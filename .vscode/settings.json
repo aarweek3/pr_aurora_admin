@@ -1,0 +1,297 @@
+{
+    "ltex.language": "ru-RU",
+    "ltex.enabled": [
+        "plaintext"
+    ],
+    // ========================================
+    // 0. ОТКЛЮЧЕНИЕ ПРОВЕРКИ ОРФОГРАФИИ
+    // ========================================
+    "cSpell.enabled": false,
+    // ========================================
+    // 1. ФОРМАТИРОВАНИЕ — ЖЁСТКОЕ И ОДИНАКОВОЕ ДЛЯ ВСЕХ
+    // ========================================
+    "editor.defaultFormatter": "esbenp.prettier-vscode", // Prettier — основной форматтер
+    "editor.formatOnSave": true, // Автоформатирование при сохранении
+    "editor.formatOnPaste": true, // Форматирование при вставке
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": "explicit", // Автофикс ESLint при сохранении
+        "source.organizeImports": "explicit" // Автосортировка импортов
+    },
+    "prettier.requireConfig": false, // Не требуем .prettierrc — используем глобальные правила
+    // Принудительно Prettier для всех основных языков
+    "[typescript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[typescriptreact]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[javascript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[javascriptreact]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[html]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[json]": {
+        "editor.defaultFormatter": "vscode.json-language-features"
+    },
+    "[jsonc]": {
+        "editor.defaultFormatter": "vscode.json-language-features"
+    },
+    // ========================================
+    // 2. РЕДАКТОР — ЕДИНЫЙ ВИЗУАЛЬНЫЙ СТИЛЬ КОДА
+    // ========================================
+    "editor.insertSpaces": true, // Пробелы вместо табов
+    "editor.tabSize": 2, // 2 пробела — стандарт Angular
+    "editor.wordWrapColumn": 120, // Перенос строки после 120 символов
+    "editor.minimap.enabled": false, // Отключаем мини-карту (экономим место)
+    "editor.stickyScroll.enabled": false, // Отключаем "липкую" прокрутку
+    "editor.lineHeight": 22, // Удобный межстрочный интервал
+    "editor.fontSize": 12, // Читаемый размер шрифта
+    "editor.fontLigatures": true, // Включаем лигатуры (=>, !==, etc.)
+    "editor.fontFamily": "'JetBrains Mono', 'Fira Code', 'Cascadia Code', Consolas, monospace", // Лучший шрифт 2025 года
+    // ========================================
+    // 3. ANGULAR + TYPESCRIPT — КРИТИЧЕСКИ ВАЖНЫЕ НАСТРОЙКИ
+    // ========================================
+    "typescript.updateImportsOnFileMove.enabled": "always", // Автообновление импортов при перемещении
+    "typescript.preferences.importModuleSpecifier": "non-relative", // Алиасы вместо ../../../../
+    "typescript.suggest.paths": true, // Подсказки путей (@shared, @core)
+    "javascript.suggest.paths": true,
+    "emmet.includeLanguages": {
+        "javascript": "javascriptreact",
+        "typescript": "typescriptreact"
+    },
+    "html.autoClosingTags": true, // Автозакрытие тегов
+    // ========================================
+    // 4. ESLINT + ЧИСТЫЙ КОД
+    // ========================================
+    "eslint.validate": [
+        "javascript",
+        "typescript",
+        "html"
+    ],
+    "eslint.format.enable": true,
+    "files.trimTrailingWhitespace": true, // Убираем пробелы в конце строк
+    "files.insertFinalNewline": true, // Добавляем пустую строку в конец файла
+    "files.eol": "\n", // LF — стандарт в git
+    // ========================================
+    // 5. ПОВЕДЕНИЕ VS CODE — УДОБСТВО И ПРОИЗВОДИТЕЛЬНОСТЬ
+    // ========================================
+    "workbench.editor.enablePreview": false, // Отключаем режим предпросмотра
+    "workbench.editor.enablePreviewFromCodeNavigation": false,
+    "workbench.editor.limit.enabled": true, // Ограничиваем вкладки
+    "workbench.editor.limit.value": 50,
+    "explorer.compactFolders": false, // Не склеиваем папки
+    "explorer.confirmDelete": true, // Подтверждение удаления
+    "explorer.sortOrder": "type", // Сортировка по типу
+    "workbench.tree.expandMode": "singleClick", // Разворачивание одним кликом
+    "workbench.tree.indent": 6, // Красивый отступ в дереве
+    "window.openFoldersInNewWindow": "off", // Открывать папки в текущем окне
+    "window.restoreWindows": "all", // Восстанавливать все окна
+    "workbench.startupEditor": "none", // Не показывать стартовую страницу
+    "security.workspace.trust.untrustedFiles": "open",
+    "files.confirmDelete": true,
+    "git.enableSmartCommit": true, // Умные коммиты в Git
+    "task.allowAutomaticTasks": "on", // Разрешаем автозапуск задач
+    // ========================================
+    // 6. ТЕМА И ЦВЕТА — КРАСИВО, ЧИТАЕМО, ПРОФЕССИОНАЛЬНО
+    // ========================================
+    "workbench.colorTheme": "Default Dark Modern",
+    "peacock.color": "#0d445f", // Основной акцентный цвет Peacock
+    "workbench.colorCustomizations": {
+        // ───── ТЕРМИНАЛ ─────
+        "terminal.background": "#1E1E1E", // Очень тёмный фон
+        "terminal.foreground": "#CCCCCC", // Светлый текст
+        "terminalCursor.foreground": "#1daef6", // Ярко-голубой курсор
+        "terminalCursor.background": "#CCCCCC", // Фон под курсором
+        // ANSI-цвета (для логов, вывода команд)
+        "terminal.ansiBlack": "#1E1E1E",
+        "terminal.ansiBlue": "#569CD6",
+        "terminal.ansiCyan": "#4EC9B0",
+        "terminal.ansiGreen": "#6A9955",
+        "terminal.ansiMagenta": "#C586C0",
+        "terminal.ansiRed": "#a55439",
+        "terminal.ansiWhite": "#D4D4D4",
+        "terminal.ansiYellow": "#DCDCAA",
+        "terminal.ansiBrightBlack": "#808080",
+        "terminal.ansiBrightBlue": "#9CDCFE",
+        "terminal.ansiBrightCyan": "#4EC9B0",
+        "terminal.ansiBrightGreen": "#6A9955",
+        "terminal.ansiBrightMagenta": "#C586C0",
+        "terminal.ansiBrightRed": "#a96e2f",
+        "terminal.ansiBrightWhite": "#FFFFFF",
+        "terminal.ansiBrightYellow": "#DCDCAA",
+        // ───── БОКОВАЯ ПАНЕЛЬ (Explorer, Git, Search) ─────
+        "sideBar.background": "#192131", // Тёмно-синий фон
+        "sideBar.foreground": "#CCCCCC", // Светлый текст
+        "sideBar.border": "#444444", // Граница справа
+        "sideBarTitle.foreground": "#FFFFFF", // Заголовки разделов
+        "sideBarSectionHeader.background": "#3A3A3A",
+        "sideBarSectionHeader.foreground": "#FFFFFF",
+        // ───── ВКЛАДКИ ─────
+        "tab.activeBackground": "#026123", // Активная вкладка — тёмно-зелёная
+        "tab.activeForeground": "#FFFFFF",
+        "tab.inactiveBackground": "#2D2D2D", // Неактивные — серые
+        "tab.inactiveForeground": "#CCCCCC",
+        "tab.border": "#444444",
+        // ───── ВЕРХНЯЯ ПАНЕЛЬ (Title Bar) ─────
+        "titleBar.activeBackground": "#4c0987", // ВЕРХНЯЯ ПАНЕЛЬ
+        "titleBar.activeForeground": "#FFFFFF",
+        "titleBar.inactiveBackground": "#4c0987",
+        // ───── ЛЕВАЯ ПАНЕЛЬ АКТИВНОСТИ ─────
+        "activityBar.background": "#14243A",
+        "activityBar.foreground": "#FFFFFF",
+        // ───── СТАТУС-БАР (внизу) ─────
+        "statusBar.background": "#007ACC", // Классический синий
+        "statusBar.foreground": "#FFFFFF",
+        "statusBar.border": "#444444",
+        "statusBarItem.hoverBackground": "#4A4A4A",
+        // ───── РЕДАКТОР ─────
+        "editor.background": "#1E1E1E",
+        "editor.foreground": "#CCCCCC",
+        "editorLineNumber.foreground": "#808080",
+        "editorCursor.foreground": "#CCCCCC",
+        "editor.selectionBackground": "#3A3A3A",
+        "editor.lineHighlightBackground": "#2D2D2D",
+        // ───── СПИСКИ И ДЕРЕВЬЯ ─────
+        "list.activeSelectionBackground": "#0b531b", // Выбранный файл
+        "list.activeSelectionForeground": "#FFFFFF",
+        "list.inactiveSelectionBackground": "#243ee6",
+        "list.hoverBackground": "#0f1316",
+        "list.focusBackground": "#085b92",
+        "list.focusForeground": "#f8f7f6",
+        "list.hoverForeground": "#4682B4",
+        "list.inactiveSelectionForeground": "#8E8D8A",
+        "tree.indentGuidesStroke": "#71a8f5"
+    },
+    // ========================================
+    // 7. КАСТОМНАЯ ПОДСВЕТКА КЛЮЧЕВЫХ СЛОВ
+    // ========================================
+    "editor.tokenColorCustomizations": {
+        "textMateRules": [
+            {
+                "scope": "keyword.control.export.ts",
+                "settings": {
+                    "foreground": "#0e93ad",
+                    "fontStyle": "bold"
+                }
+            }, // export
+            {
+                "scope": "storage.type.class.ts",
+                "settings": {
+                    "foreground": "#1c6911",
+                    "fontStyle": "bold"
+                }
+            }, // class
+            {
+                "scope": "meta.decorator.ts",
+                "settings": {
+                    "foreground": "#4a73a3",
+                    "fontStyle": "bold"
+                }
+            }, // @Component
+            {
+                "scope": "keyword.other.implements.ts",
+                "settings": {
+                    "foreground": "#b35f00",
+                    "fontStyle": "bold"
+                }
+            }, // implements
+            {
+                "scope": "storage.modifier.ts",
+                "settings": {
+                    "foreground": "#0e9a53",
+                    "fontStyle": "bold"
+                }
+            }, // private/public
+            {
+                "scope": "entity.name.function.constructor.ts",
+                "settings": {
+                    "foreground": "#003580",
+                    "fontStyle": "bold"
+                }
+            }, // constructor
+            {
+                "scope": "keyword.control.return.ts",
+                "settings": {
+                    "foreground": "#b2007f",
+                    "fontStyle": "bold"
+                }
+            }, // return
+            {
+                "scope": "keyword.control.super.ts",
+                "settings": {
+                    "foreground": "#007acc",
+                    "fontStyle": "bold"
+                }
+            }, // super
+            {
+                "scope": "variable.language.this.ts",
+                "settings": {
+                    "foreground": "#05538b",
+                    "fontStyle": "bold"
+                }
+            }, // this
+            {
+                "scope": "storage.type.any.ts",
+                "settings": {
+                    "foreground": "#808080",
+                    "fontStyle": "bold"
+                }
+            }, // any
+            {
+                "scope": "entity.name.type.class.ts",
+                "settings": {
+                    "foreground": "#b5a42e",
+                    "fontStyle": "bold"
+                }
+            },
+            // class names
+            {
+                "scope": "entity.name.type.interface.ts",
+                "settings": {
+                    "foreground": "#b5a42e",
+                    "fontStyle": "bold"
+                }
+            },
+            // interface names
+            {
+                "scope": "entity.name.type.alias.ts",
+                "settings": {
+                    "foreground": "#b5a42e",
+                    "fontStyle": "bold"
+                }
+            }, // type names
+            {
+                "scope": "storage.type.enum.ts",
+                "settings": {
+                    "foreground": "#b5a42e",
+                    "fontStyle": "bold"
+                }
+            },
+            // enum names
+            {
+                "scope": "storage.type.typealias.ts",
+                "settings": {
+                    "foreground": "#b5a42e",
+                    "fontStyle": "bold"
+                }
+            }, // typealias names
+            {
+                "scope": "storage.type.enum.ts",
+                "settings": {
+                    "foreground": "#b5a42e",
+                    "fontStyle": "bold"
+                }
+            } // enum names
+        ]
+    },
+    // ========================================
+    // 8. ТЕРМИНАЛ — ЧИТАЕМЫЙ И КРАСИВЫЙ
+    // ========================================
+    "terminal.integrated.fontFamily": "'JetBrains Mono', 'Fira Code', monospace",
+    "terminal.integrated.fontSize": 12,
+    "terminal.integrated.lineHeight": 1.2
+}

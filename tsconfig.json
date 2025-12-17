@@ -1,27 +1,76 @@
-/* To learn more about Typescript configuration file: https://www.typescriptlang.org/docs/handbook/tsconfig-json.html. */
-/* To learn more about Angular compiler options: https://angular.dev/reference/configs/angular-compiler-options. */
+// 📁 tsconfig.json
+// Конфигурация TypeScript
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "baseUrl": "./",
     "outDir": "./dist/out-tsc",
+    "forceConsistentCasingInFileNames": true,
     "strict": true,
     "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
-    "skipLibCheck": true,
-    "isolatedModules": true,
-    "esModuleInterop": true,
+    "sourceMap": true,
+    "declaration": false,
+    "downlevelIteration": true,
     "experimentalDecorators": true,
-    "moduleResolution": "bundler",
+    "moduleResolution": "node",
     "importHelpers": true,
     "target": "ES2022",
-    "module": "ES2022"
+    "module": "ES2022",
+    "useDefineForClassFields": false,
+    "lib": [
+      "ES2022",
+      "dom"
+    ],
+    "paths": {
+      "@components/*": [
+        "src/app/components/*"
+      ],
+      "@core/*": [
+        "src/app/core/*"
+      ],
+      "@auth/*": [
+        "src/app/auth/*"
+      ],
+      "@shared/*": [
+        "src/app/shared/*"
+      ],
+      "@features/*": [
+        "src/app/features/*"
+      ],
+      "@layout/*": [
+        "src/app/layout/*"
+      ],
+      "@assets/*": [
+        "src/assets/*"
+      ],
+      "@environments/*": [
+        "src/environments/*"
+      ],
+      "@infrastructure/*": [
+        "src/app/shared/infrastructure/*"
+      ],
+      "@app/*": [
+        "src/app/*"
+      ],
+      "@pages/*": [
+        "src/app/pages/*"
+      ],
+      "@stickers/*": [
+        "src/app/pages/stickers/*"
+      ],
+      "@article/*": [
+        "src/app/shared/pages/article/*"
+      ]
+    }
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
     "strictInjectionParameters": true,
     "strictInputAccessModifiers": true,
-    "strictTemplates": true
+    "strictTemplates": true,
+    "strictInputTypes": true
   }
 }

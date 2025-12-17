@@ -1,42 +1,88 @@
 {
-  // For more information, visit: https://go.microsoft.com/fwlink/?LinkId=733558
   "version": "2.0.0",
   "tasks": [
     {
+      "label": "ng serve (dev + SSL + HMR)",
       "type": "npm",
-      "script": "start",
+      "script": "start:ssl",
       "isBackground": true,
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "clear": true
+      },
       "problemMatcher": {
         "owner": "typescript",
-        "pattern": "$tsc",
+        "pattern": {
+          "regexp": "^(?:ERROR in )?(.*):(\\d+):(\\d+) - (error|warning|info) TS(\\d+): (.*)$",
+          "file": 1,
+          "line": 2,
+          "column": 3,
+          "severity": 4,
+          "code": 5,
+          "message": 6
+        },
         "background": {
           "activeOnStart": true,
-          "beginsPattern": {
-            "regexp": "(.*?)"
-          },
-          "endsPattern": {
-            "regexp": "bundle generation complete"
-          }
+          "beginsPattern": "^.*Compiling.*$",
+          "endsPattern": "^.*Compiled successfully.*$|^.*Failed to compile.*$"
         }
       }
     },
     {
+      "label": "ng build (production)",
+      "type": "npm",
+      "script": "build",
+      "group": "build",
+      "presentation": {
+        "reveal": "always",
+        "clear": true
+      },
+      "problemMatcher": {
+        "owner": "typescript",
+        "pattern": {
+          "regexp": "^(?:ERROR in )?(.*):(\\d+):(\\d+) - (error|warning|info) TS(\\d+): (.*)$",
+          "file": 1,
+          "line": 2,
+          "column": 3,
+          "severity": 4,
+          "code": 5,
+          "message": 6
+        }
+      }
+    },
+    {
+      "label": "ng test (watch)",
       "type": "npm",
       "script": "test",
       "isBackground": true,
-      "problemMatcher": {
-        "owner": "typescript",
-        "pattern": "$tsc",
-        "background": {
-          "activeOnStart": true,
-          "beginsPattern": {
-            "regexp": "(.*?)"
-          },
-          "endsPattern": {
-            "regexp": "bundle generation complete"
-          }
-        }
-      }
+      "group": "test",
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "ng test (headless)",
+      "type": "npm",
+      "script": "test:headless",
+      "group": "test",
+      "problemMatcher": []
+    },
+    {
+      "label": "ng lint",
+      "type": "npm",
+      "script": "lint",
+      "group": "test",
+      "presentation": {
+        "reveal": "always"
+      },
+      "problemMatcher": []
     }
   ]
 }
