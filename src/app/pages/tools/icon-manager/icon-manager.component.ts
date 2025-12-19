@@ -6,6 +6,7 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzDrawerModule } from 'ng-zorro-antd/drawer';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzTabsModule } from 'ng-zorro-antd/tabs';
+import { firstValueFrom } from 'rxjs';
 import { IconComponent } from '../../../shared/components/ui/icon/icon.component';
 import { ICON_REGISTRY } from '../../ui-demo/icon-ui/icon-registry';
 
@@ -115,6 +116,10 @@ import { ICON_REGISTRY } from '../../ui-demo/icon-ui/icon-registry';
             </div>
 
             <div class="header-actions">
+              <button class="btn-outline" (click)="isBatchLabOpen.set(true)">
+                <app-icon type="system/av_cog" [size]="16"></app-icon>
+                Batch Lab
+              </button>
               <button class="btn-outline">
                 <app-icon type="system/av_settings" [size]="16"></app-icon>
                 Settings
@@ -356,6 +361,236 @@ import { ICON_REGISTRY } from '../../ui-demo/icon-ui/icon-registry';
             </div>
           </div>
           }
+        </ng-container>
+      </nz-drawer>
+
+      <!-- Batch Lab Drawer -->
+      <nz-drawer
+        [nzVisible]="isBatchLabOpen()"
+        [nzWidth]="720"
+        nzTitle="Batch Operations Lab"
+        (nzOnClose)="isBatchLabOpen.set(false)"
+      >
+        <ng-container *nzDrawerContent>
+          <div class="batch-container">
+            <div class="batch-header-info">
+              <h3>Массовые операции с иконками</h3>
+              <p>Инструменты для пакетной обработки всей библиотеки или отфильтрованного списка.</p>
+            </div>
+
+            <div class="batch-options">
+              <div style="margin-bottom: 16px; display: flex; gap: 12px; align-items: center;">
+                <label style="font-size: 13px; font-weight: 600;">Область обработки:</label>
+                <button
+                  [class.btn-primary]="batchMode() === 'all'"
+                  [class.btn-outline]="batchMode() !== 'all'"
+                  style="padding: 4px 12px; height: 32px;"
+                  (click)="batchMode.set('all')"
+                >
+                  Вся библиотека ({{ totalIcons() }})
+                </button>
+                <button
+                  [class.btn-primary]="batchMode() === 'filtered'"
+                  [class.btn-outline]="batchMode() !== 'filtered'"
+                  style="padding: 4px 12px; height: 32px;"
+                  (click)="batchMode.set('filtered')"
+                >
+                  Отфильтрованные ({{ filteredIcons().length }})
+                </button>
+              </div>
+            </div>
+
+            <div class="batch-actions-grid">
+              <div class="batch-action-card" (click)="startBatchProcess('optimize')">
+                <div class="action-icon">
+                  <app-icon type="actions/av_eraser" [size]="20"></app-icon>
+                </div>
+                <div class="action-info">
+                  <h4>Batch Optimize</h4>
+                  <p>Очистка от мусора, ID, классов и внедрение currentColor.</p>
+                </div>
+              </div>
+
+              <div class="batch-action-card" (click)="startBatchProcess('normalize')">
+                <div class="action-icon">
+                  <app-icon type="arrows/av_expand" [size]="20"></app-icon>
+                </div>
+                <div class="action-info">
+                  <h4>Standardize 24x24</h4>
+                  <p>Масштабирование всех иконок под стандартный квадрат 24 на 24.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="batch-header-info" style="margin-top: 16px; background: #f1f5f9;">
+              <h4
+                style="margin: 0 0 12px 0; font-size: 14px; color: #1e293b; display: flex; align-items: center; gap: 8px;"
+              >
+                <app-icon type="actions/av_search" [size]="14"></app-icon>
+                Массовое редактирование кода
+              </h4>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                <div class="meta-item">
+                  <span class="label">Найти текст / тег</span>
+                  <input
+                    type="text"
+                    [(ngModel)]="batchSearchQuery"
+                    placeholder="Например: fill='#000'"
+                    style="width: 100%; padding: 8px; border-radius: 8px; border: 1px solid #cbd5e1; font-family: monospace; font-size: 12px;"
+                  />
+                </div>
+                <div class="meta-item">
+                  <span class="label">Заменить на</span>
+                  <input
+                    type="text"
+                    [(ngModel)]="batchReplaceQuery"
+                    placeholder="Например: fill='currentColor'"
+                    style="width: 100%; padding: 8px; border-radius: 8px; border: 1px solid #cbd5e1; font-family: monospace; font-size: 12px;"
+                  />
+                </div>
+              </div>
+              <button
+                class="btn-primary"
+                style="margin-top: 12px; width: 100%; gap: 8px;"
+                [disabled]="!batchSearchQuery()"
+                (click)="startBatchProcess('replace')"
+              >
+                <app-icon type="actions/av_save" [size]="14"></app-icon>
+                Применить замену ко всем
+              </button>
+            </div>
+
+            <div
+              class="batch-header-info"
+              style="margin-top: 16px; border-left: 4px solid #6366f1;"
+            >
+              <h4
+                style="margin: 0 0 12px 0; font-size: 14px; color: #1e293b; display: flex; align-items: center; gap: 8px;"
+              >
+                <app-icon type="actions/av_eye" [size]="14"></app-icon>
+                Массовое обогащение (Enrich / Meta)
+              </h4>
+              <div class="enrich-form" style="padding: 0;">
+                <div class="form-row">
+                  <div class="form-group">
+                    <label>Accessibility Title</label>
+                    <input
+                      type="text"
+                      [(ngModel)]="metaTitle"
+                      placeholder="e.g. Navigation checkmark"
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label>Corporate Author</label>
+                    <input type="text" [(ngModel)]="metaAuthor" />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label>Description (Context)</label>
+                  <textarea
+                    [(ngModel)]="metaDesc"
+                    placeholder="Describe the icon usage..."
+                    style="height: 60px;"
+                  ></textarea>
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label>Data Attribute Key</label>
+                    <input type="text" [(ngModel)]="metaDataKey" />
+                  </div>
+                  <div class="form-group">
+                    <label>Attribute Value</label>
+                    <input type="text" [(ngModel)]="metaDataValue" />
+                  </div>
+                </div>
+                <button
+                  class="btn-primary"
+                  style="width: 100%; margin-top: 8px; background: #6366f1;"
+                  (click)="startBatchProcess('metadata')"
+                >
+                  Установить метаданные массово
+                </button>
+              </div>
+            </div>
+
+            <div class="log-container">
+              <div
+                style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;"
+              >
+                <div
+                  style="font-size: 10px; text-transform: uppercase; color: #94a3b8; font-weight: 800; letter-spacing: 0.05em;"
+                >
+                  Session Log
+                </div>
+                @if (batchLog().length > 0) {
+                <button
+                  class="btn-outline"
+                  style="height: 24px; padding: 0 8px; font-size: 10px; border-radius: 6px;"
+                  (click)="copyBatchLog()"
+                >
+                  <app-icon
+                    type="actions/av_save"
+                    [size]="10"
+                    style="margin-right: 4px;"
+                  ></app-icon>
+                  Copy Detailed Log
+                </button>
+                }
+              </div>
+              <div class="log-scroll">
+                @for (line of batchLog(); track $index) {
+                <div
+                  class="log-entry"
+                  [class.success]="line.includes('✅')"
+                  [class.error]="line.includes('❌')"
+                >
+                  {{ line }}
+                </div>
+                } @if (batchLog().length === 0) {
+                <div style="color: #64748b; font-style: italic;">
+                  Выберите действие для начала...
+                </div>
+                }
+              </div>
+            </div>
+
+            @if (isBatchProcessing()) {
+            <div class="progress-overlay">
+              <div style="margin-bottom: 24px;">
+                <app-icon
+                  type="system/av_cog"
+                  [size]="48"
+                  style="animation: spin 2s linear infinite;"
+                ></app-icon>
+                <style>
+                  @keyframes spin {
+                    from {
+                      transform: rotate(0deg);
+                    }
+                    to {
+                      transform: rotate(360deg);
+                    }
+                  }
+                </style>
+              </div>
+              <h2 style="margin-bottom: 8px;">Выполняется обработка...</h2>
+              <div class="custom-progress-bar">
+                <div class="fill" [style.width.%]="batchProgress()"></div>
+              </div>
+              <div style="font-weight: 700; color: #6366f1;">
+                {{ batchCurrent() }} / {{ batchTotal() }} ({{ batchProgress() }}%)
+              </div>
+              <div
+                style="margin-top: 8px; font-size: 14px; font-weight: 600; color: #1e293b; background: #f1f5f9; padding: 4px 12px; border-radius: 8px;"
+              >
+                Обработка: {{ batchCurrentName() }}
+              </div>
+              <p style="margin-top: 16px; color: #64748b;">
+                Пожалуйста, не закрывайте страницу до завершения.
+              </p>
+            </div>
+            }
+          </div>
         </ng-container>
       </nz-drawer>
 
@@ -1162,6 +1397,143 @@ import { ICON_REGISTRY } from '../../ui-demo/icon-ui/icon-registry';
         grid-template-columns: 1fr 1fr;
         gap: 12px;
       }
+      /* Batch Processing Styles */
+      .batch-container {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+        height: 100%;
+      }
+
+      .batch-header-info {
+        background: #f8fafc;
+        padding: 20px;
+        border-radius: 16px;
+        border: 1px solid #e2e8f0;
+
+        h3 {
+          margin: 0 0 8px 0;
+          font-size: 16px;
+          color: #1e293b;
+        }
+
+        p {
+          margin: 0;
+          font-size: 13px;
+          color: #64748b;
+        }
+      }
+
+      .batch-actions-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+      }
+
+      .batch-action-card {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 16px;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        transition: all 0.3s;
+        cursor: pointer;
+
+        &:hover:not(.disabled) {
+          border-color: #6366f1;
+          transform: translateY(-4px);
+          box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        &.disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
+        }
+
+        .action-icon {
+          width: 40px;
+          height: 40px;
+          background: #f1f5f9;
+          border-radius: 10px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: #6366f1;
+        }
+
+        .action-info {
+          h4 {
+            margin: 0 0 4px 0;
+            font-size: 14px;
+            color: #1e293b;
+          }
+          p {
+            margin: 0;
+            font-size: 12px;
+            color: #94a3b8;
+          }
+        }
+      }
+
+      .progress-overlay {
+        position: absolute;
+        inset: 0;
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(8px);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 100;
+        border-radius: 24px;
+        padding: 40px;
+        text-align: center;
+      }
+
+      .custom-progress-bar {
+        width: 100%;
+        height: 12px;
+        background: #f1f5f9;
+        border-radius: 6px;
+        overflow: hidden;
+        margin-bottom: 16px;
+        position: relative;
+
+        .fill {
+          height: 100%;
+          background: linear-gradient(90deg, #6366f1, #a855f7);
+          transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+      }
+
+      .log-container {
+        background: #1e293b;
+        border-radius: 12px;
+        padding: 16px;
+        font-family: 'Fira Code', monospace;
+        margin-top: 24px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .log-scroll {
+        height: 180px;
+        overflow-y: auto;
+        font-size: 11px;
+        line-height: 1.5;
+        color: #cbd5e1;
+
+        .log-entry {
+          margin-bottom: 4px;
+          &.success {
+            color: #10b981;
+          }
+          &.error {
+            color: #f43f5e;
+          }
+        }
+      }
     `,
   ],
 })
@@ -1178,6 +1550,18 @@ export class IconManagerComponent {
   selectedIcon = signal<any>(null);
   rawSvgCode = signal('');
   cleanedSvgCode = signal('');
+
+  // Batch Lab Signals
+  isBatchLabOpen = signal(false);
+  isBatchProcessing = signal(false);
+  batchProgress = signal(0);
+  batchLog = signal<string[]>([]);
+  batchTotal = signal(0);
+  batchCurrent = signal(0);
+  batchCurrentName = signal('');
+  batchMode = signal<'all' | 'filtered'>('all');
+  batchSearchQuery = signal('');
+  batchReplaceQuery = signal('');
 
   // Enrichment Signals
   metaTitle = signal('');
@@ -1253,9 +1637,21 @@ export class IconManagerComponent {
         this.rawSvgCode.set(code);
         this.generatePassport(code);
       },
-      error: () => {
-        this.rawSvgCode.set('Error loading SVG source.');
+      error: (err) => {
+        let errorMsg = 'Error loading SVG source.';
+
+        if (err?.status === 404) {
+          errorMsg = `⚠️ Файл не найден: ${icon.type}.svg\n\nФайл может быть:\n- Удалён из assets/icons\n- Переименован\n- Указан неверный путь в реестре`;
+          console.error(`Icon file not found: ${path}`, err);
+        } else if (err?.status === 0) {
+          errorMsg = '⚠️ Ошибка сети. Проверьте подключение.';
+        } else if (err?.message) {
+          errorMsg = `⚠️ Ошибка: ${err.message}`;
+        }
+
+        this.rawSvgCode.set(errorMsg);
         this.iconPassport.set(null);
+        this.showToast(errorMsg);
       },
     });
   }
@@ -1362,51 +1758,54 @@ export class IconManagerComponent {
     if (!raw || raw.startsWith('Loading')) return;
 
     try {
-      const parser = new DOMParser();
-      const doc = parser.parseFromString(raw, 'image/svg+xml');
-      const svg = doc.querySelector('svg');
-      if (!svg) throw new Error('Invalid SVG');
-
-      // 1. Inject Title
-      if (this.metaTitle()) {
-        let titleEl = svg.querySelector('title');
-        if (!titleEl) {
-          titleEl = doc.createElementNS('http://www.w3.org/2000/svg', 'title') as any;
-          if (titleEl) svg.prepend(titleEl);
-        }
-        if (titleEl) titleEl.textContent = this.metaTitle();
-      }
-
-      // 2. Inject Desc
-      if (this.metaDesc()) {
-        let descEl = svg.querySelector('desc');
-        if (!descEl) {
-          descEl = doc.createElementNS('http://www.w3.org/2000/svg', 'desc') as any;
-          // Insert after title
-          const titleEl = svg.querySelector('title');
-          if (titleEl && descEl) titleEl.after(descEl);
-          else if (descEl) svg.prepend(descEl);
-        }
-        if (descEl) descEl.textContent = this.metaDesc();
-      }
-
-      // 3. Inject Author Comment
-      if (this.metaAuthor()) {
-        const comment = doc.createComment(` Author: ${this.metaAuthor()} `);
-        svg.prepend(comment);
-      }
-
-      // 4. Inject Data Attribute
-      if (this.metaDataKey() && this.metaDataValue()) {
-        svg.setAttribute(this.metaDataKey(), this.metaDataValue());
-      }
-
-      const enriched = new XMLSerializer().serializeToString(doc);
+      const enriched = this.internalApplyMetadata(raw);
       this.cleanedSvgCode.set(enriched);
       this.showToast('Metadata injected successfully!');
     } catch (e) {
       this.showToast('Error applying metadata.');
     }
+  }
+
+  private internalApplyMetadata(raw: string): string {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(raw, 'image/svg+xml');
+    const svg = doc.querySelector('svg');
+    if (!svg) throw new Error('Invalid SVG');
+
+    // 1. Inject Title
+    if (this.metaTitle()) {
+      let titleEl = svg.querySelector('title');
+      if (!titleEl) {
+        titleEl = doc.createElementNS('http://www.w3.org/2000/svg', 'title') as any;
+        if (titleEl) svg.prepend(titleEl);
+      }
+      if (titleEl) titleEl.textContent = this.metaTitle();
+    }
+
+    // 2. Inject Desc
+    if (this.metaDesc()) {
+      let descEl = svg.querySelector('desc');
+      if (!descEl) {
+        descEl = doc.createElementNS('http://www.w3.org/2000/svg', 'desc') as any;
+        const titleEl = svg.querySelector('title');
+        if (titleEl && descEl) titleEl.after(descEl);
+        else if (descEl) svg.prepend(descEl);
+      }
+      if (descEl) descEl.textContent = this.metaDesc();
+    }
+
+    // 3. Inject Author Comment
+    if (this.metaAuthor()) {
+      const comment = doc.createComment(` Author: ${this.metaAuthor()} `);
+      svg.prepend(comment);
+    }
+
+    // 4. Inject Data Attribute
+    if (this.metaDataKey() && this.metaDataValue()) {
+      svg.setAttribute(this.metaDataKey(), this.metaDataValue());
+    }
+
+    return new XMLSerializer().serializeToString(doc);
   }
 
   optimizeSvg() {
@@ -1518,6 +1917,148 @@ export class IconManagerComponent {
     const code = `<app-icon type="${type}" [size]="24"></app-icon>`;
     navigator.clipboard.writeText(code);
     this.showToast('Код компонента скопирован!');
+  }
+
+  // Batch Operations
+  async startBatchProcess(type: 'optimize' | 'normalize' | 'replace' | 'metadata') {
+    const icons =
+      this.batchMode() === 'all' ? ICON_REGISTRY.flatMap((c) => c.icons) : this.filteredIcons();
+
+    this.batchTotal.set(icons.length);
+    this.batchCurrent.set(0);
+    this.batchProgress.set(0);
+    this.isBatchProcessing.set(true);
+    this.batchLog.set([`Starting batch ${type} for ${icons.length} icons...`]);
+
+    for (let i = 0; i < icons.length; i++) {
+      const icon = icons[i];
+      this.batchCurrentName.set(icon.name || icon.type);
+      try {
+        // Find correct path: icon.type might be "category/name" or just "name"
+        let path = `assets/icons/${icon.type}.svg`;
+        if (!icon.type.includes('/')) {
+          // If no slash, maybe it's in folders? No, we should prefer the full path from type
+        }
+
+        const code = await firstValueFrom(this.http.get(path, { responseType: 'text' }));
+
+        let processed = code;
+        if (type === 'optimize') {
+          processed = this.internalOptimize(code);
+        } else if (type === 'normalize') {
+          processed = this.internalNormalize(code);
+        } else if (type === 'replace' && this.batchSearchQuery()) {
+          processed = code.split(this.batchSearchQuery()).join(this.batchReplaceQuery());
+        } else if (type === 'metadata') {
+          processed = this.internalApplyMetadata(code);
+        }
+
+        // In a real app we'd send to backend here
+        // For now we simulate success
+        this.batchCurrent.set(i + 1);
+        this.batchProgress.set(Math.round(((i + 1) / icons.length) * 100));
+        this.addBatchLog(`✅ Processed: ${icon.type}`, 'success');
+      } catch (e: any) {
+        // Детальная обработка ошибок
+        let errorMessage = `❌ Failed: ${icon.type}`;
+
+        if (e?.status === 404) {
+          errorMessage += ' - Файл не существует (404)';
+          console.warn(`Icon file not found: ${icon.type}.svg`);
+        } else if (e?.status === 0) {
+          errorMessage += ' - Ошибка сети';
+        } else if (e?.message) {
+          errorMessage += ` - ${e.message}`;
+        }
+
+        this.addBatchLog(errorMessage, 'error');
+        this.batchCurrent.set(i + 1);
+        this.batchProgress.set(Math.round(((i + 1) / icons.length) * 100));
+      }
+    }
+
+    this.addBatchLog(`Batch ${type} completed!`, 'success');
+    setTimeout(() => this.isBatchProcessing.set(false), 2000);
+  }
+
+  private internalOptimize(raw: string): string {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(raw, 'image/svg+xml');
+    const svg = doc.querySelector('svg');
+    if (!svg) return raw;
+
+    const attributesToRemove = [
+      'width',
+      'height',
+      'id',
+      'class',
+      'version',
+      'x',
+      'y',
+      'xml:space',
+      'style',
+      'xmlns:xlink',
+    ];
+    attributesToRemove.forEach((attr) => svg.removeAttribute(attr));
+
+    svg.querySelectorAll('*').forEach((el) => {
+      el.removeAttribute('id');
+      el.removeAttribute('class');
+      el.removeAttribute('style');
+      if (el.hasAttribute('fill') && el.getAttribute('fill') !== 'none')
+        el.setAttribute('fill', 'currentColor');
+      if (el.hasAttribute('stroke') && el.getAttribute('stroke') !== 'none')
+        el.setAttribute('stroke', 'currentColor');
+    });
+
+    return new XMLSerializer().serializeToString(doc);
+  }
+
+  private internalNormalize(raw: string): string {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(raw, 'image/svg+xml');
+    const svg = doc.querySelector('svg');
+    if (!svg) return raw;
+
+    let vb = svg.getAttribute('viewBox');
+    let w = parseFloat(svg.getAttribute('width') || '0');
+    let h = parseFloat(svg.getAttribute('height') || '0');
+    let minX = 0,
+      minY = 0,
+      width = 0,
+      height = 0;
+
+    if (vb) {
+      [minX, minY, width, height] = vb.split(/[\s,]+/).map(parseFloat);
+    } else if (w && h) {
+      width = w;
+      height = h;
+    } else return raw;
+
+    const children = Array.from(svg.childNodes);
+    const group = doc.createElementNS('http://www.w3.org/2000/svg', 'g');
+    const scale = Math.min(24 / width, 24 / height);
+    children.forEach((child) => group.appendChild(child));
+    group.setAttribute('transform', `scale(${scale.toFixed(4)}) translate(${-minX}, ${-minY})`);
+
+    svg.innerHTML = '';
+    svg.appendChild(group);
+    svg.setAttribute('viewBox', '0 0 24 24');
+    svg.removeAttribute('width');
+    svg.removeAttribute('height');
+
+    return new XMLSerializer().serializeToString(doc);
+  }
+
+  private addBatchLog(msg: string, type: 'success' | 'error' | 'info' = 'info') {
+    const timestamp = new Date().toLocaleTimeString();
+    this.batchLog.update((prev) => [...prev, `[${timestamp}] ${msg}`]);
+  }
+
+  copyBatchLog() {
+    const log = this.batchLog().join('\n');
+    navigator.clipboard.writeText(log);
+    this.showToast('Log copied to clipboard!');
   }
 
   private showToast(msg: string) {

@@ -23,6 +23,16 @@ export class IconService {
       map((svg: string) => this.normalizeSvg(svg)),
       catchError((err: any) => {
         this.cache.delete(path);
+
+        // Детальное логирование ошибок
+        if (err?.status === 404) {
+          console.warn(`[IconService] Icon file not found: ${path}`);
+        } else if (err?.status === 0) {
+          console.error(`[IconService] Network error loading icon: ${path}`);
+        } else {
+          console.error(`[IconService] Error loading icon: ${path}`, err);
+        }
+
         return throwError(() => err);
       }),
       shareReplay(1),

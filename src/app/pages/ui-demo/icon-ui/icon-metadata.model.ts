@@ -4,6 +4,9 @@ export interface AvIcon {
   category: string; // Категория (папка)
 }
 
+// Алиас для обратной совместимости
+export type IconMetadata = AvIcon;
+
 export interface AvIconCategory {
   category: string;
   icons: AvIcon[];
