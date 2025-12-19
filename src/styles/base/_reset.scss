@@ -1,0 +1,373 @@
+// =============================================================================
+// RESET & NORMALIZE
+// Modern CSS Reset для Aurora Admin Panel
+// =============================================================================
+
+@use "../abstracts/variables" as *;
+
+// =============================================================================
+// 1. BOX SIZING
+// =============================================================================
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+// =============================================================================
+// 2. ROOT & BODY
+// =============================================================================
+
+:root {
+  // Сглаживание шрифтов
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  // Text rendering
+  text-rendering: optimizeLegibility;
+
+  // Отключение tap highlight на мобильных
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  // Responsive font size (62.5% = 10px базовый размер)
+  font-size: 100%;
+
+  // Scroll behavior
+  scroll-behavior: smooth;
+
+  // Высота 100%
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+
+  // Базовая типографика
+  font-family: $font-family-base;
+  font-size: $font-size-base;
+  font-weight: $font-weight-normal;
+  line-height: $line-height-base;
+  color: $color-text-primary;
+  background-color: $color-bg-base;
+
+  // Запретить выделение текста (опционально)
+  // user-select: none;
+}
+
+// =============================================================================
+// 3. HEADINGS
+// =============================================================================
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+  padding: 0;
+  font-weight: $font-weight-medium;
+  line-height: $line-height-tight;
+  color: $color-text-primary;
+}
+
+h1 {
+  font-size: $heading-1-size;
+}
+
+h2 {
+  font-size: $heading-2-size;
+}
+
+h3 {
+  font-size: $heading-3-size;
+}
+
+h4 {
+  font-size: $heading-4-size;
+}
+
+h5 {
+  font-size: $heading-5-size;
+}
+
+h6 {
+  font-size: $heading-6-size;
+}
+
+// =============================================================================
+// 4. TEXT ELEMENTS
+// =============================================================================
+
+p {
+  margin: 0 0 $spacing-base 0;
+}
+
+a {
+  color: $color-primary;
+  text-decoration: none;
+  transition: color $transition-duration-base;
+
+  &:hover {
+    color: $color-primary-hover;
+    text-decoration: underline;
+  }
+
+  &:active {
+    color: $color-primary-active;
+  }
+}
+
+strong,
+b {
+  font-weight: $font-weight-semibold;
+}
+
+em,
+i {
+  font-style: italic;
+}
+
+small {
+  font-size: $font-size-xs;
+}
+
+code,
+kbd,
+samp,
+pre {
+  font-family: $font-family-monospace;
+  font-size: $font-size-sm;
+}
+
+code {
+  padding: 2px 4px;
+  background: $color-bg-gray;
+  border-radius: $border-radius-sm;
+  color: $color-error;
+}
+
+pre {
+  margin: 0 0 $spacing-base 0;
+  padding: $spacing-base;
+  background: $color-bg-gray;
+  border-radius: $border-radius-base;
+  overflow-x: auto;
+
+  code {
+    padding: 0;
+    background: none;
+    color: inherit;
+  }
+}
+
+// =============================================================================
+// 5. LISTS
+// =============================================================================
+
+ul,
+ol {
+  margin: 0 0 $spacing-base 0;
+  padding-left: $spacing-lg;
+}
+
+li {
+  margin-bottom: $spacing-xs;
+}
+
+// Убрать стили для списков без класса
+ul[class],
+ol[class] {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+// =============================================================================
+// 6. FORMS
+// =============================================================================
+
+button,
+input,
+optgroup,
+select,
+textarea {
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  margin: 0;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+input,
+textarea,
+select {
+  border: $border-width-base solid $color-border-base;
+  border-radius: $border-radius-base;
+  padding: $input-padding-horizontal-base;
+  background: $color-white;
+  color: $color-text-primary;
+  transition: $transition-base;
+
+  &:focus {
+    outline: none;
+    border-color: $color-primary;
+    box-shadow: 0 0 0 2px rgba($color-primary, 0.1);
+  }
+
+  &:disabled {
+    background: $color-bg-gray;
+    cursor: not-allowed;
+  }
+
+  &::placeholder {
+    color: $color-text-tertiary;
+  }
+}
+
+textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+// =============================================================================
+// 7. TABLES
+// =============================================================================
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  width: 100%;
+}
+
+th,
+td {
+  padding: $spacing-sm;
+  text-align: left;
+  border-bottom: $border-width-base solid $color-border-light;
+}
+
+th {
+  font-weight: $font-weight-medium;
+  color: $color-text-primary;
+  background: $color-bg-light;
+}
+
+// =============================================================================
+// 8. MEDIA
+// =============================================================================
+
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+img {
+  border-style: none;
+}
+
+svg {
+  overflow: hidden;
+  vertical-align: middle;
+}
+
+// =============================================================================
+// 9. HR
+// =============================================================================
+
+hr {
+  margin: $spacing-base 0;
+  border: 0;
+  border-top: $border-width-base solid $color-border-base;
+  opacity: 1;
+}
+
+// =============================================================================
+// 10. MISC
+// =============================================================================
+
+// Remove default styling for summary
+summary {
+  cursor: pointer;
+  list-style: none;
+
+  &::-webkit-details-marker {
+    display: none;
+  }
+}
+
+// Hidden attribute
+[hidden] {
+  display: none !important;
+}
+
+// Убрать outline при клике мышью (оставить для клавиатуры)
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+// Focus visible для клавиатурной навигации
+:focus-visible {
+  outline: 2px solid $color-primary;
+  outline-offset: 2px;
+}
+
+// =============================================================================
+// 11. SCROLLBAR (Global)
+// =============================================================================
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: $color-gray-3;
+}
+
+::-webkit-scrollbar-thumb {
+  background: $color-gray-6;
+  border-radius: $border-radius-base;
+
+  &:hover {
+    background: $color-gray-7;
+  }
+}
+
+// Firefox
+* {
+  scrollbar-width: thin;
+  scrollbar-color: $color-gray-6 $color-gray-3;
+}
+
+// =============================================================================
+// 12. SELECTION
+// =============================================================================
+
+::selection {
+  background: rgba($color-primary, 0.2);
+  color: $color-text-primary;
+}
+
+::-moz-selection {
+  background: rgba($color-primary, 0.2);
+  color: $color-text-primary;
+}

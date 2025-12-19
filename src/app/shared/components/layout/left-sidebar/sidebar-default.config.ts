@@ -21,6 +21,17 @@ export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
           route: '/dashboard',
         },
         {
+          id: 'ui-demo',
+          icon: 'appstore',
+          label: 'UI Demo',
+          type: 'link',
+          route: '/ui-demo',
+          badge: {
+            value: 'New',
+            intent: 'success',
+          },
+        },
+        {
           id: 'analytics',
           icon: 'line-chart',
           label: 'Аналитика',

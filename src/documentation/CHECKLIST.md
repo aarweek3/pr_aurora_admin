@@ -37,14 +37,16 @@
 
 ## 🎨 Этап 3: Система стилей
 
-- [ ] **SCSS Архитектура**
-  - [ ] Настроить структуру директорий (`abstracts`, `base`, `components`, `layout`, `utilities`)
-  - [ ] Определить CSS переменные в `_variables.scss` (Цвета, Отступы, Типографика)
-  - [ ] Создать миксины (`media-queries`, `flex-center`, `truncate`)
-- [ ] **Кастомизация Ng-Zorro**
-  - [ ] Создать `vendors/_ng-zorro.scss` (Переопределение переменных, без прямого использования `.ant-*`)
-  - [ ] Реализовать `ThemeService` (Переключатель Светлой/Темной темы)
-  - [ ] Применить утилиту классов BEM + `is-*` state
+## 🎨 Этап 3: Система стилей ✅
+
+- [x] **SCSS Архитектура**
+  - [x] Настроить структуру директорий (`abstracts`, `base`, `components`, `layout`, `utilities`)
+  - [x] Определить CSS переменные в `_variables.scss` (Цвета, Отступы, Типографика)
+  - [x] Создать миксины (`media-queries`, `flex-center`, `truncate`)
+- [x] **Кастомизация Ng-Zorro**
+  - [x] Создать `vendors/_ng-zorro.scss` (Переопределение переменных, без прямого использования `.ant-*`)
+  - [x] Реализовать `ThemeService` (Переключатель Светлой/Темной темы)
+  - [x] Применить утилиту классов BEM + `is-*` state
 
 ## 🔲 Этап 4: Компоненты макета (The Shell) ✅
 
@@ -66,21 +68,34 @@
   - [x] `GlobalStatusBarComponent` (Здоровье системы, статус API)
   - [x] `FooterComponent` (Версия, Копирайт)
 
-## 🧩 Этап 5: Библиотека общих UI компонентов
+## 🧩 Этап 5: Библиотека общих UI компонентов (Частично ✅)
 
-- [ ] **Базовые элементы**
-  - [ ] `ButtonComponent` и `ButtonGroupComponent`
-  - [ ] `IconComponent` (Обертка SVG/Ng-zorro)
-- [ ] **Обратная связь и Статус**
-  - [ ] `AlertComponent` (Кастомная обертка вокруг nz-alert)
+- [x] **Базовые элементы**
+  - [x] `ButtonComponent` (с типами, размерами, состояниями, BEM)
+  - [x] `ButtonDirective` (Директива av-button для нативных элементов)
+  - [x] Глобальные стили для кнопок в `styles/components/_button.scss`
+  - [x] Поддержка кнопок с иконками (icon + text, icon only)
+  - [x] Квадратные кнопки с одной иконкой (класс `av-btn--icon-only`)
+  - [x] `IconComponent` (SVG иконки: download, upload, delete, search, plus, settings, close, copy, code, chevron-up, chevron-down, info)
+  - [ ] `ButtonGroupComponent`
+- [x] **Обратная связь и Статус**
+  - [x] `AlertComponent` (Кастомная обертка вокруг nz-alert)
   - [ ] `BadgeComponent` и `StatusIndicatorComponent`
   - [ ] `SpinnerComponent` и `SkeletonComponent`
   - [ ] `EmptyStateComponent`
   - [ ] `ProgressComponent`
-- [ ] **Система форм**
-  - [ ] `FormFieldComponent` (Обертка для инпутов с обработкой ошибок)
+- [x] **Система форм**
+  - [x] `FormFieldComponent` (Обертка для инпутов с обработкой ошибок)
   - [ ] `FormGroupComponent`
   - [ ] Кастомный `TooltipComponent`
+- [x] **UI Demo компонент**
+  - [x] Демонстрация всех типов кнопок (Primary, Default, Dashed, Text, Link, Danger)
+  - [x] Демонстрация размеров кнопок (Small, Default, Large)
+  - [x] Демонстрация состояний кнопок (Loading, Disabled, Block)
+  - [x] Демонстрация кнопок с SVG иконками (Icon + Text, Icon Only)
+  - [x] Индивидуальные примеры кода с кнопками "Копировать" и "Показать код"
+  - [x] Секция help с инструкциями по подключению и использованию
+  - [x] Компактная верстка (кнопка → копировать → показать код в одну строку)
 
 ## 🔐 Этап 6: Аутентификация и Безопасность
 
@@ -106,6 +121,14 @@
 ## 📊 Текущий Статус (18 декабря 2025)
 
 ### ✅ Выполнено (MVP v1.0 - 60% готовности)
+
+**Core Architecture (100% готово):**
+
+---
+
+## 📊 Текущий Статус (18 декабря 2025 - Обновлено)
+
+### ✅ Выполнено (MVP v1.0 - 75% готовности) 🎉
 
 **Core Architecture (100% готово):**
 
@@ -135,6 +158,59 @@
 - ✅ `GlobalStatusBarComponent` - панель статуса системы
 - ✅ `FooterComponent` - подвал
 
+**SCSS System (100% готово - NEW!):**
+
+- ✅ Структура директорий (abstracts, base, components, layout, utilities, vendors)
+- ✅ `_variables.scss` - полный набор Design Tokens:
+  - Colors (primary, success, warning, error, grays, text, borders)
+  - Spacing scale (xs to xxxl)
+  - Typography (fonts, sizes, weights, line-heights)
+  - Breakpoints (xs to xxl)
+  - Z-index layers
+  - Borders & Radius
+  - Shadows (sm to xl, card shadows)
+  - Transitions & Animations
+  - Component-specific variables
+  - Dark theme variables
+- ✅ `_mixins.scss` - comprehensive набор утилит:
+  - Media queries (up, down, between)
+  - Flexbox helpers (center, layout, column)
+  - Text utilities (truncate, line-clamp, word-wrap)
+  - Positioning (absolute, fixed, cover, center)
+  - Visibility helpers
+  - Custom scrollbar
+  - Transitions & animations
+  - Reset mixins (list, button, input)
+  - Spacing generators
+  - Component mixins (hover, elevation, focus-ring)
+  - Dark theme mixin
+- ✅ `_reset.scss` - Modern CSS Reset
+- ✅ `_typography.scss` - Типографическая система с utility классами
+- ✅ `vendors/_ng-zorro.scss` - Кастомизация ng-zorro переменных
+- ✅ `ThemeService` - Dark/Light theme switcher с localStorage persistence
+
+**UI Components Library (40% готово - NEW!):**
+
+- ✅ `ButtonComponent` - полнофункциональная кнопка:
+  - Types: primary, default, dashed, text, link, danger
+  - Sizes: small, default, large
+  - States: loading, disabled, block
+  - Icon support (prefix, suffix, icon-only)
+  - BEM стилизация
+  - Dark theme support
+- ✅ `FormFieldComponent` - обертка для inputs:
+  - Label с required indicator
+  - Error handling с валидацией
+  - Help text
+  - Dark theme support
+  - Интеграция с Angular Forms (AbstractControl)
+- ✅ `AlertComponent` - компонент уведомлений:
+  - Types: success, info, warning, error
+  - Closable поддержка
+  - Title + Description layout
+  - BEM стилизация
+  - Dark theme support
+
 **Logging Infrastructure (частично):**
 
 - ✅ `LoggingService` - базовая реализация
@@ -149,6 +225,13 @@
 - [ ] Обновление UI при изменении Context
 - [ ] Валидация permissions в компонентах
 
+**UI Components (остальные):**
+
+- [ ] ButtonGroupComponent
+- [ ] IconComponent
+- [ ] Badge, Spinner, Skeleton, EmptyState, Progress
+- [ ] FormGroupComponent, TooltipComponent
+
 **Тестирование:**
 
 - [ ] Unit тесты для Core сервисов
@@ -156,20 +239,6 @@
 - [ ] E2E тесты базовых сценариев
 
 ### ❌ Не начато (приоритеты на следующий этап)
-
-**Этап 3: Система стилей (0%):**
-
-- Структура SCSS директорий
-- CSS переменные и миксины
-- BEM классы
-- Кастомизация ng-zorro
-- ThemeService
-
-**Этап 5: UI Components Library (0%):**
-
-- Базовые компоненты (Button, Icon)
-- Feedback компоненты (Alert, Badge, Spinner)
-- Form компоненты (FormField, FormGroup)
 
 **Этап 6: Аутентификация (0%):**
 

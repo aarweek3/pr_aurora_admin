@@ -4,7 +4,14 @@
       "Bash(npm run build:*)",
       "Bash(npm start)",
       "Bash(npm start:*)",
-      "Bash(cat:*)"
+      "Bash(cat:*)",
+      "Bash(git checkout:*)",
+      "Bash(dir:*)",
+      "Bash(if [ -d \"$APPDATA/Code\" ])",
+      "Bash(then find \"$APPDATA/Code\" -name \"*ui-demo*\" -type f)",
+      "Bash(else echo \"VS Code AppData not found\")",
+      "Bash(fi)",
+      "Bash(find:*)"
     ]
   }
 }

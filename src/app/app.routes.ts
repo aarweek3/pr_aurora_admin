@@ -23,6 +23,10 @@ export const routes: Routes = [
         path: 'dashboard',
         loadChildren: () => import('./pages/welcome/welcome.routes').then((m) => m.WELCOME_ROUTES),
       },
+      {
+        path: 'ui-demo',
+        loadChildren: () => import('./pages/ui-demo/ui-demo.routes').then((m) => m.UI_DEMO_ROUTES),
+      },
       // TODO: Add feature modules (Phase 7)
       // { path: 'users', loadChildren: () => import('./pages/users/users.routes') },
       // { path: 'content', loadChildren: () => import('./pages/content/content.routes') },

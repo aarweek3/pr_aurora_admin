@@ -1,0 +1,301 @@
+// =============================================================================
+// SCSS VARIABLES
+// Design Tokens для Aurora Admin Panel
+// =============================================================================
+
+// =============================================================================
+// 1. COLORS
+// =============================================================================
+
+// --- Primary Colors ---
+$color-primary: #1890ff;
+$color-primary-hover: #40a9ff;
+$color-primary-active: #096dd9;
+$color-primary-light: #e6f7ff;
+$color-primary-dark: #0050b3;
+
+// --- Secondary Colors ---
+$color-secondary: #722ed1;
+$color-secondary-hover: #9254de;
+$color-secondary-active: #531dab;
+
+// --- Success ---
+$color-success: #52c41a;
+$color-success-hover: #73d13d;
+$color-success-active: #389e0d;
+$color-success-light: #f6ffed;
+$color-success-dark: #237804;
+
+// --- Warning ---
+$color-warning: #faad14;
+$color-warning-hover: #ffc53d;
+$color-warning-active: #d48806;
+$color-warning-light: #fffbe6;
+$color-warning-dark: #ad6800;
+
+// --- Error/Danger ---
+$color-error: #ff4d4f;
+$color-error-hover: #ff7875;
+$color-error-active: #d9363e;
+$color-error-light: #fff2f0;
+$color-error-dark: #a8071a;
+
+// --- Info ---
+$color-info: #1890ff;
+$color-info-hover: #40a9ff;
+$color-info-active: #096dd9;
+$color-info-light: #e6f7ff;
+
+// --- Neutral Colors ---
+$color-white: #ffffff;
+$color-black: #000000;
+
+// Gray Scale
+$color-gray-1: #ffffff;
+$color-gray-2: #fafafa;
+$color-gray-3: #f5f5f5;
+$color-gray-4: #f0f0f0;
+$color-gray-5: #d9d9d9;
+$color-gray-6: #bfbfbf;
+$color-gray-7: #8c8c8c;
+$color-gray-8: #595959;
+$color-gray-9: #434343;
+$color-gray-10: #262626;
+$color-gray-11: #1f1f1f;
+$color-gray-12: #141414;
+$color-gray-13: #000000;
+
+// --- Text Colors ---
+$color-text-primary: rgba(0, 0, 0, 0.85);
+$color-text-secondary: rgba(0, 0, 0, 0.65);
+$color-text-tertiary: rgba(0, 0, 0, 0.45);
+$color-text-disabled: rgba(0, 0, 0, 0.25);
+$color-text-inverse: #ffffff;
+
+// --- Border Colors ---
+$color-border-base: #d9d9d9;
+$color-border-light: #f0f0f0;
+$color-border-dark: #bfbfbf;
+
+// --- Background Colors ---
+$color-bg-base: #ffffff;
+$color-bg-light: #fafafa;
+$color-bg-gray: #f5f5f5;
+$color-bg-dark: #141414;
+$color-bg-overlay: rgba(0, 0, 0, 0.45);
+
+// =============================================================================
+// 2. SPACING
+// =============================================================================
+
+$spacing-xs: 4px;
+$spacing-sm: 8px;
+$spacing-md: 12px;
+$spacing-base: 16px;
+$spacing-lg: 24px;
+$spacing-xl: 32px;
+$spacing-xxl: 48px;
+$spacing-xxxl: 64px;
+
+// Spacing scale (для margin/padding утилит)
+$spacings: (
+  0: 0,
+  1: $spacing-xs,
+  2: $spacing-sm,
+  3: $spacing-md,
+  4: $spacing-base,
+  5: $spacing-lg,
+  6: $spacing-xl,
+  7: $spacing-xxl,
+  8: $spacing-xxxl,
+);
+
+// =============================================================================
+// 3. TYPOGRAPHY
+// =============================================================================
+
+// --- Font Families ---
+$font-family-base: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial,
+  "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
+  "Noto Color Emoji";
+$font-family-monospace: "SF Mono", Monaco, "Cascadia Code", "Roboto Mono", Consolas, "Courier New",
+  monospace;
+
+// --- Font Sizes ---
+$font-size-xs: 12px;
+$font-size-sm: 14px;
+$font-size-base: 14px;
+$font-size-md: 16px;
+$font-size-lg: 18px;
+$font-size-xl: 20px;
+$font-size-xxl: 24px;
+$font-size-xxxl: 30px;
+
+// --- Font Weights ---
+$font-weight-light: 300;
+$font-weight-normal: 400;
+$font-weight-medium: 500;
+$font-weight-semibold: 600;
+$font-weight-bold: 700;
+
+// --- Line Heights ---
+$line-height-tight: 1.2;
+$line-height-base: 1.5;
+$line-height-relaxed: 1.75;
+$line-height-loose: 2;
+
+// --- Heading Sizes ---
+$heading-1-size: 38px;
+$heading-2-size: 30px;
+$heading-3-size: 24px;
+$heading-4-size: 20px;
+$heading-5-size: 16px;
+$heading-6-size: 14px;
+
+// =============================================================================
+// 4. BREAKPOINTS (Mobile First)
+// =============================================================================
+
+$breakpoint-xs: 480px;
+$breakpoint-sm: 576px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 992px;
+$breakpoint-xl: 1200px;
+$breakpoint-xxl: 1600px;
+
+$breakpoints: (
+  xs: $breakpoint-xs,
+  sm: $breakpoint-sm,
+  md: $breakpoint-md,
+  lg: $breakpoint-lg,
+  xl: $breakpoint-xl,
+  xxl: $breakpoint-xxl,
+);
+
+// =============================================================================
+// 5. Z-INDEX LAYERS
+// =============================================================================
+
+$z-index-dropdown: 1000;
+$z-index-sticky: 1020;
+$z-index-fixed: 1030;
+$z-index-modal-backdrop: 1040;
+$z-index-modal: 1050;
+$z-index-popover: 1060;
+$z-index-tooltip: 1070;
+$z-index-notification: 1080;
+
+// =============================================================================
+// 6. BORDERS & RADIUS
+// =============================================================================
+
+$border-width-base: 1px;
+$border-width-thick: 2px;
+
+$border-radius-sm: 2px;
+$border-radius-base: 4px;
+$border-radius-lg: 8px;
+$border-radius-xl: 12px;
+$border-radius-round: 50%;
+$border-radius-pill: 9999px;
+
+// =============================================================================
+// 7. SHADOWS
+// =============================================================================
+
+$shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+$shadow-base: 0 2px 8px rgba(0, 0, 0, 0.15);
+$shadow-md: 0 4px 12px rgba(0, 0, 0, 0.15);
+$shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+$shadow-xl: 0 12px 48px rgba(0, 0, 0, 0.18);
+
+// Special shadows
+$shadow-card: 0 1px 2px -2px rgba(0, 0, 0, 0.16), 0 3px 6px 0 rgba(0, 0, 0, 0.12),
+  0 5px 12px 4px rgba(0, 0, 0, 0.09);
+$shadow-card-hover: 0 1px 2px -2px rgba(0, 0, 0, 0.24), 0 3px 6px 0 rgba(0, 0, 0, 0.18),
+  0 5px 12px 4px rgba(0, 0, 0, 0.12);
+
+// =============================================================================
+// 8. TRANSITIONS & ANIMATIONS
+// =============================================================================
+
+$transition-duration-fast: 0.15s;
+$transition-duration-base: 0.2s;
+$transition-duration-slow: 0.3s;
+
+$transition-timing-ease: ease;
+$transition-timing-ease-in: ease-in;
+$transition-timing-ease-out: ease-out;
+$transition-timing-ease-in-out: ease-in-out;
+
+// Commonly used transitions
+$transition-base: all $transition-duration-base $transition-timing-ease-in-out;
+$transition-fast: all $transition-duration-fast $transition-timing-ease-in-out;
+$transition-slow: all $transition-duration-slow $transition-timing-ease-in-out;
+
+// =============================================================================
+// 9. COMPONENT SPECIFIC
+// =============================================================================
+
+// --- Buttons ---
+$button-height-sm: 24px;
+$button-height-base: 32px;
+$button-height-lg: 40px;
+$button-padding-horizontal-sm: 8px;
+$button-padding-horizontal-base: 16px;
+$button-padding-horizontal-lg: 20px;
+
+// --- Inputs ---
+$input-height-sm: 24px;
+$input-height-base: 32px;
+$input-height-lg: 40px;
+$input-padding-horizontal-sm: 8px;
+$input-padding-horizontal-base: 12px;
+$input-padding-horizontal-lg: 16px;
+
+// --- Sidebar ---
+$sidebar-width-expanded: 256px;
+$sidebar-width-collapsed: 64px;
+$sidebar-transition: width $transition-duration-base $transition-timing-ease-in-out;
+
+// --- Header ---
+$header-height: 64px;
+
+// --- Footer ---
+$footer-height: 48px;
+
+// --- Status Bar ---
+$status-bar-height: 32px;
+
+// --- Right Panel ---
+$right-panel-width-collapsed: 32px;
+$right-panel-width-expanded: 352px;
+
+// =============================================================================
+// 10. DARK THEME OVERRIDES (для ThemeService)
+// =============================================================================
+
+// Эти переменные будут использоваться в dark theme
+$dark-bg-base: #141414;
+$dark-bg-light: #1f1f1f;
+$dark-bg-gray: #262626;
+$dark-text-primary: rgba(255, 255, 255, 0.85);
+$dark-text-secondary: rgba(255, 255, 255, 0.65);
+$dark-text-tertiary: rgba(255, 255, 255, 0.45);
+$dark-border-base: #434343;
+
+// =============================================================================
+// 11. GRID SYSTEM (24 columns like ng-zorro)
+// =============================================================================
+
+$grid-columns: 24;
+$grid-gutter-width: 16px;
+
+// =============================================================================
+// 12. UTILITY COLORS (для status indicators)
+// =============================================================================
+
+$status-online: #52c41a;
+$status-offline: #8c8c8c;
+$status-busy: #ff4d4f;
+$status-away: #faad14;

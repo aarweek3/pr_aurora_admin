@@ -1,0 +1,305 @@
+// =============================================================================
+// NG-ZORRO CUSTOMIZATION
+// Переопределение переменных ng-zorro для Aurora Admin Panel
+// ВАЖНО: Не переопределяем .ant-* классы напрямую!
+// =============================================================================
+
+@use "../abstracts/variables" as *;
+
+// =============================================================================
+// 1. NG-ZORRO THEME VARIABLES
+// Эти переменные будут использованы ng-zorro при компиляции
+// =============================================================================
+
+// --- Primary Color ---
+$primary-color: $color-primary;
+$primary-color-hover: $color-primary-hover;
+$primary-color-active: $color-primary-active;
+$primary-color-outline: rgba($color-primary, 0.2);
+
+// --- Success ---
+$success-color: $color-success;
+$success-color-hover: $color-success-hover;
+$success-color-active: $color-success-active;
+$success-color-outline: rgba($color-success, 0.2);
+$success-color-deprecated-bg: $color-success-light;
+$success-color-deprecated-border: $color-success-active;
+
+// --- Warning ---
+$warning-color: $color-warning;
+$warning-color-hover: $color-warning-hover;
+$warning-color-active: $color-warning-active;
+$warning-color-outline: rgba($color-warning, 0.2);
+$warning-color-deprecated-bg: $color-warning-light;
+$warning-color-deprecated-border: $color-warning-active;
+
+// --- Error ---
+$error-color: $color-error;
+$error-color-hover: $color-error-hover;
+$error-color-active: $color-error-active;
+$error-color-outline: rgba($color-error, 0.2);
+$error-color-deprecated-bg: $color-error-light;
+$error-color-deprecated-border: $color-error-active;
+
+// --- Info ---
+$info-color: $color-info;
+$info-color-hover: $color-info-hover;
+$info-color-active: $color-info-active;
+$info-color-outline: rgba($color-info, 0.2);
+$info-color-deprecated-bg: $color-info-light;
+
+// --- Typography ---
+$font-family: $font-family-base;
+$code-family: $font-family-monospace;
+$font-size-base: $font-size-base;
+$font-size-lg: $font-size-lg;
+$font-size-sm: $font-size-sm;
+
+// --- Text Colors ---
+$text-color: $color-text-primary;
+$text-color-secondary: $color-text-secondary;
+$heading-color: $color-text-primary;
+$text-color-dark: $color-text-primary;
+$text-color-secondary-dark: $color-text-secondary;
+
+// --- Background ---
+$body-background: $color-bg-base;
+$component-background: $color-white;
+$popover-background: $color-white;
+$layout-body-background: $color-bg-light;
+$layout-header-background: $color-white;
+$layout-footer-background: $color-bg-light;
+$layout-sider-background: $color-white;
+
+// --- Border ---
+$border-color-base: $color-border-base;
+$border-color-split: $color-border-light;
+$border-radius-base: $border-radius-base;
+$border-width-base: $border-width-base;
+
+// --- Shadows ---
+$shadow-1-up: $shadow-sm;
+$shadow-1-down: $shadow-base;
+$shadow-1-left: $shadow-base;
+$shadow-1-right: $shadow-base;
+$shadow-2: $shadow-md;
+$box-shadow-base: $shadow-base;
+
+// --- Disabled State ---
+$disabled-color: $color-text-disabled;
+$disabled-bg: $color-bg-gray;
+$disabled-color-dark: rgba(255, 255, 255, 0.25);
+
+// --- Spacing ---
+$padding-lg: $spacing-lg;
+$padding-md: $spacing-md;
+$padding-sm: $spacing-sm;
+$padding-xs: $spacing-xs;
+$margin-lg: $spacing-lg;
+$margin-md: $spacing-md;
+$margin-sm: $spacing-sm;
+$margin-xs: $spacing-xs;
+
+// --- Z-Index ---
+$zindex-modal-mask: $z-index-modal-backdrop;
+$zindex-modal: $z-index-modal;
+$zindex-notification: $z-index-notification;
+$zindex-message: $z-index-notification;
+$zindex-popover: $z-index-popover;
+$zindex-picker: $z-index-dropdown;
+$zindex-dropdown: $z-index-dropdown;
+$zindex-tooltip: $z-index-tooltip;
+
+// --- Animation / Transition ---
+$animation-duration-slow: $transition-duration-slow;
+$animation-duration-base: $transition-duration-base;
+$animation-duration-fast: $transition-duration-fast;
+$ease-base-out: $transition-timing-ease-out;
+$ease-base-in: $transition-timing-ease-in;
+$ease-out: $transition-timing-ease-out;
+$ease-in: $transition-timing-ease-in;
+$ease-in-out: $transition-timing-ease-in-out;
+
+// =============================================================================
+// 2. COMPONENT SPECIFIC VARIABLES
+// =============================================================================
+
+// --- Button ---
+$btn-font-weight: $font-weight-normal;
+$btn-border-radius-base: $border-radius-base;
+$btn-border-radius-sm: $border-radius-sm;
+$btn-shadow: $shadow-sm;
+$btn-primary-shadow: 0 2px 0 rgba(0, 0, 0, 0.045);
+$btn-text-shadow: none;
+
+$btn-primary-color: $color-white;
+$btn-primary-bg: $color-primary;
+$btn-default-color: $color-text-primary;
+$btn-default-bg: $color-white;
+$btn-default-border: $color-border-base;
+$btn-danger-color: $color-white;
+$btn-danger-bg: $color-error;
+$btn-danger-border: $color-error;
+
+$btn-disable-color: $disabled-color;
+$btn-disable-bg: $disabled-bg;
+$btn-disable-border: $color-border-base;
+
+$btn-padding-horizontal-base: $button-padding-horizontal-base;
+$btn-padding-horizontal-lg: $button-padding-horizontal-lg;
+$btn-padding-horizontal-sm: $button-padding-horizontal-sm;
+
+$btn-height-base: $button-height-base;
+$btn-height-lg: $button-height-lg;
+$btn-height-sm: $button-height-sm;
+
+// --- Input ---
+$input-height-base: $input-height-base;
+$input-height-lg: $input-height-lg;
+$input-height-sm: $input-height-sm;
+$input-padding-horizontal: $input-padding-horizontal-base;
+$input-padding-horizontal-base: $input-padding-horizontal-base;
+$input-padding-horizontal-sm: $input-padding-horizontal-sm;
+$input-padding-horizontal-lg: $input-padding-horizontal-lg;
+$input-padding-vertical-base: 4px;
+$input-padding-vertical-sm: 1px;
+$input-padding-vertical-lg: 6px;
+
+$input-placeholder-color: $color-text-tertiary;
+$input-color: $color-text-primary;
+$input-border-color: $color-border-base;
+$input-bg: $color-white;
+$input-addon-bg: $color-bg-light;
+$input-hover-border-color: $color-primary-hover;
+$input-disabled-bg: $disabled-bg;
+
+// --- Table ---
+$table-bg: $color-white;
+$table-header-bg: $color-bg-light;
+$table-header-color: $color-text-primary;
+$table-footer-bg: $color-bg-light;
+$table-footer-color: $color-text-primary;
+$table-row-hover-bg: $color-bg-gray;
+$table-selected-row-bg: $color-primary-light;
+$table-body-selected-sort-bg: $color-bg-gray;
+$table-header-sort-bg: $color-bg-gray;
+$table-fixed-header-sort-active-bg: $color-bg-gray;
+$table-header-filter-active-bg: $color-bg-gray;
+$table-filter-btns-bg: $color-white;
+$table-filter-dropdown-bg: $color-white;
+$table-expand-icon-bg: $color-white;
+$table-selection-column-width: 60px;
+$table-border-color: $color-border-light;
+$table-padding-vertical: $spacing-base;
+$table-padding-horizontal: $spacing-base;
+$table-border-radius-base: $border-radius-base;
+
+// --- Modal ---
+$modal-header-bg: $color-white;
+$modal-header-padding: $spacing-base $spacing-lg;
+$modal-header-border-color-split: $color-border-light;
+$modal-content-bg: $color-white;
+$modal-heading-color: $color-text-primary;
+$modal-footer-bg: transparent;
+$modal-footer-border-color-split: $color-border-light;
+$modal-footer-padding-vertical: 10px;
+$modal-footer-padding-horizontal: $spacing-base;
+$modal-mask-bg: $color-bg-overlay;
+
+// --- Dropdown ---
+$dropdown-menu-bg: $color-white;
+$dropdown-vertical-padding: 4px;
+$dropdown-edge-child-vertical-padding: 4px;
+$dropdown-font-size: $font-size-base;
+$dropdown-line-height: 22px;
+
+// --- Menu ---
+$menu-bg: $color-white;
+$menu-popup-bg: $color-white;
+$menu-item-color: $color-text-primary;
+$menu-highlight-color: $color-primary;
+$menu-item-active-bg: $color-primary-light;
+$menu-item-active-border-width: 3px;
+$menu-item-group-title-color: $color-text-secondary;
+$menu-icon-size: 14px;
+$menu-icon-size-lg: 16px;
+$menu-item-vertical-margin: 4px;
+$menu-item-boundary-margin: 8px;
+
+// --- Notification ---
+$notification-bg: $color-white;
+$notification-padding-vertical: $spacing-base;
+$notification-padding-horizontal: $spacing-lg;
+
+// --- Message ---
+$message-notice-content-bg: $color-white;
+$message-notice-content-padding: 10px 16px;
+
+// --- Tooltip ---
+$tooltip-max-width: 250px;
+$tooltip-color: $color-white;
+$tooltip-bg: rgba(0, 0, 0, 0.75);
+$tooltip-arrow-width: 5px;
+$tooltip-distance: $tooltip-arrow-width - 1px + 4px;
+$tooltip-arrow-color: $tooltip-bg;
+
+// --- Popover ---
+$popover-bg: $color-white;
+$popover-color: $color-text-primary;
+$popover-min-width: 177px;
+$popover-arrow-width: 6px;
+$popover-distance: $popover-arrow-width + 4px;
+$popover-arrow-color: $popover-bg;
+
+// --- Badge ---
+$badge-height: 20px;
+$badge-dot-size: 6px;
+$badge-font-size: $font-size-sm;
+$badge-font-weight: normal;
+$badge-status-size: 6px;
+$badge-text-color: $color-white;
+
+// --- Tabs ---
+$tabs-card-head-background: $color-bg-light;
+$tabs-card-height: 40px;
+$tabs-card-active-color: $color-primary;
+$tabs-title-font-size: $font-size-base;
+$tabs-bar-margin: 0 0 $spacing-base 0;
+$tabs-horizontal-margin: 0 32px 0 0;
+$tabs-horizontal-padding: $spacing-sm 0;
+$tabs-vertical-padding: $spacing-sm $spacing-lg;
+
+// --- Alert ---
+$alert-success-border-color: $color-success-light;
+$alert-success-bg-color: $color-success-light;
+$alert-success-icon-color: $color-success;
+$alert-info-border-color: $color-info-light;
+$alert-info-bg-color: $color-info-light;
+$alert-info-icon-color: $color-info;
+$alert-warning-border-color: $color-warning-light;
+$alert-warning-bg-color: $color-warning-light;
+$alert-warning-icon-color: $color-warning;
+$alert-error-border-color: $color-error-light;
+$alert-error-bg-color: $color-error-light;
+$alert-error-icon-color: $color-error;
+
+// =============================================================================
+// 3. DARK THEME VARIABLES (для будущего использования)
+// =============================================================================
+
+// Эти переменные будут применены при переключении темы через ThemeService
+$dark-primary-color: $color-primary;
+$dark-body-background: $dark-bg-base;
+$dark-component-background: $dark-bg-light;
+$dark-text-color: $dark-text-primary;
+$dark-text-color-secondary: $dark-text-secondary;
+$dark-border-color-base: $dark-border-base;
+
+// =============================================================================
+// ПРИМЕЧАНИЯ:
+//
+// 1. Эти переменные используются ng-zorro при компиляции
+// 2. НЕ используем прямое переопределение .ant-* классов
+// 3. Вместо этого создаем свои компоненты-обертки в src/styles/components/
+// 4. ThemeService будет динамически применять CSS-переменные для темизации
+// =============================================================================

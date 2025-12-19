@@ -1,0 +1,437 @@
+// =============================================================================
+// TYPOGRAPHY
+// Типографическая система Aurora Admin Panel
+// =============================================================================
+
+@use "../abstracts/variables" as *;
+@use "../abstracts/mixins" as *;
+
+// =============================================================================
+// 1. UTILITY CLASSES
+// =============================================================================
+
+// --- Font Sizes ---
+.text-xs {
+  font-size: $font-size-xs;
+}
+
+.text-sm {
+  font-size: $font-size-sm;
+}
+
+.text-base {
+  font-size: $font-size-base;
+}
+
+.text-md {
+  font-size: $font-size-md;
+}
+
+.text-lg {
+  font-size: $font-size-lg;
+}
+
+.text-xl {
+  font-size: $font-size-xl;
+}
+
+.text-xxl {
+  font-size: $font-size-xxl;
+}
+
+.text-xxxl {
+  font-size: $font-size-xxxl;
+}
+
+// --- Font Weights ---
+.font-light {
+  font-weight: $font-weight-light;
+}
+
+.font-normal {
+  font-weight: $font-weight-normal;
+}
+
+.font-medium {
+  font-weight: $font-weight-medium;
+}
+
+.font-semibold {
+  font-weight: $font-weight-semibold;
+}
+
+.font-bold {
+  font-weight: $font-weight-bold;
+}
+
+// --- Text Colors ---
+.text-primary {
+  color: $color-text-primary;
+}
+
+.text-secondary {
+  color: $color-text-secondary;
+}
+
+.text-tertiary {
+  color: $color-text-tertiary;
+}
+
+.text-disabled {
+  color: $color-text-disabled;
+}
+
+.text-inverse {
+  color: $color-text-inverse;
+}
+
+// Semantic colors
+.text-success {
+  color: $color-success;
+}
+
+.text-warning {
+  color: $color-warning;
+}
+
+.text-error {
+  color: $color-error;
+}
+
+.text-info {
+  color: $color-info;
+}
+
+// Brand color
+.text-brand {
+  color: $color-primary;
+}
+
+// --- Text Alignment ---
+.text-left {
+  text-align: left;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.text-justify {
+  text-align: justify;
+}
+
+// --- Text Transformation ---
+.text-uppercase {
+  text-transform: uppercase;
+}
+
+.text-lowercase {
+  text-transform: lowercase;
+}
+
+.text-capitalize {
+  text-transform: capitalize;
+}
+
+// --- Text Decoration ---
+.text-underline {
+  text-decoration: underline;
+}
+
+.text-line-through {
+  text-decoration: line-through;
+}
+
+.text-no-underline {
+  text-decoration: none;
+}
+
+// --- Text Truncation ---
+.text-truncate {
+  @include truncate;
+}
+
+.text-clamp-2 {
+  @include line-clamp(2);
+}
+
+.text-clamp-3 {
+  @include line-clamp(3);
+}
+
+.text-clamp-4 {
+  @include line-clamp(4);
+}
+
+// --- Text Wrapping ---
+.text-nowrap {
+  white-space: nowrap;
+}
+
+.text-wrap {
+  white-space: normal;
+}
+
+.text-break {
+  @include word-wrap;
+}
+
+// --- Line Heights ---
+.leading-tight {
+  line-height: $line-height-tight;
+}
+
+.leading-normal {
+  line-height: $line-height-base;
+}
+
+.leading-relaxed {
+  line-height: $line-height-relaxed;
+}
+
+.leading-loose {
+  line-height: $line-height-loose;
+}
+
+// =============================================================================
+// 2. MONOSPACE TEXT
+// =============================================================================
+
+.text-monospace {
+  font-family: $font-family-monospace;
+}
+
+// =============================================================================
+// 3. HEADING STYLES (для кастомизации)
+// =============================================================================
+
+.heading-1 {
+  font-size: $heading-1-size;
+  font-weight: $font-weight-semibold;
+  line-height: $line-height-tight;
+  color: $color-text-primary;
+  margin-bottom: $spacing-lg;
+}
+
+.heading-2 {
+  font-size: $heading-2-size;
+  font-weight: $font-weight-semibold;
+  line-height: $line-height-tight;
+  color: $color-text-primary;
+  margin-bottom: $spacing-base;
+}
+
+.heading-3 {
+  font-size: $heading-3-size;
+  font-weight: $font-weight-medium;
+  line-height: $line-height-tight;
+  color: $color-text-primary;
+  margin-bottom: $spacing-md;
+}
+
+.heading-4 {
+  font-size: $heading-4-size;
+  font-weight: $font-weight-medium;
+  line-height: $line-height-tight;
+  color: $color-text-primary;
+  margin-bottom: $spacing-sm;
+}
+
+.heading-5 {
+  font-size: $heading-5-size;
+  font-weight: $font-weight-medium;
+  line-height: $line-height-base;
+  color: $color-text-primary;
+  margin-bottom: $spacing-sm;
+}
+
+.heading-6 {
+  font-size: $heading-6-size;
+  font-weight: $font-weight-medium;
+  line-height: $line-height-base;
+  color: $color-text-primary;
+  margin-bottom: $spacing-xs;
+}
+
+// =============================================================================
+// 4. PARAGRAPH VARIANTS
+// =============================================================================
+
+.paragraph-lead {
+  font-size: $font-size-lg;
+  line-height: $line-height-relaxed;
+  color: $color-text-secondary;
+  margin-bottom: $spacing-lg;
+}
+
+.paragraph-small {
+  font-size: $font-size-sm;
+  line-height: $line-height-base;
+  color: $color-text-secondary;
+}
+
+// =============================================================================
+// 5. LINK VARIANTS
+// =============================================================================
+
+.link {
+  color: $color-primary;
+  text-decoration: none;
+  transition: color $transition-duration-base;
+
+  &:hover {
+    color: $color-primary-hover;
+    text-decoration: underline;
+  }
+
+  &:active {
+    color: $color-primary-active;
+  }
+
+  // Модификаторы
+  &--muted {
+    color: $color-text-secondary;
+
+    &:hover {
+      color: $color-primary;
+    }
+  }
+
+  &--danger {
+    color: $color-error;
+
+    &:hover {
+      color: $color-error-hover;
+    }
+  }
+}
+
+// =============================================================================
+// 6. LIST STYLES
+// =============================================================================
+
+.list-unstyled {
+  @include reset-list;
+}
+
+.list-inline {
+  @include reset-list;
+  display: flex;
+  gap: $spacing-base;
+}
+
+// =============================================================================
+// 7. BLOCKQUOTE
+// =============================================================================
+
+.blockquote {
+  margin: $spacing-lg 0;
+  padding-left: $spacing-lg;
+  border-left: 4px solid $color-primary;
+  font-size: $font-size-md;
+  font-style: italic;
+  color: $color-text-secondary;
+}
+
+// =============================================================================
+// 8. CODE BLOCK
+// =============================================================================
+
+.code-inline {
+  padding: 2px 6px;
+  background: $color-bg-gray;
+  border-radius: $border-radius-sm;
+  font-family: $font-family-monospace;
+  font-size: $font-size-sm;
+  color: $color-error;
+}
+
+.code-block {
+  margin: $spacing-base 0;
+  padding: $spacing-base;
+  background: $color-gray-12;
+  border-radius: $border-radius-base;
+  overflow-x: auto;
+
+  code {
+    font-family: $font-family-monospace;
+    font-size: $font-size-sm;
+    color: $color-gray-2;
+    line-height: $line-height-relaxed;
+  }
+}
+
+// =============================================================================
+// 9. BADGE TEXT
+// =============================================================================
+
+.badge-text {
+  display: inline-block;
+  padding: 2px 8px;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  border-radius: $border-radius-pill;
+  background: $color-gray-5;
+  color: $color-text-primary;
+
+  // Variants
+  &--primary {
+    background: $color-primary;
+    color: $color-white;
+  }
+
+  &--success {
+    background: $color-success;
+    color: $color-white;
+  }
+
+  &--warning {
+    background: $color-warning;
+    color: $color-white;
+  }
+
+  &--error {
+    background: $color-error;
+    color: $color-white;
+  }
+}
+
+// =============================================================================
+// 10. DARK THEME OVERRIDES
+// =============================================================================
+
+[data-theme="dark"] {
+  .heading-1,
+  .heading-2,
+  .heading-3,
+  .heading-4,
+  .heading-5,
+  .heading-6,
+  .text-primary {
+    color: $dark-text-primary;
+  }
+
+  .text-secondary {
+    color: $dark-text-secondary;
+  }
+
+  .text-tertiary {
+    color: $dark-text-tertiary;
+  }
+
+  .code-inline {
+    background: $dark-bg-gray;
+  }
+
+  .code-block {
+    background: $dark-bg-light;
+  }
+}

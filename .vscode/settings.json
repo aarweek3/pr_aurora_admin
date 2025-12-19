@@ -127,63 +127,41 @@
     // 🎨 ЦВЕТА — ГЛОБАЛЬНЫЙ SHELL IDE
     // ======================================================
     // Основная тема
-    "workbench.colorTheme": "GitHub Dark",
+    "workbench.colorTheme": "Default Dark Modern",
     // Accent цвет (Peacock)
     "peacock.color": "#0d445f",
     "workbench.colorCustomizations": {
-        // --------------------------------------------------
-        // 🔹 TOOLBAR / TITLE BAR (ВЕРХ IDE)
-        // --------------------------------------------------
-        // ЭТО ТВОЙ TOOLBAR ЦВЕТ
-        "titleBar.activeBackground": "#8f067d",
+        "titleBar.activeBackground": "#0d445f",
         "titleBar.activeForeground": "#e7e7e7",
-        "titleBar.inactiveBackground": "#8f067d",
+        "titleBar.inactiveBackground": "#0d445f99",
         "titleBar.inactiveForeground": "#e7e7e799",
-        // --------------------------------------------------
-        // 🔹 STATUS BAR (НИЗ IDE)
-        // --------------------------------------------------
         "statusBar.background": "#0d445f",
         "statusBar.foreground": "#e7e7e7",
         "statusBarItem.hoverBackground": "#13648c",
         "statusBarItem.remoteBackground": "#0d445f",
         "statusBarItem.remoteForeground": "#e7e7e7",
-        // --------------------------------------------------
-        // 🔹 ACTIVITY BAR (ЛЕВАЯ ПАНЕЛЬ ИКОНОК)
-        // --------------------------------------------------
         "activityBar.background": "#13648c",
         "activityBar.foreground": "#e7e7e7",
         "activityBar.activeBackground": "#13648c",
         "activityBar.inactiveForeground": "#e7e7e799",
         "activityBarBadge.background": "#e857b8",
         "activityBarBadge.foreground": "#15202b",
-        // --------------------------------------------------
-        // 🔹 SIDEBAR (EXPLORER)
-        // --------------------------------------------------
         "sideBar.background": "#192131",
         "sideBar.foreground": "#CCCCCC",
         "sideBarTitle.foreground": "#FFFFFF",
         "sideBarSectionHeader.background": "#3A3A3A",
         "sideBarSectionHeader.foreground": "#FFFFFF",
-        // --------------------------------------------------
-        // 🔹 EDITOR
-        // --------------------------------------------------
         "editor.background": "#1E1E1E",
         "editor.foreground": "#CCCCCC",
         "editorLineNumber.foreground": "#808080",
         "editorCursor.foreground": "#CCCCCC",
         "editor.selectionBackground": "#3A3A3A",
         "editor.lineHighlightBackground": "#2D2D2D",
-        // --------------------------------------------------
-        // 🔹 TABS
-        // --------------------------------------------------
         "tab.activeBackground": "#026123",
         "tab.activeForeground": "#FFFFFF",
         "tab.inactiveBackground": "#2D2D2D",
         "tab.inactiveForeground": "#CCCCCC",
         "tab.border": "#444444",
-        // --------------------------------------------------
-        // 🔹 LIST / TREE
-        // --------------------------------------------------
         "list.activeSelectionBackground": "#0b531b",
         "list.activeSelectionForeground": "#FFFFFF",
         "list.inactiveSelectionBackground": "#243ee6",
@@ -193,13 +171,12 @@
         "list.focusBackground": "#085b92",
         "list.focusForeground": "#f8f7f6",
         "tree.indentGuidesStroke": "#71a8f5",
-        // --------------------------------------------------
-        // 🔹 TERMINAL
-        // --------------------------------------------------
         "terminal.background": "#1E1E1E",
         "terminal.foreground": "#CCCCCC",
         "terminalCursor.foreground": "#1daef6",
-        "terminalCursor.background": "#CCCCCC"
+        "terminalCursor.background": "#CCCCCC",
+        "commandCenter.border": "#e7e7e799",
+        "sash.hoverBorder": "#13648c"
     },
     // ======================================================
     // TERMINAL — ШРИФТ
