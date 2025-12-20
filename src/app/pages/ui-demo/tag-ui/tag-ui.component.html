@@ -1,0 +1,311 @@
+<div class="tag-ui-demo">
+  <div class="tag-ui-demo__header">
+    <div class="header-content">
+      <h1>Tag UI Demo</h1>
+      <p>Демонстрация компонентов тегов с различными размерами, стилями и цветами</p>
+    </div>
+    <div class="header-actions">
+      <button av-button avType="primary" (clicked)="showHelpModal.set(true)">Примеры использования</button>
+      <button av-button avType="default" (clicked)="showPrincipleModal.set(true)">Принцип работы</button>
+    </div>
+  </div>
+
+  <!-- Модал помощи -->
+  <av-modal [(isOpen)]="showHelpModal" title="Руководство по Tag System" size="large">
+    <div modal-body>
+      <av-help-copy-container
+        title="Примеры использования в коде"
+        [content]="helpCode"
+        bgColor="#1e293b"
+      ></av-help-copy-container>
+    </div>
+    <div modal-footer>
+      <button av-button avType="default" (clicked)="showHelpModal.set(false)">Закрыть</button>
+    </div>
+  </av-modal>
+
+  <!-- Модал принципа работы -->
+  <av-modal [(isOpen)]="showPrincipleModal" title="Принцип работы системы тегов" size="large">
+    <div modal-body>
+      <av-help-copy-container
+        title="Архитектура и логика"
+        [content]="principleCode"
+        bgColor="#0f172a"
+      ></av-help-copy-container>
+    </div>
+    <div modal-footer>
+      <button av-button avType="default" (clicked)="showPrincipleModal.set(false)">Закрыть</button>
+    </div>
+  </av-modal>
+
+  <!-- Базовое использование -->
+  <section class="demo-section">
+    <div class="demo-section__header">
+      <h2>Базовое использование</h2>
+    </div>
+    <p class="demo-section__description">Простые теги для отображения категорий и меток</p>
+
+    <div class="demo-section__preview">
+      <av-tag label="Angular"></av-tag>
+      <av-tag label="TypeScript"></av-tag>
+      <av-tag label="SCSS"></av-tag>
+    </div>
+
+    <av-help-copy-container
+      [content]="'<av-tag label=\"Angular\"></av-tag>\n<av-tag label=\"TypeScript\"></av-tag>\n<av-tag label=\"SCSS\"></av-tag>'"
+      title="HTML код"
+    ></av-help-copy-container>
+  </section>
+
+  <!-- Размеры -->
+  <section class="demo-section">
+    <div class="demo-section__header">
+      <h2>Размеры</h2>
+    </div>
+    <p class="demo-section__description">Три размера: small, medium (по умолчанию), large</p>
+
+    <div class="demo-section__preview">
+      <av-tag label="Small Tag" size="small" color="primary"></av-tag>
+      <av-tag label="Medium Tag" size="medium" color="primary"></av-tag>
+      <av-tag label="Large Tag" size="large" color="primary"></av-tag>
+    </div>
+
+    <av-help-copy-container
+      [content]="'<av-tag label=\"Small Tag\" size=\"small\" color=\"primary\"></av-tag>\n<av-tag label=\"Medium Tag\" size=\"medium\" color=\"primary\"></av-tag>\n<av-tag label=\"Large Tag\" size=\"large\" color=\"primary\"></av-tag>'"
+      title="HTML код"
+    ></av-help-copy-container>
+  </section>
+
+  <!-- Цвета -->
+  <section class="demo-section">
+    <div class="demo-section__header">
+      <h2>Цветовые схемы</h2>
+    </div>
+    <p class="demo-section__description">Встроенные цвета для различных статусов и категорий</p>
+
+    <div class="demo-section__preview">
+      @for (color of colors; track color) {
+        <av-tag [label]="color" [color]="color"></av-tag>
+      }
+    </div>
+
+    <av-help-copy-container
+      [content]="'<av-tag label=\"primary\" color=\"primary\"></av-tag>\n<av-tag label=\"success\" color=\"success\"></av-tag>\n<av-tag label=\"warning\" color=\"warning\"></av-tag>\n<av-tag label=\"error\" color=\"error\"></av-tag>\n<av-tag label=\"info\" color=\"info\"></av-tag>\n<av-tag label=\"neutral\" color=\"neutral\"></av-tag>'"
+      title="HTML код"
+    ></av-help-copy-container>
+  </section>
+
+  <!-- Варианты стилей -->
+  <section class="demo-section">
+    <div class="demo-section__header">
+      <h2>Варианты стилей</h2>
+    </div>
+    <p class="demo-section__description">Три стиля: soft (по умолчанию), filled, outlined</p>
+
+    <div class="demo-section__preview">
+      <div class="variant-group">
+        <h4>Soft (мягкий фон)</h4>
+        @for (color of colors; track color) {
+          <av-tag [label]="color" [color]="color" variant="soft"></av-tag>
+        }
+      </div>
+
+      <div class="variant-group">
+        <h4>Filled (заливка)</h4>
+        @for (color of colors; track color) {
+          <av-tag [label]="color" [color]="color" variant="filled"></av-tag>
+        }
+      </div>
+
+      <div class="variant-group">
+        <h4>Outlined (контур)</h4>
+        @for (color of colors; track color) {
+          <av-tag [label]="color" [color]="color" variant="outlined"></av-tag>
+        }
+      </div>
+    </div>
+
+    <av-help-copy-container
+      [content]="'<av-tag label=\"Soft\" variant=\"soft\" color=\"primary\"></av-tag>\n<av-tag label=\"Filled\" variant=\"filled\" color=\"primary\"></av-tag>\n<av-tag label=\"Outlined\" variant=\"outlined\" color=\"primary\"></av-tag>'"
+      title="HTML код"
+    ></av-help-copy-container>
+  </section>
+
+  <!-- Формы -->
+  <section class="demo-section">
+    <div class="demo-section__header">
+      <h2>Формы</h2>
+    </div>
+    <p class="demo-section__description">Rounded (скругленные углы) и Pill (полное скругление)</p>
+
+    <div class="demo-section__preview">
+      <av-tag label="Rounded" shape="rounded" color="primary"></av-tag>
+      <av-tag label="Pill" shape="pill" color="success"></av-tag>
+    </div>
+
+    <av-help-copy-container
+      [content]="'<av-tag label=\"Rounded\" shape=\"rounded\" color=\"primary\"></av-tag>\n<av-tag label=\"Pill\" shape=\"pill\" color=\"success\"></av-tag>'"
+      title="HTML код"
+    ></av-help-copy-container>
+  </section>
+
+  <!-- С иконками -->
+  <section class="demo-section">
+    <div class="demo-section__header">
+      <h2>Теги с иконками</h2>
+    </div>
+    <p class="demo-section__description">Добавление иконок слева от текста</p>
+
+    <div class="demo-section__preview">
+      <av-tag label="Settings" icon="actions/av_settings" color="neutral"></av-tag>
+      <av-tag label="User" icon="actions/av_user" color="primary"></av-tag>
+      <av-tag label="Star" icon="actions/av_star" color="warning"></av-tag>
+    </div>
+
+    <av-help-copy-container
+      [content]="'<av-tag label=\"Settings\" icon=\"actions/av_settings\" color=\"neutral\"></av-tag>\n<av-tag label=\"User\" icon=\"actions/av_user\" color=\"primary\"></av-tag>\n<av-tag label=\"Star\" icon=\"actions/av_star\" color=\"warning\"></av-tag>'"
+      title="HTML код"
+    ></av-help-copy-container>
+  </section>
+
+  <!-- Удаляемые теги -->
+  <section class="demo-section">
+    <div class="demo-section__header">
+      <h2>Удаляемые теги</h2>
+    </div>
+    <p class="demo-section__description">Теги с кнопкой удаления</p>
+
+    <div class="demo-section__preview">
+      @for (tag of basicTags; track tag) {
+        <av-tag
+          [label]="tag"
+          [removable]="true"
+          color="primary"
+          (removed)="onTagRemove(tag)">
+        </av-tag>
+      }
+    </div>
+
+    <av-help-copy-container
+      [content]="'<av-tag \n  label=\"Angular\" \n  [removable]=\"true\" \n  color=\"primary\"\n  (removed)=\"onTagRemove()\">\n</av-tag>'"
+      title="HTML код"
+    ></av-help-copy-container>
+  </section>
+
+  <!-- Кликабельные теги -->
+  <section class="demo-section">
+    <div class="demo-section__header">
+      <h2>Кликабельные теги</h2>
+    </div>
+    <p class="demo-section__description">Теги с обработчиком клика (hover-эффект)</p>
+
+    <div class="demo-section__preview">
+      <av-tag
+        label="Click me"
+        [clickable]="true"
+        color="info"
+        (clicked)="onTagClick('Click me')">
+      </av-tag>
+      <av-tag
+        label="Interactive"
+        [clickable]="true"
+        color="success"
+        variant="filled"
+        (clicked)="onTagClick('Interactive')">
+      </av-tag>
+    </div>
+
+    <av-help-copy-container
+      [content]="'<av-tag \n  label=\"Click me\" \n  [clickable]=\"true\" \n  color=\"info\"\n  (clicked)=\"onTagClick()\">\n</av-tag>'"
+      title="HTML код"
+    ></av-help-copy-container>
+  </section>
+
+  <!-- Кастомные цвета -->
+  <section class="demo-section">
+    <div class="demo-section__header">
+      <h2>Кастомные цвета</h2>
+    </div>
+    <p class="demo-section__description">Использование HEX-цветов вместо предустановленных</p>
+
+    <div class="demo-section__preview">
+      <av-tag label="Purple" color="#8b5cf6" variant="soft"></av-tag>
+      <av-tag label="Pink" color="#ec4899" variant="filled"></av-tag>
+      <av-tag label="Teal" color="#14b8a6" variant="outlined"></av-tag>
+    </div>
+
+    <av-help-copy-container
+      [content]="'<av-tag label=\"Purple\" color=\"#8b5cf6\" variant=\"soft\"></av-tag>\n<av-tag label=\"Pink\" color=\"#ec4899\" variant=\"filled\"></av-tag>\n<av-tag label=\"Teal\" color=\"#14b8a6\" variant=\"outlined\"></av-tag>'"
+      title="HTML код"
+    ></av-help-copy-container>
+  </section>
+
+  <!-- Tag Input -->
+  <section class="demo-section">
+    <div class="demo-section__header">
+      <h2>Ввод тегов (Tag Input)</h2>
+    </div>
+    <p class="demo-section__description">Компонент для добавления и управления списком тегов</p>
+
+    <div class="demo-section__preview">
+      <div class="tag-input-demo">
+        <av-tag-input
+          [(tags)]="inputTags"
+          placeholder="Добавьте навыки (Enter или запятая)..."
+          [allowDuplicates]="false"
+          variant="soft"
+        ></av-tag-input>
+
+        <div class="tag-list-info">
+          <p>Текущие теги: {{ inputTags().join(', ') || 'нет' }}</p>
+          <p>Количество: {{ inputTags().length }}</p>
+        </div>
+      </div>
+    </div>
+
+    <av-help-copy-container
+      [content]="'<av-tag-input\n  [(tags)]=\"myTags\"\n  placeholder=\"Добавьте навыки...\"\n  [allowDuplicates]=\"false\"\n  variant=\"soft\"\n></av-tag-input>\n\n// В компоненте:\nmyTags = signal([\'Frontend\', \'UI/UX\']);'"
+      title="HTML + TypeScript код"
+    ></av-help-copy-container>
+  </section>
+
+  <!-- Практические примеры -->
+  <section class="demo-section">
+    <div class="demo-section__header">
+      <h2>Практические примеры</h2>
+    </div>
+    <p class="demo-section__description">Реальные сценарии использования</p>
+
+    <div class="demo-section__preview">
+      <div class="practical-examples">
+        <div class="example-card">
+          <h4>Статусы заказов</h4>
+          <div class="example-tags">
+            <av-tag label="Новый" color="info" variant="soft"></av-tag>
+            <av-tag label="В обработке" color="warning" variant="soft"></av-tag>
+            <av-tag label="Доставлен" color="success" variant="filled"></av-tag>
+            <av-tag label="Отменен" color="error" variant="outlined"></av-tag>
+          </div>
+        </div>
+
+        <div class="example-card">
+          <h4>Категории статей</h4>
+          <div class="example-tags">
+            <av-tag label="Технологии" color="primary" shape="pill"></av-tag>
+            <av-tag label="Дизайн" color="success" shape="pill"></av-tag>
+            <av-tag label="Бизнес" color="warning" shape="pill"></av-tag>
+          </div>
+        </div>
+
+        <div class="example-card">
+          <h4>Фильтры</h4>
+          <div class="example-tags">
+            <av-tag label="Angular" [removable]="true" color="error" variant="soft"></av-tag>
+            <av-tag label="React" [removable]="true" color="info" variant="soft"></av-tag>
+            <av-tag label="Vue" [removable]="true" color="success" variant="soft"></av-tag>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

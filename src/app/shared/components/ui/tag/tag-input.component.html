@@ -1,0 +1,25 @@
+<div
+  class="av-tag-input"
+  [class.av-tag-input--focused]="isFocused()"
+  [class.av-tag-input--disabled]="disabled()"
+  (click)="focusInput()"
+>
+  <div class="av-tag-input__container">
+    @for (tag of tags(); track $index) {
+    <av-tag [label]="tag" [variant]="variant()" [removable]="!disabled()" (removed)="removeTag($index)"></av-tag>
+    }
+
+    <input
+      #inputElement
+      type="text"
+      class="av-tag-input__field"
+      [placeholder]="tags().length === 0 ? placeholder() : ''"
+      [value]="inputValue()"
+      [disabled]="disabled()"
+      (input)="onInput($event)"
+      (keydown)="onKeyDown($event)"
+      (focus)="onFocus()"
+      (blur)="onBlur($event)"
+    />
+  </div>
+</div>

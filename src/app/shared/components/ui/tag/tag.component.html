@@ -1,0 +1,22 @@
+<div
+  class="av-tag"
+  [class]="'av-tag--' + size() + ' av-tag--' + variant() + ' av-tag--' + shape() + ' av-tag--' + color()"
+  [class.av-tag--clickable]="clickable()"
+  [class.av-tag--custom]="isCustomColor"
+  [ngStyle]="tagStyles"
+  (click)="onTagClick($event)"
+>
+  @if (icon()) {
+  <app-icon [type]="icon()!" class="av-tag__icon"></app-icon>
+  }
+
+  <span class="av-tag__label">
+    <ng-content>{{ label() }}</ng-content>
+  </span>
+
+  @if (removable()) {
+  <button type="button" class="av-tag__remove" (click)="onRemoveClick($event)">
+    <app-icon type="actions/av_close" class="av-tag__remove-icon"></app-icon>
+  </button>
+  }
+</div>
