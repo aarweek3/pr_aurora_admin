@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, input, signal } from '@angular/core';
+import { Component, input, output, signal } from '@angular/core';
 
 /**
  * Help Copy Container Component
@@ -41,7 +41,7 @@ import { Component, input, signal } from '@angular/core';
         </div>
       </div>
       <div class="av-copy-container__window">
-        @if (helpVisible()) {
+        @if (helpVisible() && !disableInternalHelp()) {
         <div class="av-copy-container__help-content">
           <h5 class="av-help-title">Dokumentation: Help Copy Container</h5>
 
@@ -285,6 +285,9 @@ export class HelpCopyContainerComponent {
   /** Показывать ли кнопку справки по самому компоненту */
   showHelpButton = input<boolean>(false);
 
+  /** Отключить отображение внутреннего контента справки (только эмит события) */
+  disableInternalHelp = input<boolean>(false);
+
   copied = signal(false);
 
   /** Показывать ли справку */
@@ -301,5 +304,8 @@ export class HelpCopyContainerComponent {
 
   toggleHelp() {
     this.helpVisible.update((v) => !v);
+    this.helpToggled.emit(this.helpVisible());
   }
+
+  helpToggled = output<boolean>();
 }

@@ -57,4 +57,9 @@ export const UI_DEMO_ROUTES: Routes = [
     loadComponent: () =>
       import('./spinner-ui/spinner-ui.component').then((m) => m.SpinnerUiComponent),
   },
+  {
+    path: 'progress-ui',
+    loadComponent: () =>
+      import('./progress-ui/progress-ui.component').then((m) => m.ProgressUiComponent),
+  },
 ];

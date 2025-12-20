@@ -3,6 +3,7 @@
 // Reusable utilities для Aurora Admin Panel
 // =============================================================================
 
+@use "sass:map";
 @use "./variables" as *;
 
 // =============================================================================
@@ -14,7 +15,7 @@
 /// @example
 ///   @include media-up(md) { width: 50%; }
 @mixin media-up($breakpoint) {
-  $value: map-get($breakpoints, $breakpoint);
+  $value: map.get($breakpoints, $breakpoint);
   @if $value {
     @media (min-width: $value) {
       @content;
@@ -29,7 +30,7 @@
 /// @example
 ///   @include media-down(md) { display: none; }
 @mixin media-down($breakpoint) {
-  $value: map-get($breakpoints, $breakpoint);
+  $value: map.get($breakpoints, $breakpoint);
   @if $value {
     @media (max-width: ($value - 1px)) {
       @content;
@@ -45,8 +46,8 @@
 /// @example
 ///   @include media-between(sm, lg) { padding: 20px; }
 @mixin media-between($min, $max) {
-  $min-value: map-get($breakpoints, $min);
-  $max-value: map-get($breakpoints, $max);
+  $min-value: map.get($breakpoints, $min);
+  $max-value: map.get($breakpoints, $max);
   @if $min-value and $max-value {
     @media (min-width: $min-value) and (max-width: ($max-value - 1px)) {
       @content;
@@ -342,7 +343,7 @@
 /// @param {String} $direction - top, right, bottom, left, all
 /// @param {Number} $size - Размер из $spacings map
 @mixin margin($direction, $size) {
-  $value: map-get($spacings, $size);
+  $value: map.get($spacings, $size);
   @if $direction == "all" {
     margin: $value;
   } @else {
@@ -354,7 +355,7 @@
 /// @param {String} $direction - top, right, bottom, left, all
 /// @param {Number} $size - Размер из $spacings map
 @mixin padding($direction, $size) {
-  $value: map-get($spacings, $size);
+  $value: map.get($spacings, $size);
   @if $direction == "all" {
     padding: $value;
   } @else {

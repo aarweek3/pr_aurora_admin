@@ -107,6 +107,12 @@ export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
               route: '/ui-demo/spinner-ui',
               icon: 'reload',
             },
+            {
+              id: 'progress-ui',
+              label: 'Progress UI',
+              route: '/ui-demo/progress-ui',
+              icon: 'line-chart',
+            },
           ],
         },
         {

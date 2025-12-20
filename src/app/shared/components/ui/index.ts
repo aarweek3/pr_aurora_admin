@@ -10,5 +10,6 @@ export * from './input/input.component';
 export * from './modal';
 export * from './pagination';
 export * from './phone-input';
+export * from './progress';
 export * from './search';
 export * from './toggle';

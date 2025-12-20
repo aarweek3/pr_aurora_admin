@@ -1,0 +1,401 @@
+<div class="page-container">
+  <!-- Header Section -->
+  <div class="page-header">
+    <div class="header-content">
+      <h1 class="page-title">📊 Progress Bar</h1>
+      <p class="page-subtitle">Высокопроизводительный компонент индикации прогресса на основе Angular Signals и SVG.</p>
+    </div>
+    <div class="header-actions">
+      <app-button type="primary" (clicked)="showHelpModal = true">Примеры использования</app-button>
+      <app-button type="default" (clicked)="showPrincipleModal = true">Принцип работы</app-button>
+    </div>
+  </div>
+
+  <!-- Help Modal -->
+  <av-modal [(isOpen)]="showHelpModal" title="Руководство по Progress Bar" size="large">
+    <div modal-body>
+      <av-help-copy-container
+        title="Примеры использования в коде"
+        [content]="helpCode"
+        bgColor="#1e293b"
+      ></av-help-copy-container>
+    </div>
+    <div modal-footer>
+      <app-button type="default" (clicked)="showHelpModal = false">Закрыть</app-button>
+    </div>
+  </av-modal>
+
+  <!-- Principle Modal -->
+  <av-modal [(isOpen)]="showPrincipleModal" title="Принцип работы" size="large">
+    <div modal-body>
+      <av-help-copy-container
+        title="Архитектура и логика"
+        [content]="principleCode"
+        bgColor="#0f172a"
+      ></av-help-copy-container>
+    </div>
+    <div modal-footer>
+      <app-button type="default" (clicked)="showPrincipleModal = false">Закрыть</app-button>
+    </div>
+  </av-modal>
+
+  <!-- Generated Code Modal -->
+  <av-modal [(isOpen)]="showGeneratedCodeModal" title="Сгенерированный код" size="large">
+    <div modal-body>
+      <av-help-copy-container
+        title="Готовый код для вашего компонента"
+        [content]="generatedCode()"
+        bgColor="#0f172a"
+      ></av-help-copy-container>
+    </div>
+    <div modal-footer>
+      <app-button type="default" (clicked)="showGeneratedCodeModal = false">Закрыть</app-button>
+    </div>
+  </av-modal>
+
+  <div nz-row [nzGutter]="[24, 24]">
+    <!-- 🛠️ API Interface Documentation -->
+    <div nz-col [nzSpan]="24">
+      <nz-card nzTitle="🛠️ Технический интерфейс (Inputs)" [nzBordered]="false" class="api-docs-card">
+        <div class="api-docs-wrapper" [class.expanded]="isApiDocExpanded()">
+          <av-help-copy-container
+            title="Props & API Configuration"
+            [content]="apiInterfaceCode"
+            bgColor="#0f172a"
+            [showHelpButton]="true"
+            [disableInternalHelp]="true"
+            (helpToggled)="isApiDocExpanded.set($event)"
+          ></av-help-copy-container>
+
+          <div class="collapse-overlay" *ngIf="!isApiDocExpanded()" (click)="isApiDocExpanded.set(true)">
+            <!-- Кнопка удалена, оверлей остается кликабельным -->
+          </div>
+        </div>
+      </nz-card>
+    </div>
+
+    <!-- 🎮 Interactive Playground -->
+    <div nz-col [nzSpan]="24">
+      <nz-card nzTitle="🎮 Интерактивная площадка" [nzBordered]="false" class="playground-card">
+        <div nz-row [nzGutter]="[32, 32]">
+          <!-- Preview Area -->
+          <div nz-col [nzLg]="14" [nzMd]="24">
+            <div class="preview-area">
+              <div class="preview-box" [class.preview-box--center]="playgroundType() !== 'line'">
+                <av-progress
+                  [percent]="playgroundPercent()"
+                  [type]="playgroundType()"
+                  [status]="playgroundStatus()"
+                  [showInfo]="playgroundShowInfo()"
+                  [indeterminate]="playgroundIndeterminate()"
+                  [visible]="playgroundVisible()"
+                  [strokeColor]="finalStrokeColor()"
+                  [label]="playgroundLabel()"
+                  [strokeWidth]="playgroundStrokeWidth()"
+                ></av-progress>
+              </div>
+              <div class="preview-stats" style="margin-top: 24px">
+                <div class="stat-item">
+                  <span class="stat-label">Value</span>
+                  <span class="stat-value">{{ playgroundPercent() }}%</span>
+                </div>
+                <div class="stat-item">
+                  <span class="stat-label">Type</span>
+                  <span class="stat-value">{{ playgroundType() }}</span>
+                </div>
+                <div class="stat-item">
+                  <span class="stat-label">Status</span>
+                  <span class="stat-value status-tag" [attr.data-status]="playgroundStatus()">{{
+                    playgroundStatus()
+                  }}</span>
+                </div>
+              </div>
+
+              <div
+                class="preview-actions"
+                style="margin-top: 24px; width: 100%; max-width: 400px; display: flex; justify-content: center"
+              >
+                <app-button
+                  [type]="isSimulating() ? 'danger' : 'default'"
+                  (clicked)="toggleSimulation()"
+                  [icon]="isSimulating() ? 'close' : 'play-circle'"
+                  [block]="true"
+                >
+                  {{ isSimulating() ? 'Остановить пример' : '🚀 Живой пример (Simulate)' }}
+                </app-button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Control Area -->
+          <div nz-col [nzLg]="10" [nzMd]="24">
+            <div class="control-area">
+              <div class="control-group">
+                <label>Progress Value (%)</label>
+                <div class="slider-with-buttons">
+                  <nz-slider
+                    [nzMin]="0"
+                    [nzMax]="100"
+                    [ngModel]="playgroundPercent()"
+                    (ngModelChange)="playgroundPercent.set($event)"
+                    style="flex: 1"
+                  ></nz-slider>
+                  <nz-input-number
+                    [nzMin]="0"
+                    [nzMax]="100"
+                    [ngModel]="playgroundPercent()"
+                    (ngModelChange)="playgroundPercent.set($event)"
+                    style="width: 70px"
+                  ></nz-input-number>
+                  <nz-space>
+                    <app-button (clicked)="decrease()" icon="minus" size="small" type="default"></app-button>
+                    <app-button (clicked)="increase()" icon="plus" size="small" type="default"></app-button>
+                  </nz-space>
+                </div>
+              </div>
+
+              <div class="control-group">
+                <label>Stroke Color & Effects</label>
+                <div class="color-controls" style="background: rgba(0, 0, 0, 0.02); padding: 12px; border-radius: 8px">
+                  <div class="switch-item" style="margin-bottom: 12px; display: flex; align-items: center">
+                    <nz-switch [ngModel]="useGradient()" (ngModelChange)="useGradient.set($event)"></nz-switch>
+                    <span style="font-size: 13px; font-weight: 500; margin-left: 8px">Use Gradient</span>
+                  </div>
+
+                  <ng-container *ngIf="!useGradient()">
+                    <div style="display: flex; gap: 8px">
+                      <input
+                        type="color"
+                        [ngModel]="playgroundStrokeColor()"
+                        (ngModelChange)="playgroundStrokeColor.set($event)"
+                        style="width: 40px; height: 32px; padding: 2px"
+                      />
+                      <input
+                        nz-input
+                        placeholder="#HEX / CSS Color"
+                        [ngModel]="playgroundStrokeColor()"
+                        (ngModelChange)="playgroundStrokeColor.set($event)"
+                        style="flex: 1"
+                      />
+                      <app-button size="small" (clicked)="playgroundStrokeColor.set(undefined)">Reset</app-button>
+                    </div>
+                  </ng-container>
+
+                  <ng-container *ngIf="useGradient()">
+                    <div style="display: flex; flex-direction: column; gap: 8px">
+                      <div style="display: flex; gap: 8px; align-items: center">
+                        <span style="font-size: 11px; width: 40px; color: #888">From:</span>
+                        <input
+                          type="color"
+                          [ngModel]="gradientFrom()"
+                          (ngModelChange)="gradientFrom.set($event)"
+                          style="width: 32px; height: 32px; padding: 2px"
+                        />
+                        <input
+                          nz-input
+                          [ngModel]="gradientFrom()"
+                          (ngModelChange)="gradientFrom.set($event)"
+                          style="flex: 1"
+                          size="small"
+                        />
+                      </div>
+                      <div style="display: flex; gap: 8px; align-items: center">
+                        <span style="font-size: 11px; width: 40px; color: #888">To:</span>
+                        <input
+                          type="color"
+                          [ngModel]="gradientTo()"
+                          (ngModelChange)="gradientTo.set($event)"
+                          style="width: 32px; height: 32px; padding: 2px"
+                        />
+                        <input
+                          nz-input
+                          [ngModel]="gradientTo()"
+                          (ngModelChange)="gradientTo.set($event)"
+                          style="flex: 1"
+                          size="small"
+                        />
+                      </div>
+                    </div>
+                  </ng-container>
+                </div>
+              </div>
+
+              <div nz-row [nzGutter]="16">
+                <div nz-col [nzSpan]="12">
+                  <div class="control-group">
+                    <label>Type</label>
+                    <nz-select
+                      [ngModel]="playgroundType()"
+                      (ngModelChange)="playgroundType.set($event)"
+                      style="width: 100%"
+                    >
+                      <nz-option nzValue="line" nzLabel="Line"></nz-option>
+                      <nz-option nzValue="circle" nzLabel="Circle"></nz-option>
+                      <nz-option nzValue="dashboard" nzLabel="Dashboard"></nz-option>
+                    </nz-select>
+                  </div>
+                </div>
+                <div nz-col [nzSpan]="12">
+                  <div class="control-group">
+                    <label>Status</label>
+                    <nz-select
+                      [ngModel]="playgroundStatus()"
+                      (ngModelChange)="playgroundStatus.set($event)"
+                      style="width: 100%"
+                    >
+                      <nz-option nzValue="normal" nzLabel="Normal"></nz-option>
+                      <nz-option nzValue="active" nzLabel="Active"></nz-option>
+                      <nz-option nzValue="success" nzLabel="Success"></nz-option>
+                      <nz-option nzValue="error" nzLabel="Error"></nz-option>
+                      <nz-option nzValue="warning" nzLabel="Warning"></nz-option>
+                    </nz-select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="control-group">
+                <label>Label</label>
+                <input
+                  nz-input
+                  placeholder="Enter label..."
+                  [ngModel]="playgroundLabel()"
+                  (ngModelChange)="playgroundLabel.set($event)"
+                />
+              </div>
+
+              <div nz-row [nzGutter]="16">
+                <div nz-col [nzSpan]="12">
+                  <div class="control-group">
+                    <label>Stroke Width (px)</label>
+                    <nz-input-number
+                      [ngModel]="playgroundStrokeWidth()"
+                      (ngModelChange)="playgroundStrokeWidth.set($event)"
+                      [nzMin]="1"
+                      [nzMax]="50"
+                      style="width: 100%"
+                    ></nz-input-number>
+                  </div>
+                </div>
+                <div nz-col [nzSpan]="12">
+                  <div class="control-group">
+                    <label>Gap Degree (dashboard)</label>
+                    <nz-input-number
+                      [ngModel]="playgroundGapDegree()"
+                      (ngModelChange)="playgroundGapDegree.set($event)"
+                      [nzMin]="0"
+                      [nzMax]="295"
+                      style="width: 100%"
+                    ></nz-input-number>
+                  </div>
+                </div>
+              </div>
+
+              <div class="switches-grid">
+                <div class="switch-item">
+                  <nz-switch
+                    [ngModel]="playgroundShowInfo()"
+                    (ngModelChange)="playgroundShowInfo.set($event)"
+                  ></nz-switch>
+                  <span>Show Info</span>
+                </div>
+                <div class="switch-item">
+                  <nz-switch
+                    [ngModel]="playgroundIndeterminate()"
+                    (ngModelChange)="playgroundIndeterminate.set($event)"
+                  ></nz-switch>
+                  <span>Indeterminate</span>
+                </div>
+                <div class="switch-item">
+                  <nz-switch
+                    [ngModel]="playgroundVisible()"
+                    (ngModelChange)="playgroundVisible.set($event)"
+                  ></nz-switch>
+                  <span>Is Visible</span>
+                </div>
+              </div>
+
+              <div class="playground-actions">
+                <app-button type="primary" [block]="true" (clicked)="generateCode()" icon="code">
+                  📋 Сгенерировать код настройки
+                </app-button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nz-card>
+    </div>
+
+    <!-- Sizes & Strokes -->
+    <div nz-col [nzLg]="12" [nzMd]="24">
+      <nz-card nzTitle="Линейный прогресс (Размеры)" [nzBordered]="false">
+        <div class="demo-stack">
+          <div class="demo-item">
+            <span class="demo-label">Small (6px)</span>
+            <av-progress [percent]="30" size="small"></av-progress>
+          </div>
+          <div class="demo-item">
+            <span class="demo-label">Default (10px)</span>
+            <av-progress [percent]="50" size="default"></av-progress>
+          </div>
+          <div class="demo-item">
+            <span class="demo-label">Large (16px)</span>
+            <av-progress [percent]="70" size="large"></av-progress>
+          </div>
+          <div class="demo-item">
+            <span class="demo-label">Custom Stroke (24px)</span>
+            <av-progress [percent]="90" [strokeWidth]="24" status="active"></av-progress>
+          </div>
+        </div>
+      </nz-card>
+    </div>
+
+    <!-- Circle Types -->
+    <div nz-col [nzLg]="12" [nzMd]="24">
+      <nz-card nzTitle="Круговые индикаторы" [nzBordered]="false">
+        <div class="circle-demo-grid">
+          <div class="circle-demo-item">
+            <av-progress [percent]="75" type="circle"></av-progress>
+            <span>Circle</span>
+          </div>
+          <div class="circle-demo-item">
+            <av-progress [percent]="60" type="dashboard" status="warning"></av-progress>
+            <span>Dashboard</span>
+          </div>
+          <div class="circle-demo-item">
+            <av-progress [percent]="100" type="circle" status="success"></av-progress>
+            <span>Success</span>
+          </div>
+          <div class="circle-demo-item">
+            <av-progress [percent]="40" type="circle" status="error" [strokeWidth]="12"></av-progress>
+            <span>Error (thick)</span>
+          </div>
+        </div>
+      </nz-card>
+    </div>
+
+    <!-- Gradients -->
+    <div nz-col [nzSpan]="24">
+      <nz-card nzTitle="Градиенты и кастомные цвета" [nzBordered]="false">
+        <div nz-row [nzGutter]="[32, 32]">
+          <div nz-col [nzMd]="12" [nzSm]="24">
+            <div class="demo-stack">
+              <av-progress [percent]="99" [strokeColor]="{ from: '#108ee9', to: '#87d068' }"></av-progress>
+              <av-progress [percent]="65" [strokeColor]="['#ff4d4f', '#faad14']" status="active"></av-progress>
+              <av-progress [percent]="40" [strokeColor]="'#722ed1'"></av-progress>
+            </div>
+          </div>
+          <div nz-col [nzMd]="12" [nzSm]="24">
+            <div class="circle-demo-grid" style="justify-content: flex-start; gap: 48px">
+              <av-progress
+                [percent]="80"
+                type="circle"
+                [strokeColor]="{ from: '#34d399', to: '#3b82f6' }"
+              ></av-progress>
+              <av-progress [percent]="55" type="dashboard" [strokeColor]="['#f43f5e', '#fbbf24']"></av-progress>
+            </div>
+          </div>
+        </div>
+      </nz-card>
+    </div>
+  </div>
+</div>
