@@ -84,6 +84,18 @@ export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
               icon: 'search',
             },
             {
+              id: 'tag-ui',
+              label: 'Tag UI',
+              route: '/ui-demo/tag-ui',
+              icon: 'tags',
+            },
+            {
+              id: 'pagination-ui',
+              label: 'Pagination UI',
+              route: '/ui-demo/pagination-ui',
+              icon: 'ordered-list',
+            },
+            {
               id: 'help-copy-ui',
               label: 'Help Copy UI',
               route: '/ui-demo/help-copy-container-ui',

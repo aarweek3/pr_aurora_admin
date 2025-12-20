@@ -1,0 +1,200 @@
+<div *ngIf="!shouldHide()" [class]="containerClasses()">
+  <!-- DEFAULT VARIANT -->
+  @if (variant() === 'default') {
+  <div class="pagination__wrapper">
+    <!-- First Page Button -->
+    @if (showFirstLast() && totalPages() > 1) {
+    <button
+      type="button"
+      class="pagination__btn pagination__btn--first"
+      [disabled]="currentPage() === 1 || disabled()"
+      (click)="firstPage()"
+      [attr.aria-label]="'Первая страница'"
+    >
+      <span>«</span>
+    </button>
+    }
+
+    <!-- Previous Button -->
+    <button
+      type="button"
+      class="pagination__btn pagination__btn--prev"
+      [disabled]="!canGoPrev() || disabled()"
+      (click)="prevPage()"
+      [attr.aria-label]="labels().previous"
+    >
+      <span>‹</span>
+    </button>
+
+    <!-- Page Numbers -->
+    <div class="pagination__pages">
+      @for (page of visiblePages(); track page) { @if (isEllipsis(page)) {
+      <span class="pagination__ellipsis">...</span>
+      } @else {
+      <button
+        type="button"
+        class="pagination__btn pagination__btn--page"
+        [class.pagination__btn--active]="asNumber(page) === currentPage()"
+        [disabled]="disabled()"
+        (click)="goToPage(asNumber(page))"
+        [attr.aria-label]="labels().page + ' ' + page"
+        [attr.aria-current]="asNumber(page) === currentPage() ? 'page' : null"
+      >
+        {{ page }}
+      </button>
+      } }
+    </div>
+
+    <!-- Next Button -->
+    <button
+      type="button"
+      class="pagination__btn pagination__btn--next"
+      [disabled]="!canGoNext() || disabled()"
+      (click)="nextPage()"
+      [attr.aria-label]="labels().next"
+    >
+      <span>›</span>
+    </button>
+
+    <!-- Last Page Button -->
+    @if (showFirstLast() && totalPages() > 1) {
+    <button
+      type="button"
+      class="pagination__btn pagination__btn--last"
+      [disabled]="currentPage() === totalPages() || disabled()"
+      (click)="lastPage()"
+      [attr.aria-label]="'Последняя страница'"
+    >
+      <span>»</span>
+    </button>
+    }
+
+    <!-- Total Info -->
+    @if (showTotal()) {
+    <div class="pagination__total">
+      {{ labels().showing }} {{ range().start }}-{{ range().end }} {{ labels().of }} {{ total() }}
+    </div>
+    }
+
+    <!-- Page Size Changer -->
+    @if (showSizeChanger()) {
+    <div class="pagination__size-changer">
+      <select
+        class="pagination__select"
+        [value]="pageSize()"
+        [disabled]="disabled()"
+        (change)="changePageSize(+$any($event.target).value)"
+      >
+        @for (option of pageSizeOptions(); track option) {
+        <option [value]="option">{{ option }} {{ labels().itemsPerPage }}</option>
+        }
+      </select>
+    </div>
+    }
+
+    <!-- Quick Jumper -->
+    @if (showQuickJumper()) {
+    <div class="pagination__quick-jumper">
+      <span>{{ labels().jumpTo }}:</span>
+      <input
+        type="number"
+        class="pagination__input"
+        [value]="jumpInputValue()"
+        (input)="jumpInputValue.set($any($event.target).value)"
+        (keydown.enter)="onQuickJump()"
+        [disabled]="disabled()"
+        [min]="1"
+        [max]="totalPages()"
+        [placeholder]="'1-' + totalPages()"
+      />
+    </div>
+    }
+  </div>
+  }
+
+  <!-- SIMPLE VARIANT -->
+  @if (variant() === 'simple') {
+  <div class="pagination__wrapper pagination__wrapper--simple">
+    <button
+      type="button"
+      class="pagination__btn pagination__btn--prev"
+      [disabled]="!canGoPrev() || disabled()"
+      (click)="prevPage()"
+    >
+      {{ labels().previous }}
+    </button>
+
+    <div class="pagination__info">{{ labels().page }} {{ currentPage() }} {{ labels().of }} {{ totalPages() }}</div>
+
+    <button
+      type="button"
+      class="pagination__btn pagination__btn--next"
+      [disabled]="!canGoNext() || disabled()"
+      (click)="nextPage()"
+    >
+      {{ labels().next }}
+    </button>
+
+    @if (showSizeChanger()) {
+    <select
+      class="pagination__select"
+      [value]="pageSize()"
+      [disabled]="disabled()"
+      (change)="changePageSize(+$any($event.target).value)"
+    >
+      @for (option of pageSizeOptions(); track option) {
+      <option [value]="option">{{ option }}</option>
+      }
+    </select>
+    }
+  </div>
+  }
+
+  <!-- COMPACT VARIANT -->
+  @if (variant() === 'compact') {
+  <div class="pagination__wrapper pagination__wrapper--compact">
+    <button
+      type="button"
+      class="pagination__btn pagination__btn--prev"
+      [disabled]="!canGoPrev() || disabled()"
+      (click)="prevPage()"
+    >
+      ‹
+    </button>
+
+    <div class="pagination__compact-info">{{ currentPage() }} / {{ totalPages() }}</div>
+
+    <button
+      type="button"
+      class="pagination__btn pagination__btn--next"
+      [disabled]="!canGoNext() || disabled()"
+      (click)="nextPage()"
+    >
+      ›
+    </button>
+  </div>
+  }
+
+  <!-- MINIMAL VARIANT -->
+  @if (variant() === 'minimal') {
+  <div class="pagination__wrapper pagination__wrapper--minimal">
+    <button
+      type="button"
+      class="pagination__btn pagination__btn--text"
+      [disabled]="!canGoPrev() || disabled()"
+      (click)="prevPage()"
+    >
+      {{ labels().previous }}
+    </button>
+
+    <button
+      type="button"
+      class="pagination__btn pagination__btn--text"
+      [disabled]="!canGoNext() || disabled()"
+      (click)="nextPage()"
+    >
+      {{ labels().next }}
+    </button>
+  </div>
+  }
+</div>

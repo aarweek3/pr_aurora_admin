@@ -14,6 +14,10 @@
     padding-bottom: 2rem;
     border-bottom: 2px solid var(--border-color, #e8e8e8);
 
+    @include dark-theme {
+      border-bottom-color: var(--dark-border-color, #303030);
+    }
+
     .header-content {
       flex: 1;
 
@@ -22,12 +26,20 @@
         font-size: 2rem;
         font-weight: 700;
         color: var(--text-primary, #1a1a1a);
+
+        @include dark-theme {
+          color: var(--dark-text-primary, #fff);
+        }
       }
 
       p {
         margin: 0;
         font-size: 1rem;
         color: var(--text-secondary, #666);
+
+        @include dark-theme {
+          color: var(--dark-text-secondary, #a0a0a0);
+        }
       }
     }
 
@@ -45,6 +57,11 @@
   border-radius: 12px;
   border: 1px solid var(--border-color, #e8e8e8);
 
+  @include dark-theme {
+    background: var(--dark-bg-container, #1a1a1a);
+    border-color: var(--dark-border-color, #303030);
+  }
+
   &__header {
     display: flex;
     justify-content: space-between;
@@ -56,6 +73,10 @@
       font-size: 1.5rem;
       font-weight: 600;
       color: var(--text-primary, #1a1a1a);
+
+      @include dark-theme {
+        color: var(--dark-text-primary, #fff);
+      }
     }
 
     .code-toggle {
@@ -77,7 +98,10 @@
   &__description {
     margin: 0 0 1.5rem 0;
     color: var(--text-secondary, #666);
-    font-size: 0.95rem;
+
+    @include dark-theme {
+      color: var(--dark-text-secondary, #a0a0a0);
+    }
   }
 
   &__preview {
@@ -138,10 +162,19 @@
     border-radius: 6px;
     border: 1px solid var(--border-color, #e8e8e8);
 
+    @include dark-theme {
+      background: var(--dark-bg-elevated, #242424);
+      border-color: var(--dark-border-color, #303030);
+    }
+
     p {
       margin: 0.5rem 0;
       font-size: 0.875rem;
       color: var(--text-secondary, #666);
+
+      @include dark-theme {
+        color: var(--dark-text-secondary, #a0a0a0);
+      }
 
       &:first-child {
         margin-top: 0;
@@ -167,11 +200,20 @@
     border-radius: 8px;
     border: 1px solid var(--border-color, #e8e8e8);
 
+    @include dark-theme {
+      background: var(--dark-bg-elevated, #242424);
+      border-color: var(--dark-border-color, #303030);
+    }
+
     h4 {
       margin: 0 0 1rem 0;
       font-size: 1rem;
       font-weight: 600;
       color: var(--text-primary, #1a1a1a);
+
+      @include dark-theme {
+        color: var(--dark-text-primary, #fff);
+      }
     }
 
     .example-tags {
@@ -191,62 +233,6 @@
   border-radius: 4px;
   font-size: 0.875rem;
   color: var(--text-primary, #1a1a1a);
-}
-
-// Dark theme support
-@include dark-theme {
-  .tag-ui-demo {
-    &__header {
-      border-bottom-color: var(--dark-border-color, #303030);
-
-      .header-content {
-        h1 {
-          color: var(--dark-text-primary, #fff);
-        }
-
-        p {
-          color: var(--dark-text-secondary, #a0a0a0);
-        }
-      }
-    }
-  }
-
-  .demo-section {
-    background: var(--dark-bg-container, #1a1a1a);
-    border-color: var(--dark-border-color, #303030);
-
-    &__header {
-      h2 {
-        color: var(--dark-text-primary, #fff);
-      }
-    }
-
-    &__description {
-      color: var(--dark-text-secondary, #a0a0a0);
-    }
-  }
-
-  .practical-examples {
-    .example-card {
-      background: var(--dark-bg-elevated, #242424);
-      border-color: var(--dark-border-color, #303030);
-
-      h4 {
-        color: var(--dark-text-primary, #fff);
-      }
-    }
-  }
-
-  .tag-input-demo {
-    .tag-list-info {
-      background: var(--dark-bg-elevated, #242424);
-      border-color: var(--dark-border-color, #303030);
-
-      p {
-        color: var(--dark-text-secondary, #a0a0a0);
-      }
-    }
-  }
 }
 
 // Responsive

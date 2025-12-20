@@ -5,8 +5,8 @@
       <p>Демонстрация компонентов тегов с различными размерами, стилями и цветами</p>
     </div>
     <div class="header-actions">
-      <button av-button avType="primary" (clicked)="showHelpModal.set(true)">Примеры использования</button>
-      <button av-button avType="default" (clicked)="showPrincipleModal.set(true)">Принцип работы</button>
+      <button av-button avType="primary" (clicked)="showHelpModal = true">Примеры использования</button>
+      <button av-button avType="default" (clicked)="showPrincipleModal = true">Принцип работы</button>
     </div>
   </div>
 
@@ -20,7 +20,7 @@
       ></av-help-copy-container>
     </div>
     <div modal-footer>
-      <button av-button avType="default" (clicked)="showHelpModal.set(false)">Закрыть</button>
+      <button av-button avType="default" (clicked)="showHelpModal = false">Закрыть</button>
     </div>
   </av-modal>
 
@@ -34,7 +34,7 @@
       ></av-help-copy-container>
     </div>
     <div modal-footer>
-      <button av-button avType="default" (clicked)="showPrincipleModal.set(false)">Закрыть</button>
+      <button av-button avType="default" (clicked)="showPrincipleModal = false">Закрыть</button>
     </div>
   </av-modal>
 
@@ -51,10 +51,7 @@
       <av-tag label="SCSS"></av-tag>
     </div>
 
-    <av-help-copy-container
-      [content]="'<av-tag label=\"Angular\"></av-tag>\n<av-tag label=\"TypeScript\"></av-tag>\n<av-tag label=\"SCSS\"></av-tag>'"
-      title="HTML код"
-    ></av-help-copy-container>
+    <av-help-copy-container [content]="basicCode" title="HTML код"></av-help-copy-container>
   </section>
 
   <!-- Размеры -->
@@ -70,10 +67,7 @@
       <av-tag label="Large Tag" size="large" color="primary"></av-tag>
     </div>
 
-    <av-help-copy-container
-      [content]="'<av-tag label=\"Small Tag\" size=\"small\" color=\"primary\"></av-tag>\n<av-tag label=\"Medium Tag\" size=\"medium\" color=\"primary\"></av-tag>\n<av-tag label=\"Large Tag\" size=\"large\" color=\"primary\"></av-tag>'"
-      title="HTML код"
-    ></av-help-copy-container>
+    <av-help-copy-container [content]="sizesCode" title="HTML код"></av-help-copy-container>
   </section>
 
   <!-- Цвета -->
@@ -85,14 +79,11 @@
 
     <div class="demo-section__preview">
       @for (color of colors; track color) {
-        <av-tag [label]="color" [color]="color"></av-tag>
+      <av-tag [label]="color" [color]="color"></av-tag>
       }
     </div>
 
-    <av-help-copy-container
-      [content]="'<av-tag label=\"primary\" color=\"primary\"></av-tag>\n<av-tag label=\"success\" color=\"success\"></av-tag>\n<av-tag label=\"warning\" color=\"warning\"></av-tag>\n<av-tag label=\"error\" color=\"error\"></av-tag>\n<av-tag label=\"info\" color=\"info\"></av-tag>\n<av-tag label=\"neutral\" color=\"neutral\"></av-tag>'"
-      title="HTML код"
-    ></av-help-copy-container>
+    <av-help-copy-container [content]="colorsCode" title="HTML код"></av-help-copy-container>
   </section>
 
   <!-- Варианты стилей -->
@@ -106,29 +97,26 @@
       <div class="variant-group">
         <h4>Soft (мягкий фон)</h4>
         @for (color of colors; track color) {
-          <av-tag [label]="color" [color]="color" variant="soft"></av-tag>
+        <av-tag [label]="color" [color]="color" variant="soft"></av-tag>
         }
       </div>
 
       <div class="variant-group">
         <h4>Filled (заливка)</h4>
         @for (color of colors; track color) {
-          <av-tag [label]="color" [color]="color" variant="filled"></av-tag>
+        <av-tag [label]="color" [color]="color" variant="filled"></av-tag>
         }
       </div>
 
       <div class="variant-group">
         <h4>Outlined (контур)</h4>
         @for (color of colors; track color) {
-          <av-tag [label]="color" [color]="color" variant="outlined"></av-tag>
+        <av-tag [label]="color" [color]="color" variant="outlined"></av-tag>
         }
       </div>
     </div>
 
-    <av-help-copy-container
-      [content]="'<av-tag label=\"Soft\" variant=\"soft\" color=\"primary\"></av-tag>\n<av-tag label=\"Filled\" variant=\"filled\" color=\"primary\"></av-tag>\n<av-tag label=\"Outlined\" variant=\"outlined\" color=\"primary\"></av-tag>'"
-      title="HTML код"
-    ></av-help-copy-container>
+    <av-help-copy-container [content]="variantsCode" title="HTML код"></av-help-copy-container>
   </section>
 
   <!-- Формы -->
@@ -143,10 +131,7 @@
       <av-tag label="Pill" shape="pill" color="success"></av-tag>
     </div>
 
-    <av-help-copy-container
-      [content]="'<av-tag label=\"Rounded\" shape=\"rounded\" color=\"primary\"></av-tag>\n<av-tag label=\"Pill\" shape=\"pill\" color=\"success\"></av-tag>'"
-      title="HTML код"
-    ></av-help-copy-container>
+    <av-help-copy-container [content]="shapesCode" title="HTML код"></av-help-copy-container>
   </section>
 
   <!-- С иконками -->
@@ -162,10 +147,7 @@
       <av-tag label="Star" icon="actions/av_star" color="warning"></av-tag>
     </div>
 
-    <av-help-copy-container
-      [content]="'<av-tag label=\"Settings\" icon=\"actions/av_settings\" color=\"neutral\"></av-tag>\n<av-tag label=\"User\" icon=\"actions/av_user\" color=\"primary\"></av-tag>\n<av-tag label=\"Star\" icon=\"actions/av_star\" color=\"warning\"></av-tag>'"
-      title="HTML код"
-    ></av-help-copy-container>
+    <av-help-copy-container [content]="iconsCode" title="HTML код"></av-help-copy-container>
   </section>
 
   <!-- Удаляемые теги -->
@@ -177,19 +159,11 @@
 
     <div class="demo-section__preview">
       @for (tag of basicTags; track tag) {
-        <av-tag
-          [label]="tag"
-          [removable]="true"
-          color="primary"
-          (removed)="onTagRemove(tag)">
-        </av-tag>
+      <av-tag [label]="tag" [removable]="true" color="primary" (removed)="onTagRemove(tag)"> </av-tag>
       }
     </div>
 
-    <av-help-copy-container
-      [content]="'<av-tag \n  label=\"Angular\" \n  [removable]=\"true\" \n  color=\"primary\"\n  (removed)=\"onTagRemove()\">\n</av-tag>'"
-      title="HTML код"
-    ></av-help-copy-container>
+    <av-help-copy-container [content]="removableCode" title="HTML код"></av-help-copy-container>
   </section>
 
   <!-- Кликабельные теги -->
@@ -200,25 +174,18 @@
     <p class="demo-section__description">Теги с обработчиком клика (hover-эффект)</p>
 
     <div class="demo-section__preview">
-      <av-tag
-        label="Click me"
-        [clickable]="true"
-        color="info"
-        (clicked)="onTagClick('Click me')">
-      </av-tag>
+      <av-tag label="Click me" [clickable]="true" color="info" (clicked)="onTagClick('Click me')"> </av-tag>
       <av-tag
         label="Interactive"
         [clickable]="true"
         color="success"
         variant="filled"
-        (clicked)="onTagClick('Interactive')">
+        (clicked)="onTagClick('Interactive')"
+      >
       </av-tag>
     </div>
 
-    <av-help-copy-container
-      [content]="'<av-tag \n  label=\"Click me\" \n  [clickable]=\"true\" \n  color=\"info\"\n  (clicked)=\"onTagClick()\">\n</av-tag>'"
-      title="HTML код"
-    ></av-help-copy-container>
+    <av-help-copy-container [content]="clickableCode" title="HTML код"></av-help-copy-container>
   </section>
 
   <!-- Кастомные цвета -->
@@ -234,10 +201,7 @@
       <av-tag label="Teal" color="#14b8a6" variant="outlined"></av-tag>
     </div>
 
-    <av-help-copy-container
-      [content]="'<av-tag label=\"Purple\" color=\"#8b5cf6\" variant=\"soft\"></av-tag>\n<av-tag label=\"Pink\" color=\"#ec4899\" variant=\"filled\"></av-tag>\n<av-tag label=\"Teal\" color=\"#14b8a6\" variant=\"outlined\"></av-tag>'"
-      title="HTML код"
-    ></av-help-copy-container>
+    <av-help-copy-container [content]="customColorsCode" title="HTML код"></av-help-copy-container>
   </section>
 
   <!-- Tag Input -->
@@ -263,10 +227,7 @@
       </div>
     </div>
 
-    <av-help-copy-container
-      [content]="'<av-tag-input\n  [(tags)]=\"myTags\"\n  placeholder=\"Добавьте навыки...\"\n  [allowDuplicates]=\"false\"\n  variant=\"soft\"\n></av-tag-input>\n\n// В компоненте:\nmyTags = signal([\'Frontend\', \'UI/UX\']);'"
-      title="HTML + TypeScript код"
-    ></av-help-copy-container>
+    <av-help-copy-container [content]="tagInputCode" title="HTML + TypeScript код"></av-help-copy-container>
   </section>
 
   <!-- Практические примеры -->

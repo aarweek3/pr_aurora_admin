@@ -1,0 +1,370 @@
+<!-- ============================================================================ -->
+<!-- Pagination Component Template -->
+<!-- Примеры использования различных вариантов пагинации -->
+<!-- ============================================================================ -->
+
+<!-- Default Pagination (как на примере) -->
+<div class="pagination-wrapper">
+  <nav class="av-pagination" role="navigation" aria-label="Pagination">
+    <!-- Previous Button -->
+    <button
+      class="av-pagination__button av-pagination__nav av-pagination__nav--prev"
+      [disabled]="currentPage === 1"
+      (click)="goToPage(currentPage - 1)"
+      aria-label="Предыдущая страница"
+    >
+      &lt;
+    </button>
+
+    <!-- Page Numbers -->
+    <button
+      *ngFor="let page of visiblePages"
+      class="av-pagination__button av-pagination__page"
+      [class.av-pagination__button--active]="page === currentPage"
+      [attr.aria-current]="page === currentPage ? 'page' : null"
+      [attr.aria-label]="'Страница ' + page"
+      (click)="goToPage(page)"
+    >
+      {{ page }}
+    </button>
+
+    <!-- Ellipsis (если есть скрытые страницы) -->
+    <span class="av-pagination__ellipsis" *ngIf="showEllipsis">...</span>
+
+    <!-- Last Page -->
+    <button
+      *ngIf="showLastPage"
+      class="av-pagination__button av-pagination__page"
+      [class.av-pagination__button--active]="totalPages === currentPage"
+      [attr.aria-current]="totalPages === currentPage ? 'page' : null"
+      [attr.aria-label]="'Страница ' + totalPages"
+      (click)="goToPage(totalPages)"
+    >
+      {{ totalPages }}
+    </button>
+
+    <!-- Next Button -->
+    <button
+      class="av-pagination__button av-pagination__nav av-pagination__nav--next"
+      [disabled]="currentPage === totalPages"
+      (click)="goToPage(currentPage + 1)"
+      aria-label="Следующая страница"
+    >
+      &gt;
+    </button>
+  </nav>
+</div>
+
+<!-- ============================================================================ -->
+<!-- Variant: Simple -->
+<!-- ============================================================================ -->
+<div class="pagination-wrapper">
+  <nav class="av-pagination av-pagination--simple" role="navigation" aria-label="Pagination">
+    <button
+      class="av-pagination__button av-pagination__nav av-pagination__nav--prev"
+      [disabled]="currentPage === 1"
+      (click)="goToPage(currentPage - 1)"
+    >
+      &lt;
+    </button>
+
+    <span class="av-pagination__simple-text"> Страница {{ currentPage }} из {{ totalPages }} </span>
+
+    <button
+      class="av-pagination__button av-pagination__nav av-pagination__nav--next"
+      [disabled]="currentPage === totalPages"
+      (click)="goToPage(currentPage + 1)"
+    >
+      &gt;
+    </button>
+  </nav>
+</div>
+
+<!-- ============================================================================ -->
+<!-- Variant: Compact -->
+<!-- ============================================================================ -->
+<div class="pagination-wrapper">
+  <nav class="av-pagination av-pagination--compact" role="navigation" aria-label="Pagination">
+    <button
+      class="av-pagination__button av-pagination__nav av-pagination__nav--prev"
+      [disabled]="currentPage === 1"
+      (click)="goToPage(currentPage - 1)"
+    >
+      &lt;
+    </button>
+
+    <div class="av-pagination__compact-display">{{ currentPage }} / {{ totalPages }}</div>
+
+    <button
+      class="av-pagination__button av-pagination__nav av-pagination__nav--next"
+      [disabled]="currentPage === totalPages"
+      (click)="goToPage(currentPage + 1)"
+    >
+      &gt;
+    </button>
+  </nav>
+</div>
+
+<!-- ============================================================================ -->
+<!-- Variant: Minimal -->
+<!-- ============================================================================ -->
+<div class="pagination-wrapper">
+  <nav class="av-pagination av-pagination--minimal" role="navigation" aria-label="Pagination">
+    <button class="av-pagination__button" [disabled]="currentPage === 1" (click)="goToPage(currentPage - 1)">
+      Назад
+    </button>
+
+    <button class="av-pagination__button" [disabled]="currentPage === totalPages" (click)="goToPage(currentPage + 1)">
+      Далее
+    </button>
+  </nav>
+</div>
+
+<!-- ============================================================================ -->
+<!-- With Total Info -->
+<!-- ============================================================================ -->
+<div class="pagination-wrapper">
+  <nav class="av-pagination" role="navigation" aria-label="Pagination">
+    <button
+      class="av-pagination__button av-pagination__nav av-pagination__nav--prev"
+      [disabled]="currentPage === 1"
+      (click)="goToPage(currentPage - 1)"
+    >
+      &lt;
+    </button>
+
+    <button
+      *ngFor="let page of visiblePages"
+      class="av-pagination__button av-pagination__page"
+      [class.av-pagination__button--active]="page === currentPage"
+      (click)="goToPage(page)"
+    >
+      {{ page }}
+    </button>
+
+    <button
+      class="av-pagination__button av-pagination__nav av-pagination__nav--next"
+      [disabled]="currentPage === totalPages"
+      (click)="goToPage(currentPage + 1)"
+    >
+      &gt;
+    </button>
+
+    <!-- Total Info -->
+    <div class="av-pagination__total">Показано {{ rangeStart }}-{{ rangeEnd }} из {{ total }}</div>
+  </nav>
+</div>
+
+<!-- ============================================================================ -->
+<!-- With Size Changer -->
+<!-- ============================================================================ -->
+<div class="pagination-wrapper">
+  <nav class="av-pagination" role="navigation" aria-label="Pagination">
+    <button
+      class="av-pagination__button av-pagination__nav av-pagination__nav--prev"
+      [disabled]="currentPage === 1"
+      (click)="goToPage(currentPage - 1)"
+    >
+      &lt;
+    </button>
+
+    <button
+      *ngFor="let page of visiblePages"
+      class="av-pagination__button av-pagination__page"
+      [class.av-pagination__button--active]="page === currentPage"
+      (click)="goToPage(page)"
+    >
+      {{ page }}
+    </button>
+
+    <button
+      class="av-pagination__button av-pagination__nav av-pagination__nav--next"
+      [disabled]="currentPage === totalPages"
+      (click)="goToPage(currentPage + 1)"
+    >
+      &gt;
+    </button>
+
+    <!-- Size Changer -->
+    <div class="av-pagination__size-changer">
+      <select [(ngModel)]="pageSize" (change)="onPageSizeChange()">
+        <option [value]="10">10 / стр</option>
+        <option [value]="20">20 / стр</option>
+        <option [value]="50">50 / стр</option>
+        <option [value]="100">100 / стр</option>
+      </select>
+    </div>
+  </nav>
+</div>
+
+<!-- ============================================================================ -->
+<!-- With Quick Jumper -->
+<!-- ============================================================================ -->
+<div class="pagination-wrapper">
+  <nav class="av-pagination" role="navigation" aria-label="Pagination">
+    <button
+      class="av-pagination__button av-pagination__nav av-pagination__nav--prev"
+      [disabled]="currentPage === 1"
+      (click)="goToPage(currentPage - 1)"
+    >
+      &lt;
+    </button>
+
+    <button
+      *ngFor="let page of visiblePages"
+      class="av-pagination__button av-pagination__page"
+      [class.av-pagination__button--active]="page === currentPage"
+      (click)="goToPage(page)"
+    >
+      {{ page }}
+    </button>
+
+    <button
+      class="av-pagination__button av-pagination__nav av-pagination__nav--next"
+      [disabled]="currentPage === totalPages"
+      (click)="goToPage(currentPage + 1)"
+    >
+      &gt;
+    </button>
+
+    <!-- Quick Jumper -->
+    <div class="av-pagination__quick-jumper">
+      <label>Перейти:</label>
+      <input
+        type="number"
+        min="1"
+        [max]="totalPages"
+        [(ngModel)]="jumpToPage"
+        (keyup.enter)="goToPage(jumpToPage)"
+        placeholder="№"
+      />
+    </div>
+  </nav>
+</div>
+
+<!-- ============================================================================ -->
+<!-- Infinite Scroll Mode -->
+<!-- ============================================================================ -->
+<div class="pagination-wrapper pagination-wrapper--center">
+  <nav class="av-pagination av-pagination--infinite" role="navigation">
+    <button *ngIf="hasMore && !loading" class="av-pagination__load-more" (click)="loadMore()">Загрузить еще</button>
+
+    <div *ngIf="loading" class="av-pagination__loading">
+      <span>Загрузка...</span>
+    </div>
+
+    <div *ngIf="!hasMore" class="av-pagination__no-more">Все данные загружены</div>
+  </nav>
+</div>
+
+<!-- ============================================================================ -->
+<!-- Size Variants -->
+<!-- ============================================================================ -->
+
+<!-- Small -->
+<nav class="av-pagination av-pagination--small">
+  <!-- ... buttons ... -->
+</nav>
+
+<!-- Medium (default) -->
+<nav class="av-pagination">
+  <!-- ... buttons ... -->
+</nav>
+
+<!-- Large -->
+<nav class="av-pagination av-pagination--large">
+  <!-- ... buttons ... -->
+</nav>
+
+<!-- ============================================================================ -->
+<!-- Shape Variants -->
+<!-- ============================================================================ -->
+
+<!-- Square (default - как на примере) -->
+<nav class="av-pagination av-pagination--shape-square">
+  <!-- ... buttons ... -->
+</nav>
+
+<!-- Rounded -->
+<nav class="av-pagination av-pagination--shape-rounded">
+  <!-- ... buttons ... -->
+</nav>
+
+<!-- Circle -->
+<nav class="av-pagination av-pagination--shape-circle">
+  <!-- ... buttons ... -->
+</nav>
+
+<!-- ============================================================================ -->
+<!-- Theme Variants -->
+<!-- ============================================================================ -->
+
+<!-- Default (outlined) -->
+<nav class="av-pagination">
+  <!-- ... buttons ... -->
+</nav>
+
+<!-- Filled -->
+<nav class="av-pagination av-pagination--theme-filled">
+  <!-- ... buttons ... -->
+</nav>
+
+<!-- Ghost -->
+<nav class="av-pagination av-pagination--theme-ghost">
+  <!-- ... buttons ... -->
+</nav>
+
+<!-- Gradient -->
+<nav class="av-pagination av-pagination--theme-gradient">
+  <!-- ... buttons ... -->
+</nav>
+
+<!-- ============================================================================ -->
+<!-- Color Variants -->
+<!-- ============================================================================ -->
+
+<!-- Primary (default) -->
+<nav class="av-pagination">
+  <!-- ... buttons ... -->
+</nav>
+
+<!-- Success -->
+<nav class="av-pagination av-pagination--color-success">
+  <!-- ... buttons ... -->
+</nav>
+
+<!-- Warning -->
+<nav class="av-pagination av-pagination--color-warning">
+  <!-- ... buttons ... -->
+</nav>
+
+<!-- Danger -->
+<nav class="av-pagination av-pagination--color-danger">
+  <!-- ... buttons ... -->
+</nav>
+
+<!-- ============================================================================ -->
+<!-- Combined Styles -->
+<!-- ============================================================================ -->
+
+<!-- Modern Style -->
+<nav class="av-pagination av-pagination--modern">
+  <!-- Rounded + Filled + Shadow + Comfortable spacing -->
+</nav>
+
+<!-- Minimal Clean Style -->
+<nav class="av-pagination av-pagination--minimal-clean">
+  <!-- Ghost + No border + Compact spacing -->
+</nav>
+
+<!-- Premium Style -->
+<nav class="av-pagination av-pagination--premium">
+  <!-- Gradient + Shadow + Lift animation + Comfortable spacing -->
+</nav>
+
+<!-- ============================================================================ -->
+<!-- Disabled State -->
+<!-- ============================================================================ -->
+<nav class="av-pagination av-pagination--disabled">
+  <!-- Вся пагинация отключена -->
+</nav>

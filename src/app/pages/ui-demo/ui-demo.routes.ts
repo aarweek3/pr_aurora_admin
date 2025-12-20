@@ -41,6 +41,11 @@ export const UI_DEMO_ROUTES: Routes = [
     loadComponent: () => import('./tag-ui/tag-ui.component').then((m) => m.TagUiComponent),
   },
   {
+    path: 'pagination-ui',
+    loadComponent: () =>
+      import('./pagination-ui/pagination-ui.component').then((m) => m.PaginationUiComponent),
+  },
+  {
     path: 'help-copy-container-ui',
     loadComponent: () =>
       import('./av-help-copy-container-ui/av-help-copy-container-ui.component').then(

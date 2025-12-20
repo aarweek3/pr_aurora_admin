@@ -1,0 +1,376 @@
+// ============================================================================
+// Pagination Button Shapes & Variants
+// Дополнительные стили для различных форм кнопок пагинации
+// ============================================================================
+
+@use "styles/abstracts/variables" as *;
+@use "styles/abstracts/mixins" as *;
+
+// ========================================
+// Shape: Square (по умолчанию)
+// ========================================
+.av-pagination--shape-square {
+  .av-pagination__button {
+    border-radius: 2px;
+  }
+}
+
+// ========================================
+// Shape: Rounded (скругленные углы)
+// ========================================
+.av-pagination--shape-rounded {
+  .av-pagination__button,
+  .av-pagination__ellipsis,
+  .av-pagination__compact-display {
+    border-radius: 6px;
+  }
+
+  .av-pagination__size-changer select,
+  .av-pagination__quick-jumper input {
+    border-radius: 6px;
+  }
+}
+
+// ========================================
+// Shape: Circle (круглые кнопки)
+// ========================================
+.av-pagination--shape-circle {
+  .av-pagination__button {
+    border-radius: 50%;
+    min-width: 32px;
+    width: 32px;
+    padding: 0;
+  }
+
+  &.av-pagination--small .av-pagination__button {
+    min-width: 24px;
+    width: 24px;
+  }
+
+  &.av-pagination--large .av-pagination__button {
+    min-width: 40px;
+    width: 40px;
+  }
+
+  // Для круглых кнопок навигации используем иконки
+  .av-pagination__nav {
+    &--prev::before {
+      content: "‹";
+      font-size: 18px;
+    }
+
+    &--next::before {
+      content: "›";
+      font-size: 18px;
+    }
+  }
+}
+
+// ========================================
+// Theme: Filled (заполненные кнопки)
+// ========================================
+.av-pagination--theme-filled {
+  .av-pagination__button {
+    background: var(--bg-secondary-light, #f5f5f5);
+    border-color: transparent;
+
+    @include dark-theme {
+      background: var(--dark-bg-light, #2a2a2a);
+    }
+
+    &:hover:not(:disabled):not(.av-pagination__button--active) {
+      background: var(--bg-secondary, #e8e8e8);
+      border-color: transparent;
+
+      @include dark-theme {
+        background: var(--dark-bg-base, #303030);
+      }
+    }
+
+    &--active {
+      background: var(--color-primary, #1890ff);
+      color: #fff;
+      border-color: transparent;
+
+      @include dark-theme {
+        background: var(--color-primary, #1890ff);
+      }
+    }
+
+    &:disabled {
+      background: var(--bg-disabled, #f5f5f5);
+      border-color: transparent;
+
+      @include dark-theme {
+        background: var(--dark-bg-disabled, #1f1f1f);
+      }
+    }
+  }
+}
+
+// ========================================
+// Theme: Ghost (прозрачные кнопки)
+// ========================================
+.av-pagination--theme-ghost {
+  .av-pagination__button {
+    background: transparent;
+    border-color: transparent;
+
+    &:hover:not(:disabled):not(.av-pagination__button--active) {
+      background: rgba(24, 144, 255, 0.08);
+      border-color: transparent;
+      color: var(--color-primary, #1890ff);
+    }
+
+    &--active {
+      background: rgba(24, 144, 255, 0.12);
+      color: var(--color-primary, #1890ff);
+      border-color: transparent;
+      font-weight: 600;
+    }
+
+    &:disabled {
+      background: transparent;
+      border-color: transparent;
+    }
+  }
+}
+
+// ========================================
+// Theme: Gradient (градиентные кнопки)
+// ========================================
+.av-pagination--theme-gradient {
+  .av-pagination__button {
+    &--active {
+      background: linear-gradient(135deg, #1890ff 0%, #096dd9 100%);
+      color: #fff;
+      border-color: transparent;
+      box-shadow: 0 2px 8px rgba(24, 144, 255, 0.3);
+
+      @include dark-theme {
+        box-shadow: 0 2px 8px rgba(24, 144, 255, 0.5);
+      }
+    }
+  }
+}
+
+// ========================================
+// Color Variants (цветовые схемы)
+// ========================================
+.av-pagination--color-success {
+  .av-pagination__button {
+    &:hover:not(:disabled):not(.av-pagination__button--active) {
+      color: var(--color-success, #52c41a);
+      border-color: var(--color-success, #52c41a);
+    }
+
+    &--active {
+      color: var(--color-success, #52c41a);
+      border-color: var(--color-success, #52c41a);
+    }
+  }
+
+  &.av-pagination--theme-filled .av-pagination__button--active {
+    background: var(--color-success, #52c41a);
+    color: #fff;
+  }
+}
+
+.av-pagination--color-warning {
+  .av-pagination__button {
+    &:hover:not(:disabled):not(.av-pagination__button--active) {
+      color: var(--color-warning, #faad14);
+      border-color: var(--color-warning, #faad14);
+    }
+
+    &--active {
+      color: var(--color-warning, #faad14);
+      border-color: var(--color-warning, #faad14);
+    }
+  }
+
+  &.av-pagination--theme-filled .av-pagination__button--active {
+    background: var(--color-warning, #faad14);
+    color: #fff;
+  }
+}
+
+.av-pagination--color-danger {
+  .av-pagination__button {
+    &:hover:not(:disabled):not(.av-pagination__button--active) {
+      color: var(--color-danger, #ff4d4f);
+      border-color: var(--color-danger, #ff4d4f);
+    }
+
+    &--active {
+      color: var(--color-danger, #ff4d4f);
+      border-color: var(--color-danger, #ff4d4f);
+    }
+  }
+
+  &.av-pagination--theme-filled .av-pagination__button--active {
+    background: var(--color-danger, #ff4d4f);
+    color: #fff;
+  }
+}
+
+// ========================================
+// Spacing Variants (варианты отступов)
+// ========================================
+.av-pagination--spacing-compact {
+  gap: 2px;
+}
+
+.av-pagination--spacing-comfortable {
+  gap: 8px;
+}
+
+.av-pagination--spacing-spacious {
+  gap: 12px;
+}
+
+// ========================================
+// Border Variants (варианты границ)
+// ========================================
+.av-pagination--border-bold {
+  .av-pagination__button {
+    border-width: 2px;
+  }
+}
+
+.av-pagination--border-none {
+  .av-pagination__button {
+    border: none;
+
+    &:hover:not(:disabled):not(.av-pagination__button--active) {
+      background: var(--bg-secondary, #e8e8e8);
+
+      @include dark-theme {
+        background: var(--dark-bg-base, #303030);
+      }
+    }
+
+    &--active {
+      background: var(--color-primary, #1890ff);
+      color: #fff;
+    }
+  }
+}
+
+// ========================================
+// Shadow Variants (варианты теней)
+// ========================================
+.av-pagination--shadow-sm {
+  .av-pagination__button {
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+
+    &:hover:not(:disabled) {
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    &--active {
+      box-shadow: 0 2px 8px rgba(24, 144, 255, 0.2);
+    }
+  }
+}
+
+.av-pagination--shadow-md {
+  .av-pagination__button {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+
+    &:hover:not(:disabled) {
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
+    }
+
+    &--active {
+      box-shadow: 0 4px 12px rgba(24, 144, 255, 0.3);
+    }
+  }
+}
+
+.av-pagination--shadow-lg {
+  .av-pagination__button {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+    &:hover:not(:disabled) {
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+    }
+
+    &--active {
+      box-shadow: 0 6px 20px rgba(24, 144, 255, 0.4);
+    }
+  }
+}
+
+// ========================================
+// Animation Variants (варианты анимаций)
+// ========================================
+.av-pagination--animation-scale {
+  .av-pagination__button {
+    &:hover:not(:disabled) {
+      transform: scale(1.05);
+    }
+
+    &:active:not(:disabled) {
+      transform: scale(0.95);
+    }
+  }
+}
+
+.av-pagination--animation-lift {
+  .av-pagination__button {
+    &:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
+    }
+
+    &:active:not(:disabled) {
+      transform: translateY(0);
+    }
+  }
+}
+
+.av-pagination--animation-glow {
+  .av-pagination__button {
+    &--active {
+      animation: pagination-glow 2s ease-in-out infinite;
+    }
+  }
+}
+
+@keyframes pagination-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 5px rgba(24, 144, 255, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(24, 144, 255, 0.6);
+  }
+}
+
+// ========================================
+// Комбинированные стили (примеры)
+// ========================================
+
+// Современный стиль (круглые + заполненные + тени)
+.av-pagination--modern {
+  @extend .av-pagination--shape-rounded;
+  @extend .av-pagination--theme-filled;
+  @extend .av-pagination--shadow-sm;
+  @extend .av-pagination--spacing-comfortable;
+}
+
+// Минималистичный стиль (без границ + ghost)
+.av-pagination--minimal-clean {
+  @extend .av-pagination--theme-ghost;
+  @extend .av-pagination--border-none;
+  @extend .av-pagination--spacing-compact;
+}
+
+// Премиум стиль (градиент + тени + анимации)
+.av-pagination--premium {
+  @extend .av-pagination--theme-gradient;
+  @extend .av-pagination--shadow-md;
+  @extend .av-pagination--animation-lift;
+  @extend .av-pagination--spacing-comfortable;
+}

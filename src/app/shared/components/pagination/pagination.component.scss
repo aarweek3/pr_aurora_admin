@@ -1,0 +1,497 @@
+// ============================================================================
+// Pagination Component Styles
+// Основано на минималистичном дизайне с квадратными кнопками
+// ============================================================================
+
+@use "styles/abstracts/variables" as *;
+@use "styles/abstracts/mixins" as *;
+
+.av-pagination {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  user-select: none;
+
+  // ========================================
+  // Базовые кнопки пагинации
+  // ========================================
+  &__button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 32px;
+    height: 32px;
+    padding: 0 8px;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1;
+    color: var(--text-primary, #1a1a1a);
+    background: var(--bg-container, #fff);
+    border: 1px solid var(--border-color, #d9d9d9);
+    border-radius: 2px;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    outline: none;
+
+    @include dark-theme {
+      color: var(--dark-text-primary, #fff);
+      background: var(--dark-bg-elevated, #242424);
+      border-color: var(--dark-border-base, #404040);
+    }
+
+    // Hover состояние
+    &:hover:not(:disabled):not(.av-pagination__button--active) {
+      color: var(--color-primary, #1890ff);
+      border-color: var(--color-primary, #1890ff);
+      background: var(--bg-container, #fff);
+
+      @include dark-theme {
+        background: var(--dark-bg-elevated, #242424);
+      }
+    }
+
+    // Active (текущая страница)
+    &--active {
+      color: var(--color-primary, #1890ff);
+      border-color: var(--color-primary, #1890ff);
+      background: var(--bg-container, #fff);
+      font-weight: 500;
+      cursor: default;
+      z-index: 1;
+
+      @include dark-theme {
+        background: var(--dark-bg-elevated, #242424);
+      }
+    }
+
+    // Disabled состояние
+    &:disabled {
+      color: var(--text-disabled, rgba(0, 0, 0, 0.25));
+      background: var(--bg-disabled, #f5f5f5);
+      border-color: var(--border-color, #d9d9d9);
+      cursor: not-allowed;
+
+      @include dark-theme {
+        color: var(--dark-text-disabled, rgba(255, 255, 255, 0.3));
+        background: var(--dark-bg-disabled, #1f1f1f);
+        border-color: var(--dark-border-base, #404040);
+      }
+    }
+
+    // Focus состояние (для accessibility)
+    &:focus-visible {
+      outline: 2px solid var(--color-primary, #1890ff);
+      outline-offset: 2px;
+    }
+  }
+
+  // ========================================
+  // Кнопки навигации (prev/next)
+  // ========================================
+  &__nav {
+    // Наследует стили от __button
+  }
+
+  // ========================================
+  // Кнопки страниц
+  // ========================================
+  &__page {
+    // Наследует стили от __button
+  }
+
+  // ========================================
+  // Многоточие (ellipsis)
+  // ========================================
+  &__ellipsis {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 32px;
+    height: 32px;
+    padding: 0 8px;
+    font-size: 14px;
+    color: var(--text-secondary, #666);
+    background: transparent;
+    border: 1px solid transparent;
+    cursor: default;
+    user-select: none;
+
+    @include dark-theme {
+      color: var(--dark-text-secondary, #a0a0a0);
+    }
+
+    &:hover {
+      color: var(--color-primary, #1890ff);
+      cursor: pointer;
+    }
+  }
+
+  // ========================================
+  // Размеры компонента
+  // ========================================
+  &--small {
+    gap: 2px;
+
+    .av-pagination__button,
+    .av-pagination__ellipsis {
+      min-width: 24px;
+      height: 24px;
+      padding: 0 4px;
+      font-size: 12px;
+    }
+  }
+
+  &--large {
+    gap: 6px;
+
+    .av-pagination__button,
+    .av-pagination__ellipsis {
+      min-width: 40px;
+      height: 40px;
+      padding: 0 12px;
+      font-size: 16px;
+    }
+  }
+
+  // ========================================
+  // Варианты отображения
+  // ========================================
+
+  // Simple variant
+  &--simple {
+    .av-pagination__simple-text {
+      padding: 0 12px;
+      font-size: 14px;
+      color: var(--text-primary, #1a1a1a);
+
+      @include dark-theme {
+        color: var(--dark-text-primary, #fff);
+      }
+    }
+  }
+
+  // Compact variant
+  &--compact {
+    .av-pagination__compact-display {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 60px;
+      height: 32px;
+      padding: 0 12px;
+      font-size: 14px;
+      color: var(--text-primary, #1a1a1a);
+      background: var(--bg-container, #fff);
+      border: 1px solid var(--border-color, #d9d9d9);
+      border-radius: 2px;
+
+      @include dark-theme {
+        color: var(--dark-text-primary, #fff);
+        background: var(--dark-bg-elevated, #242424);
+        border-color: var(--dark-border-base, #404040);
+      }
+    }
+  }
+
+  // Minimal variant
+  &--minimal {
+    .av-pagination__button {
+      border: none;
+      background: transparent;
+      color: var(--color-primary, #1890ff);
+      font-weight: 400;
+      padding: 0 16px;
+
+      &:hover:not(:disabled) {
+        background: rgba(24, 144, 255, 0.08);
+      }
+
+      &:disabled {
+        background: transparent;
+        color: var(--text-disabled, rgba(0, 0, 0, 0.25));
+      }
+    }
+  }
+
+  // ========================================
+  // Дополнительные элементы
+  // ========================================
+
+  // Информация о количестве
+  &__total {
+    display: inline-flex;
+    align-items: center;
+    margin-left: 16px;
+    padding: 0 8px;
+    font-size: 14px;
+    color: var(--text-secondary, #666);
+
+    @include dark-theme {
+      color: var(--dark-text-secondary, #a0a0a0);
+    }
+  }
+
+  // Селектор размера страницы
+  &__size-changer {
+    display: inline-flex;
+    align-items: center;
+    margin-left: 16px;
+    gap: 8px;
+
+    label {
+      font-size: 14px;
+      color: var(--text-secondary, #666);
+
+      @include dark-theme {
+        color: var(--dark-text-secondary, #a0a0a0);
+      }
+    }
+
+    select {
+      min-width: 80px;
+      height: 32px;
+      padding: 0 32px 0 12px;
+      font-size: 14px;
+      color: var(--text-primary, #1a1a1a);
+      background: var(--bg-container, #fff);
+      border: 1px solid var(--border-color, #d9d9d9);
+      border-radius: 2px;
+      cursor: pointer;
+      outline: none;
+      transition: all 0.2s;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23666' d='M6 8L2 4h8z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 8px center;
+
+      @include dark-theme {
+        color: var(--dark-text-primary, #fff);
+        background-color: var(--dark-bg-elevated, #242424);
+        border-color: var(--dark-border-base, #404040);
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23a0a0a0' d='M6 8L2 4h8z'/%3E%3C/svg%3E");
+      }
+
+      &:hover {
+        border-color: var(--color-primary, #1890ff);
+      }
+
+      &:focus {
+        border-color: var(--color-primary, #1890ff);
+        box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.1);
+      }
+    }
+  }
+
+  // Быстрый переход
+  &__quick-jumper {
+    display: inline-flex;
+    align-items: center;
+    margin-left: 16px;
+    gap: 8px;
+
+    label {
+      font-size: 14px;
+      color: var(--text-secondary, #666);
+
+      @include dark-theme {
+        color: var(--dark-text-secondary, #a0a0a0);
+      }
+    }
+
+    input {
+      width: 60px;
+      height: 32px;
+      padding: 0 8px;
+      font-size: 14px;
+      text-align: center;
+      color: var(--text-primary, #1a1a1a);
+      background: var(--bg-container, #fff);
+      border: 1px solid var(--border-color, #d9d9d9);
+      border-radius: 2px;
+      outline: none;
+      transition: all 0.2s;
+
+      @include dark-theme {
+        color: var(--dark-text-primary, #fff);
+        background: var(--dark-bg-elevated, #242424);
+        border-color: var(--dark-border-base, #404040);
+      }
+
+      &:hover {
+        border-color: var(--color-primary, #1890ff);
+      }
+
+      &:focus {
+        border-color: var(--color-primary, #1890ff);
+        box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.1);
+      }
+
+      // Скрыть стрелки для number input
+      &::-webkit-inner-spin-button,
+      &::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+
+      &[type="number"] {
+        -moz-appearance: textfield;
+      }
+    }
+  }
+
+  // ========================================
+  // Infinite scroll режим
+  // ========================================
+  &--infinite {
+    .av-pagination__load-more {
+      min-width: 120px;
+      height: 40px;
+      padding: 0 24px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--color-primary, #1890ff);
+      background: var(--bg-container, #fff);
+      border: 1px solid var(--color-primary, #1890ff);
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s;
+
+      @include dark-theme {
+        background: var(--dark-bg-elevated, #242424);
+      }
+
+      &:hover:not(:disabled) {
+        color: #fff;
+        background: var(--color-primary, #1890ff);
+      }
+
+      &:disabled {
+        color: var(--text-disabled, rgba(0, 0, 0, 0.25));
+        background: var(--bg-disabled, #f5f5f5);
+        border-color: var(--border-color, #d9d9d9);
+        cursor: not-allowed;
+
+        @include dark-theme {
+          color: var(--dark-text-disabled, rgba(255, 255, 255, 0.3));
+          background: var(--dark-bg-disabled, #1f1f1f);
+          border-color: var(--dark-border-base, #404040);
+        }
+      }
+    }
+
+    .av-pagination__loading {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 16px;
+      font-size: 14px;
+      color: var(--text-secondary, #666);
+
+      @include dark-theme {
+        color: var(--dark-text-secondary, #a0a0a0);
+      }
+    }
+
+    .av-pagination__no-more {
+      padding: 0 16px;
+      font-size: 14px;
+      color: var(--text-secondary, #666);
+
+      @include dark-theme {
+        color: var(--dark-text-secondary, #a0a0a0);
+      }
+    }
+  }
+
+  // ========================================
+  // Disabled состояние всего компонента
+  // ========================================
+  &--disabled {
+    pointer-events: none;
+    opacity: 0.5;
+  }
+
+  // ========================================
+  // Адаптивность
+  // ========================================
+  @media (max-width: 768px) {
+    // На мобильных автоматически переключаемся на compact
+    &:not(&--simple):not(&--minimal):not(&--infinite) {
+      .av-pagination__page {
+        // Скрываем некоторые кнопки страниц на мобильных
+        &:not(.av-pagination__button--active) {
+          display: none;
+
+          // Показываем только соседние страницы
+          &:nth-child(-n + 3),
+          &:nth-last-child(-n + 3) {
+            display: inline-flex;
+          }
+        }
+      }
+    }
+
+    // Уменьшаем отступы
+    &__total,
+    &__size-changer,
+    &__quick-jumper {
+      margin-left: 8px;
+    }
+
+    // Скрываем total на очень маленьких экранах
+    &__total {
+      display: none;
+    }
+  }
+
+  @media (max-width: 480px) {
+    // На очень маленьких экранах скрываем дополнительные элементы
+    &__size-changer,
+    &__quick-jumper {
+      display: none;
+    }
+  }
+}
+
+// ========================================
+// Анимации
+// ========================================
+@keyframes pagination-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.av-pagination__button,
+.av-pagination__ellipsis {
+  animation: pagination-fade-in 0.2s ease-out;
+}
+
+// ========================================
+// Утилиты для выравнивания
+// ========================================
+.pagination-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding: 16px 0;
+
+  &--center {
+    justify-content: center;
+  }
+
+  &--right {
+    justify-content: flex-end;
+  }
+
+  &--left {
+    justify-content: flex-start;
+  }
+}

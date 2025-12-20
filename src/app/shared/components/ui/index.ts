@@ -8,6 +8,7 @@ export * from './form-field/form-field.component';
 export * from './icon';
 export * from './input/input.component';
 export * from './modal';
+export * from './pagination';
 export * from './phone-input';
 export * from './search';
 export * from './toggle';

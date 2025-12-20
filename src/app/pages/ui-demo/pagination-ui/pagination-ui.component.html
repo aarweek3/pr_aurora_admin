@@ -1,0 +1,476 @@
+<div class="pagination-ui-demo">
+  <div class="pagination-ui-demo__header">
+    <div class="header-content">
+      <h1>Pagination UI Demo</h1>
+      <p>Демонстрация компонента пагинации с различными вариантами и настройками</p>
+    </div>
+    <div class="header-actions">
+      <button av-button avType="primary" (clicked)="showHelpModal = true">Примеры использования</button>
+      <button av-button avType="default" (clicked)="showPrincipleModal = true">Принцип работы</button>
+    </div>
+  </div>
+
+  <!-- Модал помощи -->
+  <av-modal [(isOpen)]="showHelpModal" title="Руководство по Pagination" size="large">
+    <div modal-body>
+      <av-help-copy-container
+        title="Примеры использования в коде"
+        [content]="helpCode"
+        bgColor="#1e293b"
+      ></av-help-copy-container>
+    </div>
+    <div modal-footer>
+      <button av-button avType="default" (clicked)="showHelpModal = false">Закрыть</button>
+    </div>
+  </av-modal>
+
+  <!-- Модал принципа работы -->
+  <av-modal [(isOpen)]="showPrincipleModal" title="Принцип работы пагинации" size="large">
+    <div modal-body>
+      <av-help-copy-container
+        title="Архитектура и логика"
+        [content]="principleCode"
+        bgColor="#0f172a"
+      ></av-help-copy-container>
+    </div>
+    <div modal-footer>
+      <button av-button avType="default" (clicked)="showPrincipleModal = false">Закрыть</button>
+    </div>
+  </av-modal>
+
+  <!-- Модал сгенерированного кода -->
+  <av-modal [(isOpen)]="showGeneratedCodeModal" title="Сгенерированный код настройки" size="large">
+    <div modal-body>
+      <av-help-copy-container
+        title="Готовый код для вашего компонента"
+        [content]="generatedCode()"
+        bgColor="#0f172a"
+      ></av-help-copy-container>
+      <div
+        style="
+          margin-top: 1rem;
+          padding: 1rem;
+          background: rgba(24, 144, 255, 0.1);
+          border-radius: 8px;
+          border-left: 4px solid #1890ff;
+        "
+      >
+        <p style="margin: 0; font-size: 0.875rem; color: var(--text-secondary, #666)">
+          💡 <strong>Совет:</strong> Скопируйте этот код и вставьте в ваш компонент. Не забудьте импортировать
+          PaginationComponent!
+        </p>
+      </div>
+    </div>
+    <div modal-footer>
+      <button av-button avType="default" (clicked)="showGeneratedCodeModal = false">Закрыть</button>
+    </div>
+  </av-modal>
+
+  <!-- Интерактивная площадка -->
+  <section class="demo-section demo-section--playground">
+    <div class="demo-section__header">
+      <h2>🎮 Интерактивная площадка</h2>
+    </div>
+    <p class="demo-section__description">Настройте параметры и посмотрите как работает пагинация в реальном времени</p>
+
+    <div class="playground">
+      <!-- Панель управления -->
+      <div class="playground__controls">
+        <h3>Настройки</h3>
+
+        <div class="control-group">
+          <label class="control-label">
+            <span>Перейти на страницу:</span>
+            <input
+              type="number"
+              class="control-input"
+              [(ngModel)]="playgroundPage"
+              [min]="1"
+              [max]="Math.ceil(playgroundTotal() / playgroundPageSize())"
+            />
+          </label>
+        </div>
+
+        <div class="control-group">
+          <label class="control-label">
+            <span>Записей на странице:</span>
+            <select class="control-select" [(ngModel)]="playgroundPageSize">
+              <option [value]="5">5</option>
+              <option [value]="10">10</option>
+              <option [value]="20">20</option>
+              <option [value]="50">50</option>
+              <option [value]="100">100</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="control-group">
+          <label class="control-label">
+            <span>Всего записей:</span>
+            <input
+              type="number"
+              class="control-input"
+              [(ngModel)]="playgroundTotal"
+              [min]="1"
+              [max]="10000"
+              [step]="10"
+            />
+          </label>
+        </div>
+
+        <div class="control-group">
+          <label class="control-label">
+            <span>Размер кнопок:</span>
+            <select class="control-select" [(ngModel)]="playgroundSize">
+              <option value="small">Small</option>
+              <option value="medium">Medium</option>
+              <option value="large">Large</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="control-group">
+          <label class="control-label">
+            <span>Вариант отображения:</span>
+            <select class="control-select" [(ngModel)]="playgroundVariant">
+              <option value="default">Default</option>
+              <option value="simple">Simple</option>
+              <option value="compact">Compact</option>
+              <option value="minimal">Minimal</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="control-group">
+          <label class="control-label">
+            <span>Локаль:</span>
+            <select class="control-select" [(ngModel)]="playgroundLocale">
+              <option value="ru">Русский</option>
+              <option value="en">English</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="control-group">
+          <label class="control-label">
+            <span>Форма кнопок:</span>
+            <select class="control-select" [(ngModel)]="playgroundShape">
+              <option value="square">Square (квадратные)</option>
+              <option value="rounded">Rounded (скругленные)</option>
+              <option value="circle">Circle (круглые)</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="control-group">
+          <label class="control-label">
+            <span>Цвет:</span>
+            <select class="control-select" [(ngModel)]="playgroundColor">
+              <option value="primary">Primary (синий)</option>
+              <option value="success">Success (зеленый)</option>
+              <option value="warning">Warning (желтый)</option>
+              <option value="danger">Danger (красный)</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="control-group control-group--checkbox">
+          <label class="control-checkbox">
+            <input type="checkbox" [(ngModel)]="playgroundShowSizeChanger" />
+            <span>Показать селектор размера</span>
+          </label>
+        </div>
+
+        <div class="control-group control-group--checkbox">
+          <label class="control-checkbox">
+            <input type="checkbox" [(ngModel)]="playgroundShowQuickJumper" />
+            <span>Показать быстрый переход</span>
+          </label>
+        </div>
+
+        <div class="control-group control-group--checkbox">
+          <label class="control-checkbox">
+            <input type="checkbox" [(ngModel)]="playgroundShowTotal" />
+            <span>Показать total</span>
+          </label>
+        </div>
+
+        <div class="control-group control-group--checkbox">
+          <label class="control-checkbox">
+            <input type="checkbox" [(ngModel)]="playgroundShowFirstLast" />
+            <span>Показать кнопки первой/последней</span>
+          </label>
+        </div>
+
+        <div class="control-group control-group--checkbox">
+          <label class="control-checkbox">
+            <input type="checkbox" [(ngModel)]="playgroundDisabled" />
+            <span>Отключить (disabled)</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Превью -->
+      <div class="playground__preview">
+        <h3>Результат</h3>
+
+        <div class="preview-container">
+          <av-pagination
+            [total]="playgroundTotal()"
+            [(currentPage)]="playgroundPage"
+            [(pageSize)]="playgroundPageSize"
+            [size]="playgroundSize()"
+            [variant]="playgroundVariant()"
+            [showSizeChanger]="playgroundShowSizeChanger()"
+            [showQuickJumper]="playgroundShowQuickJumper()"
+            [showTotal]="playgroundShowTotal()"
+            [locale]="playgroundLocale()"
+            [shape]="playgroundShape()"
+            [color]="playgroundColor()"
+            [showFirstLast]="playgroundShowFirstLast()"
+            [disabled]="playgroundDisabled()"
+          >
+          </av-pagination>
+        </div>
+
+        <div class="preview-info">
+          <h4>Текущее состояние:</h4>
+          <div class="info-grid">
+            <div class="info-item">
+              <span class="info-label">Текущая страница:</span>
+              <span class="info-value">{{ playgroundPage() }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Размер страницы:</span>
+              <span class="info-value">{{ playgroundPageSize() }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Всего страниц:</span>
+              <span class="info-value">{{ Math.ceil(playgroundTotal() / playgroundPageSize()) }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Диапазон:</span>
+              <span class="info-value">
+                {{ (playgroundPage() - 1) * playgroundPageSize() + 1 }} -
+                {{ Math.min(playgroundPage() * playgroundPageSize(), playgroundTotal()) }}
+              </span>
+            </div>
+          </div>
+
+          <!-- Кнопка генерации кода -->
+          <div style="margin-top: 1.5rem; text-align: center">
+            <button av-button avType="primary" avSize="large" (clicked)="generatePaginationCode()">
+              📋 Сгенерировать код настройки
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Базовое использование -->
+  <section class="demo-section">
+    <div class="demo-section__header">
+      <h2>Базовое использование</h2>
+    </div>
+    <p class="demo-section__description">Простая пагинация с минимальными настройками</p>
+
+    <div class="demo-section__preview">
+      <av-pagination [total]="100" [(currentPage)]="currentPage1"> </av-pagination>
+    </div>
+
+    <av-help-copy-container [content]="basicCode" title="HTML код"></av-help-copy-container>
+  </section>
+
+  <!-- Варианты отображения -->
+  <section class="demo-section">
+    <div class="demo-section__header">
+      <h2>Варианты отображения</h2>
+    </div>
+    <p class="demo-section__description">Четыре варианта: default, simple, compact, minimal</p>
+
+    <div class="demo-section__preview">
+      <div class="variant-group">
+        <h4>Default (полный)</h4>
+        <av-pagination [total]="totalItems" [(currentPage)]="currentPage2" variant="default"> </av-pagination>
+      </div>
+
+      <div class="variant-group">
+        <h4>Simple (упрощенный)</h4>
+        <av-pagination [total]="totalItems" [(currentPage)]="currentPage3" variant="simple"> </av-pagination>
+      </div>
+
+      <div class="variant-group">
+        <h4>Compact (компактный)</h4>
+        <av-pagination [total]="totalItems" [(currentPage)]="currentPage4" variant="compact"> </av-pagination>
+      </div>
+
+      <div class="variant-group">
+        <h4>Minimal (минимальный)</h4>
+        <av-pagination [total]="totalItems" [(currentPage)]="currentPage5" variant="minimal"> </av-pagination>
+      </div>
+    </div>
+
+    <av-help-copy-container [content]="variantsCode" title="HTML код"></av-help-copy-container>
+  </section>
+
+  <!-- Размеры -->
+  <section class="demo-section">
+    <div class="demo-section__header">
+      <h2>Размеры</h2>
+    </div>
+    <p class="demo-section__description">Три размера: small, medium (по умолчанию), large</p>
+
+    <div class="demo-section__preview">
+      <div class="size-group">
+        <h4>Small</h4>
+        <av-pagination [total]="100" [(currentPage)]="currentPage6" size="small"> </av-pagination>
+      </div>
+
+      <div class="size-group">
+        <h4>Medium (default)</h4>
+        <av-pagination [total]="100" [(currentPage)]="currentPage7" size="medium"> </av-pagination>
+      </div>
+
+      <div class="size-group">
+        <h4>Large</h4>
+        <av-pagination [total]="100" [(currentPage)]="currentPage8" size="large"> </av-pagination>
+      </div>
+    </div>
+
+    <av-help-copy-container [content]="sizesCode" title="HTML код"></av-help-copy-container>
+  </section>
+
+  <!-- Селектор размера страницы -->
+  <section class="demo-section">
+    <div class="demo-section__header">
+      <h2>Селектор размера страницы</h2>
+    </div>
+    <p class="demo-section__description">Позволяет пользователю выбрать количество элементов на странице</p>
+
+    <div class="demo-section__preview">
+      <av-pagination
+        [total]="500"
+        [(currentPage)]="currentPage1"
+        [(pageSize)]="pageSize1"
+        [showSizeChanger]="true"
+        [pageSizeOptions]="[10, 25, 50, 100]"
+      >
+      </av-pagination>
+
+      <div class="info-box">
+        <p>Текущая страница: {{ currentPage1() }}</p>
+        <p>Размер страницы: {{ pageSize1() }}</p>
+      </div>
+    </div>
+
+    <av-help-copy-container [content]="sizeChangerCode" title="HTML код"></av-help-copy-container>
+  </section>
+
+  <!-- Быстрый переход -->
+  <section class="demo-section">
+    <div class="demo-section__header">
+      <h2>Быстрый переход</h2>
+    </div>
+    <p class="demo-section__description">Поле для быстрого перехода на нужную страницу</p>
+
+    <div class="demo-section__preview">
+      <av-pagination [total]="1000" [(currentPage)]="currentPage2" [showQuickJumper]="true"> </av-pagination>
+    </div>
+
+    <av-help-copy-container [content]="quickJumperCode" title="HTML код"></av-help-copy-container>
+  </section>
+
+  <!-- Локализация -->
+  <section class="demo-section">
+    <div class="demo-section__header">
+      <h2>Локализация</h2>
+    </div>
+    <p class="demo-section__description">Поддержка русского и английского языков</p>
+
+    <div class="demo-section__preview">
+      <div class="locale-group">
+        <h4>Русский (по умолчанию)</h4>
+        <av-pagination [total]="100" [(currentPage)]="currentPage3" locale="ru"> </av-pagination>
+      </div>
+
+      <div class="locale-group">
+        <h4>English</h4>
+        <av-pagination [total]="100" [(currentPage)]="currentPage4" locale="en"> </av-pagination>
+      </div>
+    </div>
+
+    <av-help-copy-container [content]="localeCode" title="HTML код"></av-help-copy-container>
+  </section>
+
+  <!-- Client-side пагинация -->
+  <section class="demo-section">
+    <div class="demo-section__header">
+      <h2>Client-side пагинация</h2>
+    </div>
+    <p class="demo-section__description">Пример пагинации локальных данных с использованием computed</p>
+
+    <div class="demo-section__preview">
+      <div class="client-side-demo">
+        <div class="items-list">
+          <div class="item" *ngFor="let item of displayedItems">
+            <div class="item__id">#{{ item.id }}</div>
+            <div class="item__content">
+              <h5>{{ item.name }}</h5>
+              <p>{{ item.description }}</p>
+            </div>
+          </div>
+        </div>
+
+        <av-pagination
+          [total]="allItems().length"
+          [(currentPage)]="clientPage"
+          [(pageSize)]="clientPageSize"
+          [showSizeChanger]="true"
+          [pageSizeOptions]="[5, 10, 20, 50]"
+        >
+        </av-pagination>
+      </div>
+    </div>
+
+    <av-help-copy-container [content]="clientSideCode" title="TypeScript + HTML код"></av-help-copy-container>
+  </section>
+
+  <!-- Практические примеры -->
+  <section class="demo-section">
+    <div class="demo-section__header">
+      <h2>Практические примеры</h2>
+    </div>
+    <p class="demo-section__description">Реальные сценарии использования</p>
+
+    <div class="demo-section__preview">
+      <div class="practical-examples">
+        <div class="example-card">
+          <h4>Список пользователей</h4>
+          <p class="example-desc">Пагинация с сервера, 20 элементов на странице</p>
+          <av-pagination
+            [total]="500"
+            [(currentPage)]="currentPage5"
+            [(pageSize)]="pageSize2"
+            [showSizeChanger]="true"
+            [pageSizeOptions]="[10, 20, 50]"
+            (paginationChange)="onPaginationChange($event)"
+          >
+          </av-pagination>
+        </div>
+
+        <div class="example-card">
+          <h4>Мобильная версия</h4>
+          <p class="example-desc">Компактный вариант для мобильных устройств</p>
+          <av-pagination [total]="150" [(currentPage)]="currentPage6" variant="compact" size="small"> </av-pagination>
+        </div>
+
+        <div class="example-card">
+          <h4>Бесконечная прокрутка</h4>
+          <p class="example-desc">Минимальный вариант для "Load More"</p>
+          <av-pagination [total]="300" [(currentPage)]="currentPage7" variant="minimal"> </av-pagination>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

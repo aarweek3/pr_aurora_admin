@@ -75,6 +75,61 @@ export class TagUiComponent {
    Теги имеют правильные размеры для клика (минимум 20px в высоту)
    и визуальную индикацию фокуса при вводе.`;
 
+  // Code examples
+  basicCode = `<av-tag label="Angular"></av-tag>
+<av-tag label="TypeScript"></av-tag>
+<av-tag label="SCSS"></av-tag>`;
+
+  sizesCode = `<av-tag label="Small Tag" size="small" color="primary"></av-tag>
+<av-tag label="Medium Tag" size="medium" color="primary"></av-tag>
+<av-tag label="Large Tag" size="large" color="primary"></av-tag>`;
+
+  colorsCode = `<av-tag label="primary" color="primary"></av-tag>
+<av-tag label="success" color="success"></av-tag>
+<av-tag label="warning" color="warning"></av-tag>
+<av-tag label="error" color="error"></av-tag>
+<av-tag label="info" color="info"></av-tag>
+<av-tag label="neutral" color="neutral"></av-tag>`;
+
+  variantsCode = `<av-tag label="Soft" variant="soft" color="primary"></av-tag>
+<av-tag label="Filled" variant="filled" color="primary"></av-tag>
+<av-tag label="Outlined" variant="outlined" color="primary"></av-tag>`;
+
+  shapesCode = `<av-tag label="Rounded" shape="rounded" color="primary"></av-tag>
+<av-tag label="Pill" shape="pill" color="success"></av-tag>`;
+
+  iconsCode = `<av-tag label="Settings" icon="actions/av_settings" color="neutral"></av-tag>
+<av-tag label="User" icon="actions/av_user" color="primary"></av-tag>
+<av-tag label="Star" icon="actions/av_star" color="warning"></av-tag>`;
+
+  removableCode = `<av-tag
+  label="Angular"
+  [removable]="true"
+  color="primary"
+  (removed)="onTagRemove()">
+</av-tag>`;
+
+  clickableCode = `<av-tag
+  label="Click me"
+  [clickable]="true"
+  color="info"
+  (clicked)="onTagClick()">
+</av-tag>`;
+
+  customColorsCode = `<av-tag label="Purple" color="#8b5cf6" variant="soft"></av-tag>
+<av-tag label="Pink" color="#ec4899" variant="filled"></av-tag>
+<av-tag label="Teal" color="#14b8a6" variant="outlined"></av-tag>`;
+
+  tagInputCode = `<av-tag-input
+  [(tags)]="myTags"
+  placeholder="Добавьте навыки..."
+  [allowDuplicates]="false"
+  variant="soft"
+></av-tag-input>
+
+// В компоненте:
+myTags = signal(['Frontend', 'UI/UX']);`;
+
   onTagClick(label: string) {
     console.log('Clicked tag:', label);
   }
