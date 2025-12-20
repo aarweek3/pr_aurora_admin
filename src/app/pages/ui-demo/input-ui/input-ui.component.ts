@@ -1,17 +1,12 @@
-// src/app/pages/ui-demo/input-ui/input-ui.component.ts
 import { CommonModule } from '@angular/common';
 import { Component, signal } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ButtonDirective } from '../../../shared/components/ui/button/button.directive';
+import { HelpCopyContainerComponent } from '../../../shared/components/ui/container-help-copy-ui';
 import { InputComponent } from '../../../shared/components/ui/input/input.component';
 import { InputDirective } from '../../../shared/components/ui/input/input.directive';
+import { ModalComponent } from '../../../shared/components/ui/modal';
 
-/**
- * Input UI Demo Component
- *
- * Демонстрация Input компонента - поля ввода текста
- * Показывает все варианты: Directive, Component, размеры, статусы, варианты, типы
- */
 @Component({
   selector: 'app-input-ui',
   standalone: true,
@@ -22,11 +17,32 @@ import { InputDirective } from '../../../shared/components/ui/input/input.direct
     ButtonDirective,
     InputDirective,
     InputComponent,
+    HelpCopyContainerComponent,
+    ModalComponent,
   ],
   templateUrl: './input-ui.component.html',
   styleUrls: ['./input-ui.component.scss'],
 })
 export class InputUiComponent {
+  // Playground state
+  playgroundValue = signal('');
+  playgroundLabel = signal('Username');
+  playgroundPlaceholder = signal('Enter your username...');
+  playgroundHint = signal('Use 3-20 characters');
+  playgroundStatus = signal<'default' | 'error' | 'warning' | 'success'>('default');
+  playgroundVariant = signal<'outlined' | 'filled' | 'borderless'>('outlined');
+  playgroundSize = signal<'small' | 'default' | 'large' | 'x-large'>('default');
+  playgroundType = signal<
+    'text' | 'email' | 'password' | 'number' | 'tel' | 'url' | 'search' | 'date' | 'time'
+  >('text');
+  playgroundDisabled = signal(false);
+  playgroundShowPasswordToggle = signal(true);
+  playgroundErrorMessage = signal('This field is required');
+
+  // Modal state
+  showGeneratedCodeModal = false;
+  generatedCode = signal('');
+
   // Help section
   showHelp = signal(false);
 
@@ -61,7 +77,7 @@ emailControl = new FormControl('', [
   [avStatus]="emailControl.invalid ? 'error' : 'success'"
 />`;
 
-  // Basic examples
+  // Basic examples values
   basicValue = '';
   emailValue = '';
   passwordValue = '';
@@ -107,30 +123,49 @@ emailControl = new FormControl('', [
     this.showHelp.update((v) => !v);
   }
 
+  generatePlaygroundCode(): void {
+    const attributes: string[] = [];
+
+    attributes.push(`[(ngModel)]="myValue"`);
+    if (this.playgroundLabel()) attributes.push(`label="${this.playgroundLabel()}"`);
+    if (this.playgroundPlaceholder())
+      attributes.push(`placeholder="${this.playgroundPlaceholder()}"`);
+    if (this.playgroundType() !== 'text') attributes.push(`type="${this.playgroundType()}"`);
+    if (this.playgroundSize() !== 'default') attributes.push(`size="${this.playgroundSize()}"`);
+    if (this.playgroundStatus() !== 'default')
+      attributes.push(`status="${this.playgroundStatus()}"`);
+    if (this.playgroundVariant() !== 'outlined')
+      attributes.push(`variant="${this.playgroundVariant()}"`);
+    if (this.playgroundHint()) attributes.push(`hint="${this.playgroundHint()}"`);
+    if (this.playgroundStatus() === 'error' && this.playgroundErrorMessage()) {
+      attributes.push(`errorMessage="${this.playgroundErrorMessage()}"`);
+    }
+    if (this.playgroundDisabled()) attributes.push(`[disabled]="true"`);
+    if (this.playgroundType() === 'password' && !this.playgroundShowPasswordToggle()) {
+      attributes.push(`[showPasswordToggle]="false"`);
+    }
+
+    const htmlCode = `<av-input\n  ${attributes.join('\n  ')}\n></av-input>`;
+    const tsCode = `// В компоненте\nmyValue = signal('');`;
+
+    this.generatedCode.set(`${htmlCode}\n\n${tsCode}`);
+    this.showGeneratedCodeModal = true;
+  }
+
   getErrorMessage(control: FormControl): string {
-    if (control.hasError('required')) {
-      return 'Это поле обязательно';
-    }
-    if (control.hasError('email')) {
-      return 'Неверный формат email';
-    }
+    if (control.hasError('required')) return 'Это поле обязательно';
+    if (control.hasError('email')) return 'Неверный формат email';
     if (control.hasError('minlength')) {
       const minLength = control.getError('minlength').requiredLength;
       return `Минимум ${minLength} символов`;
     }
-    if (control.hasError('pattern')) {
-      return 'Неверный формат телефона';
-    }
+    if (control.hasError('pattern')) return 'Неверный формат телефона';
     return '';
   }
 
   getStatus(control: FormControl): 'default' | 'error' | 'warning' | 'success' {
-    if (control.invalid && control.touched) {
-      return 'error';
-    }
-    if (control.valid && control.touched && control.value) {
-      return 'success';
-    }
+    if (control.invalid && control.touched) return 'error';
+    if (control.valid && control.touched && control.value) return 'success';
     return 'default';
   }
 }

@@ -101,6 +101,12 @@ export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
               route: '/ui-demo/help-copy-container-ui',
               icon: 'copy',
             },
+            {
+              id: 'spinner-ui',
+              label: 'Spinner UI',
+              route: '/ui-demo/spinner-ui',
+              icon: 'reload',
+            },
           ],
         },
         {

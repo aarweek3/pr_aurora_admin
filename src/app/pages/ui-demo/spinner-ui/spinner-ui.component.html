@@ -1,0 +1,359 @@
+<div class="spinner-ui-demo">
+  <div class="spinner-ui-demo__header">
+    <div class="header-content">
+      <h1>Spinner Component</h1>
+      <p>Премиальные индикаторы загрузки с поддержкой анимаций, оверлеев и умных задержек.</p>
+    </div>
+    <div class="header-actions">
+      <button av-button avType="primary" (clicked)="showHelpModal = true">Инструкция</button>
+    </div>
+  </div>
+
+  <!-- Модал помощи -->
+  <av-modal [(isOpen)]="showHelpModal" title="Как использовать Spinner" size="large">
+    <div modal-body>
+      <div class="help-content">
+        <h4>Базовое использование</h4>
+        <pre class="code-example"><code>&lt;av-spinner&gt;&lt;/av-spinner&gt;</code></pre>
+
+        <h4>Внутри кнопки (inherit)</h4>
+        <pre class="code-example"><code>&lt;button av-button avType="primary"&gt;
+  &lt;av-spinner size="small" color="inherit"&gt;&lt;/av-spinner&gt;
+  Loading...
+&lt;/button&gt;</code></pre>
+
+        <h4>Оверлей в блоке</h4>
+        <pre class="code-example"><code>&lt;div style="position: relative"&gt;
+  &lt;av-spinner [overlay]="true" label="Loading..."&gt;&lt;/av-spinner&gt;
+  &lt;!-- Контент --&gt;
+&lt;/div&gt;</code></pre>
+
+        <h4>Управление видимостью (visible)</h4>
+        <p>Используйте <code>[visible]</code> для плавного появления/скрытия без удаления из DOM:</p>
+        <pre
+          class="code-example"
+        ><code>&lt;av-spinner [visible]="isLoading()" [delay]="300"&gt;&lt;/av-spinner&gt;</code></pre>
+        <p><small>* Рекомендуется для overlay-режимов, чтобы анимация затухания была плавной.</small></p>
+      </div>
+    </div>
+    <div modal-footer>
+      <button av-button avType="default" (clicked)="showHelpModal = false">Закрыть</button>
+    </div>
+  </av-modal>
+
+  <!-- Модал сгенерированного кода -->
+  <av-modal [(isOpen)]="showCodeModal" title="Сгенерированный код Spinner" size="large">
+    <div modal-body>
+      <av-help-copy-container
+        title="Готовый код"
+        [content]="generatedCode()"
+        bgColor="#0a0e1a"
+      ></av-help-copy-container>
+    </div>
+    <div modal-footer>
+      <button av-button avType="default" (clicked)="showCodeModal = false">Закрыть</button>
+    </div>
+  </av-modal>
+
+  <!-- 🎮 Интерактивная площадка -->
+  <section class="demo-section demo-section--playground">
+    <div class="demo-section__header">
+      <h2>🎮 Интерактивная площадка</h2>
+    </div>
+
+    <div class="playground">
+      <!-- Настройки -->
+      <div class="playground__controls">
+        <h3>Настройки</h3>
+
+        <div class="control-group">
+          <label class="control-label">
+            <span>Размер:</span>
+            <select class="control-select" [(ngModel)]="playgroundSize">
+              <option value="tiny">Tiny (14px)</option>
+              <option value="small">Small (20px)</option>
+              <option value="default">Default (32px)</option>
+              <option value="large">Large (48px)</option>
+              <option value="huge">Huge (80px)</option>
+              <option [ngValue]="120">Custom (120px)</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="control-group">
+          <label class="control-label">
+            <span>Анимация:</span>
+            <select class="control-select" [(ngModel)]="playgroundAnimation">
+              <option value="spin">Spin (Вращение)</option>
+              <option value="pulse">Pulse (Пульсация)</option>
+              <option value="bounce">Bounce (Прыжок)</option>
+              <option value="drift">Drift (Дрейф)</option>
+              <option value="none">None</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="control-group">
+          <label class="control-label">
+            <span>Цвет: {{ playgroundColor() }}</span>
+            <div style="display: flex; gap: 8px">
+              <select class="control-select" [(ngModel)]="playgroundColor" style="flex: 1">
+                <option value="primary">Primary</option>
+                <option value="success">Success</option>
+                <option value="warning">Warning</option>
+                <option value="error">Error</option>
+                <option value="white">White</option>
+                <option value="inherit">Inherit</option>
+              </select>
+              <input
+                type="color"
+                class="control-input"
+                style="width: 40px; padding: 2px"
+                [(ngModel)]="playgroundColor"
+              />
+            </div>
+            <input
+              type="text"
+              class="control-input"
+              placeholder="#HEX"
+              [(ngModel)]="playgroundColor"
+              style="margin-top: 8px"
+            />
+          </label>
+        </div>
+
+        <div class="control-group">
+          <label class="control-label">
+            <span>Текст (Label):</span>
+            <input type="text" class="control-input" [(ngModel)]="playgroundLabel" />
+          </label>
+        </div>
+
+        <div class="control-group">
+          <label class="control-label">
+            <span>Подсказка (Tip):</span>
+            <input type="text" class="control-input" [(ngModel)]="playgroundTip" />
+          </label>
+        </div>
+
+        <div class="control-group">
+          <label class="control-label">
+            <span>Позиция текста:</span>
+            <select class="control-select" [(ngModel)]="playgroundLabelPos">
+              <option value="bottom">Снизу</option>
+              <option value="right">Справа</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="control-group control-group--checkbox">
+          <label class="control-checkbox">
+            <input type="checkbox" [(ngModel)]="playgroundVisible" />
+            <span>Visible (Видимость)</span>
+          </label>
+        </div>
+
+        <div class="control-group control-group--checkbox">
+          <label class="control-checkbox">
+            <input type="checkbox" [(ngModel)]="playgroundOverlay" />
+            <span>Включить Overlay</span>
+          </label>
+        </div>
+
+        @if (playgroundOverlay()) {
+        <div class="control-group">
+          <label class="control-label">
+            <span>Blur (px): {{ playgroundBlur() }}</span>
+            <input type="range" min="0" max="20" [(ngModel)]="playgroundBlur" />
+          </label>
+        </div>
+        <div class="control-group">
+          <label class="control-label">
+            <span>Opacity: {{ playgroundOpacity() }}</span>
+            <input type="range" min="0" max="1" step="0.1" [(ngModel)]="playgroundOpacity" />
+          </label>
+        </div>
+        }
+      </div>
+
+      <!-- Превью -->
+      <div class="playground__preview">
+        <h3>Результат</h3>
+        <div class="preview-container" [style.position]="playgroundOverlay() ? 'relative' : 'static'">
+          <av-spinner
+            [visible]="playgroundVisible()"
+            [size]="playgroundSize()"
+            [color]="playgroundColor()"
+            [animation]="playgroundAnimation()"
+            [label]="playgroundLabel()"
+            [tip]="playgroundTip()"
+            [labelPosition]="playgroundLabelPos()"
+            [overlay]="playgroundOverlay()"
+            [backdropBlur]="playgroundBlur()"
+            [backdropOpacity]="playgroundOpacity()"
+          ></av-spinner>
+
+          @if (playgroundOverlay()) {
+          <div style="padding: 20px; text-align: center; color: #888">
+            Контент под оверлеем...<br />
+            Этот текст перекрывается спиннером.
+          </div>
+          }
+        </div>
+
+        <div style="margin-top: 2rem; text-align: center">
+          <button av-button avType="primary" avSize="large" (clicked)="generateCode()">📋 Сгенерировать код</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Полноэкранный пример -->
+  <section class="demo-section">
+    <div class="demo-section__header">
+      <h2>Специальные режимы</h2>
+    </div>
+    <div class="demo-section__preview">
+      <div style="display: flex; gap: 1rem">
+        <button av-button avType="default" (clicked)="toggleFullScreen()">🚀 Проверить FullScreen (на 3 сек)</button>
+      </div>
+
+      @if (showFullScreen) {
+      <av-spinner
+        [fullScreen]="true"
+        label="Инициализация системы..."
+        tip="Пожалуйста, не закрывайте вкладку"
+        [backdropBlur]="10"
+      ></av-spinner>
+      }
+    </div>
+  </section>
+  <!-- Цветовые схемы -->
+  <section class="demo-section">
+    <div class="demo-section__header">
+      <h2>Цветовые схемы</h2>
+    </div>
+    <div class="demo-section__preview">
+      <div class="demo-preview-block">
+        <av-spinner color="primary" label="Primary"></av-spinner>
+        <av-help-copy-container
+          content='<av-spinner color="primary"></av-spinner>'
+          bgColor="#0f172a"
+        ></av-help-copy-container>
+      </div>
+      <div class="demo-preview-block">
+        <av-spinner color="success" label="Success"></av-spinner>
+        <av-help-copy-container
+          content='<av-spinner color="success"></av-spinner>'
+          bgColor="#0f172a"
+        ></av-help-copy-container>
+      </div>
+      <div class="demo-preview-block">
+        <av-spinner color="warning" label="Warning"></av-spinner>
+        <av-help-copy-container
+          content='<av-spinner color="warning"></av-spinner>'
+          bgColor="#0f172a"
+        ></av-help-copy-container>
+      </div>
+      <div class="demo-preview-block">
+        <av-spinner color="error" label="Error"></av-spinner>
+        <av-help-copy-container
+          content='<av-spinner color="error"></av-spinner>'
+          bgColor="#0f172a"
+        ></av-help-copy-container>
+      </div>
+      <div class="demo-preview-block">
+        <av-spinner color="#722ed1" label="Custom"></av-spinner>
+        <av-help-copy-container
+          content='<av-spinner color="#722ed1"></av-spinner>'
+          bgColor="#0f172a"
+        ></av-help-copy-container>
+      </div>
+    </div>
+  </section>
+
+  <!-- Варианты анимации -->
+  <section class="demo-section">
+    <div class="demo-section__header">
+      <h2>Варианты анимации</h2>
+    </div>
+    <div class="demo-section__preview">
+      <div class="demo-preview-block">
+        <av-spinner animation="spin" label="Spin (Rotate)"></av-spinner>
+        <av-help-copy-container
+          content='<av-spinner animation="spin"></av-spinner>'
+          bgColor="#0f172a"
+        ></av-help-copy-container>
+      </div>
+      <div class="demo-preview-block">
+        <av-spinner animation="pulse" label="Pulse (Fade)"></av-spinner>
+        <av-help-copy-container
+          content='<av-spinner animation="pulse"></av-spinner>'
+          bgColor="#0f172a"
+        ></av-help-copy-container>
+      </div>
+      <div class="demo-preview-block">
+        <av-spinner animation="none" label="Static"></av-spinner>
+        <av-help-copy-container
+          content='<av-spinner animation="none"></av-spinner>'
+          bgColor="#0f172a"
+        ></av-help-copy-container>
+      </div>
+    </div>
+  </section>
+
+  <!-- Примеры в кнопках -->
+  <section class="demo-section">
+    <div class="demo-section__header">
+      <h2>Использование в кнопках (inherit)</h2>
+    </div>
+    <div class="demo-section__preview demo-section__preview--column">
+      <div class="demo-preview-block">
+        <button av-button avType="primary">
+          <av-spinner size="small" color="white" style="margin-right: 8px"></av-spinner>
+          Primary Loading
+        </button>
+        <av-help-copy-container
+          content='<button av-button avType="primary"><av-spinner size="small" color="white"></av-spinner> ...</button>'
+          bgColor="#0f172a"
+        ></av-help-copy-container>
+      </div>
+
+      <div class="demo-preview-block">
+        <button av-button avType="primary">
+          <av-spinner size="small" color="inherit" style="margin-right: 8px"></av-spinner>
+          Success Mock (Inherit)
+        </button>
+        <av-help-copy-container
+          content='<button av-button><av-spinner size="small" color="inherit"></av-spinner> ...</button>'
+          bgColor="#0f172a"
+        ></av-help-copy-container>
+      </div>
+
+      <div class="demo-preview-block">
+        <button av-button avType="danger">
+          <av-spinner size="small" color="inherit" style="margin-right: 8px"></av-spinner>
+          Danger Loading
+        </button>
+        <av-help-copy-container
+          content='<button av-button avType="danger"><av-spinner size="small" color="inherit"></av-spinner> ...</button>'
+          bgColor="#0f172a"
+        ></av-help-copy-container>
+      </div>
+    </div>
+  </section>
+
+  <!-- Размеры -->
+  <section class="demo-section">
+    <div class="demo-section__header">
+      <h2>Масштабируемость</h2>
+    </div>
+    <div class="demo-section__preview" style="align-items: flex-end">
+      <av-spinner size="tiny" label="Tiny"></av-spinner>
+      <av-spinner size="small" label="Small"></av-spinner>
+      <av-spinner size="default" label="Default"></av-spinner>
+      <av-spinner size="large" label="Large"></av-spinner>
+      <av-spinner size="huge" label="Huge"></av-spinner>
+    </div>
+  </section>
+</div>

@@ -52,4 +52,9 @@ export const UI_DEMO_ROUTES: Routes = [
         (m) => m.HelpCopyContainerUiComponent,
       ),
   },
+  {
+    path: 'spinner-ui',
+    loadComponent: () =>
+      import('./spinner-ui/spinner-ui.component').then((m) => m.SpinnerUiComponent),
+  },
 ];
