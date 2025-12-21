@@ -1,0 +1,188 @@
+<div class="ui-help-container">
+  <div class="ui-help-header">
+    <h1>UI Help Base ⭐</h1>
+    <p class="text-secondary">Базовая структура для компонентов помощи</p>
+  </div>
+
+  <div class="ui-help-content">
+    <div class="ui-help-section">
+      <div class="section-header">
+        <button class="collapse-toggle" (click)="toggleSection1()">
+          <app-icon
+            [type]="isSection1Visible() ? 'arrows/av_chevron-up' : 'arrows/av_chevron-down'"
+            [size]="20"
+          ></app-icon>
+        </button>
+        <h2>🛠️ Технический интерфейс</h2>
+      </div>
+      @if (isSection1Visible()) {
+      <div class="section-content">
+        <div class="content-block no-style">
+          <av-help-copy-container
+            [title]="section1Title"
+            [content]="section1Content"
+            [bgColor]="section1BgColor"
+            [showHelpButton]="true"
+            [helpContent]="section1HelpContent"
+          ></av-help-copy-container>
+        </div>
+      </div>
+      }
+    </div>
+
+    <div class="ui-help-section">
+      <div class="section-header">
+        <button class="collapse-toggle" (click)="toggleSection2()">
+          <app-icon
+            [type]="isSection2Visible() ? 'arrows/av_chevron-up' : 'arrows/av_chevron-down'"
+            [size]="20"
+          ></app-icon>
+        </button>
+        <h2>🎮 Интерактивная площадка</h2>
+      </div>
+      @if (isSection2Visible()) {
+      <div class="playground-container">
+        <div nz-row [nzGutter]="[24, 24]">
+          <!-- Controls -->
+          <div nz-col [nzXs]="24" [nzLg]="10">
+            <nz-card nzTitle="Настройки кнопки" [nzExtra]="resetTpl" class="control-card">
+              <ng-template #resetTpl>
+                <button av-button avType="text" avTextColor="#f43f5e" (clicked)="resetAllSettings()">
+                  Сбросить все !
+                </button>
+              </ng-template>
+
+              <!-- Тип кнопки -->
+              <div class="control-group">
+                <div class="control-item">
+                  <label>Тип кнопки (avType):</label>
+                  <nz-select [(ngModel)]="pgButtonType" style="width: 100%">
+                    <nz-option nzValue="primary" nzLabel="Primary - Основная"></nz-option>
+                    <nz-option nzValue="default" nzLabel="Default - По умолчанию"></nz-option>
+                    <nz-option nzValue="dashed" nzLabel="Dashed - Пунктирная"></nz-option>
+                    <nz-option nzValue="text" nzLabel="Text - Только текст без фона"></nz-option>
+                    <nz-option nzValue="link" nzLabel="Link - Ссылка"></nz-option>
+                    <nz-option nzValue="danger" nzLabel="Danger - Опасная"></nz-option>
+                  </nz-select>
+                </div>
+              </div>
+
+              <!-- Размеры -->
+              <div class="control-group" style="background: #f0f7ff; padding: 12px; border-radius: 8px; margin: 16px 0">
+                <div nz-row [nzGutter]="16">
+                  <div nz-col [nzSpan]="12">
+                    <div class="control-item">
+                      <label>Размер (avSize):</label>
+                      <nz-select [(ngModel)]="pgButtonSize" style="width: 100%">
+                        <nz-option nzValue="small" nzLabel="Small"></nz-option>
+                        <nz-option nzValue="default" nzLabel="Default"></nz-option>
+                        <nz-option nzValue="large" nzLabel="Large"></nz-option>
+                      </nz-select>
+                    </div>
+                  </div>
+                  <div nz-col [nzSpan]="12">
+                    <div class="control-item">
+                      <label>Форма (avShape):</label>
+                      <nz-select [(ngModel)]="pgButtonShape" style="width: 100%">
+                        <nz-option nzValue="default" nzLabel="Default - Острые углы"></nz-option>
+                        <nz-option nzValue="rounded" nzLabel="Rounded - Скругленные"></nz-option>
+                        <nz-option nzValue="round" nzLabel="Round - Pill форма"></nz-option>
+                        <nz-option nzValue="circle" nzLabel="Circle - Круг"></nz-option>
+                        <nz-option nzValue="square" nzLabel="Square - Квадрат"></nz-option>
+                      </nz-select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="preview-actions" style="margin-top: 24px">
+                <p style="margin-bottom: 12px; font-weight: 600; font-size: 13px">Предпросмотр кнопки:</p>
+                <div
+                  style="
+                    display: flex;
+                    justify-content: center;
+                    padding: 32px;
+                    background: #fff;
+                    border-radius: 8px;
+                    border: 1px solid #e8e8e8;
+                  "
+                >
+                  <button av-button [avType]="pgButtonType()" [avSize]="pgButtonSize()" [avShape]="pgButtonShape()">
+                    Кнопка {{ pgButtonType() }}
+                  </button>
+                </div>
+              </div>
+            </nz-card>
+          </div>
+
+          <!-- Code View -->
+          <div nz-col [nzXs]="24" [nzLg]="14">
+            <av-help-copy-container
+              title="Generated Code"
+              [content]="pgGeneratedCode()"
+              [defaultCollapsed]="false"
+            ></av-help-copy-container>
+          </div>
+        </div>
+      </div>
+      }
+    </div>
+
+    <div class="ui-help-section">
+      <div class="section-header">
+        <button class="collapse-toggle" (click)="toggleSection3()">
+          <app-icon
+            [type]="isSection3Visible() ? 'arrows/av_chevron-up' : 'arrows/av_chevron-down'"
+            [size]="20"
+          ></app-icon>
+        </button>
+        <h2>Секция 3</h2>
+      </div>
+      @if (isSection3Visible()) {
+      <div class="section-content">
+        <div class="content-block">
+          <div class="block-placeholder">Блок 1</div>
+        </div>
+      </div>
+      }
+    </div>
+
+    <div class="ui-help-section">
+      <div class="section-header">
+        <button class="collapse-toggle" (click)="toggleSection4()">
+          <app-icon
+            [type]="isSection4Visible() ? 'arrows/av_chevron-up' : 'arrows/av_chevron-down'"
+            [size]="20"
+          ></app-icon>
+        </button>
+        <h2>Секция 4</h2>
+      </div>
+      @if (isSection4Visible()) {
+      <div class="section-content">
+        <div class="content-block">
+          <div class="block-placeholder">Блок 1</div>
+        </div>
+      </div>
+      }
+    </div>
+
+    <div class="ui-help-section">
+      <div class="section-header">
+        <button class="collapse-toggle" (click)="toggleSection5()">
+          <app-icon
+            [type]="isSection5Visible() ? 'arrows/av_chevron-up' : 'arrows/av_chevron-down'"
+            [size]="20"
+          ></app-icon>
+        </button>
+        <h2>Секция 5</h2>
+      </div>
+      @if (isSection5Visible()) {
+      <div class="section-content">
+        <div class="content-block">
+          <div class="block-placeholder">Блок 1</div>
+        </div>
+      </div>
+      }
+    </div>
+  </div>
+</div>

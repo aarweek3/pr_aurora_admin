@@ -542,6 +542,30 @@ export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
       ],
     },
     {
+      id: 'test',
+      title: 'Тесты',
+      items: [
+        {
+          id: 'tests-menu',
+          icon: 'experiment',
+          label: 'Тесты',
+          type: 'submenu',
+          badge: {
+            value: 'Dev',
+            intent: 'info',
+          },
+          submenu: [
+            {
+              id: 'ui-help-base',
+              label: 'UI Help Base',
+              route: '/test/ui-help-base',
+              icon: 'question-circle',
+            },
+          ],
+        },
+      ],
+    },
+    {
       id: 'system',
       title: 'Система',
       items: [

@@ -35,6 +35,10 @@ export const routes: Routes = [
         path: 'health',
         loadChildren: () => import('./features/health/health.routes').then((m) => m.HEALTH_ROUTES),
       },
+      {
+        path: 'test',
+        loadChildren: () => import('./pages/test/test.routes').then((m) => m.TEST_ROUTES),
+      },
       // TODO: Add feature modules (Phase 7)
       // { path: 'users', loadChildren: () => import('./pages/users/users.routes') },
       // { path: 'content', loadChildren: () => import('./pages/content/content.routes') },

@@ -12,7 +12,8 @@
       "Bash(else echo \"VS Code AppData not found\")",
       "Bash(fi)",
       "Bash(find:*)",
-      "Bash(npm install:*)"
+      "Bash(npm install:*)",
+      "Bash(mkdir:*)"
     ]
   }
 }
