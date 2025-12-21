@@ -1,0 +1,630 @@
+<div class="ui-demo">
+  <div class="ui-demo__header">
+    <h1>Buttons (New Directive API) ⭐</h1>
+    <p class="text-secondary">
+      Использование директивы <code>av-button</code> на нативных элементах для создания производительных и стильных
+      кнопок.
+    </p>
+  </div>
+
+  <!-- 🛠️ API Interface Documentation -->
+  <section class="demo-section">
+    <div class="demo-section__header">
+      <h2>🛠️ Технический интерфейс (Inputs)</h2>
+    </div>
+    <p class="demo-section__description">
+      Используйте кнопку <strong>"?"</strong> в заголовке контейнера ниже, чтобы увидеть полную спецификацию и описание
+      всех параметров.
+    </p>
+
+    <div class="demo-section__preview" style="padding: 0; background: none; border: none">
+      <av-help-copy-container
+        title="Interface: AvButtonProps"
+        [content]="apiInterfaceCode"
+        bgColor="#0a0e1a"
+        [showHelpButton]="true"
+      ></av-help-copy-container>
+    </div>
+  </section>
+
+  <!-- 🎮 Interactive Playground -->
+  <section class="demo-section">
+    <h2>🎮 Интерактивная площадка</h2>
+    <div class="playground-container">
+      <div nz-row [nzGutter]="[24, 24]">
+        <!-- Controls -->
+        <div nz-col [nzXs]="24" [nzLg]="10">
+          <nz-card nzTitle="Настройки" [nzExtra]="resetTpl">
+            <ng-template #resetTpl>
+              <button av-button avType="text" avSize="small" (click)="resetAllSettings()" style="color: #ff4d4f">
+                Сбросить всё
+              </button>
+            </ng-template>
+            <!-- 1. Shape & Content -->
+            <div class="control-item">
+              <label nz-tooltip nzTooltipTitle="Настройка скруглений: стандартная, круглая или квадратная">
+                Форма (avShape): <span class="info-icon">ⓘ</span>
+              </label>
+              <nz-select [ngModel]="pgShape()" (ngModelChange)="pgShape.set($event)" style="width: 100%">
+                <nz-option nzValue="default" nzLabel="Default (Sharp Rect)"></nz-option>
+                <nz-option nzValue="rounded" nzLabel="Rounded (Standard)"></nz-option>
+                <nz-option nzValue="rounded-big" nzLabel="Rounded-big"></nz-option>
+                <nz-option nzValue="square" nzLabel="Square (1:1 Sharp)"></nz-option>
+                <nz-option nzValue="round" nzLabel="Round (Pill)"></nz-option>
+                <nz-option nzValue="circle" nzLabel="Circle (1:1 Round)"></nz-option>
+              </nz-select>
+            </div>
+
+            <div class="control-item">
+              <label nz-tooltip nzTooltipTitle="Текст внутри кнопки. Очистите поле, чтобы включить режим 'Icon Only'.">
+                Текст кнопки: <span class="info-icon">ⓘ</span>
+              </label>
+              <input
+                nz-input
+                [ngModel]="pgLabel()"
+                (ngModelChange)="pgLabel.set($event)"
+                placeholder="Enter label..."
+              />
+            </div>
+
+            <!-- 2. Styles (Type & Size) -->
+            <div nz-row [nzGutter]="16">
+              <div nz-col [nzSpan]="12">
+                <div class="control-item">
+                  <label nz-tooltip nzTooltipTitle="Визуальный стиль кнопки"
+                    >Тип (avType): <span class="info-icon">ⓘ</span></label
+                  >
+                  <nz-select [ngModel]="pgType()" (ngModelChange)="pgType.set($event)" style="width: 100%">
+                    <nz-option nzValue="primary" nzLabel="Primary"></nz-option>
+                    <nz-option nzValue="default" nzLabel="Default"></nz-option>
+                    <nz-option nzValue="dashed" nzLabel="Dashed"></nz-option>
+                    <nz-option nzValue="text" nzLabel="Text"></nz-option>
+                    <nz-option nzValue="link" nzLabel="Link"></nz-option>
+                    <nz-option nzValue="danger" nzLabel="Danger"></nz-option>
+                  </nz-select>
+                </div>
+              </div>
+              <div nz-col [nzSpan]="12">
+                <div class="control-item">
+                  <label nz-tooltip nzTooltipTitle="Предустановленные размеры"
+                    >Размер (avSize): <span class="info-icon">ⓘ</span></label
+                  >
+                  <nz-select [ngModel]="pgSize()" (ngModelChange)="pgSize.set($event)" style="width: 100%">
+                    <nz-option nzValue="small" nzLabel="Small"></nz-option>
+                    <nz-option nzValue="default" nzLabel="Default"></nz-option>
+                    <nz-option nzValue="large" nzLabel="Large"></nz-option>
+                    <nz-option nzValue="custom" nzLabel="Установить свой"></nz-option>
+                  </nz-select>
+                </div>
+              </div>
+            </div>
+
+            <!-- 3. Geometry (Manual) - Only visible if Size is Custom -->
+            @if (pgSize() === 'custom') {
+            <div
+              style="
+                background: #fffbe6;
+                border: 1px solid #ffe58f;
+                border-radius: 8px;
+                padding: 12px;
+                margin-bottom: 20px;
+              "
+            >
+              <div class="control-item" style="margin-bottom: 0">
+                <div nz-row [nzGutter]="8">
+                  @if (pgShape() === 'circle' || pgShape() === 'square') {
+                  <div nz-col [nzSpan]="24">
+                    <label
+                      nz-tooltip
+                      nzTooltipTitle="Для круга и квадрата ширина и высота равны. Используйте это поле для изменения размера."
+                    >
+                      Размер (W=H): <span class="info-icon">ⓘ</span>
+                    </label>
+                    <input
+                      nz-input
+                      [ngModel]="pgWidth()"
+                      (ngModelChange)="onSizeChange($event)"
+                      placeholder="e.g. 100"
+                    />
+                  </div>
+                  } @else {
+                  <div nz-col [nzSpan]="12">
+                    <label nz-tooltip nzTooltipTitle="Ручное управление шириной элемента в px или %">
+                      Ширина (W): <span class="info-icon">ⓘ</span>
+                    </label>
+                    <input
+                      nz-input
+                      [ngModel]="pgWidth()"
+                      (ngModelChange)="pgWidth.set($event)"
+                      placeholder="e.g. 200"
+                    />
+                  </div>
+                  <div nz-col [nzSpan]="12">
+                    <label nz-tooltip nzTooltipTitle="Ручное управление высотой элемента в px или %">
+                      Высота (H): <span class="info-icon">ⓘ</span>
+                    </label>
+                    <input
+                      nz-input
+                      [ngModel]="pgHeight()"
+                      (ngModelChange)="pgHeight.set($event)"
+                      placeholder="e.g. 50"
+                    />
+                  </div>
+                  }
+                </div>
+              </div>
+            </div>
+            }
+
+            <!-- 4. Color Settings -->
+            <div style="display: flex; flex-direction: column; gap: 16px">
+              <!-- Button Background Color -->
+              <div class="control-item" style="margin-bottom: 0">
+                <label nz-tooltip nzTooltipTitle="Позволяет задать произвольный фон кнопке">
+                  Цвет фона кнопки (avColor): <span class="info-icon">ⓘ</span>
+                </label>
+                <div style="display: flex; flex-direction: column; gap: 10px">
+                  <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap">
+                    @for (color of colorPresets; track color) {
+                    <div
+                      class="color-preset"
+                      [style.background-color]="color"
+                      [class.active]="pgColor() === color"
+                      (click)="pgColor.set(color)"
+                      [nz-tooltip]="color"
+                    ></div>
+                    }
+                    <button
+                      av-button
+                      avType="text"
+                      avSize="small"
+                      (click)="pgColor.set(null)"
+                      style="color: #595959; height: 22px; padding: 0 4px"
+                    >
+                      Сброс
+                    </button>
+                  </div>
+                  <div style="display: flex; gap: 8px; align-items: center">
+                    <nz-color-picker [ngModel]="pgColor()" (ngModelChange)="pgColor.set($event)"></nz-color-picker>
+                    <input
+                      nz-input
+                      [ngModel]="pgColor()"
+                      (ngModelChange)="pgColor.set($event)"
+                      placeholder="HEX, RGB..."
+                      style="flex: 1; height: 32px"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <!-- Button Text Color -->
+              <div class="control-item" style="margin-bottom: 0">
+                <label nz-tooltip nzTooltipTitle="Позволяет задать произвольный цвет тексту кнопки">
+                  Цвет текста кнопки (avTextColor): <span class="info-icon">ⓘ</span>
+                </label>
+                <div style="display: flex; flex-direction: column; gap: 10px">
+                  <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap">
+                    @for (color of colorPresets; track color) {
+                    <div
+                      class="color-preset"
+                      [style.background-color]="color"
+                      [class.active]="pgTextColor() === color"
+                      (click)="pgTextColor.set(color)"
+                      [nz-tooltip]="color"
+                    ></div>
+                    }
+                    <button
+                      av-button
+                      avType="text"
+                      avSize="small"
+                      (click)="pgTextColor.set(null)"
+                      style="color: #595959; height: 22px; padding: 0 4px"
+                    >
+                      Сброс
+                    </button>
+                  </div>
+                  <div style="display: flex; gap: 8px; align-items: center">
+                    <nz-color-picker
+                      [ngModel]="pgTextColor()"
+                      (ngModelChange)="pgTextColor.set($event)"
+                    ></nz-color-picker>
+                    <input
+                      nz-input
+                      [ngModel]="pgTextColor()"
+                      (ngModelChange)="pgTextColor.set($event)"
+                      placeholder="HEX, RGB..."
+                      style="flex: 1; height: 32px"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 5. Icon Settings (Highlighted Container) -->
+            <div
+              style="
+                background: #f9f9f9;
+                border: 1px solid #e8e8e8;
+                border-radius: 8px;
+                padding: 12px;
+                margin-top: 16px;
+                margin-bottom: 0px;
+              "
+            >
+              <div class="control-item" style="margin-bottom: 8px">
+                <label nz-tooltip nzTooltipTitle="Выбор иконки из библиотек">
+                  Иконка: <span class="info-icon">ⓘ</span>
+                </label>
+                <nz-select
+                  [ngModel]="pgIcon()"
+                  (ngModelChange)="pgIcon.set($event)"
+                  nzAllowClear
+                  nzPlaceHolder="Без иконки"
+                  style="width: 100%"
+                >
+                  <nz-option [nzValue]="undefined" nzLabel="None (No Icon)"></nz-option>
+                  <nz-option nzValue="download" nzLabel="Download"></nz-option>
+                  <nz-option nzValue="upload" nzLabel="Upload"></nz-option>
+                  <nz-option nzValue="search" nzLabel="Search"></nz-option>
+                  <nz-option nzValue="plus" nzLabel="Plus"></nz-option>
+                  <nz-option nzValue="delete" nzLabel="Delete"></nz-option>
+                  <nz-option nzValue="check" nzLabel="Check"></nz-option>
+                </nz-select>
+              </div>
+
+              @if (pgIcon() && pgIcon() !== 'undefined' && pgIcon() !== null) {
+              <!-- Icon Size -->
+              <div class="control-item" style="margin-bottom: 12px">
+                <label nz-tooltip nzTooltipTitle="Управление размером встроенной иконки в пикселях">
+                  Размер иконки: <span class="info-icon">ⓘ</span>
+                </label>
+                <div nz-row [nzGutter]="12" nzAlign="middle">
+                  <div nz-col nzFlex="auto">
+                    <nz-slider
+                      [nzMin]="8"
+                      [nzMax]="128"
+                      [ngModel]="pgIconSize()"
+                      (ngModelChange)="pgIconSize.set($event)"
+                    ></nz-slider>
+                  </div>
+                  <div nz-col style="width: 80px">
+                    <nz-input-number
+                      style="width: 100%"
+                      [nzMin]="8"
+                      [nzMax]="128"
+                      [ngModel]="pgIconSize()"
+                      (ngModelChange)="pgIconSize.set($event)"
+                    ></nz-input-number>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Icon Color -->
+              <div class="control-item" style="margin-bottom: 0">
+                <label nz-tooltip nzTooltipTitle="Позволяет задать произвольный цвет только иконке">
+                  Цвет иконки (avIconColor): <span class="info-icon">ⓘ</span>
+                </label>
+                <div style="display: flex; flex-direction: column; gap: 8px">
+                  <div style="display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 4px">
+                    @for (color of colorPresets; track color) {
+                    <div
+                      class="color-preset"
+                      [style.background-color]="color"
+                      [class.active]="pgIconColor() === color"
+                      (click)="pgIconColor.set(color)"
+                      [nz-tooltip]="color"
+                    ></div>
+                    }
+                    <button
+                      av-button
+                      avType="text"
+                      avSize="small"
+                      (click)="pgIconColor.set(null)"
+                      style="color: #595959; height: 22px; padding: 0 4px"
+                    >
+                      Сброс
+                    </button>
+                  </div>
+                  <div style="display: flex; gap: 8px; align-items: center">
+                    <nz-color-picker
+                      [ngModel]="pgIconColor()"
+                      (ngModelChange)="pgIconColor.set($event)"
+                    ></nz-color-picker>
+                    <input
+                      nz-input
+                      [ngModel]="pgIconColor()"
+                      (ngModelChange)="pgIconColor.set($event)"
+                      placeholder="HEX, RGB..."
+                      style="flex: 1; height: 32px"
+                    />
+                  </div>
+                </div>
+              </div>
+              }
+            </div>
+
+            <!-- 5. Status Switches -->
+            <div nz-row [nzGutter]="16" class="control-item">
+              <div nz-col [nzSpan]="8">
+                <label nz-tooltip nzTooltipTitle="Состояние загрузки">Loading: <span class="info-icon">ⓘ</span></label>
+                <nz-switch [ngModel]="pgLoading()" (ngModelChange)="pgLoading.set($event)"></nz-switch>
+              </div>
+              <div nz-col [nzSpan]="8">
+                <label nz-tooltip nzTooltipTitle="Растянуть на всю ширину"
+                  >Block: <span class="info-icon">ⓘ</span></label
+                >
+                <nz-switch [ngModel]="pgBlock()" (ngModelChange)="pgBlock.set($event)"></nz-switch>
+              </div>
+              <div nz-col [nzSpan]="8">
+                <label nz-tooltip nzTooltipTitle="Видимость">Visible: <span class="info-icon">ⓘ</span></label>
+                <nz-switch [ngModel]="pgVisible()" (ngModelChange)="pgVisible.set($event)"></nz-switch>
+              </div>
+            </div>
+
+            <div
+              class="control-item"
+              style="
+                margin-top: 16px;
+                padding: 12px;
+                background: #f6faff;
+                border: 1px dashed #91d5ff;
+                border-radius: 4px;
+              "
+            >
+              <label nz-tooltip nzTooltipTitle="Включает глобальный модификатор .av-style-soft для контейнера.">
+                🌟 Системный Soft Style: <span class="info-icon">ⓘ</span>
+              </label>
+              <div style="display: flex; align-items: center; justify-content: space-between">
+                <span style="font-size: 11px; color: #1890ff">Применить .av-style-soft</span>
+                <nz-switch
+                  [ngModel]="pgSystemSoft()"
+                  (ngModelChange)="pgSystemSoft.set($event)"
+                  nzSize="small"
+                ></nz-switch>
+              </div>
+            </div>
+
+            <div style="margin-top: 24px; display: flex; gap: 12px">
+              <button
+                av-button
+                avType="primary"
+                style="flex: 1; background: #52c41a; border-color: #52c41a"
+                (clicked)="forceRefresh()"
+              >
+                Обновить ✨
+              </button>
+              <button
+                av-button
+                avType="default"
+                style="flex: 1; color: #ff4d4f; border-color: #ff4d4f"
+                (clicked)="resetAllSettings()"
+              >
+                Сброс 🔄
+              </button>
+            </div>
+          </nz-card>
+        </div>
+
+        <!-- Preview & Code -->
+        <div nz-col [nzXs]="24" [nzLg]="14">
+          <nz-card nzTitle="Результат">
+            <div class="preview-area" [class.av-style-soft]="pgSystemSoft()">
+              @if (refreshTrigger()) {
+              <button
+                av-button
+                [avType]="pgType()"
+                [avSize]="safePgSize()"
+                [avColor]="pgColor()"
+                [avLoading]="pgLoading()"
+                [avBlock]="pgBlock()"
+                [avVisible]="pgVisible()"
+                [avIconOnly]="pgIconOnly()"
+                [avShape]="pgShape()"
+                [avWidth]="pgWidth()"
+                [avHeight]="pgHeight()"
+                [avRadius]="pgRadius()"
+                [avIconSize]="pgIconSize()"
+                [avIconColor]="pgIconColor()"
+                [avTextColor]="pgTextColor()"
+                (clicked)="showMessage('Interactive button clicked!')"
+              >
+                @if(pgIcon()){<app-icon [type]="pgIcon()!" [size]="getIconSize()"></app-icon>@if(!pgIconOnly()){<span
+                  style="margin-left: 8px"
+                  >{{ pgLabel() }}</span
+                >}}@else{{{ pgLabel() }}}
+              </button>
+              } @else {
+              <div style="color: #bfbfbf; font-style: italic">Обновление...</div>
+              }
+            </div>
+
+            <div style="margin-top: 24px">
+              <av-help-copy-container
+                title="Сгенерированный код"
+                [content]="pgGeneratedCode()"
+                bgColor="#1e293b"
+              ></av-help-copy-container>
+            </div>
+
+            <!-- Специальная кнопка со спинером -->
+            <div style="margin-top: 24px; text-align: center; padding: 16px; background: #f0f2f5; border-radius: 8px">
+              <p style="margin-bottom: 12px; font-weight: 500">🚀 Пример с задержкой (как в Spinner UI):</p>
+              <button av-button avType="primary" [avLoading]="isLoading()" (clicked)="simulateLoading()">
+                @if (isLoading()) { Загрузка... } @else { Запустить симуляцию (2 сек) }
+              </button>
+            </div>
+          </nz-card>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 📖 Examples & Guidelines -->
+  <section class="demo-section">
+    <div class="demo-section__header">
+      <h2>📖 Примеры и Руководство</h2>
+    </div>
+
+    <nz-card class="api-docs-card" style="margin-bottom: 24px">
+      <div class="card-header-with-icon" style="margin-bottom: 16px">
+        <span class="anticon anticon-info-circle"></span>
+        <span>Как подключить кнопки в проекте?</span>
+      </div>
+      <p class="demo-section__description">
+        Следуйте этим шагам, чтобы использовать новую директиву <code>av-button</code> в ваших компонентах.
+      </p>
+      <av-help-copy-container
+        title="Подключение и использование"
+        [content]="howToConnectCode"
+        bgColor="#0a0e1a"
+        [showHelpButton]="true"
+      ></av-help-copy-container>
+    </nz-card>
+
+    <div class="demo-group">
+      <h3>Button Types с индивидуальными примерами кода</h3>
+      <div nz-row [nzGutter]="[16, 16]">
+        <!-- Primary -->
+        <div nz-col [nzXs]="24" [nzMd]="12" [nzLg]="8">
+          <div class="button-demo-item">
+            <button av-button avType="primary" (clicked)="showMessage('Primary clicked')">Primary</button>
+            <div class="demo-item-actions">
+              <button av-button avType="text" avSize="small" (click)="toggleCode('primary')">
+                {{ showCodePrimary() ? '🔽 Скрыть код' : '📋 Показать код' }}
+              </button>
+            </div>
+          </div>
+          @if (showCodePrimary()) {
+          <pre class="code-example"><code>{{ buttonPrimaryCode }}</code></pre>
+          }
+        </div>
+
+        <!-- Default -->
+        <div nz-col [nzXs]="24" [nzMd]="12" [nzLg]="8">
+          <div class="button-demo-item">
+            <button av-button avType="default" (clicked)="showMessage('Default clicked')">Default</button>
+            <div class="demo-item-actions">
+              <button av-button avType="text" avSize="small" (click)="toggleCode('default')">
+                {{ showCodeDefault() ? '🔽 Скрыть код' : '📋 Показать код' }}
+              </button>
+            </div>
+          </div>
+          @if (showCodeDefault()) {
+          <pre class="code-example"><code>{{ buttonDefaultCode }}</code></pre>
+          }
+        </div>
+
+        <!-- Dashed -->
+        <div nz-col [nzXs]="24" [nzMd]="12" [nzLg]="8">
+          <div class="button-demo-item">
+            <button av-button avType="dashed" (clicked)="showMessage('Dashed clicked')">Dashed</button>
+            <div class="demo-item-actions">
+              <button av-button avType="text" avSize="small" (click)="toggleCode('dashed')">
+                {{ showCodeDashed() ? '🔽 Скрыть код' : '📋 Показать код' }}
+              </button>
+            </div>
+          </div>
+          @if (showCodeDashed()) {
+          <pre class="code-example"><code>{{ buttonDashedCode }}</code></pre>
+          }
+        </div>
+
+        <!-- Text -->
+        <div nz-col [nzXs]="24" [nzMd]="12" [nzLg]="8">
+          <div class="button-demo-item">
+            <button av-button avType="text" (clicked)="showMessage('Text clicked')">Text Button</button>
+            <div class="demo-item-actions">
+              <button av-button avType="text" avSize="small" (click)="toggleCode('text')">
+                {{ showCodeText() ? '🔽 Скрыть код' : '📋 Показать код' }}
+              </button>
+            </div>
+          </div>
+          @if (showCodeText()) {
+          <pre class="code-example"><code>{{ buttonTextCode }}</code></pre>
+          }
+        </div>
+
+        <!-- Link -->
+        <div nz-col [nzXs]="24" [nzMd]="12" [nzLg]="8">
+          <div class="button-demo-item">
+            <button av-button avType="link" (clicked)="showMessage('Link clicked')">Link Button</button>
+            <div class="demo-item-actions">
+              <button av-button avType="text" avSize="small" (click)="toggleCode('link')">
+                {{ showCodeLink() ? '🔽 Скрыть код' : '📋 Показать код' }}
+              </button>
+            </div>
+          </div>
+          @if (showCodeLink()) {
+          <pre class="code-example"><code>{{ buttonLinkCode }}</code></pre>
+          }
+        </div>
+
+        <!-- Danger -->
+        <div nz-col [nzXs]="24" [nzMd]="12" [nzLg]="8">
+          <div class="button-demo-item">
+            <button av-button avType="danger" (clicked)="showMessage('Danger clicked')">Danger</button>
+            <div class="demo-item-actions">
+              <button av-button avType="text" avSize="small" (click)="toggleCode('danger')">
+                {{ showCodeDanger() ? '🔽 Скрыть код' : '📋 Показать код' }}
+              </button>
+            </div>
+          </div>
+          @if (showCodeDanger()) {
+          <pre class="code-example"><code>{{ buttonDangerCode }}</code></pre>
+          }
+        </div>
+      </div>
+    </div>
+
+    <div class="demo-group" style="margin-top: 32px">
+      <h3>Брутальный стиль (Strict Rectangular)</h3>
+      <p class="demo-section__description" style="margin-bottom: 16px">
+        Используйте <code>avShape="square"</code> для создания кнопок с идеально острыми углами. Этот стиль отлично
+        подходит для индустриальных, архитектурных или минималистичных дизайнов.
+      </p>
+      <div nz-row [nzGutter]="[16, 16]">
+        <div nz-col [nzSpan]="24">
+          <div class="button-demo-item" style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap">
+            <button av-button avShape="square">Sharp Corners</button>
+            <button av-button avType="primary" avShape="square">Sharp Primary</button>
+            <button av-button avType="dashed" avShape="square">Sharp Dashed</button>
+            <button av-button avType="danger" avShape="square">Sharp Danger</button>
+            <button av-button [avIconOnly]="true" avShape="square">
+              <app-icon type="search" [size]="16"></app-icon>
+            </button>
+
+            <button av-button avType="text" avSize="small" (click)="toggleCode('sharp')" style="margin-left: auto">
+              {{ showCodeSharp() ? '🔽 Скрыть код' : '📋 Показать код' }}
+            </button>
+          </div>
+          @if (showCodeSharp()) {
+          <pre class="code-example"><code>{{ sharpCode }}</code></pre>
+          }
+        </div>
+      </div>
+    </div>
+
+    <div class="demo-group" style="margin-top: 32px">
+      <h3>Button Sizes</h3>
+      <div class="button-demo-item" style="gap: 16px">
+        <button av-button avType="primary" avSize="small">Small</button>
+        <button av-button avType="primary" avSize="default">Default</button>
+        <button av-button avType="primary" avSize="large">Large</button>
+
+        <button av-button avType="text" avSize="small" (click)="toggleCode('sizes')" style="margin-left: auto">
+          {{ showButtonSizesCode() ? '🔽 Скрыть код' : '📋 Показать код' }}
+        </button>
+      </div>
+      @if (showButtonSizesCode()) {
+      <pre class="code-example"><code>{{ buttonSizesCode }}</code></pre>
+      }
+    </div>
+  </section>
+
+  <!-- Message Display -->
+  @if (message()) {
+  <div class="message-display">
+    {{ message() }}
+  </div>
+  }
+</div>

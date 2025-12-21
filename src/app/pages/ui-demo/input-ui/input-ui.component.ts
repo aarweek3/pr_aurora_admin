@@ -1,11 +1,18 @@
 import { CommonModule } from '@angular/common';
-import { Component, signal } from '@angular/core';
-import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, computed, signal } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NzCardModule } from 'ng-zorro-antd/card';
+import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
+import { NzGridModule } from 'ng-zorro-antd/grid';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzInputModule } from 'ng-zorro-antd/input';
+import { NzSelectModule } from 'ng-zorro-antd/select';
+import { NzSwitchModule } from 'ng-zorro-antd/switch';
+import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 import { ButtonDirective } from '../../../shared/components/ui/button/button.directive';
 import { HelpCopyContainerComponent } from '../../../shared/components/ui/container-help-copy-ui';
 import { InputComponent } from '../../../shared/components/ui/input/input.component';
 import { InputDirective } from '../../../shared/components/ui/input/input.directive';
-import { ModalComponent } from '../../../shared/components/ui/modal';
 
 @Component({
   selector: 'app-input-ui',
@@ -14,158 +21,191 @@ import { ModalComponent } from '../../../shared/components/ui/modal';
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
+    NzCardModule,
+    NzSelectModule,
+    NzInputModule,
+    NzCheckboxModule,
+    NzGridModule,
+    NzIconModule,
+    NzToolTipModule,
+    NzSwitchModule,
     ButtonDirective,
     InputDirective,
     InputComponent,
     HelpCopyContainerComponent,
-    ModalComponent,
   ],
   templateUrl: './input-ui.component.html',
   styleUrls: ['./input-ui.component.scss'],
 })
 export class InputUiComponent {
-  // Playground state
-  playgroundValue = signal('');
-  playgroundLabel = signal('Username');
-  playgroundPlaceholder = signal('Enter your username...');
-  playgroundHint = signal('Use 3-20 characters');
-  playgroundStatus = signal<'default' | 'error' | 'warning' | 'success'>('default');
-  playgroundVariant = signal<'outlined' | 'filled' | 'borderless'>('outlined');
-  playgroundSize = signal<'small' | 'default' | 'large' | 'x-large'>('default');
-  playgroundType = signal<
+  // UI State
+  pgType = signal<'directive' | 'component'>('directive');
+  pgValue = signal('');
+  pgLabel = signal('Username');
+  pgPlaceholder = signal('Enter your username...');
+  pgHint = signal('Use 3-20 characters');
+  pgSize = signal<'small' | 'default' | 'large' | 'x-large' | 'custom'>('default');
+  pgStatus = signal<'default' | 'error' | 'warning' | 'success'>('default');
+  pgVariant = signal<'outlined' | 'filled' | 'borderless'>('outlined');
+  pgInputType = signal<
     'text' | 'email' | 'password' | 'number' | 'tel' | 'url' | 'search' | 'date' | 'time'
   >('text');
-  playgroundDisabled = signal(false);
-  playgroundShowPasswordToggle = signal(true);
-  playgroundErrorMessage = signal('This field is required');
+  pgDisabled = signal(false);
+  pgShowPasswordToggle = signal(true);
+  pgErrorMessage = signal('This field is required');
 
-  // Modal state
-  showGeneratedCodeModal = false;
-  generatedCode = signal('');
+  // Custom Dimensions
+  pgWidth = signal<string | number | null>(null);
+  pgHeight = signal<string | number | null>(null);
+  pgRadius = signal<string | number | null>(null);
+  pgShape = signal<'default' | 'rounded' | 'rounded-big'>('default');
 
-  // Help section
-  showHelp = signal(false);
+  pgVisible = signal(true);
+  pgBlock = signal(false);
 
-  // Code examples for help section
-  directiveExample = `import { InputDirective } from '@shared/components/ui/input';
+  // Help & Documentation
+  showDocs = signal(false);
+  message = signal('');
+  refreshTrigger = signal(true);
 
-<input avInput type="text" placeholder="Basic input" />
-<input avInput avSize="large" avStatus="error" type="email" />`;
+  appliedSize = computed(
+    () =>
+      (this.pgSize() === 'custom' ? 'default' : this.pgSize()) as
+        | 'small'
+        | 'default'
+        | 'large'
+        | 'x-large',
+  );
 
-  componentExample = `import { InputComponent } from '@shared/components/ui/input';
+  pgGeneratedCode = computed(() => {
+    let code = '';
+    const isCustom = this.pgSize() === 'custom';
 
-<av-input
-  label="Email"
-  type="email"
-  placeholder="your@email.com"
-  hint="Используется для входа"
-  [status]="emailValid ? 'success' : 'error'"
-  [errorMessage]="emailError"
-/>`;
+    if (this.pgType() === 'directive') {
+      const attrs = ['avInput'];
+      if (this.pgSize() !== 'default') attrs.push(`avSize="${this.pgSize()}"`);
+      if (this.pgStatus() !== 'default') attrs.push(`avStatus="${this.pgStatus()}"`);
+      if (this.pgVariant() !== 'outlined') attrs.push(`avVariant="${this.pgVariant()}"`);
+      if (this.pgShape() !== 'default') attrs.push(`avShape="${this.pgShape()}"`);
 
-  formControlExample = `import { FormControl, Validators } from '@angular/forms';
+      if (isCustom) {
+        if (this.pgWidth()) attrs.push(`[avWidth]="${this.pgWidth()}"`);
+        if (this.pgHeight()) attrs.push(`[avHeight]="${this.pgHeight()}"`);
+        if (this.pgRadius()) attrs.push(`[avRadius]="${this.pgRadius()}"`);
+      }
 
-emailControl = new FormControl('', [
-  Validators.required,
-  Validators.email
-]);
+      if (this.pgDisabled()) attrs.push('[disabled]="true"');
+      if (!this.pgVisible()) attrs.push(`[avVisible]="false"`);
+      if (this.pgBlock()) attrs.push(`[avBlock]="true"`);
+      attrs.push(`[(ngModel)]="value"`);
 
-<input
-  avInput
-  type="email"
-  [formControl]="emailControl"
-  [avStatus]="emailControl.invalid ? 'error' : 'success'"
-/>`;
+      code = `<input\n  type="${this.pgInputType()}"\n  placeholder="${this.pgPlaceholder()}"\n  ${attrs.join(
+        '\n  ',
+      )}\n/>`;
+    } else {
+      const attrs = [`[(value)]="value"`];
+      if (this.pgLabel()) attrs.push(`label="${this.pgLabel()}"`);
+      if (this.pgPlaceholder()) attrs.push(`placeholder="${this.pgPlaceholder()}"`);
+      if (this.pgInputType() !== 'text') attrs.push(`type="${this.pgInputType()}"`);
+      if (this.pgSize() !== 'default') attrs.push(`size="${this.pgSize()}"`);
+      if (this.pgStatus() !== 'default') attrs.push(`status="${this.pgStatus()}"`);
+      if (this.pgVariant() !== 'outlined') attrs.push(`variant="${this.pgVariant()}"`);
+      if (this.pgShape() !== 'default') attrs.push(`shape="${this.pgShape()}"`);
+      if (this.pgHint()) attrs.push(`hint="${this.pgHint()}"`);
 
-  // Basic examples values
-  basicValue = '';
-  emailValue = '';
-  passwordValue = '';
+      if (this.pgStatus() === 'error' && this.pgErrorMessage()) {
+        attrs.push(`errorMessage="${this.pgErrorMessage()}"`);
+      }
 
-  // Size examples
-  smallInput = '';
-  defaultInput = '';
-  largeInput = '';
-  xLargeInput = '';
+      if (isCustom) {
+        if (this.pgWidth()) attrs.push(`[width]="${this.pgWidth()}"`);
+        if (this.pgHeight()) attrs.push(`[height]="${this.pgHeight()}"`);
+        if (this.pgRadius()) attrs.push(`[radius]="${this.pgRadius()}"`);
+      }
 
-  // Status examples
-  defaultStatus = '';
-  errorStatus = '';
-  warningStatus = '';
-  successStatus = '';
+      if (this.pgDisabled()) attrs.push('[disabled]="true"');
+      if (!this.pgVisible()) attrs.push(`[visible]="false"`);
+      if (this.pgBlock()) attrs.push(`[block]="true"`);
+      if (this.pgInputType() === 'password' && !this.pgShowPasswordToggle()) {
+        attrs.push(`[showPasswordToggle]="false"`);
+      }
 
-  // Variant examples
-  outlinedVariant = '';
-  filledVariant = '';
-  borderlessVariant = '';
-
-  // Type examples
-  textInput = '';
-  emailInput = '';
-  passwordInput = '';
-  passwordWithToggle = '';
-  passwordWithoutToggle = '';
-  numberInput = 0;
-  telInput = '';
-  urlInput = '';
-  searchInput = '';
-
-  // Textarea
-  textareaValue = '';
-  textareaLarge = '';
-
-  // FormControl examples
-  usernameControl = new FormControl('', [Validators.required, Validators.minLength(3)]);
-  emailControl = new FormControl('', [Validators.required, Validators.email]);
-  phoneControl = new FormControl('', [Validators.pattern(/^\+?[0-9]{10,}$/)]);
-
-  toggleHelp() {
-    this.showHelp.update((v) => !v);
-  }
-
-  generatePlaygroundCode(): void {
-    const attributes: string[] = [];
-
-    attributes.push(`[(ngModel)]="myValue"`);
-    if (this.playgroundLabel()) attributes.push(`label="${this.playgroundLabel()}"`);
-    if (this.playgroundPlaceholder())
-      attributes.push(`placeholder="${this.playgroundPlaceholder()}"`);
-    if (this.playgroundType() !== 'text') attributes.push(`type="${this.playgroundType()}"`);
-    if (this.playgroundSize() !== 'default') attributes.push(`size="${this.playgroundSize()}"`);
-    if (this.playgroundStatus() !== 'default')
-      attributes.push(`status="${this.playgroundStatus()}"`);
-    if (this.playgroundVariant() !== 'outlined')
-      attributes.push(`variant="${this.playgroundVariant()}"`);
-    if (this.playgroundHint()) attributes.push(`hint="${this.playgroundHint()}"`);
-    if (this.playgroundStatus() === 'error' && this.playgroundErrorMessage()) {
-      attributes.push(`errorMessage="${this.playgroundErrorMessage()}"`);
-    }
-    if (this.playgroundDisabled()) attributes.push(`[disabled]="true"`);
-    if (this.playgroundType() === 'password' && !this.playgroundShowPasswordToggle()) {
-      attributes.push(`[showPasswordToggle]="false"`);
+      code = `<av-input\n  ${attrs.join('\n  ')}\n></av-input>`;
     }
 
-    const htmlCode = `<av-input\n  ${attributes.join('\n  ')}\n></av-input>`;
-    const tsCode = `// В компоненте\nmyValue = signal('');`;
+    return `${code}\n\n// TS\nvalue = signal('');`;
+  });
 
-    this.generatedCode.set(`${htmlCode}\n\n${tsCode}`);
-    this.showGeneratedCodeModal = true;
+  apiInterfaceCode = `/**
+ * @directive avInput / <av-input>
+ */
+export interface AvInputProps {
+  /** Текст пояснения над полем (только для компонента) */
+  label?: string;
+
+  /** Тип поля */
+  type: string; // default: 'text'
+
+  /** Размер (пресет или 'custom') */
+  size: 'small' | 'default' | 'large' | 'x-large'; // default: 'default'
+
+  /** Статус валидации */
+  status: 'default' | 'error' | 'warning' | 'success'; // default: 'default'
+
+  /** Вариант дизайна */
+  variant: 'outlined' | 'filled' | 'borderless'; // default: 'outlined'
+
+  /** Сообщение об ошибке (при status="error") */
+  errorMessage?: string;
+
+  /** Подсказка под полем */
+  hint?: string;
+
+  /** Кастомные размеры */
+  width?: string | number;
+  height?: string | number;
+  radius?: string | number;
+
+  /** Видимость компонента */
+  visible?: boolean;
+
+  /** Растягивание на всю ширину контейнера */
+  block?: boolean;
+
+  /** Форма (скругление) */
+  shape?: 'default' | 'rounded' | 'rounded-big';
+}`;
+
+  showMessage(msg: string): void {
+    this.message.set(msg);
+    setTimeout(() => this.message.set(''), 3000);
   }
 
-  getErrorMessage(control: FormControl): string {
-    if (control.hasError('required')) return 'Это поле обязательно';
-    if (control.hasError('email')) return 'Неверный формат email';
-    if (control.hasError('minlength')) {
-      const minLength = control.getError('minlength').requiredLength;
-      return `Минимум ${minLength} символов`;
-    }
-    if (control.hasError('pattern')) return 'Неверный формат телефона';
-    return '';
+  forceRefresh(): void {
+    this.refreshTrigger.set(false);
+    setTimeout(() => {
+      this.refreshTrigger.set(true);
+      this.showMessage('Настройки применены! ✨');
+    }, 100);
   }
 
-  getStatus(control: FormControl): 'default' | 'error' | 'warning' | 'success' {
-    if (control.invalid && control.touched) return 'error';
-    if (control.valid && control.touched && control.value) return 'success';
-    return 'default';
+  resetAllSettings(): void {
+    this.pgType.set('directive');
+    this.pgSize.set('default');
+    this.pgVariant.set('outlined');
+    this.pgStatus.set('default');
+    this.pgInputType.set('text');
+    this.pgLabel.set('Username');
+    this.pgPlaceholder.set('Enter your username...');
+    this.pgHint.set('Use 3-20 characters');
+    this.pgValue.set('');
+    this.pgDisabled.set(false);
+    this.pgWidth.set(null);
+    this.pgHeight.set(null);
+    this.pgRadius.set(null);
+    this.pgVisible.set(true);
+    this.pgBlock.set(false);
+    this.pgShape.set('default');
+    this.forceRefresh();
   }
 }

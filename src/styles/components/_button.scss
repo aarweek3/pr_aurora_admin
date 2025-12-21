@@ -294,6 +294,14 @@
     padding-left: $spacing-md * 1.5;
     padding-right: $spacing-md * 1.5;
   }
+
+  &--shape-rounded-big {
+    border-radius: 100px !important;
+    &::before,
+    &::after {
+      border-radius: 100px !important;
+    }
+  }
 }
 
 // Global Soft Style Modifier

@@ -38,7 +38,7 @@ export class ButtonDirective {
   avColor = input<string | null>(null);
   avVisible = input<boolean>(true);
   avIconOnly = input<boolean>(false);
-  avShape = input<'default' | 'circle' | 'square' | 'round' | 'rounded'>('default');
+  avShape = input<'default' | 'circle' | 'square' | 'round' | 'rounded' | 'rounded-big'>('default');
   avWidth = input<string | number | null>(null);
   avHeight = input<string | number | null>(null);
   avRadius = input<string | number | null>(null);

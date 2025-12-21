@@ -14,12 +14,23 @@
 // ============================================================================
 
 .av-toggle {
+  // Resolved variables for internal use
+  --w: var(--av-toggle-width, 44px);
+  --h: var(--av-toggle-height, 22px);
+  --r: var(--av-toggle-radius, 100px);
+  --off: var(--av-toggle-inner-offset, 2px);
+
   position: relative;
   display: inline-block;
-  width: 44px;
-  height: 22px;
+  width: var(--w);
+  height: var(--h);
   cursor: pointer;
   flex-shrink: 0;
+  box-sizing: border-box;
+
+  * {
+    box-sizing: border-box;
+  }
 
   // Hide native checkbox
   input {
@@ -38,27 +49,49 @@
   // Slider (background track)
   &__slider {
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
+    inset: 0;
     background-color: rgba(0, 0, 0, 0.25);
-    border-radius: 100px;
+    border-radius: var(--r);
     transition: all $transition-base;
     cursor: pointer;
 
-    // Slider handle (круглая кнопка)
     &::before {
       content: "";
       position: absolute;
-      height: 18px;
-      width: 18px;
-      left: 2px;
-      bottom: 2px;
+      height: calc(var(--h) - (var(--off) * 2));
+      width: calc(var(--h) - (var(--off) * 2));
+      left: var(--off);
+      top: var(--off);
       background-color: $color-white;
-      border-radius: 50%;
+      border-radius: var(--r, 50%);
       transition: all $transition-base;
       box-shadow: $shadow-sm;
+      z-index: 1;
+    }
+  }
+
+  &__icon {
+    position: absolute;
+    height: calc(var(--h) - (var(--off) * 2));
+    width: calc(var(--h) - (var(--off) * 2));
+    left: var(--off);
+    top: var(--off);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+    pointer-events: none;
+    transition: all $transition-base;
+    color: var(--av-toggle-color, $color-primary);
+    font-size: calc(var(--h) * 0.5);
+
+    &--unchecked {
+      opacity: 1;
+      color: rgba(0, 0, 0, 0.45);
+    }
+    &--checked {
+      opacity: 0;
+      transform: translateX(0);
     }
   }
 
@@ -71,8 +104,18 @@
     background-color: $color-primary;
 
     &::before {
-      transform: translateX(22px);
+      transform: translateX(calc(var(--w) - var(--h)));
     }
+  }
+
+  input:checked ~ .av-toggle__icon--checked {
+    opacity: 1;
+    transform: translateX(calc(var(--w) - var(--h)));
+  }
+
+  input:checked ~ .av-toggle__icon--unchecked {
+    opacity: 0;
+    transform: translateX(calc(var(--w) - var(--h)));
   }
 
   // Focus state
@@ -104,9 +147,9 @@
     background-color: $color-primary-hover;
   }
 
-  // Active state
+  // Active state (expansion effect)
   &:active input:not(:disabled) + &__slider::before {
-    width: 22px;
+    width: calc(var(--h) + 4px - (var(--off) * 2));
   }
 
   // ============================================================================
@@ -114,39 +157,31 @@
   // ============================================================================
 
   &--small {
-    width: 36px;
-    height: 18px;
-
-    .av-toggle__slider::before {
-      height: 14px;
-      width: 14px;
-    }
-
-    input:checked + .av-toggle__slider::before {
-      transform: translateX(18px);
-    }
+    --av-toggle-height: 16px;
+    --av-toggle-width: 32px;
+    --av-toggle-inner-offset: 2px;
 
     &:active input:not(:disabled) + .av-toggle__slider::before {
-      width: 18px;
+      width: calc(var(--av-toggle-height) + 4px - (var(--av-toggle-inner-offset) * 2));
     }
   }
 
   &--large {
-    width: 52px;
-    height: 26px;
-
-    .av-toggle__slider::before {
-      height: 22px;
-      width: 22px;
-    }
-
-    input:checked + .av-toggle__slider::before {
-      transform: translateX(26px);
-    }
+    --av-toggle-height: 30px;
+    --av-toggle-width: 60px;
+    --av-toggle-inner-offset: 3px;
 
     &:active input:not(:disabled) + .av-toggle__slider::before {
-      width: 26px;
+      width: calc(var(--av-toggle-height) + 4px - (var(--av-toggle-inner-offset) * 2));
     }
+  }
+
+  // ============================================================================
+  // Shapes
+  // ============================================================================
+
+  &--shape-square {
+    --av-toggle-radius: 4px;
   }
 
   // ============================================================================

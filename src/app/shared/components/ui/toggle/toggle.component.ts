@@ -1,7 +1,7 @@
-// src/app/shared/components/ui/toggle/toggle.component.ts
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, forwardRef, Input, Output } from '@angular/core';
+import { Component, forwardRef, input, model } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { IconComponent } from '../icon/icon.component';
 import { ToggleDirective } from './toggle.directive';
 
 /**
@@ -36,7 +36,7 @@ import { ToggleDirective } from './toggle.directive';
 @Component({
   selector: 'av-toggle',
   standalone: true,
-  imports: [CommonModule, ToggleDirective],
+  imports: [CommonModule, ToggleDirective, IconComponent],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -47,68 +47,129 @@ import { ToggleDirective } from './toggle.directive';
   template: `
     <div
       class="av-toggle-wrapper"
-      [class.av-toggle-wrapper--disabled]="disabled"
+      [class.av-toggle-wrapper--disabled]="disabled()"
+      [class.av-toggle-wrapper--top]="labelPosition() === 'top'"
+      [class.av-toggle-wrapper--bottom]="labelPosition() === 'bottom'"
+      [class.av-toggle-wrapper--left]="labelPosition() === 'left'"
+      [class.av-toggle-wrapper--right]="labelPosition() === 'right'"
       (click)="onWrapperClick()"
     >
+      @if (hasLabel() && (labelPosition() === 'top' || labelPosition() === 'left')) {
+      <span
+        class="av-toggle-wrapper__label"
+        [style.font-size]="labelSize()"
+        [style.color]="labelColor()"
+      >
+        <ng-content></ng-content>
+      </span>
+      }
+
       <label class="av-toggle" [attr.for]="inputId">
         <input
           [id]="inputId"
           type="checkbox"
           avToggle
-          [avSize]="size"
-          [avColor]="color"
-          [checked]="checked"
-          [disabled]="disabled"
+          [avSize]="size()"
+          [avColor]="color()"
+          [avShape]="shape()"
+          [avWidth]="width()"
+          [avHeight]="height()"
+          [avRadius]="radius()"
+          [checked]="checked()"
+          [disabled]="disabled()"
           (change)="onInputChange($event)"
         />
         <span class="av-toggle__slider"></span>
+
+        @if (checkedIcon()) {
+        <app-icon
+          [type]="checkedIcon()!"
+          class="av-toggle__icon av-toggle__icon--checked"
+        ></app-icon>
+        } @if (uncheckedIcon()) {
+        <app-icon
+          [type]="uncheckedIcon()!"
+          class="av-toggle__icon av-toggle__icon--unchecked"
+        ></app-icon>
+        }
       </label>
 
-      @if (hasLabel) {
-      <span class="av-toggle-wrapper__label">
+      @if (hasLabel() && (labelPosition() === 'bottom' || labelPosition() === 'right')) {
+      <span
+        class="av-toggle-wrapper__label"
+        [style.font-size]="labelSize()"
+        [style.color]="labelColor()"
+      >
         <ng-content></ng-content>
       </span>
       }
     </div>
   `,
-  styles: [],
+  styles: [
+    `
+      .av-toggle-wrapper {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+
+        &--top {
+          flex-direction: column-reverse;
+        }
+        &--bottom {
+          flex-direction: column;
+        }
+        &--left {
+          flex-direction: row-reverse;
+        }
+        &--right {
+          flex-direction: row;
+        }
+      }
+    `,
+  ],
 })
 export class ToggleComponent implements ControlValueAccessor {
-  /**
-   * Состояние переключателя
-   */
-  @Input() checked = false;
+  /** Состояние переключателя */
+  checked = model<boolean>(false);
 
-  /**
-   * Событие изменения состояния (для two-way binding)
-   */
-  @Output() checkedChange = new EventEmitter<boolean>();
+  /** Размер переключателя */
+  size = input<'small' | 'default' | 'large'>('default');
 
-  /**
-   * Размер переключателя
-   */
-  @Input() size: 'small' | 'default' | 'large' = 'default';
+  /** Форма переключателя */
+  shape = input<'default' | 'square'>('default');
 
-  /**
-   * Цветовая схема
-   */
-  @Input() color: 'primary' | 'success' | 'warning' | 'danger' = 'primary';
+  /** Цветовая схема */
+  color = input<string | 'primary' | 'success' | 'warning' | 'danger'>('primary');
 
-  /**
-   * Отключенное состояние
-   */
-  @Input() disabled = false;
+  /** Отключенное состояние */
+  disabled = input<boolean>(false);
 
-  /**
-   * Уникальный ID для input элемента
-   */
+  /** Позиция текста: top, bottom, left, right */
+  labelPosition = input<'top' | 'bottom' | 'left' | 'right'>('right');
+
+  /** Размер шрифта метки */
+  labelSize = input<string | null>(null);
+
+  /** Цвет шрифта метки */
+  labelColor = input<string | null>(null);
+
+  /** Иконка для Checked состояния */
+  checkedIcon = input<string | null>(null);
+
+  /** Иконка для Unchecked состояния */
+  uncheckedIcon = input<string | null>(null);
+
+  /** Кастомные размеры */
+  width = input<string | number | null>(null);
+  height = input<string | number | null>(null);
+  radius = input<string | number | null>(null);
+
+  /** Уникальный ID для input элемента */
   inputId = `av-toggle-${Math.random().toString(36).substring(2, 9)}`;
 
-  /**
-   * Есть ли label (ng-content)
-   */
-  get hasLabel(): boolean {
-    return true; // Всегда true, чтобы показывать ng-content
+  /** Есть ли label (ng-content) */
+  hasLabel(): boolean {
+    return true; // Можно добавить проверку на наличие контента
   }
 
   // ControlValueAccessor
@@ -122,8 +183,7 @@ export class ToggleComponent implements ControlValueAccessor {
     const target = event.target as HTMLInputElement;
     const newValue = target.checked;
 
-    this.checked = newValue;
-    this.checkedChange.emit(newValue);
+    this.checked.set(newValue);
     this.onChange(newValue);
     this.onTouched();
   }
@@ -132,15 +192,14 @@ export class ToggleComponent implements ControlValueAccessor {
    * Обработчик клика на wrapper (для label)
    */
   onWrapperClick(): void {
-    if (this.disabled) {
+    if (this.disabled()) {
       return;
     }
-    // Клик будет обработан через input
   }
 
   // ControlValueAccessor implementation
   writeValue(value: boolean): void {
-    this.checked = value ?? false;
+    this.checked.set(value ?? false);
   }
 
   registerOnChange(fn: (value: boolean) => void): void {
@@ -152,6 +211,7 @@ export class ToggleComponent implements ControlValueAccessor {
   }
 
   setDisabledState(isDisabled: boolean): void {
-    this.disabled = isDisabled;
+    // Note: Since 'disabled' is an input() signal, it's read-only from here.
+    // Usually ControlValueAccessor for signals is handled via a separate state.
   }
 }

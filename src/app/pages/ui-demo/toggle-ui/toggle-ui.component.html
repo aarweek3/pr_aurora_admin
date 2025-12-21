@@ -1,251 +1,392 @@
-<div class="toggle-ui-demo">
-  <div class="toggle-ui-demo__header">
-    <div class="header-content">
-      <h1>Toggle Component</h1>
-      <p>Переключатели в стиле iOS и Android с поддержкой Signal, форм и различных стилей.</p>
-    </div>
-    <div class="header-actions">
-      <button av-button avType="primary" (clicked)="showHelpModal = true">Инструкция</button>
+<div class="ui-demo toggle-playground">
+  <!-- Header -->
+  <div class="ui-demo__header">
+    <h1>Toggle / Switch Directive</h1>
+    <p>Универсальный переключатель (Toggle) с поддержкой iOS-стиля, Signal API и полной кастомизацией.</p>
+  </div>
+
+  <!-- 1. Interactive Playground -->
+  <div class="playground-container">
+    <div nz-row [nzGutter]="32">
+      <!-- Left: Controls -->
+      <div nz-col [nzXs]="24" [nzLg]="10">
+        <nz-card nzTitle="Настройки" class="api-docs-card">
+          <div class="control-panel">
+            <!-- 1. Implementation Type -->
+            <div class="control-item">
+              <label nz-tooltip nzTooltipTitle="Способ реализации переключателя">
+                Тип реализации: <span class="info-icon">ⓘ</span>
+              </label>
+              <nz-select [ngModel]="pgType()" (ngModelChange)="pgType.set($event)" style="width: 100%">
+                <nz-option nzValue="directive" nzLabel="Directive (avToggle)"></nz-option>
+                <nz-option nzValue="component" nzLabel="Component (av-toggle)"></nz-option>
+                <nz-option nzValue="labeled" nzLabel="Labeled Component (iOS Style)"></nz-option>
+              </nz-select>
+            </div>
+
+            <!-- 2. Styles (Size & Shape) -->
+            <div nz-row [nzGutter]="16">
+              <div nz-col [nzSpan]="12">
+                <div class="control-item">
+                  <label nz-tooltip nzTooltipTitle="Предустановленные размеры">
+                    Размер: <span class="info-icon">ⓘ</span>
+                  </label>
+                  <nz-select [ngModel]="pgSize()" (ngModelChange)="pgSize.set($event)" style="width: 100%">
+                    <nz-option nzValue="small" nzLabel="Small"></nz-option>
+                    <nz-option nzValue="default" nzLabel="Default"></nz-option>
+                    <nz-option nzValue="large" nzLabel="Large"></nz-option>
+                    <nz-option nzValue="custom" nzLabel="Custom (Свой размер)"></nz-option>
+                  </nz-select>
+                </div>
+              </div>
+              <div nz-col [nzSpan]="12">
+                <div class="control-item">
+                  <label nz-tooltip nzTooltipTitle="Форма переключателя">
+                    Форма: <span class="info-icon">ⓘ</span>
+                  </label>
+                  <nz-select [ngModel]="pgShape()" (ngModelChange)="pgShape.set($event)" style="width: 100%">
+                    <nz-option nzValue="default" nzLabel="Rounded (Default)"></nz-option>
+                    <nz-option nzValue="square" nzLabel="Square (Sharp)"></nz-option>
+                  </nz-select>
+                </div>
+              </div>
+            </div>
+
+            <!-- 3. Content (Label) & Styling -->
+            @if (pgType() === 'component' || pgType() === 'labeled') {
+            <div class="control-item">
+              <label nz-tooltip nzTooltipTitle="Текст рядом или внутри переключателя">
+                Текст и оформление: <span class="info-icon">ⓘ</span>
+              </label>
+              <div style="display: flex; gap: 8px; margin-bottom: 10px">
+                @if (pgType() === 'component') {
+                <input
+                  nz-input
+                  [ngModel]="pgLabel()"
+                  (ngModelChange)="pgLabel.set($event)"
+                  style="flex: 1"
+                  placeholder="Текст метки"
+                />
+                } @else {
+                <input
+                  nz-input
+                  [ngModel]="pgLeftLabel()"
+                  (ngModelChange)="pgLeftLabel.set($event)"
+                  placeholder="OFF"
+                  style="width: 50%"
+                />
+                <input
+                  nz-input
+                  [ngModel]="pgRightLabel()"
+                  (ngModelChange)="pgRightLabel.set($event)"
+                  placeholder="ON"
+                  style="width: 50%"
+                />
+                }
+              </div>
+
+              @if (pgType() === 'component') {
+              <div nz-row [nzGutter]="12">
+                <div nz-col [nzSpan]="12">
+                  <nz-select
+                    [ngModel]="pgLabelPosition()"
+                    (ngModelChange)="pgLabelPosition.set($event)"
+                    nzPlaceHolder="Позиция"
+                    style="width: 100%"
+                  >
+                    <nz-option nzValue="left" nzLabel="Слева"></nz-option>
+                    <nz-option nzValue="right" nzLabel="Справа"></nz-option>
+                    <nz-option nzValue="top" nzLabel="Над"></nz-option>
+                    <nz-option nzValue="bottom" nzLabel="Под"></nz-option>
+                  </nz-select>
+                </div>
+                <div nz-col [nzSpan]="12">
+                  <nz-input-group nzAddOnAfter="px">
+                    <input
+                      nz-input
+                      [ngModel]="pgLabelSize()"
+                      (ngModelChange)="pgLabelSize.set($event)"
+                      placeholder="14px"
+                    />
+                  </nz-input-group>
+                </div>
+              </div>
+              <div style="margin-top: 8px; display: flex; align-items: center; gap: 8px">
+                <span style="font-size: 12px; color: #8c8c8c">Цвет текста:</span>
+                <nz-color-picker
+                  [ngModel]="pgLabelColor()"
+                  (ngModelChange)="pgLabelColor.set($event)"
+                  nzSize="small"
+                ></nz-color-picker>
+                <input
+                  nz-input
+                  [ngModel]="pgLabelColor()"
+                  (ngModelChange)="pgLabelColor.set($event)"
+                  style="flex: 1; height: 28px"
+                />
+              </div>
+              }
+            </div>
+            }
+
+            <!-- Custom Sizing (Shown only when pgSize() === 'custom') -->
+            @if (pgSize() === 'custom') {
+            <div class="control-item" style="padding: 12px; background: #fafafa; border-radius: 8px">
+              <label style="font-weight: 500; font-size: 13px; margin-bottom: 12px; display: block">
+                Пользовательский размер (Custom API)
+              </label>
+              <div nz-row [nzGutter]="12">
+                <div nz-col [nzSpan]="8">
+                  <nz-input-group nzPrefix="W" nzSuffix="px">
+                    <input
+                      type="number"
+                      nz-input
+                      [ngModel]="pgWidth()"
+                      (ngModelChange)="pgWidth.set($event)"
+                      placeholder="Auto"
+                    />
+                  </nz-input-group>
+                </div>
+                <div nz-col [nzSpan]="8">
+                  <nz-input-group nzPrefix="H" nzSuffix="px">
+                    <input
+                      type="number"
+                      nz-input
+                      [ngModel]="pgHeight()"
+                      (ngModelChange)="pgHeight.set($event)"
+                      placeholder="Auto"
+                    />
+                  </nz-input-group>
+                </div>
+                <div nz-col [nzSpan]="8">
+                  <nz-input-group nzPrefix="R" nzSuffix="px">
+                    <input
+                      type="number"
+                      nz-input
+                      [ngModel]="pgRadius()"
+                      (ngModelChange)="pgRadius.set($event)"
+                      placeholder="Auto"
+                    />
+                  </nz-input-group>
+                </div>
+              </div>
+            </div>
+            }
+
+            <!-- 5. Color Settings -->
+            <div class="control-item">
+              <label nz-tooltip nzTooltipTitle="Позволяет задать произвольный цвет переключателю">
+                Цвет тоггла: <span class="info-icon">ⓘ</span>
+              </label>
+              <div style="display: flex; flex-direction: column; gap: 10px">
+                <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap">
+                  @for (color of colorPresets; track color) {
+                  <div
+                    class="color-preset"
+                    [style.background-color]="
+                      color === 'primary'
+                        ? '#1890ff'
+                        : color === 'success'
+                        ? '#52c41a'
+                        : color === 'warning'
+                        ? '#faad14'
+                        : color === 'danger'
+                        ? '#ff4d4f'
+                        : color
+                    "
+                    [class.active]="pgColor() === color"
+                    (click)="pgColor.set(color)"
+                  ></div>
+                  }
+                </div>
+
+                <div style="display: flex; gap: 8px; align-items: center">
+                  <nz-color-picker [ngModel]="pgColor()" (ngModelChange)="pgColor.set($event)"></nz-color-picker>
+                  <input
+                    nz-input
+                    [ngModel]="pgColor()"
+                    (ngModelChange)="pgColor.set($event)"
+                    placeholder="HEX или CSS color"
+                    style="flex: 1; height: 32px"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <!-- 5. States -->
+            <div class="states-box">
+              <div nz-row [nzGutter]="16">
+                <div nz-col [nzSpan]="12">
+                  <div class="state-switch">
+                    <span>Checked</span>
+                    <nz-switch
+                      [ngModel]="pgChecked()"
+                      (ngModelChange)="pgChecked.set($event)"
+                      nzSize="small"
+                    ></nz-switch>
+                  </div>
+                </div>
+                <div nz-col [nzSpan]="12">
+                  <div class="state-switch">
+                    <span>Disabled</span>
+                    <nz-switch
+                      [ngModel]="pgDisabled()"
+                      (ngModelChange)="pgDisabled.set($event)"
+                      nzSize="small"
+                    ></nz-switch>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div style="margin-top: 20px">
+              <button av-button avType="dashed" [avBlock]="true" (click)="resetAllSettings()">
+                Сбросить все настройки
+              </button>
+            </div>
+          </div>
+        </nz-card>
+      </div>
+
+      <!-- Right: Preview & Code -->
+      <div nz-col [nzXs]="24" [nzLg]="14">
+        <nz-card nzTitle="Результат">
+          <div class="preview-area" style="min-height: 250px">
+            @if (refreshTrigger()) {
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 16px">
+              @if (pgType() === 'directive') {
+              <label class="av-toggle">
+                <input
+                  type="checkbox"
+                  avToggle
+                  [ngModel]="pgChecked()"
+                  (ngModelChange)="pgChecked.set($event)"
+                  [avSize]="appliedSize()"
+                  [avColor]="pgColor()"
+                  [avShape]="pgShape()"
+                  [avWidth]="pgSize() === 'custom' ? pgWidth() : null"
+                  [avHeight]="pgSize() === 'custom' ? pgHeight() : null"
+                  [avRadius]="pgSize() === 'custom' ? pgRadius() : null"
+                  [disabled]="pgDisabled()"
+                />
+                <span class="av-toggle__slider"></span>
+              </label>
+              } @else if (pgType() === 'component') {
+              <av-toggle
+                [checked]="pgChecked()"
+                (checkedChange)="pgChecked.set($event)"
+                [size]="appliedSize()"
+                [color]="pgColor()"
+                [shape]="pgShape()"
+                [labelPosition]="pgLabelPosition()"
+                [labelSize]="pgLabelSize()"
+                [labelColor]="pgLabelColor()"
+                [width]="pgSize() === 'custom' ? pgWidth() : null"
+                [height]="pgSize() === 'custom' ? pgHeight() : null"
+                [radius]="pgSize() === 'custom' ? pgRadius() : null"
+                [disabled]="pgDisabled()"
+              >
+                {{ pgLabel() }}
+              </av-toggle>
+              } @else if (pgType() === 'labeled') {
+              <av-toggle-labeled
+                [checked]="pgChecked()"
+                (checkedChange)="pgChecked.set($event)"
+                [size]="appliedSize()"
+                [color]="pgColor()"
+                [shape]="pgShape()"
+                [leftLabel]="pgLeftLabel()"
+                [rightLabel]="pgRightLabel()"
+                [width]="pgSize() === 'custom' ? pgWidth() : null"
+                [height]="pgSize() === 'custom' ? pgHeight() : null"
+                [radius]="pgSize() === 'custom' ? pgRadius() : null"
+                [disabled]="pgDisabled()"
+              ></av-toggle-labeled>
+              }
+
+              <div style="font-size: 12px; color: #8c8c8c; margin-top: 12px; font-family: monospace">
+                checked: <strong [style.color]="pgChecked() ? '#52c41a' : '#ff4d4f'">{{ pgChecked() }}</strong>
+              </div>
+            </div>
+            }
+          </div>
+
+          <div style="margin-top: 24px">
+            <av-help-copy-container
+              title="СГЕНЕРИРОВАННЫЙ КОД"
+              [content]="pgGeneratedCode()"
+              bgColor="#1e2227"
+              [showCopy]="true"
+            ></av-help-copy-container>
+          </div>
+        </nz-card>
+      </div>
     </div>
   </div>
 
-  <!-- Модал помощи (Инструкция) -->
-  <av-modal [(isOpen)]="showHelpModal" title="Как использовать Toggle" size="large">
-    <div modal-body>
-      <div class="help-content">
-        <div class="help-step">
-          <strong>📦 Вариант 1: Директива (avToggle)</strong>
-          <p>Навешивается на нативный checkbox. Это самый быстрый и легкий способ.</p>
-          <pre class="code-example"><code>&lt;label class="av-toggle"&gt;
-  &lt;input type="checkbox" avToggle [(ngModel)]="value" /&gt;
-  &lt;span class="av-toggle__slider"&gt;&lt;/span&gt;
-&lt;/label&gt;</code></pre>
-        </div>
-        <div class="help-step">
-          <strong>🎨 Вариант 2: Компонент (av-toggle)</strong>
-          <p>Готовый компонент с поддержкой контента (label) и NgModel/FormControl.</p>
-          <pre
-            class="code-example"
-          ><code>&lt;av-toggle [(checked)]="value"&gt;Включить уведомления&lt;/av-toggle&gt;</code></pre>
-        </div>
-        <div class="help-step">
-          <strong>🎯 Вариант 3: Labeled Toggle (av-toggle-labeled)</strong>
-          <p>iOS-стиль с текстовыми метками внутри переключателя.</p>
-          <pre
-            class="code-example"
-          ><code>&lt;av-toggle-labeled [(checked)]="value" leftLabel="OFF" rightLabel="ON"&gt;&lt;/av-toggle-labeled&gt;</code></pre>
-        </div>
-      </div>
+  <!-- 2. Technical Documentation -->
+  <div style="margin-top: 48px">
+    <div style="margin-bottom: 16px; display: flex; align-items: center; gap: 8px">
+      <h2 style="margin: 0; font-size: 20px; font-weight: 600">Технический интерфейс (Inputs)</h2>
+      <span
+        nz-icon
+        nzType="question-circle"
+        nzTheme="outline"
+        style="cursor: help; color: #1890ff; font-size: 18px"
+        nz-tooltip
+        nzTooltipTitle="Нажмите для просмотра справки"
+        (click)="showDocs = !showDocs"
+      ></span>
     </div>
-    <div modal-footer>
-      <button av-button avType="default" (clicked)="showHelpModal = false">Закрыть</button>
-    </div>
-  </av-modal>
 
-  <!-- Модал сгенерированного кода -->
-  <av-modal [(isOpen)]="showGeneratedCodeModal" title="Сгенерированный код Toggle" size="large">
-    <div modal-body>
+    @if (showDocs) {
+    <nz-card nzTitle="Документация: Toggle Component" class="api-docs-card" style="margin-bottom: 24px">
+      <div class="docs-summary">
+        <p>
+          <strong>Toggle</strong> — это универсальный компонент переключателя, поддерживающий три режима использования:
+        </p>
+        <ul>
+          <li>
+            <strong>Directive (avToggle):</strong> Применяется к нативному
+            <code>&lt;input type=&quot;checkbox&quot;&gt;</code>.
+          </li>
+          <li>
+            <strong>Component (&lt;av-toggle&gt;):</strong> Готовое решение с поддержкой внешних лейблов и
+            позиционирования.
+          </li>
+          <li>
+            <strong>Labeled (&lt;av-toggle-labeled&gt;):</strong> Стильный переключатель с подписями внутри трека.
+          </li>
+        </ul>
+        <p style="margin-top: 12px">
+          Используйте кнопку "?" в заголовке контейнера ниже, чтобы увидеть полную спецификацию и описание всех
+          параметров.
+        </p>
+      </div>
+    </nz-card>
+    }
+
+    <nz-card class="api-docs-card">
       <av-help-copy-container
-        title="Готовый код для вашего компонента"
-        [content]="generatedCode()"
+        title="Interface: AvToggleProps"
+        [content]="apiInterfaceCode"
         bgColor="#0a0e1a"
       ></av-help-copy-container>
-    </div>
-    <div modal-footer>
-      <button av-button avType="default" (clicked)="showGeneratedCodeModal = false">Закрыть</button>
-    </div>
-  </av-modal>
 
-  <!-- Интерактивная площадка -->
-  <section class="demo-section demo-section--playground">
-    <div class="demo-section__header">
-      <h2>🎮 Интерактивная площадка</h2>
-    </div>
-    <p class="demo-section__description">Настройте параметры переключателя и проверьте результат в реальном времени</p>
-
-    <div class="playground">
-      <!-- Панель управления -->
-      <div class="playground__controls">
-        <h3>Настройки</h3>
-
-        <div class="control-group">
-          <label class="control-label">
-            <span>Тип компонента:</span>
-            <select class="control-select" [(ngModel)]="playgroundType">
-              <option value="directive">Directive (avToggle)</option>
-              <option value="component">Component (av-toggle)</option>
-              <option value="labeled">Labeled (iOS Style)</option>
-            </select>
-          </label>
-        </div>
-
-        <div class="control-group">
-          <label class="control-label">
-            <span>Размер (Size):</span>
-            <select class="control-select" [(ngModel)]="playgroundSize">
-              <option value="small">Small</option>
-              <option value="default">Default</option>
-              <option value="large">Large</option>
-            </select>
-          </label>
-        </div>
-
-        <div class="control-group">
-          <label class="control-label">
-            <span>Цвет (Color):</span>
-            <select class="control-select" [(ngModel)]="playgroundColor">
-              <option value="primary">Primary (синий)</option>
-              <option value="success">Success (зеленый)</option>
-              <option value="warning">Warning (желтый)</option>
-              <option value="danger">Danger (красный)</option>
-            </select>
-          </label>
-        </div>
-
-        @if (playgroundType() === 'component') {
-        <div class="control-group">
-          <label class="control-label">
-            <span>Текст (Label):</span>
-            <input type="text" class="control-input" [(ngModel)]="playgroundLabel" />
-          </label>
-        </div>
-        } @if (playgroundType() === 'labeled') {
-        <div class="control-group">
-          <label class="control-label">
-            <span>Левая метка:</span>
-            <input type="text" class="control-input" [(ngModel)]="playgroundLeftLabel" />
-          </label>
-        </div>
-        <div class="control-group">
-          <label class="control-label">
-            <span>Правая метка:</span>
-            <input type="text" class="control-input" [(ngModel)]="playgroundRightLabel" />
-          </label>
-        </div>
-        }
-
-        <div class="control-group control-group--checkbox">
-          <label class="control-checkbox">
-            <input type="checkbox" [(ngModel)]="playgroundDisabled" />
-            <span>Отключен (Disabled)</span>
-          </label>
-        </div>
+      <div style="margin-top: 24px; padding: 16px; background: #fffbe6; border: 1px solid #ffe58f; border-radius: 8px">
+        <h4 style="margin-bottom: 8px; color: #856404">💡 Полезный совет</h4>
+        <p style="margin: 0; font-size: 13px; color: #856404">
+          Используйте <code>av-toggle</code> для стандартных форм с подписями, а <code>avToggle</code> директиву — когда
+          вам нужен максимальный контроль над версткой или вы модифицируете существующий нативный чекбокс.
+        </p>
       </div>
+    </nz-card>
+  </div>
 
-      <!-- Превью -->
-      <div class="playground__preview">
-        <h3>Результат</h3>
-        <div class="preview-container">
-          @if (playgroundType() === 'directive') {
-          <label class="av-toggle">
-            <input
-              type="checkbox"
-              avToggle
-              [(ngModel)]="playgroundChecked"
-              [avSize]="playgroundSize()"
-              [avColor]="playgroundColor()"
-              [disabled]="playgroundDisabled()"
-            />
-            <span class="av-toggle__slider"></span>
-          </label>
-          } @if (playgroundType() === 'component') {
-          <av-toggle
-            [(checked)]="playgroundChecked"
-            [size]="playgroundSize()"
-            [color]="playgroundColor()"
-            [disabled]="playgroundDisabled()"
-          >
-            {{ playgroundLabel() }}
-          </av-toggle>
-          } @if (playgroundType() === 'labeled') {
-          <av-toggle-labeled
-            [(checked)]="playgroundChecked"
-            [size]="playgroundSize()"
-            [color]="playgroundColor()"
-            [leftLabel]="playgroundLeftLabel()"
-            [rightLabel]="playgroundRightLabel()"
-            [disabled]="playgroundDisabled()"
-          ></av-toggle-labeled>
-          }
-
-          <div class="toggle-status-info">
-            <span
-              >Состояние: <strong>{{ playgroundChecked() ? 'ВКЛ (Checked)' : 'ВЫКЛ (Unchecked)' }}</strong></span
-            >
-          </div>
-        </div>
-
-        <!-- Кнопка генерации кода -->
-        <div style="margin-top: 2rem; text-align: center">
-          <button av-button avType="primary" avSize="large" (clicked)="generatePlaygroundCode()">
-            📋 Сгенерировать код настройки
-          </button>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Визуальные примеры -->
-  <section class="demo-section">
-    <div class="demo-section__header">
-      <h2>Доступные размеры</h2>
-    </div>
-    <div class="demo-section__preview">
-      <div style="display: flex; flex-direction: column; gap: 1.5rem">
-        <av-toggle [size]="'small'" [checked]="true">Small Size</av-toggle>
-        <av-toggle [size]="'default'" [checked]="true">Default Size</av-toggle>
-        <av-toggle [size]="'large'" [checked]="true">Large Size</av-toggle>
-      </div>
-      <div style="display: flex; flex-direction: column; gap: 1.5rem">
-        <av-toggle-labeled size="small" leftLabel="OFF" rightLabel="ON"></av-toggle-labeled>
-        <av-toggle-labeled size="default" leftLabel="OFF" rightLabel="ON"></av-toggle-labeled>
-        <av-toggle-labeled size="large" leftLabel="OFF" rightLabel="ON"></av-toggle-labeled>
-      </div>
-    </div>
-  </section>
-
-  <section class="demo-section">
-    <div class="demo-section__header">
-      <h2>Цветовые схемы</h2>
-    </div>
-    <div class="demo-section__preview">
-      <av-toggle color="primary" [checked]="true">Primary</av-toggle>
-      <av-toggle color="success" [checked]="true">Success</av-toggle>
-      <av-toggle color="warning" [checked]="true">Warning</av-toggle>
-      <av-toggle color="danger" [checked]="true">Danger</av-toggle>
-    </div>
-  </section>
-
-  <!-- Сравнительная таблица -->
-  <section class="demo-section">
-    <div class="demo-section__header">
-      <h2>Выбор реализации</h2>
-    </div>
-    <table class="comparison-table">
-      <thead>
-        <tr>
-          <th>Вариант</th>
-          <th>Применение</th>
-          <th>Преимущества</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><strong>Directive</strong></td>
-          <td>Нативные чекбоксы</td>
-          <td>Максимальная производительность, полный контроль HTML</td>
-        </tr>
-        <tr>
-          <td><strong>Component</strong></td>
-          <td>Стандартные формы</td>
-          <td>Встроенный label, поддержка Angular Forms из коробки</td>
-        </tr>
-        <tr>
-          <td><strong>Labeled</strong></td>
-          <td>Сложные интерфейсы</td>
-          <td>Информативность (текст внутри), премиальный iOS вид</td>
-        </tr>
-      </tbody>
-    </table>
-  </section>
+  <!-- Toast Notification -->
+  @if (message()) {
+  <div class="message-display">
+    {{ message() }}
+  </div>
+  }
 </div>

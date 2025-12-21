@@ -1,5 +1,5 @@
 // src/app/shared/components/ui/input/input.directive.ts
-import { Directive, ElementRef, HostBinding, Input, OnInit, Renderer2 } from '@angular/core';
+import { Directive, HostBinding, input } from '@angular/core';
 
 /**
  * Input Directive
@@ -30,68 +30,105 @@ import { Directive, ElementRef, HostBinding, Input, OnInit, Renderer2 } from '@a
     class: 'av-input',
   },
 })
-export class InputDirective implements OnInit {
+export class InputDirective {
   /**
    * Размер input
-   * - small: 24px height
-   * - default: 32px height (по умолчанию)
-   * - large: 40px height
-   * - x-large: 48px height
    */
-  @Input() avSize: 'small' | 'default' | 'large' | 'x-large' = 'default';
+  avSize = input<'small' | 'default' | 'large' | 'x-large'>('default');
 
   /**
    * Статус (для валидации)
-   * - default: обычное состояние
-   * - error: ошибка валидации (красная рамка)
-   * - warning: предупреждение (оранжевая рамка)
-   * - success: успешная валидация (зеленая рамка)
    */
-  @Input() avStatus: 'default' | 'error' | 'warning' | 'success' = 'default';
+  avStatus = input<'default' | 'error' | 'warning' | 'success'>('default');
 
   /**
    * Вариант отображения
-   * - outlined: с рамкой (по умолчанию)
-   * - filled: залитый фон
-   * - borderless: только нижняя линия
    */
-  @Input() avVariant: 'outlined' | 'filled' | 'borderless' = 'outlined';
+  avVariant = input<'outlined' | 'filled' | 'borderless'>('outlined');
 
   /**
    * Отключенное состояние
    */
-  @HostBinding('class.av-input--disabled')
-  @Input()
-  disabled = false;
+  disabled = input<boolean>(false);
 
-  constructor(
-    private el: ElementRef<HTMLInputElement | HTMLTextAreaElement>,
-    private renderer: Renderer2,
-  ) {}
+  /** Пользовательская ширина */
+  avWidth = input<string | number | null>(null);
 
-  ngOnInit(): void {
-    this.applyClasses();
+  /** Пользовательская высота */
+  avHeight = input<string | number | null>(null);
+
+  /** Пользовательский радиус скругления */
+  avRadius = input<string | number | null>(null);
+
+  /** Видимость компонента */
+  avVisible = input<boolean>(true);
+
+  /** Растягивание на всю ширину контейнера */
+  avBlock = input<boolean>(false);
+
+  /** Форма (скругление) */
+  avShape = input<'default' | 'rounded' | 'rounded-big'>('default');
+
+  @HostBinding('class')
+  get hostClasses(): string {
+    const classes = ['av-input'];
+
+    if (this.avSize() !== 'default') {
+      classes.push(`av-input--${this.avSize()}`);
+    }
+
+    if (this.avStatus() !== 'default') {
+      classes.push(`av-input--${this.avStatus()}`);
+    }
+
+    if (this.avVariant() !== 'outlined') {
+      classes.push(`av-input--${this.avVariant()}`);
+    }
+
+    if (this.disabled()) {
+      classes.push('av-input--disabled');
+    }
+
+    if (this.avBlock()) {
+      classes.push('av-input--block');
+    }
+
+    if (!this.avRadius()) {
+      if (this.avShape() === 'rounded') {
+        classes.push('av-input--rounded');
+      } else if (this.avShape() === 'rounded-big') {
+        classes.push('av-input--rounded-big');
+      }
+    }
+
+    return classes.join(' ');
   }
 
-  /**
-   * Применяет CSS классы к элементу
-   */
-  private applyClasses(): void {
-    const element = this.el.nativeElement;
+  @HostBinding('style.display')
+  get display(): string | null {
+    return this.avVisible() ? null : 'none';
+  }
 
-    // Размер
-    if (this.avSize !== 'default') {
-      this.renderer.addClass(element, `av-input--${this.avSize}`);
-    }
+  @HostBinding('style.width')
+  get width(): string | null {
+    if (this.avBlock()) return '100%';
+    return this.formatDimension(this.avWidth());
+  }
 
-    // Статус
-    if (this.avStatus !== 'default') {
-      this.renderer.addClass(element, `av-input--${this.avStatus}`);
-    }
+  @HostBinding('style.height')
+  get height(): string | null {
+    return this.formatDimension(this.avHeight());
+  }
 
-    // Вариант
-    if (this.avVariant !== 'outlined') {
-      this.renderer.addClass(element, `av-input--${this.avVariant}`);
-    }
+  @HostBinding('style.borderRadius')
+  get borderRadius(): string | null {
+    return this.formatDimension(this.avRadius());
+  }
+
+  private formatDimension(value: string | number | null): string | null {
+    if (value === null || value === undefined || value === '') return null;
+    if (typeof value === 'number') return `${value}px`;
+    if (/^\d+$/.test(value)) return `${value}px`;
+    return value;
   }
 }

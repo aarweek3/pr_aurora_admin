@@ -1,6 +1,5 @@
-// src/app/shared/components/ui/input/input.component.ts
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, forwardRef, Input, Output, signal } from '@angular/core';
+import { Component, EventEmitter, forwardRef, input, model, Output, signal } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { InputDirective } from './input.directive';
 
@@ -16,37 +15,47 @@ import { InputDirective } from './input.directive';
     },
   ],
   template: `
-    <div class="av-input-wrapper">
-      @if (label) {
-      <label [for]="inputId" class="av-input-wrapper__label">{{ label }}</label>
+    <div
+      class="av-input-wrapper"
+      [class.av-input-wrapper--block]="block()"
+      [style.display]="visible() ? null : 'none'"
+    >
+      @if (label()) {
+      <label [for]="inputId" class="av-input-wrapper__label">{{ label() }}</label>
       }
 
       <div
         class="av-input-container"
-        [class.av-input-container--with-toggle]="type === 'password' && showPasswordToggle"
+        [class.av-input-container--with-toggle]="type() === 'password' && showPasswordToggle()"
       >
         <input
           [id]="inputId"
           [type]="getInputType()"
           avInput
-          [avSize]="size"
-          [avStatus]="status"
-          [avVariant]="variant"
-          [placeholder]="placeholder"
-          [disabled]="disabled"
-          [value]="value"
+          [avSize]="size()"
+          [avStatus]="status()"
+          [avVariant]="variant()"
+          [avWidth]="width()"
+          [avHeight]="height()"
+          [avRadius]="radius()"
+          [avVisible]="visible()"
+          [avBlock]="block()"
+          [avShape]="shape()"
+          [placeholder]="placeholder()"
+          [disabled]="disabled()"
+          [value]="value()"
           (input)="onInput($event)"
         />
 
-        @if (type === 'password' && showPasswordToggle) {
+        @if (type() === 'password' && showPasswordToggle()) {
         <button
           type="button"
           class="av-input-toggle"
-          [class.av-input-toggle--small]="size === 'small'"
-          [class.av-input-toggle--large]="size === 'large'"
-          [class.av-input-toggle--x-large]="size === 'x-large'"
+          [class.av-input-toggle--small]="size() === 'small'"
+          [class.av-input-toggle--large]="size() === 'large'"
+          [class.av-input-toggle--x-large]="size() === 'x-large'"
           (click)="togglePasswordVisibility()"
-          [disabled]="disabled"
+          [disabled]="disabled()"
           [attr.aria-label]="passwordVisible() ? 'Скрыть пароль' : 'Показать пароль'"
         >
           @if (passwordVisible()) {
@@ -80,10 +89,10 @@ import { InputDirective } from './input.directive';
         }
       </div>
 
-      @if (hint && !errorMessage) {
-      <span class="av-input-wrapper__hint">{{ hint }}</span>
-      } @if (errorMessage && status === 'error') {
-      <span class="av-input-wrapper__error">{{ errorMessage }}</span>
+      @if (hint() && !errorMessage()) {
+      <span class="av-input-wrapper__hint">{{ hint() }}</span>
+      } @if (errorMessage() && status() === 'error') {
+      <span class="av-input-wrapper__error">{{ errorMessage() }}</span>
       }
     </div>
   `,
@@ -184,10 +193,10 @@ import { InputDirective } from './input.directive';
   ],
 })
 export class InputComponent implements ControlValueAccessor {
-  @Input() value = '';
-  @Output() valueChange = new EventEmitter<string>();
-  @Input() label = '';
-  @Input() type:
+  value = model<string>('');
+  @Output() valueChange = new EventEmitter<string>(); // Keep for compatibility if needed, but model handles it
+  label = input<string>('');
+  type = input<
     | 'text'
     | 'email'
     | 'password'
@@ -198,15 +207,30 @@ export class InputComponent implements ControlValueAccessor {
     | 'date'
     | 'time'
     | 'datetime-local'
-    | 'color' = 'text';
-  @Input() placeholder = '';
-  @Input() size: 'small' | 'default' | 'large' | 'x-large' = 'default';
-  @Input() status: 'default' | 'error' | 'warning' | 'success' = 'default';
-  @Input() variant: 'outlined' | 'filled' | 'borderless' = 'outlined';
-  @Input() errorMessage = '';
-  @Input() hint = '';
-  @Input() disabled = false;
-  @Input() showPasswordToggle = true; // По умолчанию показываем кнопку для type="password"
+    | 'color'
+  >('text');
+  placeholder = input<string>('');
+  size = input<'small' | 'default' | 'large' | 'x-large'>('default');
+  status = input<'default' | 'error' | 'warning' | 'success'>('default');
+  variant = input<'outlined' | 'filled' | 'borderless'>('outlined');
+  errorMessage = input<string>('');
+  hint = input<string>('');
+  disabled = input<boolean>(false);
+  showPasswordToggle = input<boolean>(true);
+
+  // Custom dimensions
+  width = input<string | number | null>(null);
+  height = input<string | number | null>(null);
+  radius = input<string | number | null>(null);
+
+  /** Видимость компонента */
+  visible = input<boolean>(true);
+
+  /** Растягивание на всю ширину контейнера */
+  block = input<boolean>(false);
+
+  /** Форма (скругление) */
+  shape = input<'default' | 'rounded' | 'rounded-big'>('default');
 
   inputId = `av-input-${Math.random().toString(36).substring(2, 9)}`;
   passwordVisible = signal(false);
@@ -215,10 +239,10 @@ export class InputComponent implements ControlValueAccessor {
   private onTouched: () => void = () => {};
 
   getInputType(): string {
-    if (this.type === 'password' && this.passwordVisible()) {
+    if (this.type() === 'password' && this.passwordVisible()) {
       return 'text';
     }
-    return this.type;
+    return this.type();
   }
 
   togglePasswordVisibility(): void {
@@ -228,13 +252,13 @@ export class InputComponent implements ControlValueAccessor {
 
   onInput(event: Event): void {
     const value = (event.target as HTMLInputElement).value;
-    this.value = value;
+    this.value.set(value);
     this.valueChange.emit(value);
     this.onChange(value);
   }
 
   writeValue(value: string): void {
-    this.value = value ?? '';
+    this.value.set(value ?? '');
   }
 
   registerOnChange(fn: (value: string) => void): void {
@@ -246,6 +270,6 @@ export class InputComponent implements ControlValueAccessor {
   }
 
   setDisabledState(isDisabled: boolean): void {
-    this.disabled = isDisabled;
+    // Readonly with signals
   }
 }
