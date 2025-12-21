@@ -44,7 +44,7 @@ export class DialogIconUiComponent {
   // Playground State
   pgTitle = signal('Подтверждение');
   pgMessage = signal('Вы уверены, что хотите выполнить это действие?');
-  pgIcon = signal('check');
+  pgIcon = signal('actions/av_check_mark');
   pgIconSize = signal(64);
   pgIconColor = signal('#52c41a');
   pgSize = signal<'small' | 'medium' | 'large'>('medium');
@@ -68,12 +68,12 @@ export class DialogIconUiComponent {
   refreshTrigger = signal(true);
 
   readonly iconPresets = [
-    { value: 'check', label: 'Check (Success)', color: '#52c41a' },
-    { value: 'close', label: 'Close (Error)', color: '#ff4d4f' },
-    { value: 'exclamation', label: 'Warning', color: '#faad14' },
-    { value: 'question', label: 'Question', color: '#1890ff' },
-    { value: 'info', label: 'Info', color: '#1890ff' },
-    { value: 'delete', label: 'Delete', color: '#ff4d4f' },
+    { value: 'actions/av_check_mark', label: 'Check (Success)', color: '#52c41a' },
+    { value: 'actions/av_close', label: 'Close (Error)', color: '#ff4d4f' },
+    { value: 'system/av_warning', label: 'Warning', color: '#faad14' },
+    { value: 'settings/av_question-mark', label: 'Question', color: '#1890ff' },
+    { value: 'system/av_info', label: 'Info', color: '#1890ff' },
+    { value: 'actions/av_trash', label: 'Delete', color: '#ff4d4f' },
   ];
 
   readonly colorPresets = ['#52c41a', '#ff4d4f', '#faad14', '#1890ff', '#722ed1', '#13c2c2'];
@@ -185,6 +185,239 @@ this.modalService.openIconDialog({
   }
 });`;
 
+  exampleSuccessCode = `// Подтверждение успешной операции (Success)
+isDialogOpen = signal(false);
+
+openSuccessDialog() {
+  this.isDialogOpen.set(true);
+}
+
+handleConfirm() {
+  console.log('Пользователь подтвердил успешную операцию');
+  this.isDialogOpen.set(false);
+  // Дополнительные действия после подтверждения
+  this.navigateToNextStep();
+}
+
+// HTML Template
+<av-modal
+  [(isOpen)]="isDialogOpen"
+  [centered]="true"
+  [avWidth]="'450px'"
+  [showBackdrop]="true"
+  [closeOnBackdrop]="true"
+  [closeOnEsc]="true"
+>
+  <div modal-body>
+    <div style="text-align: center; padding: 24px;">
+      <app-icon type="check" [size]="64" color="#52c41a"></app-icon>
+      <h3 style="margin: 16px 0 8px;">Успешно!</h3>
+      <p style="color: #8c8c8c;">Операция выполнена успешно.</p>
+    </div>
+  </div>
+  <div modal-footer style="text-align: center; justify-content: center;">
+    <button av-button avType="primary" (click)="handleConfirm()">
+      ОК
+    </button>
+  </div>
+</av-modal>`;
+
+  exampleErrorCode = `// Диалог ошибки (Error)
+isErrorDialogOpen = signal(false);
+
+showError(errorMessage: string) {
+  this.errorMessage.set(errorMessage);
+  this.isErrorDialogOpen.set(true);
+}
+
+handleErrorClose() {
+  console.log('Пользователь закрыл диалог ошибки');
+  this.isErrorDialogOpen.set(false);
+  // Можно добавить логирование ошибки или retry-логику
+}
+
+// HTML Template
+<av-modal
+  [(isOpen)]="isErrorDialogOpen"
+  [centered]="true"
+  [avWidth]="'450px'"
+>
+  <div modal-body>
+    <div style="text-align: center; padding: 24px;">
+      <app-icon type="close" [size]="64" color="#ff4d4f"></app-icon>
+      <h3 style="margin: 16px 0 8px;">Ошибка</h3>
+      <p style="color: #8c8c8c;">{{ errorMessage() }}</p>
+    </div>
+  </div>
+  <div modal-footer style="text-align: center; justify-content: center;">
+    <button av-button avType="default" (click)="isErrorDialogOpen.set(false)">
+      Отмена
+    </button>
+    <button av-button avType="danger" (click)="handleErrorClose()">
+      Попробовать снова
+    </button>
+  </div>
+</av-modal>`;
+
+  exampleDeleteCode = `// Подтверждение удаления (Delete Confirmation)
+isDeleteDialogOpen = signal(false);
+itemToDelete = signal<any>(null);
+
+confirmDelete(item: any) {
+  this.itemToDelete.set(item);
+  this.isDeleteDialogOpen.set(true);
+}
+
+handleDelete() {
+  const item = this.itemToDelete();
+  console.log('Удаление элемента:', item);
+
+  // Выполнить удаление
+  this.deleteItem(item).subscribe({
+    next: () => {
+      this.isDeleteDialogOpen.set(false);
+      this.showSuccessMessage('Элемент успешно удалён');
+    },
+    error: (err) => {
+      console.error('Ошибка удаления:', err);
+      this.isDeleteDialogOpen.set(false);
+      this.showError('Не удалось удалить элемент');
+    }
+  });
+}
+
+handleCancel() {
+  console.log('Удаление отменено');
+  this.isDeleteDialogOpen.set(false);
+  this.itemToDelete.set(null);
+}
+
+// HTML Template
+<av-modal
+  [(isOpen)]="isDeleteDialogOpen"
+  [centered]="true"
+  [avWidth]="'450px'"
+>
+  <div modal-body>
+    <div style="text-align: center; padding: 24px;">
+      <app-icon type="delete" [size]="64" color="#ff4d4f"></app-icon>
+      <h3 style="margin: 16px 0 8px;">Подтвердите удаление</h3>
+      <p style="color: #8c8c8c;">
+        Вы уверены, что хотите удалить этот элемент?
+        Это действие нельзя отменить.
+      </p>
+    </div>
+  </div>
+  <div modal-footer style="text-align: center; justify-content: center;">
+    <button av-button avType="default" (click)="handleCancel()">
+      Отмена
+    </button>
+    <button av-button avType="danger" (click)="handleDelete()">
+      Удалить
+    </button>
+  </div>
+</av-modal>`;
+
+  exampleWarningCode = `// Предупреждение с выбором (Warning)
+isWarningDialogOpen = signal(false);
+warningAction = signal<'save' | 'discard' | null>(null);
+
+showUnsavedChangesWarning() {
+  this.isWarningDialogOpen.set(true);
+}
+
+handleSaveAndContinue() {
+  console.log('Сохранить изменения и продолжить');
+  this.warningAction.set('save');
+
+  this.saveChanges().subscribe({
+    next: () => {
+      this.isWarningDialogOpen.set(false);
+      this.proceedToNextPage();
+    }
+  });
+}
+
+handleDiscardChanges() {
+  console.log('Отменить изменения');
+  this.warningAction.set('discard');
+  this.isWarningDialogOpen.set(false);
+  this.proceedToNextPage();
+}
+
+handleStayOnPage() {
+  console.log('Остаться на странице');
+  this.isWarningDialogOpen.set(false);
+  this.warningAction.set(null);
+}
+
+// HTML Template
+<av-modal
+  [(isOpen)]="isWarningDialogOpen"
+  [centered]="true"
+  [avWidth]="'500px'"
+  [closeOnBackdrop]="false"
+>
+  <div modal-body>
+    <div style="text-align: center; padding: 24px;">
+      <app-icon type="exclamation" [size]="64" color="#faad14"></app-icon>
+      <h3 style="margin: 16px 0 8px;">Несохранённые изменения</h3>
+      <p style="color: #8c8c8c;">
+        У вас есть несохранённые изменения.
+        Что вы хотите сделать?
+      </p>
+    </div>
+  </div>
+  <div modal-footer style="text-align: center; justify-content: center; gap: 8px;">
+    <button av-button avType="default" (click)="handleStayOnPage()">
+      Остаться
+    </button>
+    <button av-button avType="danger" (click)="handleDiscardChanges()">
+      Отменить изменения
+    </button>
+    <button av-button avType="primary" (click)="handleSaveAndContinue()">
+      Сохранить
+    </button>
+  </div>
+</av-modal>`;
+
+  exampleInfoCode = `// Информационный диалог (Info - без кнопки отмены)
+isInfoDialogOpen = signal(false);
+
+showInfoDialog(title: string, message: string) {
+  this.infoTitle.set(title);
+  this.infoMessage.set(message);
+  this.isInfoDialogOpen.set(true);
+}
+
+handleInfoConfirm() {
+  console.log('Пользователь прочитал информацию');
+  this.isInfoDialogOpen.set(false);
+
+  // Опционально: выполнить действие после прочтения
+  this.markNotificationAsRead();
+}
+
+// HTML Template
+<av-modal
+  [(isOpen)]="isInfoDialogOpen"
+  [centered]="true"
+  [avWidth]="'450px'"
+>
+  <div modal-body>
+    <div style="text-align: center; padding: 24px;">
+      <app-icon type="info" [size]="64" color="#1890ff"></app-icon>
+      <h3 style="margin: 16px 0 8px;">{{ infoTitle() }}</h3>
+      <p style="color: #8c8c8c;">{{ infoMessage() }}</p>
+    </div>
+  </div>
+  <div modal-footer style="text-align: center; justify-content: center;">
+    <button av-button avType="primary" (click)="handleInfoConfirm()">
+      Понятно
+    </button>
+  </div>
+</av-modal>`;
+
   openDialog(): void {
     this.isOpen.set(true);
   }
@@ -205,7 +438,7 @@ this.modalService.openIconDialog({
   resetAllSettings(): void {
     this.pgTitle.set('Подтверждение');
     this.pgMessage.set('Вы уверены, что хотите выполнить это действие?');
-    this.pgIcon.set('check');
+    this.pgIcon.set('actions/av_check_mark');
     this.pgIconSize.set(64);
     this.pgIconColor.set('#52c41a');
     this.pgSize.set('medium');

@@ -303,6 +303,7 @@
         title="Interface: DialogIconConfig"
         [content]="apiInterfaceCode"
         bgColor="#0a0e1a"
+        [showHelpButton]="true"
       ></av-help-copy-container>
 
       <div style="margin-top: 24px; padding: 16px; background: #fffbe6; border: 1px solid #ffe58f; border-radius: 8px">
@@ -311,6 +312,56 @@
           Используйте <code>centered: true</code> в конфигурации модального окна для активации режима диалогов с
           иконками. Этот режим оптимизирован для небольших информационных сообщений и подтверждений.
         </p>
+      </div>
+    </nz-card>
+  </div>
+
+  <!-- Usage Examples -->
+  <div style="margin-top: 48px">
+    <div style="margin-bottom: 16px">
+      <h2 style="margin: 0; font-size: 20px; font-weight: 600">Примеры использования</h2>
+      <p style="margin: 8px 0 0; font-size: 14px; color: #8c8c8c">
+        Практические примеры обработки нажатий кнопок для различных сценариев
+      </p>
+    </div>
+
+    <nz-card>
+      <av-help-copy-container
+        title="Пример 1: Подтверждение успешной операции"
+        [content]="exampleSuccessCode"
+        bgColor="#1e293b"
+      ></av-help-copy-container>
+
+      <div style="margin-top: 24px">
+        <av-help-copy-container
+          title="Пример 2: Диалог ошибки"
+          [content]="exampleErrorCode"
+          bgColor="#1e293b"
+        ></av-help-copy-container>
+      </div>
+
+      <div style="margin-top: 24px">
+        <av-help-copy-container
+          title="Пример 3: Подтверждение удаления"
+          [content]="exampleDeleteCode"
+          bgColor="#1e293b"
+        ></av-help-copy-container>
+      </div>
+
+      <div style="margin-top: 24px">
+        <av-help-copy-container
+          title="Пример 4: Предупреждение с выбором"
+          [content]="exampleWarningCode"
+          bgColor="#1e293b"
+        ></av-help-copy-container>
+      </div>
+
+      <div style="margin-top: 24px">
+        <av-help-copy-container
+          title="Пример 5: Информационный диалог (без кнопки отмены)"
+          [content]="exampleInfoCode"
+          bgColor="#1e293b"
+        ></av-help-copy-container>
       </div>
     </nz-card>
   </div>
