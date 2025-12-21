@@ -1,13 +1,18 @@
+import { DragDropModule } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
+  ElementRef,
   EventEmitter,
+  HostListener,
   inject,
   Input,
   OnDestroy,
   OnInit,
   Output,
+  ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
 import { IconComponent } from '../../../icon/icon.component';
@@ -41,7 +46,7 @@ import { MODAL_DATA } from '../../tokens/modal-tokens';
 @Component({
   selector: 'av-modal',
   standalone: true,
-  imports: [CommonModule, IconComponent],
+  imports: [CommonModule, IconComponent, DragDropModule],
   templateUrl: './modal.component.html',
   styleUrls: ['./modal.component.scss'],
   animations: [modalAnimation],
@@ -49,8 +54,29 @@ import { MODAL_DATA } from '../../tokens/modal-tokens';
   encapsulation: ViewEncapsulation.None,
 })
 export class ModalComponent implements OnInit, OnDestroy {
+  private cdr = inject(ChangeDetectorRef);
+
+  @ViewChild('modalContainer') modalContainer?: ElementRef;
+
+  private _isOpen = false;
+
   /** Открыт ли модал */
-  @Input() isOpen = false;
+  @Input()
+  set isOpen(value: boolean) {
+    if (this._isOpen === value) return;
+    this._isOpen = value;
+
+    if (value) {
+      this.onOpen();
+    } else {
+      this.removeBodyScrollLock();
+    }
+    this.isOpenChange.emit(value);
+  }
+
+  get isOpen(): boolean {
+    return this._isOpen;
+  }
 
   /** Размер модала */
   @Input() size: ModalSize = 'medium';
@@ -94,6 +120,30 @@ export class ModalComponent implements OnInit, OnDestroy {
   /** Центрировать содержимое (для диалогов с иконками) */
   @Input() centered = false;
 
+  /** Кастомная ширина */
+  @Input() avWidth?: string | number;
+
+  /** Кастомная высота */
+  @Input() avHeight?: string | number;
+
+  /** Максимальная ширина */
+  @Input() avMaxWidth?: string | number;
+
+  /** Максимальная высота */
+  @Input() avMaxHeight?: string | number;
+
+  /** Можно ли перетаскивать */
+  @Input() draggable = false;
+
+  /** Можно ли менять размер */
+  @Input() resizable = false;
+
+  /** Показывать кнопку разворачивания на весь экран */
+  @Input() showMaximizeButton = false;
+
+  /** Состояние полноэкранного режима (внутреннее) */
+  isFullscreen = false;
+
   /** Событие изменения isOpen */
   @Output() isOpenChange = new EventEmitter<boolean>();
 
@@ -115,16 +165,26 @@ export class ModalComponent implements OnInit, OnDestroy {
     return this.size;
   }
 
+  /** Проверка наличия кастомных размеров */
+  private get hasCustomDimensions(): boolean {
+    return !!(this.avWidth || this.avHeight);
+  }
+
   /** CSS классы для контейнера */
   get containerClasses(): string[] {
-    const classes = [
-      'modal-container',
-      `modal-container--${this.effectiveSize}`,
-      `modal-container--${this.position}`,
-    ];
+    const classes = ['modal-container', `modal-container--${this.position}`];
+
+    // Добавляем класс размера только если нет кастомных габаритов
+    if (!this.hasCustomDimensions) {
+      classes.push(`modal-container--${this.effectiveSize}`);
+    }
 
     if (this.centered) {
       classes.push('modal-container--centered');
+    }
+
+    if (this.isFullscreen) {
+      classes.push('modal-container--maximized');
     }
 
     return classes;
@@ -133,6 +193,70 @@ export class ModalComponent implements OnInit, OnDestroy {
   /** CSS классы для обертки */
   get wrapperClasses(): string[] {
     return ['modal-wrapper', `modal-wrapper--${this.position}`];
+  }
+
+  /** Стили для контейнера */
+  get containerStyles(): { [key: string]: any } {
+    if (this.isFullscreen) {
+      return {
+        width: '100vw',
+        height: '100vh',
+        maxWidth: '100vw',
+        maxHeight: '100vh',
+        borderRadius: '0',
+      };
+    }
+
+    const styles: { [key: string]: any } = {};
+
+    if (this.avWidth) {
+      styles['width'] = this.getSafeDimension(this.avWidth, 100, 'width');
+    }
+
+    if (this.avHeight) {
+      styles['height'] = this.getSafeDimension(this.avHeight, 50, 'height');
+    }
+
+    if (this.avMaxWidth) {
+      styles['max-width'] = this.getSafeDimension(this.avMaxWidth, 100, 'width');
+    }
+
+    if (this.avMaxHeight) {
+      styles['max-height'] = this.getSafeDimension(this.avMaxHeight, 50, 'height');
+    }
+
+    return styles;
+  }
+
+  /** Получение безопасного размера с учетом текущего окна */
+  private getSafeDimension(
+    value: string | number | undefined,
+    min: number,
+    type: 'width' | 'height',
+  ): string {
+    if (value === undefined || value === null || value === '') return '';
+
+    const strValue = value.toString();
+    const numValue = parseInt(strValue);
+
+    // Если это не число или содержит относительные единицы, возвращаем как есть (браузер сам ограничит)
+    if (
+      isNaN(numValue) ||
+      strValue.includes('%') ||
+      strValue.includes('vw') ||
+      strValue.includes('vh')
+    ) {
+      return strValue;
+    }
+
+    // Лимиты экрана на лету
+    const screenLimit =
+      typeof window !== 'undefined'
+        ? (type === 'width' ? window.innerWidth : window.innerHeight) * 0.98
+        : 2000;
+
+    const safeValue = Math.min(Math.max(numValue, min), screenLimit);
+    return `${safeValue}px`;
   }
 
   ngOnInit(): void {
@@ -173,10 +297,23 @@ export class ModalComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Обработка нажатия клавиш
+   * Переключение полноэкранного режима
    */
+  toggleFullscreen(event?: MouseEvent): void {
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+    this.isFullscreen = !this.isFullscreen;
+    this.cdr.detectChanges();
+  }
+
+  /**
+   * Обработка нажатия клавиш (глобально)
+   */
+  @HostListener('document:keydown', ['$event'])
   onKeyDown(event: KeyboardEvent): void {
-    if (this.closeOnEsc && event.key === 'Escape') {
+    if (this.isOpen && this.closeOnEsc && event.key === 'Escape') {
       this.close();
     }
   }
@@ -205,6 +342,48 @@ export class ModalComponent implements OnInit, OnDestroy {
     if (typeof document !== 'undefined') {
       document.body.style.overflow = '';
     }
+  }
+
+  // Логика Resize
+  onResizeMouseDown(event: MouseEvent): void {
+    if (!this.resizable || !this.modalContainer || this.isFullscreen) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    const container = this.modalContainer.nativeElement;
+    const rect = container.getBoundingClientRect();
+
+    const startX = event.clientX;
+    const startY = event.clientY;
+    const startWidth = rect.width;
+    const startHeight = rect.height;
+
+    const onMouseMove = (e: MouseEvent) => {
+      const screenWidth = window.innerWidth;
+      const screenHeight = window.innerHeight;
+
+      // Максимально допустимые размеры (98% экрана, чтобы окно не исчезало)
+      const maxW = screenWidth * 0.98;
+      const maxH = screenHeight * 0.98;
+
+      let newWidth = startWidth + (e.clientX - startX);
+      let newHeight = startHeight + (e.clientY - startY);
+
+      // Ограничиваем Min (100x50) и Max (98% экрана)
+      this.avWidth = Math.min(Math.max(newWidth, 100), maxW);
+      this.avHeight = Math.min(Math.max(newHeight, 50), maxH);
+
+      this.cdr.detectChanges();
+    };
+
+    const onMouseUp = () => {
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
+    };
+
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
   }
 }
 

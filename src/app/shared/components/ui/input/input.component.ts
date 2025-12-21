@@ -1,12 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, forwardRef, input, model, Output, signal } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { IconComponent } from '../icon/icon.component';
 import { InputDirective } from './input.directive';
 
 @Component({
   selector: 'av-input',
   standalone: true,
-  imports: [CommonModule, InputDirective],
+  imports: [CommonModule, InputDirective, IconComponent],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -27,7 +28,23 @@ import { InputDirective } from './input.directive';
       <div
         class="av-input-container"
         [class.av-input-container--with-toggle]="type() === 'password' && showPasswordToggle()"
+        [class.av-input-container--with-prefix]="prefixIcon()"
+        [class.av-input-container--with-suffix]="suffixIcon()"
+        [style.--av-prefix-icon-size]="getPrefixIconSize() + 'px'"
+        [style.--av-prefix-icon-color]="iconColor() || prefixIconColor()"
+        [style.--av-suffix-icon-size]="getSuffixIconSize() + 'px'"
+        [style.--av-suffix-icon-color]="iconColor() || suffixIconColor()"
       >
+        @if (prefixIcon()) {
+        <div class="av-input-prefix">
+          <app-icon
+            [type]="prefixIcon()!"
+            [size]="getPrefixIconSize()"
+            [color]="iconColor() || prefixIconColor()"
+          ></app-icon>
+        </div>
+        }
+
         <input
           [id]="inputId"
           [type]="getInputType()"
@@ -41,13 +58,33 @@ import { InputDirective } from './input.directive';
           [avVisible]="visible()"
           [avBlock]="block()"
           [avShape]="shape()"
+          [avIconSize]="iconSize()"
+          [avIconColor]="iconColor()"
+          [avPrefixIconSize]="prefixIconSize()"
+          [avPrefixIconColor]="prefixIconColor()"
+          [avSuffixIconSize]="suffixIconSize()"
+          [avSuffixIconColor]="suffixIconColor()"
           [placeholder]="placeholder()"
           [disabled]="disabled()"
+          [style.padding-left]="prefixIcon() ? getIconPadding() : null"
+          [style.padding-right]="
+            suffixIcon() || (type() === 'password' && showPasswordToggle())
+              ? getIconPaddingRight()
+              : null
+          "
           [value]="value()"
           (input)="onInput($event)"
         />
 
-        @if (type() === 'password' && showPasswordToggle()) {
+        @if (suffixIcon() && !(type() === 'password' && showPasswordToggle())) {
+        <div class="av-input-suffix">
+          <app-icon
+            [type]="suffixIcon()!"
+            [size]="getSuffixIconSize()"
+            [color]="iconColor() || suffixIconColor()"
+          ></app-icon>
+        </div>
+        } @if (type() === 'password' && showPasswordToggle()) {
         <button
           type="button"
           class="av-input-toggle"
@@ -102,10 +139,64 @@ import { InputDirective } from './input.directive';
         position: relative;
         display: flex;
         align-items: center;
+
+        .av-input-prefix,
+        .av-input-suffix {
+          position: absolute;
+          top: 50%;
+          transform: translateY(-50%);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: rgba(0, 0, 0, 0.45);
+          pointer-events: none;
+          z-index: 1;
+          transition: all 0.3s;
+
+          app-icon,
+          .anticon,
+          nz-icon {
+            font-size: var(--av-input-icon-size, inherit);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+
+            svg {
+              width: var(--av-input-icon-size, inherit) !important;
+              height: var(--av-input-icon-size, inherit) !important;
+            }
+          }
+        }
+
+        .av-input-prefix {
+          left: 12px;
+          app-icon,
+          .anticon,
+          nz-icon {
+            font-size: var(--av-prefix-icon-size, inherit);
+            svg {
+              width: var(--av-prefix-icon-size, inherit) !important;
+              height: var(--av-prefix-icon-size, inherit) !important;
+            }
+          }
+        }
+
+        .av-input-suffix {
+          right: 12px;
+          app-icon,
+          .anticon,
+          nz-icon {
+            font-size: var(--av-suffix-icon-size, inherit);
+            svg {
+              width: var(--av-suffix-icon-size, inherit) !important;
+              height: var(--av-suffix-icon-size, inherit) !important;
+            }
+          }
+        }
       }
 
-      .av-input-container--with-toggle input {
-        padding-right: 48px !important;
+      .av-input-container--with-toggle .av-input-toggle {
+        z-index: 2;
       }
 
       .av-input-toggle {
@@ -176,6 +267,11 @@ import { InputDirective } from './input.directive';
       }
 
       @media (prefers-color-scheme: dark) {
+        .av-input-prefix,
+        .av-input-suffix {
+          color: rgba(255, 255, 255, 0.45);
+        }
+
         .av-input-toggle {
           color: rgba(255, 255, 255, 0.45);
 
@@ -232,6 +328,30 @@ export class InputComponent implements ControlValueAccessor {
   /** Форма (скругление) */
   shape = input<'default' | 'rounded' | 'rounded-big'>('default');
 
+  /** Иконка в начале */
+  prefixIcon = input<string | null>(null);
+
+  /** Иконка в конце */
+  suffixIcon = input<string | null>(null);
+
+  /** Общий размер иконок (fallback) */
+  iconSize = input<number | null>(null);
+
+  /** Размер префиксной иконки */
+  prefixIconSize = input<number | null>(null);
+
+  /** Размер суффиксной иконки */
+  suffixIconSize = input<number | null>(null);
+
+  /** Кастомный цвет иконки (для обоих, если задан) */
+  iconColor = input<string | null>(null);
+
+  /** Цвет префиксной иконки */
+  prefixIconColor = input<string | null>(null);
+
+  /** Цвет суффиксной иконки */
+  suffixIconColor = input<string | null>(null);
+
   inputId = `av-input-${Math.random().toString(36).substring(2, 9)}`;
   passwordVisible = signal(false);
 
@@ -271,5 +391,44 @@ export class InputComponent implements ControlValueAccessor {
 
   setDisabledState(isDisabled: boolean): void {
     // Readonly with signals
+  }
+
+  getPrefixIconSize(): number {
+    return this.prefixIconSize() || this.iconSize() || this.getEffectiveIconSize();
+  }
+
+  getSuffixIconSize(): number {
+    return this.suffixIconSize() || this.iconSize() || this.getEffectiveIconSize();
+  }
+
+  getEffectiveIconSize(): number {
+    switch (this.size()) {
+      case 'small':
+        return 14;
+      case 'large':
+        return 20;
+      case 'x-large':
+        return 22;
+      default:
+        return 16;
+    }
+  }
+
+  getIconPadding(): string {
+    const iconSize = this.getPrefixIconSize();
+    return `${iconSize + 20}px`;
+  }
+
+  getIconPaddingRight(): string {
+    let padding = 12; // default base padding
+    const isPasswordWithToggle = this.type() === 'password' && this.showPasswordToggle();
+
+    if (isPasswordWithToggle) {
+      padding += 32; // width of the toggle button
+    } else if (this.suffixIcon()) {
+      padding += this.getSuffixIconSize() + 8;
+    }
+
+    return `${padding}px`;
   }
 }

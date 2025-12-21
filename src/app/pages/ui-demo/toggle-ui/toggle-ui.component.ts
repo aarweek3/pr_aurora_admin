@@ -87,48 +87,67 @@ export class ToggleUiComponent {
     let code = '';
 
     if (type === 'directive') {
-      const sizeVal = this.pgSize() === 'custom' ? 'default' : this.pgSize();
+      const attrs = [
+        'type="checkbox"',
+        'avToggle',
+        '[(ngModel)]="isChecked"',
+        `avSize="${this.pgSize() === 'custom' ? 'default' : this.pgSize()}"`,
+        `avColor="${this.pgColor()}"`,
+        `avShape="${this.pgShape()}"`,
+      ];
+
+      if (this.pgSize() === 'custom') {
+        if (this.pgWidth()) attrs.push(`[avWidth]="${this.pgWidth()}"`);
+        if (this.pgHeight()) attrs.push(`[avHeight]="${this.pgHeight()}"`);
+        if (this.pgRadius()) attrs.push(`[avRadius]="${this.pgRadius()}"`);
+      }
+
+      if (this.pgDisabled()) attrs.push('[disabled]="true"');
+
       code = `<label class="av-toggle">
   <input
-    type="checkbox"
-    avToggle
-    [(ngModel)]="isChecked"
-    avSize="${sizeVal}"
-    avColor="${this.pgColor()}"
-    avShape="${this.pgShape()}"
-    ${this.pgSize() === 'custom' && this.pgWidth() ? `[avWidth]="${this.pgWidth()}"` : ''}
-    ${this.pgSize() === 'custom' && this.pgHeight() ? `[avHeight]="${this.pgHeight()}"` : ''}
-    ${this.pgSize() === 'custom' && this.pgRadius() ? `[avRadius]="${this.pgRadius()}"` : ''}
-    ${this.pgDisabled() ? '[disabled]="true"' : ''}
+    ${attrs.join('\n    ')}
   />
   <span class="av-toggle__slider"></span>
 </label>`;
     } else if (type === 'component') {
-      const sizeVal = this.pgSize() === 'custom' ? 'default' : this.pgSize();
+      const attrs = [
+        '[(checked)]="isChecked"',
+        `size="${this.pgSize() === 'custom' ? 'default' : this.pgSize()}"`,
+        `color="${this.pgColor()}"`,
+        `shape="${this.pgShape()}"`,
+        `labelPosition="${this.pgLabelPosition()}"`,
+        `labelSize="${this.pgLabelSize()}"`,
+        `labelColor="${this.pgLabelColor()}"`,
+      ];
+
+      if (this.pgSize() === 'custom') {
+        if (this.pgWidth()) attrs.push(`[width]="${this.pgWidth()}"`);
+        if (this.pgHeight()) attrs.push(`[height]="${this.pgHeight()}"`);
+        if (this.pgRadius()) attrs.push(`[radius]="${this.pgRadius()}"`);
+      }
+
+      if (this.pgDisabled()) attrs.push('[disabled]="true"');
+
       code = `<av-toggle
-  [(checked)]="isChecked"
-  size="${sizeVal}"
-  color="${this.pgColor()}"
-  shape="${this.pgShape()}"
-  labelPosition="${this.pgLabelPosition()}"
-  labelSize="${this.pgLabelSize()}"
-  labelColor="${this.pgLabelColor()}"
-  ${this.pgSize() === 'custom' && this.pgWidth() ? `[width]="${this.pgWidth()}"` : ''}
-  ${this.pgSize() === 'custom' && this.pgHeight() ? `[height]="${this.pgHeight()}"` : ''}
-  ${this.pgSize() === 'custom' && this.pgRadius() ? `[radius]="${this.pgRadius()}"` : ''}
-  ${this.pgDisabled() ? '[disabled]="true"' : ''}
+  ${attrs.join('\n  ')}
 >
   ${this.pgLabel()}
 </av-toggle>`;
     } else {
+      const attrs = [
+        '[(checked)]="isChecked"',
+        `size="${this.pgSize()}"`,
+        `color="${this.pgColor()}"`,
+        `shape="${this.pgShape()}"`,
+        `leftLabel="${this.pgLeftLabel()}"`,
+        `rightLabel="${this.pgRightLabel()}"`,
+      ];
+
+      if (this.pgDisabled()) attrs.push('[disabled]="true"');
+
       code = `<av-toggle-labeled
-  [(checked)]="isChecked"
-  size="${this.pgSize()}"
-  color="${this.pgColor()}"
-  shape="${this.pgShape()}"
-  leftLabel="${this.pgLeftLabel()}"
-  rightLabel="${this.pgRightLabel()}"
-  ${this.pgDisabled() ? '[disabled]="true"' : ''}
+  ${attrs.join('\n  ')}
 ></av-toggle-labeled>`;
     }
 

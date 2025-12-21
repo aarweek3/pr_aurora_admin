@@ -1,7 +1,6 @@
 <div
   *ngIf="isOpen"
   [class]="wrapperClasses.join(' ')"
-  (keydown)="onKeyDown($event)"
   [@modal]="'enter'"
   role="dialog"
   aria-modal="true"
@@ -11,9 +10,22 @@
   <div *ngIf="showBackdrop" class="modal-backdrop" (click)="onBackdropClick($event)" aria-hidden="true"></div>
 
   <!-- Modal Container -->
-  <div [class]="containerClasses.join(' ')" role="document">
+  <div
+    #modalContainer
+    [class]="containerClasses.join(' ')"
+    [ngStyle]="containerStyles"
+    role="document"
+    cdkDrag
+    [cdkDragDisabled]="!draggable"
+    cdkDragBoundary=".modal-wrapper"
+  >
     <!-- Header -->
-    <div class="modal-header" *ngIf="title || showCloseButton">
+    <div
+      class="modal-header"
+      *ngIf="title || showCloseButton"
+      cdkDragHandle
+      [style.cursor]="draggable ? 'move' : 'default'"
+    >
       <div class="modal-header__content">
         <h2 *ngIf="title" id="modal-title" class="modal-header__title">
           {{ title }}
@@ -23,9 +35,27 @@
         </p>
       </div>
 
-      <button *ngIf="showCloseButton" type="button" class="modal-header__close" (click)="close()" aria-label="Закрыть">
-        <app-icon type="actions/av_close" [size]="20"></app-icon>
-      </button>
+      <div class="modal-header__actions">
+        <button
+          *ngIf="showMaximizeButton"
+          type="button"
+          class="modal-header__action"
+          (click)="toggleFullscreen($event)"
+          [attr.aria-label]="isFullscreen ? 'Свернуть' : 'Развернуть'"
+        >
+          <app-icon [type]="isFullscreen ? 'actions/av_compress' : 'actions/av_expand'" [size]="18"></app-icon>
+        </button>
+
+        <button
+          *ngIf="showCloseButton"
+          type="button"
+          class="modal-header__close"
+          (click)="close()"
+          aria-label="Закрыть"
+        >
+          <app-icon type="actions/av_close" [size]="20"></app-icon>
+        </button>
+      </div>
     </div>
 
     <!-- Body -->
@@ -43,5 +73,8 @@
 
       <ng-content select="[modal-footer]"></ng-content>
     </div>
+
+    <!-- Resize Handle -->
+    <div *ngIf="resizable" class="modal-resize-handle" (mousedown)="onResizeMouseDown($event)"></div>
   </div>
 </div>

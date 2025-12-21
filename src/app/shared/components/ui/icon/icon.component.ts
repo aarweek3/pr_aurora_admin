@@ -17,6 +17,7 @@ import { IconService } from '@core/services/icon/icon.service';
       class="av-icon"
       [style.width.px]="size()"
       [style.height.px]="size()"
+      [style.--av-icon-color]="color()"
       [innerHTML]="svgContent()"
     ></div>
   `,
@@ -68,6 +69,9 @@ export class IconComponent {
   /** Размер в пикселях */
   size = input<number>(24);
 
+  /** Цвет иконки (напр. '#ff0000', 'red', 'currentColor') */
+  color = input<string | null>(null);
+
   /** Обработанное содержимое SVG */
   svgContent = signal<SafeHtml>('');
 
@@ -84,6 +88,10 @@ export class IconComponent {
     'chevron-up': 'arrows/av_chevron-up.svg',
     'chevron-down': 'arrows/av_chevron-down.svg',
     info: 'system/av_info.svg',
+    email: 'communication/av_mail.svg',
+    user: 'users/av_user.svg',
+    lock: 'security/av_lock.svg',
+    check: 'actions/av_check.svg',
   };
 
   constructor() {

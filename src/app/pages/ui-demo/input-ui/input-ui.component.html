@@ -177,6 +177,201 @@
             </div>
             } }
 
+            <!-- ✨ Prefix Icon Section -->
+            <div
+              style="background: #f0f7ff; border: 1px solid #bae7ff; border-radius: 12px; padding: 16px; margin: 20px 0"
+            >
+              <div
+                style="
+                  margin-bottom: 20px;
+                  font-weight: 700;
+                  font-size: 14px;
+                  color: #0050b3;
+                  display: flex;
+                  align-items: center;
+                  gap: 10px;
+                "
+              >
+                <span nz-icon nzType="login"></span>
+                Prefix Icon Settings
+              </div>
+
+              <div class="control-item">
+                <label nz-tooltip nzTooltipTitle="Иконка в начале поля">
+                  Иконка: <span class="info-icon">ⓘ</span>
+                </label>
+                <div class="control-content-zone">
+                  <nz-select
+                    [ngModel]="pgPrefixIcon()"
+                    (ngModelChange)="pgPrefixIcon.set($event)"
+                    nzAllowClear
+                    nzPlaceHolder="None"
+                    style="width: 100%"
+                  >
+                    <nz-option nzValue="search" nzLabel="Search"></nz-option>
+                    <nz-option nzValue="user" nzLabel="User"></nz-option>
+                    <nz-option nzValue="mail" nzLabel="Email"></nz-option>
+                    <nz-option nzValue="lock" nzLabel="Lock"></nz-option>
+                    <nz-option nzValue="download" nzLabel="Download"></nz-option>
+                  </nz-select>
+                </div>
+              </div>
+
+              @if (pgPrefixIcon()) {
+              <div class="control-item">
+                <label nz-tooltip nzTooltipTitle="Размер префиксной иконки">
+                  Размер иконки: <span class="info-icon">ⓘ</span>
+                </label>
+                <div class="control-content-zone" style="flex-direction: row; align-items: center; gap: 16px">
+                  <nz-slider
+                    style="flex: 1"
+                    [nzMin]="12"
+                    [nzMax]="40"
+                    [ngModel]="pgPrefixIconSize() || 16"
+                    (ngModelChange)="pgPrefixIconSize.set($event)"
+                  ></nz-slider>
+                  <nz-input-number
+                    style="width: 60px"
+                    [nzMin]="12"
+                    [nzMax]="40"
+                    [ngModel]="pgPrefixIconSize() || 16"
+                    (ngModelChange)="pgPrefixIconSize.set($event)"
+                  ></nz-input-number>
+                </div>
+              </div>
+
+              <div class="control-item">
+                <label nz-tooltip nzTooltipTitle="Цвет префиксной иконки (avPrefixIconColor)">
+                  Цвет иконки: <span class="info-icon">ⓘ</span>
+                </label>
+                <div class="control-content-zone">
+                  <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 8px">
+                    @for (color of colorPresets; track color) {
+                    <div
+                      class="color-preset"
+                      [style.background]="color"
+                      [class.active]="pgPrefixIconColor() === color"
+                      (click)="pgPrefixIconColor.set(color)"
+                    ></div>
+                    }
+                    <button av-button avType="text" avSize="small" (click)="pgPrefixIconColor.set(null)">Сброс</button>
+                  </div>
+                  <div style="display: flex; gap: 8px; align-items: center">
+                    <nz-color-picker
+                      [ngModel]="pgPrefixIconColor()"
+                      (ngModelChange)="pgPrefixIconColor.set($event)"
+                    ></nz-color-picker>
+                    <input
+                      nz-input
+                      [ngModel]="pgPrefixIconColor()"
+                      (ngModelChange)="pgPrefixIconColor.set($event)"
+                      placeholder="HEX, RGB..."
+                      style="flex: 1"
+                    />
+                  </div>
+                </div>
+              </div>
+              }
+            </div>
+
+            <!-- ✨ Suffix Icon Section -->
+            <div
+              style="background: #fffbe6; border: 1px solid #ffe58f; border-radius: 12px; padding: 16px; margin: 20px 0"
+            >
+              <div
+                style="
+                  margin-bottom: 20px;
+                  font-weight: 700;
+                  font-size: 14px;
+                  color: #d48806;
+                  display: flex;
+                  align-items: center;
+                  gap: 10px;
+                "
+              >
+                <span nz-icon nzType="logout"></span>
+                Suffix Icon Settings
+              </div>
+
+              <div class="control-item">
+                <label nz-tooltip nzTooltipTitle="Иконка в конце поля">
+                  Иконка: <span class="info-icon">ⓘ</span>
+                </label>
+                <div class="control-content-zone">
+                  <nz-select
+                    [ngModel]="pgSuffixIcon()"
+                    (ngModelChange)="pgSuffixIcon.set($event)"
+                    nzAllowClear
+                    nzPlaceHolder="None"
+                    style="width: 100%"
+                  >
+                    <nz-option nzValue="check" nzLabel="Check"></nz-option>
+                    <nz-option nzValue="close" nzLabel="Close"></nz-option>
+                    <nz-option nzValue="info-circle" nzLabel="Info"></nz-option>
+                    <nz-option nzValue="calendar" nzLabel="Calendar"></nz-option>
+                    <nz-option nzValue="eye" nzLabel="Eye"></nz-option>
+                    <nz-option nzValue="download" nzLabel="Download"></nz-option>
+                  </nz-select>
+                </div>
+              </div>
+
+              @if (pgSuffixIcon()) {
+              <div class="control-item">
+                <label nz-tooltip nzTooltipTitle="Размер суффиксной иконки">
+                  Размер иконки: <span class="info-icon">ⓘ</span>
+                </label>
+                <div class="control-content-zone" style="flex-direction: row; align-items: center; gap: 16px">
+                  <nz-slider
+                    style="flex: 1"
+                    [nzMin]="12"
+                    [nzMax]="40"
+                    [ngModel]="pgSuffixIconSize() || 16"
+                    (ngModelChange)="pgSuffixIconSize.set($event)"
+                  ></nz-slider>
+                  <nz-input-number
+                    style="width: 60px"
+                    [nzMin]="12"
+                    [nzMax]="40"
+                    [ngModel]="pgSuffixIconSize() || 16"
+                    (ngModelChange)="pgSuffixIconSize.set($event)"
+                  ></nz-input-number>
+                </div>
+              </div>
+
+              <div class="control-item">
+                <label nz-tooltip nzTooltipTitle="Цвет суффиксной иконки (avSuffixIconColor)">
+                  Цвет иконки: <span class="info-icon">ⓘ</span>
+                </label>
+                <div class="control-content-zone">
+                  <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 8px">
+                    @for (color of colorPresets; track color) {
+                    <div
+                      class="color-preset"
+                      [style.background]="color"
+                      [class.active]="pgSuffixIconColor() === color"
+                      (click)="pgSuffixIconColor.set(color)"
+                    ></div>
+                    }
+                    <button av-button avType="text" avSize="small" (click)="pgSuffixIconColor.set(null)">Сброс</button>
+                  </div>
+                  <div style="display: flex; gap: 8px; align-items: center">
+                    <nz-color-picker
+                      [ngModel]="pgSuffixIconColor()"
+                      (ngModelChange)="pgSuffixIconColor.set($event)"
+                    ></nz-color-picker>
+                    <input
+                      nz-input
+                      [ngModel]="pgSuffixIconColor()"
+                      (ngModelChange)="pgSuffixIconColor.set($event)"
+                      placeholder="HEX, RGB..."
+                      style="flex: 1"
+                    />
+                  </div>
+                </div>
+              </div>
+              }
+            </div>
+
             <!-- 5. Status Switches -->
             <div class="control-item switches-row">
               <div class="switch-item">
@@ -223,22 +418,50 @@
             <div class="preview-area">
               <div style="width: 100%; max-width: 400px">
                 @if (refreshTrigger()) { @if (pgType() === 'directive') {
-                <input
-                  avInput
-                  [type]="pgInputType()"
-                  [avSize]="appliedSize()"
-                  [avVariant]="pgVariant()"
-                  [avStatus]="pgStatus()"
-                  [avWidth]="pgSize() === 'custom' ? pgWidth() : null"
-                  [avHeight]="pgSize() === 'custom' ? pgHeight() : null"
-                  [avRadius]="pgSize() === 'custom' ? pgRadius() : null"
-                  [avVisible]="pgVisible()"
-                  [avBlock]="pgBlock()"
-                  [avShape]="pgShape()"
-                  [placeholder]="pgPlaceholder()"
-                  [disabled]="pgDisabled()"
-                  [(ngModel)]="pgValue"
-                />
+                <div
+                  [class.av-input-container]="pgPrefixIcon() || pgSuffixIcon()"
+                  [style.--av-prefix-icon-size]="(pgPrefixIconSize() || 16) + 'px'"
+                  [style.--av-prefix-icon-color]="pgPrefixIconColor()"
+                  [style.--av-suffix-icon-size]="(pgSuffixIconSize() || 16) + 'px'"
+                  [style.--av-suffix-icon-color]="pgSuffixIconColor()"
+                >
+                  @if (pgPrefixIcon()) {
+                  <div class="av-input-prefix">
+                    <app-icon [type]="pgPrefixIcon()!"></app-icon>
+                  </div>
+                  }
+                  <input
+                    avInput
+                    [type]="pgInputType()"
+                    [avSize]="appliedSize()"
+                    [avVariant]="pgVariant()"
+                    [avStatus]="pgStatus()"
+                    [avWidth]="pgSize() === 'custom' ? pgWidth() : pgBlock() ? '100%' : null"
+                    [avHeight]="pgSize() === 'custom' ? pgHeight() : null"
+                    [avRadius]="pgSize() === 'custom' ? pgRadius() : null"
+                    [avVisible]="pgVisible()"
+                    [avBlock]="pgBlock()"
+                    [avShape]="pgShape()"
+                    [avPrefixIconSize]="pgPrefixIconSize()"
+                    [avPrefixIconColor]="pgPrefixIconColor()"
+                    [avSuffixIconSize]="pgSuffixIconSize()"
+                    [avSuffixIconColor]="pgSuffixIconColor()"
+                    [placeholder]="pgPlaceholder()"
+                    [disabled]="pgDisabled()"
+                    [(ngModel)]="pgValue"
+                    [style.padding-left]="pgPrefixIcon() ? (pgPrefixIconSize() || 16) + 20 + 'px' : null"
+                    [style.padding-right]="
+                      (pgSuffixIcon() ? (pgSuffixIconSize() || 16) + 20 : 0) +
+                      (pgInputType() === 'password' && pgShowPasswordToggle() ? 40 : 0) +
+                      'px'
+                    "
+                  />
+                  @if (pgSuffixIcon()) {
+                  <div class="av-input-suffix">
+                    <app-icon [type]="pgSuffixIcon()!"></app-icon>
+                  </div>
+                  }
+                </div>
                 } @else {
                 <av-input
                   [(value)]="pgValue"
@@ -258,6 +481,12 @@
                   [shape]="pgShape()"
                   [disabled]="pgDisabled()"
                   [showPasswordToggle]="pgShowPasswordToggle()"
+                  [prefixIcon]="pgPrefixIcon()"
+                  [prefixIconSize]="pgPrefixIconSize()"
+                  [prefixIconColor]="pgPrefixIconColor()"
+                  [suffixIcon]="pgSuffixIcon()"
+                  [suffixIconSize]="pgSuffixIconSize()"
+                  [suffixIconColor]="pgSuffixIconColor()"
                 ></av-input>
                 } }
               </div>

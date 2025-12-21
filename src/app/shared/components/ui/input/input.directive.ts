@@ -69,6 +69,24 @@ export class InputDirective {
   /** Форма (скругление) */
   avShape = input<'default' | 'rounded' | 'rounded-big'>('default');
 
+  /** Размер префиксной иконки */
+  avPrefixIconSize = input<string | number | null>(null);
+
+  /** Цвет префиксной иконки */
+  avPrefixIconColor = input<string | null>(null);
+
+  /** Размер суффиксной иконки */
+  avSuffixIconSize = input<string | number | null>(null);
+
+  /** Цвет суффиксной иконки */
+  avSuffixIconColor = input<string | null>(null);
+
+  /** Базовый размер иконок (если не заданы специфичные) */
+  avIconSize = input<string | number | null>(null);
+
+  /** Базовый цвет иконок (если не заданы специфичные) */
+  avIconColor = input<string | null>(null);
+
   @HostBinding('class')
   get hostClasses(): string {
     const classes = ['av-input'];
@@ -123,6 +141,36 @@ export class InputDirective {
   @HostBinding('style.borderRadius')
   get borderRadius(): string | null {
     return this.formatDimension(this.avRadius());
+  }
+
+  @HostBinding('style.--av-icon-color')
+  get iconColor(): string | null {
+    return this.avIconColor();
+  }
+
+  @HostBinding('style.--av-input-icon-size')
+  get iconSize(): string | null {
+    return this.formatDimension(this.avIconSize());
+  }
+
+  @HostBinding('style.--av-prefix-icon-color')
+  get prefixIconColor(): string | null {
+    return this.avPrefixIconColor() || this.avIconColor();
+  }
+
+  @HostBinding('style.--av-prefix-icon-size')
+  get prefixIconSize(): string | null {
+    return this.formatDimension(this.avPrefixIconSize() || this.avIconSize());
+  }
+
+  @HostBinding('style.--av-suffix-icon-color')
+  get suffixIconColor(): string | null {
+    return this.avSuffixIconColor() || this.avIconColor();
+  }
+
+  @HostBinding('style.--av-suffix-icon-size')
+  get suffixIconSize(): string | null {
+    return this.formatDimension(this.avSuffixIconSize() || this.avIconSize());
   }
 
   private formatDimension(value: string | number | null): string | null {

@@ -78,6 +78,16 @@ export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
               icon: 'border',
             },
             {
+              id: 'modal-ui-new',
+              label: 'Modal UI Demo New',
+              route: '/ui-demo/modal-ui-new',
+              icon: 'layout',
+              badge: {
+                value: 'New',
+                intent: 'success',
+              },
+            },
+            {
               id: 'search-ui',
               label: 'Search UI',
               route: '/ui-demo/search-ui',

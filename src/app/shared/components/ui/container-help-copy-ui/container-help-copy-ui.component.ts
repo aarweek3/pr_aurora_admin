@@ -18,14 +18,23 @@ import { Component, input, output, signal } from '@angular/core';
   template: `
     <div
       class="av-copy-container"
+      [class.av-copy-container--collapsed]="collapsed()"
       [style.width]="width()"
-      [style.height]="height()"
+      [style.height]="collapsed() ? 'auto' : height()"
       [style.--av-copy-bg]="bgColor() || 'var(--color-bg-help-wrapper, #1e293b)'"
     >
       <div class="av-copy-container__header">
         <h4 class="av-copy-container__title">{{ title() }}</h4>
         <div class="av-copy-container__actions">
-          @if(showHelpButton()) {
+          <button
+            class="av-copy-container__action-btn av-copy-container__action-btn--toggle"
+            (click)="toggleCollapse()"
+            [title]="collapsed() ? 'Развернуть' : 'Свернуть'"
+          >
+            {{ collapsed() ? '▲' : '▼' }}
+          </button>
+
+          @if (!collapsed()) { @if(showHelpButton()) {
           <button
             class="av-copy-container__action-btn av-copy-container__action-btn--help"
             (click)="toggleHelp()"
@@ -37,9 +46,11 @@ import { Component, input, output, signal } from '@angular/core';
           <button class="av-copy-container__action-btn" (click)="copyContent()">
             {{ copied() ? 'Скопировано!' : 'Копировать' }}
           </button>
-          }
+          } }
         </div>
       </div>
+
+      @if (!collapsed()) {
       <div class="av-copy-container__window">
         @if (helpVisible()) { @if (helpContent()) {
         <div class="av-copy-container__help-content">
@@ -107,6 +118,7 @@ import { Component, input, output, signal } from '@angular/core';
         <pre class="av-copy-container__pre"><code [innerText]="content()"></code></pre>
         }
       </div>
+      }
     </div>
   `,
   styles: [
@@ -315,10 +327,26 @@ export class HelpCopyContainerComponent {
   /** Контент для справки (если не задан, показывается техническая справка компонента) */
   helpContent = input<string | null>(null);
 
+  /** Начальное состояние: свернуто или нет */
+  defaultCollapsed = input<boolean>(true);
+
+  /** Сигнал текущего состояния сворачивания */
+  collapsed = signal(false);
+
   copied = signal(false);
 
   /** Показывать ли справку */
   helpVisible = signal(false);
+
+  constructor() {
+    // Устанавливаем начальное состояние из input
+    // Используем effect или ngOnInit, но в Angular 17+ удобно через constructor/field init
+    // Однако input() возвращает Signal, поэтому лучше в constructor
+  }
+
+  ngOnInit() {
+    this.collapsed.set(this.defaultCollapsed());
+  }
 
   copyContent() {
     if (!this.content()) return;
@@ -334,5 +362,11 @@ export class HelpCopyContainerComponent {
     this.helpToggled.emit(this.helpVisible());
   }
 
+  toggleCollapse() {
+    this.collapsed.update((v) => !v);
+    this.collapsedChange.emit(this.collapsed());
+  }
+
   helpToggled = output<boolean>();
+  collapsedChange = output<boolean>();
 }

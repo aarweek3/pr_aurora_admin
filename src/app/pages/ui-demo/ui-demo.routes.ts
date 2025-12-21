@@ -33,6 +33,11 @@ export const UI_DEMO_ROUTES: Routes = [
     loadComponent: () => import('./modal-ui/modal-ui.component').then((m) => m.ModalUiComponent),
   },
   {
+    path: 'modal-ui-new',
+    loadComponent: () =>
+      import('./modal-ui-new/modal-ui-new.component').then((m) => m.ModalUiNewComponent),
+  },
+  {
     path: 'search-ui',
     loadComponent: () => import('./search-ui/search-ui.component').then((m) => m.SearchUiComponent),
   },
