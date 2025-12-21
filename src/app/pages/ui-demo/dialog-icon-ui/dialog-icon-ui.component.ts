@@ -52,6 +52,7 @@ export class DialogIconUiComponent {
   pgCloseOnBackdrop = signal(true);
   pgCloseOnEsc = signal(true);
   pgShowCloseButton = signal(false);
+  pgDraggable = signal(true);
 
   // Button Configuration
   pgConfirmText = signal('Подтвердить');
@@ -90,6 +91,7 @@ openDialog() {
     closeOnBackdrop: ${this.pgCloseOnBackdrop()},
     closeOnEsc: ${this.pgCloseOnEsc()},
     showCloseButton: ${this.pgShowCloseButton()},
+    draggable: ${this.pgDraggable()},
   });
 
   modal.result.subscribe(result => {
@@ -98,7 +100,7 @@ openDialog() {
 }
 
 // HTML Template
-<av-modal [(isOpen)]="dialogOpen" [centered]="true" [avWidth]="'${this.pgWidth()}'">
+<av-modal [(isOpen)]="dialogOpen" [centered]="true" [avWidth]="'${this.pgWidth()}'" [draggable]="${this.pgDraggable()}">
   <div modal-body>
     <div style="text-align: center; padding: 24px;">
       <app-icon
@@ -446,6 +448,7 @@ handleInfoConfirm() {
     this.pgCloseOnBackdrop.set(true);
     this.pgCloseOnEsc.set(true);
     this.pgShowCloseButton.set(false);
+    this.pgDraggable.set(true);
     this.pgConfirmText.set('Подтвердить');
     this.pgCancelText.set('Отмена');
     this.pgConfirmType.set('primary');

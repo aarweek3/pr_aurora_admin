@@ -233,6 +233,16 @@
                 </div>
                 <div nz-col [nzSpan]="12">
                   <div class="state-switch">
+                    <span>Draggable</span>
+                    <nz-switch
+                      [ngModel]="pgDraggable()"
+                      (ngModelChange)="pgDraggable.set($event)"
+                      nzSize="small"
+                    ></nz-switch>
+                  </div>
+                </div>
+                <div nz-col [nzSpan]="12">
+                  <div class="state-switch">
                     <span>Close on Backdrop</span>
                     <nz-switch
                       [ngModel]="pgCloseOnBackdrop()"
@@ -376,6 +386,7 @@
     [closeOnBackdrop]="pgCloseOnBackdrop()"
     [closeOnEsc]="pgCloseOnEsc()"
     [showCloseButton]="pgShowCloseButton()"
+    [draggable]="pgDraggable()"
     [centered]="true"
   >
     <div modal-body>
