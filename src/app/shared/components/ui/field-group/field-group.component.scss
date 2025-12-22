@@ -3,22 +3,61 @@
 
 .av-field-group {
   position: relative;
-  border: 1px solid var(--color-border-base, #d9d9d9);
-  border-radius: 8px;
+  border: 1px solid var(--av-fg-border-color, var(--color-border-base, #dcdee0));
+  border-radius: var(--av-fg-radius, 8px);
   padding: 16px 12px 12px;
-  background: rgba(24, 144, 255, 0.02);
+  background: var(--av-fg-content-bg, transparent);
   margin-top: 10px;
   width: 100%;
-  transition: all 0.2s ease;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 
   &.is-collapsed {
-    padding-bottom: 4px;
+    border: none;
+    background: transparent;
+    padding: 0;
     min-height: auto;
+    box-shadow: none;
+
+    &:hover {
+      box-shadow: none;
+    }
+
+    .av-field-group__header {
+      position: relative;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: transparent;
+      padding: 0;
+      margin-bottom: 8px;
+
+      &::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: var(--av-fg-border-color, var(--color-border-base, #dcdee0));
+        margin-left: 12px;
+        opacity: 0.6;
+      }
+
+      &:hover::after {
+        background: var(--av-fg-border-color-hover, var(--color-primary, #1890ff));
+        opacity: 1;
+      }
+    }
+
+    // В темной теме линия должна быть соответствующего цвета
+    @include dark-theme {
+      .av-field-group__header::after {
+        background: var(--dark-border-base, #434343);
+      }
+    }
   }
 
   &:hover {
-    border-color: var(--color-primary, #1890ff);
-    box-shadow: 0 2px 4px rgba(24, 144, 255, 0.1);
+    border-color: var(--av-fg-border-color-hover, var(--color-primary, #1890ff));
+    background: var(--av-fg-content-bg-hover, var(--av-fg-content-bg, transparent));
+    box-shadow: 0 4px 12px rgba(24, 144, 255, 0.08); // Мягкая тень при наведении
   }
 
   &__header {
@@ -27,28 +66,40 @@
     left: 12px;
     display: flex;
     align-items: center;
-    background: #ffffff; // Фон должен быть непрозрачным
+    background: var(--av-fg-header-bg, #ffffff); // Фон должен быть непрозрачным
     padding: 0 6px;
     height: 20px;
     border-radius: 4px;
     z-index: 2;
 
     @include dark-theme {
-      background: #1f1f1f;
+      background: var(--av-fg-header-bg, #1f1f1f);
     }
 
     &.is-clickable {
       cursor: pointer;
-      &:hover .av-field-group__label {
-        color: var(--color-primary, #1890ff);
+      &:hover {
+        .av-field-group__label {
+          color: var(--av-fg-label-color-hover, var(--color-primary, #1890ff));
+        }
+        background: var(--av-fg-header-bg-hover, var(--av-fg-header-bg, #ffffff));
+
+        @include dark-theme {
+          background: var(--av-fg-header-bg-hover, var(--av-fg-header-bg, #1f1f1f));
+        }
       }
+    }
+
+    &.is-empty {
+      padding: 0 2px; // Меньше отступов если только стрелка
+      left: 10px;
     }
   }
 
   &__label {
     font-size: 11px;
     font-weight: 600;
-    color: var(--color-text-secondary, #8c8c8c);
+    color: var(--av-fg-label-color, var(--color-text-secondary, #8c8c8c));
     text-transform: uppercase;
     letter-spacing: 0.5px;
     white-space: nowrap;
@@ -65,11 +116,11 @@
     width: 20px;
     height: 20px;
     cursor: pointer;
-    color: var(--color-text-secondary, #8c8c8c);
+    color: var(--av-fg-arrow-color, var(--color-text-secondary, #8c8c8c));
     transition: all 0.2s ease;
 
     &:hover {
-      color: var(--color-primary, #1890ff);
+      color: var(--av-fg-arrow-color-hover, var(--color-primary, #1890ff));
       transform: scale(1.15);
     }
   }
@@ -77,6 +128,8 @@
   &__content {
     display: block;
     width: 100%;
+    max-height: inherit; // Чтобы можно было ограничивать извне
+    overflow: auto; // Добавляем прокрутки если содержимое выходит
 
     // Для лучшего отображения дочерних элементов
     > * {
@@ -138,6 +191,18 @@
 }
 
 // Варианты стилей
+:host([variant="block"]),
+:host([variant="default"]) {
+  .av-field-group {
+    background: transparent;
+    border-color: var(--color-border-base, #dcdee0);
+
+    &:hover {
+      border-color: var(--color-primary, #1890ff);
+    }
+  }
+}
+
 :host([variant="minimal"]) {
   .av-field-group {
     border: 1px dashed var(--color-border-base, #d9d9d9);

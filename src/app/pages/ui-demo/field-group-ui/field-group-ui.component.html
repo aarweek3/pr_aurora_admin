@@ -1,109 +1,446 @@
-<div class="ui-help-container">
-  <div class="ui-help-header">
-    <h1>Field Group UI 📦</h1>
-    <p class="text-secondary">Универсальный компонент-обертка для группировки полей с метками</p>
+<app-container-ui-help-base
+  pageTitle="Field Group UI 📦"
+  pageDescription="Универсальный компонент-обертка для группировки полей с метками (src/app/shared/components/ui/field-group/field-group.component.ts)"
+>
+  <div class="ui-help-section">
+    <div class="section-header clickable" (click)="toggleSection1()">
+      <av-icon
+        [type]="isSection1Visible() ? 'arrows/av_chevron-up' : 'arrows/av_chevron-down'"
+        [size]="16"
+        class="header-arrow"
+      ></av-icon>
+      <h2>🛠️ Технический интерфейс</h2>
+    </div>
+    @if (isSection1Visible()) {
+    <div class="section-content">
+      <div class="content-block no-style">
+        <av-help-copy-container
+          [title]="section1Title"
+          [content]="section1Content"
+          [bgColor]="section1BgColor"
+          [showHelpButton]="true"
+          [defaultCollapsed]="false"
+        ></av-help-copy-container>
+      </div>
+    </div>
+    }
   </div>
 
-  <div class="ui-help-content">
-    <div class="ui-help-section">
-      <div class="section-header">
-        <button class="collapse-toggle" (click)="toggleSection1()">
-          <av-icon
-            [type]="isSection1Visible() ? 'arrows/av_chevron-up' : 'arrows/av_chevron-down'"
-            [size]="20"
-          ></av-icon>
-        </button>
-        <h2>🛠️ Технический интерфейс</h2>
-      </div>
-      @if (isSection1Visible()) {
-      <div class="section-content">
-        <div class="content-block no-style">
-          <av-help-copy-container
-            [title]="section1Title"
-            [content]="section1Content"
-            [bgColor]="section1BgColor"
-            [showHelpButton]="true"
-            [defaultCollapsed]="false"
-          ></av-help-copy-container>
-        </div>
-      </div>
-      }
+  <div class="ui-help-section">
+    <div class="section-header clickable" (click)="toggleSection2()">
+      <av-icon
+        [type]="isSection2Visible() ? 'arrows/av_chevron-up' : 'arrows/av_chevron-down'"
+        [size]="16"
+        class="header-arrow"
+      ></av-icon>
+      <h2>🎮 Интерактивная площадка</h2>
     </div>
-
-    <div class="ui-help-section">
-      <div class="section-header">
-        <button class="collapse-toggle" (click)="toggleSection2()">
-          <av-icon
-            [type]="isSection2Visible() ? 'arrows/av_chevron-up' : 'arrows/av_chevron-down'"
-            [size]="20"
-          ></av-icon>
-        </button>
-        <h2>🎮 Интерактивная площадка</h2>
-      </div>
-      @if (isSection2Visible()) {
-      <div class="playground-container">
-        <div nz-row [nzGutter]="[24, 24]">
-          <!-- Left: Controls -->
-          <div nz-col [nzXs]="24" [nzLg]="10">
-            <nz-card nzTitle="Настройки" class="control-card">
-              <!-- Variant Selection -->
-              <div class="control-item">
-                <label>Выберите вариант:</label>
-                <nz-select [(ngModel)]="selectedVariant" style="width: 100%">
-                  @for (variant of variants; track variant.value) {
-                  <nz-option [nzValue]="variant.value" [nzLabel]="variant.label"></nz-option>
-                  }
-                </nz-select>
-              </div>
-
-              <!-- Size Selection -->
-              <div class="control-item">
-                <label>Выберите размер:</label>
-                <nz-select [(ngModel)]="selectedSize" style="width: 100%">
-                  @for (size of sizes; track size.value) {
-                  <nz-option [nzValue]="size.value" [nzLabel]="size.label"></nz-option>
-                  }
-                </nz-select>
-              </div>
-            </nz-card>
-          </div>
-
-          <!-- Right: Result & Code -->
-          <div nz-col [nzXs]="24" [nzLg]="14">
-            <!-- Result Preview -->
-            <nz-card nzTitle="Результат" class="result-card" style="margin-bottom: 24px">
-              <av-field-group label="Демо поле" [variant]="selectedVariant()" [size]="selectedSize()">
-                <input av-input placeholder="Введите текст..." />
-              </av-field-group>
-            </nz-card>
-
-            <!-- Generated Code Block -->
-            <div class="content-block no-style">
-              <av-help-copy-container
-                title="Сгенерированный код"
-                [content]="generatedCode()"
-                [defaultCollapsed]="false"
-              ></av-help-copy-container>
+    @if (isSection2Visible()) {
+    <div class="playground-container">
+      <div nz-row [nzGutter]="[24, 24]">
+        <!-- Left: Controls -->
+        <div nz-col [nzXs]="24" [nzLg]="10">
+          <nz-card nzTitle="Настройки" class="control-card">
+            <!-- Variant Selection -->
+            <div class="control-item">
+              <label>Выберите вариант:</label>
+              <nz-select
+                [ngModel]="selectedVariant()"
+                (ngModelChange)="selectedVariant.set($event)"
+                style="width: 100%"
+              >
+                @for (variant of variants; track variant.value) {
+                <nz-option [nzValue]="variant.value" [nzLabel]="variant.label"></nz-option>
+                }
+              </nz-select>
             </div>
+
+            <!-- Size Selection (Hidden for Block variant) -->
+            @if (selectedVariant() !== 'block') {
+            <div class="control-item" style="margin-bottom: 16px">
+              <label>Выберите размер:</label>
+              <nz-select [ngModel]="selectedSize()" (ngModelChange)="selectedSize.set($event)" style="width: 100%">
+                @for (size of sizes; track size.value) {
+                <nz-option [nzValue]="size.value" [nzLabel]="size.label"></nz-option>
+                }
+              </nz-select>
+            </div>
+            }
+
+            <!-- Toggles Row: All in One (Switches next to text) -->
+            <div class="control-item" style="display: flex; gap: 32px; align-items: center; margin-bottom: 24px">
+              <div style="display: flex; align-items: center; gap: 8px">
+                <label style="font-size: 14px; font-weight: 500; white-space: nowrap">Подпись:</label>
+                <nz-switch [ngModel]="showLabel()" (ngModelChange)="showLabel.set($event)"></nz-switch>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px">
+                <label style="font-size: 14px; font-weight: 500; white-space: nowrap">Стрелка:</label>
+                <nz-switch [ngModel]="isCollapsible()" (ngModelChange)="isCollapsible.set($event)"></nz-switch>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px">
+                <label style="font-size: 14px; font-weight: 500; white-space: nowrap">CВЕРНУТО:</label>
+                <nz-switch [ngModel]="isCollapsed()" (ngModelChange)="isCollapsed.set($event)"></nz-switch>
+              </div>
+            </div>
+
+            <!-- Shape Selection -->
+            <div class="control-item">
+              <label>Форма углов:</label>
+              <nz-select [ngModel]="selectedShape()" (ngModelChange)="selectedShape.set($event)" style="width: 100%">
+                @for (shape of shapes; track shape.value) {
+                <nz-option [nzValue]="shape.value" [nzLabel]="shape.label"></nz-option>
+                }
+              </nz-select>
+            </div>
+
+            <!-- Custom Radius -->
+            <div class="control-item">
+              <label>Свой радиус (px):</label>
+              <input
+                nz-input
+                type="number"
+                [ngModel]="customRadius()"
+                (ngModelChange)="customRadius.set($event)"
+                placeholder="Напр. 20"
+              />
+            </div>
+
+            <!-- Background Toggles -->
+            <div
+              class="control-item"
+              style="
+                display: flex;
+                gap: 24px;
+                align-items: center;
+                margin-bottom: 24px;
+                padding-top: 16px;
+                border-top: 1px dashed #f0f0f0;
+              "
+            >
+              <div style="display: flex; align-items: center; gap: 8px">
+                <label style="font-size: 14px; font-weight: 500; white-space: nowrap">Фон при старте:</label>
+                <nz-switch [ngModel]="showBg()" (ngModelChange)="showBg.set($event)"></nz-switch>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px">
+                <label style="font-size: 14px; font-weight: 500; white-space: nowrap">Фон при наведении:</label>
+                <nz-select [ngModel]="hoverBgMode()" (ngModelChange)="hoverBgMode.set($event)" style="width: 180px">
+                  <nz-option nzValue="none" nzLabel="Не появляется"></nz-option>
+                  <nz-option nzValue="intensify" nzLabel="Становится насыщеннее"></nz-option>
+                </nz-select>
+              </div>
+            </div>
+
+            <!-- Advanced Color Controls -->
+            <div class="advanced-colors" style="display: flex; flex-direction: column; gap: 12px">
+              <h4 style="margin: 0; font-size: 13px; color: #8c8c8c; text-transform: uppercase; letter-spacing: 1px">
+                Цвета (Обычный / Наведение)
+              </h4>
+
+              <!-- Label Colors -->
+              <div class="color-row" style="display: flex; gap: 16px">
+                <div style="flex: 1">
+                  <label style="display: block; font-size: 12px; margin-bottom: 4px">Надпись:</label>
+                  <div style="display: flex; gap: 8px; align-items: center">
+                    <input
+                      nz-input
+                      [ngModel]="labelColor()"
+                      (ngModelChange)="labelColor.set($event)"
+                      style="flex: 1; font-size: 12px; height: 32px"
+                    />
+                    <div
+                      (click)="togglePicker('labelColor')"
+                      [style.background]="labelColor()"
+                      style="width: 32px; height: 32px; border-radius: 4px; border: 1px solid #d9d9d9; cursor: pointer"
+                    ></div>
+                  </div>
+                  @if (activePicker() === 'labelColor') {
+                  <div style="margin-top: 8px; position: absolute; z-index: 10">
+                    <av-picker [ngModel]="labelColor()" (ngModelChange)="labelColor.set($event)"></av-picker>
+                  </div>
+                  }
+                </div>
+                <div style="flex: 1">
+                  <label style="display: block; font-size: 12px; margin-bottom: 4px">Надпись (Hover):</label>
+                  <div style="display: flex; gap: 8px; align-items: center">
+                    <input
+                      nz-input
+                      [ngModel]="labelColorHover()"
+                      (ngModelChange)="labelColorHover.set($event)"
+                      style="flex: 1; font-size: 12px; height: 32px"
+                    />
+                    <div
+                      (click)="togglePicker('labelColorHover')"
+                      [style.background]="labelColorHover()"
+                      style="width: 32px; height: 32px; border-radius: 4px; border: 1px solid #d9d9d9; cursor: pointer"
+                    ></div>
+                  </div>
+                  @if (activePicker() === 'labelColorHover') {
+                  <div style="margin-top: 8px; position: absolute; z-index: 10">
+                    <av-picker [ngModel]="labelColorHover()" (ngModelChange)="labelColorHover.set($event)"></av-picker>
+                  </div>
+                  }
+                </div>
+              </div>
+
+              <!-- Border Colors -->
+              <div class="color-row" style="display: flex; gap: 16px">
+                <div style="flex: 1">
+                  <label style="display: block; font-size: 12px; margin-bottom: 4px">Рамка:</label>
+                  <div style="display: flex; gap: 8px; align-items: center">
+                    <input
+                      nz-input
+                      [ngModel]="borderColor()"
+                      (ngModelChange)="borderColor.set($event)"
+                      style="flex: 1; font-size: 12px; height: 32px"
+                    />
+                    <div
+                      (click)="togglePicker('borderColor')"
+                      [style.background]="borderColor()"
+                      style="width: 32px; height: 32px; border-radius: 4px; border: 1px solid #d9d9d9; cursor: pointer"
+                    ></div>
+                  </div>
+                  @if (activePicker() === 'borderColor') {
+                  <div style="margin-top: 8px; position: absolute; z-index: 10">
+                    <av-picker [ngModel]="borderColor()" (ngModelChange)="borderColor.set($event)"></av-picker>
+                  </div>
+                  }
+                </div>
+                <div style="flex: 1">
+                  <label style="display: block; font-size: 12px; margin-bottom: 4px">Рамка (Hover):</label>
+                  <div style="display: flex; gap: 8px; align-items: center">
+                    <input
+                      nz-input
+                      [ngModel]="borderColorHover()"
+                      (ngModelChange)="borderColorHover.set($event)"
+                      style="flex: 1; font-size: 12px; height: 32px"
+                    />
+                    <div
+                      (click)="togglePicker('borderColorHover')"
+                      [style.background]="borderColorHover()"
+                      style="width: 32px; height: 32px; border-radius: 4px; border: 1px solid #d9d9d9; cursor: pointer"
+                    ></div>
+                  </div>
+                  @if (activePicker() === 'borderColorHover') {
+                  <div style="margin-top: 8px; position: absolute; z-index: 10">
+                    <av-picker
+                      [ngModel]="borderColorHover()"
+                      (ngModelChange)="borderColorHover.set($event)"
+                    ></av-picker>
+                  </div>
+                  }
+                </div>
+              </div>
+
+              <!-- Arrow Colors -->
+              <div class="color-row" style="display: flex; gap: 16px">
+                <div style="flex: 1">
+                  <label style="display: block; font-size: 12px; margin-bottom: 4px">Стрелка:</label>
+                  <div style="display: flex; gap: 8px; align-items: center">
+                    <input
+                      nz-input
+                      [ngModel]="arrowColor()"
+                      (ngModelChange)="arrowColor.set($event)"
+                      style="flex: 1; font-size: 12px; height: 32px"
+                    />
+                    <div
+                      (click)="togglePicker('arrowColor')"
+                      [style.background]="arrowColor()"
+                      style="width: 32px; height: 32px; border-radius: 4px; border: 1px solid #d9d9d9; cursor: pointer"
+                    ></div>
+                  </div>
+                  @if (activePicker() === 'arrowColor') {
+                  <div style="margin-top: 8px; position: absolute; z-index: 10">
+                    <av-picker [ngModel]="arrowColor()" (ngModelChange)="arrowColor.set($event)"></av-picker>
+                  </div>
+                  }
+                </div>
+                <div style="flex: 1">
+                  <label style="display: block; font-size: 12px; margin-bottom: 4px">Стрелка (Hover):</label>
+                  <div style="display: flex; gap: 8px; align-items: center">
+                    <input
+                      nz-input
+                      [ngModel]="arrowColorHover()"
+                      (ngModelChange)="arrowColorHover.set($event)"
+                      style="flex: 1; font-size: 12px; height: 32px"
+                    />
+                    <div
+                      (click)="togglePicker('arrowColorHover')"
+                      [style.background]="arrowColorHover()"
+                      style="width: 32px; height: 32px; border-radius: 4px; border: 1px solid #d9d9d9; cursor: pointer"
+                    ></div>
+                  </div>
+                  @if (activePicker() === 'arrowColorHover') {
+                  <div style="margin-top: 8px; position: absolute; z-index: 10">
+                    <av-picker [ngModel]="arrowColorHover()" (ngModelChange)="arrowColorHover.set($event)"></av-picker>
+                  </div>
+                  }
+                </div>
+              </div>
+
+              <!-- Header Bg Colors -->
+              <div class="color-row" style="display: flex; gap: 16px">
+                <div style="flex: 1">
+                  <label style="display: block; font-size: 12px; margin-bottom: 4px">Фон подписи:</label>
+                  <div style="display: flex; gap: 8px; align-items: center">
+                    <input
+                      nz-input
+                      [ngModel]="headerBgColor()"
+                      (ngModelChange)="headerBgColor.set($event)"
+                      style="flex: 1; font-size: 12px; height: 32px"
+                    />
+                    <div
+                      (click)="togglePicker('headerBgColor')"
+                      [style.background]="headerBgColor()"
+                      style="width: 32px; height: 32px; border-radius: 4px; border: 1px solid #d9d9d9; cursor: pointer"
+                    ></div>
+                  </div>
+                  @if (activePicker() === 'headerBgColor') {
+                  <div style="margin-top: 8px; position: absolute; z-index: 10">
+                    <av-picker [ngModel]="headerBgColor()" (ngModelChange)="headerBgColor.set($event)"></av-picker>
+                  </div>
+                  }
+                </div>
+                <div style="flex: 1">
+                  <label style="display: block; font-size: 12px; margin-bottom: 4px">Фон подписи (Hover):</label>
+                  <div style="display: flex; gap: 8px; align-items: center">
+                    <input
+                      nz-input
+                      [ngModel]="headerBgColorHover()"
+                      (ngModelChange)="headerBgColorHover.set($event)"
+                      style="flex: 1; font-size: 12px; height: 32px"
+                    />
+                    <div
+                      (click)="togglePicker('headerBgColorHover')"
+                      [style.background]="headerBgColorHover()"
+                      style="width: 32px; height: 32px; border-radius: 4px; border: 1px solid #d9d9d9; cursor: pointer"
+                    ></div>
+                  </div>
+                  @if (activePicker() === 'headerBgColorHover') {
+                  <div style="margin-top: 8px; position: absolute; z-index: 10">
+                    <av-picker
+                      [ngModel]="headerBgColorHover()"
+                      (ngModelChange)="headerBgColorHover.set($event)"
+                    ></av-picker>
+                  </div>
+                  }
+                </div>
+              </div>
+            </div>
+          </nz-card>
+        </div>
+
+        <div nz-col [nzXs]="24" [nzLg]="14">
+          <!-- Result Preview with Responsive Simulator -->
+          <nz-card [nzTitle]="resultTitle" class="result-card" style="margin-bottom: 24px">
+            <ng-template #resultTitle>
+              <div style="display: flex; justify-content: space-between; align-items: center; width: 100%">
+                <span>Результат</span>
+                <div class="responsive-simulator">
+                  <nz-radio-group
+                    [ngModel]="previewWidth()"
+                    (ngModelChange)="previewWidth.set($event)"
+                    nzButtonStyle="solid"
+                    nzSize="small"
+                  >
+                    <label nz-radio-button nzValue="100%" title="Desktop">
+                      <av-icon type="devices/av_desktop" [size]="14"></av-icon>
+                    </label>
+                    <label nz-radio-button nzValue="768px" title="Tablet">
+                      <av-icon type="devices/av_tablet" [size]="14"></av-icon>
+                    </label>
+                    <label nz-radio-button nzValue="375px" title="Mobile">
+                      <av-icon type="devices/av_phone" [size]="14"></av-icon>
+                    </label>
+                  </nz-radio-group>
+                </div>
+              </div>
+            </ng-template>
+
+            <div class="result-preview-viewport">
+              <div class="result-preview-frame" [style.width]="previewWidth()">
+                <av-field-group
+                  [label]="showLabel() ? 'Демо поле' : ''"
+                  [variant]="selectedVariant()"
+                  [size]="selectedSize()"
+                  [shape]="selectedShape()"
+                  [radius]="customRadius()"
+                  [collapsible]="isCollapsible()"
+                  [(isCollapsed)]="isCollapsed"
+                  [showBackground]="showBg()"
+                  [hoverBackground]="hoverBgMode()"
+                  [labelColor]="labelColor()"
+                  [labelColorHover]="labelColorHover()"
+                  [arrowColor]="arrowColor()"
+                  [arrowColorHover]="arrowColorHover()"
+                  [borderColor]="borderColor()"
+                  [borderColorHover]="borderColorHover()"
+                  [headerBgColor]="headerBgColor()"
+                  [headerBgColorHover]="headerBgColorHover()"
+                  [contentBackground]="contentBgColor()"
+                  [contentBackgroundHover]="contentBgColorHover()"
+                >
+                  <input av-input placeholder="Введите текст..." />
+                </av-field-group>
+              </div>
+            </div>
+          </nz-card>
+
+          <!-- Generated Code Block -->
+          <div class="content-block no-style">
+            <av-help-copy-container
+              title="Сгенерированный код"
+              [content]="generatedCode()"
+              [defaultCollapsed]="false"
+            ></av-help-copy-container>
           </div>
         </div>
       </div>
-      }
     </div>
+    }
+  </div>
 
-    <div class="ui-help-section">
-      <div class="section-header">
-        <button class="collapse-toggle" (click)="toggleSection3()">
-          <av-icon
-            [type]="isSection3Visible() ? 'arrows/av_chevron-up' : 'arrows/av_chevron-down'"
-            [size]="20"
-          ></av-icon>
-        </button>
-        <h2>📚 Примеры использования</h2>
+  <div class="ui-help-section">
+    <div class="section-header clickable" (click)="toggleSection4()">
+      <av-icon
+        [type]="isSection4Visible() ? 'arrows/av_chevron-up' : 'arrows/av_chevron-down'"
+        [size]="16"
+        class="header-arrow"
+      ></av-icon>
+      <h2>📖 Документация</h2>
+    </div>
+    @if (isSection4Visible()) {
+    <div class="section-content">
+      <div class="content-block documentation-container">
+        <div class="documentation-header">
+          <h4 class="documentation-title">ПОЛНОЕ РУКОВОДСТВО</h4>
+        </div>
+        <div class="documentation-window">
+          <div class="documentation-content" [innerHTML]="sectionDocumentation"></div>
+        </div>
       </div>
-      @if (isSection3Visible()) {
-      <div class="section-content">
-        <div class="content-block no-style">
+    </div>
+    }
+  </div>
+
+  <div class="ui-help-section">
+    <div class="section-header clickable" (click)="toggleSection3()">
+      <av-icon
+        [type]="isSection3Visible() ? 'arrows/av_chevron-up' : 'arrows/av_chevron-down'"
+        [size]="16"
+        class="header-arrow"
+      ></av-icon>
+      <h2>📚 Примеры использования</h2>
+    </div>
+    @if (isSection3Visible()) {
+    <div class="section-content grid-examples">
+      <!-- 1. Базовое использование -->
+      <div class="example-card">
+        <div class="example-preview">
+          <av-field-group label="Персональные данные">
+            <input avInput placeholder="Введите имя..." />
+          </av-field-group>
+        </div>
+        <div class="example-code">
           <av-help-copy-container
             title="Базовое использование"
             [content]="exampleBasic"
@@ -111,8 +448,19 @@
             [defaultCollapsed]="false"
           ></av-help-copy-container>
         </div>
+      </div>
 
-        <div class="content-block no-style">
+      <!-- 2. Варианты стилей -->
+      <div class="example-card">
+        <div class="example-preview" style="flex-direction: column; gap: 16px; align-items: stretch">
+          <av-field-group label="Default стиль">
+            <input avInput placeholder="Обычная рамка" />
+          </av-field-group>
+          <av-field-group label="Minimal стиль" variant="minimal">
+            <input avInput placeholder="Пунктирная рамка" />
+          </av-field-group>
+        </div>
+        <div class="example-code">
           <av-help-copy-container
             title="Варианты стилей"
             [content]="exampleVariants"
@@ -120,8 +468,22 @@
             [defaultCollapsed]="false"
           ></av-help-copy-container>
         </div>
+      </div>
 
-        <div class="content-block no-style">
+      <!-- 3. Размеры -->
+      <div class="example-card">
+        <div class="example-preview" style="flex-direction: column; gap: 12px; align-items: stretch">
+          <av-field-group label="Small" size="small">
+            <input avInput avSize="small" placeholder="Small input" />
+          </av-field-group>
+          <av-field-group label="Medium (Default)" size="medium">
+            <input avInput placeholder="Medium input" />
+          </av-field-group>
+          <av-field-group label="Large" size="large">
+            <input avInput avSize="large" placeholder="Large input" />
+          </av-field-group>
+        </div>
+        <div class="example-code">
           <av-help-copy-container
             title="Размеры"
             [content]="exampleSizes"
@@ -129,8 +491,48 @@
             [defaultCollapsed]="false"
           ></av-help-copy-container>
         </div>
+      </div>
 
-        <div class="content-block no-style">
+      <!-- 4. Форма углов -->
+      <div class="example-card">
+        <div class="example-preview" style="flex-direction: column; gap: 12px; align-items: stretch">
+          <av-field-group label="Square (0px)" shape="square">
+            <input avInput placeholder="Прямоугольные углы" />
+          </av-field-group>
+          <av-field-group label="Default (4px)">
+            <input avInput placeholder="Стандарт" />
+          </av-field-group>
+          <av-field-group label="Rounded (8px)" shape="rounded">
+            <input avInput placeholder="Скругление" />
+          </av-field-group>
+          <av-field-group label="Rounded-Big (16px)" shape="rounded-big">
+            <input avInput placeholder="Сильное скругление" />
+          </av-field-group>
+          <av-field-group label="Custom Radius (24px)" [radius]="24">
+            <input avInput placeholder="Произвольное значение" />
+          </av-field-group>
+        </div>
+        <div class="example-code">
+          <av-help-copy-container
+            title="Форма углов"
+            [content]="exampleShapes"
+            bgColor="#1e293b"
+            [defaultCollapsed]="false"
+          ></av-help-copy-container>
+        </div>
+      </div>
+
+      <!-- 5. С кнопками -->
+      <div class="example-card">
+        <div class="example-preview">
+          <av-field-group label="Действия" [labelColor]="'#ff4d4f'">
+            <div style="display: flex; gap: 8px">
+              <button av-button avType="primary">Сохранить</button>
+              <button av-button avType="default">Отмена</button>
+            </div>
+          </av-field-group>
+        </div>
+        <div class="example-code">
           <av-help-copy-container
             title="С кнопками"
             [content]="exampleButtons"
@@ -138,8 +540,25 @@
             [defaultCollapsed]="false"
           ></av-help-copy-container>
         </div>
+      </div>
 
-        <div class="content-block no-style">
+      <!-- 5. Сложные формы -->
+      <div class="example-card">
+        <div class="example-preview" style="flex-direction: column; gap: 16px; align-items: stretch">
+          <av-field-group label="Адрес доставки">
+            <div nz-row [nzGutter]="8">
+              <div nz-col [nzSpan]="12"><input avInput placeholder="Город" /></div>
+              <div nz-col [nzSpan]="12"><input avInput placeholder="Страна" /></div>
+            </div>
+          </av-field-group>
+          <av-field-group label="Уведомления" variant="filled">
+            <div style="display: flex; justify-content: space-between; align-items: center">
+              <span>Email</span>
+              <nz-switch [ngModel]="emailNotifications()" (ngModelChange)="emailNotifications.set($event)"></nz-switch>
+            </div>
+          </av-field-group>
+        </div>
+        <div class="example-code">
           <av-help-copy-container
             title="Сложные формы"
             [content]="exampleComplex"
@@ -147,8 +566,23 @@
             [defaultCollapsed]="false"
           ></av-help-copy-container>
         </div>
+      </div>
 
-        <div class="content-block no-style">
+      <!-- 6. С иконками -->
+      <div class="example-card">
+        <div class="example-preview">
+          <av-field-group
+            label="Статус системы"
+            [showBackground]="true"
+            [contentBackground]="'rgba(82, 196, 26, 0.05)'"
+          >
+            <div style="display: flex; align-items: center; gap: 12px">
+              <av-icon type="actions/av_check_mark" [size]="20" color="#52c41a"></av-icon>
+              <span style="color: #52c41a; font-weight: 500">Все системы работают штатно</span>
+            </div>
+          </av-field-group>
+        </div>
+        <div class="example-code">
           <av-help-copy-container
             title="С иконками"
             [content]="exampleIcons"
@@ -157,8 +591,8 @@
           ></av-help-copy-container>
         </div>
       </div>
-      }
     </div>
+    }
   </div>
-</div>
-            <div nz-row [nzGutter]="16" style="margin-bottom: 24px">
+</app-container-ui-help-base>
+<div nz-row [nzGutter]="16" style="margin-bottom: 24px"></div>
