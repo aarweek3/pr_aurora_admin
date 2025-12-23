@@ -1,193 +1,193 @@
-<div class="help-copy-ui-demo">
-  <div class="help-copy-ui-demo__header">
-    <div class="header-content">
-      <h1>Help Copy Container</h1>
-      <p>Переиспользуемый UI-блок для отображения документации, кода или инструкций с функцией копирования.</p>
-    </div>
+<app-container-ui-help-base
+  pageTitle="Help Copy Container"
+  pageDescription="Переиспользуемый UI-блок для отображения документация, кода или инструкций с функцией копирования. (src\app\pages\ui-demo\av-help-copy-container-ui\av-help-copy-container-ui.component.html)"
+>
+  <div class="ui-help-content" style="padding: 0">
+    <!-- Модал сгенерированного кода -->
+    <av-modal [(isOpen)]="showGeneratedCodeModal" title="Сгенерированный код контейнера" size="large">
+      <div modal-body>
+        <av-help-copy-container
+          title="Готовый код для вашего компонента"
+          [content]="generatedCode()"
+          bgColor="#0a0e1a"
+        ></av-help-copy-container>
+        <div
+          style="
+            margin-top: 1rem;
+            padding: 1rem;
+            background: rgba(24, 144, 255, 0.1);
+            border-radius: 8px;
+            border-left: 4px solid #1890ff;
+          "
+        >
+          <p style="margin: 0; font-size: 0.875rem; color: var(--text-secondary, #666)">
+            💡 <strong>Совет:</strong> Используйте этот компонент для оформления примеров кода или важных инструкций.
+          </p>
+        </div>
+      </div>
+      <div modal-footer>
+        <button av-button avType="default" (clicked)="showGeneratedCodeModal = false">Закрыть</button>
+      </div>
+    </av-modal>
+
+    <!-- Интерактивная площадка -->
+    <section class="demo-section demo-section--playground">
+      <div class="demo-section__header">
+        <h2>🎮 Интерактивная площадка</h2>
+      </div>
+      <p class="demo-section__description">Настройте параметры контейнера и посмотрите результат в реальном времени</p>
+
+      <div class="playground">
+        <!-- Панель управления -->
+        <div class="playground__controls">
+          <h3>Настройки</h3>
+
+          <div class="control-group">
+            <label class="control-label">
+              <span>Заголовок:</span>
+              <input type="text" class="control-input" [(ngModel)]="playgroundTitle" />
+            </label>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label">
+              <span>Цвет фона (bgColor):</span>
+              <input
+                type="color"
+                class="control-input"
+                [(ngModel)]="playgroundBgColor"
+                style="height: 40px; padding: 2px"
+              />
+              <input type="text" class="control-input" [(ngModel)]="playgroundBgColor" style="margin-top: 5px" />
+            </label>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label">
+              <span>Ширина:</span>
+              <div class="preset-buttons">
+                <button (click)="setPresetWidth('100%')" [class.active]="playgroundWidth() === '100%'">100%</button>
+                <button (click)="setPresetWidth('300px')" [class.active]="playgroundWidth() === '300px'">300px</button>
+                <button (click)="setPresetWidth('auto')" [class.active]="playgroundWidth() === 'auto'">Auto</button>
+              </div>
+              <input type="text" class="control-input" [(ngModel)]="playgroundWidth" />
+            </label>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label">
+              <span>Высота:</span>
+              <div class="preset-buttons">
+                <button (click)="setPresetHeight('100%')" [class.active]="playgroundHeight() === '100%'">100%</button>
+                <button (click)="setPresetHeight('200px')" [class.active]="playgroundHeight() === '200px'">
+                  200px
+                </button>
+                <button (click)="setPresetHeight('auto')" [class.active]="playgroundHeight() === 'auto'">Auto</button>
+              </div>
+              <input type="text" class="control-input" [(ngModel)]="playgroundHeight" />
+              <small style="color: #888; margin-top: 4px; display: block">
+                * Укажите фиксированную высоту (напр. 200px), чтобы увидеть прокрутку.
+              </small>
+            </label>
+          </div>
+
+          <div class="control-group control-group--checkbox">
+            <label class="control-checkbox">
+              <input type="checkbox" [(ngModel)]="playgroundShowCopy" />
+              <span>Кнопка копирования</span>
+            </label>
+          </div>
+
+          <div class="control-group control-group--checkbox">
+            <label class="control-checkbox">
+              <input type="checkbox" [(ngModel)]="playgroundShowHelpButton" />
+              <span>Кнопка справки (?)</span>
+            </label>
+          </div>
+
+          <div class="control-group" *ngIf="playgroundShowHelpButton()">
+            <label class="control-label">
+              <span>Текст справки (helpContent):</span>
+              <textarea
+                class="control-input"
+                [(ngModel)]="playgroundHelpContent"
+                rows="3"
+                style="resize: vertical"
+                placeholder="Введите текст справки..."
+              ></textarea>
+            </label>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label">
+              <span>Контент:</span>
+              <textarea
+                class="control-input"
+                [(ngModel)]="playgroundContent"
+                rows="5"
+                style="resize: vertical"
+              ></textarea>
+            </label>
+          </div>
+        </div>
+
+        <!-- Превью -->
+        <div class="playground__preview">
+          <h3>Результат</h3>
+          <div class="preview-container">
+            <av-help-copy-container
+              [title]="playgroundTitle()"
+              [content]="playgroundContent()"
+              [width]="playgroundWidth()"
+              [height]="playgroundHeight()"
+              [bgColor]="playgroundBgColor()"
+              [showCopy]="playgroundShowCopy()"
+              [showHelpButton]="playgroundShowHelpButton()"
+              [helpContent]="playgroundHelpContent()"
+            ></av-help-copy-container>
+          </div>
+
+          <div style="margin-top: 2rem; text-align: center">
+            <button av-button avType="primary" avSize="large" (clicked)="generatePlaygroundCode()">
+              📋 Сгенерировать код настройки
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 🛠️ API Interface Documentation -->
+    <section class="demo-section">
+      <div class="demo-section__header">
+        <h2>🛠️ Технический интерфейс (Inputs)</h2>
+      </div>
+      <p class="demo-section__description">
+        Используйте кнопку <strong>"?"</strong> в заголовке контейнера ниже, чтобы увидеть полную спецификацию и
+        описание всех параметров.
+      </p>
+
+      <div class="demo-section__preview" style="padding: 0">
+        <av-help-copy-container
+          title="Спецификация : HelpCopyContainer"
+          [content]="apiInterfaceCode"
+          bgColor="#0a0e1a"
+          [showHelpButton]="true"
+        ></av-help-copy-container>
+      </div>
+    </section>
+
+    <!-- Статические примеры -->
+    <section class="demo-section">
+      <div class="demo-section__header">
+        <h2>Базовое использование</h2>
+      </div>
+      <div class="demo-section__preview">
+        <av-help-copy-container
+          title="Код использования"
+          [content]="basicCode"
+          bgColor="#1e293b"
+        ></av-help-copy-container>
+      </div>
+    </section>
   </div>
-
-  <!-- Модал сгенерированного кода -->
-  <av-modal [(isOpen)]="showGeneratedCodeModal" title="Сгенерированный код контейнера" size="large">
-    <div modal-body>
-      <av-help-copy-container
-        title="Готовый код для вашего компонента"
-        [content]="generatedCode()"
-        bgColor="#0a0e1a"
-      ></av-help-copy-container>
-      <div
-        style="
-          margin-top: 1rem;
-          padding: 1rem;
-          background: rgba(24, 144, 255, 0.1);
-          border-radius: 8px;
-          border-left: 4px solid #1890ff;
-        "
-      >
-        <p style="margin: 0; font-size: 0.875rem; color: var(--text-secondary, #666)">
-          💡 <strong>Совет:</strong> Используйте этот компонент для оформления примеров кода или важных инструкций.
-        </p>
-      </div>
-    </div>
-    <div modal-footer>
-      <button av-button avType="default" (clicked)="showGeneratedCodeModal = false">Закрыть</button>
-    </div>
-  </av-modal>
-
-  <!-- Интерактивная площадка -->
-  <section class="demo-section demo-section--playground">
-    <div class="demo-section__header">
-      <h2>🎮 Интерактивная площадка</h2>
-    </div>
-    <p class="demo-section__description">Настройте параметры контейнера и посмотрите результат в реальном времени</p>
-
-    <div class="playground">
-      <!-- Панель управления -->
-      <div class="playground__controls">
-        <h3>Настройки</h3>
-
-        <div class="control-group">
-          <label class="control-label">
-            <span>Заголовок:</span>
-            <input type="text" class="control-input" [(ngModel)]="playgroundTitle" />
-          </label>
-        </div>
-
-        <div class="control-group">
-          <label class="control-label">
-            <span>Цвет фона (bgColor):</span>
-            <input
-              type="color"
-              class="control-input"
-              [(ngModel)]="playgroundBgColor"
-              style="height: 40px; padding: 2px"
-            />
-            <input type="text" class="control-input" [(ngModel)]="playgroundBgColor" style="margin-top: 5px" />
-          </label>
-        </div>
-
-        <div class="control-group">
-          <label class="control-label">
-            <span>Ширина:</span>
-            <div class="preset-buttons">
-              <button (click)="setPresetWidth('100%')" [class.active]="playgroundWidth() === '100%'">100%</button>
-              <button (click)="setPresetWidth('300px')" [class.active]="playgroundWidth() === '300px'">300px</button>
-              <button (click)="setPresetWidth('auto')" [class.active]="playgroundWidth() === 'auto'">Auto</button>
-            </div>
-            <input type="text" class="control-input" [(ngModel)]="playgroundWidth" />
-          </label>
-        </div>
-
-        <div class="control-group">
-          <label class="control-label">
-            <span>Высота:</span>
-            <div class="preset-buttons">
-              <button (click)="setPresetHeight('100%')" [class.active]="playgroundHeight() === '100%'">100%</button>
-              <button (click)="setPresetHeight('200px')" [class.active]="playgroundHeight() === '200px'">200px</button>
-              <button (click)="setPresetHeight('auto')" [class.active]="playgroundHeight() === 'auto'">Auto</button>
-            </div>
-            <input type="text" class="control-input" [(ngModel)]="playgroundHeight" />
-            <small style="color: #888; margin-top: 4px; display: block">
-              * Укажите фиксированную высоту (напр. 200px), чтобы увидеть прокрутку.
-            </small>
-          </label>
-        </div>
-
-        <div class="control-group control-group--checkbox">
-          <label class="control-checkbox">
-            <input type="checkbox" [(ngModel)]="playgroundShowCopy" />
-            <span>Кнопка копирования</span>
-          </label>
-        </div>
-
-        <div class="control-group control-group--checkbox">
-          <label class="control-checkbox">
-            <input type="checkbox" [(ngModel)]="playgroundShowHelpButton" />
-            <span>Кнопка справки (?)</span>
-          </label>
-        </div>
-
-        <div class="control-group" *ngIf="playgroundShowHelpButton()">
-          <label class="control-label">
-            <span>Текст справки (helpContent):</span>
-            <textarea
-              class="control-input"
-              [(ngModel)]="playgroundHelpContent"
-              rows="3"
-              style="resize: vertical"
-              placeholder="Введите текст справки..."
-            ></textarea>
-          </label>
-        </div>
-
-        <div class="control-group">
-          <label class="control-label">
-            <span>Контент:</span>
-            <textarea
-              class="control-input"
-              [(ngModel)]="playgroundContent"
-              rows="5"
-              style="resize: vertical"
-            ></textarea>
-          </label>
-        </div>
-      </div>
-
-      <!-- Превью -->
-      <div class="playground__preview">
-        <h3>Результат</h3>
-        <div class="preview-container">
-          <av-help-copy-container
-            [title]="playgroundTitle()"
-            [content]="playgroundContent()"
-            [width]="playgroundWidth()"
-            [height]="playgroundHeight()"
-            [bgColor]="playgroundBgColor()"
-            [showCopy]="playgroundShowCopy()"
-            [showHelpButton]="playgroundShowHelpButton()"
-            [helpContent]="playgroundHelpContent()"
-          ></av-help-copy-container>
-        </div>
-
-        <div style="margin-top: 2rem; text-align: center">
-          <button av-button avType="primary" avSize="large" (clicked)="generatePlaygroundCode()">
-            📋 Сгенерировать код настройки
-          </button>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 🛠️ API Interface Documentation -->
-  <section class="demo-section">
-    <div class="demo-section__header">
-      <h2>🛠️ Технический интерфейс (Inputs)</h2>
-    </div>
-    <p class="demo-section__description">
-      Используйте кнопку <strong>"?"</strong> в заголовке контейнера ниже, чтобы увидеть полную спецификацию и описание
-      всех параметров.
-    </p>
-
-    <div class="demo-section__preview" style="padding: 0">
-      <av-help-copy-container
-        title="Спецификация : HelpCopyContainer"
-        [content]="apiInterfaceCode"
-        bgColor="#0a0e1a"
-        [showHelpButton]="true"
-      ></av-help-copy-container>
-    </div>
-  </section>
-
-  <!-- Статические примеры -->
-  <section class="demo-section">
-    <div class="demo-section__header">
-      <h2>Базовое использование</h2>
-    </div>
-    <div class="demo-section__preview">
-      <av-help-copy-container
-        title="Код использования"
-        [content]="basicCode"
-        bgColor="#1e293b"
-      ></av-help-copy-container>
-    </div>
-  </section>
-</div>
+</app-container-ui-help-base>

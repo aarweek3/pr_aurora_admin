@@ -15,6 +15,21 @@
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+
+    .emoji {
+      display: inline-block;
+      -webkit-text-fill-color: initial;
+      background: initial;
+      background-clip: initial;
+      -webkit-background-clip: initial;
+      vertical-align: middle;
+      position: relative;
+      top: -4px;
+      font-weight: normal;
+      font-size: 0.75em;
+      margin-left: 3px;
+      opacity: 0.9;
+    }
   }
 
   .text-secondary {
@@ -454,4 +469,16 @@
     transform: translate(-50%, 0);
     opacity: 1;
   }
+}
+
+// Global emoji reset for consistent rendering
+.emoji {
+  display: inline-block;
+  -webkit-text-fill-color: initial !important;
+  background: transparent !important;
+  background-clip: border-box !important;
+  -webkit-background-clip: border-box !important;
+  vertical-align: middle;
+  font-size: 1.2em;
+  line-height: 1;
 }

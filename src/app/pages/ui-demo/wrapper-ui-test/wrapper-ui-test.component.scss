@@ -1,0 +1,330 @@
+h1 {
+  font-size: 32px;
+  margin: 0 0 12px 0;
+  color: #1a1a1a;
+}
+
+.description {
+  color: #666;
+  margin: 0 0 4px 0;
+  font-size: 14px;
+
+  code {
+    background-color: #f0f0f0;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 13px;
+    color: #d63384;
+  }
+}
+
+// Playground
+.playground-container {
+  background: #fafafa;
+  padding: 24px;
+  border-radius: 16px;
+  border: 1px solid #f0f0f0;
+  margin-bottom: 48px;
+}
+
+.control-card-tabs {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08) !important;
+  border: none !important;
+  border-radius: 12px !important;
+  height: 100%;
+}
+
+.result-card {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05) !important;
+  border: 1px solid #f0f0f0 !important;
+  border-radius: 12px !important;
+  height: 100%;
+}
+
+.preview-info {
+  padding: 20px;
+
+  h3 {
+    margin: 0 0 16px 0;
+    font-size: 18px;
+    color: #1a1a1a;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 16px 0;
+
+    li {
+      padding: 8px 0;
+      border-bottom: 1px solid #f0f0f0;
+      color: #4a4a4a;
+
+      strong {
+        color: #1a1a1a;
+        font-weight: 600;
+      }
+
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+  }
+}
+
+// Examples section
+.examples-section {
+  margin-top: 48px;
+  padding-top: 32px;
+  border-top: 2px solid #e8e8e8;
+
+  h2 {
+    font-size: 24px;
+    margin: 0 0 24px 0;
+    color: #1a1a1a;
+  }
+
+  .example-description {
+    margin-bottom: 16px;
+    color: #666;
+    font-size: 14px;
+  }
+}
+
+// Documentation section
+.documentation-section {
+  margin-top: 48px;
+  padding-top: 32px;
+  border-top: 2px solid #e8e8e8;
+
+  h2 {
+    font-size: 24px;
+    margin: 0 0 24px 0;
+    color: #1a1a1a;
+  }
+
+  h3 {
+    font-size: 16px;
+    margin: 16px 0 8px 0;
+    color: #1a1a1a;
+  }
+
+  pre {
+    background: #f5f5f5;
+    padding: 12px;
+    border-radius: 4px;
+    overflow-x: auto;
+  }
+
+  code {
+    background-color: #f0f0f0;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 13px;
+    color: #d63384;
+  }
+
+  .tips-list {
+    margin: 0;
+    padding-left: 0;
+    list-style: none;
+
+    li {
+      margin-bottom: 12px;
+      line-height: 1.6;
+      color: #4a4a4a;
+
+      code {
+        background-color: #f0f0f0;
+        padding: 2px 6px;
+        border-radius: 3px;
+        font-size: 13px;
+        color: #d63384;
+      }
+    }
+  }
+}
+
+// Dark theme
+:host-context(.dark-theme) {
+  h1 {
+    color: #e8e8e8;
+  }
+
+  .description {
+    color: #a0a0a0;
+
+    code {
+      background-color: #2a2a2a;
+      color: #ff6b9d;
+    }
+  }
+
+  .playground-container {
+    background: #1a1a1a;
+    border-color: #3a3a3a;
+  }
+
+  .control-card-tabs,
+  .result-card {
+    background: #2a2a2a !important;
+    border-color: #3a3a3a !important;
+  }
+
+  .preview-info {
+    h3 {
+      color: #e8e8e8;
+    }
+
+    ul li {
+      border-bottom-color: #3a3a3a;
+      color: #b0b0b0;
+
+      strong {
+        color: #e8e8e8;
+      }
+    }
+  }
+
+  .examples-section,
+  .documentation-section {
+    border-top-color: #3a3a3a;
+
+    h2,
+    h3 {
+      color: #e8e8e8;
+    }
+
+    pre {
+      background: #2a2a2a;
+    }
+
+    code {
+      background-color: #2a2a2a;
+      color: #ff6b9d;
+    }
+
+    .example-description {
+      color: #a0a0a0;
+    }
+
+    .tips-list li {
+      color: #b0b0b0;
+
+      code {
+        background-color: #2a2a2a;
+        color: #ff6b9d;
+      }
+    }
+  }
+}
+
+.demo-content {
+  h3 {
+    font-size: 18px;
+    margin: 0 0 12px 0;
+    color: #1a1a1a;
+  }
+
+  p {
+    margin: 0 0 12px 0;
+    line-height: 1.6;
+    color: #4a4a4a;
+
+    code {
+      background-color: #f0f0f0;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-size: 13px;
+      color: #d63384;
+    }
+
+    strong {
+      color: #1a1a1a;
+      font-weight: 600;
+    }
+  }
+
+  ul {
+    margin: 0;
+    padding-left: 20px;
+
+    li {
+      margin-bottom: 8px;
+      line-height: 1.6;
+      color: #4a4a4a;
+    }
+  }
+}
+
+.demo-block {
+  padding: 16px;
+  margin-bottom: 16px;
+  border-left: 3px solid #1890ff;
+  background-color: #f5f9ff;
+  border-radius: 4px;
+
+  h4 {
+    font-size: 16px;
+    margin: 0 0 8px 0;
+    color: #1a1a1a;
+  }
+
+  p {
+    margin: 0;
+    line-height: 1.6;
+    color: #4a4a4a;
+  }
+}
+
+// Dark theme support
+:host-context(.dark-theme) {
+  h1 {
+    color: #e8e8e8;
+  }
+
+  .description {
+    color: #a0a0a0;
+
+    code {
+      background-color: #2a2a2a;
+      color: #ff6b9d;
+    }
+  }
+
+  .demo-content {
+    h3 {
+      color: #e8e8e8;
+    }
+
+    p {
+      color: #b0b0b0;
+
+      code {
+        background-color: #2a2a2a;
+        color: #ff6b9d;
+      }
+
+      strong {
+        color: #e8e8e8;
+      }
+    }
+
+    ul li {
+      color: #b0b0b0;
+    }
+  }
+
+  .demo-block {
+    background-color: #1a2332;
+    border-left-color: #4096ff;
+
+    h4 {
+      color: #e8e8e8;
+    }
+
+    p {
+      color: #b0b0b0;
+    }
+  }
+}

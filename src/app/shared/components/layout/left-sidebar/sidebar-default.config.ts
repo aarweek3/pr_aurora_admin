@@ -58,12 +58,6 @@ export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
               },
             },
             {
-              id: 'picker-ui',
-              label: 'Color Picker UI 🎨',
-              route: '/ui-demo/picker-ui',
-              icon: 'bg-colors',
-            },
-            {
               id: 'dialog-icon-ui',
               label: 'Dialog Icon UI',
               route: '/ui-demo/dialog-icon-ui',
@@ -169,21 +163,9 @@ export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
               route: '/ui-demo/toggle-ui',
               icon: 'swap',
             },
-          ],
-        },
-        {
-          id: 'ui-components',
-          icon: 'build',
-          label: 'UI Components',
-          type: 'submenu',
-          badge: {
-            value: 'Premium',
-            intent: 'warning',
-          },
-          submenu: [
             {
               id: 'color-picker-demo',
-              label: 'Color Picker',
+              label: 'Color Picker UI',
               route: '/ui-demo/color-picker-demo',
               icon: 'bg-colors',
               badge: {
@@ -191,26 +173,31 @@ export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
                 intent: 'success',
               },
             },
-
             {
-              id: 'icon-demo',
-              label: 'Icon',
-              route: '/ui-demo/icon-demo',
-              icon: 'star',
+              id: 'wrapper-ui-test',
+              label: 'Wrapper UI Test 🎁',
+              route: '/ui-demo/wrapper-ui-test',
+              icon: 'gift',
               badge: {
                 value: 'New',
                 intent: 'success',
               },
             },
             {
-              id: 'icon-ui-new',
-              label: 'Icon Control UI 🎨 ⭐',
-              route: '/ui-demo/icon-ui-new',
-              icon: 'star',
+              id: 'button-demo',
+              label: 'Button Demo 🎮',
+              route: '/ui-demo/button-demo',
+              icon: 'play-circle',
               badge: {
                 value: 'New',
-                intent: 'success',
+                intent: 'warning',
               },
+            },
+            {
+              id: 'ui-help-base',
+              label: 'UI Help Base',
+              route: '/test/ui-help-base',
+              icon: 'question-circle',
             },
           ],
         },
@@ -617,30 +604,6 @@ export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
             value: 'Pro',
             intent: 'info',
           },
-        },
-      ],
-    },
-    {
-      id: 'test',
-      title: 'Тесты',
-      items: [
-        {
-          id: 'tests-menu',
-          icon: 'experiment',
-          label: 'Тесты',
-          type: 'submenu',
-          badge: {
-            value: 'Dev',
-            intent: 'info',
-          },
-          submenu: [
-            {
-              id: 'ui-help-base',
-              label: 'UI Help Base',
-              route: '/test/ui-help-base',
-              icon: 'question-circle',
-            },
-          ],
         },
       ],
     },

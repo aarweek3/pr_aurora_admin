@@ -200,7 +200,8 @@ export class IconComponent {
     const mappedFile = this.iconFileMap[type];
     let iconPath = mappedFile ? `assets/icons/${mappedFile}` : type;
 
-    // Добавляем расширение и префикс если нужно
+    // Добавляем расширение и префикс если нужнопочему в компонетах разные контролы это должен быть наш один единственный контрол
+
     if (!iconPath.endsWith('.svg')) iconPath += '.svg';
     if (!iconPath.startsWith('assets/')) iconPath = `assets/icons/${iconPath}`;
 

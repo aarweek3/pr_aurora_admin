@@ -4,11 +4,19 @@ import { FormsModule } from '@angular/forms';
 import { ButtonDirective } from '../../../shared/components/ui/button/button.directive';
 import { HelpCopyContainerComponent } from '../../../shared/components/ui/container-help-copy-ui';
 import { ModalComponent } from '../../../shared/components/ui/modal';
+import { ContainerUiHelpBaseComponent } from '../../../shared/containers/ui-help/container-ui-help-base/container-ui-help-base.component';
 
 @Component({
   selector: 'app-help-copy-container-ui',
   standalone: true,
-  imports: [CommonModule, FormsModule, HelpCopyContainerComponent, ButtonDirective, ModalComponent],
+  imports: [
+    CommonModule,
+    FormsModule,
+    HelpCopyContainerComponent,
+    ButtonDirective,
+    ModalComponent,
+    ContainerUiHelpBaseComponent,
+  ],
   templateUrl: './av-help-copy-container-ui.component.html',
   styleUrl: './av-help-copy-container-ui.component.scss',
 })

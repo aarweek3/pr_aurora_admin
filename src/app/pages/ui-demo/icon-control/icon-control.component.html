@@ -1,14 +1,7 @@
-<div class="ui-help-container">
-  <!-- Header -->
-  <div class="ui-help-header">
-    <h1>Icon Control UI 22222🎨 ⭐</h1>
-    <p class="text-secondary">
-      Полный контроль над иконками: размер, цвет, трансформации, границы и эффекты.
-      <br />
-      <small>Компонент: IconControlComponent (src/app/pages/ui-demo/icon-control/icon-control.component.ts)</small>
-    </p>
-  </div>
-
+<app-container-ui-help-base
+  pageTitle="Icon Control 🧱"
+  pageDescription="Полный контроль над иконками: размер, цвет, трансформации, границы и эффекты. Компонент: IconControlComponent (src/app/pages/ui-demo/icon-control/icon-control.component.ts)"
+>
   <div class="ui-help-content">
     <div class="ui-help-section">
       <div class="section-header">
@@ -18,7 +11,7 @@
             [size]="20"
           ></av-icon>
         </button>
-        <h2>🎮 Интерактивная площадка Icon Control</h2>
+        <h2><span class="emoji">🎮</span> Интерактивная площадка Icon Control</h2>
       </div>
 
       @if (isPlaygroundVisible()) {
@@ -35,7 +28,7 @@
                     <av-icon-settings-control
                       [value]="pgConfig()"
                       (valueChange)="pgConfig.set($event)"
-                      [presets]="iconPresets()"
+                      [presets]="iconPresets"
                     ></av-icon-settings-control>
                   </div>
                 </nz-tab>
@@ -47,6 +40,7 @@
                       title="Сгенерированный код (HTML / TS / SCSS)"
                       [content]="pgGeneratedCode()"
                       bgColor="#1e293b"
+                      [defaultCollapsed]="false"
                     ></av-help-copy-container>
                   </div>
                 </nz-tab>
@@ -59,6 +53,7 @@
                       [content]="pgRawSource()"
                       bgColor="#0f172a"
                       codeLang="xml"
+                      [defaultCollapsed]="false"
                     ></av-help-copy-container>
                   </div>
                 </nz-tab>
@@ -71,6 +66,7 @@
                       [content]="apiInterfaceCode"
                       bgColor="#0a0e1a"
                       [showHelpButton]="true"
+                      [defaultCollapsed]="false"
                     ></av-help-copy-container>
                   </div>
                 </nz-tab>
@@ -115,7 +111,7 @@
           [size]="20"
           class="header-arrow"
         ></av-icon>
-        <h2>📚 Библиотека иконок</h2>
+        <h2><span class="emoji">📚</span> Библиотека иконок</h2>
       </div>
 
       @if (isSectionLibraryVisible()) {
@@ -134,7 +130,7 @@
           </ng-template>
         </div>
 
-        @for (cat of filteredCategories(); track cat.category) {
+        @for (cat of filteredCategories; track cat.category) {
         <div class="category-block" style="margin-bottom: 40px">
           <h3
             class="category-title"
@@ -226,4 +222,4 @@
     {{ toastMessage() }}
   </div>
   }
-</div>
+</app-container-ui-help-base>

@@ -1,18 +1,14 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import {
-  AvIconConfig,
-  IconComponent,
-  IconSettingsControlComponent,
-} from '../../../shared/components/ui/icon';
+import { AvIconConfig, IconComponent } from '../../../shared/components/ui/icon';
 import { AvIconCategory } from './icon-metadata.model';
 import { ICON_REGISTRY } from './icon-registry';
 
 @Component({
   selector: 'av-icon-ui',
   standalone: true,
-  imports: [CommonModule, FormsModule, IconComponent, IconSettingsControlComponent],
+  imports: [CommonModule, FormsModule, IconComponent],
   template: `
     <!-- Icon UI Component: IconUiComponent (src/app/pages/ui-demo/icon-ui/icon-ui.component.ts) -->
     <div class="icon-ui">
@@ -21,9 +17,13 @@ import { ICON_REGISTRY } from './icon-registry';
         <div class="header-main">
           <div class="title-group">
             <h1>Icon Library</h1>
+
             <p class="text-secondary">
-              {{ totalIcons() }} иконок в {{ categories().length }} категориях | Компонент:
-              IconUiComponent
+              {{ totalIcons() }} иконок в {{ categories().length }} категориях
+            </p>
+            <p class="text-secondary">
+              Компонент: IconUiComponent
+              (pr_aurora_admin/src/app/pages/ui-demo/icon-ui/icon-ui.component.ts)
             </p>
           </div>
 
@@ -43,64 +43,54 @@ import { ICON_REGISTRY } from './icon-registry';
           </div>
         </div>
 
-        <div class="controls">
-          <av-icon-settings-control
-            [value]="iconConfig()"
-            (valueChange)="iconConfig.set($event)"
-            [presets]="iconPresets()"
-            [compact]="true"
-          ></av-icon-settings-control>
-        </div>
-      </div>
-
-      <!-- Main Content -->
-      <div class="icon-ui__content">
-        @if (filteredCategories().length === 0) {
-        <div class="empty-state">
-          <av-icon type="system/av_info" [size]="48"></av-icon>
-          <h3>Ничего не найдено</h3>
-          <p>Попробуйте изменить поисковый запрос</p>
-        </div>
-        } @for (cat of filteredCategories(); track cat.category) {
-        <section class="category-section">
-          <h2 class="category-title">
-            {{ cat.category }}
-            <span class="count">{{ cat.icons.length }}</span>
-          </h2>
-
-          <div class="icon-grid">
-            @for (icon of cat.icons; track icon.type) {
-            <div class="icon-card" (click)="copyToClipboard(icon.type)">
-              <div class="icon-preview" [style.color]="activeColor()">
-                <av-icon [type]="icon.type" [size]="iconSize()"></av-icon>
-              </div>
-              <div class="icon-info">
-                <span class="icon-name" [title]="icon.name">{{ icon.name }}</span>
-                <button class="copy-hint" (click)="$event.stopPropagation(); copyCode(icon.type)">
-                  <av-icon type="actions/av_save" [size]="12"></av-icon>
-                  Code
-                </button>
-              </div>
-            </div>
-            }
+        <!-- Main Content -->
+        <div class="icon-ui__content">
+          @if (filteredCategories().length === 0) {
+          <div class="empty-state">
+            <av-icon type="system/av_info" [size]="48"></av-icon>
+            <h3>Ничего не найдено</h3>
+            <p>Попробуйте изменить поисковый запрос</p>
           </div>
-        </section>
+          } @for (cat of filteredCategories(); track cat.category) {
+          <section class="category-section">
+            <h2 class="category-title">
+              {{ cat.category }}
+              <span class="count">{{ cat.icons.length }}</span>
+            </h2>
+
+            <div class="icon-grid">
+              @for (icon of cat.icons; track icon.type) {
+              <div class="icon-card" (click)="copyToClipboard(icon.type)">
+                <div class="icon-preview" [style.color]="activeColor()">
+                  <av-icon [type]="icon.type" [size]="iconSize()"></av-icon>
+                </div>
+                <div class="icon-info">
+                  <span class="icon-name" [title]="icon.name">{{ icon.name }}</span>
+                  <button class="copy-hint" (click)="$event.stopPropagation(); copyCode(icon.type)">
+                    <av-icon type="actions/av_save" [size]="12"></av-icon>
+                    Code
+                  </button>
+                </div>
+              </div>
+              }
+            </div>
+          </section>
+          }
+        </div>
+
+        <!-- Toast Notification (Simplified) -->
+        @if (toastMessage()) {
+        <div class="toast-notification fade-in">
+          {{ toastMessage() }}
+        </div>
         }
       </div>
-
-      <!-- Toast Notification (Simplified) -->
-      @if (toastMessage()) {
-      <div class="toast-notification fade-in">
-        {{ toastMessage() }}
-      </div>
-      }
     </div>
   `,
   styles: [
     `
       .icon-ui {
         padding: 24px;
-        padding-top: 200px; /* Space for fixed header */
         min-height: 100vh;
         background: var(--bg-primary);
       }
@@ -112,22 +102,11 @@ import { ICON_REGISTRY } from './icon-registry';
       }
 
       .icon-ui__header {
-        position: fixed;
-        top: 64px; /* Adjust based on admin header height */
-        left: 280px; /* Adjust based on sidebar width */
-        right: 0;
-        z-index: 100;
         padding: 24px 40px;
         display: flex;
         flex-direction: column;
         gap: 20px;
-        transition: all 0.3s ease;
-      }
-
-      @media (max-width: 992px) {
-        .icon-ui__header {
-          left: 0;
-        }
+        margin-bottom: 24px;
       }
 
       .header-main {

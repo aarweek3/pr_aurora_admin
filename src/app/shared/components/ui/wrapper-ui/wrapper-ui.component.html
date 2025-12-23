@@ -1,0 +1,19 @@
+<div class="av-wrapper-ui" [style.padding]="'0 ' + padding() + 'px'">
+  <div
+    class="av-wrapper-ui__container"
+    [style.max-width]="maxWidth()"
+    [class.av-wrapper-ui__container--bordered]="bordered()"
+  >
+    <!-- Header Section -->
+    <header class="av-wrapper-ui__header" [class.av-wrapper-ui__header--fixed]="headerFixed()">
+      <ng-content select="[wrapper-header]"></ng-content>
+    </header>
+
+    <!-- Body Section -->
+    <main class="av-wrapper-ui__body" [class.av-wrapper-ui__body--scroll]="bodyScroll()">
+      <ng-content select="[wrapper-body]"></ng-content>
+      <!-- Fallback: если нет wrapper-body, показываем весь контент -->
+      <ng-content></ng-content>
+    </main>
+  </div>
+</div>

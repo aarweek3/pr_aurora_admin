@@ -1,4 +1,5 @@
 import { Component, input } from '@angular/core';
+import { IconComponent } from '@shared/components/ui/icon/icon.component';
 import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzGridModule } from 'ng-zorro-antd/grid';
 import { NzInputModule } from 'ng-zorro-antd/input';
@@ -8,7 +9,14 @@ import { NzSwitchModule } from 'ng-zorro-antd/switch';
 @Component({
   selector: 'app-container-ui-help-base',
   standalone: true,
-  imports: [NzCardModule, NzGridModule, NzInputModule, NzSelectModule, NzSwitchModule],
+  imports: [
+    NzCardModule,
+    NzGridModule,
+    NzInputModule,
+    NzSelectModule,
+    NzSwitchModule,
+    IconComponent,
+  ],
   templateUrl: './container-ui-help-base.component.html',
   styleUrl: './container-ui-help-base.component.scss',
 })

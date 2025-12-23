@@ -11,9 +11,9 @@
         [ngModel]="value().type"
         (ngModelChange)="updateProperty('type', $event)"
         nzShowSearch
-        nzPlaceHolder="Выберите иконку"
-        nzSize="small"
+        nzSize="large"
         [nzCustomTemplate]="selectedIconTpl"
+        [nzDropdownStyle]="{ 'max-height': '500px' }"
         class="icon-select"
       >
         @for (preset of presets(); track preset.value) {
@@ -30,7 +30,7 @@
       </nz-select>
 
       <button av-button avType="text" avSize="small" avTextColor="#f43f5e" (click)="resetSettings()">
-        <av-icon type="actions/av_close" [size]="14"></av-icon>
+        <av-icon type="actions/av_close" [size]="12"></av-icon>
         Сброс
       </button>
 
@@ -103,66 +103,98 @@
     </div>
   </av-field-group>
 
-  <!-- Block C: Transformations -->
   <av-field-group label="Трансформации" size="small" [collapsible]="true">
-    <div nz-row [nzGutter]="12">
+    <div nz-row [nzGutter]="16">
       <!-- Rotation -->
-      <div nz-col [nzSpan]="12">
+      <div nz-col [nzXs]="24" [nzSm]="12">
         <div class="control-item">
-          <label class="slider-label">Поворот ({{ value().rotation }}°):</label>
-          <nz-slider
-            [ngModel]="value().rotation"
-            (ngModelChange)="updateProperty('rotation', $event)"
-            [nzMin]="0"
-            [nzMax]="360"
-            [nzStep]="15"
-          ></nz-slider>
+          <label class="slider-label">Поворот:</label>
+          <div class="slider-with-input">
+            <nz-slider
+              [ngModel]="value().rotation"
+              (ngModelChange)="updateProperty('rotation', $event)"
+              [nzMin]="0"
+              [nzMax]="360"
+              [nzStep]="1"
+            ></nz-slider>
+            <nz-input-number
+              [ngModel]="value().rotation"
+              (ngModelChange)="updateProperty('rotation', $event)"
+              [nzMin]="0"
+              [nzMax]="360"
+              nzSize="small"
+              class="mini-input"
+            ></nz-input-number>
+          </div>
         </div>
       </div>
 
       <!-- Scale -->
-      <div nz-col [nzSpan]="12">
+      <div nz-col [nzXs]="24" [nzSm]="12">
         <div class="control-item">
-          <label class="slider-label">Масштаб ({{ value().scale }}):</label>
-          <nz-slider
-            [ngModel]="value().scale"
-            (ngModelChange)="updateProperty('scale', $event)"
-            [nzMin]="0.1"
-            [nzMax]="3"
-            [nzStep]="0.1"
-          ></nz-slider>
+          <label class="slider-label">Масштаб:</label>
+          <div class="slider-with-input">
+            <nz-slider
+              [ngModel]="value().scale"
+              (ngModelChange)="updateProperty('scale', $event)"
+              [nzMin]="0.1"
+              [nzMax]="5"
+              [nzStep]="0.1"
+            ></nz-slider>
+            <nz-input-number
+              [ngModel]="value().scale"
+              (ngModelChange)="updateProperty('scale', $event)"
+              [nzMin]="0.1"
+              [nzMax]="5"
+              [nzStep]="0.1"
+              nzSize="small"
+              class="mini-input"
+            ></nz-input-number>
+          </div>
         </div>
       </div>
     </div>
 
-    <div nz-row [nzGutter]="12">
+    <div nz-row [nzGutter]="16" style="margin-top: 8px">
       <!-- Opacity -->
-      <div nz-col [nzSpan]="12">
+      <div nz-col [nzXs]="24" [nzSm]="12">
         <div class="control-item">
-          <label class="slider-label">Прозрачность ({{ (value().opacity * 100).toFixed(0) }}%):</label>
-          <nz-slider
-            [ngModel]="value().opacity"
-            (ngModelChange)="updateProperty('opacity', $event)"
-            [nzMin]="0.1"
-            [nzMax]="1"
-            [nzStep]="0.1"
-          ></nz-slider>
+          <label class="slider-label">Прозрачность:</label>
+          <div class="slider-with-input">
+            <nz-slider
+              [ngModel]="value().opacity"
+              (ngModelChange)="updateProperty('opacity', $event)"
+              [nzMin]="0.1"
+              [nzMax]="1"
+              [nzStep]="0.1"
+            ></nz-slider>
+            <nz-input-number
+              [ngModel]="value().opacity"
+              (ngModelChange)="updateProperty('opacity', $event)"
+              [nzMin]="0.1"
+              [nzMax]="1"
+              [nzStep]="0.1"
+              nzSize="small"
+              class="mini-input"
+            ></nz-input-number>
+          </div>
         </div>
       </div>
 
       <!-- Flip Switches -->
-      <div nz-col [nzSpan]="12">
-        <div class="flip-controls">
-          <div class="flip-switch">
-            <span>Отразить X</span>
+      <div nz-col [nzXs]="24" [nzSm]="12">
+        <div class="control-row flip-row">
+          <label class="control-label">Отразить:</label>
+          <div class="flip-unit">
+            <span class="flip-tag">X</span>
             <nz-switch
               [ngModel]="value().flipX"
               (ngModelChange)="updateProperty('flipX', $event)"
               nzSize="small"
             ></nz-switch>
           </div>
-          <div class="flip-switch">
-            <span>Отразить Y</span>
+          <div class="flip-unit">
+            <span class="flip-tag">Y</span>
             <nz-switch
               [ngModel]="value().flipY"
               (ngModelChange)="updateProperty('flipY', $event)"
@@ -178,22 +210,31 @@
   <av-field-group label="Стилизация" size="small" [collapsible]="true">
     <div nz-row [nzGutter]="12" nzAlign="middle">
       <!-- Padding -->
-      <div nz-col [nzSpan]="8">
+      <div nz-col [nzXs]="24" [nzSm]="10">
         <div class="control-compact">
-          <label>Отступы:</label>
+          <label style="min-width: 50px">Отступы:</label>
           <nz-slider
             [ngModel]="value().padding"
             (ngModelChange)="updateProperty('padding', $event)"
             [nzMin]="0"
-            [nzMax]="32"
-            [nzStep]="2"
+            [nzMax]="64"
+            [nzStep]="1"
+            style="flex: 1"
           ></nz-slider>
+          <nz-input-number
+            [ngModel]="value().padding"
+            (ngModelChange)="updateProperty('padding', $event)"
+            [nzMin]="0"
+            [nzMax]="64"
+            nzSize="small"
+            style="width: 48px; border: none; background: transparent; box-shadow: none"
+          ></nz-input-number>
         </div>
       </div>
 
       <!-- Background Color -->
-      <div nz-col [nzSpan]="6">
-        <div class="control-compact">
+      <div nz-col [nzXs]="12" [nzSm]="6">
+        <div class="control-compact" style="justify-content: center">
           <label>Фон:</label>
           <nz-color-picker
             [ngModel]="value().background"
@@ -205,8 +246,8 @@
       </div>
 
       <!-- Border Toggle -->
-      <div nz-col [nzSpan]="10">
-        <div class="control-compact">
+      <div nz-col [nzXs]="12" [nzSm]="8">
+        <div class="control-compact" style="justify-content: flex-end">
           <label>Граница:</label>
           <nz-switch
             [ngModel]="value().borderShow"

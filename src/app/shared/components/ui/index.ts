@@ -21,6 +21,7 @@ export * from './search';
 export * from './spinner/spinner.component';
 export * from './tag';
 export * from './toggle';
+export * from './wrapper-ui/wrapper-ui.component';
 
 // ==========================================================
 // 2. Коллекции компонентов (Группировка)
@@ -48,6 +49,7 @@ import { CodeBlockComponent } from './code-block/code-block.component';
 import { HelpCopyContainerComponent } from './container-help-copy-ui';
 import { ModalCloseDirective, ModalComponent } from './modal';
 import { PaginationComponent } from './pagination';
+import { WrapperUiComponent } from './wrapper-ui/wrapper-ui.component';
 
 /** Общий UI: Кнопки, иконки, теги, алерты */
 export const AV_GENERAL_UI = [
@@ -84,6 +86,7 @@ export const AV_UTILITY_UI = [
   PaginationComponent,
   HelpCopyContainerComponent,
   CodeBlockComponent,
+  WrapperUiComponent,
 ] as const;
 
 /**

@@ -41,6 +41,8 @@ import { IconComponent } from '../icon/icon.component';
         </button>
         }
       </div>
+      } @if (description()) {
+      <div class="av-field-group__description">{{ description() }}</div>
       }
       <div class="av-field-group__content" [hidden]="isCollapsed()">
         <ng-content></ng-content>
@@ -54,6 +56,11 @@ export class FieldGroupComponent {
    * Текст метки для группы полей
    */
   label = input<string>();
+
+  /**
+   * Описание/подсказка для группы полей (опционально)
+   */
+  description = input<string>();
 
   /**
    * Можно ли сворачивать группу

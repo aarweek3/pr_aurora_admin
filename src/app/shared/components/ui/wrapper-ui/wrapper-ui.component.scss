@@ -1,0 +1,74 @@
+.av-wrapper-ui {
+  display: block;
+  width: 100%;
+  min-height: 100vh;
+  // Серый фон страницы
+  background-color: #f5f5f5;
+  box-sizing: border-box;
+
+  &__container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin: 0 auto;
+    // Светлый контейнер
+    background-color: #ffffff;
+    min-height: 100vh;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    // Максимальная ширина 1400px
+    max-width: 1400px;
+
+    // Граница между header и body (опционально)
+    &--bordered {
+      .av-wrapper-ui__header {
+        border-bottom: 1px solid #e8e8e8;
+      }
+    }
+  }
+
+  &__header {
+    // Высота auto по контенту
+    padding: 16px 20px;
+    background-color: #ffffff;
+    flex-shrink: 0; // Не сжимается
+
+    // Фиксированный header (опционально)
+    &--fixed {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+  }
+
+  &__body {
+    flex: 1; // Растягивается на всю доступную высоту
+    padding: 24px 20px;
+    overflow-y: visible; // По умолчанию без скролла
+
+    // Скролл у body (опционально)
+    &--scroll {
+      overflow-y: auto;
+      max-height: calc(100vh - var(--header-height, 80px));
+    }
+  }
+}
+
+// Dark theme support (опционально)
+:host-context(.dark-theme) .av-wrapper-ui {
+  background-color: #1f1f1f;
+
+  &__container {
+    background-color: #2a2a2a;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  }
+
+  &__container--bordered {
+    .av-wrapper-ui__header {
+      border-bottom-color: #404040;
+    }
+  }
+
+  &__header {
+    background-color: #2a2a2a;
+  }
+}

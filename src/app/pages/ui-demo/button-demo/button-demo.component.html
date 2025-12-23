@@ -1,0 +1,14 @@
+<av-component-demo [config]="config" (controlValuesChange)="onControlValuesChange($event)">
+  <!-- Preview: Живая кнопка с настройками -->
+  <div demo-preview>
+    <button
+      nz-button
+      [nzSize]="previewProps().size"
+      [nzType]="previewProps().type"
+      [disabled]="previewProps().disabled"
+      [nzLoading]="previewProps().loading"
+    >
+      {{ previewProps().text }}
+    </button>
+  </div>
+</av-component-demo>

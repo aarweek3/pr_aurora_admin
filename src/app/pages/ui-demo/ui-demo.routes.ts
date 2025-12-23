@@ -88,10 +88,6 @@ export const UI_DEMO_ROUTES: Routes = [
       import('./progress-ui/progress-ui.component').then((m) => m.ProgressUiComponent),
   },
   {
-    path: 'picker-ui',
-    loadComponent: () => import('./picker-ui/picker-ui.component').then((m) => m.PickerUiComponent),
-  },
-  {
     path: 'color-picker-demo',
     loadComponent: () =>
       import('./color-picker-demo/color-picker-demo.component').then(
@@ -99,12 +95,13 @@ export const UI_DEMO_ROUTES: Routes = [
       ),
   },
   {
-    path: 'icon-demo',
-    loadComponent: () => import('./icon-demo/icon-demo.component').then((m) => m.IconDemoComponent),
+    path: 'wrapper-ui-test',
+    loadComponent: () =>
+      import('./wrapper-ui-test/wrapper-ui-test.component').then((m) => m.WrapperUiTestComponent),
   },
   {
-    path: 'icon-ui-new',
+    path: 'button-demo',
     loadComponent: () =>
-      import('./icon-ui-new/icon-ui-new.component').then((m) => m.IconUiNewComponent),
+      import('./button-demo/button-demo.component').then((m) => m.ButtonDemoComponent),
   },
 ];

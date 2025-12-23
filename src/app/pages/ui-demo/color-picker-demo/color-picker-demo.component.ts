@@ -3,7 +3,7 @@ import { Component, computed, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzGridModule } from 'ng-zorro-antd/grid';
-import { NzSelectModule } from 'ng-zorro-antd/select';
+import { NzRadioModule } from 'ng-zorro-antd/radio';
 import { ButtonDirective } from '../../../shared/components/ui/button/button.directive';
 import { HelpCopyContainerComponent } from '../../../shared/components/ui/container-help-copy-ui/container-help-copy-ui.component';
 import { FieldGroupComponent } from '../../../shared/components/ui/field-group/field-group.component';
@@ -13,6 +13,7 @@ import {
   type CustomColor,
   type PickerMode,
 } from '../../../shared/components/ui/picker/picker.types';
+import { ContainerUiHelpBaseComponent } from '../../../shared/containers/ui-help/container-ui-help-base/container-ui-help-base.component';
 
 @Component({
   selector: 'av-color-picker-demo',
@@ -22,12 +23,13 @@ import {
     FormsModule,
     NzCardModule,
     NzGridModule,
-    NzSelectModule,
+    NzRadioModule,
     ButtonDirective,
     IconComponent,
     HelpCopyContainerComponent,
     FieldGroupComponent,
     PickerComponent,
+    ContainerUiHelpBaseComponent,
   ],
   templateUrl: './color-picker-demo.component.html',
   styleUrl: './color-picker-demo.component.scss',
@@ -168,19 +170,4 @@ export interface CustomColor {
   }
 
   // Methods
-  resetColor(): void {
-    this.selectedColor.set('#1890ff');
-  }
-
-  addRandomColor(): void {
-    const randomColor =
-      '#' +
-      Math.floor(Math.random() * 16777215)
-        .toString(16)
-        .padStart(6, '0');
-    this.customColors.update((colors) => [
-      ...colors,
-      { name: `Random ${colors.length + 1}`, value: randomColor, category: 'custom' },
-    ]);
-  }
 }

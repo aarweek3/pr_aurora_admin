@@ -8,6 +8,7 @@
   background: var(--color-bg-container, #ffffff);
   border: 1px dashed var(--color-border, #d9d9d9);
   border-radius: 6px;
+  overflow-x: hidden;
   transition: all 0.3s ease;
 
   &:hover {
@@ -26,6 +27,17 @@
     .control-label {
       font-size: 10px;
     }
+  }
+
+  // 🔥 IMPORTANT: Fix for scrollbars in av-field-group
+  ::ng-deep .av-field-group__content {
+    overflow: visible !important;
+    display: block !important;
+  }
+
+  ::ng-deep .ant-row {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
   }
 }
 
@@ -105,12 +117,13 @@
 .selected-icon {
   display: flex;
   align-items: center;
-  gap: 8px;
-  height: 28px;
+  gap: 10px;
+  padding: 4px 0;
 
   span {
-    font-size: 12px;
-    font-weight: 500;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-primary, #1890ff);
   }
 }
 
@@ -130,7 +143,8 @@
     font-weight: 600;
     color: var(--color-text-secondary, #8c8c8c);
     white-space: nowrap;
-    min-width: 45px;
+    min-width: unset; // Remove fixed min-width
+    margin-right: 8px;
     text-align: right;
   }
 
@@ -181,7 +195,7 @@
 // Color Preset Grid
 .color-preset-grid {
   display: grid;
-  grid-template-columns: repeat(12, 1fr);
+  grid-template-columns: repeat(auto-fill, minmax(18px, 1fr));
   gap: 4px;
   flex: 1;
   min-width: 0;
@@ -233,24 +247,68 @@
     margin: 0;
     padding: 4px 0;
   }
+
+  .slider-with-input {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    nz-slider {
+      flex: 1;
+    }
+
+    .mini-input {
+      width: 54px !important; // Fixed width for inputs
+      flex-shrink: 0;
+
+      ::ng-deep .ant-input-number-input {
+        font-size: 11px;
+        padding: 0 4px;
+        text-align: center;
+      }
+    }
+  }
 }
 
-// Flip Controls
-.flip-controls {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+// Flip Controls (Now in row format)
+.flip-row {
+  justify-content: flex-start;
+  margin-bottom: 0 !important;
+  height: 38px; // Align with slider-containing rows
 
-  .flip-switch {
+  .flip-unit {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    padding: 4px 8px;
+    gap: 6px;
+    padding: 2px 8px;
     background: var(--color-bg-layout, #f5f5f5);
     border-radius: 4px;
-    font-size: 11px;
-    font-weight: 500;
-    color: var(--color-text-secondary, #595959);
+    margin-right: 8px;
+
+    &:last-child {
+      margin-right: 0;
+    }
+
+    .flip-tag {
+      font-size: 10px;
+      font-weight: 800;
+      color: var(--color-primary, #1890ff);
+      width: 12px;
+      text-align: center;
+    }
+
+    ::ng-deep .ant-switch {
+      min-width: 28px;
+    }
+  }
+}
+
+// Mobile/Narrow adjustments
+@media (max-width: 480px) {
+  .flip-row {
+    flex-wrap: wrap;
+    height: auto;
+    padding-top: 4px;
   }
 }
 

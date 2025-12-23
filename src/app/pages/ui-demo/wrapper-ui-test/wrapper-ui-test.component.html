@@ -1,0 +1,158 @@
+<av-wrapper-ui>
+  <div wrapper-header>
+    <h1>Wrapper UI Test 🎁</h1>
+    <p class="description">
+      Демонстрация универсального компонента <code>av-wrapper-ui</code> с полной структурой playground.<br />
+      Компонент: <code>WrapperUiComponent</code> (src/app/shared/components/ui/wrapper-ui/wrapper-ui.component.ts)
+    </p>
+  </div>
+
+  <div wrapper-body>
+    <div class="playground-container">
+      <div nz-row [nzGutter]="[24, 24]">
+        <div nz-col [nzXs]="24" [nzLg]="15">
+          <nz-card class="control-card-tabs">
+            <nz-tabset>
+              <nz-tab nzTitle="⚙️ Пример">
+                <div style="padding-top: 20px">
+                  <av-help-copy-container
+                    title="Базовое использование"
+                    [content]="usageExample"
+                    bgColor="#1e293b"
+                    [defaultCollapsed]="false"
+                  ></av-help-copy-container>
+                </div>
+              </nz-tab>
+
+              <nz-tab nzTitle="📄 Код">
+                <div style="padding-top: 20px">
+                  <av-help-copy-container
+                    title="Продвинутое использование"
+                    [content]="advancedExample"
+                    bgColor="#1e293b"
+                    [defaultCollapsed]="false"
+                  ></av-help-copy-container>
+                </div>
+              </nz-tab>
+
+              <nz-tab nzTitle="🛠️ API">
+                <div style="padding-top: 20px">
+                  <av-help-copy-container
+                    title="TypeScript Interface"
+                    [content]="apiCode"
+                    bgColor="#1e293b"
+                    [defaultCollapsed]="false"
+                  ></av-help-copy-container>
+                </div>
+              </nz-tab>
+
+              <nz-tab nzTitle="💡 Импорт">
+                <div style="padding-top: 20px">
+                  <av-help-copy-container
+                    title="Полный пример с импортом"
+                    [content]="importExample"
+                    bgColor="#1e293b"
+                    [defaultCollapsed]="false"
+                  ></av-help-copy-container>
+                </div>
+              </nz-tab>
+            </nz-tabset>
+          </nz-card>
+        </div>
+
+        <div nz-col [nzXs]="24" [nzLg]="9">
+          <nz-card class="result-card" nzTitle="🎨 Результат">
+            <div class="preview-info">
+              <h3>📐 Структура wrapper-ui</h3>
+              <ul>
+                <li><strong>Header:</strong> Закреплен сверху (sticky)</li>
+                <li><strong>Body:</strong> Прокручивается</li>
+                <li><strong>Max-width:</strong> 1400px</li>
+                <li><strong>Padding:</strong> 20px</li>
+                <li><strong>Background:</strong> Серый (#f5f5f5) снаружи, белый (#ffffff) внутри</li>
+              </ul>
+            </div>
+          </nz-card>
+        </div>
+      </div>
+    </div>
+
+    <div class="examples-section">
+      <h2>📚 Примеры использования</h2>
+
+      <div nz-row [nzGutter]="[16, 16]">
+        <div nz-col [nzXs]="24" [nzMd]="12">
+          <nz-card nzTitle="📐 Особенности Header">
+            <p><strong>Sticky Header:</strong> Остается виден при прокрутке</p>
+            <p><strong>Z-Index:</strong> 1000</p>
+            <p><strong>Padding:</strong> 16px 20px</p>
+            <p><strong>Border:</strong> Снизу (опционально)</p>
+          </nz-card>
+        </div>
+
+        <div nz-col [nzXs]="24" [nzMd]="12">
+          <nz-card nzTitle="📜 Особенности Body">
+            <p><strong>Overflow:</strong> Auto</p>
+            <p><strong>Padding:</strong> 20px</p>
+            <p><strong>Max-Width:</strong> 1400px</p>
+            <p><strong>Центрирование:</strong> margin: 0 auto</p>
+          </nz-card>
+        </div>
+
+        <div nz-col [nzSpan]="24">
+          <nz-card nzTitle="📝 Пример с длинным контентом">
+            <av-help-copy-container
+              title="Демонстрация скролла"
+              [content]="scrollExample"
+              bgColor="#1e293b"
+            ></av-help-copy-container>
+          </nz-card>
+        </div>
+      </div>
+    </div>
+
+    <div class="documentation-section">
+      <h2>📖 Документация</h2>
+
+      <nz-collapse>
+        <nz-collapse-panel nzHeader="🚀 Как использовать" [nzActive]="true">
+          <h3>1. Импорт компонента</h3>
+          <pre><code>import &#123; WrapperUiComponent &#125; from '&#64;shared/components/ui/wrapper-ui/wrapper-ui.component';</code></pre>
+
+          <h3>2. Добавьте в шаблон</h3>
+          <pre><code>&lt;av-wrapper-ui&gt;
+  &lt;div wrapper-header&gt;
+    &lt;h1&gt;Заголовок&lt;/h1&gt;
+  &lt;/div&gt;
+  &lt;div wrapper-body&gt;
+    &lt;p&gt;Контент&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/av-wrapper-ui&gt;</code></pre>
+        </nz-collapse-panel>
+
+        <nz-collapse-panel nzHeader="⚙️ Параметры">
+          <ul>
+            <li><code>headerFixed</code> (boolean) - Закрепить header сверху. По умолчанию: <code>true</code></li>
+            <li><code>bodyScroll</code> (boolean) - Разрешить прокрутку body. По умолчанию: <code>true</code></li>
+            <li>
+              <code>maxWidth</code> (string) - Максимальная ширина контейнера. По умолчанию: <code>'1400px'</code>
+            </li>
+            <li><code>padding</code> (number) - Боковые отступы в пикселях. По умолчанию: <code>20</code></li>
+            <li><code>bordered</code> (boolean) - Граница между header и body. По умолчанию: <code>true</code></li>
+          </ul>
+        </nz-collapse-panel>
+
+        <nz-collapse-panel nzHeader="💡 Советы">
+          <ul>
+            <li>✅ Используйте <code>wrapper-header</code> для заголовков страниц</li>
+            <li>✅ <code>wrapper-body</code> для основного контента</li>
+            <li>✅ Header автоматически sticky при прокрутке</li>
+            <li>✅ Body центрируется с max-width 1400px</li>
+            <li>⚠️ Не забудьте импортировать компонент в imports[]</li>
+            <li>💡 Для отключения sticky используйте <code>[headerFixed]="false"</code></li>
+          </ul>
+        </nz-collapse-panel>
+      </nz-collapse>
+    </div>
+  </div>
+</av-wrapper-ui>
