@@ -18,6 +18,7 @@ export * from './phone-input';
 export * from './picker/picker.component';
 export * from './progress';
 export * from './search';
+export * from './showcase/showcase.component';
 export * from './spinner/spinner.component';
 export * from './tag';
 export * from './toggle';

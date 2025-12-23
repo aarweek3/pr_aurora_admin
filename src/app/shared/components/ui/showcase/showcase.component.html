@@ -1,0 +1,38 @@
+<av-wrapper-ui [headerConfig]="config().headerConfig">
+  <div wrapper-body>
+    <!-- 🎮 Playground Container -->
+    <div class="playground-container">
+      <div nz-row [nzGutter]="[24, 24]">
+        <!-- LEFT: Tabs (60% по умолчанию) -->
+        <div nz-col [nzXs]="24" [nzLg]="columnSplit()[0]">
+          <nz-card class="control-card-tabs">
+            <ng-content select="[showcase-tabs]"></ng-content>
+          </nz-card>
+        </div>
+
+        <!-- RIGHT: Result (40% по умолчанию) -->
+        <div nz-col [nzXs]="24" [nzLg]="columnSplit()[1]">
+          <nz-card class="result-card" [nzTitle]="resultTitle()">
+            <ng-content select="[showcase-result]"></ng-content>
+          </nz-card>
+        </div>
+      </div>
+    </div>
+
+    <!-- 📚 Examples Section (опционально) -->
+    @if (showExamples()) {
+    <div class="examples-section">
+      <h2>📚 Примеры использования</h2>
+      <ng-content select="[showcase-examples]"></ng-content>
+    </div>
+    }
+
+    <!-- 📖 Documentation Section (опционально) -->
+    @if (showDocs()) {
+    <div class="documentation-section">
+      <h2>📖 Документация</h2>
+      <ng-content select="[showcase-docs]"></ng-content>
+    </div>
+    }
+  </div>
+</av-wrapper-ui>

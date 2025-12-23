@@ -5,14 +5,17 @@ import { NzCollapseModule } from 'ng-zorro-antd/collapse';
 import { NzGridModule } from 'ng-zorro-antd/grid';
 import { NzTabsModule } from 'ng-zorro-antd/tabs';
 import { HelpCopyContainerComponent } from '../../../shared/components/ui/container-help-copy-ui/container-help-copy-ui.component';
-import { WrapperUiComponent } from '../../../shared/components/ui/wrapper-ui/wrapper-ui.component';
+import {
+  ShowcaseComponent,
+  ShowcaseConfig,
+} from '../../../shared/components/ui/showcase/showcase.component';
 
 @Component({
   selector: 'app-wrapper-ui-test',
   standalone: true,
   imports: [
     CommonModule,
-    WrapperUiComponent,
+    ShowcaseComponent,
     HelpCopyContainerComponent,
     NzTabsModule,
     NzCardModule,
@@ -23,24 +26,78 @@ import { WrapperUiComponent } from '../../../shared/components/ui/wrapper-ui/wra
   styleUrl: './wrapper-ui-test.component.scss',
 })
 export class WrapperUiTestComponent {
+  // Конфигурация showcase
+  readonly showcaseConfig: ShowcaseConfig = {
+    headerConfig: {
+      title: 'Wrapper UI Test 🎁',
+      description:
+        'Демонстрация универсального компонента av-wrapper-ui с полной структурой playground',
+      componentName: 'WrapperUiComponent',
+      componentPath: 'src/app/shared/components/ui/wrapper-ui/wrapper-ui.component.ts',
+    },
+    resultTitle: '🎨 Результат',
+    showExamples: true,
+    showDocs: true,
+    columnSplit: [15, 9],
+  };
+
   // Примеры кода
-  readonly usageExample = `<av-wrapper-ui>
+  readonly usageExample = `// Способ 1: Через конфигурацию (рекомендуется для demo-страниц)
+import { WrapperUiConfigHeader } from '@shared/components/ui/wrapper-ui/wrapper-ui.component';
+
+headerConfig: WrapperUiConfigHeader = {
+  title: 'Моя страница 🎨',
+  description: 'Описание страницы',
+  componentName: 'MyComponent',
+  componentPath: 'src/app/pages/my-page/my-page.component.ts'
+};
+
+<av-wrapper-ui [headerConfig]="headerConfig">
+  <div wrapper-body>
+    <p>Основной контент</p>
+  </div>
+</av-wrapper-ui>
+
+// Способ 2: Через content projection (для production)
+<av-wrapper-ui>
   <div wrapper-header>
     <h1>Заголовок страницы</h1>
     <p>Описание или дополнительная информация</p>
   </div>
-
   <div wrapper-body>
     <p>Основной контент страницы</p>
-    <!-- Ваш контент здесь -->
   </div>
 </av-wrapper-ui>`;
 
   readonly apiCode = `/**
+ * @interface WrapperUiConfigHeader
+ * Конфигурация для автоматической генерации header
+ */
+export interface WrapperUiConfigHeader {
+  /** Заголовок страницы (обязательно) */
+  title: string;
+
+  /** Описание страницы */
+  description?: string;
+
+  /** Название компонента (например: "WrapperUiComponent") */
+  componentName?: string;
+
+  /** Путь к файлу компонента */
+  componentPath?: string;
+
+  /** Дополнительная заметка (например: "⚠️ Экспериментальный компонент") */
+  note?: string;
+}
+
+/**
  * @component av-wrapper-ui
  * Универсальный контейнер для страниц приложения
  */
 export interface WrapperUiProps {
+  /** Конфигурация header (альтернатива content projection) */
+  headerConfig?: WrapperUiConfigHeader | null;  // default: null
+
   /** Фиксированный header (sticky) */
   headerFixed?: boolean;        // default: true
 
@@ -57,8 +114,17 @@ export interface WrapperUiProps {
   bordered?: boolean;            // default: true
 }`;
 
-  readonly advancedExample = `<!-- С настройками -->
+  readonly advancedExample = `<!-- С конфигурацией header и настройками -->
+const headerConfig: WrapperUiConfigHeader = {
+  title: 'Advanced Page 🚀',
+  description: 'Страница с кастомными настройками',
+  componentName: 'AdvancedComponent',
+  componentPath: 'src/app/pages/advanced/advanced.component.ts',
+  note: '⚠️ Экспериментальный компонент'
+};
+
 <av-wrapper-ui
+  [headerConfig]="headerConfig"
   [headerFixed]="false"
   [bodyScroll]="true"
   maxWidth="1400px"
@@ -93,7 +159,7 @@ export interface WrapperUiProps {
 
   readonly importExample = `// app.component.ts или любой другой компонент
 import { Component } from '@angular/core';
-import { WrapperUiComponent } from '@shared/components/ui/wrapper-ui/wrapper-ui.component';
+import { WrapperUiComponent, WrapperUiConfigHeader } from '@shared/components/ui/wrapper-ui/wrapper-ui.component';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzCardModule } from 'ng-zorro-antd/card';
 
@@ -106,12 +172,7 @@ import { NzCardModule } from 'ng-zorro-antd/card';
     NzCardModule,
   ],
   template: \`
-    <av-wrapper-ui>
-      <div wrapper-header>
-        <h1>Моя страница</h1>
-        <p>Пример использования wrapper-ui</p>
-      </div>
-
+    <av-wrapper-ui [headerConfig]="headerConfig">
       <div wrapper-body>
         <nz-card nzTitle="Карточка 1">
           <p>Контент карточки 1</p>
@@ -125,5 +186,13 @@ import { NzCardModule } from 'ng-zorro-antd/card';
     </av-wrapper-ui>
   \`,
 })
-export class ExampleComponent {}`;
+export class ExampleComponent {
+  headerConfig: WrapperUiConfigHeader = {
+    title: 'Моя страница 🎨',
+    description: 'Пример использования wrapper-ui с конфигурацией',
+    componentName: 'ExampleComponent',
+    componentPath: 'src/app/pages/example/example.component.ts',
+    note: '💡 Новый способ использования через headerConfig'
+  };
+}`;
 }

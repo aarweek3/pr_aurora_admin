@@ -6,7 +6,27 @@
   >
     <!-- Header Section -->
     <header class="av-wrapper-ui__header" [class.av-wrapper-ui__header--fixed]="headerFixed()">
+      @if (headerConfig()) {
+      <!-- Автогенерированный header из конфига -->
+      <h1>{{ headerConfig()!.title }}</h1>
+      @if (headerConfig()!.description || headerConfig()!.componentName || headerConfig()!.note) {
+      <p class="description">
+        @if (headerConfig()!.description) {
+        {{ headerConfig()!.description }}
+        } @if (headerConfig()!.componentName) {
+        <br />
+        Компонент: <code>{{ headerConfig()!.componentName }}</code>
+        @if (headerConfig()!.componentPath) {
+        <span class="component-path">({{ headerConfig()!.componentPath }})</span>
+        } } @if (headerConfig()!.note) {
+        <br />
+        <span class="note">{{ headerConfig()!.note }}</span>
+        }
+      </p>
+      } } @else {
+      <!-- Кастомный header через content projection -->
       <ng-content select="[wrapper-header]"></ng-content>
+      }
     </header>
 
     <!-- Body Section -->
