@@ -1,8 +1,14 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzCollapseModule } from 'ng-zorro-antd/collapse';
+import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzGridModule } from 'ng-zorro-antd/grid';
+import { NzInputModule } from 'ng-zorro-antd/input';
+import { NzSliderModule } from 'ng-zorro-antd/slider';
+import { NzSwitchModule } from 'ng-zorro-antd/switch';
 import { NzTabsModule } from 'ng-zorro-antd/tabs';
 import { HelpCopyContainerComponent } from '../../../shared/components/ui/container-help-copy-ui/container-help-copy-ui.component';
 import {
@@ -15,12 +21,18 @@ import {
   standalone: true,
   imports: [
     CommonModule,
+    FormsModule,
     ShowcaseComponent,
     HelpCopyContainerComponent,
     NzTabsModule,
     NzCardModule,
     NzGridModule,
     NzCollapseModule,
+    NzButtonModule,
+    NzSwitchModule,
+    NzFormModule,
+    NzInputModule,
+    NzSliderModule,
   ],
   templateUrl: './wrapper-ui-test.component.html',
   styleUrl: './wrapper-ui-test.component.scss',
@@ -35,11 +47,16 @@ export class WrapperUiTestComponent {
       componentName: 'WrapperUiComponent',
       componentPath: 'src/app/shared/components/ui/wrapper-ui/wrapper-ui.component.ts',
     },
-    resultTitle: '🎨 Результат',
+    resultTitle: '🎨 Интерактивный результат',
     showExamples: true,
     showDocs: true,
-    columnSplit: [15, 9],
+    columnSplit: [14, 10],
   };
+
+  // Настройки wrapper-ui
+  headerFixed = true;
+  maxWidth = '1400px';
+  bordered = true;
 
   // Примеры кода
   readonly usageExample = `// Способ 1: Через конфигурацию (рекомендуется для demo-страниц)
@@ -142,18 +159,6 @@ const headerConfig: WrapperUiConfigHeader = {
     <div class="content">
       <!-- Ваш контент -->
     </div>
-  </div>
-</av-wrapper-ui>`;
-
-  readonly scrollExample = `<av-wrapper-ui>
-  <div wrapper-header>
-    <h1>Длинный контент</h1>
-  </div>
-  <div wrapper-body>
-    ${Array.from(
-      { length: 50 },
-      (_, i) => `<p>Параграф ${i + 1} - контент для демонстрации скролла</p>`,
-    ).join('\n    ')}
   </div>
 </av-wrapper-ui>`;
 

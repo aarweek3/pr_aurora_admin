@@ -1,32 +1,33 @@
+@use "styles/abstracts/variables" as *;
+
 // Специфичные стили для wrapper-ui-test страницы
-// (Общие playground стили находятся в showcase.component.scss)
+// Большинство стилей перенесено в showcase.component.scss
 
 .preview-info {
-  padding: 20px;
+  padding: $spacing-md;
 
   h3 {
-    margin: 0 0 16px 0;
-    font-size: 18px;
-    color: #1a1a1a;
+    margin-bottom: $spacing-base;
+    color: $color-gray-10;
   }
 
   ul {
     list-style: none;
     padding: 0;
-    margin: 0 0 16px 0;
+    margin-bottom: $spacing-base;
 
     li {
-      padding: 8px 0;
-      border-bottom: 1px solid #f0f0f0;
-      color: #4a4a4a;
-
-      strong {
-        color: #1a1a1a;
-        font-weight: 600;
-      }
+      padding: $spacing-sm 0;
+      border-bottom: 1px solid $color-border-light;
+      color: $color-text-secondary;
 
       &:last-child {
         border-bottom: none;
+      }
+
+      code {
+        color: $color-primary;
+        font-weight: $font-weight-medium;
       }
     }
   }
@@ -36,15 +37,15 @@
 :host-context(.dark-theme) {
   .preview-info {
     h3 {
-      color: #e8e8e8;
+      color: $dark-text-primary;
     }
 
     ul li {
-      border-bottom-color: #3a3a3a;
-      color: #b0b0b0;
+      border-bottom-color: $dark-border-base;
+      color: $dark-text-secondary;
 
-      strong {
-        color: #e8e8e8;
+      code {
+        color: $dark-info;
       }
     }
   }

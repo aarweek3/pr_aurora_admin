@@ -1,0 +1,170 @@
+<av-showcase [config]="showcaseConfig">
+  <!-- Табы с контролами и примерами кода (слева) -->
+  <nz-tabset showcase-tabs>
+    <!-- Интерактивные контролы -->
+    <nz-tab nzTitle="🎮 Playground">
+      <div style="padding: 20px">
+        <!-- Сообщения пользователю -->
+        @if (message()) {
+        <div class="message-toast">{{ message() }}</div>
+        }
+
+        <!-- Готовый контрол иконок -->
+        <div style="margin-bottom: 10px; font-size: 12px; color: #666">
+          Загружено иконок: {{ iconPresets.length }}
+          <br />
+          Текущая иконка: {{ iconConfig().type }}
+        </div>
+
+        <!-- Отладочная информация -->
+        <details style="margin-bottom: 10px">
+          <summary style="font-size: 12px; color: #999; cursor: pointer">🔍 Отладочная информация</summary>
+          <div style="font-size: 11px; color: #666; padding: 10px; background: #f5f5f5; border-radius: 4px">
+            <strong>Первые 5 иконок:</strong>
+            <ul>
+              @for (preset of iconPresets.slice(0, 5); track preset.value) {
+              <li>{{ preset.category }}/{{ preset.label }} ({{ preset.value }})</li>
+              }
+            </ul>
+          </div>
+        </details>
+
+        <av-icon-settings-control
+          [(value)]="iconConfig"
+          [presets]="iconPresets"
+          (valueChange)="onIconConfigChange($event)"
+        >
+        </av-icon-settings-control>
+      </div>
+    </nz-tab>
+    <!-- Примеры кода -->
+    <nz-tab nzTitle="📄 Код HTML">
+      <div style="padding-top: 20px">
+        <av-help-copy-container
+          title="HTML Template"
+          [content]="generatedCode().html"
+          bgColor="#1e293b"
+          [defaultCollapsed]="false"
+        >
+        </av-help-copy-container>
+      </div>
+    </nz-tab>
+
+    <nz-tab nzTitle="📄 Код TS">
+      <div style="padding-top: 20px">
+        <av-help-copy-container
+          title="TypeScript Configuration"
+          [content]="generatedCode().typescript"
+          bgColor="#1e293b"
+          [defaultCollapsed]="false"
+        >
+        </av-help-copy-container>
+      </div>
+    </nz-tab>
+
+    <!-- API документация -->
+    <nz-tab nzTitle="🛠️ API">
+      <div style="padding-top: 20px">
+        <av-help-copy-container
+          title="Icon Component API"
+          [content]="apiExample"
+          bgColor="#1e293b"
+          [defaultCollapsed]="false"
+        >
+        </av-help-copy-container>
+      </div>
+    </nz-tab>
+  </nz-tabset>
+
+  <!-- Интерактивный результат (справа) -->
+  <div showcase-result class="live-preview">
+    <div class="preview-container">
+      <div class="icon-preview">
+        <av-icon [type]="iconConfig().type || 'actions/av_check_mark'" [size]="iconConfig().size" [style]="iconStyle()">
+        </av-icon>
+      </div>
+
+      <div class="icon-info">
+        <h4>Текущие настройки:</h4>
+        <ul>
+          <li><strong>Тип:</strong> {{ iconConfig().type }}</li>
+          <li><strong>Размер:</strong> {{ iconConfig().size }}px</li>
+          <li><strong>Цвет:</strong> {{ iconConfig().color }}</li>
+          <li><strong>Поворот:</strong> {{ iconConfig().rotation }}°</li>
+          <li><strong>Масштаб:</strong> {{ iconConfig().scale }}x</li>
+          <li><strong>Прозрачность:</strong> {{ iconConfig().opacity }}</li>
+        </ul>
+      </div>
+
+      <div class="copy-actions">
+        <button nz-button nzType="primary" nzSize="small" (click)="copyToClipboard(generatedCode().html, 'HTML')">
+          📋 Копировать HTML
+        </button>
+        <button
+          nz-button
+          nzType="default"
+          nzSize="small"
+          style="margin-left: 8px"
+          (click)="copyToClipboard(generatedCode().typescript, 'TypeScript')"
+        >
+          📋 Копировать TS
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Примеры использования (внизу) -->
+  <div showcase-examples>
+    <nz-card nzTitle="📚 Примеры использования">
+      <div nz-row [nzGutter]="[16, 16]">
+        <div nz-col [nzXs]="24" [nzMd]="8">
+          <div class="example-item">
+            <h4>Базовая иконка</h4>
+            <av-icon type="actions/av_check_mark" [size]="24"></av-icon>
+            <code>&lt;av-icon type="actions/av_check_mark" [size]="24"&gt;&lt;/av-icon&gt;</code>
+          </div>
+        </div>
+
+        <div nz-col [nzXs]="24" [nzMd]="8">
+          <div class="example-item">
+            <h4>Цветная иконка</h4>
+            <av-icon type="general/av_like" [size]="24" color="#ff4d4f"></av-icon>
+            <code>&lt;av-icon type="general/av_like" [size]="24" color="#ff4d4f"&gt;&lt;/av-icon&gt;</code>
+          </div>
+        </div>
+
+        <div nz-col [nzXs]="24" [nzMd]="8">
+          <div class="example-item">
+            <h4>Повёрнутая иконка</h4>
+            <av-icon type="system/av_settings" [size]="24" [style.transform]="'rotate(45deg)'"></av-icon>
+            <code
+              >&lt;av-icon type="system/av_settings" [size]="24"
+              [style.transform]="'rotate(45deg)'"&gt;&lt;/av-icon&gt;</code
+            >
+          </div>
+        </div>
+      </div>
+    </nz-card>
+  </div>
+
+  <!-- Документация (внизу) -->
+  <div showcase-docs>
+    <nz-card nzTitle="📖 Документация компонента">
+      <h3>Основные параметры:</h3>
+      <ul>
+        <li><code>type</code> - путь к иконке (обязательный)</li>
+        <li><code>size</code> - размер в пикселях</li>
+        <li><code>color</code> - цвет иконки</li>
+      </ul>
+
+      <h3>Стилизация через CSS:</h3>
+      <ul>
+        <li><code>transform</code> - поворот, масштаб, отражение</li>
+        <li><code>opacity</code> - прозрачность</li>
+        <li><code>padding</code> - внутренние отступы</li>
+        <li><code>background</code> - фон контейнера</li>
+        <li><code>border</code> - рамка контейнера</li>
+      </ul>
+    </nz-card>
+  </div>
+</av-showcase>

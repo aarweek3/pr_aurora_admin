@@ -1,0 +1,270 @@
+// Стили для icon-control-aurora компонента
+
+.control-card {
+  margin-bottom: 16px;
+
+  .ant-form-item {
+    margin-bottom: 12px;
+  }
+
+  .ant-form-item:last-child {
+    margin-bottom: 0;
+  }
+
+  .ant-form-item-label {
+    font-weight: 600;
+  }
+}
+
+.preset-buttons {
+  margin-top: 12px;
+  padding: 12px;
+  background: #fafafa;
+  border-radius: 6px;
+
+  strong {
+    font-size: 12px;
+    color: #666;
+  }
+}
+
+.color-preset-btn {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  border: 2px solid #e0e0e0;
+  margin: 2px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    transform: scale(1.1);
+    border-color: #1890ff;
+  }
+
+  &.selected {
+    border-color: #1890ff;
+    box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+  }
+}
+
+.live-preview {
+  height: 650px;
+  background: #f8f9fa;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  overflow: auto;
+}
+
+.preview-container {
+  padding: 20px;
+  text-align: center;
+
+  .icon-preview {
+    padding: 40px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 120px;
+
+    av-icon {
+      display: inline-flex;
+    }
+  }
+
+  .icon-info {
+    text-align: left;
+    background: white;
+    padding: 16px;
+    border-radius: 6px;
+    margin-bottom: 16px;
+
+    h4 {
+      margin: 0 0 12px 0;
+      color: #262626;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+
+      li {
+        padding: 4px 0;
+        font-size: 13px;
+        color: #595959;
+        border-bottom: 1px solid #f0f0f0;
+
+        &:last-child {
+          border-bottom: none;
+        }
+
+        strong {
+          color: #262626;
+        }
+      }
+    }
+  }
+
+  .copy-actions {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+  }
+}
+
+.example-item {
+  text-align: center;
+  padding: 16px;
+  background: white;
+  border-radius: 6px;
+  border: 1px solid #e0e0e0;
+
+  h4 {
+    margin: 0 0 12px 0;
+    font-size: 14px;
+    color: #262626;
+  }
+
+  av-icon {
+    display: block;
+    margin: 12px auto;
+  }
+
+  code {
+    display: block;
+    font-size: 11px;
+    background: #f5f5f5;
+    padding: 8px;
+    border-radius: 4px;
+    margin-top: 12px;
+    word-break: break-all;
+  }
+}
+
+.message-toast {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: #52c41a;
+  color: white;
+  padding: 12px 16px;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  font-size: 14px;
+  animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+// === Библиотека иконок ===
+.icon-library-section {
+  // Контейнер библиотеки
+  .library-container {
+    overflow: hidden !important;
+  }
+
+  // Сетка иконок оптимизированная под 1400px
+  .icon-grid {
+    // На 1400px помещается примерно 13 иконок в ряд (105px + 10px gap)
+    @media (min-width: 1400px) {
+      grid-template-columns: repeat(13, minmax(105px, 1fr)) !important;
+      gap: 10px !important;
+    }
+
+    // На средних экранах
+    @media (min-width: 1200px) and (max-width: 1399px) {
+      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)) !important;
+      gap: 10px !important;
+    }
+
+    // На планшетах
+    @media (min-width: 768px) and (max-width: 1199px) {
+      grid-template-columns: repeat(auto-fill, minmax(95px, 1fr)) !important;
+      gap: 8px !important;
+    }
+
+    // На мобильных
+    @media (max-width: 767px) {
+      grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)) !important;
+      gap: 6px !important;
+    }
+  }
+
+  // Карточки иконок
+  .icon-item-card {
+    transition: all 0.2s ease;
+    border: 1px solid #f0f0f0 !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+
+    &:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 16px rgba(24, 144, 255, 0.15);
+      border-color: #1890ff !important;
+    }
+
+    &:active {
+      transform: translateY(-1px);
+    }
+
+    // Выбранная иконка
+    &.selected {
+      border-color: #52c41a !important;
+      background-color: #f6ffed;
+    }
+  }
+
+  // Заголовки категорий
+  .category-title {
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    position: sticky;
+    top: 0;
+    background: white;
+    z-index: 10;
+    margin-left: -24px;
+    margin-right: -24px;
+    padding-left: 24px;
+    padding-right: 24px;
+    padding-top: 8px;
+  }
+
+  // Строка поиска
+  .search-bar {
+    .ant-input-affix-wrapper {
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+
+      &:focus-within {
+        box-shadow: 0 4px 16px rgba(24, 144, 255, 0.2);
+      }
+    }
+  }
+
+  // Заголовок секции
+  .section-header {
+    border-bottom: 1px solid #f0f0f0;
+    padding-bottom: 16px;
+    margin-bottom: 24px !important;
+
+    &:hover {
+      h2 {
+        color: #1890ff;
+      }
+    }
+  }
+}

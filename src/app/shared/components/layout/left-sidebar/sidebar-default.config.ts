@@ -94,6 +94,16 @@ export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
               },
             },
             {
+              id: 'icon-control-aurora',
+              label: 'Icon Component Aurora',
+              route: '/ui-demo/icon-control-aurora',
+              icon: 'star',
+              badge: {
+                value: '✨',
+                intent: 'warning',
+              },
+            },
+            {
               id: 'icon-ui',
               label: 'Icon UI',
               route: '/ui-demo/icon-ui',

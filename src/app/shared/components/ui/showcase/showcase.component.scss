@@ -1,145 +1,435 @@
-// Playground Container
-.playground-container {
-  background: #fafafa;
-  padding: 24px;
-  border-radius: 16px;
-  border: 1px solid #f0f0f0;
-  margin-bottom: 48px;
-}
+@use "styles/abstracts/variables" as *;
 
-// Control Card (Left - Tabs)
-.control-card-tabs {
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08) !important;
-  border: none !important;
-  border-radius: 12px !important;
+// --- Mixins for Showcase ---
+
+@mixin showcase-card {
+  background: $color-white !important;
+  border: 1px solid $color-border-light !important;
+  border-radius: $border-radius-xl !important;
+  box-shadow: $shadow-sm !important;
+  transition: border-color $transition-duration-fast ease, box-shadow $transition-duration-fast ease !important;
   height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 
-  ::ng-deep .ant-card-body {
-    padding: 0;
+  &:hover {
+    border-color: $color-primary !important;
+    box-shadow: 0 8px 24px rgba($color-primary, 0.08) !important;
   }
 }
 
-// Result Card (Right)
-.result-card {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05) !important;
-  border: 1px solid #f0f0f0 !important;
-  border-radius: 12px !important;
-  height: 100%;
-}
+@mixin showcase-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  margin-bottom: $spacing-lg;
+  padding: $spacing-sm $spacing-md;
+  border-radius: $border-radius-lg;
+  transition: background $transition-duration-base ease;
 
-// Examples Section
-.examples-section {
-  margin-top: 48px;
-  padding-top: 32px;
-  border-top: 2px solid #e8e8e8;
+  &:hover {
+    background: rgba($color-black, 0.02);
+  }
 
   h2 {
-    font-size: 24px;
-    margin: 0 0 24px 0;
-    color: #1a1a1a;
-  }
-
-  .example-description {
-    margin-bottom: 16px;
-    color: #666;
-    font-size: 14px;
-  }
-}
-
-// Documentation Section
-.documentation-section {
-  margin-top: 48px;
-  padding-top: 32px;
-  border-top: 2px solid #e8e8e8;
-
-  h2 {
-    font-size: 24px;
-    margin: 0 0 24px 0;
-    color: #1a1a1a;
-  }
-
-  h3 {
-    font-size: 16px;
-    margin: 16px 0 8px 0;
-    color: #1a1a1a;
-  }
-
-  pre {
-    background: #f5f5f5;
-    padding: 12px;
-    border-radius: 4px;
-    overflow-x: auto;
-  }
-
-  code {
-    background-color: #f0f0f0;
-    padding: 2px 6px;
-    border-radius: 3px;
-    font-size: 13px;
-    color: #d63384;
-  }
-
-  ul {
+    font-size: $font-size-xxl;
     margin: 0;
-    padding-left: 20px;
+    color: $color-gray-10;
+  }
+}
 
-    li {
-      margin-bottom: 12px;
-      line-height: 1.6;
-      color: #4a4a4a;
+// --- Main Styles ---
 
-      code {
-        background-color: #f0f0f0;
-        padding: 2px 6px;
-        border-radius: 3px;
-        font-size: 13px;
-        color: #d63384;
+.playground-container {
+  background: #f8fbff; // Специальный оттенок Aurora
+  padding: $spacing-lg;
+  border-radius: 20px;
+  margin-bottom: $spacing-xxl;
+  position: relative;
+  transition: $transition-base;
+}
+
+.control-card-tabs,
+.result-card {
+  @include showcase-card;
+}
+
+.control-card-tabs {
+  ::ng-deep {
+    // Внутренние отступы контента табов
+    .ant-tabs-tabpane {
+      padding: $spacing-lg !important;
+      background: $color-white;
+    }
+
+    // Скрываем синюю линию (ink-bar)
+    .ant-tabs-ink-bar {
+      display: none !important;
+    }
+
+    // Настройка навигации табов
+    .ant-tabs-nav {
+      margin-bottom: 0 !important;
+      background: $color-bg-light;
+      border-bottom: 1px solid $color-border-light !important;
+      padding: 0 $spacing-base;
+
+      &::before {
+        display: none;
+      }
+    }
+
+    // Стили кнопок табов
+    .ant-tabs-tab {
+      padding: $spacing-md $spacing-base !important;
+      margin: 0 !important;
+      transition: color $transition-duration-base ease;
+
+      &:hover {
+        color: $color-primary;
+      }
+
+      &-active {
+        .ant-tabs-tab-btn {
+          color: $color-primary !important;
+          font-weight: $font-weight-semibold;
+        }
       }
     }
   }
 }
 
+// --- Section Styles (Examples & Documentation) ---
+
+.examples-section,
+.documentation-section {
+  margin-top: $spacing-xxl;
+  padding-top: $spacing-xl;
+  border-top: 2px solid $color-border-light;
+
+  .section-header {
+    @include showcase-section-header;
+  }
+
+  .example-description {
+    margin-bottom: $spacing-base;
+    color: $color-text-secondary;
+    font-size: $font-size-sm;
+  }
+
+  h3 {
+    font-size: $font-size-md;
+    margin: $spacing-base 0 $spacing-sm 0;
+    color: $color-gray-10;
+  }
+
+  pre {
+    background: $color-gray-3;
+    padding: $spacing-md;
+    border-radius: $border-radius-lg;
+    overflow-x: auto;
+  }
+
+  code {
+    background-color: $color-gray-4;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: $font-size-xs;
+    color: $color-error-dark;
+  }
+
+  ul {
+    margin: 0;
+    padding-left: $spacing-lg;
+
+    li {
+      margin-bottom: $spacing-md;
+      line-height: $line-height-base;
+      color: $color-text-secondary;
+
+      code {
+        background-color: $color-gray-4;
+        padding: 2px $spacing-sm;
+        border-radius: 4px;
+        font-size: $font-size-xs;
+        color: $color-error-dark;
+      }
+    }
+  }
+
+  .section-content {
+    overflow: hidden;
+    max-height: 5000px;
+    opacity: 1;
+    transition: all $transition-duration-slow cubic-bezier(0.645, 0.045, 0.355, 1);
+
+    &--collapsed {
+      max-height: 0;
+      opacity: 0;
+      pointer-events: none;
+      margin: 0 !important;
+    }
+  }
+
+  .collapse-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: $spacing-xs;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: $color-gray-7;
+    transition: color $transition-duration-base ease;
+
+    // Иконка плавно меняет цвет и немного масштабируется
+    av-icon {
+      transition: transform $transition-duration-base $transition-timing-ease-in-out;
+    }
+
+    &:hover {
+      color: $color-primary;
+
+      av-icon {
+        transform: translateY(-2px); // Легкий эффект левитации
+      }
+    }
+  }
+}
+
+// Styles for flattened forms inside tabs
+.demo-form {
+  .form-section-title {
+    font-size: $font-size-md;
+    font-weight: $font-weight-semibold;
+    color: $color-gray-10;
+    margin-bottom: $spacing-lg;
+    padding-bottom: $spacing-md;
+    border-bottom: 1px solid $color-border-light;
+  }
+
+  .form-hint {
+    display: block;
+    margin-top: $spacing-xs;
+    color: $color-gray-7;
+    font-size: $font-size-xs;
+  }
+
+  ::ng-deep {
+    .ant-form-item-label > label {
+      font-weight: $font-weight-medium;
+      color: $color-text-secondary;
+    }
+  }
+}
+
+// === Новые стили для блоков результата ===
+.result-column {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: 12px; // увеличенные отступы между блоками
+}
+
+.result-block {
+  border-radius: $border-radius-xl;
+  overflow: hidden;
+  box-shadow: $shadow-sm;
+  transition: box-shadow $transition-duration-base ease;
+
+  &--preview {
+    background: #f8f9fa;
+    flex: 1; // занимает оставшееся место
+    min-height: 160px; // увеличенная минимальная высота
+  }
+
+  &--code {
+    background: $color-white;
+    flex: 0 0 auto; // размер по содержимому
+    border: 1px solid #e8e8e8;
+  }
+
+  &--description {
+    background: #f0f7ff;
+    flex: 0 0 auto; // размер по содержимому
+  }
+
+  &__header {
+    padding: $spacing-md $spacing-lg; // увеличенные отступы
+    background: rgba($color-black, 0.02);
+    border-bottom: 1px solid rgba($color-black, 0.06);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    h4 {
+      margin: 0;
+      font-size: $font-size-sm;
+      font-weight: $font-weight-semibold;
+      color: $color-gray-10;
+    }
+  }
+
+  &__content {
+    padding: $spacing-lg; // увеличенные отступы
+  }
+}
+
+// Стили для кнопки копирования кода
+.copy-code-btn {
+  background: transparent;
+  border: 1px solid #d9d9d9;
+  border-radius: $border-radius-lg;
+  padding: 6px 12px;
+  font-size: $font-size-xs;
+  color: $color-text-secondary;
+  cursor: pointer;
+  transition: all $transition-duration-base ease;
+
+  &:hover {
+    background: $color-primary;
+    color: $color-white;
+    border-color: $color-primary;
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+// Стили для блока кода
+.code-content {
+  background: #f8f8f8;
+  border: 1px solid #e8e8e8;
+  border-radius: $border-radius-lg;
+  padding: $spacing-lg;
+  margin: 0;
+  font-family: "Monaco", "Menlo", "Ubuntu Mono", monospace;
+  font-size: $font-size-xs;
+  line-height: 1.6;
+  color: #2d3748;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+// Заглушки для контента
+.auto-params {
+  padding: $spacing-md;
+  border: 1px dashed $color-border-light;
+  border-radius: $border-radius-lg;
+  color: $color-text-tertiary;
+  font-size: $font-size-xs;
+  text-align: center;
+  background: #f0f7ff;
+  margin-top: $spacing-sm;
+}
+
 // Dark Theme Support
 :host-context(.dark-theme) {
   .playground-container {
-    background: #1a1a1a;
-    border-color: #3a3a3a;
+    background: $dark-bg-base;
+    border-color: $dark-border-base;
   }
 
   .control-card-tabs,
   .result-card {
-    background: #2a2a2a !important;
-    border-color: #3a3a3a !important;
+    background: $dark-bg-card !important;
+    border-color: $dark-border-base !important;
+  }
+
+  // Темная тема для блоков результата
+  .result-block {
+    &--preview {
+      background: $dark-bg-gray;
+    }
+
+    &--code {
+      background: $dark-bg-card;
+      border-color: $dark-border-base;
+    }
+
+    &--description {
+      background: rgba($color-primary, 0.08);
+    }
+
+    &__header {
+      background: rgba($color-white, 0.05);
+      border-bottom-color: $dark-border-base;
+
+      h4 {
+        color: $dark-text-primary;
+      }
+    }
+  }
+
+  // Темная тема для кнопки копирования кода
+  .copy-code-btn {
+    border-color: $dark-border-base;
+    color: $dark-text-secondary;
+
+    &:hover {
+      background: $color-primary;
+      color: $color-white;
+      border-color: $color-primary;
+    }
+  }
+
+  // Темная тема для блока кода
+  .code-content {
+    background: $dark-bg-gray;
+    border-color: $dark-border-base;
+    color: $dark-text-primary;
+  }
+
+  .auto-params {
+    border-color: $dark-border-base;
+    color: $dark-text-tertiary;
+    background: rgba($color-primary, 0.08);
   }
 
   .examples-section,
   .documentation-section {
-    border-top-color: #3a3a3a;
+    border-top-color: $dark-border-base;
 
     h2,
     h3 {
-      color: #e8e8e8;
+      color: $dark-text-primary;
+    }
+
+    .section-header:hover {
+      background: rgba($color-white, 0.05);
+    }
+
+    .collapse-btn {
+      color: $dark-text-tertiary;
+      &:hover {
+        color: $dark-text-primary;
+      }
     }
 
     pre {
-      background: #2a2a2a;
+      background: $dark-bg-gray;
     }
 
     code {
-      background-color: #2a2a2a;
-      color: #ff6b9d;
+      background-color: $dark-bg-gray;
+      color: $dark-error;
     }
 
     .example-description {
-      color: #a0a0a0;
+      color: $dark-text-secondary;
     }
 
     ul li {
-      color: #b0b0b0;
+      color: $dark-text-secondary;
 
       code {
-        background-color: #2a2a2a;
-        color: #ff6b9d;
+        background-color: $dark-bg-gray;
+        color: $dark-error;
       }
     }
   }

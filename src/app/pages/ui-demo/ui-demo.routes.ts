@@ -39,6 +39,13 @@ export const UI_DEMO_ROUTES: Routes = [
       import('./icon-control/icon-control.component').then((m) => m.IconControlComponent),
   },
   {
+    path: 'icon-control-aurora',
+    loadComponent: () =>
+      import('./icon-control-aurora/icon-control-aurora.component').then(
+        (m) => m.IconControlAuroraComponent,
+      ),
+  },
+  {
     path: 'modal-ui',
     loadComponent: () => import('./modal-ui/modal-ui.component').then((m) => m.ModalUiComponent),
   },

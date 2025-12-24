@@ -1,7 +1,9 @@
 .ui-help-container {
-  padding: 32px;
+  padding: 0 32px 32px 32px; // Убираем верхний отступ (был 32px)
   max-width: 1600px;
   margin: 0 auto;
+  position: relative;
+  z-index: 1; // Всегда ниже header (2000)
 }
 
 .ui-help-header {

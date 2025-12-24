@@ -1,61 +1,97 @@
-<av-showcase [config]="showcaseConfig">
-  <!-- Табы с примерами кода (слева) -->
-  <nz-tabset showcase-tabs>
+<av-showcase [config]="showcaseConfig" [headerFixed]="headerFixed" [bordered]="bordered" [maxWidth]="maxWidth">
+  <!-- Табы с контролами и примерами кода (слева) -->
+  <nz-tabset showcase-tabs [nzAnimated]="false">
+    <!-- Интерактивные контролы -->
+    <nz-tab nzTitle="🎮 Playground">
+      <form nz-form nzLayout="vertical" class="demo-form">
+        <h3 class="form-section-title">🛠️ Настройки wrapper-ui</h3>
+
+        <!-- Header Fixed -->
+        <nz-form-item>
+          <nz-form-label>Фиксированный header</nz-form-label>
+          <nz-form-control>
+            <nz-switch [(ngModel)]="headerFixed" name="headerFixed"></nz-switch>
+            <small class="form-hint">
+              {{ headerFixed ? 'Header прилипает сверху при скролле' : 'Header скроллится с контентом' }}
+            </small>
+          </nz-form-control>
+        </nz-form-item>
+
+        <!-- Bordered -->
+        <nz-form-item>
+          <nz-form-label>Граница между header и body</nz-form-label>
+          <nz-form-control>
+            <nz-switch [(ngModel)]="bordered" name="bordered"></nz-switch>
+            <small class="form-hint">
+              {{ bordered ? 'Показывать границу' : 'Без границы' }}
+            </small>
+          </nz-form-control>
+        </nz-form-item>
+
+        <!-- Max Width -->
+        <nz-form-item>
+          <nz-form-label>Максимальная ширина контейнера</nz-form-label>
+          <nz-form-control>
+            <input nz-input [(ngModel)]="maxWidth" name="maxWidth" placeholder="Например: 1400px, 100%, auto" />
+            <small class="form-hint">Текущая: {{ maxWidth }}</small>
+          </nz-form-control>
+        </nz-form-item>
+      </form>
+    </nz-tab>
+
+    <!-- Примеры кода -->
     <nz-tab nzTitle="⚙️ Пример">
-      <div style="padding-top: 20px">
-        <av-help-copy-container
-          title="Базовое использование"
-          [content]="usageExample"
-          bgColor="#1e293b"
-          [defaultCollapsed]="false"
-        ></av-help-copy-container>
-      </div>
+      <av-help-copy-container
+        title="Базовое использование"
+        [content]="usageExample"
+        bgColor="#1e293b"
+        [defaultCollapsed]="false"
+      ></av-help-copy-container>
     </nz-tab>
 
     <nz-tab nzTitle="📄 Код">
-      <div style="padding-top: 20px">
-        <av-help-copy-container
-          title="Продвинутое использование"
-          [content]="advancedExample"
-          bgColor="#1e293b"
-          [defaultCollapsed]="false"
-        ></av-help-copy-container>
-      </div>
+      <av-help-copy-container
+        title="Продвинутое использование"
+        [content]="advancedExample"
+        bgColor="#1e293b"
+        [defaultCollapsed]="false"
+      ></av-help-copy-container>
     </nz-tab>
 
     <nz-tab nzTitle="🛠️ API">
-      <div style="padding-top: 20px">
-        <av-help-copy-container
-          title="TypeScript Interface"
-          [content]="apiCode"
-          bgColor="#1e293b"
-          [defaultCollapsed]="false"
-        ></av-help-copy-container>
-      </div>
+      <av-help-copy-container
+        title="TypeScript Interface"
+        [content]="apiCode"
+        bgColor="#1e293b"
+        [defaultCollapsed]="false"
+      ></av-help-copy-container>
     </nz-tab>
 
     <nz-tab nzTitle="💡 Импорт">
-      <div style="padding-top: 20px">
-        <av-help-copy-container
-          title="Полный пример с импортом"
-          [content]="importExample"
-          bgColor="#1e293b"
-          [defaultCollapsed]="false"
-        ></av-help-copy-container>
-      </div>
+      <av-help-copy-container
+        title="Полный пример с импортом"
+        [content]="importExample"
+        bgColor="#1e293b"
+        [defaultCollapsed]="false"
+      ></av-help-copy-container>
     </nz-tab>
   </nz-tabset>
 
-  <!-- Результат (справа) -->
+  <!-- Интерактивный результат (справа) -->
   <div showcase-result class="preview-info">
-    <h3>📐 Структура wrapper-ui</h3>
+    <p><strong>Текущая конфигурация страницы:</strong></p>
     <ul>
-      <li><strong>Header:</strong> Закреплен сверху (sticky)</li>
-      <li><strong>Body:</strong> Прокручивается</li>
-      <li><strong>Max-width:</strong> 1400px</li>
-      <li><strong>Padding:</strong> 20px</li>
-      <li><strong>Background:</strong> Серый (#f5f5f5) снаружи, белый (#ffffff) внутри</li>
+      <li>
+        Header Fixed: <code>{{ headerFixed }}</code>
+      </li>
+      <li>
+        Max Width: <code>{{ maxWidth }}</code>
+      </li>
+      <li>
+        Bordered: <code>{{ bordered }}</code>
+      </li>
     </ul>
+    <p class="form-hint">Изменения применяются ко всей структуре страницы в реальном времени.</p>
   </div>
 
   <!-- Примеры использования (внизу) -->
@@ -76,16 +112,6 @@
           <p><strong>Padding:</strong> 20px</p>
           <p><strong>Max-Width:</strong> 1400px</p>
           <p><strong>Центрирование:</strong> margin: 0 auto</p>
-        </nz-card>
-      </div>
-
-      <div nz-col [nzSpan]="24">
-        <nz-card nzTitle="📝 Пример с длинным контентом">
-          <av-help-copy-container
-            title="Демонстрация скролла"
-            [content]="scrollExample"
-            bgColor="#1e293b"
-          ></av-help-copy-container>
         </nz-card>
       </div>
     </div>
@@ -111,9 +137,7 @@
     <nz-collapse-panel nzHeader="⚙️ Параметры">
       <ul>
         <li><code>headerFixed</code> (boolean) - Закрепить header сверху. По умолчанию: <code>true</code></li>
-        <li><code>bodyScroll</code> (boolean) - Разрешить прокрутку body. По умолчанию: <code>true</code></li>
         <li><code>maxWidth</code> (string) - Максимальная ширина контейнера. По умолчанию: <code>'1400px'</code></li>
-        <li><code>padding</code> (number) - Боковые отступы в пикселях. По умолчанию: <code>20</code></li>
         <li><code>bordered</code> (boolean) - Граница между header и body. По умолчанию: <code>true</code></li>
       </ul>
     </nz-collapse-panel>

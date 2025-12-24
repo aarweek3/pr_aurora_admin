@@ -1,0 +1,213 @@
+:host {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  overflow: visible; // Убираем все скроллы
+}
+
+.av-icon-library {
+  position: relative;
+
+  // === Заголовок ===
+  .library-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #f0f0f0;
+
+    &.clickable {
+      cursor: pointer;
+      transition: all 0.2s ease;
+
+      &:hover {
+        .library-title {
+          color: #1890ff;
+        }
+      }
+    }
+
+    .chevron-icon {
+      margin-right: 8px;
+      transition: transform 0.2s ease;
+    }
+
+    .library-title {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 600;
+      transition: color 0.2s ease;
+    }
+  }
+
+  // === Контент ===
+  .library-content {
+    // Секция поиска
+    .search-section {
+      margin-bottom: 24px;
+      max-width: 600px;
+
+      .ant-input-affix-wrapper {
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+
+        &:focus-within {
+          box-shadow: 0 4px 16px rgba(24, 144, 255, 0.2);
+        }
+      }
+    }
+
+    // Отсутствие результатов
+    .no-results {
+      text-align: center;
+      padding: 40px 20px;
+      color: #999;
+
+      p {
+        margin: 16px 0;
+        font-size: 16px;
+      }
+
+      .clear-search-btn {
+        background: #1890ff;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 14px;
+
+        &:hover {
+          background: #40a9ff;
+        }
+      }
+    }
+
+    // === Категории ===
+    .category-section {
+      margin-bottom: 40px;
+
+      .category-title {
+        margin-bottom: 16px;
+        padding-bottom: 8px;
+        border-bottom: 1px solid #f0f0f0;
+        font-size: 16px;
+        font-weight: 600;
+        text-transform: uppercase;
+        color: #666;
+        letter-spacing: 0.5px;
+        position: sticky;
+        top: 0;
+        background: white;
+        z-index: 10;
+        margin-left: -24px;
+        margin-right: -24px;
+        padding-left: 24px;
+        padding-right: 24px;
+        padding-top: 8px;
+
+        .category-count {
+          color: #999;
+          margin-left: 8px;
+          font-weight: normal;
+          font-size: 14px;
+        }
+      }
+
+      // === Сетка иконок ===
+      .icons-grid {
+        display: grid;
+        gap: 10px;
+        width: 100%;
+
+        // Адаптивная сетка без фиксированной ширины
+        grid-template-columns: repeat(auto-fill, minmax(105px, 1fr));
+
+        // Оптимизированные breakpoints
+        @media (min-width: 1200px) {
+          grid-template-columns: repeat(auto-fill, minmax(105px, 1fr));
+          gap: 12px;
+        }
+
+        @media (min-width: 768px) and (max-width: 1199px) {
+          grid-template-columns: repeat(auto-fill, minmax(95px, 1fr));
+          gap: 10px;
+        }
+
+        @media (max-width: 767px) {
+          grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+          gap: 8px;
+        }
+      }
+
+      // === Карточки иконок ===
+      .icon-card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 85px;
+        padding: 8px;
+        border: 1px solid #f0f0f0;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        background: white;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+
+        &:hover {
+          transform: translateY(-3px);
+          box-shadow: 0 6px 16px rgba(24, 144, 255, 0.15);
+          border-color: #1890ff;
+        }
+
+        &:active {
+          transform: translateY(-1px);
+        }
+
+        &.selected {
+          border-color: #52c41a;
+          background-color: #f6ffed;
+          box-shadow: 0 4px 12px rgba(82, 196, 26, 0.2);
+        }
+
+        .icon-display {
+          flex: 1;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          height: 36px;
+          margin-bottom: 6px;
+        }
+
+        .icon-name {
+          font-size: 10px;
+          color: #666;
+          text-align: center;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          width: 100%;
+          line-height: 1.2;
+          height: 14px;
+        }
+      }
+    }
+  }
+}
+
+// === Анимации ===
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.library-content {
+  animation: fadeInUp 0.3s ease;
+}

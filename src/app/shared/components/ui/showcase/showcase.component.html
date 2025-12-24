@@ -1,4 +1,9 @@
-<av-wrapper-ui [headerConfig]="config().headerConfig">
+<av-wrapper-ui
+  [headerConfig]="config().headerConfig"
+  [headerFixed]="headerFixed()"
+  [bordered]="bordered()"
+  [maxWidth]="maxWidth()"
+>
   <div wrapper-body>
     <!-- 🎮 Playground Container -->
     <div class="playground-container">
@@ -10,11 +15,51 @@
           </nz-card>
         </div>
 
-        <!-- RIGHT: Result (40% по умолчанию) -->
+        <!-- RIGHT: Result с новой структурой (40% по умолчанию) -->
         <div nz-col [nzXs]="24" [nzLg]="columnSplit()[1]">
-          <nz-card class="result-card" [nzTitle]="resultTitle()">
-            <ng-content select="[showcase-result]"></ng-content>
-          </nz-card>
+          <div class="result-column">
+            <!-- Блок 1: Интерактивный результат -->
+            <div class="result-block result-block--preview">
+              <div class="result-block__header">
+                <h4>{{ previewBlockTitle() }}</h4>
+              </div>
+              <div class="result-block__content">
+                <ng-content select="[showcase-result]"></ng-content>
+              </div>
+            </div>
+
+            <!-- Блок 2: Код -->
+            <div class="result-block result-block--code">
+              <div class="result-block__header">
+                <h4>{{ codeBlockTitle() }}</h4>
+                <button class="copy-code-btn" (click)="copyCode()">
+                  {{ codeCopied() ? 'Скопировано!' : 'Копировать код' }}
+                </button>
+              </div>
+              <div class="result-block__content">
+                <pre
+                  class="code-content"
+                ><code>{{ generatedCode() || '// Код будет сгенерирован автоматически' }}</code></pre>
+              </div>
+            </div>
+
+            <!-- Блок 3: Описание (если есть контент) -->
+            @if (hasDescriptionContent()) {
+            <div class="result-block result-block--description">
+              <div class="result-block__header">
+                <h4>{{ descriptionBlockTitle() }}</h4>
+              </div>
+              <div class="result-block__content">
+                @if (autoParams()) {
+                <div class="auto-params">
+                  <p>Автогенерированные параметры будут здесь</p>
+                </div>
+                }
+                <ng-content select="[showcase-description]"></ng-content>
+              </div>
+            </div>
+            }
+          </div>
         </div>
       </div>
     </div>
@@ -22,16 +67,32 @@
     <!-- 📚 Examples Section (опционально) -->
     @if (showExamples()) {
     <div class="examples-section">
-      <h2>📚 Примеры использования</h2>
-      <ng-content select="[showcase-examples]"></ng-content>
+      <div class="section-header" (click)="toggleExamples()">
+        <h2>📚 Примеры использования</h2>
+        <button class="collapse-btn">
+          <av-icon [type]="examplesCollapsed() ? 'chevron-down' : 'chevron-up'" [size]="20"></av-icon>
+        </button>
+      </div>
+
+      <div class="section-content" [class.section-content--collapsed]="examplesCollapsed()">
+        <ng-content select="[showcase-examples]"></ng-content>
+      </div>
     </div>
     }
 
     <!-- 📖 Documentation Section (опционально) -->
     @if (showDocs()) {
     <div class="documentation-section">
-      <h2>📖 Документация</h2>
-      <ng-content select="[showcase-docs]"></ng-content>
+      <div class="section-header" (click)="toggleDocs()">
+        <h2>📖 Документация</h2>
+        <button class="collapse-btn">
+          <av-icon [type]="docsCollapsed() ? 'chevron-down' : 'chevron-up'" [size]="20"></av-icon>
+        </button>
+      </div>
+
+      <div class="section-content" [class.section-content--collapsed]="docsCollapsed()">
+        <ng-content select="[showcase-docs]"></ng-content>
+      </div>
     </div>
     }
   </div>

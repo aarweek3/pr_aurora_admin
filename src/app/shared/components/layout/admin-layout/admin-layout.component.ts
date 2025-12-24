@@ -104,10 +104,12 @@ import { RightPanelComponent } from '../right-panel/right-panel.component';
 
       .admin-layout__main {
         flex: 1 1 auto;
+        display: flex;
+        flex-direction: column;
         overflow-y: auto;
         overflow-x: hidden;
-        background: #f0f2f5;
-        padding: 24px;
+        background: transparent; // Убираем серый фон (#f0f2f5)
+        padding: 0; // Убираем принудительный отступ 24px
       }
 
       .admin-layout__right-panel {

@@ -1,3 +1,4 @@
+export * from './icon-library/icon-library.component';
 export * from './icon-settings-control/icon-settings-control.component';
 export * from './icon.component';
 

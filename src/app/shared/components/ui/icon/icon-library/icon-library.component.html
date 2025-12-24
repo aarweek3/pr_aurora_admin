@@ -1,0 +1,83 @@
+<div class="av-icon-library">
+  <nz-card [nzBodyStyle]="{ padding: '24px' }">
+    <!-- Заголовок с возможностью сворачивания -->
+    <div class="library-header" [class.clickable]="collapsible()" (click)="toggleVisibility()">
+      @if (collapsible()) {
+      <av-icon
+        [type]="isVisible() ? 'arrows/av_chevron-up' : 'arrows/av_chevron-down'"
+        [size]="20"
+        class="chevron-icon"
+      ></av-icon>
+      }
+      <h2 class="library-title">{{ title() }} ({{ presets().length }})</h2>
+    </div>
+
+    <!-- Контент библиотеки -->
+    @if (isVisible()) {
+    <div class="library-content">
+      <!-- Поиск -->
+      <div class="search-section">
+        <nz-input-group [nzPrefix]="searchIcon" [nzSuffix]="clearIcon" nzSize="large">
+          <input
+            nz-input
+            [ngModel]="searchQuery()"
+            (ngModelChange)="searchQuery.set($event)"
+            placeholder="Поиск по названию или категории..."
+          />
+        </nz-input-group>
+
+        <ng-template #searchIcon>
+          <av-icon type="actions/av_search" [size]="16" color="#bfbfbf"></av-icon>
+        </ng-template>
+
+        <ng-template #clearIcon>
+          @if (searchQuery()) {
+          <av-icon
+            type="actions/av_close"
+            [size]="14"
+            color="#bfbfbf"
+            (click)="clearSearch()"
+            style="cursor: pointer"
+          ></av-icon>
+          }
+        </ng-template>
+      </div>
+
+      <!-- Результаты поиска -->
+      @if (searchQuery() && filteredCategories().length === 0) {
+      <div class="no-results">
+        <av-icon type="actions/av_search" [size]="48" color="#d9d9d9"></av-icon>
+        <p>Иконки не найдены</p>
+        <button type="button" (click)="clearSearch()" class="clear-search-btn">Очистить поиск</button>
+      </div>
+      }
+
+      <!-- Категории и иконки -->
+      @for (category of filteredCategories(); track category.name) {
+      <div class="category-section">
+        <h3 class="category-title">
+          {{ category.name }}
+          <small class="category-count">({{ category.icons.length }})</small>
+        </h3>
+
+        <div class="icons-grid">
+          @for (icon of category.icons; track icon.value) {
+          <div
+            class="icon-card"
+            [class.selected]="isIconSelected(icon.value)"
+            (click)="selectIcon(icon.value)"
+            [title]="icon.category + '/' + icon.label"
+          >
+            <div class="icon-display">
+              <av-icon [type]="icon.value" [size]="28" [color]="iconColor()"></av-icon>
+            </div>
+            <div class="icon-name">{{ icon.label }}</div>
+          </div>
+          }
+        </div>
+      </div>
+      }
+    </div>
+    }
+  </nz-card>
+</div>
