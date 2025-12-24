@@ -10,8 +10,12 @@
 ℹ️ wrapper-ui (Переиспользуемый компонент):
 src/app/shared/components/ui/wrapper-ui/wrapper-ui.component.ts
 
+ℹ️ showcase.component.ts
+src\app\shared\components\ui\showcase\showcase.component.ts
+
 ℹ️ wrapper-ui-test (Демо-компонент):
 src/app/pages/ui-demo/wrapper-ui-test/wrapper-ui-test.component.ts
+✅ Добавлен пункт "🚀 Пример полной интеграции" в документацию
 ==============================================
 ==============================================
 

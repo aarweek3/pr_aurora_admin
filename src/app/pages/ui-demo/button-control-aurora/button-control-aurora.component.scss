@@ -1,0 +1,98 @@
+// Стили для button-control-aurora компонента
+
+.demo-form {
+  padding: 24px;
+}
+
+.button-controls .control-group {
+  margin-bottom: 20px;
+
+  .control-label {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    color: #262626;
+    margin-bottom: 8px;
+  }
+
+  nz-radio-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+
+    label[nz-radio] {
+      margin: 0;
+      white-space: nowrap;
+    }
+  }
+
+  input[nz-input] {
+    width: 100%;
+  }
+
+  &.checkbox-group label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+  }
+}
+
+.live-preview {
+  background: #f8f9fa;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+}
+
+.preview-container {
+  padding: 24px;
+  text-align: center;
+
+  .button-preview {
+    padding: 48px;
+    background: white;
+    border-radius: 8px;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .button-info {
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: left;
+
+    ul {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+  }
+}
+
+.config-summary .config-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+
+  .config-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 12px;
+    background: #f8f9fa;
+    border-radius: 6px;
+    font-size: 13px;
+  }
+}
+
+.message-toast {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: #52c41a;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 6px;
+  z-index: 1000;
+}

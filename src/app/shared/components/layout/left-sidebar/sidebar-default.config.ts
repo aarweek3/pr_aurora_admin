@@ -57,6 +57,17 @@ export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
                 intent: 'success',
               },
             },
+
+            {
+              id: 'button-control-aurora',
+              label: 'Button Component Aurora',
+              route: '/ui-demo/button-control-aurora',
+              icon: 'appstore',
+              badge: {
+                value: 'New',
+                intent: 'success',
+              },
+            },
             {
               id: 'dialog-icon-ui',
               label: 'Dialog Icon UI',
@@ -101,6 +112,16 @@ export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
               badge: {
                 value: '✨',
                 intent: 'warning',
+              },
+            },
+            {
+              id: 'color-component-aurora',
+              label: 'Color Component Aurora',
+              route: '/ui-demo/color-component-aurora',
+              icon: 'bg-colors',
+              badge: {
+                value: '🎨',
+                intent: 'info',
               },
             },
             {

@@ -17,6 +17,13 @@ export const UI_DEMO_ROUTES: Routes = [
       import('./button-ui-new/button-ui-new.component').then((m) => m.ButtonUiNewComponent),
   },
   {
+    path: 'button-control-aurora',
+    loadComponent: () =>
+      import('./button-control-aurora/button-control-aurora.component').then(
+        (m) => m.ButtonControlAuroraComponent,
+      ),
+  },
+  {
     path: 'toggle-ui',
     loadComponent: () => import('./toggle-ui/toggle-ui.component').then((m) => m.ToggleUiComponent),
   },
@@ -43,6 +50,13 @@ export const UI_DEMO_ROUTES: Routes = [
     loadComponent: () =>
       import('./icon-control-aurora/icon-control-aurora.component').then(
         (m) => m.IconControlAuroraComponent,
+      ),
+  },
+  {
+    path: 'color-component-aurora',
+    loadComponent: () =>
+      import('./color-component-aurora/color-component-aurora.component').then(
+        (m) => m.ColorComponentAuroraComponent,
       ),
   },
   {

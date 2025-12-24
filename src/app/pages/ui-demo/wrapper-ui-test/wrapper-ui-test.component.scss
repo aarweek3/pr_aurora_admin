@@ -1,3 +1,4 @@
+@use "sass:color";
 @use "styles/abstracts/variables" as *;
 
 // Специфичные стили для wrapper-ui-test страницы
@@ -33,6 +34,83 @@
   }
 }
 
+// Стили для информации о компонентах
+.component-info-grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: 1fr 1fr;
+  margin-bottom: 20px;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.component-info-card {
+  border-radius: 8px;
+  padding: 16px;
+
+  h4 {
+    display: flex;
+    align-items: center;
+    margin: 0 0 8px 0;
+
+    av-icon {
+      margin-right: 8px;
+    }
+  }
+
+  &--current {
+    background: #f0f8ff;
+    border: 1px solid #bae7ff;
+
+    h4 {
+      color: #1890ff;
+    }
+  }
+
+  &--control {
+    background: #f6ffed;
+    border: 1px solid #b7eb8f;
+
+    h4 {
+      color: #52c41a;
+    }
+  }
+
+  .component-details {
+    font-size: 13px;
+
+    .detail-row {
+      margin-bottom: 4px;
+
+      &:last-child {
+        margin-bottom: 8px;
+      }
+
+      strong {
+        font-weight: 600;
+      }
+
+      code {
+        background: rgba(0, 0, 0, 0.06);
+        padding: 2px 6px;
+        border-radius: 3px;
+        font-family: "Courier New", monospace;
+
+        &.path {
+          font-size: 11px;
+        }
+      }
+    }
+
+    .description {
+      color: #666;
+      line-height: 1.4;
+    }
+  }
+}
+
 // Dark theme
 :host-context(.dark-theme) {
   .preview-info {
@@ -46,6 +124,53 @@
 
       code {
         color: $dark-info;
+      }
+    }
+  }
+
+  // Темная тема для документации
+  .documentation-content {
+    h3 {
+      color: color.adjust($color-primary, $lightness: 15%) !important;
+    }
+    p {
+      color: rgba(255, 255, 255, 0.65) !important;
+    }
+  }
+
+  // Темная тема для компонентов
+  .component-info-card {
+    &--current {
+      background: rgba(24, 144, 255, 0.1);
+      border-color: rgba(24, 144, 255, 0.3);
+
+      h4 {
+        color: color.adjust(#1890ff, $lightness: 20%);
+      }
+
+      code {
+        background: rgba(24, 144, 255, 0.2);
+        color: rgba(255, 255, 255, 0.85);
+      }
+    }
+
+    &--control {
+      background: rgba(82, 196, 26, 0.1);
+      border-color: rgba(82, 196, 26, 0.3);
+
+      h4 {
+        color: color.adjust(#52c41a, $lightness: 20%);
+      }
+
+      code {
+        background: rgba(82, 196, 26, 0.2);
+        color: rgba(255, 255, 255, 0.85);
+      }
+    }
+
+    .component-details {
+      .description {
+        color: rgba(255, 255, 255, 0.65);
       }
     }
   }

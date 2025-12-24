@@ -349,6 +349,14 @@
     }
   }
 
+  &--shape-rounded-big {
+    border-radius: 12px !important; // Larger rounded corners
+    &::before,
+    &::after {
+      border-radius: 12px !important;
+    }
+  }
+
   &--shape-round {
     border-radius: $border-radius-pill !important;
     padding-left: $spacing-md * 1.5;
