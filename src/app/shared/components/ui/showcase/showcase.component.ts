@@ -71,6 +71,9 @@ export class ShowcaseComponent implements OnInit {
   /** Максимальная ширина контейнера (прямой проброс) */
   maxWidth = input<string>('1400px');
 
+  /** Генерированный код от родительского компонента */
+  generatedCodeInput = input<string>('');
+
   /** Состояние сворачивания примеров */
   examplesCollapsed = signal(false);
 
@@ -81,7 +84,9 @@ export class ShowcaseComponent implements OnInit {
   codeCopied = signal(false);
 
   /** Генерированный код для копирования */
-  generatedCode = signal<string>('');
+  generatedCode = computed(
+    () => this.generatedCodeInput() || '// Код будет сгенерирован автоматически',
+  );
 
   /** Заголовок блока результата */
   resultTitle = computed(() => this.config().resultTitle ?? '🎨 Результат');

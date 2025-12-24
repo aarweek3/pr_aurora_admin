@@ -1,55 +1,25 @@
+@use "sass:color";
+@use "styles/abstracts/variables" as *;
+
 // Стили для icon-control-aurora компонента
 
-.control-card {
-  margin-bottom: 16px;
+// === Общие стили ===
+.demo-form {
+  padding: 24px;
 
-  .ant-form-item {
-    margin-bottom: 12px;
-  }
-
-  .ant-form-item:last-child {
-    margin-bottom: 0;
-  }
-
-  .ant-form-item-label {
+  .form-section-title {
+    font-size: 16px;
     font-weight: 600;
+    color: #262626;
+    margin-bottom: 24px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #f0f0f0;
   }
 }
 
-.preset-buttons {
-  margin-top: 12px;
-  padding: 12px;
-  background: #fafafa;
-  border-radius: 6px;
-
-  strong {
-    font-size: 12px;
-    color: #666;
-  }
-}
-
-.color-preset-btn {
-  width: 24px;
-  height: 24px;
-  border-radius: 4px;
-  border: 2px solid #e0e0e0;
-  margin: 2px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-
-  &:hover {
-    transform: scale(1.1);
-    border-color: #1890ff;
-  }
-
-  &.selected {
-    border-color: #1890ff;
-    box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
-  }
-}
-
+// === Результат (Preview блок) ===
 .live-preview {
-  height: 650px;
+  height: auto;
   background: #f8f9fa;
   border: 1px solid #e0e0e0;
   border-radius: 8px;
@@ -57,15 +27,15 @@
 }
 
 .preview-container {
-  padding: 20px;
+  padding: 24px;
   text-align: center;
 
   .icon-preview {
-    padding: 40px;
+    padding: 48px;
     background: white;
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    margin-bottom: 20px;
+    margin-bottom: 24px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -79,13 +49,14 @@
   .icon-info {
     text-align: left;
     background: white;
-    padding: 16px;
+    padding: 12px;
     border-radius: 6px;
-    margin-bottom: 16px;
+    margin-bottom: 12px;
 
     h4 {
-      margin: 0 0 12px 0;
+      margin: 0 0 8px 0;
       color: #262626;
+      font-size: 14px;
     }
 
     ul {
@@ -95,8 +66,8 @@
 
       li {
         padding: 4px 0;
-        font-size: 13px;
-        color: #595959;
+        font-size: 12px;
+        color: rgba(0, 0, 0, 0.65);
         border-bottom: 1px solid #f0f0f0;
 
         &:last-child {
@@ -117,44 +88,51 @@
   }
 }
 
-.example-item {
-  text-align: center;
-  padding: 16px;
-  background: white;
-  border-radius: 6px;
-  border: 1px solid #e0e0e0;
-
+// === Блок описания ===
+.config-summary {
   h4 {
     margin: 0 0 12px 0;
-    font-size: 14px;
     color: #262626;
+    font-size: 14px;
   }
 
-  av-icon {
-    display: block;
-    margin: 12px auto;
-  }
+  .config-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 8px;
 
-  code {
-    display: block;
-    font-size: 11px;
-    background: #f5f5f5;
-    padding: 8px;
-    border-radius: 4px;
-    margin-top: 12px;
-    word-break: break-all;
+    .config-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 4px 8px;
+      background: rgba(24, 144, 255, 0.05);
+      border-radius: 8px;
+      font-size: 12px;
+
+      .config-label {
+        font-weight: 500;
+        color: rgba(0, 0, 0, 0.65);
+      }
+
+      .config-value {
+        font-weight: 600;
+        color: #262626;
+        font-family: monospace;
+      }
+    }
   }
 }
 
+// === Сообщения ===
 .message-toast {
   position: fixed;
   top: 20px;
   right: 20px;
   background: #52c41a;
   color: white;
-  padding: 12px 16px;
+  padding: 8px 12px;
   border-radius: 6px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
   z-index: 1000;
   font-size: 14px;
   animation: slideIn 0.3s ease;
@@ -171,99 +149,381 @@
   }
 }
 
-// === Библиотека иконок ===
-.icon-library-section {
-  // Контейнер библиотеки
-  .library-container {
-    overflow: hidden !important;
+// === Примеры использования ===
+.example-item {
+  text-align: center;
+  padding: 16px;
+  background: white;
+  border-radius: 6px;
+  border: 1px solid #e0e0e0;
+  margin-bottom: 16px;
+  min-height: 120px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  h4,
+  h5 {
+    margin: 0 0 12px 0;
+    font-size: 14px;
+    color: #262626;
   }
 
-  // Сетка иконок оптимизированная под 1400px
-  .icon-grid {
-    // На 1400px помещается примерно 13 иконок в ряд (105px + 10px gap)
-    @media (min-width: 1400px) {
-      grid-template-columns: repeat(13, minmax(105px, 1fr)) !important;
-      gap: 10px !important;
-    }
+  av-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 12px auto;
 
-    // На средних экранах
-    @media (min-width: 1200px) and (max-width: 1399px) {
-      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)) !important;
-      gap: 10px !important;
-    }
-
-    // На планшетах
-    @media (min-width: 768px) and (max-width: 1199px) {
-      grid-template-columns: repeat(auto-fill, minmax(95px, 1fr)) !important;
-      gap: 8px !important;
-    }
-
-    // На мобильных
-    @media (max-width: 767px) {
-      grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)) !important;
-      gap: 6px !important;
-    }
-  }
-
-  // Карточки иконок
-  .icon-item-card {
-    transition: all 0.2s ease;
-    border: 1px solid #f0f0f0 !important;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-
-    &:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 6px 16px rgba(24, 144, 255, 0.15);
-      border-color: #1890ff !important;
-    }
-
-    &:active {
-      transform: translateY(-1px);
-    }
-
-    // Выбранная иконка
-    &.selected {
-      border-color: #52c41a !important;
-      background-color: #f6ffed;
+    // Обеспечиваем видимость иконки
+    &::ng-deep svg {
+      display: block;
+      width: 100%;
+      height: 100%;
     }
   }
 
-  // Заголовки категорий
-  .category-title {
+  code {
+    display: block;
+    font-size: 11px;
+    background: #f5f5f5;
+    padding: 8px;
+    border-radius: 4px;
+    margin-top: 12px;
+    word-break: break-all;
+  }
+}
+
+// Стили для документации
+.documentation-content {
+  h3 {
+    font-size: 18px;
     font-weight: 600;
-    letter-spacing: 0.5px;
-    position: sticky;
-    top: 0;
-    background: white;
-    z-index: 10;
-    margin-left: -24px;
-    margin-right: -24px;
-    padding-left: 24px;
-    padding-right: 24px;
-    padding-top: 8px;
+  }
+}
+
+.code-block {
+  background: #f5f5f5;
+  padding: 16px;
+  border-radius: 6px;
+  font-family: "Courier New", monospace;
+  font-size: 12px;
+  line-height: 1.5;
+  margin: 12px 0;
+  border-left: 4px solid $color-primary;
+
+  code {
+    background: transparent;
+    padding: 0;
+    font-size: inherit;
+  }
+}
+
+.api-table-wrapper {
+  overflow-x: auto;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  background: white;
+  margin: 16px 0;
+}
+
+.api-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+
+  th {
+    background: #f8f9fa;
+    padding: 12px;
+    text-align: left;
+    font-weight: 600;
+    border-bottom: 2px solid #dee2e6;
   }
 
-  // Строка поиска
-  .search-bar {
-    .ant-input-affix-wrapper {
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  td {
+    padding: 12px;
+    border-bottom: 1px solid #dee2e6;
 
-      &:focus-within {
-        box-shadow: 0 4px 16px rgba(24, 144, 255, 0.2);
+    code {
+      background: #f0f0f0;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-size: 11px;
+      color: $color-primary;
+    }
+  }
+
+  tr:last-child td {
+    border-bottom: none;
+  }
+}
+
+.advantages-list {
+  margin: 16px 0;
+  line-height: 1.6;
+  list-style: none;
+  padding: 0;
+
+  li {
+    padding: 8px 0;
+
+    &:before {
+      content: "✅ ";
+      margin-right: 8px;
+    }
+  }
+}
+
+// Стили для информации о компонентах
+.component-info-grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: 1fr 1fr;
+  margin-bottom: 20px;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.component-info-card {
+  border-radius: 8px;
+  padding: 16px;
+
+  h4 {
+    display: flex;
+    align-items: center;
+    margin: 0 0 8px 0;
+
+    av-icon {
+      margin-right: 8px;
+    }
+  }
+
+  &--current {
+    background: #f0f8ff;
+    border: 1px solid #bae7ff;
+
+    h4 {
+      color: #1890ff;
+    }
+  }
+
+  &--control {
+    background: #f6ffed;
+    border: 1px solid #b7eb8f;
+
+    h4 {
+      color: #52c41a;
+    }
+  }
+
+  .component-details {
+    font-size: 13px;
+
+    .detail-row {
+      margin-bottom: 4px;
+
+      &:last-child {
+        margin-bottom: 8px;
+      }
+
+      strong {
+        font-weight: 600;
+      }
+
+      code {
+        background: rgba(0, 0, 0, 0.06);
+        padding: 2px 6px;
+        border-radius: 3px;
+        font-family: "Courier New", monospace;
+
+        &.path {
+          font-size: 11px;
+        }
+      }
+    }
+
+    .description {
+      color: #666;
+      line-height: 1.4;
+    }
+  }
+}
+
+// Стили для API таблицы
+.api-table-wrapper {
+  margin: 16px 0;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.api-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  background: white;
+
+  th {
+    background: #f8f9fa;
+    padding: 12px;
+    text-align: left;
+    font-weight: 600;
+    border-bottom: 2px solid #dee2e6;
+    color: #495057;
+
+    &:first-child {
+      min-width: 120px;
+    }
+    &:nth-child(2) {
+      min-width: 200px;
+    }
+    &:nth-child(3) {
+      min-width: 100px;
+    }
+  }
+
+  td {
+    padding: 12px;
+    border-bottom: 1px solid #dee2e6;
+    vertical-align: top;
+
+    &:first-child {
+      font-weight: 500;
+    }
+
+    code {
+      background: #f0f0f0;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-size: 11px;
+      color: #d63384;
+      font-family: "Courier New", monospace;
+    }
+  }
+
+  tr:hover {
+    background-color: #f8f9fa;
+  }
+
+  tr:last-child td {
+    border-bottom: none;
+  }
+}
+
+// === Темная тема ===
+:host-context(.dark-theme) {
+  .live-preview {
+    background: #262626;
+    border-color: #434343;
+  }
+
+  .preview-container {
+    .icon-preview {
+      background: #1f1f1f;
+    }
+
+    .icon-info {
+      background: #1f1f1f;
+
+      h4 {
+        color: rgba(255, 255, 255, 0.85);
+      }
+
+      ul li {
+        border-bottom-color: #434343;
+        color: rgba(255, 255, 255, 0.65);
+
+        strong {
+          color: rgba(255, 255, 255, 0.85);
+        }
       }
     }
   }
 
-  // Заголовок секции
-  .section-header {
-    border-bottom: 1px solid #f0f0f0;
-    padding-bottom: 16px;
-    margin-bottom: 24px !important;
+  .config-summary {
+    h4 {
+      color: rgba(255, 255, 255, 0.85);
+    }
 
-    &:hover {
-      h2 {
-        color: #1890ff;
+    .config-item {
+      background: rgba(24, 144, 255, 0.1);
+
+      .config-label {
+        color: rgba(255, 255, 255, 0.65);
+      }
+
+      .config-value {
+        color: rgba(255, 255, 255, 0.85);
+      }
+    }
+  }
+
+  // Темная тема для документации
+  .documentation-content {
+    h3 {
+      color: color.adjust($color-primary, $lightness: 15%) !important;
+    }
+    p {
+      color: rgba(255, 255, 255, 0.65) !important;
+    }
+  }
+
+  // Темная тема для компонентов
+  .component-info-card {
+    &--current {
+      background: rgba(24, 144, 255, 0.1);
+      border-color: rgba(24, 144, 255, 0.3);
+
+      h4 {
+        color: color.adjust(#1890ff, $lightness: 20%);
+      }
+
+      code {
+        background: rgba(24, 144, 255, 0.2);
+        color: rgba(255, 255, 255, 0.85);
+      }
+    }
+
+    &--control {
+      background: rgba(82, 196, 26, 0.1);
+      border-color: rgba(82, 196, 26, 0.3);
+
+      h4 {
+        color: color.adjust(#52c41a, $lightness: 20%);
+      }
+
+      code {
+        background: rgba(82, 196, 26, 0.2);
+        color: rgba(255, 255, 255, 0.85);
+      }
+    }
+
+    .component-details {
+      .description {
+        color: rgba(255, 255, 255, 0.65);
+      }
+    }
+  }
+
+  .api-table-wrapper {
+    background: #1f1f1f;
+    border-color: #434343;
+  }
+
+  .api-table {
+    th {
+      background: #262626;
+      color: rgba(255, 255, 255, 0.85);
+      border-bottom-color: #434343;
+    }
+    td {
+      color: rgba(255, 255, 255, 0.65);
+      border-bottom-color: #434343;
+      code {
+        background: #303030;
+        color: #ffa39e;
       }
     }
   }
