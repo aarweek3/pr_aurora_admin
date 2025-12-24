@@ -10,7 +10,8 @@
       @if (headerConfig()) {
       <!-- Автогенерированный header из конфига -->
       <h1>{{ headerConfig()!.title }}</h1>
-      @if (headerConfig()!.description || headerConfig()!.componentName || headerConfig()!.note) {
+      @if (headerConfig()!.description || headerConfig()!.componentName || headerConfig()!.controlComponent ||
+      headerConfig()!.docsPath || headerConfig()!.note) {
       <p class="description">
         @if (headerConfig()!.description) {
         {{ headerConfig()!.description }}
@@ -19,7 +20,14 @@
         Компонент: <code>{{ headerConfig()!.componentName }}</code>
         @if (headerConfig()!.componentPath) {
         <span class="component-path">({{ headerConfig()!.componentPath }})</span>
-        } } @if (headerConfig()!.note) {
+        } } @if (headerConfig()!.controlComponent) {
+        <br />
+        Компонент контрол: <code>{{ headerConfig()!.controlComponent!.name }}</code>
+        <span class="component-path">({{ headerConfig()!.controlComponent!.path }})</span>
+        } @if (headerConfig()!.docsPath) {
+        <br />
+        Документация: <code class="component-path">{{ headerConfig()!.docsPath }}</code>
+        } @if (headerConfig()!.note) {
         <br />
         <span class="note">{{ headerConfig()!.note }}</span>
         }

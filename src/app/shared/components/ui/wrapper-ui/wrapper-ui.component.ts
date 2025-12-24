@@ -15,6 +15,13 @@ export interface WrapperUiConfigHeader {
   componentPath?: string;
   /** Дополнительная заметка или предупреждение */
   note?: string;
+  /** Компонент контрол: название и путь */
+  controlComponent?: {
+    name: string;
+    path: string;
+  };
+  /** Путь к файлу документации */
+  docsPath?: string;
 }
 
 @Component({
