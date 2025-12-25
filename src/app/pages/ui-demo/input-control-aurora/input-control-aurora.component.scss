@@ -1,0 +1,34 @@
+@use "../../../../styles/abstracts/mixins" as *;
+
+.demo-form {
+  padding: 24px;
+}
+
+.control-group {
+  margin-bottom: 16px;
+
+  .control-label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    font-size: 14px;
+    color: #333;
+  }
+}
+
+.toggle-group {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+// Специфично для таблицы API
+nz-table {
+  code {
+    background: rgba(0, 0, 0, 0.06);
+    padding: 2px 4px;
+    border-radius: 4px;
+    font-family: monospace;
+    font-size: 0.9em;
+  }
+}

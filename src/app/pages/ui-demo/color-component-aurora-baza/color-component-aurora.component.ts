@@ -1,17 +1,15 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, OnDestroy, signal } from '@angular/core';
+import { Component, computed, OnDestroy, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-
+import { NzAlertModule } from 'ng-zorro-antd/alert';
 import { NzCardModule } from 'ng-zorro-antd/card';
-
+import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
+import { NzCollapseModule } from 'ng-zorro-antd/collapse';
 import { NzGridModule } from 'ng-zorro-antd/grid';
 import { NzRadioModule } from 'ng-zorro-antd/radio';
 import { NzTabsModule } from 'ng-zorro-antd/tabs';
-
-import { ControlDocumentationComponent } from '@shared/components/ui/control-documentation';
 import { ButtonDirective } from '../../../shared/components/ui/button/button.directive';
-
-import { NzTableModule } from 'ng-zorro-antd/table';
+import { HelpCopyContainerComponent } from '../../../shared/components/ui/container-help-copy-ui/container-help-copy-ui.component';
 import { IconComponent } from '../../../shared/components/ui/icon/icon.component';
 import { PickerComponent } from '../../../shared/components/ui/picker/picker.component';
 import {
@@ -22,7 +20,18 @@ import {
   ShowcaseComponent,
   ShowcaseConfig,
 } from '../../../shared/components/ui/showcase/showcase.component';
-import { COLOR_COMPONENT_DOCUMENTATION } from './color-component-aurora.config';
+import {
+  API_EXAMPLE,
+  COLOR_PALETTES,
+  FULL_HTML_DOC,
+  FULL_SCSS_DOC,
+  FULL_TS_DOC,
+  IMPORT_DOC,
+  MODES_DOC,
+  SETUP_DOC,
+  TEMPLATE_DOC,
+  USAGE_EXAMPLES,
+} from './color-component-aurora.docs';
 
 // Экспорт типов для использования в других компонентах
 export { CustomColor, PickerMode } from '../../../shared/components/ui/picker/picker.types';
@@ -37,16 +46,17 @@ export { CustomColor, PickerMode } from '../../../shared/components/ui/picker/pi
     PickerComponent,
     ButtonDirective,
     IconComponent,
-    NzTableModule,
+    HelpCopyContainerComponent,
     NzRadioModule,
     NzCardModule,
     NzGridModule,
+    NzCollapseModule,
+    NzCheckboxModule,
     NzTabsModule,
-    ControlDocumentationComponent,
+    NzAlertModule,
   ],
   templateUrl: './color-component-aurora.component.html',
   styleUrl: './color-component-aurora.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ColorComponentAuroraComponent implements OnDestroy {
   // Константы времени для улучшения читаемости
@@ -54,9 +64,6 @@ export class ColorComponentAuroraComponent implements OnDestroy {
 
   // Хранение таймера для очистки
   private messageTimer: ReturnType<typeof setTimeout> | null = null;
-
-  // Конфигурация документации
-  readonly documentationConfig = COLOR_COMPONENT_DOCUMENTATION;
 
   // Конфигурация showcase с новой 3-блочной структурой
   readonly showcaseConfig: ShowcaseConfig = {
@@ -69,7 +76,7 @@ export class ColorComponentAuroraComponent implements OnDestroy {
         name: 'PickerComponent',
         path: 'src/app/shared/components/ui/picker/picker.component.ts',
       },
-      docsPath: 'src/app/pages/ui-demo/color-component-aurora/color-component-aurora.config.ts',
+      docsPath: 'src/app/pages/ui-demo/color-component-aurora/color-component-aurora.docs.ts',
       description:
         'Универсальное решение для выбора цветов в Aurora Design System. Поддерживает работу с кастомными палитрами, системными диалогами и комбинированные режимы. Включает поддержку HEX форматов, прозрачности и адаптивной стилизации.',
       note: '💡 Полная документация по интеграции и использованию PickerComponent находится в разделе "Документация"',
@@ -113,7 +120,7 @@ export class ColorComponentAuroraComponent implements OnDestroy {
 
   // Computed свойства
 
-  // Автоматическая генерация кода на основе текущих настроек
+  // Автоматическая генерация кода на основе текущих настроек (упрощенная версия как в color-picker-demo)
   generatedCode = computed(() => {
     const mode = this.selectedMode();
     const color = this.selectedColor();
@@ -121,7 +128,7 @@ export class ColorComponentAuroraComponent implements OnDestroy {
     const tsCode = `// TypeScript
 selectedColor = signal<string>('${color}');
 
-// Custom colors для демонстрации
+// Custom colors для демонстрации (5 базовых цветов)
 customColors: CustomColor[] = [
   { name: 'Primary', value: '#1890ff', category: 'primary' },
   { name: 'Success', value: '#52c41a', category: 'primary' },
@@ -141,17 +148,20 @@ customColors: CustomColor[] = [
   [showBorder]="true">
 </av-picker>`;
 
-    return {
-      typescript: tsCode,
-      html: htmlCode,
-    };
+    return `${tsCode}\n\n${htmlCode}`;
   });
 
-  // Code for showcase input (formatted string)
-  codeForShowcase = computed(() => {
-    const code = this.generatedCode();
-    return `${code.html}\n\n${code.typescript}`;
-  });
+  // Статичные примеры кода из документации
+  readonly importDoc = IMPORT_DOC;
+  readonly setupDoc = SETUP_DOC;
+  readonly templateDoc = TEMPLATE_DOC;
+  readonly modesDoc = MODES_DOC;
+  readonly fullTsDoc = FULL_TS_DOC;
+  readonly fullHtmlDoc = FULL_HTML_DOC;
+  readonly fullScssDoc = FULL_SCSS_DOC;
+  readonly usageExamples = USAGE_EXAMPLES;
+  readonly apiExample = API_EXAMPLE;
+  readonly colorPalettes = COLOR_PALETTES;
 
   // Методы управления
 
@@ -176,9 +186,7 @@ customColors: CustomColor[] = [
   // Копирование кода в буфер обмена
   copyCode(): void {
     const code = this.generatedCode();
-    const textToCopy = `HTML:\n${code.html}\n\nTypeScript:\n${code.typescript}`;
-
-    navigator.clipboard.writeText(textToCopy).then(
+    navigator.clipboard.writeText(code).then(
       () => {
         this.showSuccessMessage('Код скопирован в буфер обмена!');
       },

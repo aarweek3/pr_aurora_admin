@@ -1,0 +1,336 @@
+<av-showcase [config]="showcaseConfig" [generatedCodeInput]="codeForShowcase()">
+  <div showcase-tabs>
+    <nz-tabset [nzAnimated]="false">
+      <!-- 🎮 Playground -->
+      <nz-tab nzTitle="🎮 Playground">
+        <div class="demo-form">
+          <div nz-row [nzGutter]="[16, 16]">
+            <!-- Type Selector -->
+            <div nz-col [nzSpan]="24">
+              <div class="control-group">
+                <label class="control-label">Режим:</label>
+                <nz-radio-group [ngModel]="config().type" (ngModelChange)="updateConfig('type', $event)">
+                  <label nz-radio-button nzValue="directive">Директива (avInput)</label>
+                  <label nz-radio-button nzValue="component">Компонент (av-input)</label>
+                </nz-radio-group>
+              </div>
+            </div>
+
+            <!-- Basic Props -->
+            <div nz-col [nzSpan]="12">
+              <div class="control-group">
+                <label class="control-label">Размер:</label>
+                <nz-select [ngModel]="config().size" (ngModelChange)="updateConfig('size', $event)" style="width: 100%">
+                  <nz-option nzValue="small" nzLabel="Small"></nz-option>
+                  <nz-option nzValue="default" nzLabel="Default"></nz-option>
+                  <nz-option nzValue="large" nzLabel="Large"></nz-option>
+                  <nz-option nzValue="x-large" nzLabel="X-Large"></nz-option>
+                  <nz-option nzValue="custom" nzLabel="Custom"></nz-option>
+                </nz-select>
+              </div>
+            </div>
+
+            <div nz-col [nzSpan]="12">
+              <div class="control-group">
+                <label class="control-label">Тип ввода:</label>
+                <nz-select
+                  [ngModel]="config().inputType"
+                  (ngModelChange)="updateConfig('inputType', $event)"
+                  style="width: 100%"
+                >
+                  <nz-option nzValue="text" nzLabel="Text"></nz-option>
+                  <nz-option nzValue="password" nzLabel="Password"></nz-option>
+                  <nz-option nzValue="email" nzLabel="Email"></nz-option>
+                  <nz-option nzValue="number" nzLabel="Number"></nz-option>
+                </nz-select>
+              </div>
+            </div>
+
+            <div nz-col [nzSpan]="12">
+              <div class="control-group">
+                <label class="control-label">Статус:</label>
+                <nz-select
+                  [ngModel]="config().status"
+                  (ngModelChange)="updateConfig('status', $event)"
+                  style="width: 100%"
+                >
+                  <nz-option nzValue="default" nzLabel="Default"></nz-option>
+                  <nz-option nzValue="error" nzLabel="Error"></nz-option>
+                  <nz-option nzValue="warning" nzLabel="Warning"></nz-option>
+                  <nz-option nzValue="success" nzLabel="Success"></nz-option>
+                </nz-select>
+              </div>
+            </div>
+
+            <div nz-col [nzSpan]="12">
+              <div class="control-group">
+                <label class="control-label">Форма:</label>
+                <nz-select
+                  [ngModel]="config().shape"
+                  (ngModelChange)="updateConfig('shape', $event)"
+                  style="width: 100%"
+                >
+                  <nz-option nzValue="default" nzLabel="Default"></nz-option>
+                  <nz-option nzValue="rounded" nzLabel="Rounded"></nz-option>
+                  <nz-option nzValue="rounded-big" nzLabel="Rounded Big"></nz-option>
+                </nz-select>
+              </div>
+            </div>
+
+            <div nz-col [nzSpan]="24">
+              <div class="control-group">
+                <label class="control-label">Вариант:</label>
+                <nz-radio-group [ngModel]="config().variant" (ngModelChange)="updateConfig('variant', $event)">
+                  <label nz-radio-button nzValue="outlined">Outlined (Default)</label>
+                  <label nz-radio-button nzValue="filled">Filled</label>
+                  <label nz-radio-button nzValue="borderless">Borderless</label>
+                </nz-radio-group>
+              </div>
+            </div>
+
+            <!-- Toggle Props -->
+            <div nz-col [nzSpan]="24">
+              <div class="toggle-group" style="display: flex; gap: 16px">
+                <label nz-checkbox [ngModel]="config().disabled" (ngModelChange)="updateConfig('disabled', $event)"
+                  >Disabled</label
+                >
+                <label nz-checkbox [ngModel]="config().block" (ngModelChange)="updateConfig('block', $event)"
+                  >Block (100%)</label
+                >
+              </div>
+            </div>
+
+            <!-- Component Only Props -->
+            <div nz-col [nzSpan]="24" *ngIf="config().type === 'component'">
+              <h4 style="margin: 16px 0 8px; font-size: 13px; color: #888">Свойства компонента</h4>
+              <div class="control-group">
+                <label class="control-label">Label:</label>
+                <input nz-input [ngModel]="config().label" (ngModelChange)="updateConfig('label', $event)" />
+              </div>
+              <div class="control-group" style="margin-top: 8px">
+                <label class="control-label">Hint:</label>
+                <input nz-input [ngModel]="config().hint" (ngModelChange)="updateConfig('hint', $event)" />
+              </div>
+              <div class="control-group" style="margin-top: 8px">
+                <label class="control-label">Иконки:</label>
+                <div style="display: flex; gap: 8px">
+                  <nz-select
+                    nzAllowClear
+                    nzPlaceHolder="Prefix"
+                    [ngModel]="config().prefixIcon"
+                    (ngModelChange)="updateConfig('prefixIcon', $event)"
+                    style="flex: 1"
+                  >
+                    <nz-option nzValue="search" nzLabel="Search"></nz-option>
+                    <nz-option nzValue="user" nzLabel="User"></nz-option>
+                    <nz-option nzValue="lock" nzLabel="Lock"></nz-option>
+                  </nz-select>
+                  <nz-select
+                    nzAllowClear
+                    nzPlaceHolder="Suffix"
+                    [ngModel]="config().suffixIcon"
+                    (ngModelChange)="updateConfig('suffixIcon', $event)"
+                    style="flex: 1"
+                  >
+                    <nz-option nzValue="check" nzLabel="Check"></nz-option>
+                    <nz-option nzValue="close" nzLabel="Close"></nz-option>
+                    <nz-option nzValue="info" nzLabel="Info"></nz-option>
+                  </nz-select>
+                </div>
+              </div>
+            </div>
+            <!-- Reset Button -->
+            <div nz-col [nzSpan]="24" style="margin-top: 16px">
+              <button nz-button nzType="default" nzDanger (click)="resetAllSettings()">Сбросить настройки</button>
+            </div>
+          </div>
+        </div>
+      </nz-tab>
+
+      <!-- 💻 Code -->
+      <nz-tab nzTitle="💻 Код">
+        <div class="demo-form">
+          <div *ngIf="documentationConfig.interactiveExample">
+            <h4>{{ documentationConfig.interactiveExample.title }}</h4>
+            <p style="color: #666; margin-bottom: 16px">{{ documentationConfig.interactiveExample.description }}</p>
+
+            <h5>HTML код:</h5>
+            <pre
+              style="background: #f5f5f5; padding: 16px; border-radius: 6px; margin-bottom: 16px"
+            ><code>{{ generatedCode().html }}</code></pre>
+
+            <h5>TypeScript:</h5>
+            <pre
+              style="background: #f5f5f5; padding: 16px; border-radius: 6px; margin-bottom: 16px"
+            ><code>{{ generatedCode().typescript }}</code></pre>
+          </div>
+
+          <div *ngFor="let example of documentationConfig.codeExamples" style="margin-bottom: 32px">
+            <h4>{{ example.title }}</h4>
+            <p *ngIf="example.description" style="color: #666; margin-bottom: 8px">{{ example.description }}</p>
+            <pre
+              style="background: #f5f5f5; padding: 16px; border-radius: 6px"
+            ><code>{{ example.htmlCode }}</code></pre>
+          </div>
+        </div>
+      </nz-tab>
+
+      <!-- 📚 Examples -->
+      <nz-tab nzTitle="📚 Примеры">
+        <div class="demo-form">
+          <div *ngFor="let example of documentationConfig.usageExamples" style="margin-bottom: 32px">
+            <h4>{{ example.title }}</h4>
+            <p style="color: #666">{{ example.description }}</p>
+            <pre
+              style="background: #f5f5f5; padding: 16px; border-radius: 6px"
+            ><code>{{ example.htmlCode }}</code></pre>
+          </div>
+        </div>
+      </nz-tab>
+
+      <!-- 📖 API -->
+      <nz-tab nzTitle="📖 API">
+        <div class="demo-form">
+          <!-- Inputs -->
+          <div *ngIf="documentationConfig.apiDetails.inputs.length">
+            <h4 style="margin-bottom: 16px">📥 Входные параметры (Inputs)</h4>
+            <nz-table
+              #inputsTable
+              [nzData]="documentationConfig.apiDetails.inputs"
+              [nzShowPagination]="false"
+              nzSize="small"
+              [nzBordered]="true"
+            >
+              <thead>
+                <tr>
+                  <th nzWidth="200px">Параметр</th>
+                  <th nzWidth="200px">Тип</th>
+                  <th nzWidth="150px">Default</th>
+                  <th>Описание</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let data of inputsTable.data">
+                  <td>
+                    <code>{{ data.name }}</code>
+                  </td>
+                  <td>
+                    <code style="color: #1890ff">{{ data.type }}</code>
+                  </td>
+                  <td>
+                    <code>{{ data.defaultValue || '-' }}</code>
+                  </td>
+                  <td>{{ data.description }}</td>
+                </tr>
+              </tbody>
+            </nz-table>
+          </div>
+          <!-- Outputs -->
+          <div *ngIf="documentationConfig.apiDetails.outputs.length" style="margin-top: 32px">
+            <h4 style="margin-bottom: 16px">📤 События (Outputs)</h4>
+            <nz-table
+              #outputsTable
+              [nzData]="documentationConfig.apiDetails.outputs"
+              [nzShowPagination]="false"
+              nzSize="small"
+              [nzBordered]="true"
+            >
+              <thead>
+                <tr>
+                  <th nzWidth="200px">Событие</th>
+                  <th nzWidth="200px">Тип</th>
+                  <th>Описание</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let data of outputsTable.data">
+                  <td>
+                    <code>{{ data.name }}</code>
+                  </td>
+                  <td>
+                    <code style="color: #1890ff">{{ data.type }}</code>
+                  </td>
+                  <td>{{ data.description }}</td>
+                </tr>
+              </tbody>
+            </nz-table>
+          </div>
+        </div>
+      </nz-tab>
+    </nz-tabset>
+  </div>
+
+  <div showcase-result>
+    <div
+      class="live-preview-box"
+      [style.padding]="'32px'"
+      style="
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 150px;
+        background: #fff;
+        width: 100%;
+      "
+    >
+      <div style="width: 100%; max-width: 400px">
+        <ng-container *ngIf="config().type === 'directive'">
+          <input
+            avInput
+            [type]="config().inputType"
+            [placeholder]="config().placeholder"
+            [avSize]="appliedSize()"
+            [avStatus]="config().status"
+            [avVariant]="config().variant"
+            [avShape]="config().shape"
+            [avBlock]="config().block"
+            [disabled]="config().disabled"
+            [ngModel]="config().value"
+            (ngModelChange)="updateConfig('value', $event)"
+          />
+        </ng-container>
+
+        <ng-container *ngIf="config().type === 'component'">
+          <av-input
+            [type]="config().inputType"
+            [placeholder]="config().placeholder"
+            [size]="appliedSize()"
+            [status]="config().status"
+            [variant]="config().variant"
+            [shape]="config().shape"
+            [block]="config().block"
+            [disabled]="config().disabled"
+            [label]="config().label"
+            [hint]="config().hint"
+            [prefixIcon]="config().prefixIcon"
+            [suffixIcon]="config().suffixIcon"
+            [ngModel]="config().value"
+            (ngModelChange)="updateConfig('value', $event)"
+          ></av-input>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+
+  <div showcase-description>
+    <div class="description-box">
+      <h4>Текущая конфигурация</h4>
+      <p>
+        Тип: <strong>{{ config().type }}</strong>
+      </p>
+      <p>
+        Размер: <strong>{{ config().size }}</strong>
+      </p>
+      <p>
+        Статус: <strong>{{ config().status }}</strong>
+      </p>
+      <p>
+        Форма: <strong>{{ config().shape }}</strong>
+      </p>
+    </div>
+  </div>
+
+  <div showcase-docs>
+    <control-documentation [config]="documentationConfig"></control-documentation>
+  </div>
+</av-showcase>

@@ -31,6 +31,13 @@ export const UI_DEMO_ROUTES: Routes = [
     loadComponent: () => import('./toggle-ui/toggle-ui.component').then((m) => m.ToggleUiComponent),
   },
   {
+    path: 'input-control-aurora',
+    loadComponent: () =>
+      import('./input-control-aurora/input-control-aurora.component').then(
+        (m) => m.InputControlAuroraComponent,
+      ),
+  },
+  {
     path: 'input-ui',
     loadComponent: () => import('./input-ui/input-ui.component').then((m) => m.InputUiComponent),
   },
@@ -92,6 +99,13 @@ export const UI_DEMO_ROUTES: Routes = [
   {
     path: 'search-ui',
     loadComponent: () => import('./search-ui/search-ui.component').then((m) => m.SearchUiComponent),
+  },
+  {
+    path: 'search-control-aurora',
+    loadComponent: () =>
+      import('./search-control-aurora/search-control-aurora.component').then(
+        (m) => m.SearchControlAuroraComponent,
+      ),
   },
   {
     path: 'tag-ui',

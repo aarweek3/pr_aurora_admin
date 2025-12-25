@@ -114,6 +114,16 @@ export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
               icon: 'picture',
             },
             {
+              id: 'input-control-aurora',
+              label: 'Input Component Aurora',
+              route: '/ui-demo/input-control-aurora',
+              icon: 'edit',
+              badge: {
+                value: 'New',
+                intent: 'success',
+              },
+            },
+            {
               id: 'input-ui',
               label: 'Input UI',
               route: '/ui-demo/input-ui',
@@ -158,6 +168,16 @@ export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
               label: 'Spinner UI',
               route: '/ui-demo/spinner-ui',
               icon: 'reload',
+            },
+            {
+              id: 'search-control-aurora',
+              label: 'Search Component Aurora',
+              route: '/ui-demo/search-control-aurora',
+              icon: 'search',
+              badge: {
+                value: 'New',
+                intent: 'success',
+              },
             },
             {
               id: 'tag-ui',

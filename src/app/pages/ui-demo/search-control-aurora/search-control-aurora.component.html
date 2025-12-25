@@ -1,0 +1,235 @@
+<av-showcase [config]="showcaseConfig" [generatedCodeInput]="generatedCode()">
+  <!-- LEFT: Tabs & Controls -->
+  <div showcase-tabs>
+    <nz-tabset [nzAnimated]="false">
+      <!-- 1. Playground -->
+      <nz-tab nzTitle="🎮 Playground">
+        <div class="demo-form form-layout">
+          <!-- Группа: Текст -->
+          <div class="control-group">
+            <label class="control-label">Placeholder</label>
+            <input nz-input [ngModel]="placeholder()" (ngModelChange)="placeholder.set($event)" />
+            <span class="control-hint">Текст подсказки в пустом поле</span>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label">Текст кнопки</label>
+            <input nz-input [ngModel]="buttonText()" (ngModelChange)="buttonText.set($event)" />
+            <span class="control-hint">Текст на кнопке справа (если пусто - иконка)</span>
+          </div>
+
+          <!-- Группа: Поведение -->
+          <div class="control-group">
+            <label class="control-label">Размер (Size)</label>
+            <nz-select [ngModel]="size()" (ngModelChange)="size.set($event)" style="width: 100%">
+              <nz-option nzValue="small" nzLabel="Small (Компактный)"></nz-option>
+              <nz-option nzValue="default" nzLabel="Default (Стандартный)"></nz-option>
+              <nz-option nzValue="large" nzLabel="Large (Большой)"></nz-option>
+              <nz-option nzValue="x-large" nzLabel="X-Large (Очень большой)"></nz-option>
+            </nz-select>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label">Debounce (мс)</label>
+            <nz-input-number
+              [ngModel]="debounceTime()"
+              (ngModelChange)="debounceTime.set($event)"
+              [nzMin]="0"
+              [nzStep]="100"
+              style="width: 100%"
+            ></nz-input-number>
+            <span class="control-hint">Задержка события onSearch после ввода</span>
+          </div>
+        </div>
+      </nz-tab>
+
+      <!-- 2. Код -->
+      <nz-tab nzTitle="💻 Код">
+        <div class="demo-form">
+          <div style="margin-bottom: 32px">
+            <h4>Интерактивный пример</h4>
+            <p style="color: #666; margin-bottom: 16px">Код генерируется автоматически на основе настроек Playground</p>
+            <pre
+              style="background: #f5f5f5; padding: 16px; border-radius: 6px; border: 1px solid #e8e8e8"
+            ><code>{{ generatedCode() }}</code></pre>
+          </div>
+
+          <div *ngFor="let example of documentationConfig.codeExamples" style="margin-bottom: 32px">
+            <h4>{{ example.title }}</h4>
+            <p *ngIf="example.description" style="color: #666; margin-bottom: 16px">{{ example.description }}</p>
+            <h5 style="color: #1890ff; margin-bottom: 8px">HTML:</h5>
+            <pre
+              style="
+                background: #f5f5f5;
+                padding: 16px;
+                border-radius: 6px;
+                margin-bottom: 16px;
+                border: 1px solid #e8e8e8;
+              "
+            ><code>{{ example.htmlCode }}</code></pre>
+            <h5 *ngIf="example.tsCode" style="color: #722ed1; margin-bottom: 8px">TypeScript:</h5>
+            <pre
+              *ngIf="example.tsCode"
+              style="background: #f5f5f5; padding: 16px; border-radius: 6px; border: 1px solid #e8e8e8"
+            ><code>{{ example.tsCode }}</code></pre>
+          </div>
+        </div>
+      </nz-tab>
+
+      <!-- 3. Примеры -->
+      <nz-tab nzTitle="📚 Примеры">
+        <div class="demo-form">
+          <div
+            *ngFor="let example of documentationConfig.usageExamples"
+            style="margin-bottom: 32px; border-bottom: 1px solid #f0f0f0; padding-bottom: 24px"
+          >
+            <h4>{{ example.title }}</h4>
+            <p *ngIf="example.description" style="color: #666; margin-bottom: 16px">{{ example.description }}</p>
+            <h5 style="color: #1890ff; margin-bottom: 8px">HTML:</h5>
+            <pre
+              style="
+                background: #f5f5f5;
+                padding: 16px;
+                border-radius: 6px;
+                margin-bottom: 16px;
+                border: 1px solid #e8e8e8;
+              "
+            ><code>{{ example.htmlCode }}</code></pre>
+            <h5 *ngIf="example.tsCode" style="color: #722ed1; margin-bottom: 8px">TypeScript:</h5>
+            <pre
+              *ngIf="example.tsCode"
+              style="background: #f5f5f5; padding: 16px; border-radius: 6px; border: 1px solid #e8e8e8"
+            ><code>{{ example.tsCode }}</code></pre>
+          </div>
+        </div>
+      </nz-tab>
+
+      <!-- 4. API -->
+      <nz-tab nzTitle="📖 API">
+        <div class="demo-form">
+          <!-- Inputs -->
+          <div *ngIf="documentationConfig.apiDetails.inputs.length">
+            <h4 style="margin-bottom: 16px">📥 Входные параметры (Inputs)</h4>
+            <nz-table
+              #inputsTable
+              [nzData]="documentationConfig.apiDetails.inputs"
+              [nzShowPagination]="false"
+              nzSize="small"
+              [nzBordered]="true"
+            >
+              <thead>
+                <tr>
+                  <th nzWidth="25%">Свойство</th>
+                  <th nzWidth="25%">Тип</th>
+                  <th nzWidth="20%">По умолчанию</th>
+                  <th>Описание</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of inputsTable.data">
+                  <td>
+                    <code style="background: #f5f5f5; padding: 2px 6px; border-radius: 4px; color: #1890ff">{{
+                      item.name
+                    }}</code>
+                    <span *ngIf="item.required" style="color: #ff4d4f; margin-left: 4px">*</span>
+                  </td>
+                  <td>
+                    <code>{{ item.type }}</code>
+                  </td>
+                  <td>
+                    <code style="color: #52c41a">{{ item.defaultValue }}</code>
+                  </td>
+                  <td>{{ item.description }}</td>
+                </tr>
+              </tbody>
+            </nz-table>
+          </div>
+
+          <!-- Outputs -->
+          <div *ngIf="documentationConfig.apiDetails.outputs.length" style="margin-top: 32px">
+            <h4 style="margin-bottom: 16px">📤 События (Outputs)</h4>
+            <nz-table
+              #outputsTable
+              [nzData]="documentationConfig.apiDetails.outputs"
+              [nzShowPagination]="false"
+              nzSize="small"
+              [nzBordered]="true"
+            >
+              <thead>
+                <tr>
+                  <th nzWidth="30%">Событие</th>
+                  <th nzWidth="30%">Тип данных</th>
+                  <th>Описание</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of outputsTable.data">
+                  <td>
+                    <code style="background: #f5f5f5; padding: 2px 6px; border-radius: 4px; color: #722ed1">{{
+                      item.name
+                    }}</code>
+                  </td>
+                  <td>
+                    <code>{{ item.type }}</code>
+                  </td>
+                  <td>{{ item.description }}</td>
+                </tr>
+              </tbody>
+            </nz-table>
+          </div>
+        </div>
+      </nz-tab>
+    </nz-tabset>
+  </div>
+
+  <!-- RIGHT BLOCK 1: Preview -->
+  <div showcase-result>
+    <div class="preview-container">
+      <av-search
+        [value]="searchValue()"
+        (valueChange)="searchValue.set($event)"
+        [avPlaceholder]="placeholder()"
+        [avButtonText]="buttonText()"
+        [avSize]="size()"
+        [avDebounceTime]="debounceTime()"
+        (onSearch)="handleSearch($event)"
+      >
+      </av-search>
+
+      <!-- Визуализация статуса -->
+      <div class="status-panel" *ngIf="lastSearchEvent() || searchValue()">
+        <div class="status-item" *ngIf="searchValue()">
+          <span class="label">Текущий ввод:</span>
+          <span class="value">{{ searchValue() }}</span>
+        </div>
+        <div class="status-item highlight" *ngIf="lastSearchEvent()">
+          <span class="label">🔍 Событие onSearch:</span>
+          <span class="value">{{ lastSearchEvent() }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT BLOCK 3: Description (Current State) -->
+  <div showcase-description>
+    <div class="current-state">
+      <div class="state-item">
+        <span class="state-label">Value:</span>
+        <span class="state-value">{{ searchValue() || '(пусто)' }}</span>
+      </div>
+      <div class="state-item">
+        <span class="state-label">Size:</span>
+        <span class="state-value">{{ size() }}</span>
+      </div>
+      <div class="state-item">
+        <span class="state-label">Debounce:</span>
+        <span class="state-value">{{ debounceTime() }}ms</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOTTOM: Documentation -->
+  <div showcase-docs>
+    <control-documentation [config]="documentationConfig"></control-documentation>
+  </div>
+</av-showcase>
