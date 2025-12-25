@@ -18,6 +18,12 @@ export interface ControlDocumentationConfig {
   /** Примеры использования */
   usageExamples: UsageExample[];
 
+  /** Примеры кода для табов (динамический контент) */
+  codeExamples?: CodeExample[];
+
+  /** Интерактивный пример для playground */
+  interactiveExample?: InteractiveExample;
+
   /** Архитектурные заметки */
   architectureNotes?: ArchitectureNote[];
 }
@@ -104,6 +110,28 @@ export interface UsageExample {
 
   /** Описание примера */
   description?: string;
+}
+
+export interface CodeExample {
+  /** Заголовок примера для таба "💻 Код" */
+  title: string;
+
+  /** HTML код */
+  htmlCode: string;
+
+  /** TypeScript код */
+  tsCode: string;
+
+  /** Описание примера */
+  description?: string;
+}
+
+export interface InteractiveExample {
+  /** Заголовок для интерактивного примера */
+  title: string;
+
+  /** Описание интерактивного примера */
+  description: string;
 }
 
 export interface ArchitectureNote {

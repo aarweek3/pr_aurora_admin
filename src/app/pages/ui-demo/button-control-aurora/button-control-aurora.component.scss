@@ -147,22 +147,22 @@
   }
 }
 
-// Темная тема
+// ===== ТЕМНАЯ ТЕМА - ТОЛЬКО СТРУКТУРНЫЕ СТИЛИ =====
+// Исправляет "белые пятна" в темной теме для контейнеров
 :host-context(.dark-theme) {
   .live-preview {
     background: #262626;
     border-color: #434343;
   }
 
-  .preview-container {
-    .button-preview {
-      background: #1f1f1f;
-    }
+  .button-preview {
+    background: #1f1f1f;
+    border-color: #434343;
+  }
 
-    .button-info {
-      background: #1f1f1f;
-      color: rgba(255, 255, 255, 0.85);
-    }
+  .button-info {
+    background: #1f1f1f;
+    color: rgba(255, 255, 255, 0.85);
   }
 
   .config-summary .config-grid .config-item {
@@ -172,189 +172,5 @@
 
   .button-controls {
     box-shadow: 0 0 10px rgba(255, 100, 100, 0.3);
-  }
-
-  // Специальные стили для кнопок в тёмной теме
-
-  // Primary - Default (обводка)
-  button.av-btn--primary.av-btn--variant-default {
-    background: transparent;
-    border-color: #177ddc;
-    color: #177ddc;
-
-    av-icon {
-      color: #177ddc;
-    }
-
-    &:hover:not(:disabled) {
-      background: rgba(23, 125, 220, 0.15);
-      border-color: #3c9ae8;
-      color: #3c9ae8;
-
-      av-icon {
-        color: #3c9ae8;
-      }
-    }
-
-    &:active:not(:disabled) {
-      background: rgba(23, 125, 220, 0.25);
-      border-color: #1765ad;
-      color: #1765ad;
-
-      av-icon {
-        color: #1765ad;
-      }
-    }
-  }
-
-  // Danger - Default (обводка)
-  button.av-btn--danger.av-btn--variant-default {
-    background: transparent;
-    border-color: #a61d24;
-    color: #a61d24;
-
-    av-icon {
-      color: #a61d24;
-    }
-
-    &:hover:not(:disabled) {
-      background: rgba(166, 29, 36, 0.15);
-      border-color: #d32029;
-      color: #d32029;
-
-      av-icon {
-        color: #d32029;
-      }
-    }
-
-    &:active:not(:disabled) {
-      background: rgba(166, 29, 36, 0.25);
-      border-color: #7c1823;
-      color: #7c1823;
-
-      av-icon {
-        color: #7c1823;
-      }
-    }
-  }
-
-  // Primary - Dashed (пунктирная обводка)
-  button.av-btn--primary.av-btn--variant-dashed {
-    background: transparent;
-    border: 2px dashed #177ddc;
-    color: #177ddc;
-
-    av-icon {
-      color: #177ddc;
-    }
-
-    &:hover:not(:disabled) {
-      background: rgba(23, 125, 220, 0.15);
-      border-color: #3c9ae8;
-      color: #3c9ae8;
-
-      av-icon {
-        color: #3c9ae8;
-      }
-    }
-
-    &:active:not(:disabled) {
-      background: rgba(23, 125, 220, 0.25);
-      border-color: #1765ad;
-      color: #1765ad;
-
-      av-icon {
-        color: #1765ad;
-      }
-    }
-  }
-
-  // Danger - Dashed (пунктирная обводка)
-  button.av-btn--danger.av-btn--variant-dashed {
-    background: transparent;
-    border: 2px dashed #a61d24;
-    color: #a61d24;
-
-    av-icon {
-      color: #a61d24;
-    }
-
-    &:hover:not(:disabled) {
-      background: rgba(166, 29, 36, 0.15);
-      border-color: #d32029;
-      color: #d32029;
-
-      av-icon {
-        color: #d32029;
-      }
-    }
-
-    &:active:not(:disabled) {
-      background: rgba(166, 29, 36, 0.25);
-      border-color: #7c1823;
-      color: #7c1823;
-
-      av-icon {
-        color: #7c1823;
-      }
-    }
-  }
-
-  // Primary - Ghost (прозрачный)
-  button.av-btn--primary.av-btn--variant-ghost {
-    background: transparent;
-    border: none;
-    color: #3c9ae8; // Средняя яркость (было #177ddc)
-
-    av-icon {
-      color: #3c9ae8;
-    }
-
-    &:hover:not(:disabled) {
-      background: rgba(23, 125, 220, 0.12);
-      color: #177ddc; // Полная яркость при наведении
-
-      av-icon {
-        color: #177ddc;
-      }
-    }
-
-    &:active:not(:disabled) {
-      background: rgba(23, 125, 220, 0.2);
-      color: #1765ad; // Тёмный при нажатии
-
-      av-icon {
-        color: #1765ad;
-      }
-    }
-  }
-
-  // Danger - Ghost (прозрачный)
-  button.av-btn--danger.av-btn--variant-ghost {
-    background: transparent;
-    border: none;
-    color: #d32029; // Средняя яркость (было #a61d24)
-
-    av-icon {
-      color: #d32029;
-    }
-
-    &:hover:not(:disabled) {
-      background: rgba(166, 29, 36, 0.12);
-      color: #a61d24; // Полная яркость при наведении
-
-      av-icon {
-        color: #a61d24;
-      }
-    }
-
-    &:active:not(:disabled) {
-      background: rgba(166, 29, 36, 0.2);
-      color: #7c1823; // Тёмный при нажатии
-
-      av-icon {
-        color: #7c1823;
-      }
-    }
   }
 }

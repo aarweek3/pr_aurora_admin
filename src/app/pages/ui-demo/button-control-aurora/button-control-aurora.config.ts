@@ -12,161 +12,160 @@ export const BUTTON_CONTROL_DOCUMENTATION: ControlDocumentationConfig = {
   },
 
   controlComponent: {
-    name: 'ButtonSettingsControlComponent',
-    path: 'src/app/shared/components/ui/button/button-settings-control/',
-    description:
-      'Основной компонент управления параметрами кнопок - готовое решение для интеграции',
-    icon: 'general/av_settings',
+    name: 'ButtonDirective (av-button)',
+    path: 'src/app/shared/components/ui/button/button.directive.ts',
+    description: 'Основная директива для создания стилизованных кнопок во всем приложении',
+    icon: 'general/av_component',
   },
 
   mainDescription: {
-    componentTitle: 'ButtonSettingsControlComponent',
+    componentTitle: 'ButtonDirective (av-button)',
     shortDescription:
-      'Готовый компонент для управления всеми параметрами кнопки с живым предварительным просмотром.',
+      'Мощная директива для создания красивых и функциональных кнопок с поддержкой различных типов, размеров и состояний.',
     detailedDescription:
-      'Этот компонент предоставляет полноценный интерфейс для настройки всех параметров кнопки: тип (primary/danger), вариант отображения (default/dashed/ghost), размер (small/medium/large), форма (default/circle/square), состояние загрузки, отключения и т.д. Идеально подходит для админских панелей, конструкторов интерфейсов и инструментов дизайна.',
+      'Директива av-button предоставляет единообразный API для создания кнопок любой сложности. Поддерживает различные типы (primary, danger, default), варианты отображения (default, dashed, ghost), размеры (small, medium, large), формы (default, circle, square), состояния загрузки и отключения. Автоматически применяет правильные стили, ARIA атрибуты и обеспечивает доступность.',
     keyFeatures: [
-      '🎨 Поддержка всех типов кнопок: primary, danger, default',
-      '🔄 Три варианта отображения: default (обводка), dashed (пунктир), ghost (прозрачный)',
-      '📏 Три размера: small (маленький), medium (средний), large (большой)',
-      '🔘 Три формы: default (прямоугольная), circle (круглая), square (квадратная)',
-      '⚡ Состояния: loading (загрузка), disabled (отключена)',
-      '🖼️ Поддержка иконок: prefix (слева), suffix (справа), icon-only (только иконка)',
-      '🎭 Живой предварительный просмотр в реальном времени',
-      '📝 Генерация кода для копирования',
-      '🌙 Поддержка тёмной темы',
-      '♿ Полная доступность (ARIA, клавиатура)',
+      '🎨 Поддержка типов: primary, danger, default',
+      '🔄 Варианты отображения: default (обводка), dashed (пунктир), ghost (прозрачный)',
+      '📏 Размеры: small, medium, large',
+      '🔘 Формы: default (прямоугольная), circle (круглая), square (квадратная)',
+      '⚡ Состояния: loading (спиннер), disabled (отключена)',
+      '🖼️ Иконки: prefix/suffix поддержка с av-icon',
+      '♿ Полная доступность: ARIA атрибуты, keyboard navigation',
+      '🎯 Единый API: одинаковое поведение во всем приложении',
+      '🧩 Совместимость: работает с Angular Forms, роутингом, событиями',
     ],
   },
 
   apiDetails: {
     inputs: [
       {
-        name: 'buttonType',
-        type: 'string',
+        name: 'avType',
+        type: '"primary" | "danger" | "default"',
         defaultValue: '"primary"',
-        description: 'Тип кнопки: "primary", "danger", "default"',
+        description: 'Тип кнопки определяющий цветовую схему',
         required: false,
       },
       {
-        name: 'variant',
-        type: 'string',
+        name: 'avVariant',
+        type: '"default" | "dashed" | "ghost"',
         defaultValue: '"default"',
-        description: 'Вариант отображения: "default", "dashed", "ghost"',
+        description: 'Вариант отображения (обводка, пунктир, прозрачная)',
         required: false,
       },
       {
-        name: 'size',
-        type: 'string',
+        name: 'avSize',
+        type: '"small" | "medium" | "large"',
         defaultValue: '"medium"',
-        description: 'Размер кнопки: "small", "medium", "large"',
+        description: 'Размер кнопки',
         required: false,
       },
       {
-        name: 'shape',
-        type: 'string',
+        name: 'avShape',
+        type: '"default" | "circle" | "square"',
         defaultValue: '"default"',
-        description: 'Форма кнопки: "default", "circle", "square"',
+        description: 'Форма кнопки',
         required: false,
       },
       {
-        name: 'loading',
+        name: 'avLoading',
         type: 'boolean',
         defaultValue: 'false',
-        description: 'Показать состояние загрузки со спиннером',
+        description: 'Показать спиннер загрузки',
         required: false,
       },
       {
         name: 'disabled',
         type: 'boolean',
         defaultValue: 'false',
-        description: 'Отключить кнопку',
-        required: false,
-      },
-      {
-        name: 'iconPrefix',
-        type: 'string | null',
-        defaultValue: 'null',
-        description: 'Иконка слева от текста',
-        required: false,
-      },
-      {
-        name: 'iconSuffix',
-        type: 'string | null',
-        defaultValue: 'null',
-        description: 'Иконка справа от текста',
-        required: false,
-      },
-      {
-        name: 'text',
-        type: 'string',
-        defaultValue: '"Button"',
-        description: 'Текст кнопки',
+        description: 'Отключить кнопку (стандартный HTML атрибут)',
         required: false,
       },
     ],
     outputs: [
       {
-        name: 'buttonConfigChange',
-        type: 'ButtonConfig',
-        description: 'Событие при изменении любого параметра кнопки',
-      },
-      {
-        name: 'codeGenerated',
-        type: 'string',
-        description: 'Событие генерации HTML-кода кнопки',
+        name: 'click',
+        type: 'MouseEvent',
+        description: 'Стандартное событие клика по кнопке',
       },
     ],
     methods: [
       {
-        name: 'resetToDefaults',
+        name: 'focus',
         parameters: '',
         returnType: 'void',
-        description: 'Сброс всех настроек к значениям по умолчанию',
+        description: 'Программно установить фокус на кнопку',
       },
       {
-        name: 'generateCode',
+        name: 'blur',
         parameters: '',
-        returnType: 'string',
-        description: 'Генерация HTML-кода с текущими настройками',
+        returnType: 'void',
+        description: 'Программно убрать фокус с кнопки',
       },
     ],
   },
 
   usageExamples: [
     {
-      title: 'Базовое использование',
-      description: 'Простейший вариант использования с настройками по умолчанию',
-      htmlCode: `<button-settings-control
-  [buttonType]="'primary'"
-  [variant]="'default'"
-  (buttonConfigChange)="onConfigChange($event)">
-</button-settings-control>`,
-      tsCode: `export class MyComponent {
-  onConfigChange(config: ButtonConfig) {
-    console.log('Новая конфигурация:', config);
-  }
-}`,
+      title: 'Базовая кнопка',
+      description: 'Простейший вариант использования директивы av-button',
+      htmlCode: `<button av-button avType="primary">
+  Нажми меня
+</button>`,
+      tsCode: `// Никакого дополнительного TypeScript кода не требуется
+// Директива работает автоматически`,
     },
     {
-      title: 'С начальными настройками',
-      description: 'Использование с предустановленной конфигурацией',
-      htmlCode: `<button-settings-control
-  [buttonType]="'danger'"
-  [variant]="'ghost'"
-  [size]="'large'"
-  [iconPrefix]="'general/av_delete'"
-  [text]="'Удалить'"
-  (codeGenerated)="onCodeGenerated($event)">
-</button-settings-control>`,
+      title: 'Кнопка с иконкой и состояниями',
+      description: 'Использование с иконкой, загрузкой и событием клика',
+      htmlCode: `<button
+  av-button
+  avType="danger"
+  avVariant="ghost"
+  avSize="large"
+  [avLoading]="isLoading"
+  [disabled]="isDisabled"
+  (click)="onDeleteClick()">
+  <av-icon type="general/av_delete"></av-icon>
+  Удалить
+</button>`,
       tsCode: `export class MyComponent {
-  onCodeGenerated(htmlCode: string) {
-    // Скопировать код в буфер обмена
-    navigator.clipboard.writeText(htmlCode);
+  isLoading = false;
+  isDisabled = false;
+
+  onDeleteClick() {
+    this.isLoading = true;
+    // Логика удаления...
   }
 }`,
     },
   ],
+
+  codeExamples: [
+    {
+      title: 'Базовые примеры использования',
+      description: 'Визуальные примеры с различными конфигурациями',
+      htmlCode: `<!-- Primary кнопки -->
+<button av-button avType="primary">Primary</button>
+<button av-button avType="primary" avVariant="ghost">Primary Ghost</button>
+
+<!-- Danger кнопки -->
+<button av-button avType="danger">Danger</button>
+<button av-button avType="danger" avVariant="dashed">Danger Dashed</button>
+
+<!-- С иконками -->
+<button av-button avType="primary">
+  <av-icon type="actions/av_check_mark"></av-icon>
+  Сохранить
+</button>`,
+      tsCode: `// Никакой дополнительный TypeScript код не требуется`,
+    },
+  ],
+
+  interactiveExample: {
+    title: 'Интерактивный пример',
+    description: 'Код, генерируемый на основе настроек в Playground',
+  },
 
   architectureNotes: [
     {

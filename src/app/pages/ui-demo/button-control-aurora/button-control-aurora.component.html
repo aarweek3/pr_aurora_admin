@@ -150,23 +150,59 @@
       <!-- Вкладка с примерами кода -->
       <nz-tab nzTitle="💻 Код">
         <div class="demo-form">
-          <h4>HTML код:</h4>
-          <pre
-            style="background: #f5f5f5; padding: 16px; border-radius: 6px; margin-bottom: 16px"
-          ><code>{{ generatedCode().html }}</code></pre>
+          <!-- Динамический пример из playground -->
+          <div *ngIf="documentationConfig.interactiveExample" style="margin-bottom: 32px">
+            <h4>{{ documentationConfig.interactiveExample.title }}</h4>
+            <p style="color: #666; margin-bottom: 16px">{{ documentationConfig.interactiveExample.description }}</p>
 
-          <h4>TypeScript конфигурация:</h4>
-          <pre
-            style="background: #f5f5f5; padding: 16px; border-radius: 6px; margin-bottom: 16px"
-          ><code>{{ generatedCode().typescript }}</code></pre>
+            <h5>HTML код:</h5>
+            <pre
+              style="background: #f5f5f5; padding: 16px; border-radius: 6px; margin-bottom: 16px"
+            ><code>{{ generatedCode().html }}</code></pre>
 
-          <div style="display: flex; gap: 8px">
-            <button nz-button nzType="primary" nzSize="small" (click)="copyToClipboard(generatedCode().html, 'HTML')">
-              📋 Копировать HTML
-            </button>
-            <button nz-button nzSize="small" (click)="copyToClipboard(generatedCode().typescript, 'TypeScript')">
-              📋 Копировать TS
-            </button>
+            <h5>TypeScript конфигурация:</h5>
+            <pre
+              style="background: #f5f5f5; padding: 16px; border-radius: 6px; margin-bottom: 16px"
+            ><code>{{ generatedCode().typescript }}</code></pre>
+
+            <div style="display: flex; gap: 8px; margin-bottom: 16px">
+              <button nz-button nzType="primary" nzSize="small" (click)="copyToClipboard(generatedCode().html, 'HTML')">
+                > 📋 Копировать HTML
+              </button>
+              <button nz-button nzSize="small" (click)="copyToClipboard(generatedCode().typescript, 'TypeScript')">
+                📋 Копировать TS
+              </button>
+            </div>
+          </div>
+
+          <!-- Остальные статические примеры из конфига -->
+          <div *ngFor="let example of documentationConfig.codeExamples; let i = index" style="margin-bottom: 32px">
+            <h4>{{ example.title }}</h4>
+            <p *ngIf="example.description" style="color: #666; margin-bottom: 16px">{{ example.description }}</p>
+
+            <h5>HTML:</h5>
+            <pre
+              style="background: #f5f5f5; padding: 16px; border-radius: 6px; margin-bottom: 16px"
+            ><code>{{ example.htmlCode }}</code></pre>
+
+            <h5>TypeScript:</h5>
+            <pre
+              style="background: #f5f5f5; padding: 16px; border-radius: 6px; margin-bottom: 16px"
+            ><code>{{ example.tsCode }}</code></pre>
+
+            <div style="display: flex; gap: 8px; margin-bottom: 16px">
+              <button
+                nz-button
+                nzType="primary"
+                nzSize="small"
+                (click)="copyToClipboard(example.htmlCode, 'HTML ' + example.title)"
+              >
+                📋 Копировать HTML
+              </button>
+              <button nz-button nzSize="small" (click)="copyToClipboard(example.tsCode, 'TypeScript ' + example.title)">
+                📋 Копировать TS
+              </button>
+            </div>
           </div>
         </div>
       </nz-tab>
@@ -174,35 +210,39 @@
       <!-- Вкладка с базовыми примерами -->
       <nz-tab nzTitle="📚 Примеры">
         <div class="demo-form">
-          <h4>Базовые примеры использования:</h4>
-          <pre
-            style="background: #f5f5f5; padding: 16px; border-radius: 6px; margin-bottom: 16px"
-          ><code>{{ usageExample }}</code></pre>
+          <!-- Примеры из конфига -->
+          <div *ngFor="let example of documentationConfig.usageExamples; let i = index" style="margin-bottom: 32px">
+            <h4>{{ example.title }}</h4>
+            <p *ngIf="example.description" style="color: #666; margin-bottom: 16px">{{ example.description }}</p>
 
-          <h4>Визуальные примеры:</h4>
-          <div nz-row [nzGutter]="[16, 16]">
-            <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="8">
-              <div class="example-item">
-                <h5>Базовая иконка</h5>
-                <av-icon type="actions/av_check_mark" [size]="24"></av-icon>
-              </div>
-            </div>
-            <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="8">
-              <div class="example-item">
-                <h5>Цветная иконка</h5>
-                <av-icon type="general/av_like" [size]="24" color="#ff4d4f"></av-icon>
-              </div>
-            </div>
-            <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="8">
-              <div class="example-item">
-                <h5>Повёрнутая иконка</h5>
-                <av-icon
-                  type="actions/av_check_mark"
-                  [size]="24"
-                  [style.transform]="'rotate(45deg)'"
-                  color="#52c41a"
-                ></av-icon>
-              </div>
+            <h5>HTML:</h5>
+            <pre
+              style="background: #f5f5f5; padding: 16px; border-radius: 6px; margin-bottom: 16px"
+            ><code>{{ example.htmlCode }}</code></pre>
+
+            <h5 *ngIf="example.tsCode">TypeScript:</h5>
+            <pre
+              *ngIf="example.tsCode"
+              style="background: #f5f5f5; padding: 16px; border-radius: 6px; margin-bottom: 16px"
+            ><code>{{ example.tsCode }}</code></pre>
+
+            <div style="display: flex; gap: 8px; margin-bottom: 16px">
+              <button
+                nz-button
+                nzType="primary"
+                nzSize="small"
+                (click)="copyToClipboard(example.htmlCode, 'HTML ' + example.title)"
+              >
+                📋 Копировать HTML
+              </button>
+              <button
+                *ngIf="example.tsCode"
+                nz-button
+                nzSize="small"
+                (click)="copyToClipboard(example.tsCode, 'TypeScript ' + example.title)"
+              >
+                📋 Копировать TS
+              </button>
             </div>
           </div>
         </div>
@@ -211,67 +251,101 @@
       <!-- Вкладка с API документацией -->
       <nz-tab nzTitle="📖 API">
         <div class="demo-form">
-          <h4>🔧 Основные параметры компонента:</h4>
-          <div style="background: #f8f9fa; padding: 16px; border-radius: 6px; margin-bottom: 16px">
-            <table style="width: 100%; border-collapse: collapse">
-              <thead>
-                <tr style="border-bottom: 2px solid #dee2e6">
-                  <th style="text-align: left; padding: 8px; font-weight: 600">Параметр</th>
-                  <th style="text-align: left; padding: 8px; font-weight: 600">Тип</th>
-                  <th style="text-align: left; padding: 8px; font-weight: 600">По умолчанию</th>
-                  <th style="text-align: left; padding: 8px; font-weight: 600">Описание</th>
-                </tr>
-              </thead>
-              <tbody style="font-size: 13px">
-                <tr style="border-bottom: 1px solid #dee2e6">
-                  <td style="padding: 8px"><code>type</code></td>
-                  <td style="padding: 8px; color: #0066cc">string</td>
-                  <td style="padding: 8px; color: #dc3545">обязательно</td>
-                  <td style="padding: 8px">Путь к иконке: "category/icon_name"</td>
-                </tr>
-                <tr style="border-bottom: 1px solid #dee2e6">
-                  <td style="padding: 8px"><code>size</code></td>
-                  <td style="padding: 8px; color: #0066cc">number</td>
-                  <td style="padding: 8px">24</td>
-                  <td style="padding: 8px">Размер иконки в пикселях</td>
-                </tr>
-                <tr style="border-bottom: 1px solid #dee2e6">
-                  <td style="padding: 8px"><code>color</code></td>
-                  <td style="padding: 8px; color: #0066cc">string</td>
-                  <td style="padding: 8px">inherit</td>
-                  <td style="padding: 8px">Цвет иконки (HEX, RGB, именованный)</td>
-                </tr>
-              </tbody>
-            </table>
+          <!-- Входные параметры (inputs) -->
+          <div *ngIf="documentationConfig.apiDetails.inputs.length" style="margin-bottom: 32px">
+            <h4>📥 Входные параметры (Inputs)</h4>
+            <div class="api-table-wrapper">
+              <table class="api-table" style="width: 100%; border-collapse: collapse; margin-bottom: 16px">
+                <thead>
+                  <tr style="background: #fafafa; border-bottom: 1px solid #d9d9d9">
+                    <th style="padding: 12px; text-align: left; border-right: 1px solid #d9d9d9">Параметр</th>
+                    <th style="padding: 12px; text-align: left; border-right: 1px solid #d9d9d9">Тип</th>
+                    <th style="padding: 12px; text-align: left; border-right: 1px solid #d9d9d9">По умолчанию</th>
+                    <th style="padding: 12px; text-align: left">Описание</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr
+                    *ngFor="let input of documentationConfig.apiDetails.inputs"
+                    style="border-bottom: 1px solid #f0f0f0"
+                  >
+                    <td style="padding: 12px; border-right: 1px solid #f0f0f0">
+                      <code style="background: #f5f5f5; padding: 2px 6px; border-radius: 3px">{{ input.name }}</code>
+                      <span *ngIf="input.required" style="color: #ff4d4f; margin-left: 4px">*</span>
+                    </td>
+                    <td style="padding: 12px; border-right: 1px solid #f0f0f0">
+                      <code style="color: #1890ff">{{ input.type }}</code>
+                    </td>
+                    <td style="padding: 12px; border-right: 1px solid #f0f0f0">
+                      <code style="color: #52c41a">{{ input.defaultValue || '—' }}</code>
+                    </td>
+                    <td style="padding: 12px">{{ input.description }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
 
-          <h4>🎨 CSS стилизация (опционально):</h4>
-          <ul style="margin-bottom: 16px; list-style-type: none; padding: 0">
-            <li style="padding: 4px 0">💫 <code>[style.transform]</code> - поворот, масштаб, отражение</li>
-            <li style="padding: 4px 0">👻 <code>[style.opacity]</code> - прозрачность (0-1)</li>
-            <li style="padding: 4px 0">📦 <code>[style.padding]</code> - внутренние отступы</li>
-            <li style="padding: 4px 0">🎨 <code>[style.background]</code> - фон контейнера</li>
-            <li style="padding: 4px 0">🖼️ <code>[style.border]</code> - рамка контейнера</li>
-            <li style="padding: 4px 0">🔄 <code>[style.border-radius]</code> - скругление углов</li>
-          </ul>
+          <!-- Выходные события (outputs) -->
+          <div *ngIf="documentationConfig.apiDetails.outputs.length" style="margin-bottom: 32px">
+            <h4>📤 События (Outputs)</h4>
+            <div class="api-table-wrapper">
+              <table class="api-table" style="width: 100%; border-collapse: collapse; margin-bottom: 16px">
+                <thead>
+                  <tr style="background: #fafafa; border-bottom: 1px solid #d9d9d9">
+                    <th style="padding: 12px; text-align: left; border-right: 1px solid #d9d9d9">Событие</th>
+                    <th style="padding: 12px; text-align: left; border-right: 1px solid #d9d9d9">Тип данных</th>
+                    <th style="padding: 12px; text-align: left">Описание</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr
+                    *ngFor="let output of documentationConfig.apiDetails.outputs"
+                    style="border-bottom: 1px solid #f0f0f0"
+                  >
+                    <td style="padding: 12px; border-right: 1px solid #f0f0f0">
+                      <code style="background: #f5f5f5; padding: 2px 6px; border-radius: 3px">{{ output.name }}</code>
+                    </td>
+                    <td style="padding: 12px; border-right: 1px solid #f0f0f0">
+                      <code style="color: #1890ff">{{ output.type }}</code>
+                    </td>
+                    <td style="padding: 12px">{{ output.description }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
 
-          <h4>📋 Полная API документация с примерами:</h4>
-          <pre
-            style="
-              background: #f5f5f5;
-              padding: 16px;
-              border-radius: 6px;
-              max-height: 400px;
-              overflow-y: auto;
-              font-size: 11px;
-              line-height: 1.4;
-            "
-          ><code>{{ apiExample }}</code></pre>
-
-          <div style="display: flex; gap: 8px; margin-top: 16px">
-            <button nz-button nzType="primary" nzSize="small" (click)="copyToClipboard(apiExample, 'API документация')">
-              📋 Копировать API
-            </button>
+          <!-- Методы (если есть) -->
+          <div *ngIf="documentationConfig.apiDetails.methods?.length" style="margin-bottom: 32px">
+            <h4>⚙️ Публичные методы</h4>
+            <div class="api-table-wrapper">
+              <table class="api-table" style="width: 100%; border-collapse: collapse; margin-bottom: 16px">
+                <thead>
+                  <tr style="background: #fafafa; border-bottom: 1px solid #d9d9d9">
+                    <th style="padding: 12px; text-align: left; border-right: 1px solid #d9d9d9">Метод</th>
+                    <th style="padding: 12px; text-align: left; border-right: 1px solid #d9d9d9">Возвращает</th>
+                    <th style="padding: 12px; text-align: left">Описание</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr
+                    *ngFor="let method of documentationConfig.apiDetails.methods"
+                    style="border-bottom: 1px solid #f0f0f0"
+                  >
+                    <td style="padding: 12px; border-right: 1px solid #f0f0f0">
+                      <code style="background: #f5f5f5; padding: 2px 6px; border-radius: 3px"
+                        >{{ method.name }}({{ method.parameters }})</code
+                      >
+                    </td>
+                    <td style="padding: 12px; border-right: 1px solid #f0f0f0">
+                      <code style="color: #1890ff">{{ method.returnType }}</code>
+                    </td>
+                    <td style="padding: 12px">{{ method.description }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </nz-tab>
