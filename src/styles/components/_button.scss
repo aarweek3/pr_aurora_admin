@@ -358,3 +358,247 @@
     }
   }
 }
+
+/**
+ * Расширенные варианты кнопок
+ * Перенесено из button-control-aurora.component.scss для устранения дублирования
+ */
+
+// Primary - Default (обводка)
+.av-btn--primary.av-btn--variant-default {
+  background: transparent;
+  border: 2px solid #1890ff;
+  color: #1890ff;
+
+  av-icon {
+    color: #1890ff;
+  }
+
+  &:hover:not(:disabled) {
+    background: rgba(24, 144, 255, 0.1);
+    border-color: #40a9ff;
+    color: #40a9ff;
+
+    av-icon {
+      color: #40a9ff;
+    }
+  }
+
+  &:active:not(:disabled) {
+    background: rgba(24, 144, 255, 0.2);
+    border-color: #096dd9;
+    color: #096dd9;
+
+    av-icon {
+      color: #096dd9;
+    }
+  }
+}
+
+// Danger - Default (обводка)
+.av-btn--danger.av-btn--variant-default {
+  background: transparent;
+  border: 2px solid #ff4d4f;
+  color: #ff4d4f;
+
+  av-icon {
+    color: #ff4d4f;
+  }
+
+  &:hover:not(:disabled) {
+    background: rgba(255, 77, 79, 0.1);
+    border-color: #ff7875;
+    color: #ff7875;
+
+    av-icon {
+      color: #ff7875;
+    }
+  }
+
+  &:active:not(:disabled) {
+    background: rgba(255, 77, 79, 0.2);
+    border-color: #d9363e;
+    color: #d9363e;
+
+    av-icon {
+      color: #d9363e;
+    }
+  }
+}
+
+// Primary - Dashed (пунктирная обводка)
+.av-btn--primary.av-btn--variant-dashed {
+  background: transparent;
+  border: 2px dashed #1890ff;
+  color: #1890ff;
+
+  av-icon {
+    color: #1890ff;
+  }
+
+  &:hover:not(:disabled) {
+    background: rgba(24, 144, 255, 0.1);
+    border-color: #40a9ff;
+    color: #40a9ff;
+
+    av-icon {
+      color: #40a9ff;
+    }
+  }
+
+  &:active:not(:disabled) {
+    background: rgba(24, 144, 255, 0.2);
+    border-color: #096dd9;
+    color: #096dd9;
+
+    av-icon {
+      color: #096dd9;
+    }
+  }
+}
+
+// Danger - Dashed (пунктирная обводка)
+.av-btn--danger.av-btn--variant-dashed {
+  background: transparent;
+  border: 2px dashed #ff4d4f;
+  color: #ff4d4f;
+
+  av-icon {
+    color: #ff4d4f;
+  }
+
+  &:hover:not(:disabled) {
+    background: rgba(255, 77, 79, 0.1);
+    border-color: #ff7875;
+    color: #ff7875;
+
+    av-icon {
+      color: #ff7875;
+    }
+  }
+
+  &:active:not(:disabled) {
+    background: rgba(255, 77, 79, 0.2);
+    border-color: #d9363e;
+    color: #d9363e;
+
+    av-icon {
+      color: #d9363e;
+    }
+  }
+}
+
+// Primary - Ghost (прозрачный)
+.av-btn--primary.av-btn--variant-ghost {
+  background: transparent;
+  border: none;
+  color: #40a9ff; // Средняя яркость
+
+  av-icon {
+    color: #40a9ff;
+  }
+
+  &:hover:not(:disabled) {
+    background: rgba(24, 144, 255, 0.08);
+    color: #1890ff; // Полная яркость при наведении
+
+    av-icon {
+      color: #1890ff;
+    }
+  }
+
+  &:active:not(:disabled) {
+    background: rgba(24, 144, 255, 0.15);
+    color: #096dd9; // Тёмный при нажатии
+
+    av-icon {
+      color: #096dd9;
+    }
+  }
+}
+
+// Danger - Ghost (прозрачный)
+.av-btn--danger.av-btn--variant-ghost {
+  background: transparent;
+  border: none;
+  color: #ff7875; // Средняя яркость
+
+  av-icon {
+    color: #ff7875;
+  }
+
+  &:hover:not(:disabled) {
+    background: rgba(255, 77, 79, 0.08);
+    color: #ff4d4f; // Полная яркость при наведении
+
+    av-icon {
+      color: #ff4d4f;
+    }
+  }
+
+  &:active:not(:disabled) {
+    background: rgba(255, 77, 79, 0.15);
+    color: #d9363e; // Тёмный при нажатии
+
+    av-icon {
+      color: #d9363e;
+    }
+  }
+}
+
+// Адаптация размеров иконок для разных размеров кнопок
+.av-btn {
+  // Базовый gap между текстом и иконкой
+  gap: 8px;
+
+  av-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  // Маленькие кнопки
+  &--small {
+    gap: 6px;
+
+    av-icon {
+      font-size: 14px;
+    }
+
+    // Но для circle/square - без gap
+    &.av-btn--shape-circle,
+    &.av-btn--shape-square,
+    &.av-btn--icon-only {
+      gap: 0;
+    }
+  }
+
+  // Большие кнопки
+  &--large {
+    gap: 10px;
+
+    av-icon {
+      font-size: 20px;
+    }
+
+    // Но для circle/square - без gap
+    &.av-btn--shape-circle,
+    &.av-btn--shape-square,
+    &.av-btn--icon-only {
+      gap: 0;
+    }
+  }
+
+  // Переопределение для кнопок только с иконкой
+  &--shape-circle,
+  &--shape-square,
+  &--icon-only {
+    gap: 0;
+    padding: 0;
+
+    av-icon {
+      margin: 0 !important;
+    }
+  }
+}

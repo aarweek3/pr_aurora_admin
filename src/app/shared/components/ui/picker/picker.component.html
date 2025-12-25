@@ -17,83 +17,66 @@
     class="av-picker"
     [class.av-picker--compact]="avSize() === 'compact'"
     [class.av-picker--no-border]="!showBorder()"
+    [class.av-picker--horizontal]="true"
   >
-    <!-- Section 1: Palette -->
+    <!-- Секция 1: Палитра (6 цветов + прозрачный) -->
     @if (shouldShowCustomColors()) {
-    <div class="av-picker__section">
-      <div class="av-picker__label">ПАЛИТРА:</div>
-      <div class="av-picker__grid">
-        @for (color of customColors(); track color.value) {
-        <button
-          class="av-picker__swatch"
-          [class.av-picker__swatch--selected]="isColorSelected(color.value)"
-          [style.backgroundColor]="color.value"
-          [title]="color.name"
-          (click)="onColorSelect(color.value)"
-          type="button"
-        >
-          @if (isColorSelected(color.value)) {
-          <span class="av-picker__check">✓</span>
-          }
-        </button>
-        } @if (avSize() === 'compact' && allowTransparent()) {
-        <button
-          class="av-picker__swatch av-picker__swatch--transparent"
-          [class.av-picker__swatch--selected]="selectedColor() === 'transparent'"
-          (click)="onColorSelect('transparent')"
-          title="Прозрачный"
-          type="button"
-        >
-          <span class="av-picker__transparent-pattern"></span>
-          @if (selectedColor() === 'transparent') {
-          <span class="av-picker__check">✓</span>
-          }
-        </button>
-        }
-
-        <button class="av-picker__reset-btn" (click)="onReset()" type="button">Сброс</button>
-      </div>
-    </div>
-    }
-
-    <!-- Section 2: Custom Color Selection -->
-    @if (shouldShowPicker()) {
-    <div class="av-picker__section">
-      <div class="av-picker__label">CUSTOM COLOR:</div>
-      <div class="av-picker__picker-wrapper">
-        <nz-color-picker
-          [(ngModel)]="selectedColor"
-          [nzShowText]="false"
-          [nzDisabledAlpha]="!showAlpha()"
-          (ngModelChange)="onPickerChange($event)"
-        ></nz-color-picker>
-
-        @if (showInput()) {
-        <input
-          type="text"
-          class="av-picker__input"
-          [(ngModel)]="selectedColor"
-          (ngModelChange)="onPickerChange($event)"
-          placeholder="#FFFFFF"
-        />
-        }
-      </div>
-    </div>
-    }
-
-    <!-- Transparent (full width btn if not compact) -->
-    @if (avSize() !== 'compact' && allowTransparent() && shouldShowCustomColors()) {
-    <div class="av-picker__transparent">
+    <div class="av-picker__palette-section">
+      @for (color of customColors(); track color.value) {
       <button
-        class="av-picker__transparent-btn"
-        [class.av-picker__transparent-btn--selected]="selectedColor() === 'transparent'"
+        class="av-picker__swatch"
+        [class.av-picker__swatch--selected]="isColorSelected(color.value)"
+        [style.backgroundColor]="color.value"
+        [title]="color.name"
+        (click)="onColorSelect(color.value)"
+        type="button"
+      >
+        @if (isColorSelected(color.value)) {
+        <span class="av-picker__check">✓</span>
+        }
+      </button>
+      } @if (allowTransparent()) {
+      <button
+        class="av-picker__swatch av-picker__swatch--transparent"
+        [class.av-picker__swatch--selected]="selectedColor() === 'transparent'"
         (click)="onColorSelect('transparent')"
+        title="Прозрачный"
         type="button"
       >
         <span class="av-picker__transparent-pattern"></span>
-        <span>Прозрачный фон</span>
+        @if (selectedColor() === 'transparent') {
+        <span class="av-picker__check">✓</span>
+        }
       </button>
+      }
     </div>
     }
+
+    <!-- Секция 2: Color Picker + Input -->
+    @if (shouldShowPicker()) {
+    <div class="av-picker__picker-section">
+      <nz-color-picker
+        [(ngModel)]="selectedColor"
+        [nzShowText]="false"
+        [nzDisabledAlpha]="!showAlpha()"
+        (ngModelChange)="onPickerChange($event)"
+      ></nz-color-picker>
+
+      @if (showInput()) {
+      <input
+        type="text"
+        class="av-picker__input"
+        [(ngModel)]="selectedColor"
+        (ngModelChange)="onPickerChange($event)"
+        placeholder="#FFFFFF"
+      />
+      }
+    </div>
+    }
+
+    <!-- Секция 3: Кнопка Сброс (текстовая) -->
+    <div class="av-picker__reset-section">
+      <button class="av-picker__reset-link" (click)="onReset()" type="button">Сброс</button>
+    </div>
   </div>
 </ng-template>

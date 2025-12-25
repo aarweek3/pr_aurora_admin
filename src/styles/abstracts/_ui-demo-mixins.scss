@@ -1,0 +1,185 @@
+// UI Demo Control Components - Common Styles Mixins
+// Создано для устранения дублирования стилей между Control-компонентами
+
+/**
+ * 🎯 Основной миксин для всех Control-компонентов
+ * Включает общие стили формы, контролов и preview
+ */
+@mixin control-demo-base-styles {
+  // ===== 1. ОБЩИЕ СТИЛИ ФОРМЫ =====
+  .demo-form {
+    padding: 24px 0;
+  }
+
+  .form-section-title {
+    margin-bottom: 24px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #262626;
+    border-bottom: 1px solid #e5e7eb;
+    padding-bottom: 12px;
+
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+
+  // ===== 2. БАЗОВЫЕ СТИЛИ КОНТРОЛОВ =====
+  .control-group {
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+
+    .control-label {
+      font-size: 14px;
+      font-weight: 500;
+      color: #262626;
+      margin-bottom: 0;
+      margin-right: 16px;
+      min-width: 100px;
+    }
+
+    nz-radio-group {
+      display: flex;
+      flex-wrap: nowrap;
+      gap: 16px;
+
+      label[nz-radio] {
+        margin: 0;
+        white-space: nowrap;
+      }
+    }
+
+    input[nz-input] {
+      width: 100%;
+      flex: 1;
+    }
+
+    nz-select {
+      width: 100%;
+    }
+
+    &.checkbox-group {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+
+      label[nz-checkbox] {
+        margin: 0;
+      }
+    }
+  }
+
+  // ===== 3. DASHED SETTINGS BOX =====
+  .dashed-settings-box {
+    border: 1px dashed #d9d9d9;
+    border-radius: 8px;
+    padding: 16px;
+    display: flex;
+    gap: 24px;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+
+    .control-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      .label {
+        font-size: 14px;
+        font-weight: 500;
+        color: #262626;
+      }
+    }
+  }
+
+  // ===== 4. PREVIEW КОНТЕЙНЕР =====
+  .preview-container {
+    padding: 24px;
+    text-align: center;
+
+    .preview-header {
+      text-align: center;
+      margin-bottom: 32px;
+
+      h4 {
+        margin: 0 0 8px;
+        font-size: 18px;
+        font-weight: 600;
+        color: #262626;
+      }
+    }
+
+    // Базовый preview (можно переопределить)
+    .component-preview {
+      padding: 48px;
+      background: white;
+      border-radius: 8px;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+
+  // ===== 5. MESSAGE TOAST =====
+  .message-toast {
+    position: fixed;
+    top: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.85);
+    color: white;
+    padding: 12px 24px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    z-index: 10000;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    animation: fadeInOut 2.5s ease-in-out;
+  }
+
+  @keyframes fadeInOut {
+    0% {
+      opacity: 0;
+      transform: translate(-50%, -10px);
+    }
+    10% {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+    90% {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+    100% {
+      opacity: 0;
+      transform: translate(-50%, -10px);
+    }
+  }
+
+  // ===== 6. РАДИО КНОПКИ В РЯД =====
+  .radio-inline {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+
+    label[nz-radio] {
+      margin: 0;
+      white-space: nowrap;
+    }
+  }
+}
+
+/**
+ * 🎯 Специальный миксин для компонентов-контролов
+ * Добавляет debug box-shadow (по желанию)
+ */
+@mixin control-debug-box($color: rgba(255, 0, 0, 0.5)) {
+  .component-controls {
+    box-shadow: 0 0 10px $color;
+    padding: 16px;
+    border-radius: 8px;
+  }
+}

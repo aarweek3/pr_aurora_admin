@@ -102,20 +102,13 @@ export class ColorComponentAuroraComponent implements OnDestroy {
   selectedColor = signal<string>('#1890ff');
   selectedMode = signal<PickerMode>('custom-and-picker');
 
-  // Кастомные цвета для демонстрации (точная копия из color-picker-demo)
+  // Кастомные цвета для демонстрации (5 базовых цветов)
   customColors = signal<CustomColor[]>([
     { name: 'Primary', value: '#1890ff', category: 'primary' },
     { name: 'Success', value: '#52c41a', category: 'primary' },
     { name: 'Warning', value: '#faad14', category: 'primary' },
-    { name: 'Danger', value: '#ff4d4f', category: 'primary' },
+    { name: 'Error', value: '#ff4d4f', category: 'primary' },
     { name: 'Purple', value: '#722ed1', category: 'secondary' },
-    { name: 'Cyan', value: '#13c2c2', category: 'secondary' },
-    { name: 'Magenta', value: '#eb2f96', category: 'secondary' },
-    { name: 'Red', value: '#f5222d', category: 'secondary' },
-    { name: 'Orange', value: '#fa541c', category: 'secondary' },
-    { name: 'Lime', value: '#a0d911', category: 'secondary' },
-    { name: 'Blue', value: '#1677ff', category: 'secondary' },
-    { name: 'Violet', value: '#722ed1', category: 'secondary' },
   ]);
 
   // Доступные режимы работы (точная копия из color-picker-demo)
@@ -135,13 +128,13 @@ export class ColorComponentAuroraComponent implements OnDestroy {
     const tsCode = `// TypeScript
 selectedColor = signal<string>('${color}');
 
-// Custom colors для демонстрации
+// Custom colors для демонстрации (5 базовых цветов)
 customColors: CustomColor[] = [
   { name: 'Primary', value: '#1890ff', category: 'primary' },
   { name: 'Success', value: '#52c41a', category: 'primary' },
   { name: 'Warning', value: '#faad14', category: 'primary' },
-  { name: 'Danger', value: '#ff4d4f', category: 'primary' },
-  // ... другие цвета
+  { name: 'Error', value: '#ff4d4f', category: 'primary' },
+  { name: 'Purple', value: '#722ed1', category: 'secondary' },
 ];`;
 
     const htmlCode = `<!-- HTML Template -->

@@ -8,9 +8,6 @@ import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
 import { NzCollapseModule } from 'ng-zorro-antd/collapse';
 import { NzGridModule } from 'ng-zorro-antd/grid';
 import { NzInputModule } from 'ng-zorro-antd/input';
-
-// Новые импорты для универсального компонента документации
-import { ControlDocumentationComponent } from '@shared/components/ui/control-documentation';
 import { NzRadioModule } from 'ng-zorro-antd/radio';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzTabsModule } from 'ng-zorro-antd/tabs';
@@ -19,6 +16,7 @@ import {
   ButtonSize,
   ButtonType,
 } from '../../../shared/components/ui/button/button.directive';
+import { HelpCopyContainerComponent } from '../../../shared/components/ui/container-help-copy-ui/container-help-copy-ui.component';
 import { AvIconConfig } from '../../../shared/components/ui/icon';
 import { IconSettingsControlComponent } from '../../../shared/components/ui/icon/icon-settings-control/icon-settings-control.component';
 import { IconComponent } from '../../../shared/components/ui/icon/icon.component';
@@ -27,7 +25,6 @@ import {
   ShowcaseComponent,
   ShowcaseConfig,
 } from '../../../shared/components/ui/showcase/showcase.component';
-import { BUTTON_CONTROL_DOCUMENTATION } from './button-control-aurora.config';
 import {
   API_EXAMPLE,
   FULL_HTML_DOC,
@@ -74,9 +71,9 @@ interface ButtonConfig {
     NzInputModule,
     NzSelectModule,
     NzCheckboxModule,
+    HelpCopyContainerComponent,
     PickerComponent,
     IconSettingsControlComponent,
-    ControlDocumentationComponent,
   ],
   templateUrl: './button-control-aurora.component.html',
   styleUrl: './button-control-aurora.component.scss',
@@ -87,9 +84,6 @@ export class ButtonControlAuroraComponent implements OnDestroy {
 
   // Хранение таймера для очистки
   private messageTimer: ReturnType<typeof setTimeout> | null = null;
-
-  // Конфигурация универсальной документации
-  readonly documentationConfig = BUTTON_CONTROL_DOCUMENTATION;
   // Конфигурация showcase с новой 3-блочной структурой
   readonly showcaseConfig: ShowcaseConfig = {
     headerConfig: {

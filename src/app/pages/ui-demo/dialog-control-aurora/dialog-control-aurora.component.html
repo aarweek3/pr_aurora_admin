@@ -1,0 +1,265 @@
+<av-showcase [config]="showcaseConfig" [generatedCodeInput]="generatedCode()">
+  <!-- TAB: PLAYGROUND (CONTROLS) -->
+  <div showcase-tabs>
+    <nz-tabset [nzAnimated]="false">
+      <nz-tab nzTitle="🎮 Playground">
+        <div class="demo-form">
+          <h3 class="form-section-title">Настройки контента</h3>
+
+          <div class="control-group">
+            <label class="control-label">Заголовок:</label>
+            <input nz-input [(ngModel)]="dialogConfig().title" (ngModelChange)="updateConfig('title', $event)" />
+          </div>
+
+          <div class="control-group">
+            <label class="control-label">Сообщение:</label>
+            <textarea
+              nz-input
+              rows="3"
+              [(ngModel)]="dialogConfig().message"
+              (ngModelChange)="updateConfig('message', $event)"
+            ></textarea>
+          </div>
+
+          <h3 class="form-section-title" style="margin-top: 24px">Настройки иконки</h3>
+          <av-icon-settings-control
+            [(value)]="iconConfig"
+            [presets]="iconPresets"
+            (valueChange)="onIconConfigChange($event)"
+          ></av-icon-settings-control>
+
+          <h3 class="form-section-title" style="margin-top: 24px">Кнопки диалога</h3>
+
+          <div class="control-group">
+            <label class="control-label">Текст "Подтвердить":</label>
+            <input
+              nz-input
+              [(ngModel)]="dialogConfig().confirmText"
+              (ngModelChange)="updateConfig('confirmText', $event)"
+            />
+          </div>
+
+          <div class="control-group">
+            <label class="control-label">Тип кнопки подтверждения:</label>
+            <nz-radio-group
+              [(ngModel)]="dialogConfig().confirmType"
+              (ngModelChange)="updateConfig('confirmType', $event)"
+            >
+              <label nz-radio nzValue="primary">Primary</label>
+              <label nz-radio nzValue="default">Default</label>
+              <label nz-radio nzValue="danger">Danger</label>
+            </nz-radio-group>
+          </div>
+
+          <div class="control-group checkbox-group">
+            <label
+              nz-checkbox
+              [(ngModel)]="dialogConfig().showCancelButton"
+              (ngModelChange)="updateConfig('showCancelButton', $event)"
+            >
+              Показывать "Отмена"
+            </label>
+            @if(dialogConfig().showCancelButton) {
+            <input
+              nz-input
+              size="small"
+              [(ngModel)]="dialogConfig().cancelText"
+              (ngModelChange)="updateConfig('cancelText', $event)"
+              placeholder="Текст отмены"
+            />
+            }
+          </div>
+
+          <h3 class="form-section-title" style="margin-top: 24px">Параметры окна</h3>
+
+          <div class="control-group">
+            <label class="control-label">Ширина:</label>
+            <input nz-input [(ngModel)]="dialogConfig().width" (ngModelChange)="updateConfig('width', $event)" />
+          </div>
+
+          <div class="control-group checkbox-group">
+            <label nz-checkbox [(ngModel)]="dialogConfig().centered" (ngModelChange)="updateConfig('centered', $event)">
+              Центрировать (Centered)
+            </label>
+            <label
+              nz-checkbox
+              [(ngModel)]="dialogConfig().draggable"
+              (ngModelChange)="updateConfig('draggable', $event)"
+            >
+              Перетаскиваемое (Draggable)
+            </label>
+            <label
+              nz-checkbox
+              [(ngModel)]="dialogConfig().closeOnBackdrop"
+              (ngModelChange)="updateConfig('closeOnBackdrop', $event)"
+            >
+              Закрывать по клику на фон
+            </label>
+            <label
+              nz-checkbox
+              [(ngModel)]="dialogConfig().closeOnEsc"
+              (ngModelChange)="updateConfig('closeOnEsc', $event)"
+            >
+              Закрывать по ESC
+            </label>
+            <label
+              nz-checkbox
+              [(ngModel)]="dialogConfig().showCloseButton"
+              (ngModelChange)="updateConfig('showCloseButton', $event)"
+            >
+              Показывать крестик (X)
+            </label>
+          </div>
+        </div>
+      </nz-tab>
+
+      <nz-tab nzTitle="📚 Примеры">
+        <div class="demo-form">
+          <h4>Быстрые шаблоны:</h4>
+
+          <div nz-row [nzGutter]="[16, 16]">
+            <div nz-col [nzSpan]="24">
+              <div class="example-item">
+                <h4>Успешное действие</h4>
+                <p>Диалог с зеленой галочкой и кнопкой ОК.</p>
+                <div class="example-buttons">
+                  <button
+                    nz-button
+                    nzType="primary"
+                    (click)="
+                      updateConfig('title', 'Успешно!');
+                      updateIconConfig({ type: 'actions/av_check_mark', color: '#52c41a', size: 48 })
+                    "
+                  >
+                    Применить
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div nz-col [nzSpan]="24">
+              <div class="example-item">
+                <h4>Опасное действие</h4>
+                <p>Красная корзина, кнопка Danger, запрос подтверждения.</p>
+                <div class="example-buttons">
+                  <button
+                    nz-button
+                    nzType="default"
+                    nzDanger
+                    (click)="
+                      updateConfig('title', 'Удалить?');
+                      updateConfig('confirmType', 'danger');
+                      updateIconConfig({ type: 'actions/av_trash', color: '#ff4d4f', size: 48 })
+                    "
+                  >
+                    Применить
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <h4 style="margin-top: 24px">Примеры кода:</h4>
+          <av-help-copy-container
+            title="Usage Examples"
+            [content]="usageExample"
+            bgColor="#f5f5f5"
+            [defaultCollapsed]="false"
+          ></av-help-copy-container>
+        </div>
+      </nz-tab>
+
+      <nz-tab nzTitle="📖 API">
+        <div class="demo-form">
+          <av-help-copy-container
+            title="API Reference"
+            [content]="apiDoc"
+            bgColor="#f5f5f5"
+            [defaultCollapsed]="false"
+          ></av-help-copy-container>
+        </div>
+      </nz-tab>
+    </nz-tabset>
+  </div>
+
+  <!-- RESULT: LIVE PREVIEW & DESCRIPTION -->
+  <div showcase-result>
+    <div class="preview-container">
+      <button class="main-action-btn" av-button avType="primary" avSize="large" (click)="openDialog()">
+        Открыть диалог
+      </button>
+
+      <div class="dialog-info">
+        <h4>👁️ Предпросмотр параметров:</h4>
+        <ul>
+          <li><strong>Title:</strong> {{ dialogConfig().title }}</li>
+          <li><strong>Icon:</strong> {{ iconConfig().type }} ({{ iconConfig().color }})</li>
+          <li><strong>Width:</strong> {{ dialogConfig().width }}</li>
+          <li><strong>Buttons:</strong> {{ dialogConfig().showCancelButton ? 'Cancel + Confirm' : 'Confirm only' }}</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULT: DESCRIPTION (BOTTOM) -->
+  <div showcase-description>
+    <div class="config-summary">
+      <div class="config-grid">
+        <div class="config-item">
+          <span class="config-label">Title</span>
+          <span class="config-value">{{ dialogConfig().title }}</span>
+        </div>
+        <div class="config-item">
+          <span class="config-label">Width</span>
+          <span class="config-value">{{ dialogConfig().width }}</span>
+        </div>
+        <div class="config-item">
+          <span class="config-label">Centered</span>
+          <span class="config-value">{{ dialogConfig().centered }}</span>
+        </div>
+        <div class="config-item">
+          <span class="config-label">Confirm Type</span>
+          <span class="config-value">{{ dialogConfig().confirmType }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</av-showcase>
+
+<!-- ACTIVE MODAL COMPONENT (Triggered by isDialogOpen) -->
+<av-modal
+  [(isOpen)]="isDialogOpen"
+  [centered]="dialogConfig().centered"
+  [avWidth]="dialogConfig().width"
+  [showBackdrop]="dialogConfig().closeOnBackdrop"
+  [closeOnBackdrop]="dialogConfig().closeOnBackdrop"
+  [closeOnEsc]="dialogConfig().closeOnEsc"
+  [showCloseButton]="dialogConfig().showCloseButton"
+  [draggable]="dialogConfig().draggable"
+>
+  <div modal-body>
+    <div style="text-align: center; padding: 24px">
+      @if(iconConfig().type) {
+      <av-icon
+        [type]="iconConfig().type!"
+        [size]="iconConfig().size"
+        [color]="iconConfig().color"
+        [style.transform]="'rotate(' + iconConfig().rotation + 'deg) scale(' + iconConfig().scale + ')'"
+        [style.opacity]="iconConfig().opacity"
+      ></av-icon>
+      }
+      <h3 style="margin: 16px 0 8px; font-weight: 600">{{ dialogConfig().title }}</h3>
+      <p style="color: #8c8c8c; margin: 0">{{ dialogConfig().message }}</p>
+    </div>
+  </div>
+  <div modal-footer style="text-align: center; justify-content: center; gap: 8px">
+    @if(dialogConfig().showCancelButton) {
+    <button av-button avType="default" (click)="onCancel()">
+      {{ dialogConfig().cancelText }}
+    </button>
+    }
+    <button av-button [avType]="dialogConfig().confirmType" (click)="onConfirm()">
+      {{ dialogConfig().confirmText }}
+    </button>
+  </div>
+</av-modal>

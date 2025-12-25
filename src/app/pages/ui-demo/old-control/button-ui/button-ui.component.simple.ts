@@ -1,9 +1,9 @@
 // src/app/pages/ui-demo/button-ui/button-ui.component.ts
 import { CommonModule } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
-import { ThemeService } from '../../../core/services/theme/theme.service';
-import { ButtonDirective } from '../../../shared/components/ui/button/button.directive';
-import { IconComponent } from '../../../shared/components/ui/icon/icon.component';
+import { ThemeService } from '../../../../core/services/theme/theme.service';
+import { ButtonDirective } from '../../../../shared/components/ui/button/button.directive';
+import { IconComponent } from '../../../../shared/components/ui/icon/icon.component';
 
 @Component({
   selector: 'app-button-ui',
@@ -109,7 +109,7 @@ export class ButtonUiComponent {
   toggleCodeIconOnlySmall(): void { this.showCodeIconOnlySmall.update(v => !v); }
   toggleCodeIconOnlyLarge(): void { this.showCodeIconOnlyLarge.update(v => !v); }
   toggleCodeIconOnlyDanger(): void { this.showCodeIconOnlyDanger.update(v => !v); }
-  
+
   toggleCode(section: 'types' | 'sizes' | 'icons' | 'states'): void {
     if (section === 'types') this.showButtonTypesCode.update(v => !v);
   }

@@ -12,9 +12,12 @@ import { NzSliderModule } from 'ng-zorro-antd/slider';
 import { NzSpaceModule } from 'ng-zorro-antd/space';
 import { NzSwitchModule } from 'ng-zorro-antd/switch';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
-import { ButtonDirective, ButtonSize } from '../../../shared/components/ui/button/button.directive';
-import { HelpCopyContainerComponent } from '../../../shared/components/ui/container-help-copy-ui/container-help-copy-ui.component';
-import { IconComponent } from '../../../shared/components/ui/icon/icon.component';
+import {
+  ButtonDirective,
+  ButtonSize,
+} from '../../../../shared/components/ui/button/button.directive';
+import { HelpCopyContainerComponent } from '../../../../shared/components/ui/container-help-copy-ui/container-help-copy-ui.component';
+import { IconComponent } from '../../../../shared/components/ui/icon/icon.component';
 
 @Component({
   selector: 'app-button-ui',

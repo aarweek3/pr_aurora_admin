@@ -1,0 +1,206 @@
+<div class="control-documentation">
+  <!-- Архитектура компонентов -->
+  <section class="architecture-section">
+    <h3 class="section-title">
+      <av-icon type="general/av_component" [size]="20"></av-icon>
+      📋 Архитектура компонентов
+    </h3>
+
+    <div class="component-info-grid">
+      <!-- Демонстрационный компонент -->
+      <div class="component-info-card component-info-card--demo">
+        <h4>
+          <av-icon [type]="config.demoComponent.icon" [size]="16"></av-icon>
+          Демонстрационный компонент
+        </h4>
+        <div class="component-details">
+          <div class="detail-row">
+            <strong>Имя:</strong>
+            <code>{{ config.demoComponent.name }}</code>
+          </div>
+          <div class="detail-row">
+            <strong>Путь:</strong>
+            <code class="path">{{ config.demoComponent.path }}</code>
+          </div>
+          <div class="description">
+            {{ config.demoComponent.description }}
+          </div>
+        </div>
+      </div>
+
+      <!-- Контрольный компонент (если есть) -->
+      <div *ngIf="config.controlComponent" class="component-info-card component-info-card--control">
+        <h4>
+          <av-icon [type]="config.controlComponent.icon" [size]="16"></av-icon>
+          Компонент контрол
+        </h4>
+        <div class="component-details">
+          <div class="detail-row">
+            <strong>Имя:</strong>
+            <code>{{ config.controlComponent.name }}</code>
+          </div>
+          <div class="detail-row">
+            <strong>Путь:</strong>
+            <code class="path">{{ config.controlComponent.path }}</code>
+          </div>
+          <div class="description">
+            {{ config.controlComponent.description }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Описание основного компонента -->
+  <section class="main-description-section">
+    <h3 class="section-title">📦 {{ config.mainDescription.componentTitle }}</h3>
+
+    <div class="description-content">
+      <p class="short-description">{{ config.mainDescription.shortDescription }}</p>
+      <p class="detailed-description">{{ config.mainDescription.detailedDescription }}</p>
+
+      <div *ngIf="config.mainDescription.keyFeatures.length" class="key-features">
+        <h4>🎯 Ключевые особенности:</h4>
+        <ul>
+          <li *ngFor="let feature of config.mainDescription.keyFeatures">
+            {{ feature }}
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- API документация -->
+  <section class="api-section">
+    <h3 class="section-title">
+      <av-icon type="general/av_api" [size]="20"></av-icon>
+      🔌 API компонента
+    </h3>
+
+    <!-- Input параметры -->
+    <div *ngIf="config.apiDetails.inputs.length" class="api-subsection">
+      <h4>📥 Input параметры</h4>
+      <div class="api-table">
+        <div class="api-table-header">
+          <div class="col-name">Название</div>
+          <div class="col-type">Тип</div>
+          <div class="col-default">По умолчанию</div>
+          <div class="col-description">Описание</div>
+        </div>
+        <div
+          *ngFor="let input of config.apiDetails.inputs"
+          class="api-table-row"
+          [class.api-table-row--required]="input.required"
+        >
+          <div class="col-name">
+            <code>{{ input.name }}</code>
+            <span *ngIf="input.required" class="required-badge">*</span>
+          </div>
+          <div class="col-type">
+            <code>{{ input.type }}</code>
+          </div>
+          <div class="col-default">
+            <code *ngIf="input.defaultValue">{{ input.defaultValue }}</code>
+            <span *ngIf="!input.defaultValue" class="no-default">—</span>
+          </div>
+          <div class="col-description">{{ input.description }}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Output события -->
+    <div *ngIf="config.apiDetails.outputs.length" class="api-subsection">
+      <h4>📤 Output события</h4>
+      <div class="api-table">
+        <div class="api-table-header">
+          <div class="col-name">Событие</div>
+          <div class="col-type">Тип данных</div>
+          <div class="col-description">Описание</div>
+        </div>
+        <div *ngFor="let output of config.apiDetails.outputs" class="api-table-row">
+          <div class="col-name">
+            <code>{{ output.name }}</code>
+          </div>
+          <div class="col-type">
+            <code>{{ output.type }}</code>
+          </div>
+          <div class="col-description">{{ output.description }}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Методы (если есть) -->
+    <div *ngIf="config.apiDetails.methods?.length" class="api-subsection">
+      <h4>⚙️ Публичные методы</h4>
+      <div class="api-table">
+        <div class="api-table-header">
+          <div class="col-name">Метод</div>
+          <div class="col-type">Возвращает</div>
+          <div class="col-description">Описание</div>
+        </div>
+        <div *ngFor="let method of config.apiDetails.methods" class="api-table-row">
+          <div class="col-name">
+            <code>{{ method.name }}({{ method.parameters }})</code>
+          </div>
+          <div class="col-type">
+            <code>{{ method.returnType }}</code>
+          </div>
+          <div class="col-description">{{ method.description }}</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Примеры использования -->
+  <section *ngIf="config.usageExamples.length" class="examples-section">
+    <h3 class="section-title">
+      <av-icon type="general/av_code" [size]="20"></av-icon>
+      💡 Примеры использования
+    </h3>
+
+    <!-- Вкладки примеров -->
+    <div *ngIf="config.usageExamples.length > 1" class="example-tabs">
+      <button
+        *ngFor="let example of config.usageExamples; let i = index"
+        class="example-tab"
+        [class.example-tab--active]="activeExampleIndex === i"
+        (click)="setActiveExample(i)"
+      >
+        {{ example.title }}
+      </button>
+    </div>
+
+    <!-- Содержание активного примера -->
+    <div class="example-content">
+      <div class="example-description" *ngIf="config.usageExamples[activeExampleIndex].description">
+        {{ config.usageExamples[activeExampleIndex].description }}
+      </div>
+
+      <div class="code-block">
+        <h5>HTML:</h5>
+        <pre><code>{{ config.usageExamples[activeExampleIndex].htmlCode }}</code></pre>
+      </div>
+
+      <div *ngIf="config.usageExamples[activeExampleIndex].tsCode" class="code-block">
+        <h5>TypeScript:</h5>
+        <pre><code>{{ config.usageExamples[activeExampleIndex].tsCode }}</code></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- Архитектурные заметки -->
+  <section *ngIf="config.architectureNotes?.length" class="notes-section">
+    <h3 class="section-title">
+      <av-icon type="general/av_note" [size]="20"></av-icon>
+      📚 Архитектурные заметки
+    </h3>
+
+    <div *ngFor="let note of config.architectureNotes" [ngClass]="getArchitectureNoteClass(note.type)">
+      <div class="note-header">
+        <av-icon [type]="getArchitectureNoteIcon(note.type)" [size]="16"></av-icon>
+        <strong>{{ note.title }}</strong>
+      </div>
+      <div class="note-content">{{ note.content }}</div>
+    </div>
+  </section>
+</div>

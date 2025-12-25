@@ -9,12 +9,15 @@ export const UI_DEMO_ROUTES: Routes = [
   },
   {
     path: 'button-ui',
-    loadComponent: () => import('./button-ui/button-ui.component').then((m) => m.ButtonUiComponent),
+    loadComponent: () =>
+      import('./old-control/button-ui/button-ui.component').then((m) => m.ButtonUiComponent),
   },
   {
     path: 'button-ui-new',
     loadComponent: () =>
-      import('./button-ui-new/button-ui-new.component').then((m) => m.ButtonUiNewComponent),
+      import('./old-control/button-ui-new/button-ui-new.component').then(
+        (m) => m.ButtonUiNewComponent,
+      ),
   },
   {
     path: 'button-control-aurora',
@@ -38,7 +41,8 @@ export const UI_DEMO_ROUTES: Routes = [
   },
   {
     path: 'icon-ui',
-    loadComponent: () => import('./icon-ui/icon-ui.component').then((m) => m.IconUiComponent),
+    loadComponent: () =>
+      import('./old-control/icon-ui/icon-ui.component').then((m) => m.IconUiComponent),
   },
   {
     path: 'icon-control',
@@ -72,6 +76,13 @@ export const UI_DEMO_ROUTES: Routes = [
     path: 'dialog-icon-ui',
     loadComponent: () =>
       import('./dialog-icon-ui/dialog-icon-ui.component').then((m) => m.DialogIconUiComponent),
+  },
+  {
+    path: 'dialog-control-aurora',
+    loadComponent: () =>
+      import('./dialog-control-aurora/dialog-control-aurora.component').then(
+        (m) => m.DialogControlAuroraComponent,
+      ),
   },
   {
     path: 'field-group-ui',

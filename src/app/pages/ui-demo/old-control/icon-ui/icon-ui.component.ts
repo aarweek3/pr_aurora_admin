@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { AvIconConfig, IconComponent } from '../../../shared/components/ui/icon';
+import { AvIconConfig, IconComponent } from '../../../../shared/components/ui/icon';
 import { AvIconCategory } from './icon-metadata.model';
 import { ICON_REGISTRY } from './icon-registry';
 

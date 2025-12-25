@@ -60,7 +60,7 @@
   ::ng-deep {
     // Внутренние отступы контента табов
     .ant-tabs-tabpane {
-      padding: $spacing-lg !important;
+      padding: 0 !important;
       background: $color-white;
     }
 

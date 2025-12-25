@@ -90,7 +90,7 @@
         (ngModelChange)="updateProperty('color', $event)"
         nzSize="small"
       ></nz-color-picker>
-      <div class="color-preset-grid">
+      <div class="color-preset-grid all-colors">
         @for (color of colorPresets; track $index) {
         <button
           class="color-preset-btn"
@@ -98,8 +98,16 @@
           [class.active]="value().color === color"
           (click)="selectColorPreset(color)"
         ></button>
+        } @for (color of neutralColorPresets; track $index) {
+        <button
+          class="color-preset-btn neutral"
+          [style.background-color]="color"
+          [class.active]="value().color === color"
+          (click)="selectColorPreset(color)"
+        ></button>
         }
       </div>
+      <button av-button avType="text" avSize="small" (click)="resetColor()" class="reset-color-btn">Сброс</button>
     </div>
   </av-field-group>
 

@@ -143,6 +143,8 @@
 
   &__input {
     flex: 1;
+    min-width: 80px; // Минимальная ширина для адаптивности
+    max-width: 120px; // Максимальная ширина, чтобы не растягивался
     height: 32px;
     padding: 0 12px;
     border: 1px solid #cbd5e1;
@@ -214,6 +216,91 @@
     }
     .av-picker__check {
       font-size: 12px;
+    }
+  }
+
+  // ===== ГОРИЗОНТАЛЬНАЯ ВЕРСТКА =====
+  &--horizontal {
+    flex-direction: row;
+    align-items: center;
+    gap: 16px;
+    padding: 12px 16px;
+    min-height: 48px;
+    flex-wrap: wrap; // Позволяет переносить на новую строку при нехватке места
+
+    // Адаптивность для узких экранов
+    @media (max-width: 768px) {
+      gap: 12px;
+      padding: 12px;
+    }
+  }
+
+  // Секция 1: Палитра
+  &__palette-section {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding-right: 16px;
+    border-right: 1px solid #e5e7eb;
+    flex-shrink: 0; // Не сжимается
+
+    @include dark-theme {
+      border-right-color: rgba(255, 255, 255, 0.1);
+    }
+  }
+
+  // Секция 2: Color Picker + Input
+  &__picker-section {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding-right: 16px;
+    border-right: 1px solid #e5e7eb;
+    flex: 1; // Занимает доступное место
+    min-width: 0; // Позволяет сжиматься
+
+    @include dark-theme {
+      border-right-color: rgba(255, 255, 255, 0.1);
+    }
+  }
+
+  // Секция 3: Кнопка Сброс (текстовая)
+  &__reset-section {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0; // Не сжимается
+  }
+
+  &__reset-link {
+    background: none;
+    border: none;
+    color: $color-primary;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    padding: 0;
+    transition: all 0.2s ease;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+      color: $color-primary-hover;
+    }
+
+    &:active {
+      color: $color-primary-active;
+    }
+
+    @include dark-theme {
+      color: #3c9ae8;
+
+      &:hover {
+        color: #69b1ff;
+      }
+
+      &:active {
+        color: #177ddc;
+      }
     }
   }
 }

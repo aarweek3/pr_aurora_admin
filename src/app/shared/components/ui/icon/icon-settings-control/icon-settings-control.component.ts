@@ -58,6 +58,16 @@ export class IconSettingsControlComponent {
     '#2f54eb',
   ];
 
+  // Neutral color presets (white → black)
+  readonly neutralColorPresets = [
+    '#ffffff', // Белый
+    '#e5e7eb', // Светло-серый
+    '#9ca3af', // Серый
+    '#6b7280', // Средне-серый
+    '#374151', // Темно-серый
+    '#000000', // Черный
+  ];
+
   // Size presets
   readonly sizePresets = [12, 16, 24, 32];
 
@@ -122,6 +132,13 @@ export class IconSettingsControlComponent {
   selectColorPreset(color: string): void {
     this.updateProperty('color', color);
     this.showMessage(`Цвет: ${color}`);
+  }
+
+  // Reset color to default
+  resetColor(): void {
+    const defaultColor = this.getDefaultConfig().color;
+    this.updateProperty('color', defaultColor);
+    this.showMessage(`Цвет сброшен: ${defaultColor}`);
   }
 
   // Quick size selection

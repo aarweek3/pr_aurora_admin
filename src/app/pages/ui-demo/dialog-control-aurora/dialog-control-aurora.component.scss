@@ -1,0 +1,153 @@
+.control-group {
+  margin-bottom: 24px;
+}
+
+.control-label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #1f2937;
+  font-size: 14px;
+}
+
+.checkbox-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.form-section-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.preview-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  gap: 32px;
+  background: white;
+  border-radius: 8px;
+  padding: 32px;
+}
+
+.main-action-btn {
+  min-width: 200px;
+  height: 48px;
+  font-size: 16px;
+}
+
+.dialog-info {
+  width: 100%;
+  max-width: 400px;
+  background: #f8f9fa;
+  padding: 16px;
+  border-radius: 8px;
+  border: 1px dashed #d9d9d9;
+
+  h4 {
+    margin: 0 0 12px 0;
+    color: #1f2937;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    font-size: 13px;
+    color: #4b5563;
+
+    li {
+      margin-bottom: 6px;
+      display: flex;
+      justify-content: space-between;
+
+      strong {
+        color: #374151;
+      }
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+}
+
+.config-summary {
+  .config-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .config-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px;
+    background: white;
+    border: 1px solid #f0f0f0;
+    border-radius: 4px;
+
+    .config-label {
+      color: #8c8c8c;
+      font-size: 12px;
+    }
+
+    .config-value {
+      font-weight: 500;
+      font-size: 13px;
+      color: #262626;
+    }
+  }
+}
+
+.example-item {
+  background: white;
+  border: 1px solid #f0f0f0;
+  border-radius: 8px;
+  padding: 16px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  transition: all 0.3s ease;
+
+  &:hover {
+    border-color: #1890ff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  }
+
+  h4 {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: #1f2937;
+  }
+
+  p {
+    margin: 0;
+    font-size: 13px;
+    color: #6b7280;
+    flex-grow: 1;
+  }
+}
+
+.example-buttons {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+pre {
+  margin: 0;
+  border: 1px solid #f0f0f0;
+}

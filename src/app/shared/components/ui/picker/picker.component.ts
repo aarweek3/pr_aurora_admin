@@ -53,6 +53,7 @@ export class PickerComponent {
   avTitle = input<string | undefined>();
   showWrapper = input<boolean>(true);
   showBorder = input<boolean>(true);
+  hideLabels = input<boolean>(false); // Скрыть надписи "ПАЛИТРА:" и "CUSTOM COLOR:"
 
   // Two-way binding
   selectedColor = model<string>('#1890ff');

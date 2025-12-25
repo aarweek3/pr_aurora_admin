@@ -1,6 +1,7 @@
 import { Component, signal } from '@angular/core';
 import { NzButtonModule } from 'ng-zorro-antd/button';
-import { ComponentDemoComponent } from '../../../shared/components/ui/component-demo/component-demo.component';
+
+import { ComponentDemoComponent } from '@shared/components/ui/component-demo/component-demo.component';
 import { BUTTON_DEMO_CONFIG } from './button-demo.config';
 
 /**

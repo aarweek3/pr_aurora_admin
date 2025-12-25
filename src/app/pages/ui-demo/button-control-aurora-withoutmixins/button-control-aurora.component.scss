@@ -1,0 +1,606 @@
+// Стили для button-control-aurora компонента
+
+.demo-form {
+  padding: 24px 0 24px 0;
+}
+
+.form-section-title {
+  margin-bottom: 24px;
+}
+
+// Обертка для всех контролов
+.button-controls {
+  // Тень для отладки, как просил пользователь
+  box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+  padding: 16px;
+  border-radius: 8px;
+}
+
+.button-controls .control-group {
+  margin-bottom: 20px;
+  display: flex; // Выстраиваем в ряд
+  align-items: center; // Центрируем по вертикали
+
+  .control-label {
+    font-size: 14px;
+    font-weight: 500;
+    color: #262626;
+    margin-bottom: 0; // Убираем отступ снизу
+    margin-right: 16px; // Добавляем отступ справа
+    min-width: 100px; // Фиксированная ширина для ровного выравнивания (опционально)
+  }
+
+  nz-radio-group {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 16px;
+    // overflow-x: auto; // Убираем, так как это вызывает появление стрелок
+
+    label[nz-radio] {
+      margin: 0;
+      white-space: nowrap;
+    }
+  }
+
+  input[nz-input] {
+    width: 100%;
+    flex: 1; // Занимает оставшееся место
+  }
+
+  &.checkbox-group {
+    // Для чекбоксов логика может быть другой, если нужно
+    display: flex;
+    gap: 24px;
+  }
+}
+
+.dashed-settings-box {
+  border: 1px dashed #d9d9d9;
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  gap: 24px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+
+  .control-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    .label {
+      font-size: 14px;
+      font-weight: 500;
+      color: #262626;
+    }
+  }
+}
+
+.live-preview {
+  background: #f8f9fa;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+}
+
+.preview-container {
+  padding: 24px;
+  text-align: center;
+
+  .button-preview {
+    padding: 48px;
+    background: white;
+    border-radius: 8px;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    // ===== БАЗОВЫЕ СТИЛИ ДЛЯ КНОПКИ С ТЕКСТОМ И ИКОНКОЙ =====
+    button[av-button] {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px; // Расстояние между иконкой и текстом (для кнопок с текстом)
+
+      av-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0; // Иконка не сжимается
+      }
+
+      // ===== ПЕРЕОПРЕДЕЛЕНИЕ ДЛЯ КНОПОК ТОЛЬКО С ИКОНКОЙ =====
+
+      // 1. Круглые и квадратные кнопки (всегда только иконка)
+      &.av-btn--shape-circle,
+      &.av-btn--shape-square {
+        gap: 0; // ❌ Убираем gap - иконка должна быть по центру
+        padding: 0; // ❌ Убираем padding - иконка занимает всё пространство
+
+        av-icon {
+          margin: 0 !important; // ❌ Принудительно убираем все отступы
+        }
+      }
+
+      // 2. Явный класс для кнопки только с иконкой (более надёжно)
+      &.av-btn--icon-only {
+        gap: 0; // ❌ Убираем gap
+
+        av-icon {
+          margin: 0 !important; // ❌ Убираем отступы
+        }
+      }
+    }
+  }
+
+  .button-info {
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: left;
+
+    ul {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+  }
+}
+
+.config-summary .config-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+
+  .config-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 12px;
+    background: #f8f9fa;
+    border-radius: 6px;
+    font-size: 13px;
+  }
+}
+
+.message-toast {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: #52c41a;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 6px;
+  z-index: 1000;
+}
+
+// ===== АДАПТАЦИЯ РАЗМЕРОВ ИКОНОК ДЛЯ РАЗНЫХ РАЗМЕРОВ КНОПОК =====
+.button-preview {
+  // Маленькие кнопки - меньший gap и размер иконки
+  button.av-btn--small {
+    gap: 6px; // Меньший зазор для компактности
+
+    av-icon {
+      font-size: 14px; // Маленькая иконка
+    }
+
+    // Но для circle/square - без gap
+    &.av-btn--shape-circle,
+    &.av-btn--shape-square,
+    &.av-btn--icon-only {
+      gap: 0;
+    }
+  }
+
+  // Большие кнопки - больший gap и размер иконки
+  button.av-btn--large {
+    gap: 10px; // Больший зазор для читаемости
+
+    av-icon {
+      font-size: 20px; // Большая иконка
+    }
+
+    // Но для circle/square - без gap
+    &.av-btn--shape-circle,
+    &.av-btn--shape-square,
+    &.av-btn--icon-only {
+      gap: 0;
+    }
+  }
+
+  // ===== СПЕЦИАЛЬНЫЕ СТИЛИ ДЛЯ ТИПОВ КНОПОК =====
+
+  // Primary - Default (обводка)
+  button.av-btn--primary.av-btn--variant-default {
+    background: transparent;
+    border: 2px solid #1890ff;
+    color: #1890ff;
+
+    av-icon {
+      color: #1890ff;
+    }
+
+    &:hover:not(:disabled) {
+      background: rgba(24, 144, 255, 0.1);
+      border-color: #40a9ff;
+      color: #40a9ff;
+
+      av-icon {
+        color: #40a9ff;
+      }
+    }
+
+    &:active:not(:disabled) {
+      background: rgba(24, 144, 255, 0.2);
+      border-color: #096dd9;
+      color: #096dd9;
+
+      av-icon {
+        color: #096dd9;
+      }
+    }
+  }
+
+  // Danger - Default (обводка)
+  button.av-btn--danger.av-btn--variant-default {
+    background: transparent;
+    border: 2px solid #ff4d4f;
+    color: #ff4d4f;
+
+    av-icon {
+      color: #ff4d4f;
+    }
+
+    &:hover:not(:disabled) {
+      background: rgba(255, 77, 79, 0.1);
+      border-color: #ff7875;
+      color: #ff7875;
+
+      av-icon {
+        color: #ff7875;
+      }
+    }
+
+    &:active:not(:disabled) {
+      background: rgba(255, 77, 79, 0.2);
+      border-color: #d9363e;
+      color: #d9363e;
+
+      av-icon {
+        color: #d9363e;
+      }
+    }
+  }
+
+  // Primary - Dashed (пунктирная обводка)
+  button.av-btn--primary.av-btn--variant-dashed {
+    background: transparent;
+    border: 2px dashed #1890ff;
+    color: #1890ff;
+
+    av-icon {
+      color: #1890ff;
+    }
+
+    &:hover:not(:disabled) {
+      background: rgba(24, 144, 255, 0.1);
+      border-color: #40a9ff;
+      color: #40a9ff;
+
+      av-icon {
+        color: #40a9ff;
+      }
+    }
+
+    &:active:not(:disabled) {
+      background: rgba(24, 144, 255, 0.2);
+      border-color: #096dd9;
+      color: #096dd9;
+
+      av-icon {
+        color: #096dd9;
+      }
+    }
+  }
+
+  // Danger - Dashed (пунктирная обводка)
+  button.av-btn--danger.av-btn--variant-dashed {
+    background: transparent;
+    border: 2px dashed #ff4d4f;
+    color: #ff4d4f;
+
+    av-icon {
+      color: #ff4d4f;
+    }
+
+    &:hover:not(:disabled) {
+      background: rgba(255, 77, 79, 0.1);
+      border-color: #ff7875;
+      color: #ff7875;
+
+      av-icon {
+        color: #ff7875;
+      }
+    }
+
+    &:active:not(:disabled) {
+      background: rgba(255, 77, 79, 0.2);
+      border-color: #d9363e;
+      color: #d9363e;
+
+      av-icon {
+        color: #d9363e;
+      }
+    }
+  }
+
+  // Primary - Ghost (прозрачный)
+  button.av-btn--primary.av-btn--variant-ghost {
+    background: transparent;
+    border: none;
+    color: #40a9ff; // Средняя яркость (было #1890ff)
+
+    av-icon {
+      color: #40a9ff;
+    }
+
+    &:hover:not(:disabled) {
+      background: rgba(24, 144, 255, 0.08);
+      color: #1890ff; // Полная яркость при наведении
+
+      av-icon {
+        color: #1890ff;
+      }
+    }
+
+    &:active:not(:disabled) {
+      background: rgba(24, 144, 255, 0.15);
+      color: #096dd9; // Тёмный при нажатии
+
+      av-icon {
+        color: #096dd9;
+      }
+    }
+  }
+
+  // Danger - Ghost (прозрачный)
+  button.av-btn--danger.av-btn--variant-ghost {
+    background: transparent;
+    border: none;
+    color: #ff7875; // Средняя яркость (было #ff4d4f)
+
+    av-icon {
+      color: #ff7875;
+    }
+
+    &:hover:not(:disabled) {
+      background: rgba(255, 77, 79, 0.08);
+      color: #ff4d4f; // Полная яркость при наведении
+
+      av-icon {
+        color: #ff4d4f;
+      }
+    }
+
+    &:active:not(:disabled) {
+      background: rgba(255, 77, 79, 0.15);
+      color: #d9363e; // Тёмный при нажатии
+
+      av-icon {
+        color: #d9363e;
+      }
+    }
+  }
+}
+
+// Темная тема
+:host-context(.dark-theme) {
+  .live-preview {
+    background: #262626;
+    border-color: #434343;
+  }
+
+  .preview-container {
+    .button-preview {
+      background: #1f1f1f;
+    }
+
+    .button-info {
+      background: #1f1f1f;
+      color: rgba(255, 255, 255, 0.85);
+    }
+  }
+
+  .config-summary .config-grid .config-item {
+    background: rgba(255, 255, 255, 0.05);
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  .button-controls {
+    box-shadow: 0 0 10px rgba(255, 100, 100, 0.3);
+  }
+
+  // Специальные стили для кнопок в тёмной теме
+
+  // Primary - Default (обводка)
+  button.av-btn--primary.av-btn--variant-default {
+    background: transparent;
+    border-color: #177ddc;
+    color: #177ddc;
+
+    av-icon {
+      color: #177ddc;
+    }
+
+    &:hover:not(:disabled) {
+      background: rgba(23, 125, 220, 0.15);
+      border-color: #3c9ae8;
+      color: #3c9ae8;
+
+      av-icon {
+        color: #3c9ae8;
+      }
+    }
+
+    &:active:not(:disabled) {
+      background: rgba(23, 125, 220, 0.25);
+      border-color: #1765ad;
+      color: #1765ad;
+
+      av-icon {
+        color: #1765ad;
+      }
+    }
+  }
+
+  // Danger - Default (обводка)
+  button.av-btn--danger.av-btn--variant-default {
+    background: transparent;
+    border-color: #a61d24;
+    color: #a61d24;
+
+    av-icon {
+      color: #a61d24;
+    }
+
+    &:hover:not(:disabled) {
+      background: rgba(166, 29, 36, 0.15);
+      border-color: #d32029;
+      color: #d32029;
+
+      av-icon {
+        color: #d32029;
+      }
+    }
+
+    &:active:not(:disabled) {
+      background: rgba(166, 29, 36, 0.25);
+      border-color: #7c1823;
+      color: #7c1823;
+
+      av-icon {
+        color: #7c1823;
+      }
+    }
+  }
+
+  // Primary - Dashed (пунктирная обводка)
+  button.av-btn--primary.av-btn--variant-dashed {
+    background: transparent;
+    border: 2px dashed #177ddc;
+    color: #177ddc;
+
+    av-icon {
+      color: #177ddc;
+    }
+
+    &:hover:not(:disabled) {
+      background: rgba(23, 125, 220, 0.15);
+      border-color: #3c9ae8;
+      color: #3c9ae8;
+
+      av-icon {
+        color: #3c9ae8;
+      }
+    }
+
+    &:active:not(:disabled) {
+      background: rgba(23, 125, 220, 0.25);
+      border-color: #1765ad;
+      color: #1765ad;
+
+      av-icon {
+        color: #1765ad;
+      }
+    }
+  }
+
+  // Danger - Dashed (пунктирная обводка)
+  button.av-btn--danger.av-btn--variant-dashed {
+    background: transparent;
+    border: 2px dashed #a61d24;
+    color: #a61d24;
+
+    av-icon {
+      color: #a61d24;
+    }
+
+    &:hover:not(:disabled) {
+      background: rgba(166, 29, 36, 0.15);
+      border-color: #d32029;
+      color: #d32029;
+
+      av-icon {
+        color: #d32029;
+      }
+    }
+
+    &:active:not(:disabled) {
+      background: rgba(166, 29, 36, 0.25);
+      border-color: #7c1823;
+      color: #7c1823;
+
+      av-icon {
+        color: #7c1823;
+      }
+    }
+  }
+
+  // Primary - Ghost (прозрачный)
+  button.av-btn--primary.av-btn--variant-ghost {
+    background: transparent;
+    border: none;
+    color: #3c9ae8; // Средняя яркость (было #177ddc)
+
+    av-icon {
+      color: #3c9ae8;
+    }
+
+    &:hover:not(:disabled) {
+      background: rgba(23, 125, 220, 0.12);
+      color: #177ddc; // Полная яркость при наведении
+
+      av-icon {
+        color: #177ddc;
+      }
+    }
+
+    &:active:not(:disabled) {
+      background: rgba(23, 125, 220, 0.2);
+      color: #1765ad; // Тёмный при нажатии
+
+      av-icon {
+        color: #1765ad;
+      }
+    }
+  }
+
+  // Danger - Ghost (прозрачный)
+  button.av-btn--danger.av-btn--variant-ghost {
+    background: transparent;
+    border: none;
+    color: #d32029; // Средняя яркость (было #a61d24)
+
+    av-icon {
+      color: #d32029;
+    }
+
+    &:hover:not(:disabled) {
+      background: rgba(166, 29, 36, 0.12);
+      color: #a61d24; // Полная яркость при наведении
+
+      av-icon {
+        color: #a61d24;
+      }
+    }
+
+    &:active:not(:disabled) {
+      background: rgba(166, 29, 36, 0.2);
+      color: #7c1823; // Тёмный при нажатии
+
+      av-icon {
+        color: #7c1823;
+      }
+    }
+  }
+}

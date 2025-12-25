@@ -42,23 +42,6 @@ export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
           },
           submenu: [
             {
-              id: 'button-ui',
-              label: 'Button UI',
-              route: '/ui-demo/button-ui',
-              icon: 'block',
-            },
-            {
-              id: 'button-ui-new',
-              label: 'Button UI New',
-              route: '/ui-demo/button-ui-new',
-              icon: 'appstore',
-              badge: {
-                value: 'New',
-                intent: 'success',
-              },
-            },
-
-            {
               id: 'button-control-aurora',
               label: 'Button Component Aurora',
               route: '/ui-demo/button-control-aurora',
@@ -69,9 +52,29 @@ export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
               },
             },
             {
+              id: 'color-component-aurora',
+              label: 'Color Component Aurora',
+              route: '/ui-demo/color-component-aurora',
+              icon: 'bg-colors',
+              badge: {
+                value: '🎨',
+                intent: 'info',
+              },
+            },
+            {
               id: 'dialog-icon-ui',
               label: 'Dialog Icon UI',
               route: '/ui-demo/dialog-icon-ui',
+              icon: 'message',
+              badge: {
+                value: 'Old',
+                intent: 'info',
+              },
+            },
+            {
+              id: 'dialog-control-aurora',
+              label: 'Dialog Control Aurora',
+              route: '/ui-demo/dialog-control-aurora',
               icon: 'message',
               badge: {
                 value: 'New',
@@ -95,16 +98,6 @@ export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
               icon: 'copy',
             },
             {
-              id: 'icon-control',
-              label: 'Icon Control UI',
-              route: '/ui-demo/icon-control',
-              icon: 'control',
-              badge: {
-                value: 'New',
-                intent: 'success',
-              },
-            },
-            {
               id: 'icon-control-aurora',
               label: 'Icon Component Aurora',
               route: '/ui-demo/icon-control-aurora',
@@ -115,18 +108,8 @@ export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
               },
             },
             {
-              id: 'color-component-aurora',
-              label: 'Color Component Aurora',
-              route: '/ui-demo/color-component-aurora',
-              icon: 'bg-colors',
-              badge: {
-                value: '🎨',
-                intent: 'info',
-              },
-            },
-            {
               id: 'icon-ui',
-              label: 'Icon UI',
+              label: 'Icon Library',
               route: '/ui-demo/icon-ui',
               icon: 'picture',
             },
@@ -135,12 +118,6 @@ export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
               label: 'Input UI',
               route: '/ui-demo/input-ui',
               icon: 'edit',
-            },
-            {
-              id: 'modal-ui',
-              label: 'Modal UI',
-              route: '/ui-demo/modal-ui',
-              icon: 'border',
             },
             {
               id: 'modal-ui-new',
@@ -195,14 +172,10 @@ export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
               icon: 'swap',
             },
             {
-              id: 'color-picker-demo',
-              label: 'Color Picker UI',
-              route: '/ui-demo/color-picker-demo',
-              icon: 'bg-colors',
-              badge: {
-                value: 'New',
-                intent: 'success',
-              },
+              id: 'ui-help-base',
+              label: 'UI Help Base',
+              route: '/test/ui-help-base',
+              icon: 'question-circle',
             },
             {
               id: 'wrapper-ui-test',
@@ -214,21 +187,53 @@ export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
                 intent: 'success',
               },
             },
+          ],
+        },
+        {
+          id: 'ui-demo-old',
+          icon: 'history',
+          label: 'OLD',
+          type: 'submenu',
+          submenu: [
             {
               id: 'button-demo',
               label: 'Button Demo 🎮',
               route: '/ui-demo/button-demo',
               icon: 'play-circle',
+            },
+            {
+              id: 'button-ui',
+              label: 'Button UI',
+              route: '/ui-demo/button-ui',
+              icon: 'block',
+            },
+            {
+              id: 'button-ui-new',
+              label: 'Button UI New',
+              route: '/ui-demo/button-ui-new',
+              icon: 'appstore',
               badge: {
-                value: 'New',
+                value: 'Old',
                 intent: 'warning',
               },
             },
             {
-              id: 'ui-help-base',
-              label: 'UI Help Base',
-              route: '/test/ui-help-base',
-              icon: 'question-circle',
+              id: 'color-picker-demo',
+              label: 'Color Picker UI',
+              route: '/ui-demo/color-picker-demo',
+              icon: 'bg-colors',
+            },
+            {
+              id: 'icon-control',
+              label: 'Icon Control UI',
+              route: '/ui-demo/icon-control',
+              icon: 'control',
+            },
+            {
+              id: 'modal-ui',
+              label: 'Modal UI',
+              route: '/ui-demo/modal-ui',
+              icon: 'border',
             },
           ],
         },

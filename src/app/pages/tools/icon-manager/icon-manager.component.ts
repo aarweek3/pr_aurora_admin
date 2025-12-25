@@ -8,7 +8,8 @@ import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzTabsModule } from 'ng-zorro-antd/tabs';
 import { firstValueFrom } from 'rxjs';
 import { IconComponent } from '../../../shared/components/ui/icon/icon.component';
-import { ICON_REGISTRY } from '../../ui-demo/icon-ui/icon-registry';
+import { IconMetadata } from '../../ui-demo/old-control/icon-ui/icon-metadata.model';
+import { ICON_REGISTRY, IconCategory } from '../../ui-demo/old-control/icon-ui/icon-registry';
 
 @Component({
   selector: 'av-icon-manager',
@@ -1580,7 +1581,7 @@ export class IconManagerComponent {
   categories = signal(ICON_REGISTRY);
 
   totalIcons = computed(() => {
-    return ICON_REGISTRY.reduce((acc, cat) => acc + cat.icons.length, 0);
+    return ICON_REGISTRY.reduce((acc: number, cat: IconCategory) => acc + cat.icons.length, 0);
   });
 
   storageUsage = computed(() => {
@@ -1591,12 +1592,13 @@ export class IconManagerComponent {
   filteredIcons = computed(() => {
     const query = this.searchQuery().toLowerCase().trim();
     const category = this.selectedCategory();
-    let icons = ICON_REGISTRY.flatMap((c) => c.icons);
+    let icons = ICON_REGISTRY.flatMap((c: IconCategory) => c.icons);
 
-    if (category) icons = icons.filter((i) => i.category === category);
+    if (category) icons = icons.filter((i: IconMetadata) => i.category === category);
     if (query) {
       icons = icons.filter(
-        (i) => i.name.toLowerCase().includes(query) || i.category.toLowerCase().includes(query),
+        (i: IconMetadata) =>
+          i.name.toLowerCase().includes(query) || i.category.toLowerCase().includes(query),
       );
     }
     return icons;
@@ -1918,7 +1920,9 @@ export class IconManagerComponent {
   // Batch Operations
   async startBatchProcess(type: 'optimize' | 'normalize' | 'replace' | 'metadata') {
     const icons =
-      this.batchMode() === 'all' ? ICON_REGISTRY.flatMap((c) => c.icons) : this.filteredIcons();
+      this.batchMode() === 'all'
+        ? ICON_REGISTRY.flatMap((c: IconCategory) => c.icons)
+        : this.filteredIcons();
 
     this.batchTotal.set(icons.length);
     this.batchCurrent.set(0);
