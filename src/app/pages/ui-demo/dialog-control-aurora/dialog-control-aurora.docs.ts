@@ -45,19 +45,41 @@ export const TEMPLATE_DOC = `<!-- Декларативное использов�
   </div>
 </av-modal>`;
 
-export const USAGE_EXAMPLE = `// 1. Использование специализированных методов (Recommended)
+export const USAGE_EXAMPLE = `// 1. Декларативное использование (в шаблоне)
+<av-modal
+  [(isOpen)]="showModal"
+  title="Заголовок"
+  [centered]="true"
+  [avWidth]="'500px'"
+>
+  <div modal-body>
+    <p>Содержимое модального окна</p>
+  </div>
+  <div modal-footer>
+    <button av-button avType="default" (click)="showModal = false">Отмена</button>
+    <button av-button avType="primary" (click)="save()">Сохранить</button>
+  </div>
+</av-modal>
+
+// 2. Использование специализированных методов (Recommended)
 await this.modalService.success('Данные сохранены', 'Успешно', true); // Centered success
 await this.modalService.error('Ошибка сервера', 'Ошибка', true);     // Centered error
 await this.modalService.delete('Вы уверены?', 'Удаление');           // Centered delete confirm
 
-// 2. Стандартный Confirm
-this.modalService.confirm({
+// 3. Стандартный Confirm
+const confirmed = await this.modalService.confirm({
   title: 'Подтвердите действие',
   message: 'Перейти на следующую страницу?',
-  icon: 'system/av_question-mark'
-}).then(res => console.log(res));
+  icon: 'system/av_question-mark',
+  confirmText: 'Да',
+  cancelText: 'Нет'
+});
 
-// 3. Открытие произвольного компонента
+if (confirmed) {
+  // Выполнить действие
+}
+
+// 4. Открытие произвольного компонента
 this.modalService.open(MyFormComponent, {
   data: { id: 123 },
   size: 'large',

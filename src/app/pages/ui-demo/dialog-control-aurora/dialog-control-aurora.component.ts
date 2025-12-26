@@ -172,6 +172,12 @@ export class DialogControlAuroraComponent {
   // Основной метод открытия диалога из Live Demo
   // State
   isDialogOpen = signal(false);
+
+  // Example States
+  example1Open = signal(false);
+  example2Open = signal(false);
+  example3Open = signal(false);
+
   feedbackMessage = signal('');
 
   // Methods

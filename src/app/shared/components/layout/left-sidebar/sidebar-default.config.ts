@@ -61,19 +61,10 @@ export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
                 intent: 'info',
               },
             },
-            {
-              id: 'dialog-icon-ui',
-              label: 'Dialog Icon UI',
-              route: '/ui-demo/dialog-icon-ui',
-              icon: 'message',
-              badge: {
-                value: 'Old',
-                intent: 'info',
-              },
-            },
+
             {
               id: 'dialog-control-aurora',
-              label: 'Dialog Control Aurora',
+              label: 'Dialog Component Aurora',
               route: '/ui-demo/dialog-control-aurora',
               icon: 'message',
               badge: {
@@ -256,6 +247,16 @@ export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
               label: 'Search UI',
               route: '/ui-demo/search-ui',
               icon: 'search',
+            },
+            {
+              id: 'dialog-icon-ui',
+              label: 'Dialog Icon UI',
+              route: '/ui-demo/dialog-icon-ui',
+              icon: 'message',
+              badge: {
+                value: 'Old',
+                intent: 'info',
+              },
             },
           ],
         },
