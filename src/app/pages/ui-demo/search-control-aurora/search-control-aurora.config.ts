@@ -1,6 +1,6 @@
 import { ControlDocumentationConfig } from '@shared/components/ui/control-documentation';
 
-export const SEARCH_CONTROL_DOCUMENTATION: ControlDocumentationConfig = {
+export const DOCUMENTATION: ControlDocumentationConfig = {
   demoComponent: {
     name: 'SearchControlAuroraComponent',
     path: 'src/app/pages/ui-demo/search-control-aurora/',

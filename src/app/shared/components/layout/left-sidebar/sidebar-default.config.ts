@@ -83,6 +83,16 @@ export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
               },
             },
             {
+              id: 'field-group-component-aurora',
+              label: 'Field Group UI Component Aurora',
+              route: '/ui-demo/field-group-component-aurora',
+              icon: 'group',
+              badge: {
+                value: 'New',
+                intent: 'success',
+              },
+            },
+            {
               id: 'help-copy-ui',
               label: 'Help Copy UI',
               route: '/ui-demo/help-copy-container-ui',

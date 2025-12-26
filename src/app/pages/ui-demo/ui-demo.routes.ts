@@ -97,6 +97,13 @@ export const UI_DEMO_ROUTES: Routes = [
       import('./field-group-ui/field-group-ui.component').then((m) => m.FieldGroupUiComponent),
   },
   {
+    path: 'field-group-component-aurora',
+    loadComponent: () =>
+      import('./field-group-component-aurora/field-group-control-aurora.component').then(
+        (m) => m.FieldGroupControlAuroraComponent,
+      ),
+  },
+  {
     path: 'search-ui',
     loadComponent: () => import('./search-ui/search-ui.component').then((m) => m.SearchUiComponent),
   },

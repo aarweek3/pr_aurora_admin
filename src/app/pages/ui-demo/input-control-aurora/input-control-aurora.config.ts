@@ -1,6 +1,6 @@
 import { ControlDocumentationConfig } from '@shared/components/ui/control-documentation';
 
-export const INPUT_CONTROL_DOCUMENTATION: ControlDocumentationConfig = {
+export const DOCUMENTATION: ControlDocumentationConfig = {
   // Информация о демонстрационном компоненте
   demoComponent: {
     name: 'InputControlAuroraComponent',

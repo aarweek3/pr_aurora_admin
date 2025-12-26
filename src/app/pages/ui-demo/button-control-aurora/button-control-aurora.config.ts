@@ -3,7 +3,7 @@ import { ControlDocumentationConfig } from '@shared/components/ui/control-docume
 /**
  * Конфигурация документации для ButtonControlAurora
  */
-export const BUTTON_CONTROL_DOCUMENTATION: ControlDocumentationConfig = {
+export const DOCUMENTATION: ControlDocumentationConfig = {
   demoComponent: {
     name: 'ButtonControlAuroraComponent',
     path: 'src/app/pages/ui-demo/button-control-aurora/',

@@ -1,6 +1,6 @@
 import { ControlDocumentationConfig } from '@shared/components/ui/control-documentation';
 
-export const COLOR_COMPONENT_DOCUMENTATION: ControlDocumentationConfig = {
+export const DOCUMENTATION: ControlDocumentationConfig = {
   demoComponent: {
     name: 'ColorComponentAuroraComponent',
     path: 'src/app/pages/ui-demo/color-component-aurora/',

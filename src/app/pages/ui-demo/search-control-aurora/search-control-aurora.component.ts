@@ -16,7 +16,7 @@ import {
   ShowcaseComponent,
   ShowcaseConfig,
 } from '@shared/components/ui/showcase/showcase.component';
-import { SEARCH_CONTROL_DOCUMENTATION } from './search-control-aurora.config';
+import { DOCUMENTATION } from './search-control-aurora.config';
 
 @Component({
   selector: 'app-search-control-aurora',
@@ -42,7 +42,7 @@ import { SEARCH_CONTROL_DOCUMENTATION } from './search-control-aurora.config';
 })
 export class SearchControlAuroraComponent implements OnInit {
   // Конфигурация документации
-  readonly documentationConfig = SEARCH_CONTROL_DOCUMENTATION;
+  readonly documentationConfig = DOCUMENTATION;
 
   ngOnInit() {
     console.log('SearchControlAuroraComponent Init');

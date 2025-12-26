@@ -1,0 +1,215 @@
+<av-showcase [config]="showcaseConfig" [generatedCodeInput]="generatedCode()">
+  <!-- TAB SECTION: PLAYGROUND (Controls) -->
+  <div showcase-tabs>
+    <nz-tabset [nzAnimated]="false">
+      <nz-tab nzTitle="🎮 Playground">
+        <div class="demo-form">
+          <!-- Основные настройки -->
+          <h3 class="form-section-title">Основные настройки</h3>
+
+          <div class="control-group">
+            <label class="control-label">Заголовок группы:</label>
+            <input
+              nz-input
+              [ngModel]="config().label"
+              (ngModelChange)="updateConfig('label', $event)"
+              placeholder="Введите заголовок..."
+            />
+          </div>
+
+          <div class="control-group">
+            <label class="control-label">Стилевой вариант:</label>
+            <nz-select
+              [ngModel]="config().variant"
+              (ngModelChange)="updateConfig('variant', $event)"
+              style="width: 100%"
+            >
+              @for (variant of variants; track variant.value) {
+              <nz-option [nzValue]="variant.value" [nzLabel]="variant.label"></nz-option>
+              }
+            </nz-select>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label">Размер:</label>
+            <nz-select [ngModel]="config().size" (ngModelChange)="updateConfig('size', $event)" style="width: 100%">
+              @for (size of sizes; track size.value) {
+              <nz-option [nzValue]="size.value" [nzLabel]="size.label"></nz-option>
+              }
+            </nz-select>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label">Форма углов:</label>
+            <nz-select [ngModel]="config().shape" (ngModelChange)="updateConfig('shape', $event)" style="width: 100%">
+              @for (shape of shapes; track shape.value) {
+              <nz-option [nzValue]="shape.value" [nzLabel]="shape.label"></nz-option>
+              }
+            </nz-select>
+          </div>
+
+          <!-- Поведение -->
+          <h3 class="form-section-title">Поведение</h3>
+
+          <div class="control-group checkbox-group">
+            <label nz-checkbox [ngModel]="config().collapsible" (ngModelChange)="updateConfig('collapsible', $event)">
+              Включить сворачивание
+            </label>
+          </div>
+
+          <div class="control-group checkbox-group">
+            <label
+              nz-checkbox
+              [ngModel]="config().isCollapsed"
+              (ngModelChange)="updateConfig('isCollapsed', $event)"
+              [nzDisabled]="!config().collapsible"
+            >
+              Свернуть по умолчанию
+            </label>
+          </div>
+
+          <!-- Кнопка сброса -->
+          <div class="control-group" style="margin-top: 24px">
+            <button av-button avType="default" (click)="resetToDefaults()">Сбросить к умолчанию</button>
+          </div>
+        </div>
+      </nz-tab>
+
+      <nz-tab nzTitle="📚 Примеры">
+        <control-documentation [config]="documentationConfig"></control-documentation>
+      </nz-tab>
+    </nz-tabset>
+  </div>
+
+  <!-- RESULT: LIVE PREVIEW -->
+  <div showcase-result>
+    <div class="preview-container">
+      <av-field-group
+        [label]="config().label"
+        [variant]="config().variant"
+        [size]="config().size"
+        [shape]="config().shape"
+        [collapsible]="config().collapsible"
+        [(isCollapsed)]="config().isCollapsed"
+        [showBackground]="config().showBackground"
+        [hoverBackground]="config().hoverBackground"
+        [labelColor]="config().labelColor"
+        [borderColor]="config().borderColor"
+      >
+        <input av-input placeholder="Введите имя..." style="margin-bottom: 16px" />
+        <input av-input placeholder="Введите email..." style="margin-bottom: 16px" />
+
+        <div style="display: flex; gap: 8px; align-items: center">
+          <label
+            nz-checkbox
+            [ngModel]="exampleFormData().notifications"
+            (ngModelChange)="updateExampleFormData('notifications', $event)"
+          >
+            Получать уведомления
+          </label>
+        </div>
+      </av-field-group>
+    </div>
+  </div>
+
+  <!-- RESULT: DESCRIPTION -->
+  <div showcase-description>
+    <div class="config-summary">
+      <div class="config-grid">
+        <div class="config-item">
+          <span class="config-label">Заголовок</span>
+          <span class="config-value">{{ config().label }}</span>
+        </div>
+        <div class="config-item">
+          <span class="config-label">Вариант</span>
+          <span class="config-value">{{ config().variant }}</span>
+        </div>
+        <div class="config-item">
+          <span class="config-label">Размер</span>
+          <span class="config-value">{{ config().size }}</span>
+        </div>
+        <div class="config-item">
+          <span class="config-label">Форма</span>
+          <span class="config-value">{{ config().shape }}</span>
+        </div>
+        <div class="config-item">
+          <span class="config-label">Сворачиваемый</span>
+          <span class="config-value">{{ config().collapsible ? 'Да' : 'Нет' }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- USAGE EXAMPLES -->
+  <div showcase-examples>
+    <div class="demo-form">
+      <div class="example-block" style="margin-bottom: 32px">
+        <h4>1. Базовое использование</h4>
+        <p>Простая группа полей с заголовком:</p>
+
+        <div
+          style="padding: 24px; border: 1px solid #f0f0f0; border-radius: 6px; margin-bottom: 16px; background: white"
+        >
+          <av-field-group label="Персональная информация">
+            <input
+              av-input
+              placeholder="Ваше имя"
+              [ngModel]="exampleFormData().name"
+              (ngModelChange)="updateExampleFormData('name', $event)"
+              style="margin-bottom: 12px"
+            />
+            <input
+              av-input
+              placeholder="Email адрес"
+              [ngModel]="exampleFormData().email"
+              (ngModelChange)="updateExampleFormData('email', $event)"
+            />
+          </av-field-group>
+        </div>
+
+        <pre><code>&lt;av-field-group label="Персональная информация"&gt;
+  &lt;input av-input placeholder="Ваше имя" /&gt;
+  &lt;input av-input placeholder="Email адрес" /&gt;
+&lt;/av-field-group&gt;</code></pre>
+      </div>
+
+      <div class="example-block">
+        <h4>2. Сворачиваемая группа</h4>
+        <p>Группа с возможностью сворачивания содержимого:</p>
+
+        <div
+          style="padding: 24px; border: 1px solid #f0f0f0; border-radius: 6px; margin-bottom: 16px; background: white"
+        >
+          <av-field-group label="Дополнительные настройки" [collapsible]="true" [(isCollapsed)]="exampleCollapsed">
+            <input
+              av-input
+              placeholder="Город"
+              [ngModel]="exampleFormData().city"
+              (ngModelChange)="updateExampleFormData('city', $event)"
+              style="margin-bottom: 12px"
+            />
+            <input
+              av-input
+              placeholder="Страна"
+              [ngModel]="exampleFormData().country"
+              (ngModelChange)="updateExampleFormData('country', $event)"
+            />
+          </av-field-group>
+        </div>
+
+        <pre><code>&lt;av-field-group
+  label="Дополнительные настройки"
+  [collapsible]="true"
+  [(isCollapsed)]="isCollapsed"&gt;
+  &lt;input av-input placeholder="Город" /&gt;
+  &lt;input av-input placeholder="Страна" /&gt;
+&lt;/av-field-group&gt;</code></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOTTOM: Documentation -->
+  <div showcase-docs>
+    <control-documentation [config]="documentationConfig"></control-documentation>
+  </div>
+</av-showcase>

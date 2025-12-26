@@ -14,6 +14,7 @@ import { ControlDocumentationComponent } from '@shared/components/ui/control-doc
 import { NzRadioModule } from 'ng-zorro-antd/radio';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzTabsModule } from 'ng-zorro-antd/tabs';
+import { ICON_PRESETS } from '../../../../assets/constants/icon-presets.const';
 import {
   ButtonDirective,
   ButtonSize,
@@ -27,8 +28,7 @@ import {
   ShowcaseComponent,
   ShowcaseConfig,
 } from '../../../shared/components/ui/showcase/showcase.component';
-import { BUTTON_CONTROL_DOCUMENTATION } from './button-control-aurora.config';
-import { ICON_PRESETS } from './icon-presets.const';
+import { DOCUMENTATION } from './button-control-aurora.config';
 
 // Интерфейс конфигурации кнопки
 interface ButtonConfig {
@@ -79,7 +79,7 @@ export class ButtonControlAuroraComponent implements OnDestroy {
   private messageTimer: ReturnType<typeof setTimeout> | null = null;
 
   // Конфигурация универсальной документации
-  readonly documentationConfig = BUTTON_CONTROL_DOCUMENTATION;
+  readonly documentationConfig = DOCUMENTATION;
   // Конфигурация showcase с новой 3-блочной структурой
   readonly showcaseConfig: ShowcaseConfig = {
     headerConfig: {

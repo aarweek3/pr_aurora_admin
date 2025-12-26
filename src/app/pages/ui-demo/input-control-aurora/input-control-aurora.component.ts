@@ -20,7 +20,7 @@ import {
   ShowcaseComponent,
   ShowcaseConfig,
 } from '@shared/components/ui/showcase/showcase.component';
-import { INPUT_CONTROL_DOCUMENTATION } from './input-control-aurora.config';
+import { DOCUMENTATION } from './input-control-aurora.config';
 
 interface InputDemoConfig {
   type: 'directive' | 'component';
@@ -79,7 +79,7 @@ interface InputDemoConfig {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InputControlAuroraComponent {
-  readonly documentationConfig = INPUT_CONTROL_DOCUMENTATION;
+  readonly documentationConfig = DOCUMENTATION;
 
   readonly showcaseConfig: ShowcaseConfig = {
     headerConfig: {

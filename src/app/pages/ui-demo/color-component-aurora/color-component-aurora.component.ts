@@ -22,7 +22,7 @@ import {
   ShowcaseComponent,
   ShowcaseConfig,
 } from '../../../shared/components/ui/showcase/showcase.component';
-import { COLOR_COMPONENT_DOCUMENTATION } from './color-component-aurora.config';
+import { DOCUMENTATION } from './color-component-aurora.config';
 
 // Экспорт типов для использования в других компонентах
 export { CustomColor, PickerMode } from '../../../shared/components/ui/picker/picker.types';
@@ -56,7 +56,7 @@ export class ColorComponentAuroraComponent implements OnDestroy {
   private messageTimer: ReturnType<typeof setTimeout> | null = null;
 
   // Конфигурация документации
-  readonly documentationConfig = COLOR_COMPONENT_DOCUMENTATION;
+  readonly documentationConfig = DOCUMENTATION;
 
   // Конфигурация showcase с новой 3-блочной структурой
   readonly showcaseConfig: ShowcaseConfig = {
