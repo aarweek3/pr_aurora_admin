@@ -43,15 +43,15 @@ export class ControlDocumentationComponent {
   getArchitectureNoteIcon(type: string): string {
     switch (type) {
       case 'info':
-        return 'general/av_info';
+        return 'system/av_info';
       case 'warning':
-        return 'general/av_warning';
+        return 'system/av_warning';
       case 'tip':
-        return 'general/av_bulb';
+        return 'system/av_star';
       case 'danger':
-        return 'general/av_error';
+        return 'settings/av_exclamation-mark';
       default:
-        return 'general/av_info';
+        return 'system/av_info';
     }
   }
 }

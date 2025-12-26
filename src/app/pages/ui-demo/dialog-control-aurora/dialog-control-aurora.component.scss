@@ -110,6 +110,57 @@
   }
 }
 
+// Стили для блоков кода в табе "Код"
+.code-block-container {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+
+  .code-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 16px;
+    background: #f3f4f6;
+    color: #374151;
+    font-size: 12px;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    border-bottom: 1px solid #e5e7eb;
+
+    .copy-btn {
+      background: transparent;
+      border: none;
+      color: #6b7280;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 4px;
+      transition: all 0.2s;
+
+      &:hover {
+        background: #e5e7eb;
+        color: #111827;
+      }
+    }
+  }
+
+  pre {
+    margin: 0;
+    padding: 16px;
+    max-height: 400px;
+    overflow: auto;
+
+    code {
+      color: #000000;
+      font-family: "Consolas", "Monaco", "Courier New", monospace;
+      font-size: 13px;
+      line-height: 1.5;
+      white-space: pre-wrap;
+    }
+  }
+}
+
 .example-item {
   background: white;
   border: 1px solid #f0f0f0;

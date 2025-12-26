@@ -469,7 +469,7 @@ export const API_EXAMPLE = \`interface PickerProps {
 {
   id: 'my-demo-page',
   title: 'My Demo Page',
-  icon: 'general/av_palette',
+  icon: 'editor/av_paint',
   href: '/ui-demo/my-demo-page',
   badge: { text: '🎨', intent: 'info' },
 },

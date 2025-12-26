@@ -6,7 +6,7 @@ export const DOCUMENTATION: ControlDocumentationConfig = {
     name: 'InputControlAuroraComponent',
     path: 'src/app/pages/ui-demo/input-control-aurora/input-control-aurora.component.ts',
     description: 'Демонстрация полей ввода (Input)',
-    icon: 'edit',
+    icon: 'editor/av_edit',
   },
 
   // Описание основного функционала

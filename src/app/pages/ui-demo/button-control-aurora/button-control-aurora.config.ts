@@ -126,7 +126,7 @@ export const DOCUMENTATION: ControlDocumentationConfig = {
   [avLoading]="isLoading"
   [disabled]="isDisabled"
   (click)="onDeleteClick()">
-  <av-icon type="general/av_delete"></av-icon>
+  <av-icon type="actions/av_trash"></av-icon>
   Удалить
 </button>`,
       tsCode: `export class MyComponent {

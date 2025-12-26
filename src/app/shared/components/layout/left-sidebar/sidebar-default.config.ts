@@ -26,40 +26,24 @@ export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
           label: 'Health Monitoring',
           type: 'link',
           route: '/health',
-          badge: {
-            value: 'Live',
-            intent: 'success',
-          },
         },
         {
           id: 'ui-demo',
           icon: 'appstore',
           label: 'UI Demo',
           type: 'submenu',
-          badge: {
-            value: 'New',
-            intent: 'success',
-          },
           submenu: [
             {
               id: 'button-control-aurora',
               label: 'Button Component Aurora',
               route: '/ui-demo/button-control-aurora',
               icon: 'appstore',
-              badge: {
-                value: 'New',
-                intent: 'success',
-              },
             },
             {
               id: 'color-component-aurora',
               label: 'Color Component Aurora',
               route: '/ui-demo/color-component-aurora',
               icon: 'bg-colors',
-              badge: {
-                value: '🎨',
-                intent: 'info',
-              },
             },
 
             {
@@ -67,30 +51,12 @@ export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
               label: 'Dialog Component Aurora',
               route: '/ui-demo/dialog-control-aurora',
               icon: 'message',
-              badge: {
-                value: 'New',
-                intent: 'success',
-              },
-            },
-            {
-              id: 'field-group-ui',
-              label: 'Field Group UI',
-              route: '/ui-demo/field-group-ui',
-              icon: 'group',
-              badge: {
-                value: 'New',
-                intent: 'success',
-              },
             },
             {
               id: 'field-group-component-aurora',
               label: 'Field Group UI Component Aurora',
               route: '/ui-demo/field-group-component-aurora',
               icon: 'group',
-              badge: {
-                value: 'New',
-                intent: 'success',
-              },
             },
             {
               id: 'help-copy-ui',
@@ -103,10 +69,6 @@ export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
               label: 'Icon Component Aurora',
               route: '/ui-demo/icon-control-aurora',
               icon: 'star',
-              badge: {
-                value: '✨',
-                intent: 'warning',
-              },
             },
             {
               id: 'icon-ui',
@@ -119,10 +81,6 @@ export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
               label: 'Input Component Aurora',
               route: '/ui-demo/input-control-aurora',
               icon: 'edit',
-              badge: {
-                value: 'New',
-                intent: 'success',
-              },
             },
 
             {
@@ -130,10 +88,6 @@ export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
               label: 'Modal UI Demo New',
               route: '/ui-demo/modal-ui-new',
               icon: 'layout',
-              badge: {
-                value: 'New',
-                intent: 'success',
-              },
             },
             {
               id: 'pagination-ui',
@@ -165,10 +119,6 @@ export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
               label: 'Search Component Aurora',
               route: '/ui-demo/search-control-aurora',
               icon: 'search',
-              badge: {
-                value: 'New',
-                intent: 'success',
-              },
             },
             {
               id: 'tag-ui',
@@ -193,10 +143,6 @@ export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
               label: 'Wrapper UI Test 🎁',
               route: '/ui-demo/wrapper-ui-test',
               icon: 'gift',
-              badge: {
-                value: 'New',
-                intent: 'success',
-              },
             },
           ],
         },
@@ -223,10 +169,6 @@ export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
               label: 'Button UI New',
               route: '/ui-demo/button-ui-new',
               icon: 'appstore',
-              badge: {
-                value: 'Old',
-                intent: 'warning',
-              },
             },
             {
               id: 'color-picker-demo',
@@ -263,10 +205,12 @@ export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
               label: 'Dialog Icon UI',
               route: '/ui-demo/dialog-icon-ui',
               icon: 'message',
-              badge: {
-                value: 'Old',
-                intent: 'info',
-              },
+            },
+            {
+              id: 'field-group-ui',
+              label: 'Field Group UI',
+              route: '/ui-demo/field-group-ui',
+              icon: 'group',
             },
           ],
         },
@@ -276,10 +220,6 @@ export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
           label: 'Аналитика',
           type: 'link',
           route: '/analytics',
-          badge: {
-            value: 'New',
-            intent: 'success',
-          },
         },
         {
           id: 'users',
@@ -287,10 +227,6 @@ export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
           label: 'Пользователи',
           type: 'link',
           route: '/users',
-          badge: {
-            value: 5,
-            intent: 'info',
-          },
         },
       ],
     },
@@ -309,10 +245,6 @@ export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
               label: 'Статьи',
               route: '/content/articles',
               icon: 'read',
-              badge: {
-                value: 12,
-                intent: 'info',
-              },
             },
             {
               id: 'categories',
@@ -357,10 +289,6 @@ export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
               label: 'Черновики',
               route: '/pages/drafts',
               icon: 'edit',
-              badge: {
-                value: 3,
-                intent: 'warning',
-              },
             },
           ],
         },
