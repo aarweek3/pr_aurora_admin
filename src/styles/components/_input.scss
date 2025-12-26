@@ -172,8 +172,6 @@
     border: none;
     border-bottom: 1px solid $color-border-base;
     border-radius: 0;
-    padding-left: 0;
-    padding-right: 0;
 
     &:focus {
       border-bottom-color: $color-primary;
@@ -183,6 +181,11 @@
     &:hover:not(:disabled):not(:focus) {
       border-bottom-color: $color-primary-hover;
     }
+  }
+
+  // Dashed modifier
+  &--dashed {
+    border-style: dashed;
   }
 
   // ============================================================================

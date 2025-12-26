@@ -123,12 +123,7 @@ export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
                 intent: 'success',
               },
             },
-            {
-              id: 'input-ui',
-              label: 'Input UI',
-              route: '/ui-demo/input-ui',
-              icon: 'edit',
-            },
+
             {
               id: 'modal-ui-new',
               label: 'Modal UI Demo New',
@@ -157,12 +152,7 @@ export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
               route: '/ui-demo/progress-ui',
               icon: 'line-chart',
             },
-            {
-              id: 'search-ui',
-              label: 'Search UI',
-              route: '/ui-demo/search-ui',
-              icon: 'search',
-            },
+
             {
               id: 'spinner-ui',
               label: 'Spinner UI',
@@ -254,6 +244,18 @@ export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
               label: 'Modal UI',
               route: '/ui-demo/modal-ui',
               icon: 'border',
+            },
+            {
+              id: 'input-ui',
+              label: 'Input UI',
+              route: '/ui-demo/input-ui',
+              icon: 'edit',
+            },
+            {
+              id: 'search-ui',
+              label: 'Search UI',
+              route: '/ui-demo/search-ui',
+              icon: 'search',
             },
           ],
         },

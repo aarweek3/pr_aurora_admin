@@ -47,6 +47,11 @@ export class InputDirective {
   avVariant = input<'outlined' | 'filled' | 'borderless'>('outlined');
 
   /**
+   * Пунктирная рамка
+   */
+  avDashed = input<boolean>(false);
+
+  /**
    * Отключенное состояние
    */
   disabled = input<boolean>(false);
@@ -101,6 +106,10 @@ export class InputDirective {
 
     if (this.avVariant() !== 'outlined') {
       classes.push(`av-input--${this.avVariant()}`);
+    }
+
+    if (this.avDashed()) {
+      classes.push('av-input--dashed');
     }
 
     if (this.disabled()) {

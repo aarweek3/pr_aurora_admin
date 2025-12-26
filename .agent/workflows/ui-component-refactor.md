@@ -125,8 +125,7 @@ export class [Name]ControlAuroraComponent {
       </nz-tab>
 
       <nz-tab nzTitle="📖 API">
-        <!-- Use av-help-copy-container for API docs -->
-        <av-help-copy-container [content]="apiDoc" ...></av-help-copy-container>
+        <control-documentation [config]="documentationConfig"></control-documentation>
       </nz-tab>
     </nz-tabset>
   </div>
@@ -151,8 +150,66 @@ export class [Name]ControlAuroraComponent {
       </div>
     </div>
   </div>
+
+  <!-- USAGE EXAMPLES (Bottom Section) -->
+  <div showcase-examples>
+    <div class="demo-form">
+      <!-- Example 1 -->
+      <div class="example-block" style="margin-bottom: 32px">
+        <h4>1. Базовый пример</h4>
+        <!-- Live Component -->
+        <div style="padding: 24px; border: 1px solid #f0f0f0; border-radius: 6px; margin-bottom: 16px; background: white">
+          <app-target-component [(value)]="exampleSignal"></app-target-component>
+        </div>
+        <!-- Code Block -->
+        <pre style="..."><code>...</code></pre>
+      </div>
+    </div>
+  </div>
 </av-showcase>
 ```
+
+## ЭТАП 3.1: Настройка Примеров Использования (Usage Examples)
+
+Для отображения секции "Примеры использования" (как в `ButtonControlAuora` или `SearchControlAurora`):
+
+1.  **Включите опцию в конфиге**:
+    В `showcaseConfig` установите `showExamples: true`.
+
+2.  **Добавьте сигналы для примеров (.ts)**:
+    Если примеры интерактивны, создайте отдельные сигналы для них, чтобы они не зависели от главного Playground.
+
+    ```typescript
+    exampleValue1 = signal("");
+    exampleValue2 = signal("Initial");
+    ```
+
+3.  **Используйте слот `showcase-examples` (.html)**:
+    Разместите контент примеров внутри `div` с атрибутом `showcase-examples`.
+
+    ```html
+    <div showcase-examples>
+      <div class="demo-form">
+        <div class="example-block">
+          <h4>Заголовок примера</h4>
+          <p>Описание...</p>
+
+          <!-- Живой пример с отдельным состоянием -->
+          <div class="live-example-container">
+            <app-target-component [(value)]="exampleValue1"></app-target-component>
+          </div>
+
+          <!-- Блок кода (можно копировать из .config.ts) -->
+          <pre><code>...</code></pre>
+        </div>
+      </div>
+    </div>
+    ```
+
+4.  **Убедитесь, что `ControlDocumentationComponent` подключен**:
+    Для вкладок "Код" и "API" используйте `<control-documentation [config]="documentationConfig">`. Это заменит старые `av-help-copy-container` для стандартных секций.
+
+````
 
 ## ЭТАП 4: Документация (.docs.ts)
 
@@ -169,7 +226,7 @@ export const API_DOC = \`
 @Input() prop1: string; // Description
 @Input() prop2: boolean; // Description
 \`;
-```
+````
 
 ## ЭТАП 5: Интеграция
 

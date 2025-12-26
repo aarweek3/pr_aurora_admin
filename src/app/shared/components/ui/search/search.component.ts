@@ -38,6 +38,14 @@ import { InputDirective } from '../input/input.directive';
           type="text"
           avInput
           [avSize]="avSize()"
+          [avVariant]="avVariant()"
+          [avStatus]="avStatus()"
+          [avShape]="avShape()"
+          [avDashed]="avDashed()"
+          [avBlock]="true"
+          [avWidth]="avWidth()"
+          [avHeight]="avHeight()"
+          [avRadius]="avRadius()"
           [placeholder]="avPlaceholder()"
           [value]="value()"
           (input)="onInputChange($event)"
@@ -165,6 +173,18 @@ export class SearchInputComponent {
   avPlaceholder = input<string>('Поиск...');
   avButtonText = input<string>('Найти');
   avSize = input<'small' | 'default' | 'large' | 'x-large'>('default');
+  avVariant = input<'outlined' | 'filled' | 'borderless'>('outlined');
+  avShape = input<'default' | 'rounded' | 'rounded-big'>('default');
+  avStatus = input<'default' | 'error' | 'warning' | 'success'>('default');
+  avBlock = input<boolean>(false);
+  avDashed = input<boolean>(false);
+
+  // Custom dimensions
+  avWidth = input<string | number | null>(null);
+  avHeight = input<string | number | null>(null);
+  avRadius = input<string | number | null>(null);
+  avVisible = input<boolean>(true);
+
   avDebounceTime = input<number>(300);
 
   // Value model (two-way binding)

@@ -57,7 +57,9 @@ import { InputDirective } from './input.directive';
           [avRadius]="radius()"
           [avVisible]="visible()"
           [avBlock]="block()"
+          [avBlock]="block()"
           [avShape]="shape()"
+          [avDashed]="dashed()"
           [avIconSize]="iconSize()"
           [avIconColor]="iconColor()"
           [avPrefixIconSize]="prefixIconSize()"
@@ -327,6 +329,8 @@ export class InputComponent implements ControlValueAccessor {
 
   /** Форма (скругление) */
   shape = input<'default' | 'rounded' | 'rounded-big'>('default');
+
+  dashed = input<boolean>(false);
 
   /** Иконка в начале */
   prefixIcon = input<string | null>(null);

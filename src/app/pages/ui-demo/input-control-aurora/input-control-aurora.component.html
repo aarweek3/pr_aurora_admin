@@ -17,74 +17,94 @@
             </div>
 
             <!-- Basic Props -->
-            <div nz-col [nzSpan]="12">
+            <div nz-col [nzSpan]="24">
               <div class="control-group">
                 <label class="control-label">Размер:</label>
-                <nz-select [ngModel]="config().size" (ngModelChange)="updateConfig('size', $event)" style="width: 100%">
-                  <nz-option nzValue="small" nzLabel="Small"></nz-option>
-                  <nz-option nzValue="default" nzLabel="Default"></nz-option>
-                  <nz-option nzValue="large" nzLabel="Large"></nz-option>
-                  <nz-option nzValue="x-large" nzLabel="X-Large"></nz-option>
-                  <nz-option nzValue="custom" nzLabel="Custom"></nz-option>
-                </nz-select>
+                <nz-radio-group [ngModel]="config().size" (ngModelChange)="updateConfig('size', $event)">
+                  <label nz-radio nzValue="small">Small</label>
+                  <label nz-radio nzValue="default">Default</label>
+                  <label nz-radio nzValue="large">Large</label>
+                  <label nz-radio nzValue="x-large">X-Large</label>
+                  <label nz-radio nzValue="custom">Custom</label>
+                </nz-radio-group>
               </div>
             </div>
 
-            <div nz-col [nzSpan]="12">
+            <!-- Custom Dimensions -->
+            <div nz-col [nzSpan]="24" *ngIf="config().size === 'custom'">
+              <div class="control-group">
+                <label class="control-label">Кастомные размеры (W / H / R):</label>
+                <div style="display: flex; gap: 8px">
+                  <input
+                    nz-input
+                    placeholder="Width"
+                    [ngModel]="config().width"
+                    (ngModelChange)="updateConfig('width', $event)"
+                  />
+                  <input
+                    nz-input
+                    placeholder="Height"
+                    [ngModel]="config().height"
+                    (ngModelChange)="updateConfig('height', $event)"
+                  />
+                  <input
+                    nz-input
+                    placeholder="Radius"
+                    [ngModel]="config().radius"
+                    (ngModelChange)="updateConfig('radius', $event)"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div nz-col [nzSpan]="24">
               <div class="control-group">
                 <label class="control-label">Тип ввода:</label>
-                <nz-select
-                  [ngModel]="config().inputType"
-                  (ngModelChange)="updateConfig('inputType', $event)"
-                  style="width: 100%"
-                >
-                  <nz-option nzValue="text" nzLabel="Text"></nz-option>
-                  <nz-option nzValue="password" nzLabel="Password"></nz-option>
-                  <nz-option nzValue="email" nzLabel="Email"></nz-option>
-                  <nz-option nzValue="number" nzLabel="Number"></nz-option>
-                </nz-select>
+                <nz-radio-group [ngModel]="config().inputType" (ngModelChange)="updateConfig('inputType', $event)">
+                  <label nz-radio nzValue="text">Text</label>
+                  <label nz-radio nzValue="password">Password</label>
+                  <label nz-radio nzValue="email">Email</label>
+                  <label nz-radio nzValue="number">Number</label>
+                </nz-radio-group>
               </div>
             </div>
 
-            <div nz-col [nzSpan]="12">
+            <div nz-col [nzSpan]="24">
               <div class="control-group">
                 <label class="control-label">Статус:</label>
-                <nz-select
-                  [ngModel]="config().status"
-                  (ngModelChange)="updateConfig('status', $event)"
-                  style="width: 100%"
-                >
-                  <nz-option nzValue="default" nzLabel="Default"></nz-option>
-                  <nz-option nzValue="error" nzLabel="Error"></nz-option>
-                  <nz-option nzValue="warning" nzLabel="Warning"></nz-option>
-                  <nz-option nzValue="success" nzLabel="Success"></nz-option>
-                </nz-select>
+                <nz-radio-group [ngModel]="config().status" (ngModelChange)="updateConfig('status', $event)">
+                  <label nz-radio nzValue="default">Default</label>
+                  <label nz-radio nzValue="error">Error</label>
+                  <label nz-radio nzValue="warning">Warning</label>
+                  <label nz-radio nzValue="success">Success</label>
+                </nz-radio-group>
               </div>
             </div>
 
-            <div nz-col [nzSpan]="12">
+            <div nz-col [nzSpan]="24">
               <div class="control-group">
                 <label class="control-label">Форма:</label>
-                <nz-select
-                  [ngModel]="config().shape"
-                  (ngModelChange)="updateConfig('shape', $event)"
-                  style="width: 100%"
-                >
-                  <nz-option nzValue="default" nzLabel="Default"></nz-option>
-                  <nz-option nzValue="rounded" nzLabel="Rounded"></nz-option>
-                  <nz-option nzValue="rounded-big" nzLabel="Rounded Big"></nz-option>
-                </nz-select>
+                <nz-radio-group [ngModel]="config().shape" (ngModelChange)="updateConfig('shape', $event)">
+                  <label nz-radio nzValue="default">Default</label>
+                  <label nz-radio nzValue="rounded">Rounded</label>
+                  <label nz-radio nzValue="rounded-big">Rounded Big</label>
+                </nz-radio-group>
               </div>
             </div>
 
             <div nz-col [nzSpan]="24">
               <div class="control-group">
                 <label class="control-label">Вариант:</label>
-                <nz-radio-group [ngModel]="config().variant" (ngModelChange)="updateConfig('variant', $event)">
-                  <label nz-radio-button nzValue="outlined">Outlined (Default)</label>
-                  <label nz-radio-button nzValue="filled">Filled</label>
-                  <label nz-radio-button nzValue="borderless">Borderless</label>
-                </nz-radio-group>
+                <div style="display: flex; align-items: center; gap: 16px">
+                  <nz-radio-group [ngModel]="config().variant" (ngModelChange)="updateConfig('variant', $event)">
+                    <label nz-radio nzValue="outlined">Outlined</label>
+                    <label nz-radio nzValue="filled">Filled</label>
+                    <label nz-radio nzValue="borderless">Borderless</label>
+                  </nz-radio-group>
+                  <label nz-checkbox [ngModel]="config().dashed" (ngModelChange)="updateConfig('dashed', $event)"
+                    >Dashed (Пунктир)</label
+                  >
+                </div>
               </div>
             </div>
 
@@ -283,7 +303,11 @@
             [avStatus]="config().status"
             [avVariant]="config().variant"
             [avShape]="config().shape"
+            [avDashed]="config().dashed"
             [avBlock]="config().block"
+            [avWidth]="config().width"
+            [avHeight]="config().height"
+            [avRadius]="config().radius"
             [disabled]="config().disabled"
             [ngModel]="config().value"
             (ngModelChange)="updateConfig('value', $event)"
@@ -304,6 +328,10 @@
             [hint]="config().hint"
             [prefixIcon]="config().prefixIcon"
             [suffixIcon]="config().suffixIcon"
+            [width]="config().width"
+            [height]="config().height"
+            [radius]="config().radius"
+            [dashed]="config().dashed"
             [ngModel]="config().value"
             (ngModelChange)="updateConfig('value', $event)"
           ></av-input>

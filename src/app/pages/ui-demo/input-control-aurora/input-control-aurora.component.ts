@@ -6,6 +6,7 @@ import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
 import { NzGridModule } from 'ng-zorro-antd/grid';
 import { NzInputModule } from 'ng-zorro-antd/input';
+import { NzRadioModule } from 'ng-zorro-antd/radio';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzSliderModule } from 'ng-zorro-antd/slider';
 import { NzSwitchModule } from 'ng-zorro-antd/switch';
@@ -46,6 +47,7 @@ interface InputDemoConfig {
   width: string | number | null;
   height: string | number | null;
   radius: string | number | null;
+  dashed: boolean;
 }
 
 @Component({
@@ -61,6 +63,7 @@ interface InputDemoConfig {
 
     NzGridModule,
     NzInputModule,
+    NzRadioModule,
     NzSelectModule,
     NzSwitchModule,
     NzSliderModule,
@@ -125,6 +128,7 @@ export class InputControlAuroraComponent {
     width: null,
     height: null,
     radius: null,
+    dashed: false,
   });
 
   // Helpers
@@ -164,6 +168,7 @@ export class InputControlAuroraComponent {
       width: null,
       height: null,
       radius: null,
+      dashed: false,
     });
   }
 
@@ -180,6 +185,7 @@ export class InputControlAuroraComponent {
       if (c.status !== 'default') attrs.push(`avStatus="${c.status}"`);
       if (c.variant !== 'outlined') attrs.push(`avVariant="${c.variant}"`);
       if (c.shape !== 'default') attrs.push(`avShape="${c.shape}"`);
+      if (c.dashed) attrs.push(`[avDashed]="true"`);
       if (c.disabled) attrs.push('disabled');
       if (isCustom) {
         if (c.width) attrs.push(`[avWidth]="${c.width}"`);
@@ -206,6 +212,7 @@ export class InputControlAuroraComponent {
       if (c.status !== 'default') attrs.push(`status="${c.status}"`);
       if (c.variant !== 'outlined') attrs.push(`variant="${c.variant}"`);
       if (c.shape !== 'default') attrs.push(`shape="${c.shape}"`);
+      if (c.dashed) attrs.push(`[dashed]="true"`);
       if (c.hint) attrs.push(`hint="${c.hint}"`);
       if (c.status === 'error' && c.errorMessage) attrs.push(`errorMessage="${c.errorMessage}"`);
 
