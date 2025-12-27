@@ -1,0 +1,305 @@
+<av-showcase [config]="showcaseConfig" [generatedCodeInput]="codeForShowcase()">
+  <!-- TAB SECTION: TABS & CONTROLS -->
+  <div showcase-tabs>
+    <nz-tabset [nzAnimated]="false">
+      <!-- 1. PLAYGROUND -->
+      <nz-tab nzTitle="🎮 Playground">
+        <div class="demo-form">
+          <h3 class="form-section-title">Основные настройки</h3>
+
+          <div class="control-group">
+            <label class="control-label">Заполнение (%)</label>
+            <div class="control-row" style="grid-template-columns: 1fr 80px">
+              <nz-slider
+                [nzMin]="0"
+                [nzMax]="100"
+                [ngModel]="config().percent"
+                (ngModelChange)="updateConfig('percent', $event)"
+              ></nz-slider>
+              <nz-input-number
+                [nzMin]="0"
+                [nzMax]="100"
+                [ngModel]="config().percent"
+                (ngModelChange)="updateConfig('percent', $event)"
+                style="width: 100%"
+              ></nz-input-number>
+            </div>
+          </div>
+
+          <div class="control-row">
+            <div class="control-group">
+              <label class="control-label">Тип (Type):</label>
+              <nz-select [ngModel]="config().type" (ngModelChange)="updateConfig('type', $event)">
+                @for (t of types; track t.value) {
+                <nz-option [nzLabel]="t.label" [nzValue]="t.value"></nz-option>
+                }
+              </nz-select>
+            </div>
+            <div class="control-group">
+              <label class="control-label">Статус (Status):</label>
+              <nz-select [ngModel]="config().status" (ngModelChange)="updateConfig('status', $event)">
+                @for (s of statuses; track s.value) {
+                <nz-option [nzLabel]="s.label" [nzValue]="s.value"></nz-option>
+                }
+              </nz-select>
+            </div>
+          </div>
+
+          <h3 class="form-section-title">Внешний вид и цвет</h3>
+
+          <div class="control-group">
+            <label class="control-label">Размер (Size):</label>
+            <nz-radio-group [ngModel]="config().size" (ngModelChange)="updateConfig('size', $event)">
+              @for (sz of sizes; track sz.value) {
+              <label nz-radio [nzValue]="sz.value">{{ sz.label }}</label>
+              }
+            </nz-radio-group>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label">Цвет заливки (Stroke Color):</label>
+            <div class="gradient-toggle">
+              <div nz-row [nzGutter]="16" nzAlign="middle">
+                <div nz-col>
+                  <nz-switch [ngModel]="useGradient()" (ngModelChange)="useGradient.set($event)"></nz-switch>
+                </div>
+                <div nz-col>
+                  <span class="label">Использовать градиент</span>
+                </div>
+              </div>
+            </div>
+
+            @if (useGradient()) {
+            <div class="control-row" style="margin-top: 12px">
+              <div class="control-group">
+                <label class="control-label">От (From):</label>
+                <input type="color" [ngModel]="gradientFrom()" (ngModelChange)="gradientFrom.set($event)" nz-input />
+              </div>
+              <div class="control-group">
+                <label class="control-label">До (To):</label>
+                <input type="color" [ngModel]="gradientTo()" (ngModelChange)="gradientTo.set($event)" nz-input />
+              </div>
+            </div>
+            }
+          </div>
+
+          <div class="control-row">
+            <div class="control-group">
+              <label class="control-label">Толщина (Stroke Width):</label>
+              <nz-input-number
+                [ngModel]="config().strokeWidth"
+                (ngModelChange)="updateConfig('strokeWidth', $event)"
+                [nzMin]="1"
+                [nzMax]="50"
+                placeholder="Авто"
+                style="width: 100%"
+              ></nz-input-number>
+            </div>
+            <div class="control-group">
+              <label class="control-label">Края (Linecap):</label>
+              <nz-select [ngModel]="config().strokeLinecap" (ngModelChange)="updateConfig('strokeLinecap', $event)">
+                @for (l of linecaps; track l.value) {
+                <nz-option [nzLabel]="l.label" [nzValue]="l.value"></nz-option>
+                }
+              </nz-select>
+            </div>
+          </div>
+
+          <h3 class="form-section-title">Дополнительно</h3>
+
+          <div class="control-group">
+            <label class="control-label">Метка (Label):</label>
+            <input
+              nz-input
+              [ngModel]="config().label"
+              (ngModelChange)="updateConfig('label', $event)"
+              placeholder="Введите описание..."
+            />
+          </div>
+
+          <div class="control-row">
+            <div class="control-group checkbox-group">
+              <label nz-checkbox [ngModel]="config().showInfo" (ngModelChange)="updateConfig('showInfo', $event)">
+                Инфо/Проценты
+              </label>
+            </div>
+            <div class="control-group checkbox-group">
+              <label
+                nz-checkbox
+                [ngModel]="config().indeterminate"
+                (ngModelChange)="updateConfig('indeterminate', $event)"
+              >
+                Indeterminate
+              </label>
+            </div>
+          </div>
+        </div>
+      </nz-tab>
+
+      <!-- 2. CODE -->
+      <nz-tab nzTitle="💻 Код">
+        <div class="demo-form">
+          <div class="code-block-container" style="margin-top: 0">
+            <div class="code-header">
+              <span>HTML Template</span>
+              <button class="copy-btn" (click)="copyToClipboard(generatedCode().html)">📋</button>
+            </div>
+            <pre><code>{{ generatedCode().html }}</code></pre>
+          </div>
+
+          <div class="code-block-container" style="margin-top: 24px">
+            <div class="code-header">
+              <span>TypeScript Logic</span>
+              <button class="copy-btn" (click)="copyToClipboard(generatedCode().typescript)">📋</button>
+            </div>
+            <pre><code>{{ generatedCode().typescript }}</code></pre>
+          </div>
+        </div>
+      </nz-tab>
+
+      <!-- 3. EXAMPLES -->
+      <nz-tab nzTitle="📚 Примеры">
+        <div class="demo-form">
+          <p>
+            Полный список расширенных примеров представлен в нижней части страницы под блоком предварительного
+            просмотра.
+          </p>
+        </div>
+      </nz-tab>
+
+      <!-- 4. API -->
+      <nz-tab nzTitle="📖 API">
+        <div class="demo-form">
+          <control-documentation [config]="documentationConfig"></control-documentation>
+        </div>
+      </nz-tab>
+    </nz-tabset>
+  </div>
+
+  <!-- RESULT: LIVE PREVIEW -->
+  <div showcase-result>
+    <div class="preview-container">
+      <div class="live-demo-wrapper">
+        <av-progress
+          [percent]="config().percent"
+          [type]="config().type"
+          [status]="config().status"
+          [size]="config().size"
+          [strokeColor]="finalStrokeColor()"
+          [strokeWidth]="config().strokeWidth"
+          [strokeLinecap]="config().strokeLinecap"
+          [showInfo]="config().showInfo"
+          [indeterminate]="config().indeterminate"
+          [label]="config().label"
+          [gapDegree]="config().gapDegree"
+          [visible]="config().visible"
+        >
+        </av-progress>
+      </div>
+
+      <div class="preview-actions" style="margin-top: 48px">
+        <button
+          av-button
+          [avType]="isSimulating() ? 'danger' : 'primary'"
+          (clicked)="toggleSimulation()"
+          [avBlock]="true"
+          style="min-width: 250px"
+        >
+          <av-icon [type]="isSimulating() ? 'close' : 'play-circle'" [size]="18"></av-icon>
+          <span style="margin-left: 10px">{{ isSimulating() ? 'Остановить прогресс' : 'Запустить симуляцию' }}</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULT: DESCRIPTION -->
+  <div showcase-description>
+    <div class="dialog-info">
+      <span class="info-title">👁️ Текущий стейт:</span>
+      <span class="info-item"
+        >Процент: <strong>{{ config().percent }}%</strong></span
+      >
+      <span class="info-item"
+        >Тип: <strong>{{ config().type }}</strong></span
+      >
+      <span class="info-item"
+        >Статус: <strong>{{ config().status }}</strong></span
+      >
+      <span class="info-item"
+        >Режим: <strong>{{ config().indeterminate ? 'Бесконечный' : 'Обычный' }}</strong></span
+      >
+    </div>
+  </div>
+
+  <!-- USAGE EXAMPLES (Bottom Section) -->
+  <div showcase-examples>
+    <div class="demo-form">
+      <div class="example-grid">
+        <!-- 1. Linear Sizes -->
+        <div class="example-block">
+          <h4>1. Линейный прогресс (Размеры)</h4>
+          <p>Стандартные пресеты высоты: <code>small</code>, <code>default</code>, <code>large</code>.</p>
+          <div class="example-preview column-stack">
+            <div class="preview-item">
+              <span class="label">Small (6px)</span>
+              <av-progress [percent]="30" size="small"></av-progress>
+            </div>
+            <div class="preview-item">
+              <span class="label">Default (10px)</span>
+              <av-progress [percent]="50" size="default"></av-progress>
+            </div>
+            <div class="preview-item">
+              <span class="label">Large (16px)</span>
+              <av-progress [percent]="70" size="large"></av-progress>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. Circle & Dashboard -->
+        <div class="example-block">
+          <h4>2. Круговые индикаторы</h4>
+          <p>Размеры <code>circle</code> и <code>dashboard</code> можно задавать в пикселях.</p>
+          <div class="example-preview row-stack">
+            <div class="preview-item center">
+              <av-progress [percent]="75" type="circle"></av-progress>
+              <span class="label">Circle (Normal)</span>
+            </div>
+            <div class="preview-item center">
+              <av-progress [percent]="45" type="dashboard" status="warning"></av-progress>
+              <span class="label">Dashboard (Warning)</span>
+            </div>
+            <div class="preview-item center">
+              <av-progress [percent]="100" type="circle" status="success" [size]="80"></av-progress>
+              <span class="label">Success (Small Circle)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. Colors & Gradients -->
+        <div class="example-block">
+          <h4>3. Градиенты и кастомные цвета</h4>
+          <p>Используйте строковые значения или объект конфигурации градиента.</p>
+          <div class="example-preview column-stack">
+            <av-progress [percent]="99" [strokeColor]="{ from: '#108ee9', to: '#87d068' }"></av-progress>
+            <av-progress [percent]="65" [strokeColor]="['#ff4d4f', '#faad14']" status="active"></av-progress>
+            <av-progress [percent]="40" [strokeColor]="'#722ed1'" label="Кастомный цвет фиолетовый"></av-progress>
+          </div>
+        </div>
+
+        <!-- 4. Indeterminate Mode -->
+        <div class="example-block">
+          <h4>4. Режим Indeterminate</h4>
+          <p>Визуализация процесса с неизвестным временем завершения.</p>
+          <div class="example-preview center">
+            <av-progress [percent]="50" [indeterminate]="true" label="Идет синхронизация данных..."></av-progress>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOTTOM: Documentation -->
+  <div showcase-docs>
+    <control-documentation [config]="documentationConfig"></control-documentation>
+  </div>
+</av-showcase>

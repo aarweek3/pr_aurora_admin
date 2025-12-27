@@ -5,6 +5,7 @@
 
 - cоздаем новый компонент
   ng g c name-control-aurora
+  ng g c progress-bar-control-aurora
 
 - создаем дополнительный файл конфигурации
   имя-control-aurora.config.ts

@@ -89,12 +89,7 @@ export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
               route: '/ui-demo/modal-control-aurora',
               icon: 'layout',
             },
-            {
-              id: 'pagination-ui',
-              label: 'Pagination UI',
-              route: '/ui-demo/pagination-ui',
-              icon: 'ordered-list',
-            },
+
             {
               id: 'pagination-control-aurora',
               label: 'Pagination Control Aurora',
@@ -113,7 +108,12 @@ export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
               route: '/ui-demo/progress-ui',
               icon: 'line-chart',
             },
-
+            {
+              id: 'progress-bar-control-aurora',
+              label: 'Progress Bar Control Aurora',
+              route: '/ui-demo/progress-bar-control-aurora',
+              icon: 'line-chart',
+            },
             {
               id: 'spinner-ui',
               label: 'Spinner UI',
@@ -158,6 +158,12 @@ export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
           label: 'OLD',
           type: 'submenu',
           submenu: [
+            {
+              id: 'pagination-ui',
+              label: 'Pagination UI',
+              route: '/ui-demo/pagination-ui',
+              icon: 'ordered-list',
+            },
             {
               id: 'modal-ui-new',
               label: 'Modal UI Demo New',

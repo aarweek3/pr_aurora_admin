@@ -1,0 +1,347 @@
+@use "../../../../styles/abstracts/variables" as vars;
+
+.demo-form {
+  padding: 16px;
+
+  .form-section-title {
+    color: #1890ff;
+    font-size: 14px;
+    font-weight: 600;
+    margin: 16px 0 12px 0;
+    border-bottom: 1px solid #f0f0f0;
+    padding-bottom: 8px;
+
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+
+  .control-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 16px;
+
+    &.checkbox-group {
+      flex-direction: row;
+      align-items: center;
+      margin-bottom: 12px;
+      gap: 12px;
+    }
+
+    .control-label {
+      font-weight: 500;
+      color: #333;
+      margin-bottom: 8px;
+      font-size: 13px;
+    }
+
+    .label {
+      font-size: 13px;
+      color: #666;
+    }
+
+    nz-radio-group {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+  }
+
+  .control-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 8px;
+  }
+}
+
+// === ОБНОВЛЕННАЯ СЕТКА: Playground слева (12), Результаты (Превью + Код + Стейт) справа (12) ===
+:host ::ng-deep {
+  .playground-container > .ant-row {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr; // Две колонки
+    gap: 24px !important;
+
+    // Сбрасываем стандартное поведение колонок
+    > div.ant-col {
+      display: contents !important;
+    }
+
+    // Блок табов (Playground / Код / Примеры / API) - СЛЕВА
+    .control-card-tabs {
+      grid-column: 1 !important;
+      grid-row: 1 / span 3 !important; // Растягиваем на всю высоту правой стопки
+      height: auto !important;
+    }
+
+    // Колонку результата разбираем на составляющие
+    .result-column {
+      display: contents !important;
+    }
+
+    // 🔴 Live Demo (Теперь справа сверху)
+    .result-block--preview {
+      grid-column: 2 !important;
+      grid-row: 1 !important;
+      margin: 0 !important;
+      min-height: 250px;
+    }
+
+    // 📄 Генерированный код (Под Live Demo)
+    .result-block--code {
+      grid-column: 2 !important;
+      grid-row: 2 !important;
+      margin: 0 !important;
+    }
+
+    // 📋 Текущие параметры (В самом низу правой колонки)
+    .result-block--description {
+      grid-column: 2 !important;
+      grid-row: 3 !important;
+      margin: 0 !important;
+    }
+  }
+}
+
+.preview-container {
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.02);
+  width: 100%;
+
+  .live-demo-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+}
+
+.preview-actions {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.dialog-info {
+  width: auto;
+  max-width: fit-content;
+  background: #f8f9fa;
+  padding: 12px 20px;
+  border-radius: 8px;
+  border: 1px solid #e8e8e8;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px; // Немного плотнее для боковой колонки
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+
+  .info-title {
+    color: #1f2937;
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  .info-item {
+    font-size: 12px;
+    color: #666;
+    display: flex;
+    gap: 4px;
+
+    strong {
+      color: #1890ff;
+      font-weight: 600;
+    }
+  }
+}
+
+// Gallery examples styling
+.example-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  width: 100%;
+}
+
+.example-block {
+  background: #fff;
+  padding: 32px;
+  border-radius: 12px;
+  border: 1px solid #f0f0f0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+
+  h4 {
+    color: #1890ff;
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+  }
+
+  p {
+    color: #666;
+    font-size: 14px;
+    margin: 0;
+  }
+
+  .example-preview {
+    padding: 32px;
+    background: #fafafa;
+    border-radius: 12px;
+    display: flex;
+    border: 1px solid #f5f5f5;
+    width: 100%;
+
+    &.column-stack {
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    &.row-stack {
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 40px;
+      justify-content: center;
+    }
+
+    &.center {
+      justify-content: center;
+      align-items: center;
+    }
+
+    .preview-item {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      width: 100%;
+
+      &.center {
+        width: auto;
+        align-items: center;
+      }
+
+      .label {
+        font-size: 12px;
+        color: #999;
+        font-weight: 600;
+      }
+    }
+  }
+}
+
+.code-block-container {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  overflow: hidden;
+  width: 100%;
+
+  .code-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    background: #f3f4f6;
+    color: #374151;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-bottom: 1px solid #e5e7eb;
+
+    .copy-btn {
+      background: #fff;
+      border: 1px solid #d1d5db;
+      color: #6b7280;
+      cursor: pointer;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-size: 12px;
+      transition: all 0.2s;
+
+      &:hover {
+        background: #f9fafb;
+        color: #111827;
+        border-color: #9ca3af;
+      }
+    }
+  }
+
+  pre {
+    margin: 0;
+    padding: 12px;
+    max-height: 400px;
+    overflow: auto;
+
+    code {
+      font-family: "Consolas", "Monaco", "Courier New", monospace;
+      font-size: 12px;
+      line-height: 1.5;
+      color: #1f2937;
+    }
+  }
+}
+
+// Dark mode support
+:host-context(.dark) {
+  .demo-form {
+    .form-section-title {
+      color: #40a9ff;
+      border-bottom-color: #303030;
+    }
+    .control-group .control-label {
+      color: #d9d9d9;
+    }
+  }
+
+  .preview-container {
+    background: #141414;
+    box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.02);
+  }
+
+  .dialog-info {
+    background: #1f1f1f;
+    border-color: #434343;
+    .info-title {
+      color: #d9d9d9;
+    }
+    .info-item {
+      color: #8c8c8c;
+      strong {
+        color: #40a9ff;
+      }
+    }
+  }
+
+  .example-block {
+    background: #1f1f1f;
+    border-color: #303030;
+    p {
+      color: #8c8c8c;
+    }
+    .example-preview {
+      background: #141414;
+    }
+  }
+
+  .code-block-container {
+    background: #0d1117;
+    border-color: #30363d;
+    .code-header {
+      background: #161b22;
+      color: #8b949e;
+      border-bottom-color: #30363d;
+    }
+    pre code {
+      color: #c9d1d9;
+    }
+  }
+}

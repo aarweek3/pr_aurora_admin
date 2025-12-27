@@ -155,6 +155,13 @@ export const UI_DEMO_ROUTES: Routes = [
       import('./progress-ui/progress-ui.component').then((m) => m.ProgressUiComponent),
   },
   {
+    path: 'progress-bar-control-aurora',
+    loadComponent: () =>
+      import('./progress-bar-control-aurora/progress-bar-control-aurora.component').then(
+        (m) => m.ProgressBarControlAuroraComponent,
+      ),
+  },
+  {
     path: 'color-picker-demo',
     loadComponent: () =>
       import('./color-picker-demo/color-picker-demo.component').then(
