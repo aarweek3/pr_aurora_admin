@@ -67,9 +67,10 @@
             border-radius: 4px;
             font-family: "SF Mono", Consolas, monospace;
             font-size: 12px;
+            word-break: break-all;
 
             &.path {
-              color: #1890ff;
+              color: vars.$color-primary;
               background: rgba(24, 144, 255, 0.1);
             }
           }

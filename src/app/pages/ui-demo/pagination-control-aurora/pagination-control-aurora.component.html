@@ -1,0 +1,341 @@
+<av-showcase [config]="showcaseConfig" [generatedCodeInput]="codeForShowcase()">
+  <!-- TAB SECTION: TABS & CONTROLS -->
+  <div showcase-tabs>
+    <nz-tabset [nzAnimated]="false">
+      <!-- 1. PLAYGROUND -->
+      <nz-tab nzTitle="🎮 Playground">
+        <div class="demo-form">
+          <h3 class="form-section-title">Основные параметры</h3>
+
+          <div class="control-row">
+            <div class="control-group">
+              <label class="control-label">Всего элементов (total):</label>
+              <input
+                nz-input
+                type="number"
+                [ngModel]="config().total"
+                (ngModelChange)="updateConfig('total', $event)"
+              />
+            </div>
+            <div class="control-group">
+              <label class="control-label">Текущая страница:</label>
+              <input
+                nz-input
+                type="number"
+                [ngModel]="config().currentPage"
+                (ngModelChange)="updateConfig('currentPage', $event)"
+              />
+            </div>
+          </div>
+
+          <h3 class="form-section-title">Внешний вид</h3>
+
+          <div class="control-group">
+            <label class="control-label">Вариант (Variant):</label>
+            <nz-radio-group [ngModel]="config().variant" (ngModelChange)="updateConfig('variant', $event)">
+              @for (v of variants; track v.value) {
+              <label nz-radio [nzValue]="v.value">{{ v.label }}</label>
+              }
+            </nz-radio-group>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label">Размер (Size):</label>
+            <nz-radio-group [ngModel]="config().size" (ngModelChange)="updateConfig('size', $event)">
+              @for (s of sizes; track s.value) {
+              <label nz-radio [nzValue]="s.value">{{ s.label }}</label>
+              }
+            </nz-radio-group>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label">Форма кнопок (Shape):</label>
+            <nz-radio-group [ngModel]="config().shape" (ngModelChange)="updateConfig('shape', $event)">
+              @for (sh of shapes; track sh.value) {
+              <label nz-radio [nzValue]="sh.value">{{ sh.label }}</label>
+              }
+            </nz-radio-group>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label">Цвет (Color):</label>
+            <nz-radio-group [ngModel]="config().color" (ngModelChange)="updateConfig('color', $event)">
+              @for (c of colors; track c.value) {
+              <label nz-radio [nzValue]="c.value">{{ c.label }}</label>
+              }
+            </nz-radio-group>
+          </div>
+
+          <h3 class="form-section-title">Поведение</h3>
+
+          <div class="control-row">
+            <div class="control-group checkbox-group">
+              <label
+                nz-checkbox
+                [ngModel]="config().showSizeChanger"
+                (ngModelChange)="updateConfig('showSizeChanger', $event)"
+              >
+                Размер страницы
+              </label>
+            </div>
+            <div class="control-group checkbox-group">
+              <label
+                nz-checkbox
+                [ngModel]="config().showQuickJumper"
+                (ngModelChange)="updateConfig('showQuickJumper', $event)"
+              >
+                Быстрый переход
+              </label>
+            </div>
+          </div>
+
+          <div class="control-row">
+            <div class="control-group checkbox-group">
+              <label nz-checkbox [ngModel]="config().showTotal" (ngModelChange)="updateConfig('showTotal', $event)">
+                Показывать "Всего"
+              </label>
+            </div>
+            <div class="control-group checkbox-group">
+              <label
+                nz-checkbox
+                [ngModel]="config().showFirstLast"
+                (ngModelChange)="updateConfig('showFirstLast', $event)"
+              >
+                Первая/Последняя
+              </label>
+            </div>
+          </div>
+
+          <div class="control-row">
+            <div class="control-group checkbox-group">
+              <label nz-checkbox [ngModel]="config().disabled" (ngModelChange)="updateConfig('disabled', $event)">
+                Заблокировано
+              </label>
+            </div>
+            <div class="control-group checkbox-group">
+              <label
+                nz-checkbox
+                [ngModel]="config().hideOnSinglePage"
+                (ngModelChange)="updateConfig('hideOnSinglePage', $event)"
+              >
+                Скрывать при 1 стр.
+              </label>
+            </div>
+          </div>
+
+          <div class="control-group" style="margin-top: 16px">
+            <label class="control-label">Локализация:</label>
+            <nz-radio-group [ngModel]="config().locale" (ngModelChange)="updateConfig('locale', $event)">
+              <label nz-radio nzValue="ru">Русский (RU)</label>
+              <label nz-radio nzValue="en">English (EN)</label>
+            </nz-radio-group>
+          </div>
+        </div>
+      </nz-tab>
+
+      <!-- 2. CODE -->
+      <nz-tab nzTitle="💻 Код">
+        <div class="demo-form">
+          <div class="code-block-container">
+            <div class="code-header">
+              <span>HTML Template</span>
+              <button class="copy-btn" (click)="copyToClipboard(generatedCode().html)">📋</button>
+            </div>
+            <pre><code>{{ generatedCode().html }}</code></pre>
+          </div>
+
+          <div class="code-block-container" style="margin-top: 24px">
+            <div class="code-header">
+              <span>TypeScript Logic</span>
+              <button class="copy-btn" (click)="copyToClipboard(generatedCode().typescript)">📋</button>
+            </div>
+            <pre><code>{{ generatedCode().typescript }}</code></pre>
+          </div>
+        </div>
+      </nz-tab>
+
+      <!-- 3. EXAMPLES (Simplified internal view) -->
+      <nz-tab nzTitle="📚 Примеры">
+        <div class="demo-form">
+          <p>
+            Полный список расширенных примеров представлен в нижней части страницы под блоком предварительного
+            просмотра.
+          </p>
+        </div>
+      </nz-tab>
+
+      <!-- 4. API -->
+      <nz-tab nzTitle="📖 API">
+        <div class="demo-form">
+          <control-documentation [config]="documentationConfig"></control-documentation>
+        </div>
+      </nz-tab>
+    </nz-tabset>
+  </div>
+
+  <!-- RESULT: LIVE PREVIEW -->
+  <div showcase-result>
+    <div class="preview-container">
+      <div class="live-demo-wrapper">
+        <av-pagination
+          [total]="config().total"
+          [(currentPage)]="config().currentPage"
+          [(pageSize)]="config().pageSize"
+          [variant]="config().variant"
+          [size]="config().size"
+          [shape]="config().shape"
+          [color]="config().color"
+          [showSizeChanger]="config().showSizeChanger"
+          [showQuickJumper]="config().showQuickJumper"
+          [showTotal]="config().showTotal"
+          [showFirstLast]="config().showFirstLast"
+          [hideOnSinglePage]="config().hideOnSinglePage"
+          [disabled]="config().disabled"
+          [locale]="config().locale"
+          (paginationChange)="onPaginationChange($event)"
+        >
+        </av-pagination>
+      </div>
+
+      <div class="dialog-info" style="margin-top: 40px">
+        <span class="info-title">👁️ Текущий стейт:</span>
+        <span class="info-item"
+          >Страница: <strong>{{ config().currentPage }}</strong></span
+        >
+        <span class="info-item"
+          >Размер: <strong>{{ config().pageSize }}</strong></span
+        >
+        <span class="info-item"
+          >Диапазон:
+          <strong
+            >{{ (config().currentPage - 1) * config().pageSize + 1 }} -
+            {{ Math.min(config().currentPage * config().pageSize, config().total) }}</strong
+          ></span
+        >
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULT: DESCRIPTION -->
+  <div showcase-description>
+    <div class="config-summary">
+      <div class="config-grid">
+        <div class="config-item">
+          <span class="config-label">Вариант</span>
+          <span class="config-value">{{ config().variant }}</span>
+        </div>
+        <div class="config-item">
+          <span class="config-label">Размер</span>
+          <span class="config-value">{{ config().size }}</span>
+        </div>
+        <div class="config-item">
+          <span class="config-label">Форма</span>
+          <span class="config-value">{{ config().shape }}</span>
+        </div>
+        <div class="config-item">
+          <span class="config-label">Цвет</span>
+          <span class="config-value">{{ config().color }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- USAGE EXAMPLES (Bottom Section, Full Width) -->
+  <div showcase-examples>
+    <div class="demo-form">
+      <div class="example-grid">
+        <!-- 1. Basic -->
+        <div class="example-block">
+          <h4>1. Базовое использование</h4>
+          <p>Минимальная настройка с обязательным полем <code>total</code>.</p>
+          <div class="example-preview">
+            <av-pagination [total]="100" [(currentPage)]="examplePage1" [showTotal]="false"></av-pagination>
+          </div>
+          <div class="code-block-container compact">
+            <pre><code>{{ exampleSnippets.basic }}</code></pre>
+          </div>
+        </div>
+
+        <!-- 2. Variants -->
+        <div class="example-block">
+          <h4>2. Варианты отображения</h4>
+          <p>Стили <code>default</code>, <code>simple</code>, <code>compact</code> и <code>minimal</code>.</p>
+          <div class="example-preview-stack">
+            <div class="preview-item">
+              <span class="preview-label">Simple:</span>
+              <av-pagination [total]="50" [(currentPage)]="examplePage2" variant="simple"></av-pagination>
+            </div>
+            <div class="preview-item">
+              <span class="preview-label">Compact:</span>
+              <av-pagination [total]="50" [(currentPage)]="examplePage3" variant="compact"></av-pagination>
+            </div>
+            <div class="preview-item">
+              <span class="preview-label">Minimal:</span>
+              <av-pagination [total]="50" [(currentPage)]="examplePage4" variant="minimal"></av-pagination>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. Sizes -->
+        <div class="example-block">
+          <h4>3. Размеры</h4>
+          <p>Три стандартных размера: <code>small</code>, <code>medium</code> и <code>large</code>.</p>
+          <div class="example-preview-stack">
+            <div class="preview-item">
+              <span class="preview-label">Small:</span>
+              <av-pagination [total]="30" [(currentPage)]="examplePage5" size="small"></av-pagination>
+            </div>
+            <div class="preview-item">
+              <span class="preview-label">Large:</span>
+              <av-pagination [total]="30" [(currentPage)]="examplePage6" size="large"></av-pagination>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. Advanced Controls -->
+        <div class="example-block">
+          <h4>4. Продвинутые контролы</h4>
+          <p>Селектор размера страницы и быстрый переход к номеру страницы.</p>
+          <div class="example-preview">
+            <av-pagination
+              [total]="500"
+              [(currentPage)]="examplePage7"
+              [(pageSize)]="examplePageSize1"
+              [showSizeChanger]="true"
+              [showQuickJumper]="true"
+              [pageSizeOptions]="[10, 20, 50]"
+            ></av-pagination>
+          </div>
+        </div>
+
+        <!-- 5. Client-side Example -->
+        <div class="example-block">
+          <h4>5. Клиентская пагинация (Computed)</h4>
+          <p>Пример использования с сигналами для фильтрации локального массива данных.</p>
+          <div class="example-preview client-example">
+            <div class="items-list-mini">
+              @for (item of displayedItems(); track item.id) {
+              <div class="item-mini">#{{ item.id }} - {{ item.name }}</div>
+              }
+            </div>
+            <av-pagination
+              [total]="allItems().length"
+              [(currentPage)]="clientPage"
+              [(pageSize)]="clientPageSize"
+              size="small"
+              variant="compact"
+            ></av-pagination>
+          </div>
+          <div class="code-block-container compact">
+            <pre><code>{{ exampleSnippets.computed }}</code></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOTTOM: Documentation -->
+  <div showcase-docs>
+    <control-documentation [config]="documentationConfig"></control-documentation>
+  </div>
+</av-showcase>

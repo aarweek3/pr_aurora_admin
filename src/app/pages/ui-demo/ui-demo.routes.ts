@@ -64,6 +64,13 @@ export const UI_DEMO_ROUTES: Routes = [
       ),
   },
   {
+    path: 'modal-control-aurora',
+    loadComponent: () =>
+      import('./modal-control-aurora/modal-control-aurora.component').then(
+        (m) => m.ModalControlAuroraComponent,
+      ),
+  },
+  {
     path: 'color-component-aurora',
     loadComponent: () =>
       import('./color-component-aurora/color-component-aurora.component').then(
@@ -122,6 +129,13 @@ export const UI_DEMO_ROUTES: Routes = [
     path: 'pagination-ui',
     loadComponent: () =>
       import('./pagination-ui/pagination-ui.component').then((m) => m.PaginationUiComponent),
+  },
+  {
+    path: 'pagination-control-aurora',
+    loadComponent: () =>
+      import('./pagination-control-aurora/pagination-control-aurora.component').then(
+        (m) => m.PaginationControlAuroraComponent,
+      ),
   },
   {
     path: 'help-copy-container-ui',

@@ -84,15 +84,21 @@ export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
             },
 
             {
-              id: 'modal-ui-new',
-              label: 'Modal UI Demo New',
-              route: '/ui-demo/modal-ui-new',
+              id: 'modal-control-aurora',
+              label: 'Modal Component Aurora',
+              route: '/ui-demo/modal-control-aurora',
               icon: 'layout',
             },
             {
               id: 'pagination-ui',
               label: 'Pagination UI',
               route: '/ui-demo/pagination-ui',
+              icon: 'ordered-list',
+            },
+            {
+              id: 'pagination-control-aurora',
+              label: 'Pagination Control Aurora',
+              route: '/ui-demo/pagination-control-aurora',
               icon: 'ordered-list',
             },
             {
@@ -152,6 +158,12 @@ export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
           label: 'OLD',
           type: 'submenu',
           submenu: [
+            {
+              id: 'modal-ui-new',
+              label: 'Modal UI Demo New',
+              route: '/ui-demo/modal-ui-new',
+              icon: 'layout',
+            },
             {
               id: 'button-demo',
               label: 'Button Demo 🎮',

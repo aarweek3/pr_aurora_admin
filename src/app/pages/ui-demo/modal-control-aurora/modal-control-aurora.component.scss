@@ -1,0 +1,248 @@
+// Стили для демо-компонента Modal Control Aurora
+.demo-form {
+  padding: 16px;
+
+  .form-section-title {
+    color: #1890ff;
+    font-size: 14px;
+    font-weight: 600;
+    margin: 16px 0 12px 0;
+    border-bottom: 1px solid #f0f0f0;
+    padding-bottom: 8px;
+
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+
+  .control-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 16px;
+
+    &.checkbox-group {
+      flex-direction: row;
+      align-items: center;
+      margin-bottom: 12px;
+      gap: 12px;
+    }
+
+    .control-label {
+      font-weight: 500;
+      color: #333;
+      margin-bottom: 6px;
+      font-size: 13px;
+    }
+
+    nz-radio-group {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+  }
+
+  .control-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 8px;
+  }
+}
+
+.preview-container {
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 32px;
+  min-height: 300px;
+  background: #fff;
+  border-radius: 8px;
+}
+
+.dialog-info {
+  width: 100%;
+  max-width: 350px;
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px dashed #d9d9d9;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+
+  h4 {
+    margin: 0 0 16px 0;
+    color: #1f2937;
+    font-size: 14px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    li {
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      color: #4b5563;
+
+      strong {
+        color: #374151;
+      }
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+}
+
+.config-summary {
+  padding: 16px;
+
+  .config-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 12px;
+
+    .config-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 12px;
+      background: #fafafa;
+      border-radius: 4px;
+      font-size: 13px;
+
+      .config-label {
+        color: #666;
+        font-weight: 500;
+      }
+
+      .config-value {
+        color: #333;
+        font-weight: 600;
+      }
+    }
+  }
+}
+
+// Стили для блоков кода
+.code-block-container {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-top: 16px;
+
+  .code-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 16px;
+    background: #f3f4f6;
+    color: #374151;
+    font-size: 12px;
+    border-bottom: 1px solid #e5e7eb;
+
+    .copy-btn {
+      background: transparent;
+      border: none;
+      color: #6b7280;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 4px;
+      transition: all 0.2s;
+
+      &:hover {
+        background: #e5e7eb;
+        color: #111827;
+      }
+    }
+  }
+
+  pre {
+    margin: 0;
+    padding: 16px;
+    max-height: 400px;
+    overflow: auto;
+
+    code {
+      font-family: "Consolas", "Monaco", "Courier New", monospace;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+  }
+}
+
+.example-block {
+  margin-bottom: 32px;
+
+  h4 {
+    color: #1890ff;
+    margin-bottom: 12px;
+    font-size: 16px;
+    font-weight: 600;
+  }
+}
+
+// Dark mode support
+:host-context(.dark) {
+  .demo-form {
+    .form-section-title {
+      color: #40a9ff;
+      border-bottom-color: #303030;
+    }
+    .control-group .control-label {
+      color: #d9d9d9;
+    }
+  }
+
+  .config-summary .config-grid .config-item {
+    background: #1f1f1f;
+    .config-label {
+      color: #8c8c8c;
+    }
+    .config-value {
+      color: #d9d9d9;
+    }
+  }
+
+  .dialog-info {
+    background: #1f1f1f;
+    border-color: #434343;
+    h4 {
+      color: #d9d9d9;
+    }
+    ul li {
+      color: #8c8c8c;
+      strong {
+        color: #d9d9d9;
+      }
+    }
+  }
+
+  .code-block-container {
+    background: #1f1f1f;
+    border-color: #303030;
+
+    .code-header {
+      background: #262626;
+      color: #d9d9d9;
+      border-bottom-color: #303030;
+      .copy-btn:hover {
+        background: #303030;
+      }
+    }
+
+    pre code {
+      color: #d9d9d9;
+    }
+  }
+}
