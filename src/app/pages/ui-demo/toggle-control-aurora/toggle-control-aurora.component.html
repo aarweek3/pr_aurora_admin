@@ -1,0 +1,346 @@
+<av-showcase [config]="showcaseConfig" [generatedCodeInput]="codeForShowcase()">
+  <!-- TAB SECTION: TABS & CONTROLS -->
+  <div showcase-tabs>
+    <nz-tabset [nzAnimated]="false">
+      <!-- 1. PLAYGROUND -->
+      <nz-tab nzTitle="🎮 Playground">
+        <div class="demo-form">
+          <h3 class="form-section-title">Реализация</h3>
+          <div class="control-group">
+            <nz-radio-group
+              [ngModel]="config().type"
+              (ngModelChange)="updateConfig('type', $event)"
+              nzButtonStyle="solid"
+              [disabled]="config().isLabeled"
+            >
+              @for (t of types; track t.value) {
+              <label nz-radio-button [nzValue]="t.value">{{ t.label }}</label>
+              }
+            </nz-radio-group>
+          </div>
+
+          <h3 class="form-section-title">Внешний вид</h3>
+          <div class="control-group checkbox-group" style="margin-bottom: 20px">
+            <nz-switch [ngModel]="config().isLabeled" (ngModelChange)="updateConfig('isLabeled', $event)"></nz-switch>
+            <span class="label"><strong>С подписями (av-toggle-labeled)</strong></span>
+          </div>
+          <div class="control-row">
+            <div class="control-group">
+              <label class="control-label">Размер (Size):</label>
+              <nz-select
+                [ngModel]="config().size"
+                (ngModelChange)="updateConfig('size', $event)"
+                [disabled]="config().useCustomSize"
+              >
+                @for (s of sizes; track s.value) {
+                <nz-option [nzLabel]="s.label" [nzValue]="s.value"></nz-option>
+                }
+              </nz-select>
+            </div>
+            <div class="control-group">
+              <label class="control-label">Форма (Shape):</label>
+              <nz-select [ngModel]="config().shape" (ngModelChange)="updateConfig('shape', $event)">
+                @for (sh of shapes; track sh.value) {
+                <nz-option [nzLabel]="sh.label" [nzValue]="sh.value"></nz-option>
+                }
+              </nz-select>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label">Цвет (Color):</label>
+            <div class="color-picker-row">
+              <nz-select [ngModel]="config().color" (ngModelChange)="updateConfig('color', $event)" style="flex: 1">
+                @for (c of colors; track c.value) {
+                <nz-option [nzLabel]="c.label" [nzValue]="c.value"></nz-option>
+                }
+              </nz-select>
+              <input
+                type="color"
+                [ngModel]="config().color"
+                (ngModelChange)="updateConfig('color', $event)"
+                nz-input
+                style="width: 50px; padding: 2px"
+              />
+            </div>
+          </div>
+
+          @if (!config().isLabeled && config().type === 'component') {
+          <h3 class="form-section-title">Настройки текста (Label)</h3>
+          <div class="control-group">
+            <label class="control-label">Текст лейбла:</label>
+            <input
+              nz-input
+              [ngModel]="config().label"
+              (ngModelChange)="updateConfig('label', $event)"
+              placeholder="Enter label text"
+            />
+          </div>
+          <div class="control-row">
+            <div class="control-group">
+              <label class="control-label">Позиция:</label>
+              <nz-select [ngModel]="config().labelPosition" (ngModelChange)="updateConfig('labelPosition', $event)">
+                @for (p of positions; track p.value) {
+                <nz-option [nzLabel]="p.label" [nzValue]="p.value"></nz-option>
+                }
+              </nz-select>
+            </div>
+            <div class="control-group">
+              <label class="control-label">Размер шрифта:</label>
+              <input
+                nz-input
+                [ngModel]="config().labelSize"
+                (ngModelChange)="updateConfig('labelSize', $event)"
+                placeholder="e.g. 14px"
+              />
+            </div>
+          </div>
+          } @if (config().isLabeled) {
+          <h3 class="form-section-title">Метки статуса (Labeled)</h3>
+          <div class="control-row">
+            <div class="control-group">
+              <label class="control-label">Слева (OFF):</label>
+              <input nz-input [ngModel]="config().leftLabel" (ngModelChange)="updateConfig('leftLabel', $event)" />
+            </div>
+            <div class="control-group">
+              <label class="control-label">Справа (ON):</label>
+              <input nz-input [ngModel]="config().rightLabel" (ngModelChange)="updateConfig('rightLabel', $event)" />
+            </div>
+          </div>
+          }
+
+          <h3 class="form-section-title">Кастомные габариты</h3>
+          <div class="control-group checkbox-group">
+            <nz-switch
+              [ngModel]="config().useCustomSize"
+              (ngModelChange)="updateConfig('useCustomSize', $event)"
+            ></nz-switch>
+            <span class="label">Использовать свои размеры (px)</span>
+          </div>
+
+          @if (config().useCustomSize) {
+          <div class="control-row">
+            <div class="control-group">
+              <label class="control-label">Ширина (Width):</label>
+              <nz-input-number
+                [ngModel]="config().width"
+                (ngModelChange)="updateConfig('width', $event)"
+                style="width: 100%"
+              ></nz-input-number>
+            </div>
+            <div class="control-group">
+              <label class="control-label">Высота (Height):</label>
+              <nz-input-number
+                [ngModel]="config().height"
+                (ngModelChange)="updateConfig('height', $event)"
+                style="width: 100%"
+              ></nz-input-number>
+            </div>
+          </div>
+          <div class="control-group">
+            <label class="control-label">Радиус (Radius):</label>
+            <nz-input-number
+              [ngModel]="config().radius"
+              (ngModelChange)="updateConfig('radius', $event)"
+              style="width: 100%"
+            ></nz-input-number>
+          </div>
+          }
+
+          <div class="control-group checkbox-group" style="margin-top: 24px">
+            <nz-switch [ngModel]="config().disabled" (ngModelChange)="updateConfig('disabled', $event)"></nz-switch>
+            <span class="label">Отключить (Disabled)</span>
+          </div>
+        </div>
+      </nz-tab>
+
+      <!-- 2. CODE -->
+      <nz-tab nzTitle="💻 Код">
+        <div class="demo-form">
+          <div class="code-block-container" style="margin-top: 0">
+            <div class="code-header">
+              <span>HTML Template</span>
+              <button class="copy-btn" (click)="copyToClipboard(generatedCode().html)">📋</button>
+            </div>
+            <pre><code>{{ generatedCode().html }}</code></pre>
+          </div>
+
+          <div class="code-block-container" style="margin-top: 24px">
+            <div class="code-header">
+              <span>TypeScript Example</span>
+              <button class="copy-btn" (click)="copyToClipboard(generatedCode().typescript)">📋</button>
+            </div>
+            <pre><code>{{ generatedCode().typescript }}</code></pre>
+          </div>
+        </div>
+      </nz-tab>
+
+      <!-- 3. EXAMPLES -->
+      <nz-tab nzTitle="📚 Примеры">
+        <div class="demo-form">
+          <p>Разнообразные примеры использования переключателей представлены в нижней части страницы.</p>
+        </div>
+      </nz-tab>
+
+      <!-- 4. API -->
+      <nz-tab nzTitle="📖 API">
+        <div class="demo-form">
+          <control-documentation [config]="documentationConfig"></control-documentation>
+        </div>
+      </nz-tab>
+    </nz-tabset>
+  </div>
+
+  <!-- RESULT: LIVE PREVIEW -->
+  <div showcase-result>
+    <div class="preview-container">
+      <div class="live-demo-wrapper">
+        <!-- Режим Labeled -->
+        @if (config().isLabeled) {
+        <av-toggle-labeled
+          [(checked)]="config().checked"
+          [size]="config().size"
+          [color]="config().color"
+          [shape]="config().shape"
+          [leftLabel]="config().leftLabel"
+          [rightLabel]="config().rightLabel"
+          [disabled]="config().disabled"
+        ></av-toggle-labeled>
+        } @else {
+        <!-- Режим Директивы -->
+        @if (config().type === 'directive') {
+        <label class="av-toggle">
+          <input
+            type="checkbox"
+            avToggle
+            [(ngModel)]="config().checked"
+            [avSize]="config().size"
+            [avColor]="config().color"
+            [avShape]="config().shape"
+            [avWidth]="config().width!"
+            [avHeight]="config().height!"
+            [avRadius]="config().radius!"
+            [disabled]="config().disabled"
+          />
+          <span class="av-toggle__slider"></span>
+        </label>
+        }
+
+        <!-- Режим Компонента -->
+        @if (config().type === 'component') {
+        <av-toggle
+          [(checked)]="config().checked"
+          [size]="config().size"
+          [color]="config().color"
+          [shape]="config().shape"
+          [labelPosition]="config().labelPosition"
+          [labelSize]="config().labelSize"
+          [labelColor]="config().labelColor"
+          [width]="config().width!"
+          [height]="config().height!"
+          [radius]="config().radius!"
+          [disabled]="config().disabled"
+        >
+          {{ config().label }}
+        </av-toggle>
+        } }
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULT: DESCRIPTION -->
+  <div showcase-description>
+    <div class="dialog-info">
+      <span class="info-title">👁️ Стейт:</span>
+      <span class="info-item"
+        >Checked: <strong>{{ config().checked }}</strong></span
+      >
+      <span class="info-item"
+        >Size: <strong>{{ config().size }}</strong></span
+      >
+      <span class="info-item"
+        >Color: <strong>{{ config().color }}</strong></span
+      >
+      <span class="info-item"
+        >Type: <strong>{{ config().isLabeled ? 'labeled' : config().type }}</strong></span
+      >
+    </div>
+  </div>
+
+  <!-- USAGE EXAMPLES (Bottom) -->
+  <div showcase-examples>
+    <div class="demo-form">
+      <div class="example-grid">
+        <!-- 1. Системные цвета -->
+        <div class="example-block">
+          <h4>1. Системные цвета и статусы</h4>
+          <p>Предустановленные цветовые палитры для быстрой интеграции.</p>
+          <div class="example-preview row-stack">
+            <av-toggle [checked]="true" color="primary">Primary</av-toggle>
+            <av-toggle [checked]="true" color="success">Success</av-toggle>
+            <av-toggle [checked]="true" color="warning">Warning</av-toggle>
+            <av-toggle [checked]="true" color="danger">Danger</av-toggle>
+          </div>
+        </div>
+
+        <!-- 2. Размеры и масштабирование -->
+        <div class="example-block">
+          <h4>2. Размеры и масштабирование</h4>
+          <p>Три стандартных размера и возможность создания микро- или макро-переключателей.</p>
+          <div class="example-preview row-stack" style="align-items: center">
+            <div class="preview-item center">
+              <av-toggle size="small" [checked]="true"></av-toggle>
+              <span class="label">Small</span>
+            </div>
+            <div class="preview-item center">
+              <av-toggle size="default" [checked]="true"></av-toggle>
+              <span class="label">Default</span>
+            </div>
+            <div class="preview-item center">
+              <av-toggle size="large" [checked]="true"></av-toggle>
+              <span class="label">Large</span>
+            </div>
+            <div class="preview-item center">
+              <av-toggle [checked]="true" [width]="100" [height]="40" [radius]="20"></av-toggle>
+              <span class="label">Custom (100x40)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. Позиционирование текста -->
+        <div class="example-block">
+          <h4>3. Позиционирование лейбла</h4>
+          <p>Текст можно располагать с любой стороны от переключателя.</p>
+          <div class="example-preview row-stack">
+            <av-toggle labelPosition="left" [checked]="true">Слева</av-toggle>
+            <av-toggle labelPosition="right" [checked]="true">Справа</av-toggle>
+            <av-toggle labelPosition="top" [checked]="true">Сверху</av-toggle>
+            <av-toggle labelPosition="bottom" [checked]="true">Снизу</av-toggle>
+          </div>
+        </div>
+
+        <!-- 4. Вариант Labeled -->
+        <div class="example-block">
+          <h4>4. Информативные переключатели (Labeled)</h4>
+          <p>Идеально подходят для переключения тем или режимов работы с текстовой индикацией.</p>
+          <div class="example-preview column-stack" style="align-items: center">
+            <av-toggle-labeled [checked]="false" leftLabel="OFF" rightLabel="ON"></av-toggle-labeled>
+            <av-toggle-labeled
+              [checked]="true"
+              leftLabel="Light"
+              rightLabel="Dark"
+              color="#111"
+              shape="square"
+            ></av-toggle-labeled>
+            <av-toggle-labeled [checked]="true" leftLabel="RUS" rightLabel="ENG" color="danger"></av-toggle-labeled>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOTTOM: Documentation -->
+  <div showcase-docs>
+    <control-documentation [config]="documentationConfig"></control-documentation>
+  </div>
+</av-showcase>

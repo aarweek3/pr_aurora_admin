@@ -31,6 +31,13 @@ export const UI_DEMO_ROUTES: Routes = [
     loadComponent: () => import('./toggle-ui/toggle-ui.component').then((m) => m.ToggleUiComponent),
   },
   {
+    path: 'toggle-control-aurora',
+    loadComponent: () =>
+      import('./toggle-control-aurora/toggle-control-aurora.component').then(
+        (m) => m.ToggleControlAuroraComponent,
+      ),
+  },
+  {
     path: 'input-control-aurora',
     loadComponent: () =>
       import('./input-control-aurora/input-control-aurora.component').then(

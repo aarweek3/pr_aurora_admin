@@ -140,6 +140,12 @@ export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
               icon: 'swap',
             },
             {
+              id: 'toggle-control-aurora',
+              label: 'Toggle Component Aurora',
+              route: '/ui-demo/toggle-control-aurora',
+              icon: 'swap',
+            },
+            {
               id: 'ui-help-base',
               label: 'UI Help Base',
               route: '/test/ui-help-base',
