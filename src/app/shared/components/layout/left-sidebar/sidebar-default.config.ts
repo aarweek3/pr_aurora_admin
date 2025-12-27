@@ -102,12 +102,7 @@ export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
               route: '/ui-demo/phone-number-ui',
               icon: 'phone',
             },
-            {
-              id: 'progress-ui',
-              label: 'Progress UI',
-              route: '/ui-demo/progress-ui',
-              icon: 'line-chart',
-            },
+
             {
               id: 'progress-bar-control-aurora',
               label: 'Progress Bar Control Aurora',
@@ -118,6 +113,12 @@ export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
               id: 'spinner-ui',
               label: 'Spinner UI',
               route: '/ui-demo/spinner-ui',
+              icon: 'reload',
+            },
+            {
+              id: 'spinner-control-aurora',
+              label: 'Spinner Control Aurora',
+              route: '/ui-demo/spinner-control-aurora',
               icon: 'reload',
             },
             {
@@ -163,6 +164,12 @@ export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
               label: 'Pagination UI',
               route: '/ui-demo/pagination-ui',
               icon: 'ordered-list',
+            },
+            {
+              id: 'progress-ui',
+              label: 'Progress UI',
+              route: '/ui-demo/progress-ui',
+              icon: 'line-chart',
             },
             {
               id: 'modal-ui-new',

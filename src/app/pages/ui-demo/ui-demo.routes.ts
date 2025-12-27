@@ -150,6 +150,13 @@ export const UI_DEMO_ROUTES: Routes = [
       import('./spinner-ui/spinner-ui.component').then((m) => m.SpinnerUiComponent),
   },
   {
+    path: 'spinner-control-aurora',
+    loadComponent: () =>
+      import('./spinner-control-aurora/spinner-control-aurora.component').then(
+        (m) => m.SpinnerControlAuroraComponent,
+      ),
+  },
+  {
     path: 'progress-ui',
     loadComponent: () =>
       import('./progress-ui/progress-ui.component').then((m) => m.ProgressUiComponent),

@@ -5,25 +5,29 @@
 
 - cоздаем новый компонент
   ng g c name-control-aurora
-  ng g c progress-bar-control-aurora
 
 - создаем дополнительный файл конфигурации
   имя-control-aurora.config.ts
 
+  spinner
+
 - создаем rout к нему
-  Нажмите Ctrl + P (Windows/Linux)
-  Начните вводить название файла: ui-demo.routes
+- [Открыть rout](/src\app\pages\ui-demo\ui-demo.routes.ts)
+
   создаем новый
   {
-  path: 'icon-control-aurora',
+  path: 'spinner-control-aurora',
   loadComponent: () =>
-  import('./icon-control-aurora/icon-control-aurora.component').then(
-  (m) => m.IconControlAuroraComponent,
+  import('./spinner-control-aurora/spinner-control-aurora.component').then(
+  (m) => m.SpinnerControlAuroraComponent,
   ),
   },
 
 - добавляем новый пункт в меню для нового компонента
-  идем в sidebar-default.config. и создаем новый
+  идем в
+  [Открыть конфигурацию сидбара](/src/app/shared/components/layout/left-sidebar/sidebar-default.config.ts)
+  sidebar-default.config.
+  и создаем новый
   {
   id: 'tag-ui',
   label: 'Tag UI',

@@ -1,0 +1,313 @@
+<av-showcase [config]="showcaseConfig" [generatedCodeInput]="codeForShowcase()">
+  <!-- TAB SECTION: TABS & CONTROLS -->
+  <div showcase-tabs>
+    <nz-tabset [nzAnimated]="false">
+      <!-- 1. PLAYGROUND -->
+      <nz-tab nzTitle="🎮 Playground">
+        <div class="demo-form">
+          <h3 class="form-section-title">Основные настройки</h3>
+
+          <div class="control-row">
+            <div class="control-group">
+              <label class="control-label">Размер (Size):</label>
+              <nz-select [ngModel]="config().size" (ngModelChange)="updateConfig('size', $event)">
+                @for (s of sizes; track s.value) {
+                <nz-option [nzLabel]="s.label" [nzValue]="s.value"></nz-option>
+                }
+                <nz-option [nzLabel]="'Custom (120px)'" [nzValue]="120"></nz-option>
+              </nz-select>
+            </div>
+            <div class="control-group">
+              <label class="control-label">Анимация:</label>
+              <nz-select [ngModel]="config().animation" (ngModelChange)="updateConfig('animation', $event)">
+                @for (a of animations; track a.value) {
+                <nz-option [nzLabel]="a.label" [nzValue]="a.value"></nz-option>
+                }
+              </nz-select>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label">Цвет (Color):</label>
+            <div class="color-picker-row">
+              <nz-select [ngModel]="config().color" (ngModelChange)="updateConfig('color', $event)" style="flex: 1">
+                @for (c of colors; track c.value) {
+                <nz-option [nzLabel]="c.label" [nzValue]="c.value"></nz-option>
+                }
+              </nz-select>
+              <input
+                type="color"
+                [ngModel]="config().color"
+                (ngModelChange)="updateConfig('color', $event)"
+                nz-input
+                style="width: 50px; padding: 2px"
+              />
+            </div>
+          </div>
+
+          <h3 class="form-section-title">Контент и позиционирование</h3>
+
+          <div class="control-group">
+            <label class="control-label">Текст (Label):</label>
+            <input
+              nz-input
+              [ngModel]="config().label"
+              (ngModelChange)="updateConfig('label', $event)"
+              placeholder="Loading..."
+            />
+          </div>
+
+          <div class="control-group">
+            <label class="control-label">Подсказка (Tip):</label>
+            <input
+              nz-input
+              [ngModel]="config().tip"
+              (ngModelChange)="updateConfig('tip', $event)"
+              placeholder="Please wait..."
+            />
+          </div>
+
+          <div class="control-row">
+            <div class="control-group">
+              <label class="control-label">Позиция текста:</label>
+              <nz-radio-group
+                [ngModel]="config().labelPosition"
+                (ngModelChange)="updateConfig('labelPosition', $event)"
+              >
+                @for (p of positions; track p.value) {
+                <label nz-radio [nzValue]="p.value">{{ p.label }}</label>
+                }
+              </nz-radio-group>
+            </div>
+            <div class="control-group">
+              <label class="control-label">Задержка (ms):</label>
+              <nz-input-number
+                [ngModel]="config().delay"
+                (ngModelChange)="updateConfig('delay', $event)"
+                [nzMin]="0"
+                [nzStep]="100"
+                style="width: 100%"
+              ></nz-input-number>
+            </div>
+          </div>
+
+          <h3 class="form-section-title">Эффекты оверлея</h3>
+
+          <div class="control-group checkbox-group">
+            <nz-switch [ngModel]="config().overlay" (ngModelChange)="updateConfig('overlay', $event)"></nz-switch>
+            <span class="label">Включить Overlay режим</span>
+          </div>
+
+          @if (config().overlay) {
+          <div class="control-row">
+            <div class="control-group">
+              <label class="control-label">Размытие (Blur): {{ config().backdropBlur }}px</label>
+              <nz-slider
+                [nzMin]="0"
+                [nzMax]="20"
+                [ngModel]="config().backdropBlur"
+                (ngModelChange)="updateConfig('backdropBlur', $event)"
+              ></nz-slider>
+            </div>
+            <div class="control-group">
+              <label class="control-label">Прозрачность (Opacity): {{ config().backdropOpacity }}</label>
+              <nz-slider
+                [nzMin]="0"
+                [nzMax]="1"
+                [nzStep]="0.1"
+                [ngModel]="config().backdropOpacity"
+                (ngModelChange)="updateConfig('backdropOpacity', $event)"
+              ></nz-slider>
+            </div>
+          </div>
+          }
+
+          <div class="control-group checkbox-group" style="margin-top: 16px">
+            <nz-switch [ngModel]="config().visible" (ngModelChange)="updateConfig('visible', $event)"></nz-switch>
+            <span class="label">Компонент Видим (Visible)</span>
+          </div>
+        </div>
+      </nz-tab>
+
+      <!-- 2. CODE -->
+      <nz-tab nzTitle="💻 Код">
+        <div class="demo-form">
+          <div class="code-block-container" style="margin-top: 0">
+            <div class="code-header">
+              <span>HTML Template</span>
+              <button class="copy-btn" (click)="copyToClipboard(generatedCode().html)">📋</button>
+            </div>
+            <pre><code>{{ generatedCode().html }}</code></pre>
+          </div>
+
+          <div class="code-block-container" style="margin-top: 24px">
+            <div class="code-header">
+              <span>TypeScript Example</span>
+              <button class="copy-btn" (click)="copyToClipboard(generatedCode().typescript)">📋</button>
+            </div>
+            <pre><code>{{ generatedCode().typescript }}</code></pre>
+          </div>
+        </div>
+      </nz-tab>
+
+      <!-- 3. EXAMPLES -->
+      <nz-tab nzTitle="📚 Примеры">
+        <div class="demo-form">
+          <p>
+            Расширенные примеры использования Spinner представлены в нижней части страницы под блоком предварительного
+            просмотра.
+          </p>
+        </div>
+      </nz-tab>
+
+      <!-- 4. API -->
+      <nz-tab nzTitle="📖 API">
+        <div class="demo-form">
+          <control-documentation [config]="documentationConfig"></control-documentation>
+        </div>
+      </nz-tab>
+    </nz-tabset>
+  </div>
+
+  <!-- RESULT: LIVE PREVIEW -->
+  <div showcase-result>
+    <div class="preview-container">
+      <div
+        class="live-demo-wrapper"
+        [style.position]="config().overlay ? 'relative' : 'static'"
+        [style.min-height]="config().overlay ? '200px' : 'auto'"
+      >
+        <av-spinner
+          [visible]="config().visible"
+          [size]="config().size"
+          [color]="config().color"
+          [animation]="config().animation"
+          [label]="config().label"
+          [tip]="config().tip"
+          [labelPosition]="config().labelPosition"
+          [overlay]="config().overlay"
+          [backdropBlur]="config().backdropBlur"
+          [backdropOpacity]="config().backdropOpacity"
+          [delay]="config().delay"
+        ></av-spinner>
+
+        @if (config().overlay) {
+        <div class="overlay-dummy-content">
+          <h4>Контент под оверлеем</h4>
+          <p>
+            Этот текст блокируется спиннером при включении режима Overlay. Вы можете настраивать размытие и прозрачность
+            фона в Playground.
+          </p>
+        </div>
+        }
+      </div>
+
+      <div class="preview-actions" style="margin-top: 48px">
+        <button av-button avType="default" (clicked)="toggleFullScreen()" style="min-width: 250px">
+          <av-icon type="general/av_full_screen" [size]="18"></av-icon>
+          <span style="margin-left: 10px">Проверить FullScreen режим</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULT: DESCRIPTION -->
+  <div showcase-description>
+    <div class="dialog-info">
+      <span class="info-title">👁️ Стейт:</span>
+      <span class="info-item"
+        >Размер: <strong>{{ config().size }}</strong></span
+      >
+      <span class="info-item"
+        >Цвет: <strong>{{ config().color }}</strong></span
+      >
+      <span class="info-item"
+        >Анимация: <strong>{{ config().animation }}</strong></span
+      >
+      <span class="info-item"
+        >Overlay: <strong>{{ config().overlay ? 'Вкл' : 'Выкл' }}</strong></span
+      >
+    </div>
+  </div>
+
+  <!-- USAGE EXAMPLES (Bottom) -->
+  <div showcase-examples>
+    <div class="demo-form">
+      <div class="example-grid">
+        <!-- 1. C цветовыми схемами -->
+        <div class="example-block">
+          <h4>1. Цветовые схемы</h4>
+          <p>Системные пресеты цветов для интеграции с темой или кастомные HEX-значения.</p>
+          <div class="example-preview row-stack">
+            <av-spinner color="primary" label="Primary"></av-spinner>
+            <av-spinner color="success" label="Success"></av-spinner>
+            <av-spinner color="warning" label="Warning"></av-spinner>
+            <av-spinner color="error" label="Error"></av-spinner>
+            <av-spinner color="#722ed1" label="Custom Purple"></av-spinner>
+          </div>
+        </div>
+
+        <!-- 2. Анимации -->
+        <div class="example-block">
+          <h4>2. Варианты анимации</h4>
+          <p>Пять предустановленных режимов движения для любого контекста интерфейса.</p>
+          <div class="example-preview row-stack">
+            <av-spinner animation="spin" label="Spin"></av-spinner>
+            <av-spinner animation="pulse" label="Pulse"></av-spinner>
+            <av-spinner animation="bounce" label="Bounce"></av-spinner>
+            <av-spinner animation="drift" label="Drift"></av-spinner>
+            <av-spinner animation="none" label="Static"></av-spinner>
+          </div>
+        </div>
+
+        <!-- 3. В кнопках -->
+        <div class="example-block">
+          <h4>3. Использование в кнопках</h4>
+          <p>При использовании <code>color="inherit"</code>, спиннер адаптируется под цвет кнопки.</p>
+          <div class="example-preview row-stack">
+            <button av-button avType="primary">
+              <av-spinner size="small" color="inherit" style="margin-right: 8px"></av-spinner>
+              Идет сохранение...
+            </button>
+            <button av-button avType="danger">
+              <av-spinner size="small" color="inherit" style="margin-right: 8px"></av-spinner>
+              Удаление...
+            </button>
+            <button av-button avType="default">
+              <av-spinner size="small" color="primary" style="margin-right: 8px"></av-spinner>
+              Загрузка списков
+            </button>
+          </div>
+        </div>
+
+        <!-- 4. Размеры -->
+        <div class="example-block">
+          <h4>4. Шкала размеров</h4>
+          <p>От микро-индикаторов до крупномасштабных загрузчиков.</p>
+          <div class="example-preview row-stack" style="align-items: flex-end">
+            <av-spinner size="tiny" label="Tiny"></av-spinner>
+            <av-spinner size="small" label="Small"></av-spinner>
+            <av-spinner size="default" label="Default"></av-spinner>
+            <av-spinner size="large" label="Large"></av-spinner>
+            <av-spinner size="huge" label="Huge"></av-spinner>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOTTOM: Documentation -->
+  <div showcase-docs>
+    <control-documentation [config]="documentationConfig"></control-documentation>
+  </div>
+</av-showcase>
+
+<!-- FullScreen Demo Overlay -->
+@if (showFullScreenDemo()) {
+<av-spinner
+  [fullScreen]="true"
+  label="Симуляция полноэкранной загрузки..."
+  tip="Автоматически закроется через 3 секунды"
+  [backdropBlur]="10"
+></av-spinner>
+}
