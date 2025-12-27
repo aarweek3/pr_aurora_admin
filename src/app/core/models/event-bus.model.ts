@@ -60,6 +60,10 @@ export type EventType =
   | 'actionCompleted'
   | 'actionFailed'
 
+  // Console Events
+  | 'openConsole'
+  | 'toggleConsole'
+
   // System Events
   | 'backendAvailable'
   | 'backendUnavailable'

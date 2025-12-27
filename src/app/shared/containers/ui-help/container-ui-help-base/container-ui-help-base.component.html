@@ -7,22 +7,64 @@
   <div class="ui-help-content">
     <ng-content></ng-content>
 
-    <!-- Fallback if used as a standalone page without projected content -->
-    <div
-      class="ui-help-fallback"
-      style="
-        margin-top: 40px;
-        text-align: center;
-        color: #8c8c8c;
-        padding: 40px;
-        border: 1px dashed #d9d9d9;
-        border-radius: 8px;
-      "
-    >
-      <av-icon type="system/av_info" [size]="48" color="#d9d9d9" style="margin-bottom: 20px; display: block"></av-icon>
-      <h3>Центральная База Помощи (UI Help Base)</h3>
-      <p>Этот компонент является базовым шаблоном для всех страниц документации в системе.</p>
-      <p>Используйте селектор <code>&lt;app-container-ui-help-base&gt;</code> для обёртывания вашего контента.</p>
+    <!-- Aurora Control Integration Guide -->
+    <div class="quick-start-guide">
+      <div class="guide-header">
+        <av-icon type="system/av_flash" [size]="24" color="#faad14"></av-icon>
+        <h2>Краткое руководство по интеграции</h2>
+      </div>
+
+      <div class="guide-steps">
+        <div class="step-card">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <h4>Импорт зависимостей</h4>
+            <p>Все контроли являются Standalone. Импортируйте их напрямую в ваш компонент:</p>
+            <code>import &#123; AV_UI_COMPONENTS &#125; from '&#64;shared/components/ui';</code>
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <h4>Подключение в imports</h4>
+            <p>Добавьте нужные компоненты или весь пакет в массив imports:</p>
+            <code>imports: [ ...AV_UI_COMPONENTS ]</code>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="controls-overview">
+      @for (group of controlGroups; track group.title) {
+      <div class="control-group-section">
+        <div class="group-header">
+          <h3>{{ group.title }}</h3>
+          <p>{{ group.description }}</p>
+        </div>
+
+        <div class="controls-grid">
+          @for (item of group.items; track item.name) {
+          <div class="control-card">
+            <div class="control-info">
+              <span class="control-badge" [class]="item.type.toLowerCase()">{{ item.type }}</span>
+              <h4 class="control-name">{{ item.name }}</h4>
+              <code class="control-selector">{{ item.selector }}</code>
+              <p class="control-desc">{{ item.description }}</p>
+            </div>
+          </div>
+          }
+        </div>
+      </div>
+      }
+    </div>
+
+    <div class="ui-help-fallback">
+      <av-icon type="system/av_info" [size]="32" color="#d9d9d9" style="margin-bottom: 12px; display: block"></av-icon>
+      <h3>Нужна помощь?</h3>
+      <p>
+        Если вы не нашли ответ здесь, обратитесь к разделу <strong>UI Demo</strong> для просмотра живых примеров и
+        генерации кода.
+      </p>
     </div>
   </div>
 </div>

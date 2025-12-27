@@ -1,9 +1,10 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 import { ContextService } from '../../../../core/services/context/context.service';
 import { ErrorRegistryService } from '../../../../core/services/error-registry/error-registry.service';
+import { EventBusService } from '../../../../core/services/event-bus/event-bus.service';
 
 /**
  * Status Indicator Interface
@@ -35,109 +36,149 @@ export interface StatusIndicator {
 @Component({
   selector: 'app-global-status-bar',
   standalone: true,
-  imports: [
-    CommonModule,
-    NzIconModule,
-    NzToolTipModule,
-  ],
+  imports: [CommonModule, NzIconModule, NzToolTipModule],
   template: `
     <div class="global-status-bar">
       <div class="global-status-bar__indicators">
         @for (indicator of indicators(); track indicator.id) {
-          <div
-            class="status-indicator"
-            [class]="'status-indicator--' + indicator.status"
-            nz-tooltip
-            [nzTooltipTitle]="indicator.message"
-            nzTooltipPlacement="top">
-            <span nz-icon [nzType]="indicator.icon" [nzSpin]="indicator.status === 'loading'"></span>
-            <span class="status-indicator__label">{{ indicator.label }}</span>
-          </div>
+        <div
+          class="status-indicator"
+          [class]="'status-indicator--' + indicator.status"
+          nz-tooltip
+          [nzTooltipTitle]="indicator.message"
+          nzTooltipPlacement="top"
+        >
+          <span nz-icon [nzType]="indicator.icon" [nzSpin]="indicator.status === 'loading'"></span>
+          <span class="status-indicator__label">{{ indicator.label }}</span>
+        </div>
         }
       </div>
 
       <!-- Дополнительная информация -->
       <div class="global-status-bar__info">
         @if (hasActiveLocks()) {
-          <div class="status-info-item status-info-item--warning">
-            <span nz-icon nzType="lock"></span>
-            <span>Заблокировано: {{ activeLocks() }}</span>
-          </div>
+        <div class="status-info-item status-info-item--warning">
+          <span nz-icon nzType="lock"></span>
+          <span>Заблокировано: {{ activeLocks() }}</span>
+        </div>
+        } @if (backgroundTasks() > 0) {
+        <div class="status-info-item">
+          <span nz-icon nzType="loading" nzSpin></span>
+          <span>Задач в фоне: {{ backgroundTasks() }}</span>
+        </div>
         }
-        @if (backgroundTasks() > 0) {
-          <div class="status-info-item">
-            <span nz-icon nzType="loading" nzSpin></span>
-            <span>Задач в фоне: {{ backgroundTasks() }}</span>
-          </div>
-        }
+
+        <button
+          class="console-trigger"
+          (click)="openConsole()"
+          nz-tooltip
+          nzTooltipTitle="Открыть консоль отладки"
+        >
+          <span nz-icon nzType="code"></span>
+          <span>Console</span>
+        </button>
       </div>
     </div>
   `,
-  styles: [`
-    .global-status-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      height: 32px;
-      padding: 0 24px;
-      background: #fafafa;
-      border-top: 1px solid #f0f0f0;
-      font-size: 12px;
-    }
+  styles: [
+    `
+      .global-status-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 32px;
+        padding: 0 24px;
+        background: #fafafa;
+        border-top: 1px solid #f0f0f0;
+        font-size: 12px;
+      }
 
-    .global-status-bar__indicators {
-      display: flex;
-      gap: 24px;
-    }
+      .global-status-bar__indicators {
+        display: flex;
+        gap: 24px;
+      }
 
-    .status-indicator {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      cursor: default;
-      transition: all 0.3s;
-    }
+      .status-indicator {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        cursor: default;
+        transition: all 0.3s;
+      }
 
-    .status-indicator--healthy {
-      color: #52c41a;
-    }
+      .status-indicator--healthy {
+        color: #52c41a;
+      }
 
-    .status-indicator--warning {
-      color: #faad14;
-    }
+      .status-indicator--warning {
+        color: #faad14;
+      }
 
-    .status-indicator--error {
-      color: #ff4d4f;
-    }
+      .status-indicator--error {
+        color: #ff4d4f;
+      }
 
-    .status-indicator--loading {
-      color: #1890ff;
-    }
+      .status-indicator--loading {
+        color: #1890ff;
+      }
 
-    .status-indicator__label {
-      font-weight: 500;
-    }
+      .status-indicator__label {
+        font-weight: 500;
+      }
 
-    .global-status-bar__info {
-      display: flex;
-      gap: 16px;
-      color: #8c8c8c;
-    }
+      .global-status-bar__info {
+        display: flex;
+        gap: 16px;
+        color: #8c8c8c;
+      }
 
-    .status-info-item {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
+      .status-info-item {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
 
-    .status-info-item--warning {
-      color: #faad14;
-    }
-  `],
+      .status-info-item--warning {
+        color: #faad14;
+      }
+
+      .console-trigger {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 0 12px;
+        height: 24px;
+        background: #f0f2f5;
+        border: 1px solid #d9d9d9;
+        border-radius: 4px;
+        color: #595959;
+        cursor: pointer;
+        font-size: 11px;
+        font-weight: 600;
+        transition: all 0.2s;
+        margin-left: 8px;
+
+        &:hover {
+          background: #1890ff;
+          color: #fff;
+          border-color: #1890ff;
+        }
+
+        &:active {
+          transform: translateY(1px);
+        }
+
+        span[nz-icon] {
+          font-size: 14px;
+        }
+      }
+    `,
+  ],
 })
 export class GlobalStatusBarComponent implements OnInit {
   private readonly contextService = inject(ContextService);
   private readonly errorRegistry = inject(ErrorRegistryService);
+  private readonly eventBus = inject(EventBusService);
 
   indicators = signal<StatusIndicator[]>([]);
   activeLocks = signal(0);
@@ -176,7 +217,9 @@ export class GlobalStatusBarComponent implements OnInit {
         id: 'backend',
         label: 'Backend',
         status: context.operationalState.backendAvailable ? 'healthy' : 'error',
-        message: context.operationalState.backendAvailable ? 'Связь установлена' : 'Нет связи с сервером',
+        message: context.operationalState.backendAvailable
+          ? 'Связь установлена'
+          : 'Нет связи с сервером',
         icon: context.operationalState.backendAvailable ? 'cloud' : 'disconnect',
       },
       {
@@ -229,5 +272,12 @@ export class GlobalStatusBarComponent implements OnInit {
 
   hasActiveLocks(): boolean {
     return this.activeLocks() > 0;
+  }
+
+  openConsole(): void {
+    this.eventBus.publish({
+      type: 'openConsole',
+      payload: null,
+    });
   }
 }

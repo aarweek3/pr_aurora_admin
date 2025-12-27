@@ -1,18 +1,16 @@
-src\app\pages\ui-demo\tag-ui
+src\app\pages\ui-demo\help-container-control-aurora
 
-tag-control-aurora
+help-container-control-aurora
 Создание нового компонента Ctrl + P
 
 - переходим в папку
   cd src\app\pages\ui-demo
 
 - cоздаем новый компонент
-  ng g c tag-control-aurora
+  ng g c help-container-control-aurora
 
 - создаем дополнительный файл конфигурации
-  tag-control-aurora.config.ts
-
-  spinner
+  help-container-control-aurora.config.ts
 
 - создаем rout к нему
 - [Открыть rout](/src\app\pages\ui-demo\ui-demo.routes.ts)

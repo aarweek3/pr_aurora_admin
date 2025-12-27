@@ -35,38 +35,39 @@ export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
           submenu: [
             {
               id: 'button-control-aurora',
-              label: 'Button Component Aurora',
+              label: 'Button Control Aurora',
               route: '/ui-demo/button-control-aurora',
               icon: 'appstore',
             },
             {
               id: 'color-component-aurora',
-              label: 'Color Component Aurora',
+              label: 'Color Control Aurora',
               route: '/ui-demo/color-component-aurora',
               icon: 'bg-colors',
             },
 
             {
               id: 'dialog-control-aurora',
-              label: 'Dialog Component Aurora',
+              label: 'Dialog Control Aurora',
               route: '/ui-demo/dialog-control-aurora',
               icon: 'message',
             },
             {
               id: 'field-group-component-aurora',
-              label: 'Field Group UI Component Aurora',
+              label: 'Field Group UI Control Aurora',
               route: '/ui-demo/field-group-component-aurora',
               icon: 'group',
             },
+
             {
-              id: 'help-copy-ui',
-              label: 'Help Copy UI',
-              route: '/ui-demo/help-copy-container-ui',
+              id: 'help-container-control-aurora',
+              label: 'Help Container Control Aurora',
+              route: '/ui-demo/help-container-control-aurora',
               icon: 'copy',
             },
             {
               id: 'icon-control-aurora',
-              label: 'Icon Component Aurora',
+              label: 'Icon Control Aurora',
               route: '/ui-demo/icon-control-aurora',
               icon: 'star',
             },
@@ -78,14 +79,14 @@ export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
             },
             {
               id: 'input-control-aurora',
-              label: 'Input Component Aurora',
+              label: 'Input Control Aurora',
               route: '/ui-demo/input-control-aurora',
               icon: 'edit',
             },
 
             {
               id: 'modal-control-aurora',
-              label: 'Modal Component Aurora',
+              label: 'Modal Control Aurora',
               route: '/ui-demo/modal-control-aurora',
               icon: 'layout',
             },
@@ -117,31 +118,19 @@ export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
             },
             {
               id: 'search-control-aurora',
-              label: 'Search Component Aurora',
+              label: 'Search Control Aurora',
               route: '/ui-demo/search-control-aurora',
               icon: 'search',
             },
             {
-              id: 'tag-ui',
-              label: 'Tag UI',
-              route: '/ui-demo/tag-ui',
-              icon: 'tags',
-            },
-            {
               id: 'tag-control-aurora',
-              label: 'Tag Component Aurora',
+              label: 'Tag Control Aurora',
               route: '/ui-demo/tag-control-aurora',
               icon: 'tags',
             },
             {
-              id: 'toggle-ui',
-              label: 'Toggle UI',
-              route: '/ui-demo/toggle-ui',
-              icon: 'swap',
-            },
-            {
               id: 'toggle-control-aurora',
-              label: 'Toggle Component Aurora',
+              label: 'Toggle Control Aurora',
               route: '/ui-demo/toggle-control-aurora',
               icon: 'swap',
             },
@@ -151,20 +140,39 @@ export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
               route: '/test/ui-help-base',
               icon: 'question-circle',
             },
-            {
-              id: 'wrapper-ui-test',
-              label: 'Wrapper UI Test 🎁',
-              route: '/ui-demo/wrapper-ui-test',
-              icon: 'gift',
-            },
           ],
         },
+        // меню OLD
         {
           id: 'ui-demo-old',
           icon: 'history',
           label: 'OLD',
           type: 'submenu',
           submenu: [
+            {
+              id: 'tag-ui',
+              label: 'Tag UI',
+              route: '/ui-demo/tag-ui',
+              icon: 'tags',
+            },
+            {
+              id: 'help-copy-ui',
+              label: 'Help Copy UI',
+              route: '/ui-demo/help-copy-container-ui',
+              icon: 'copy',
+            },
+            {
+              id: 'toggle-ui',
+              label: 'Toggle UI',
+              route: '/ui-demo/toggle-ui',
+              icon: 'swap',
+            },
+            {
+              id: 'wrapper-ui-test',
+              label: 'Wrapper UI Test 🎁',
+              route: '/ui-demo/wrapper-ui-test',
+              icon: 'gift',
+            },
             {
               id: 'spinner-ui',
               label: 'Spinner UI',

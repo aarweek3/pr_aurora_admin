@@ -1,0 +1,223 @@
+<av-showcase [config]="showcaseConfig" [generatedCodeInput]="codeForShowcase()">
+  <!-- TAB SECTION: TABS & CONTROLS -->
+  <div showcase-tabs>
+    <nz-tabset [nzAnimated]="false">
+      <!-- 1. PLAYGROUND -->
+      <nz-tab nzTitle="🎮 Playground">
+        <div class="demo-form">
+          <h3 class="form-section-title">Основные настройки</h3>
+          <div class="control-group">
+            <label class="control-label">Заголовок (Title):</label>
+            <input
+              nz-input
+              [ngModel]="config().title"
+              (ngModelChange)="updateConfig('title', $event)"
+              placeholder="Enter block title"
+            />
+          </div>
+
+          <div class="control-group">
+            <label class="control-label">Контент (Content):</label>
+            <textarea
+              nz-input
+              [ngModel]="config().content"
+              (ngModelChange)="updateConfig('content', $event)"
+              [nzAutosize]="{ minRows: 4, maxRows: 10 }"
+            ></textarea>
+          </div>
+
+          <h3 class="form-section-title">Размеры и цвет</h3>
+          <div class="control-row">
+            <div class="control-group">
+              <label class="control-label">Ширина (Width):</label>
+              <nz-select [ngModel]="config().width" (ngModelChange)="updateConfig('width', $event)">
+                @for (w of widthPresets; track w.value) {
+                <nz-option [nzLabel]="w.label" [nzValue]="w.value"></nz-option>
+                }
+              </nz-select>
+            </div>
+            <div class="control-group">
+              <label class="control-label">Высота (Height):</label>
+              <nz-select [ngModel]="config().height" (ngModelChange)="updateConfig('height', $event)">
+                @for (h of heightPresets; track h.value) {
+                <nz-option [nzLabel]="h.label" [nzValue]="h.value"></nz-option>
+                }
+              </nz-select>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label">Фон (Background Color):</label>
+            <div class="color-picker-row">
+              <input
+                nz-input
+                [(ngModel)]="config().bgColor"
+                (ngModelChange)="updateConfig('bgColor', $event)"
+                style="flex: 1"
+                placeholder="#1e293b"
+              />
+              <input
+                type="color"
+                [ngModel]="config().bgColor"
+                (ngModelChange)="updateConfig('bgColor', $event)"
+                nz-input
+                style="width: 50px; padding: 2px"
+              />
+            </div>
+          </div>
+
+          <h3 class="form-section-title">Функции</h3>
+          <div class="control-row">
+            <div class="control-group checkbox-group">
+              <nz-switch [ngModel]="config().showCopy" (ngModelChange)="updateConfig('showCopy', $event)"></nz-switch>
+              <span class="label">Кнопка копирования</span>
+            </div>
+            <div class="control-group checkbox-group">
+              <nz-switch
+                [ngModel]="config().showHelpButton"
+                (ngModelChange)="updateConfig('showHelpButton', $event)"
+              ></nz-switch>
+              <span class="label">Кнопка справки (?)</span>
+            </div>
+          </div>
+
+          @if (config().showHelpButton) {
+          <div class="control-group" style="margin-top: 16px">
+            <label class="control-label">Текст справки (HTML поддерживается):</label>
+            <textarea
+              nz-input
+              [ngModel]="config().helpContent"
+              (ngModelChange)="updateConfig('helpContent', $event)"
+              [nzAutosize]="{ minRows: 2, maxRows: 5 }"
+            ></textarea>
+          </div>
+          }
+        </div>
+      </nz-tab>
+
+      <!-- 2. CODE -->
+      <nz-tab nzTitle="💻 Код">
+        <div class="demo-form">
+          <div class="code-block-container" style="margin-top: 0">
+            <div class="code-header">
+              <span>HTML Markup</span>
+              <button class="copy-btn" (click)="copyToClipboard(generatedCode().html)">📋</button>
+            </div>
+            <pre><code>{{ generatedCode().html }}</code></pre>
+          </div>
+
+          <div class="code-block-container" style="margin-top: 24px">
+            <div class="code-header">
+              <span>TS / Variable Data</span>
+              <button class="copy-btn" (click)="copyToClipboard(generatedCode().ts)">📋</button>
+            </div>
+            <pre><code>{{ generatedCode().ts }}</code></pre>
+          </div>
+        </div>
+      </nz-tab>
+
+      <!-- 3. EXAMPLES -->
+      <nz-tab nzTitle="📚 Примеры">
+        <div class="demo-form">
+          <p>Ниже представлены различные варианты использования контейнера в реальных сценариях.</p>
+        </div>
+      </nz-tab>
+
+      <!-- 4. API -->
+      <nz-tab nzTitle="📖 API">
+        <div class="demo-form">
+          <control-documentation [config]="documentationConfig"></control-documentation>
+        </div>
+      </nz-tab>
+    </nz-tabset>
+  </div>
+
+  <!-- RESULT: LIVE PREVIEW -->
+  <div showcase-result>
+    <div class="preview-container">
+      <div class="live-demo-wrapper">
+        <av-help-copy-container
+          [title]="config().title"
+          [content]="config().content"
+          [width]="config().width"
+          [height]="config().height"
+          [bgColor]="config().bgColor"
+          [showCopy]="config().showCopy"
+          [showHelpButton]="config().showHelpButton"
+          [helpContent]="config().helpContent"
+        ></av-help-copy-container>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULT: DESCRIPTION -->
+  <div showcase-description>
+    <div class="dialog-info">
+      <span class="info-title">👁️ Статистика:</span>
+      <span class="info-item"
+        >Символов: <strong>{{ config().content.length }}</strong></span
+      >
+      <span class="info-item"
+        >Ширина: <strong>{{ config().width }}</strong></span
+      >
+      <span class="info-item"
+        >Высота: <strong>{{ config().height }}</strong></span
+      >
+    </div>
+  </div>
+
+  <!-- USAGE EXAMPLES (Bottom) -->
+  <div showcase-examples>
+    <div class="demo-form">
+      <div class="example-grid">
+        <!-- 1. Текстовая инструкция -->
+        <div class="example-block">
+          <h4>1. Текстовая инструкция</h4>
+          <p>Использование контейнера для простых текстовых заметок с кнопкой справки.</p>
+          <div class="example-preview">
+            <av-help-copy-container
+              title="Важное примечание"
+              content="Для активации API используйте заголовок X-API-KEY в каждом запросе."
+              bgColor="#334155"
+              [showHelpButton]="true"
+              helpContent="Ключ можно получить в личном кабинете в разделе Настройки"
+            ></av-help-copy-container>
+          </div>
+        </div>
+
+        <!-- 2. JSON Спецификация -->
+        <div class="example-block">
+          <h4>2. JSON Спецификация</h4>
+          <p>Отображение структурированных данных с фиксированной высотой и прокруткой.</p>
+          <div class="example-preview">
+            <av-help-copy-container
+              title="User Response JSON"
+              content='{\n  "id": 123,\n  "name": "John Doe",\n  "email": "john@example.com",\n  "roles": ["admin", "editor"],\n  "status": "active",\n  "metadata": {\n    "lastLogin": "2023-10-27",\n    "ip": "192.168.1.1"\n  }\n}'
+              height="150px"
+              bgColor="#1e1e1e"
+            ></av-help-copy-container>
+          </div>
+        </div>
+
+        <!-- 3. Светлая тема (Кастомный фон) -->
+        <div class="example-block">
+          <h4>3. Светлый вариант</h4>
+          <p>Пример использования светлого фона для встраивания в светлые интерфейсы.</p>
+          <div class="example-preview premium-light">
+            <av-help-copy-container
+              title="Public Key"
+              content="ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC6..."
+              bgColor="transparent"
+              [showCopy]="true"
+            ></av-help-copy-container>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOTTOM: Documentation -->
+  <div showcase-docs>
+    <control-documentation [config]="documentationConfig"></control-documentation>
+  </div>
+</av-showcase>

@@ -159,6 +159,13 @@ export const UI_DEMO_ROUTES: Routes = [
       ),
   },
   {
+    path: 'help-container-control-aurora',
+    loadComponent: () =>
+      import('./help-container-control-aurora/help-container-control-aurora.component').then(
+        (m) => m.HelpContainerControlAuroraComponent,
+      ),
+  },
+  {
     path: 'spinner-ui',
     loadComponent: () =>
       import('./spinner-ui/spinner-ui.component').then((m) => m.SpinnerUiComponent),

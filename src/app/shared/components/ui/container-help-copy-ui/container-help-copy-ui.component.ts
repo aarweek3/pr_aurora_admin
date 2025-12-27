@@ -127,8 +127,11 @@ import { Component, input, output, signal } from '@angular/core';
       @use 'styles/abstracts/mixins' as *;
 
       .av-copy-container {
-        /* Переменная для управления цветом фона извне */
+        /* Переменные для управления цветом фона и текста */
         --av-copy-bg: #1e293b;
+        --av-copy-text: #ffffff;
+        --av-copy-btn-bg: rgba(255, 255, 255, 0.1);
+        --av-copy-btn-border: rgba(255, 255, 255, 0.2);
 
         display: flex;
         flex-direction: column;
@@ -139,6 +142,7 @@ import { Component, input, output, signal } from '@angular/core';
         overflow: hidden;
         box-sizing: border-box;
         transition: width 0.3s ease-in-out, height 0.3s ease-in-out;
+        border: 1px solid rgba(0, 0, 0, 0.05);
 
         &__header {
           display: flex;
@@ -149,11 +153,12 @@ import { Component, input, output, signal } from '@angular/core';
 
         &__title {
           margin: 0;
-          color: rgba(255, 255, 255, 0.6);
-          font-size: 0.75rem;
-          font-weight: 600;
+          color: var(--av-copy-text);
+          opacity: 0.6;
+          font-size: 0.7rem;
+          font-weight: 700;
           text-transform: uppercase;
-          letter-spacing: 0.05em;
+          letter-spacing: 0.1em;
         }
 
         &__actions {
@@ -162,51 +167,72 @@ import { Component, input, output, signal } from '@angular/core';
         }
 
         &__action-btn {
-          background: rgba(255, 255, 255, 0.1);
-          border: 1px solid rgba(255, 255, 255, 0.2);
-          color: #f8fafc;
+          background: var(--av-copy-btn-bg);
+          border: 1px solid var(--av-copy-btn-border);
+          color: var(--av-copy-text);
           padding: 4px 12px;
-          border-radius: 4px;
-          font-size: 0.75rem;
+          border-radius: 6px;
+          font-size: 0.7rem;
+          font-weight: 600;
           cursor: pointer;
           transition: all 0.2s;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
 
           &:hover {
             background: rgba(255, 255, 255, 0.2);
+            @if (light-background) {
+              background: rgba(0, 0, 0, 0.05);
+            }
+          }
+
+          &--toggle {
+            font-size: 0.6rem;
+            width: 24px;
+            padding: 4px 0;
           }
 
           &--help {
             min-width: 24px;
             padding: 4px 8px;
-            background: rgba(255, 255, 255, 0.05);
-            color: rgba(255, 255, 255, 0.7);
+            opacity: 0.8;
 
             &:hover {
-              background: rgba(255, 255, 255, 0.2);
-              color: #fff;
+              opacity: 1;
+              background: var(--av-copy-btn-bg);
             }
           }
         }
 
         &__window {
           background: #ffffff;
-          border-radius: 8px;
-          padding: 20px;
-          border: 1px solid #cbd5e1;
+          border-radius: 10px;
+          padding: 16px;
+          border: 1px solid rgba(0, 0, 0, 0.05);
           flex: 1;
           overflow: auto;
           min-height: 50px;
-          position: relative; /* For overlays if needed */
+          position: relative;
+          box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.02);
 
           @include dark-theme {
-            background: rgba(255, 255, 255, 0.05);
-            border-color: rgba(255, 255, 255, 0.1);
+            background: rgba(15, 23, 42, 0.6);
+            border-color: rgba(255, 255, 255, 0.05);
           }
         }
 
         &__pre {
           margin: 0;
           white-space: pre;
+          background: #f8fafc;
+          padding: 12px 16px;
+          border-radius: 6px;
+          border: 1px solid #f1f5f9;
+
+          @include dark-theme {
+            background: rgba(0, 0, 0, 0.2);
+            border-color: rgba(255, 255, 255, 0.03);
+          }
         }
 
         /* Help Styles */
@@ -219,79 +245,15 @@ import { Component, input, output, signal } from '@angular/core';
           }
         }
 
-        .av-help-title {
-          margin: 0 0 12px 0;
-          font-size: 1rem;
-          font-weight: 600;
-        }
-
-        .av-help-section {
-          margin-bottom: 12px;
-        }
-
-        .av-help-label {
-          font-weight: 600;
-          display: block;
-          margin-bottom: 4px;
-        }
-
-        .av-help-code {
-          background: rgba(0, 0, 0, 0.05);
-          padding: 2px 6px;
-          border-radius: 4px;
-          font-family: monospace;
-          display: inline-block;
-
-          @include dark-theme {
-            background: rgba(255, 255, 255, 0.1);
-          }
-        }
-
-        .av-help-list {
-          list-style: none;
-          padding: 0;
-          margin: 0;
-
-          li {
-            margin-bottom: 8px;
-            display: flex;
-            flex-direction: column;
-
-            code {
-              font-family: monospace;
-              font-weight: 600;
-              color: #0f172a;
-              margin-bottom: 2px;
-
-              @include dark-theme {
-                color: #e2e8f0;
-              }
-            }
-          }
-        }
-
-        .av-help-desc {
-          font-size: 0.75rem;
-          color: #64748b;
-          @include dark-theme {
-            color: #94a3b8;
-          }
-        }
-
         code {
-          color: #1e293b; /* Темно-синий шрифт в светлой теме */
+          color: #334155;
           font-family: 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
           font-size: 13px;
           line-height: 1.6;
 
           @include dark-theme {
-            color: #f8fafc; /* Светлый шрифт в темной теме */
+            color: #f8fafc;
           }
-        }
-
-        @include dark-theme {
-          box-shadow: none;
-          border: 1px solid rgba(255, 255, 255, 0.1);
         }
       }
     `,

@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, input } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { AdminHeaderComponent } from '../admin-header/admin-header.component';
+import { ConsolePanelComponent } from '../console-panel/console-panel.component';
 import { FooterComponent } from '../footer/footer.component';
 import { GlobalStatusBarComponent } from '../global-status-bar/global-status-bar.component';
 import { LeftSidebarComponent } from '../left-sidebar/left-sidebar.component';
@@ -48,6 +49,7 @@ import { RightPanelComponent } from '../right-panel/right-panel.component';
     AdminHeaderComponent,
     LeftSidebarComponent,
     RightPanelComponent,
+    ConsolePanelComponent,
     FooterComponent,
     GlobalStatusBarComponent,
   ],
@@ -68,6 +70,9 @@ import { RightPanelComponent } from '../right-panel/right-panel.component';
 
         <!-- Правая панель -->
         <app-right-panel class="admin-layout__right-panel"></app-right-panel>
+
+        <!-- Консоль (отдельный слой) -->
+        <app-console-panel></app-console-panel>
       </div>
 
       <!-- Глобальный статус бар -->

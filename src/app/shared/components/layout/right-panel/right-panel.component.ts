@@ -13,11 +13,6 @@ import { EventBusService } from '../../../../core/services/event-bus/event-bus.s
  * Гибридная правая панель с двумя зонами:
  * 1. Context Zone (динамическая) - контекстные данные из выбранной записи
  * 2. Menu Zone (статическая) - вкладки: Действия, Ошибки, История, Debug
- *
- * Согласно архитектуре (SOW ЧАСТЬ 4.3):
- * - Отвечает за контекстные данные и детализацию
- * - НЕ отвечает за навигацию и роутинг
- * - Связь через Event Bus
  */
 @Component({
   selector: 'app-right-panel',
@@ -37,7 +32,6 @@ import { EventBusService } from '../../../../core/services/event-bus/event-bus.s
           <div class="context-properties">
             <h3 class="context-properties__title">{{ contextTitle() }}</h3>
             <div class="context-properties__content">
-              <!-- TODO: Динамическая загрузка компонента деталей (Phase 7) -->
               <p>Детали записи: {{ contextTitle() }}</p>
             </div>
           </div>
@@ -53,7 +47,6 @@ import { EventBusService } from '../../../../core/services/event-bus/event-bus.s
         <!-- Menu Zone (статические вкладки) -->
         <div class="right-panel__menu-zone">
           <nz-tabset nzSize="small">
-            <!-- Действия -->
             <nz-tab nzTitle="Действия">
               <div class="panel-tab-content">
                 @if (availableActions().length > 0) {
@@ -74,7 +67,6 @@ import { EventBusService } from '../../../../core/services/event-bus/event-bus.s
               </div>
             </nz-tab>
 
-            <!-- Ошибки -->
             <nz-tab [nzTitle]="errorsTabTitle()">
               <div class="panel-tab-content">
                 @if (errors().length > 0) {
@@ -95,14 +87,12 @@ import { EventBusService } from '../../../../core/services/event-bus/event-bus.s
               </div>
             </nz-tab>
 
-            <!-- История -->
             <nz-tab nzTitle="История">
               <div class="panel-tab-content">
                 <nz-empty nzNotFoundContent="История пуста" [nzNotFoundImage]="'simple'"></nz-empty>
               </div>
             </nz-tab>
 
-            <!-- Debug (только в dev режиме) -->
             @if (isDevMode()) {
             <nz-tab nzTitle="Debug">
               <div class="panel-tab-content">
@@ -307,14 +297,12 @@ export class RightPanelComponent implements OnInit {
   ]);
 
   ngOnInit(): void {
-    // Подписка на события открытия панели
     this.eventBus.subscribe('openRightPanel', (event) => {
       this.isOpen.set(true);
       this.hasContextData.set(true);
       this.contextTitle.set(event.payload?.title || 'Детали');
     });
 
-    // Подписка на ошибки
     this.errorRegistry.errors$.subscribe((errors) => {
       this.errors.set(errors);
     });
@@ -325,7 +313,6 @@ export class RightPanelComponent implements OnInit {
   }
 
   executeAction(actionId: string): void {
-    // Публикуем событие выполнения действия
     this.eventBus.publish({
       type: 'actionRequested',
       payload: { actionId },
@@ -351,7 +338,6 @@ export class RightPanelComponent implements OnInit {
   }
 
   isDevMode(): boolean {
-    // TODO: Получать из environment (Phase 2)
     return true;
   }
 
