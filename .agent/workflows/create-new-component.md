@@ -1,13 +1,16 @@
+src\app\pages\ui-demo\tag-ui
+
+tag-control-aurora
 Создание нового компонента Ctrl + P
 
 - переходим в папку
   cd src\app\pages\ui-demo
 
 - cоздаем новый компонент
-  ng g c name-control-aurora
+  ng g c tag-control-aurora
 
 - создаем дополнительный файл конфигурации
-  имя-control-aurora.config.ts
+  tag-control-aurora.config.ts
 
   spinner
 

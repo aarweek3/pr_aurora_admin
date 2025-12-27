@@ -110,12 +110,6 @@ export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
               icon: 'line-chart',
             },
             {
-              id: 'spinner-ui',
-              label: 'Spinner UI',
-              route: '/ui-demo/spinner-ui',
-              icon: 'reload',
-            },
-            {
               id: 'spinner-control-aurora',
               label: 'Spinner Control Aurora',
               route: '/ui-demo/spinner-control-aurora',
@@ -131,6 +125,12 @@ export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
               id: 'tag-ui',
               label: 'Tag UI',
               route: '/ui-demo/tag-ui',
+              icon: 'tags',
+            },
+            {
+              id: 'tag-control-aurora',
+              label: 'Tag Component Aurora',
+              route: '/ui-demo/tag-control-aurora',
               icon: 'tags',
             },
             {
@@ -159,6 +159,12 @@ export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
           label: 'OLD',
           type: 'submenu',
           submenu: [
+            {
+              id: 'spinner-ui',
+              label: 'Spinner UI',
+              route: '/ui-demo/spinner-ui',
+              icon: 'reload',
+            },
             {
               id: 'pagination-ui',
               label: 'Pagination UI',

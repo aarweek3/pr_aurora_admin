@@ -126,6 +126,13 @@ export const UI_DEMO_ROUTES: Routes = [
     loadComponent: () => import('./tag-ui/tag-ui.component').then((m) => m.TagUiComponent),
   },
   {
+    path: 'tag-control-aurora',
+    loadComponent: () =>
+      import('./tag-control-aurora/tag-control-aurora.component').then(
+        (m) => m.TagControlAuroraComponent,
+      ),
+  },
+  {
     path: 'pagination-ui',
     loadComponent: () =>
       import('./pagination-ui/pagination-ui.component').then((m) => m.PaginationUiComponent),

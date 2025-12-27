@@ -1,0 +1,296 @@
+<av-showcase [config]="showcaseConfig" [generatedCodeInput]="codeForShowcase()">
+  <!-- TAB SECTION: TABS & CONTROLS -->
+  <div showcase-tabs>
+    <nz-tabset [nzAnimated]="false">
+      <!-- 1. PLAYGROUND -->
+      <nz-tab nzTitle="🎮 Playground">
+        <div class="demo-form">
+          <h3 class="form-section-title">Внешний вид тега</h3>
+
+          <div class="control-group">
+            <label class="control-label">Текст (Label):</label>
+            <input
+              nz-input
+              [ngModel]="config().label"
+              (ngModelChange)="updateConfig('label', $event)"
+              placeholder="Enter tag text..."
+            />
+          </div>
+
+          <div class="control-row">
+            <div class="control-group">
+              <label class="control-label">Стиль (Variant):</label>
+              <nz-select [ngModel]="config().variant" (ngModelChange)="updateConfig('variant', $event)">
+                @for (v of variants; track v.value) {
+                <nz-option [nzLabel]="v.label" [nzValue]="v.value"></nz-option>
+                }
+              </nz-select>
+            </div>
+            <div class="control-group">
+              <label class="control-label">Размер (Size):</label>
+              <nz-select [ngModel]="config().size" (ngModelChange)="updateConfig('size', $event)">
+                @for (s of sizes; track s.value) {
+                <nz-option [nzLabel]="s.label" [nzValue]="s.value"></nz-option>
+                }
+              </nz-select>
+            </div>
+          </div>
+
+          <div class="control-row">
+            <div class="control-group">
+              <label class="control-label">Форма (Shape):</label>
+              <nz-radio-group [ngModel]="config().shape" (ngModelChange)="updateConfig('shape', $event)">
+                @for (sh of shapes; track sh.value) {
+                <label nz-radio [nzValue]="sh.value">{{ sh.label }}</label>
+                }
+              </nz-radio-group>
+            </div>
+          </div>
+
+          <h3 class="form-section-title">Цвет и иконка</h3>
+
+          <div class="control-group">
+            <label class="control-label">Цвет (Color):</label>
+            <div class="color-picker-row">
+              <nz-select [ngModel]="config().color" (ngModelChange)="updateConfig('color', $event)" style="flex: 1">
+                @for (c of colors; track c.value) {
+                <nz-option [nzLabel]="c.label" [nzValue]="c.value"></nz-option>
+                }
+              </nz-select>
+              <input
+                type="color"
+                [ngModel]="config().color"
+                (ngModelChange)="updateConfig('color', $event)"
+                nz-input
+                style="width: 50px; padding: 2px"
+              />
+            </div>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label">Иконка (Icon):</label>
+            <nz-select
+              [ngModel]="config().icon"
+              (ngModelChange)="updateConfig('icon', $event)"
+              nzShowSearch
+              nzAllowClear
+            >
+              @for (i of icons; track i.value) {
+              <nz-option [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
+              }
+            </nz-select>
+          </div>
+
+          <h3 class="form-section-title">Поведение и ввод</h3>
+
+          <div class="control-row">
+            <div class="control-group checkbox-group">
+              <nz-switch [ngModel]="config().removable" (ngModelChange)="updateConfig('removable', $event)"></nz-switch>
+              <span class="label">Удаляемый</span>
+            </div>
+            <div class="control-group checkbox-group">
+              <nz-switch [ngModel]="config().clickable" (ngModelChange)="updateConfig('clickable', $event)"></nz-switch>
+              <span class="label">Кликабельный</span>
+            </div>
+          </div>
+
+          <div class="control-group" style="margin-top: 16px">
+            <label class="control-label">Placeholder инпута:</label>
+            <input nz-input [ngModel]="config().placeholder" (ngModelChange)="updateConfig('placeholder', $event)" />
+          </div>
+
+          <div class="control-row">
+            <div class="control-group checkbox-group">
+              <nz-switch
+                [ngModel]="config().allowDuplicates"
+                (ngModelChange)="updateConfig('allowDuplicates', $event)"
+              ></nz-switch>
+              <span class="label">Дубликаты</span>
+            </div>
+            <div class="control-group">
+              <label class="control-label">Max Tags:</label>
+              <nz-input-number
+                [ngModel]="config().maxTags"
+                (ngModelChange)="updateConfig('maxTags', $event)"
+                [nzMin]="1"
+                style="width: 100%"
+              ></nz-input-number>
+            </div>
+          </div>
+        </div>
+      </nz-tab>
+
+      <!-- 2. CODE -->
+      <nz-tab nzTitle="💻 Код">
+        <div class="demo-form">
+          <div class="code-block-container" style="margin-top: 0">
+            <div class="code-header">
+              <span>HTML Markup</span>
+              <button class="copy-btn" (click)="copyToClipboard(generatedCode().html)">📋</button>
+            </div>
+            <pre><code>{{ generatedCode().html }}</code></pre>
+          </div>
+
+          <div class="code-block-container" style="margin-top: 24px">
+            <div class="code-header">
+              <span>TypeScript Logic</span>
+              <button class="copy-btn" (click)="copyToClipboard(generatedCode().typescript)">📋</button>
+            </div>
+            <pre><code>{{ generatedCode().typescript }}</code></pre>
+          </div>
+        </div>
+      </nz-tab>
+
+      <!-- 3. EXAMPLES -->
+      <nz-tab nzTitle="📚 Примеры">
+        <div class="demo-form">
+          <p>Полный набор примеров использования системы тегов находится в нижней части страницы.</p>
+        </div>
+      </nz-tab>
+
+      <!-- 4. API -->
+      <nz-tab nzTitle="📖 API">
+        <div class="demo-form">
+          <control-documentation [config]="documentationConfig"></control-documentation>
+        </div>
+      </nz-tab>
+    </nz-tabset>
+  </div>
+
+  <!-- RESULT: LIVE PREVIEW -->
+  <div showcase-result>
+    <div class="preview-container">
+      <div class="live-demo-wrapper">
+        <div class="demo-section-mini">
+          <span class="section-label">Одиночный тег:</span>
+          <av-tag
+            [label]="config().label"
+            [size]="config().size"
+            [variant]="config().variant"
+            [color]="config().color"
+            [shape]="config().shape"
+            [removable]="config().removable"
+            [clickable]="config().clickable"
+            [icon]="config().icon"
+            (removed)="onTagAction('removed', config().label)"
+            (clicked)="onTagAction('clicked', config().label)"
+          ></av-tag>
+        </div>
+
+        <div class="demo-section-mini" style="margin-top: 40px; width: 100%">
+          <span class="section-label">Поле ввода тегов:</span>
+          <av-tag-input
+            [(tags)]="tagsList"
+            [placeholder]="config().placeholder"
+            [allowDuplicates]="config().allowDuplicates"
+            [maxTags]="config().maxTags"
+            [variant]="config().variant"
+            [color]="config().color"
+          ></av-tag-input>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULT: DESCRIPTION -->
+  <div showcase-description>
+    <div class="dialog-info">
+      <span class="info-title">👁️ Стейт:</span>
+      <span class="info-item"
+        >Тегов в инпуте: <strong>{{ tagsList().length }}</strong></span
+      >
+      <span class="info-item"
+        >Вариант: <strong>{{ config().variant }}</strong></span
+      >
+      <span class="info-item"
+        >Цвет: <strong>{{ config().color }}</strong></span
+      >
+    </div>
+  </div>
+
+  <!-- USAGE EXAMPLES (Bottom) -->
+  <div showcase-examples>
+    <div class="demo-form">
+      <div class="example-grid">
+        <!-- 1. Варианты заливки -->
+        <div class="example-block">
+          <h4>1. Варианты заливки (Variants)</h4>
+          <p>Три основных стиля для управления акцентами в интерфейсе.</p>
+          <div class="example-preview column-stack">
+            <div class="preview-row">
+              <span class="group-label">Soft:</span>
+              <av-tag label="Primary" color="primary" variant="soft"></av-tag>
+              <av-tag label="Success" color="success" variant="soft"></av-tag>
+              <av-tag label="Warning" color="warning" variant="soft"></av-tag>
+            </div>
+            <div class="preview-row">
+              <span class="group-label">Filled:</span>
+              <av-tag label="Primary" color="primary" variant="filled"></av-tag>
+              <av-tag label="Success" color="success" variant="filled"></av-tag>
+              <av-tag label="Warning" color="warning" variant="filled"></av-tag>
+            </div>
+            <div class="preview-row">
+              <span class="group-label">Outlined:</span>
+              <av-tag label="Primary" color="primary" variant="outlined"></av-tag>
+              <av-tag label="Success" color="success" variant="outlined"></av-tag>
+              <av-tag label="Warning" color="warning" variant="outlined"></av-tag>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. Формы и размеры -->
+        <div class="example-block">
+          <h4>2. Формы и размеры</h4>
+          <p>Скругление Rounded или овальная форма Pill в трех размерах.</p>
+          <div class="example-preview row-stack">
+            <div class="preview-item center">
+              <av-tag label="Small Pill" size="small" shape="pill" color="info"></av-tag>
+              <span class="label">Small Pill</span>
+            </div>
+            <div class="preview-item center">
+              <av-tag label="Medium Rounded" size="medium" shape="rounded" color="primary"></av-tag>
+              <span class="label">Medium Rounded</span>
+            </div>
+            <div class="preview-item center">
+              <av-tag label="Large Pill" size="large" shape="pill" color="success"></av-tag>
+              <span class="label">Large Pill</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. Интерактивность -->
+        <div class="example-block">
+          <h4>3. Интерактивность и иконки</h4>
+          <p>Теги могут содержать иконки, быть кликабельными или удаляемыми.</p>
+          <div class="example-preview row-stack">
+            <av-tag label="User Profile" icon="actions/av_user" color="primary" [clickable]="true"></av-tag>
+            <av-tag label="Settings" icon="actions/av_settings" color="neutral" [removable]="true"></av-tag>
+            <av-tag label="Verified" icon="actions/av_check_mark" color="success" variant="soft"></av-tag>
+          </div>
+        </div>
+
+        <!-- 4. Практическое: Навыки -->
+        <div class="example-block">
+          <h4>4. Практический пример: Облако навыков</h4>
+          <p>Использование av-tag-input для динамического управления списком компетенций.</p>
+          <div class="example-preview">
+            <div style="width: 100%; max-width: 500px; margin: 0 auto">
+              <av-tag-input
+                [tags]="['Angular', 'TypeScript', 'RxJS', 'Signals']"
+                placeholder="Добавьте новый навык..."
+                color="primary"
+                variant="soft"
+              >
+              </av-tag-input>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOTTOM: Documentation -->
+  <div showcase-docs>
+    <control-documentation [config]="documentationConfig"></control-documentation>
+  </div>
+</av-showcase>
