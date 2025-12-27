@@ -2,6 +2,7 @@ import { HttpErrorResponse, HttpEvent, HttpHandlerFn, HttpRequest } from '@angul
 import { inject } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { LoggerConsoleService } from '../../../../shared/logger-console/services/logger-console.service';
 
 import {
   errorMessages,
@@ -21,8 +22,20 @@ export function HttpErrorInterceptor(
   next: HttpHandlerFn,
 ): Observable<HttpEvent<unknown>> {
   const errorHandlingService = inject(ErrorHandlingService);
+  const loggerConsole = inject(LoggerConsoleService).getLogger('[API_ERR]');
+
   return next(req).pipe(
     catchError((httpError: HttpErrorResponse) => {
+      // Логируем ошибку в консоль
+      loggerConsole.error(`${req.method} ${req.url}`, {
+        status: httpError.status,
+        statusText: httpError.statusText,
+        params: req.params
+          .keys()
+          .reduce((acc, key) => ({ ...acc, [key]: req.params.get(key) }), {}),
+        error: httpError.error,
+      });
+
       let errorResponse: ErrorResponse;
       if (httpError.status === 0) {
         errorResponse = ErrorResponse.createNetworkError(req.urlWithParams);

@@ -1,0 +1,69 @@
+<div class="logger-container">
+  <!-- Toolbox / Header -->
+  <header class="logger-toolbar">
+    <div class="toolbar-left">
+      <div class="search-box">
+        <span class="search-icon">🔍</span>
+        <input
+          type="text"
+          placeholder="Filter messages or prefixes..."
+          [ngModel]="searchQuery()"
+          (ngModelChange)="searchQuery.set($event)"
+        />
+      </div>
+
+      <div class="level-filters">
+        @for (level of levels; track level) {
+        <button
+          class="filter-btn"
+          [class.active]="activeLevels()[level]"
+          [ngClass]="'btn-' + level"
+          (click)="toggleLevel(level)"
+        >
+          <span class="level-name">{{ level }}</span>
+          <span class="level-count">{{ counters()[level] }}</span>
+        </button>
+        }
+      </div>
+    </div>
+
+    <div class="toolbar-right">
+      <button class="action-btn" (click)="export()" title="Download JSON">📥 Export</button>
+      <button class="action-btn danger" (click)="clear()" title="Clear logs">🗑️ Clear</button>
+    </div>
+  </header>
+
+  <!-- Logs Viewport -->
+  <main class="logger-viewport" #scrollContainer (scroll)="onScroll($event)">
+    <div class="logs-list">
+      @for (log of filteredLogs(); track log.id) {
+      <div class="log-entry" [ngClass]="['level-' + log.level]">
+        <div class="log-main">
+          <span class="log-time">{{ log.timestamp | date : 'HH:mm:ss.SSS' }}</span>
+          <span class="log-prefix">{{ log.prefix }}</span>
+          <span class="log-message">{{ log.message }}</span>
+
+          <button class="copy-entry-btn" (click)="copyMessage(log.message)" title="Copy message">📋</button>
+        </div>
+
+        <!-- JSON Viewer for detailed data (if present) -->
+        @if (log.data && log.data.length > 0) {
+        <div class="log-details">
+          @for (item of log.data; track $index) {
+          <app-logger-console-json-viewer [value]="item" [path]="''"></app-logger-console-json-viewer>
+          }
+        </div>
+        }
+      </div>
+      } @empty {
+      <div class="empty-state">No logs match your filter</div>
+      }
+    </div>
+  </main>
+
+  <!-- Footer Info -->
+  <footer class="logger-footer">
+    <div class="status-info">Total: {{ loggerService.logs().length }} | Showing: {{ filteredLogs().length }}</div>
+    <div class="scroll-mode">Status: {{ autoScroll ? 'Sticky Bottom' : 'Manual Scroll' }}</div>
+  </footer>
+</div>

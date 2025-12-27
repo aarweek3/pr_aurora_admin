@@ -140,6 +140,12 @@ export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
               route: '/test/ui-help-base',
               icon: 'question-circle',
             },
+            {
+              id: 'logger-console',
+              label: 'Logger Console 🛠️',
+              route: '/ui-demo/logger-console',
+              icon: 'terminal',
+            },
           ],
         },
         // меню OLD
@@ -339,6 +345,55 @@ export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
         },
       ],
     },
+    // ПЕСОЧНИЦА
+    {
+      id: 'sand',
+      title: 'Песочница',
+      items: [
+        {
+          id: 'sand-menu',
+          icon: 'file-text',
+          label: 'Песочница',
+          type: 'submenu',
+          submenu: [
+            {
+              id: 'articles',
+              label: 'Статьи',
+              route: '/content/articles',
+              icon: 'read',
+            },
+          ],
+        },
+        {
+          id: 'pages',
+          icon: 'file',
+          label: 'Страницы',
+          type: 'submenu',
+          submenu: [
+            {
+              id: 'all-pages',
+              label: 'Все страницы',
+              route: '/pages/all',
+              icon: 'folder-open',
+            },
+            {
+              id: 'new-page',
+              label: 'Создать страницу',
+              route: '/pages/new',
+              icon: 'plus',
+            },
+            {
+              id: 'drafts',
+              label: 'Черновики',
+              route: '/pages/drafts',
+              icon: 'edit',
+            },
+          ],
+        },
+      ],
+    },
+    // КОНЕЦ ПЕСОЧНИЦА
+
     {
       id: 'ecommerce',
       title: 'E-commerce',

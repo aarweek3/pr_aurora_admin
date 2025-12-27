@@ -1,0 +1,40 @@
+<div class="sandbox-container">
+  <div class="sandbox-card">
+    <h2>Logger Console Sandbox</h2>
+    <p class="description">
+      Use the buttons below to generate logs and test the system's performance and visualization.
+    </p>
+
+    <div class="demo-grid">
+      <!-- Standard Levels -->
+      <section class="demo-section">
+        <h3>Standard Logs</h3>
+        <div class="btn-group">
+          <button class="btn info" (click)="logInfo()">Log Info</button>
+          <button class="btn warn" (click)="logWarn()">Log Warning</button>
+          <button class="btn error" (click)="logError()">Log Error</button>
+          <button class="btn debug" (click)="logDebug()">Log Debug</button>
+        </div>
+      </section>
+
+      <!-- Advanced Tests -->
+      <section class="demo-section">
+        <h3>Advanced Tests</h3>
+        <div class="btn-group">
+          <button class="btn primary" (click)="logBigObject()">Big JSON Object</button>
+          <button class="btn danger" (click)="simulateFatalError()">Simulate Fatal</button>
+        </div>
+      </section>
+
+      <!-- Performance -->
+      <section class="demo-section">
+        <h3>Performance</h3>
+        <div class="btn-group">
+          <button class="btn stress" (click)="spamLogs()">🔥 Spam 1000 logs</button>
+        </div>
+      </section>
+    </div>
+
+    <div class="hint">💡 Press the <strong>Console Toggle</strong> in the sidebar or tray to see the results.</div>
+  </div>
+</div>

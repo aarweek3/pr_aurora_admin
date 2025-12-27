@@ -1,300 +1,155 @@
-# SimpleLogger - Реализация на основе ТЗ
+📑 MASTER TZ: LoggerConsole Ultimate System (v2.0)
 
-```typescript
-// ============================================================================
-// 📝 SIMPLE LOGGER - IMPLEMENTATION
-// ============================================================================
+1. Концепция системы
+   LoggerConsole — это изолированная высокопроизводительная среда мониторинга состояния приложения. Она объединяет в себе классическое логирование, визуализацию сложных структур данных и инструменты анализа ошибок.
 
-/**
- * Уровни логирования (соответствуют методам console)
- */
-export type LogLevel = "log" | "debug" | "info" | "warn" | "error";
+Ключевой принцип: "Прозрачность без мусора". Мы видим всё, что происходит в приложении, в красивом интерфейсе, не засоряя рабочее пространство пользователя, но давая разработчику полный контроль.
 
-/**
- * Конфигурация логгера (все поля опциональны)
- */
-export interface LoggerConfig {
-  /** Минимальный уровень вывода (по умолчанию 'info') */
-  level?: LogLevel;
+2. Архитектура и Файловая структура
+   Все компоненты системы используют префикс LoggerConsole для исключения конфликтов имен.
 
-  /** Префикс сообщений (автоматически обрамляется в [ ]) */
-  prefix?: string;
+text
+src/app/shared/logger-сonsole/
+├── models/
+│ └── logger-console.model.ts # Типы, интерфейсы, константы
+├── services/
+│ ├── logger-console.engine.ts # Core Logic (Pure TS, без зависимостей Angular)
+│ └── logger-console.service.ts # Angular Service (Signals, Buffer Management)
+├── components/
+│ ├── logger-console/ # Main UI Component
+│ │ ├── logger-console.component.ts
+│ │ ├── logger-console.component.html
+│ │ └── logger-console.component.scss
+│ └── logger-console-json-viewer/ # Tree-view JSON Viewer
+│ ├── logger-console-json-viewer.component.ts
+│ ├── logger-console-json-viewer.component.html
+│ └── logger-console-json-viewer.component.scss
+├── routes/
+│ └── logger-console.routes.ts # Роутинг для Sandbox
+src/app/pages/ui-demo/logger-console-demo/
+└── logger-console-demo.component.ts # Страница "Песочница" (Showcase) 3. Модель данных (logger-console.model.ts)
+3.1. Уровни (Levels)
+type LogLevel = 'log' | 'debug' | 'info' | 'warn' | 'error';
 
-  /** Выводить локальное время перед сообщением */
-  timestamp?: boolean;
+3.2. Сущность LogEntry
+typescript
+interface LogEntry {
+id: string; // UUID или short-id
+timestamp: Date; // Время создания
+level: LogLevel; // Уровень
+prefix: string; // Источник лога (Context)
+message: string; // Основное сообщение
+data?: any[]; // Массив дополнительных данных (объекты, стеки ошибок)
 }
+3.3. Конфигурация
+typescript
+interface LoggerConsoleConfig {
+minLevel: LogLevel; // Минимальный уровень для записи в буфер
+enableConsole: boolean; // Дублировать ли в системную консоль
+maxBuffer: number; // Лимит записей (1000)
+} 4. Ядро системы (Engine & Service)
+4.1. SimpleLoggerConsole (Engine)
+Изоляция: Не зависит от Angular. Может использоваться в любых частях проекта.
+Механика: При вызове метода (напр.
+info
+) формирует объект LogEntry, выводит его в console.info (если разрешено) и вызывает зарегистрированный callback.
+4.2. LoggerConsoleService (Angular Service)
+Хранилище: Использует WritableSignal<LogEntry[]> для реактивности.
+Управление буфером (Smart FIFO):
+Лимит: 1000 записей.
+При переполнении удаляет 100 старых записей за один раз (пакетная очистка для снижения нагрузки на Garbage Collector).
+API:
+getLogger(prefix: string): ILoggerConsole — основная точка входа.
+clear() — полная очистка сигнала.
+exportToJSON() — генерация файла для скачивания. 5. Визуализация (UI Layer)
+5.1. LoggerConsoleComponent (Основной экран)
+Toolbar:
+Search Input (живой поиск по сообщению и префиксу).
+Level Filter (кнопки-переключатели для каждого уровня с индикаторами количества).
+Кнопка "Clear" и Кнопка "Download JSON".
+Viewport:
+Интерактивный список с trackBy: id.
+Auto-scroll logic: Если скролл прижат к низу — новые записи тянут его за собой. Если пользователь отскроллил вверх — авто-скролл временно засыпает.
+Стилизация:
+log
+: Default.
+debug
+: Серый (италик).
+info
+: Свежий синий градиент слева.
+warn
+: Мягкий желтый фон строки.
+error
+: Красный текст, розовый фон, жирный шрифт для сообщения.
+5.2. LoggerConsoleJsonViewer (Древовидный вьювер)
+Recursive Display: Рекурсивный компонент для отрисовки вложенных объектов.
+Interaction: Все объекты по умолчанию свернуты. Разворот по клику на узел.
+Copy Path: При наведении на ключ появляется кнопка, копирующая путь к нему (напр. [2].payload.id).
+Theming: Темная тема (Dark Mode friendly) с подсветкой типов (строки - зеленые, числа - оранжевые и т.д.). 6. План Интеграции
+6.1. Глобальный перехват
+GlobalErrorHandler: Добавить вызов LoggerConsoleService во все блоки обработки исключений. Префикс: [GLOBAL_ERR].
+HttpErrorInterceptor: Регистрировать все неудачные запросы. В лог писать: URL, Метод, Статус, Body ответа. Префикс: [API_ERR].
+6.2. Sidebar Integration
+Заменить содержимое
+ConsolePanelComponent
+. Вместо заглушки вставить <app-logger-console>.
 
-/**
- * Публичный интерфейс логгера
- */
-export interface ILogger {
-  log(message: string, ...args: any[]): void;
-  debug(message: string, ...args: any[]): void;
-  info(message: string, ...args: any[]): void;
-  warn(message: string, ...args: any[]): void;
-  error(message: string, ...args: any[]): void;
-}
+6.3. Sandbox (Песочница)
+Создать страницу ui-demo/logger, на которой разместить "Пульт управления":
 
-/**
- * Минимальный логгер (реализация ~40 строк)
- */
-export class SimpleLogger implements ILogger {
-  private readonly levels: Record<LogLevel, number> = {
-    log: 0,
-    debug: 1,
-    info: 2,
-    warn: 3,
-    error: 4,
-  };
+Кнопка "Spam 1000 logs" (тест производительности).
+Кнопка "Big Object" (рендерим JSON глубиной в 10 уровней).
+Кнопка "Fatal Error" (симуляция падения приложения). 7. Технические KPI
+Payload: Прирост бандла не более 20КБ.
+Zero-Lag: Отрисовка лога не должна блокировать основной поток (использовать requestAnimationFrame или setTimeout при массовом вбросе).
+UX: Каждый лог должен иметь кнопку "Copy message" для быстрой отправки коллегам.
+Это ТЗ является исчерпывающим руководством. По нему можно строить систему, готовую к промышленной эксплуатации.
 
-  private readonly config: Required<LoggerConfig>;
-
-  constructor(config: LoggerConfig = {}) {
-    this.config = {
-      level: config.level ?? "info",
-      prefix: config.prefix ?? "",
-      timestamp: config.timestamp ?? false,
-    };
-  }
-
-  private shouldLog(level: LogLevel): boolean {
-    return this.levels[level] >= this.levels[this.config.level];
-  }
-
-  private format(message: string): string {
-    const parts: string[] = [];
-
-    if (this.config.timestamp) {
-      parts.push(`[${new Date().toLocaleTimeString()}]`);
-    }
-
-    if (this.config.prefix) {
-      parts.push(`[${this.config.prefix}]`);
-    }
-
-    parts.push(message);
-
-    return parts.join(" ");
-  }
-
-  log(message: string, ...args: any[]): void {
-    if (this.shouldLog("log")) this.output("log", message, ...args);
-  }
-
-  debug(message: string, ...args: any[]): void {
-    if (this.shouldLog("debug")) this.output("debug", message, ...args);
-  }
-
-  info(message: string, ...args: any[]): void {
-    if (this.shouldLog("info")) this.output("info", message, ...args);
-  }
-
-  warn(message: string, ...args: any[]): void {
-    if (this.shouldLog("warn")) this.output("warn", message, ...args);
-  }
-
-  error(message: string, ...args: any[]): void {
-    if (this.shouldLog("error")) this.output("error", message, ...args);
-  }
-
-  private output(level: LogLevel, message: string, ...args: any[]): void {
-    const formatted = this.format(message);
-    const consoleMethod = console[level as keyof Console] ?? console.log;
-
-    if (typeof consoleMethod === "function") {
-      consoleMethod(formatted, ...args);
-    }
-  }
-}
-
-/**
- * Фабрика создания логгеров с префиксом
- */
-export class LoggerFactory {
-  static create(prefix: string, level: LogLevel = "info"): ILogger {
-    return new SimpleLogger({
-      prefix,
-      level,
-      timestamp: true,
-    });
-  }
-
-  /** Дефолтный логгер без префикса */
-  static getDefault(): ILogger {
-    return new SimpleLogger({ timestamp: false });
-  }
-}
-
-// ============================================================================
-// 🎯 READY TO USE EXAMPLES
-// ============================================================================
-
-// Глобальный логгер
-const log = LoggerFactory.getDefault();
-
-// Контекстные логгеры
-const authLog = LoggerFactory.create("Auth");
-const apiLog = LoggerFactory.create("API", "debug");
-const userLog = LoggerFactory.create("User", "warn");
-
-// Примеры использования:
-
-// log.info('Application started');
-// → Application started
-
-// authLog.warn('Invalid credentials attempt');
-// → [14:30:25] [Auth] Invalid credentials attempt
-
-// apiLog.debug('API response', { userId: 123, status: 'ok' });
-// → [14:30:26] [API] API response { userId: 123, status: 'ok' }
-
-// userLog.debug('This won\'t show - level is warn');
-// → (nothing)
-
-// userLog.error('User action failed', error);
-// → [14:30:27] [User] User action failed Error: ...
-
-export { log, authLog, apiLog, userLog };
-```
-
-## Тесты (опционально)
-
-```typescript
-// ============================================================================
-// 🧪 SIMPLE TESTS
-// ============================================================================
-
-// Простые проверки работоспособности
-function testLogger() {
-  console.log("=== Testing SimpleLogger ===");
-
-  // Test 1: Basic functionality
-  const logger = new SimpleLogger();
-  logger.info("Test message"); // Should show
-  logger.debug("Debug message"); // Should NOT show (level = info)
-
-  // Test 2: With config
-  const configLogger = new SimpleLogger({
-    level: "debug",
-    prefix: "TEST",
-    timestamp: true,
-  });
-  configLogger.debug("Debug with config"); // Should show with [timestamp] [TEST]
-
-  // Test 3: Factory
-  const factoryLogger = LoggerFactory.create("FACTORY");
-  factoryLogger.warn("Factory warning"); // Should show
-
-  console.log("=== Tests completed ===");
-}
-
-// Раскомментировать для запуска тестов:
-// testLogger();
-```
-
-## Angular интеграция (бонус)
-
-```typescript
-// ============================================================================
-// 🅰️ ANGULAR INTEGRATION (OPTIONAL)
-// ============================================================================
-
-import { Injectable } from "@angular/core";
-
-@Injectable({
-  providedIn: "root",
-})
-export class LoggingService {
-  private readonly loggers = new Map<string, ILogger>();
-
-  constructor() {
-    // Создаем базовые логгеры для типичных случаев
-    this.loggers.set("default", LoggerFactory.getDefault());
-    this.loggers.set("auth", LoggerFactory.create("Auth"));
-    this.loggers.set("api", LoggerFactory.create("API"));
-    this.loggers.set("ui", LoggerFactory.create("UI"));
-  }
-
-  getLogger(name: string = "default"): ILogger {
-    if (!this.loggers.has(name)) {
-      this.loggers.set(name, LoggerFactory.create(name.toUpperCase()));
-    }
-    return this.loggers.get(name)!;
-  }
-
-  // Convenience methods
-  get auth() {
-    return this.getLogger("auth");
-  }
-  get api() {
-    return this.getLogger("api");
-  }
-  get ui() {
-    return this.getLogger("ui");
-  }
-  get default() {
-    return this.getLogger("default");
-  }
-}
-
-// Использование в компонентах:
-// constructor(private logger: LoggingService) {}
-// this.logger.auth.info('User logged in');
-// this.logger.api.debug('API call', request);
-```
-
-## Использование в проекте
-
-```typescript
-// ============================================================================
-// 📦 USAGE IN REAL PROJECT
-// ============================================================================
-
-// 1. В main.ts
-import { LoggerFactory } from "./logger/simple-logger";
-
-const appLog = LoggerFactory.create("APP");
-appLog.info("Application bootstrap started");
-
-// 2. В сервисах
-class AuthService {
-  private log = LoggerFactory.create("AuthService");
-
-  login(credentials: LoginRequest) {
-    this.log.info("Login attempt", { email: credentials.email });
-    // ... logic
-  }
-}
-
-// 3. В компонентах
-@Component({
-  selector: "app-user-profile",
-})
-class UserProfileComponent {
-  private log = LoggerFactory.create("UserProfile");
-
-  ngOnInit() {
-    this.log.debug("Component initialized");
-  }
-}
-
-// 4. В interceptors
-class ApiInterceptor {
-  private log = LoggerFactory.create("API");
-
-  intercept(req: HttpRequest<any>): Observable<HttpEvent<any>> {
-    this.log.debug(`${req.method} ${req.url}`);
-    // ... logic
-  }
-}
-```
-
-## Результат
-
-✅ **Размер**: 47 строк основного кода
-✅ **Dependencies**: 0
-✅ **Bundle size**: ~1.5KB minified
-✅ **Время интеграции**: 2 минуты
-✅ **Готов к production**: Да
-
-**Можно копировать и использовать прямо сейчас!** 🚀
+===============================================
+🏁 Checklist: LoggerConsole Implementation
+===============================================
+Этап 1: Подготовка фундамента (Boilerplate)
+Создать структуру папок в src/app/shared/logger/ (models, services, components, routes).
+Создать все пустые файлы согласно ТЗ (12 файлов).
+Определить интерфейсы в logger-console.model.ts (LogLevel, LogEntry, Config).
+Реализовать SimpleLoggerConsole в logger-console.engine.ts (с поддержкой 5 уровней и callback).
+Этап 2: Сервисный слой (The Brains)
+Реализовать LoggerConsoleService:
+Создать logsSignal (WritableSignal).
+Реализовать фабричный метод getLogger(prefix).
+Написать логику Smart FIFO (лимит 1000, удаление по 100).
+Добавить метод clear().
+Реализовать метод exportToJSON() (генерация и скачивание файла).
+Этап 3: JSON Viewer (The "Premium" Component)
+Разработать LoggerConsoleJsonViewerComponent:
+Реализовать рекурсивный рендеринг дерева.
+Добавить логику Expand/Collapse (по умолчанию свернуто).
+Реализовать функционал Copy Path (генерация пути ключа).
+Настроить CSS-подсветку типов (String, Number, Boolean, Null).
+Этап 4: Основной интерфейс (The Face)
+Разработать LoggerConsoleComponent:
+Toolbar: Поиск, фильтры по уровням (toggle-buttons), счетчики логов.
+List: Рендеринг строк с уникальной стилизацией для каждого из 5 уровней.
+UX: Реализовать "Умный авто-скролл" (прилипание к низу).
+Actions: Кнопка копирования каждого отдельного сообщения.
+Этап 5: Интеграция (Connecting Nerves)
+UI: Заменить "Проверка..." в
+ConsolePanelComponent
+на <app-logger-console>.
+Global Errors: Настроить
+GlobalErrorHandler
+(добавить вызов LoggerConsoleService).
+Network: Настроить HttpErrorInterceptor (логирование ошибок API).
+Этап 6: Песочница и Валидация (Sandbox)
+Создать LoggerConsoleDemoComponent.
+Добавить кнопки генерации всех типов логов.
+Реализовать Стресс-тест (цикл на 1000 записей).
+Проверить отображение гигантских JSON-объектов.
+Зарегистрировать роуты в ui-demo.routes.ts и добавить раздел в меню "Песочница".
+📊 Критерии готовности (Definition of Done)
+Логи пишутся в фоновом режиме даже при закрытой панели.
+При достижении 1000 строк приложение не "фриизится" (пакетная очистка работает).
+JSON Viewer корректно отображает вложенность более 3 уровней.
+Поиск мгновенно фильтрует 500+ записей.
+Ошибки рантайма (JS) и сети (HTTP) автоматически появляются в консоли.
+Если согласен с чек-листом — мы готовы к первому шагу (созданию пустых файлов).

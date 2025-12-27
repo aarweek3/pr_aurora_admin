@@ -206,4 +206,11 @@ export const UI_DEMO_ROUTES: Routes = [
     loadComponent: () =>
       import('./button-demo/button-demo.component').then((m) => m.ButtonDemoComponent),
   },
+  {
+    path: 'logger-console',
+    loadComponent: () =>
+      import(
+        '../../shared/logger-console/components/logger-console-demo/logger-console-demo.component'
+      ).then((m) => m.LoggerConsoleDemoComponent),
+  },
 ];
