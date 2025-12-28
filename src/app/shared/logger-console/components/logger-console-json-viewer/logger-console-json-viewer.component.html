@@ -18,7 +18,14 @@
       @if (isExpandable) {
       <span class="type-label">{{ typeLabel }}</span>
       @if (!isExpanded()) {
-      <span class="collapsed-preview">{{ value | json | slice : 0 : 30 }}...</span>
+      <span
+        class="collapsed-preview"
+        [class.full-visible]="isPreviewFullyVisible()"
+        (click)="togglePreviewFullText($event)"
+        [title]="isPreviewFullyVisible() ? 'Click to collapse' : 'Click to expand text'"
+      >
+        {{ value | json }}
+      </span>
       } } @else {
       <span class="primitive-value" [ngClass]="'type-' + valueType">
         {{ valueType === 'string' ? '"' + value + '"' : value }}

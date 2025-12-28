@@ -106,12 +106,24 @@
 /* Toolbar */
 .logger-toolbar {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 8px 12px;
+  flex-direction: column;
+  padding: 6px 12px;
   background: var(--lc-bg-toolbar);
   border-bottom: 1px solid var(--lc-border-main);
-  gap: 16px;
+  gap: 8px;
+
+  .toolbar-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+
+    &.bottom-row {
+      border-top: 1px solid var(--lc-border-light);
+      padding-top: 4px;
+      justify-content: flex-start;
+    }
+  }
 }
 
 .toolbar-left {
@@ -121,10 +133,106 @@
   flex: 1;
 }
 
+// ====== Tabs Navigation ======
+.tabs-nav {
+  display: flex;
+  gap: 4px;
+  border: 1px solid var(--lc-border-light);
+  border-radius: 6px;
+  padding: 2px;
+  background: var(--lc-bg-panel);
+}
+
+.tab-btn {
+  padding: 6px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  border: none;
+  background: transparent;
+  color: var(--lc-text-muted);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+
+  &:hover {
+    background: var(--lc-bg-hover);
+    color: var(--lc-text-main);
+  }
+
+  &.active {
+    background: var(--lc-btn-primary-bg);
+    color: var(--lc-footer-text);
+  }
+}
+
 .toolbar-right {
   display: flex;
   align-items: center;
   gap: 8px; /* Gap between actions */
+}
+
+/* Client Info Bar */
+.client-info-bar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 4px 12px;
+  background: var(--lc-bg-main);
+  border-bottom: 1px solid var(--lc-border-main);
+  font-size: 11px;
+  color: var(--lc-text-muted);
+  overflow-x: auto;
+  white-space: nowrap;
+
+  .info-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: default;
+
+    .info-icon {
+      font-size: 12px;
+      opacity: 0.8;
+    }
+
+    .info-label {
+      font-weight: 500;
+      color: var(--lc-text-main);
+    }
+
+    .info-value {
+      opacity: 0.7;
+      font-size: 10px;
+    }
+
+    .network-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--lc-color-error);
+      box-shadow: 0 0 4px var(--lc-color-error);
+
+      &.online {
+        background: #098658;
+        box-shadow: 0 0 4px #098658;
+      }
+    }
+
+    &:hover {
+      .info-label {
+        color: var(--lc-color-info);
+      }
+    }
+  }
+
+  /* Scrollbar hide for cleaner look */
+  &::-webkit-scrollbar {
+    height: 2px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: var(--lc-border-light);
+  }
 }
 
 .search-box {
@@ -208,6 +316,14 @@
   &.btn-debug.active {
     border-bottom: 2px solid var(--lc-color-debug);
     color: var(--lc-color-debug);
+  }
+  &.action-filter.active {
+    border-bottom: 2px solid var(--lc-color-prefix);
+    color: var(--lc-color-prefix);
+  }
+  &.state-filter.active {
+    border-bottom: 2px solid var(--lc-color-warn);
+    color: var(--lc-color-warn);
   }
 }
 
@@ -364,6 +480,124 @@
   transform: scale(1.1);
 }
 
+/* HTTP Specific Styles */
+.http-method {
+  font-size: 10px;
+  font-weight: bold;
+  padding: 1px 4px;
+  border-radius: 3px;
+  margin-right: 8px;
+  min-width: 35px;
+  text-align: center;
+  color: #fff;
+  background: #555; /* Default */
+
+  &[data-method="GET"] {
+    background: #0e639c;
+  }
+  &[data-method="POST"] {
+    background: #1177bb;
+  }
+  &[data-method="PUT"] {
+    background: #cca700;
+  }
+  &[data-method="DELETE"] {
+    background: #f14c4c;
+  }
+  &[data-method="PATCH"] {
+    background: #8e44ad;
+  }
+}
+
+.http-status {
+  font-weight: bold;
+  margin-right: 8px;
+  color: #098658; /* Success green */
+
+  &.status-error {
+    color: var(--lc-color-error);
+  }
+}
+
+.http-url {
+  font-family: "Consolas", monospace;
+  opacity: 0.9;
+}
+
+.http-duration {
+  font-size: 10px;
+  color: var(--lc-color-debug);
+  margin-left: 8px;
+  font-style: italic;
+}
+
+/* Interaction Specific Styles */
+.interaction-icon {
+  font-size: 14px;
+  margin-right: 4px;
+}
+
+.interaction-tag {
+  background: var(--lc-bg-hover);
+  color: var(--lc-color-prefix);
+  padding: 1px 4px;
+  border-radius: 3px;
+  font-size: 10px;
+  font-weight: bold;
+  text-transform: uppercase;
+  margin-right: 8px;
+  border: 1px solid var(--lc-border-light);
+}
+
+.interaction-text {
+  font-weight: 500;
+  color: var(--lc-text-main);
+}
+
+.type-interaction {
+  border-left: 2px solid var(--lc-color-prefix);
+  background: rgba(86, 156, 214, 0.05);
+}
+
+/* State Specific Styles */
+.state-icon {
+  font-size: 14px;
+  margin-right: 4px;
+}
+
+.state-name {
+  font-weight: bold;
+  color: var(--lc-color-warn);
+  margin-right: 12px;
+}
+
+.state-change {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+
+  .old-value {
+    color: var(--lc-text-muted);
+    text-decoration: line-through;
+    opacity: 0.7;
+  }
+
+  .arrow {
+    color: var(--lc-text-muted);
+  }
+
+  .new-value {
+    color: var(--lc-json-number);
+    font-weight: 500;
+  }
+}
+
+.type-state {
+  border-left: 2px solid var(--lc-color-warn);
+  background: rgba(204, 167, 0, 0.03);
+}
+
 .log-details {
   margin: 4px 0 8px 88px;
   padding: 8px;
@@ -389,4 +623,151 @@
   background: var(--lc-footer-bg);
   color: var(--lc-footer-text);
   font-size: 11px;
+}
+/* Help Overlay */
+.help-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+  padding: 20px;
+  backdrop-filter: blur(4px);
+
+  .help-content {
+    background: var(--lc-bg-main);
+    border: 1px solid var(--lc-border-main);
+    border-radius: 12px;
+    width: 100%;
+    max-width: 600px;
+    max-height: 90%;
+    overflow-y: auto;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .help-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--lc-border-main);
+    background: var(--lc-bg-toolbar);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    h3 {
+      margin: 0;
+      font-size: 16px;
+      color: var(--lc-text-inverse);
+    }
+
+    .close-help {
+      background: none;
+      border: none;
+      color: var(--lc-text-muted);
+      font-size: 24px;
+      cursor: pointer;
+      line-height: 1;
+
+      &:hover {
+        color: var(--lc-color-error);
+      }
+    }
+  }
+
+  .help-grid {
+    padding: 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+
+    section {
+      h4 {
+        margin: 0 0 8px 0;
+        font-size: 13px;
+        color: var(--lc-color-prefix);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      p {
+        margin: 0 0 12px 0;
+        font-size: 12px;
+        line-height: 1.5;
+        color: var(--lc-text-main);
+      }
+
+      code {
+        display: block;
+        background: var(--lc-bg-panel);
+        padding: 8px;
+        border-radius: 4px;
+        font-family: monospace;
+        font-size: 11px;
+        color: var(--lc-color-warn);
+        margin-bottom: 12px;
+        border: 1px solid var(--lc-border-panel);
+      }
+
+      ul {
+        margin: 0;
+        padding-left: 18px;
+        font-size: 12px;
+
+        li {
+          margin-bottom: 4px;
+        }
+      }
+    }
+
+    .help-sandbox-info {
+      grid-column: span 2;
+      border-top: 1px dashed var(--lc-border-main);
+      padding-top: 20px;
+      margin: 10px -20px -20px -20px;
+      padding: 20px;
+      background: rgba(86, 156, 214, 0.05);
+      border-radius: 0 0 12px 12px;
+
+      h4 {
+        color: var(--lc-color-info) !important;
+      }
+
+      a {
+        color: var(--lc-color-info);
+        text-decoration: underline;
+        word-break: break-all;
+
+        &:hover {
+          color: var(--lc-color-prefix);
+        }
+      }
+    }
+  }
+}
+
+.action-btn.theme-toggle.active {
+  background: var(--lc-bg-active);
+  border-color: var(--lc-color-info);
+  color: var(--lc-color-info);
+}
+
+// ====== Navigation Tab Content ======
+.navigation-tab-content {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+
+  app-navigation-trail {
+    flex: 1;
+    overflow: hidden;
+    display: block;
+  }
 }

@@ -41,6 +41,7 @@ export class SimpleLoggerConsole implements ILoggerConsole {
       id: btoa(Math.random().toString()).substring(10, 18), // Быстрый короткий ID
       timestamp: new Date(),
       level,
+      type: 'standard',
       prefix: this.prefix,
       message,
       data: data.length > 0 ? data : undefined,

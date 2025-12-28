@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { LoggerConsoleService } from '../../services/logger-console.service';
 
 @Component({
@@ -12,6 +12,14 @@ import { LoggerConsoleService } from '../../services/logger-console.service';
 export class LoggerConsoleDemoComponent {
   private loggerService = inject(LoggerConsoleService);
   private logger = this.loggerService.getLogger(this);
+
+  /** Сигнал для демонстрации отслеживания состояния */
+  counter = signal(0);
+
+  constructor() {
+    // Подписываемся на отслеживание сигнала "Demo Counter"
+    this.loggerService.trackSignal(this.counter, 'Demo Counter');
+  }
 
   /** Генерация простых логов */
   logInfo(): void {
@@ -79,5 +87,14 @@ export class LoggerConsoleDemoComponent {
           'Error: Bootstrap failed\n    at init (main.js:10:5)\n    at Object.run (app.js:20:1)',
       },
     );
+  }
+
+  /** Методы для изменения сигнала */
+  increment(): void {
+    this.counter.update((v) => v + 1);
+  }
+
+  decrement(): void {
+    this.counter.update((v) => v - 1);
   }
 }

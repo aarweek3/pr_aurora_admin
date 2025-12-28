@@ -4,11 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { LogLevel } from '../../models/logger-console.model';
 import { LoggerConsoleService } from '../../services/logger-console.service';
 import { LoggerConsoleJsonViewerComponent } from '../logger-console-json-viewer/logger-console-json-viewer.component';
+import { NavigationTrailComponent } from '../navigation-trail/navigation-trail.component';
 
 @Component({
   selector: 'app-logger-console',
   standalone: true,
-  imports: [CommonModule, FormsModule, LoggerConsoleJsonViewerComponent],
+  imports: [CommonModule, FormsModule, LoggerConsoleJsonViewerComponent, NavigationTrailComponent],
   templateUrl: './logger-console.component.html',
   styleUrls: ['./logger-console.component.scss'],
   host: {
@@ -19,6 +20,9 @@ export class LoggerConsoleComponent {
   public loggerService = inject(LoggerConsoleService);
 
   @ViewChild('scrollContainer') private scrollContainer!: ElementRef;
+
+  /** Активная вкладка */
+  activeTab = signal<'logs' | 'navigation'>('logs');
 
   /** Тема консоли: true = темная, false = светлая */
   isDarkTheme = signal(true);
@@ -38,6 +42,18 @@ export class LoggerConsoleComponent {
   /** Список всех уровней для кнопок фильтрации */
   readonly levels: LogLevel[] = ['log', 'debug', 'info', 'warn', 'error'];
 
+  /** Флаг отображения HTTP запросов */
+  showHttp = signal(true);
+
+  /** Флаг отображения действий пользователя */
+  showActions = signal(true);
+
+  /** Флаг отображения изменений состояния (Signals) */
+  showState = signal(true);
+
+  /** Флаг отображения справки */
+  showHelp = signal(false);
+
   /** Флаг авто-скролла */
   autoScroll = true;
 
@@ -45,8 +61,24 @@ export class LoggerConsoleComponent {
   filteredLogs = computed(() => {
     const query = this.searchQuery().toLowerCase();
     const active = this.activeLevels();
+    const showHttp = this.showHttp();
 
     return this.loggerService.logs().filter((log) => {
+      // Если это HTTP лог и фильтр выключен -> скрываем
+      if (log.type === 'http' && !showHttp) {
+        return false;
+      }
+
+      // Если это Action лог и фильтр выключен -> скрываем
+      if (log.type === 'interaction' && !this.showActions()) {
+        return false;
+      }
+
+      // Если это State лог и фильтр выключен -> скрываем
+      if (log.type === 'state' && !this.showState()) {
+        return false;
+      }
+
       const matchLevel = active[log.level];
       const matchSearch =
         !query ||
@@ -96,9 +128,39 @@ export class LoggerConsoleComponent {
     this.loggerService.exportToJSON();
   }
 
+  /** Получение относительного пути из URL для компактности */
+  getUrlPath(url: string): string {
+    try {
+      const urlObj = new URL(url, window.location.origin);
+      return urlObj.pathname + urlObj.search;
+    } catch {
+      return url;
+    }
+  }
+
+  /** Переключение фильтра HTTP */
+  toggleHttp(): void {
+    this.showHttp.update((v) => !v);
+  }
+
+  /** Переключение фильтра действий пользователя */
+  toggleActions(): void {
+    this.showActions.update((v) => !v);
+  }
+
+  /** Переключение фильтра состояния */
+  toggleState(): void {
+    this.showState.update((v) => !v);
+  }
+
   /** Переключение темы */
   toggleTheme(): void {
     this.isDarkTheme.update((v) => !v);
+  }
+
+  /** Переключение справки */
+  toggleHelp(): void {
+    this.showHelp.update((v) => !v);
   }
 
   /** Копирование сообщения в буфер */

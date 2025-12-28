@@ -2,9 +2,11 @@ import { registerLocaleData } from '@angular/common';
 import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
 import ru from '@angular/common/locales/ru';
 import {
+  APP_INITIALIZER,
   ApplicationConfig,
   ErrorHandler,
   importProvidersFrom,
+  inject,
   provideZoneChangeDetection,
 } from '@angular/core';
 import { provideAnimations } from '@angular/platform-browser/animations';
@@ -22,6 +24,7 @@ import { routes } from './app.routes';
 import { GlobalErrorHandler } from './shared/infrastructure/interceptor/services/global-error-handler.service';
 import { HttpErrorInterceptor } from './shared/infrastructure/interceptor/services/http-error.interceptor';
 import { HttpRequestLoggerInterceptor } from './shared/infrastructure/interceptor/services/http-request-logger.interceptor';
+import { NavigationTrailService } from './shared/logger-console/services/navigation-trail.service';
 
 // Import all icons (for dev purposes, production should be selective)
 const antDesignIcons = AllIcons as { [key: string]: IconDefinition };
@@ -68,6 +71,19 @@ export const appConfig: ApplicationConfig = {
     {
       provide: ErrorHandler,
       useClass: GlobalErrorHandler,
+    },
+
+    // Navigation Trail Service - автоматическая инициализация
+    {
+      provide: APP_INITIALIZER,
+      useFactory: () => {
+        const navigationTrailService = inject(NavigationTrailService);
+        return () => {
+          // Сервис инициализируется автоматически в конструкторе
+          console.log('Navigation Trail initialized');
+        };
+      },
+      multi: true,
     },
 
     // TODO: Add APP_INITIALIZER for ContextService, ErrorRegistry (Phase 2)

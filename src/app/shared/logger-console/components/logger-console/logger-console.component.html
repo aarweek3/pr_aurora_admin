@@ -1,18 +1,76 @@
 <div class="logger-container" [class.light-theme]="!isDarkTheme()">
   <!-- Toolbox / Header -->
   <header class="logger-toolbar">
-    <div class="toolbar-left">
-      <div class="search-box">
-        <span class="search-icon">🔍</span>
-        <input
-          type="text"
-          placeholder="Filter messages or prefixes..."
-          [ngModel]="searchQuery()"
-          (ngModelChange)="searchQuery.set($event)"
-        />
+    <!-- Top Row: Tabs, Search and Actions -->
+    <div class="toolbar-row top-row">
+      <div class="toolbar-left">
+        <!-- Вкладки -->
+        <div class="tabs-nav">
+          <button class="tab-btn" [class.active]="activeTab() === 'logs'" (click)="activeTab.set('logs')">
+            📋 Logs
+          </button>
+          <button class="tab-btn" [class.active]="activeTab() === 'navigation'" (click)="activeTab.set('navigation')">
+            🧭 Navigation
+          </button>
+        </div>
+
+        @if (activeTab() === 'logs') {
+        <div class="search-box">
+          <span class="search-icon">🔍</span>
+          <input
+            type="text"
+            placeholder="Filter messages or prefixes..."
+            [ngModel]="searchQuery()"
+            (ngModelChange)="searchQuery.set($event)"
+          />
+        </div>
+        }
       </div>
 
+      <div class="toolbar-right">
+        <button class="action-btn theme-toggle" (click)="toggleHelp()" title="Show Help" [class.active]="showHelp()">
+          ❓
+        </button>
+        <button
+          class="action-btn theme-toggle"
+          (click)="toggleTheme()"
+          [title]="isDarkTheme() ? 'Switch to Light Mode' : 'Switch to Dark Mode'"
+        >
+          {{ isDarkTheme() ? '☀️' : '🌙' }}
+        </button>
+        <button class="action-btn" (click)="export()" title="Download JSON">📥 Export</button>
+        <button class="action-btn danger" (click)="clear()" title="Clear logs">🗑️ Clear</button>
+      </div>
+    </div>
+
+    <!-- Bottom Row: Filters (Only for Logs tab) -->
+    @if (activeTab() === 'logs') {
+    <div class="toolbar-row bottom-row">
       <div class="level-filters">
+        <button
+          class="filter-btn state-filter"
+          [class.active]="showState()"
+          (click)="toggleState()"
+          title="Toggle Signal changes"
+        >
+          <span class="level-name">STATE</span>
+        </button>
+        <button
+          class="filter-btn action-filter"
+          [class.active]="showActions()"
+          (click)="toggleActions()"
+          title="Toggle User Actions"
+        >
+          <span class="level-name">ACTION</span>
+        </button>
+        <button
+          class="filter-btn http-filter"
+          [class.active]="showHttp()"
+          (click)="toggleHttp()"
+          title="Toggle HTTP requests"
+        >
+          <span class="level-name">HTTP</span>
+        </button>
         @for (level of levels; track level) {
         <button
           class="filter-btn"
@@ -26,28 +84,84 @@
         }
       </div>
     </div>
-
-    <div class="toolbar-right">
-      <button
-        class="action-btn theme-toggle"
-        (click)="toggleTheme()"
-        [title]="isDarkTheme() ? 'Switch to Light Mode' : 'Switch to Dark Mode'"
-      >
-        {{ isDarkTheme() ? '☀️' : '🌙' }}
-      </button>
-      <button class="action-btn" (click)="export()" title="Download JSON">📥 Export</button>
-      <button class="action-btn danger" (click)="clear()" title="Clear logs">🗑️ Clear</button>
-    </div>
+    }
   </header>
+
+  <!-- Client Info Bar -->
+  <div class="client-info-bar">
+    @let info = loggerService.clientInfo();
+    <div class="info-item" title="Screen / Viewport">
+      <span class="info-icon">🖥️</span>
+      <span class="info-label">{{ info.resolution }}</span>
+      <span class="info-value">({{ info.viewport }})</span>
+    </div>
+    <div class="info-item" title="Device / OS">
+      <span class="info-icon">💻</span>
+      <span class="info-label">{{ info.device }}</span>
+      <span class="info-value">[{{ info.os }}]</span>
+    </div>
+    <div class="info-item" title="Browser">
+      <span class="info-icon">🌐</span>
+      <span class="info-label">{{ info.browser }}</span>
+    </div>
+    <div class="info-item" title="Theme">
+      <span class="info-icon">{{ info.theme === 'Dark' ? '🌙' : '☀️' }}</span>
+      <span class="info-label">{{ info.theme }}</span>
+    </div>
+    <div class="info-item" title="Language">
+      <span class="info-icon">🌍</span>
+      <span class="info-label">{{ info.language }}</span>
+    </div>
+    <div class="info-item" title="Network Status">
+      <span class="network-dot" [class.online]="info.isOnline"></span>
+      <span class="info-label">{{ info.isOnline ? 'Online' : 'Offline' }}</span>
+    </div>
+    <div class="info-item" title="API Endpoint">
+      <span class="info-icon">🔗</span>
+      <span class="info-label">API:</span>
+      <span class="info-value">{{ info.apiEndpoint }}</span>
+    </div>
+  </div>
 
   <!-- Logs Viewport -->
   <main class="logger-viewport" #scrollContainer (scroll)="onScroll($event)">
     <div class="logs-list">
       @for (log of filteredLogs(); track log.id) {
-      <div class="log-entry" [ngClass]="['level-' + log.level]">
+      <div class="log-entry" [ngClass]="['level-' + log.level, 'type-' + log.type]">
         <div class="log-main">
+          @if (log.type === 'http' && log.httpDetails) {
+          <!-- HTTP LOG LAYOUT -->
+          <span class="http-method" [attr.data-method]="log.httpDetails.method">{{ log.httpDetails.method }}</span>
+          <span class="http-status" [class.status-error]="log.httpDetails.statusCode >= 400">{{
+            log.httpDetails.statusCode
+          }}</span>
+          <span class="log-message http-url" [title]="log.httpDetails.url">{{ getUrlPath(log.httpDetails.url) }}</span>
+          <span class="http-duration">{{ log.httpDetails.duration }}ms</span>
+          } @else if (log.type === 'interaction' && log.interactionDetails) {
+          <!-- INTERACTION LOG LAYOUT -->
+          <span class="interaction-icon">🖱️</span>
+          <span class="log-prefix">{{ log.prefix }}</span>
+          <span class="log-message">
+            <span class="interaction-tag">{{ log.interactionDetails.element }}</span>
+            <span class="interaction-text">{{ log.interactionDetails.text }}</span>
+          </span>
+          } @else if (log.type === 'state' && log.stateDetails) {
+          <!-- STATE LOG LAYOUT -->
+          <span class="state-icon">🔄</span>
+          <span class="log-prefix">{{ log.prefix }}</span>
+          <span class="log-message">
+            <span class="state-name">{{ log.stateDetails.name }}</span>
+            <span class="state-change">
+              <span class="old-value">{{ log.stateDetails.oldValue | json }}</span>
+              <span class="arrow">→</span>
+              <span class="new-value">{{ log.stateDetails.newValue | json }}</span>
+            </span>
+          </span>
+          } @else {
+          <!-- STANDARD LOG LAYOUT -->
           <span class="log-prefix">{{ log.prefix }}</span>
           <span class="log-message">{{ log.message }}</span>
+          }
 
           <button class="copy-entry-btn" (click)="copyMessage(log.message)" title="Copy message">📋</button>
 
@@ -77,4 +191,69 @@
     <div class="status-info">Total: {{ loggerService.logs().length }} | Showing: {{ filteredLogs().length }}</div>
     <div class="scroll-mode">Status: {{ autoScroll ? 'Sticky Bottom' : 'Manual Scroll' }}</div>
   </footer>
+
+  <!-- Help Overlay -->
+  @if (showHelp()) {
+  <div class="help-overlay" (click)="toggleHelp()">
+    <div class="help-content" (click)="$event.stopPropagation()">
+      <div class="help-header">
+        <h3>🚀 Справка Logger Console</h3>
+        <button class="close-help" (click)="toggleHelp()">×</button>
+      </div>
+
+      <div class="help-grid">
+        <section>
+          <h4>🔄 История Сигналов (Signals)</h4>
+          <p>Отслеживание изменений Angular Signals в реальном времени. В коде:</p>
+          <code>this.loggerService.trackSignal(mySignal, 'ИмяСигнала');</code>
+          <p>Отображает переход от старого значения к новому. Фильтр: кнопка <strong>STATE</strong>.</p>
+        </section>
+
+        <section>
+          <h4>🖱️ Действия пользователя</h4>
+          <p>
+            Автоматическая запись всех кликов на кнопки и ссылки. Позволяет восстановить путь пользователя к ошибке.
+            Фильтр: кнопка <strong>ACTION</strong>.
+          </p>
+        </section>
+
+        <section>
+          <h4>🔌 Сеть и Окружение</h4>
+          <p>
+            <strong>HTTP:</strong> Логирование всех API-запросов, их статусов и длительности. Фильтр: кнопка
+            <strong>HTTP</strong>.
+          </p>
+          <p>
+            <strong>Инфо:</strong> В верхней панели отображается разрешение экрана, тема и статус сети (Online/Offline).
+          </p>
+        </section>
+
+        <section>
+          <h4>📦 Сервис и Экспорт</h4>
+          <ul>
+            <li><strong>Export:</strong> Скачать логи в формате JSON для анализа.</li>
+            <li><strong>Clear:</strong> Полная очистка текущего буфера (лимит 1000 записей).</li>
+          </ul>
+        </section>
+
+        <section class="help-sandbox-info">
+          <h4>🏗️ Где проверить? (Песочница)</h4>
+          <p>Страница «Песочницы» для проверки всех функций доступна в боковом меню:</p>
+          <p>Раздел <strong>UI Demo</strong> → <strong>Logger Console 🛠️</strong></p>
+          <p>
+            Прямая ссылка:
+            <a href="http://localhost:4200/ui-demo/logger-console" target="_blank"
+              >http://localhost:4200/ui-demo/logger-console</a
+            >
+          </p>
+        </section>
+      </div>
+    </div>
+  </div>
+  } @if (activeTab() === 'navigation') {
+  <!-- Navigation Trail Component -->
+  <div class="navigation-tab-content">
+    <app-navigation-trail />
+  </div>
+  }
 </div>

@@ -38,7 +38,7 @@ import { LoggerConsoleComponent } from '../../../logger-console/components/logge
         width: 0;
         background: #1e1e1e; // Темный фон для консоли
         box-shadow: -4px 0 15px rgba(0, 0, 0, 0.3);
-        z-index: 1000;
+        z-index: 9999;
         overflow: hidden;
         transition: width 0.3s cubic-bezier(0.7, 0, 0.3, 1);
         border-left: 1px solid #333;

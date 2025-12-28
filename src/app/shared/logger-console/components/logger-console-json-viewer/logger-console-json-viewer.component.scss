@@ -2,12 +2,13 @@
   display: block;
   font-family: "JetBrains Mono", "Fira Code", monospace;
   font-size: 13px;
-  line-height: 1.5;
+  font-size: 12px; /* Чуть меньше стандартного */
+  line-height: 1.35;
   color: var(--lc-text-main);
 }
 
 .json-node {
-  padding-left: 4px;
+  padding-left: 10px; /* Уменьшаем отступ дерева */
 
   &.expandable {
     .node-header {
@@ -65,6 +66,26 @@
 .collapsed-preview {
   color: var(--lc-text-muted);
   font-size: 11px;
+
+  /* Ограничение в 5 строк с переносом */
+  display: -webkit-box;
+  -webkit-line-clamp: 5;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  white-space: pre-wrap; /* Сохраняем пробелы и разрешаем перенос */
+  word-break: break-word; /* Разрываем длинные строки JSON */
+  max-width: 100%; /* Ограничиваем ширину контейнером */
+  cursor: zoom-in; /* Визуальный намек на возможность клика */
+  border-radius: 2px;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  &.full-visible {
+    -webkit-line-clamp: unset; /* Убираем ограничение */
+    cursor: zoom-out;
+  }
 }
 
 /* Стили для типов данных */
@@ -106,114 +127,6 @@
 
   &:hover {
     color: var(--lc-text-main);
-    transform: scale(1.2);
-  }
-
-  .copy-icon {
-    line-height: 1;
-  }
-}
-
-.json-node {
-  padding-left: 4px;
-
-  &.expandable {
-    .node-header {
-      cursor: pointer;
-      &:hover {
-        background: rgba(255, 255, 255, 0.05);
-      }
-    }
-  }
-}
-
-.node-header {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 2px 4px;
-  border-radius: 4px;
-  position: relative;
-  white-space: nowrap;
-
-  &:hover .copy-path-btn {
-    opacity: 1;
-  }
-}
-
-.toggle-icon {
-  font-size: 8px;
-  display: inline-block;
-  transition: transform 0.2s;
-  color: #666;
-  width: 12px;
-  text-align: center;
-
-  &.expanded {
-    transform: rotate(90deg);
-  }
-
-  &.empty {
-    opacity: 0;
-  }
-}
-
-.node-key {
-  color: #9cdcfe; // Голубой для ключей
-  font-weight: 500;
-}
-
-.type-label {
-  color: #569cd6;
-  font-style: italic;
-  font-size: 11px;
-  margin-right: 6px;
-}
-
-.collapsed-preview {
-  color: #666;
-  font-size: 11px;
-}
-
-/* Стили для типов данных */
-.primitive-value {
-  &.type-string {
-    color: #ce9178;
-  } // Оранжево-коричневый
-  &.type-number {
-    color: #b5cea8;
-  } // Светло-зеленый
-  &.type-boolean {
-    color: #569cd6;
-  } // Синий
-  &.type-null {
-    color: #569cd6;
-    font-weight: bold;
-  }
-  &.type-undefined {
-    color: #808080;
-  }
-}
-
-.node-children {
-  margin-left: 12px;
-  border-left: 1px solid rgba(255, 255, 255, 0.1);
-  padding-left: 4px;
-}
-
-.copy-path-btn {
-  opacity: 0;
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 0 4px;
-  font-size: 12px;
-  transition: opacity 0.2s;
-  color: #888;
-  margin-left: auto;
-
-  &:hover {
-    color: #fff;
     transform: scale(1.2);
   }
 

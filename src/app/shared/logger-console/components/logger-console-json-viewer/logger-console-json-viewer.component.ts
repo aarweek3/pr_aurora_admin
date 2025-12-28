@@ -21,6 +21,9 @@ export class LoggerConsoleJsonViewerComponent {
   /** Состояние развернутости */
   isExpanded = signal(false);
 
+  /** Состояние полного отображения превью (снятие лимита строк) */
+  isPreviewFullyVisible = signal(false);
+
   /** Тип значения */
   get valueType(): string {
     if (this.value === null) return 'null';
@@ -42,16 +45,23 @@ export class LoggerConsoleJsonViewerComponent {
   /** Название типа для отображения в скобках */
   get typeLabel(): string {
     if (Array.isArray(this.value)) return `Array(${this.value.length})`;
-    if (this.valueType === 'object') return 'Object';
+    // Для обычных объектов не пишем "Object", это лишний шум
+    if (this.valueType === 'object') return '';
     return '';
   }
 
-  /** Переключение видимости */
+  /** Переключение видимости дерева */
   toggleExpand(event: MouseEvent): void {
     event.stopPropagation();
     if (this.isExpandable) {
       this.isExpanded.update((v) => !v);
     }
+  }
+
+  /** Переключение полного текста превью */
+  togglePreviewFullText(event: MouseEvent): void {
+    event.stopPropagation();
+    this.isPreviewFullyVisible.update((v) => !v);
   }
 
   /** Копирование пути в буфер обмена */

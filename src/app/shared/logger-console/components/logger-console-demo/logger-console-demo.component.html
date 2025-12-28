@@ -17,6 +17,18 @@
         </div>
       </section>
 
+      <!-- State Management -->
+      <section class="demo-section">
+        <h3>Signal Tracker (State)</h3>
+        <div class="counter-display">
+          Current Signal Value: <strong>{{ counter() }}</strong>
+        </div>
+        <div class="btn-group">
+          <button class="btn info" (click)="increment()">Increment (+)</button>
+          <button class="btn warn" (click)="decrement()">Decrement (-)</button>
+        </div>
+      </section>
+
       <!-- Advanced Tests -->
       <section class="demo-section">
         <h3>Advanced Tests</h3>

@@ -24,10 +24,10 @@ src/app/shared/logger-сonsole/
 │ ├── logger-console-json-viewer.component.ts
 │ ├── logger-console-json-viewer.component.html
 │ └── logger-console-json-viewer.component.scss
+└── logger-console-demo.component.ts # Страница "Песочница" (Showcase) 3. Модель данных (logger-console.model.ts)
 ├── routes/
 │ └── logger-console.routes.ts # Роутинг для Sandbox
-src/app/pages/ui-demo/logger-console-demo/
-└── logger-console-demo.component.ts # Страница "Песочница" (Showcase) 3. Модель данных (logger-console.model.ts)
+
 3.1. Уровни (Levels)
 type LogLevel = 'log' | 'debug' | 'info' | 'warn' | 'error';
 
