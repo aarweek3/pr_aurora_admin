@@ -26,15 +26,19 @@ export function HttpErrorInterceptor(
 
   return next(req).pipe(
     catchError((httpError: HttpErrorResponse) => {
-      // Логируем ошибку в консоль
-      loggerConsole.error(`${req.method} ${req.url}`, {
-        status: httpError.status,
-        statusText: httpError.statusText,
-        params: req.params
-          .keys()
-          .reduce((acc, key) => ({ ...acc, [key]: req.params.get(key) }), {}),
-        error: httpError.error,
-      });
+      const isHealthCheck = req.url.includes('HealthCheck');
+
+      // Логируем ошибку в консоль, если это не HealthCheck (его логирует HealthService сам)
+      if (!isHealthCheck) {
+        loggerConsole.error(`${req.method} ${req.url}`, {
+          status: httpError.status,
+          statusText: httpError.statusText,
+          params: req.params
+            .keys()
+            .reduce((acc, key) => ({ ...acc, [key]: req.params.get(key) }), {}),
+          error: httpError.error,
+        });
+      }
 
       let errorResponse: ErrorResponse;
       if (httpError.status === 0) {
@@ -43,9 +47,9 @@ export function HttpErrorInterceptor(
         errorResponse = createEnhancedErrorResponse(httpError, req);
       }
 
-      // Не показываем глобальное сообщение об ошибке для иконок
+      // Не показываем глобальное сообщение об ошибке для иконок и HealthCheck
       const isIconRequest = req.url.endsWith('.svg') || req.url.includes('assets/icons');
-      if (!isIconRequest) {
+      if (!isIconRequest && !isHealthCheck) {
         errorHandlingService.handleError(errorResponse);
       }
 

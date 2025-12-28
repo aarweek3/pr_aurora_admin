@@ -1,10 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzPopoverModule } from 'ng-zorro-antd/popover';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 import { ContextService } from '../../../../core/services/context/context.service';
 import { ErrorRegistryService } from '../../../../core/services/error-registry/error-registry.service';
 import { EventBusService } from '../../../../core/services/event-bus/event-bus.service';
+import { HealthIndicatorComponent } from '../../../health/components/health-indicator/health-indicator.component';
+import { HealthPanelDetailsComponent } from '../../../health/components/health-panel-details/health-panel-details.component';
 
 /**
  * Status Indicator Interface
@@ -36,7 +39,14 @@ export interface StatusIndicator {
 @Component({
   selector: 'app-global-status-bar',
   standalone: true,
-  imports: [CommonModule, NzIconModule, NzToolTipModule],
+  imports: [
+    CommonModule,
+    NzIconModule,
+    NzToolTipModule,
+    NzPopoverModule,
+    HealthIndicatorComponent,
+    HealthPanelDetailsComponent,
+  ],
   template: `
     <div class="global-status-bar">
       <div class="global-status-bar__indicators">
@@ -67,6 +77,22 @@ export interface StatusIndicator {
           <span>Задач в фоне: {{ backgroundTasks() }}</span>
         </div>
         }
+
+        <!-- Мониторинг здоровья -->
+        <div
+          class="health-wrapper"
+          nz-popover
+          nzPopoverTrigger="click"
+          [nzPopoverContent]="healthDetails"
+          nzPopoverPlacement="topRight"
+          nzPopoverOverlayClassName="health-popover"
+        >
+          <app-health-indicator></app-health-indicator>
+        </div>
+
+        <ng-template #healthDetails>
+          <app-health-panel-details></app-health-panel-details>
+        </ng-template>
 
         <button
           class="console-trigger"

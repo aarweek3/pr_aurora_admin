@@ -1,0 +1,178 @@
+<div class="health-details-container">
+  <header class="panel-header">
+    <div class="header-main">
+      <div class="status-label">
+        <h3>System Health</h3>
+        <div
+          class="status-badge"
+          [class.healthy]="healthService.status().overallStatus === 'Healthy'"
+          [class.unhealthy]="healthService.status().overallStatus !== 'Healthy'"
+        >
+          {{ healthService.status().overallStatus }}
+        </div>
+      </div>
+      <p>Real-time system diagnostics and connectivity report</p>
+    </div>
+
+    <button class="refresh-btn" (click)="refresh()" [disabled]="healthService.refreshing()">
+      <span class="btn-content">
+        <span nz-icon nzType="reload" [nzSpin]="healthService.refreshing()" class="icon"></span>
+        <span>{{ healthService.refreshing() ? 'Checking...' : 'Refresh' }}</span>
+      </span>
+      <!-- Loader "Slider" at the bottom of button -->
+      @if (healthService.refreshing()) {
+      <div class="btn-loader-slider"></div>
+      }
+    </button>
+  </header>
+
+  <nav class="panel-tabs">
+    @for (tab of tabs; track tab) {
+    <div class="tab-item" [class.active]="activeTab() === tab" (click)="setActiveTab(tab)">
+      {{ tab }}
+    </div>
+    }
+  </nav>
+
+  <main class="panel-content">
+    <div class="tab-content-wrapper">
+      <!-- OVERVIEW TAB -->
+      @if (activeTab() === 'Overview') {
+      <div class="tab-pane overview">
+        <div class="overview-grid">
+          <div class="main-card-row" [class.danger]="healthService.status().overallStatus !== 'Healthy'">
+            <div class="card-icon">
+              <span
+                nz-icon
+                [nzType]="healthService.status().isOnline ? 'check-circle' : 'close-circle'"
+                nzTheme="outline"
+              ></span>
+            </div>
+            <div class="card-info">
+              <h4>Application is {{ healthService.status().isOnline ? 'Online' : 'Offline' }}</h4>
+              <p>Heartbeat signal: Active</p>
+            </div>
+            <div class="card-meta">
+              <label>Last Heartbeat</label>
+              <span>{{ healthService.status().lastCheck | date : 'HH:mm:ss' }}</span>
+            </div>
+          </div>
+
+          <div class="stats-row">
+            <div class="stat-box">
+              <div class="stat-header">
+                <span nz-icon nzType="dashboard" nzTheme="outline"></span>
+                <label>API LATENCY</label>
+              </div>
+              <div class="stat-value">{{ healthService.status().responseTime }}<small>ms</small></div>
+              <div class="stat-progress">
+                <div class="progress-bar" [style.width.%]="(healthService.status().responseTime / 500) * 100"></div>
+              </div>
+            </div>
+
+            <div class="stat-box">
+              <div class="stat-header">
+                <span nz-icon nzType="cluster" nzTheme="outline"></span>
+                <label>SUB-SYSTEMS</label>
+              </div>
+              <div class="stat-value">{{ healthService.status().checks.length }} <small>online</small></div>
+              <div class="stat-progress">
+                <div class="progress-bar" [style.width.%]="(healthService.status().checks.length / 5) * 100"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      }
+
+      <!-- NETWORK TAB (Specialized for Timings) -->
+      @if (activeTab() === 'Network') {
+      <div class="tab-pane">
+        <div class="network-header">
+          <h5>Client-to-Server Connectivity Graph</h5>
+          <p>Detailed resource timing analysis for the current API session</p>
+        </div>
+        <div class="table-container">
+          <table class="health-table">
+            <thead>
+              <tr>
+                <th width="40%">Network Phase</th>
+                <th width="20%">Status</th>
+                <th width="15%">Duration</th>
+                <th width="25%">Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (metric of healthService.networkMetrics(); track metric.name) {
+              <tr>
+                <td>
+                  <strong>{{ metric.name }}</strong>
+                </td>
+                <td>
+                  <span class="status-badge-pill Healthy">
+                    <span class="status-dot"></span>
+                    Active
+                  </span>
+                </td>
+                <td>
+                  <span class="duration-tag">{{ metric.duration }}ms</span>
+                </td>
+                <td><span class="details-text">Browser-level network metric</span></td>
+              </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+      }
+
+      <!-- INFRA & AUTH TABS (Health-Check Based) -->
+      @if (activeTab() === 'Infra' || activeTab() === 'Auth') {
+      <div class="tab-pane">
+        <div class="table-container">
+          <table class="health-table">
+            <thead>
+              <tr>
+                <th width="40%">Service Name</th>
+                <th width="20%">Status</th>
+                <th width="15%">Response</th>
+                <th width="25%">Diagnostic Info</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (check of healthService.status().checks; track check.name) {
+              <tr>
+                <td>
+                  <strong>{{ check.name }}</strong>
+                </td>
+                <td>
+                  <span class="status-badge-pill" [class]="check.status">
+                    <span class="status-dot"></span>
+                    {{ check.status }}
+                  </span>
+                </td>
+                <td>
+                  <span class="duration-tag">{{ check.duration }}ms</span>
+                </td>
+                <td>
+                  <span class="details-text">{{ check.description || 'System reporting normal' }}</span>
+                </td>
+              </tr>
+              } @if (healthService.status().checks.length === 0) {
+              <tr>
+                <td colspan="4" class="empty-state">
+                  <div class="empty-content">
+                    <span nz-icon nzType="inbox" nzTheme="outline"></span>
+                    <p>No diagnostic data available for {{ activeTab() }} at this time</p>
+                  </div>
+                </td>
+              </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+      }
+    </div>
+  </main>
+</div>

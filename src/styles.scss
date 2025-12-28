@@ -60,8 +60,21 @@
 }
 
 // =============================================================================
-// 8. TEMPORARY / DEBUGGING
+// 9. HEALTH MONITOR POPOVER CUSTOMIZATION
 // =============================================================================
+.health-popover {
+  .ant-popover-inner {
+    background-color: transparent;
+    box-shadow: none;
+    padding: 0;
+  }
+  .ant-popover-inner-content {
+    padding: 0;
+  }
+  .ant-popover-arrow {
+    display: none; // Скрываем стрелку для более чистого вида
+  }
+}
 
 // Временные стили для отладки (удалить в production)
 // body {

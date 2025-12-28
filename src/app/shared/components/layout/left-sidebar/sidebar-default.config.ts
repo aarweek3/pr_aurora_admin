@@ -21,11 +21,24 @@ export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
           route: '/dashboard',
         },
         {
-          id: 'health',
+          id: 'health-group',
           icon: 'heart',
-          label: 'Health Monitoring',
-          type: 'link',
-          route: '/health',
+          label: 'Системное здоровье',
+          type: 'submenu',
+          submenu: [
+            {
+              id: 'server-health',
+              label: 'Здоровье сервера',
+              route: '/health/server',
+              icon: 'cloud-server',
+            },
+            {
+              id: 'db-health',
+              label: 'Здоровье БД',
+              route: '/health/database',
+              icon: 'database',
+            },
+          ],
         },
         {
           id: 'ui-demo',

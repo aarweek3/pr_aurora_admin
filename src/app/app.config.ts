@@ -21,6 +21,7 @@ registerLocaleData(ru);
 import { routes } from './app.routes';
 import { GlobalErrorHandler } from './shared/infrastructure/interceptor/services/global-error-handler.service';
 import { HttpErrorInterceptor } from './shared/infrastructure/interceptor/services/http-error.interceptor';
+import { HttpRequestLoggerInterceptor } from './shared/infrastructure/interceptor/services/http-request-logger.interceptor';
 
 // Import all icons (for dev purposes, production should be selective)
 const antDesignIcons = AllIcons as { [key: string]: IconDefinition };
@@ -42,6 +43,7 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(
       withFetch(),
       withInterceptors([
+        HttpRequestLoggerInterceptor, // Логирование запросов
         HttpErrorInterceptor, // Phase 2 - HTTP Error Handling
         // TODO: Add authInterceptor (Phase 6)
         // TODO: Add loadingInterceptor (Phase 8)

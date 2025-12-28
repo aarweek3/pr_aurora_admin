@@ -1,0 +1,23 @@
+<div class="health-indicator-container" (click)="toggleDetails()">
+  <div class="circles-group">
+    <!-- API Circle -->
+    <div
+      [class]="getStatusClass(healthService.circles().api)"
+      title="API System: {{ healthService.circles().api }}"
+    ></div>
+    <!-- DB Circle -->
+    <div [class]="getStatusClass(healthService.circles().db)" title="Database: {{ healthService.circles().db }}"></div>
+    <!-- AUTH Circle -->
+    <div
+      [class]="getStatusClass(healthService.circles().auth)"
+      title="Auth/Tokens: {{ healthService.circles().auth }}"
+    ></div>
+  </div>
+
+  <div class="latency-info" [class.latency-warning]="healthService.status().responseTime > 300">
+    <span class="latency-value">{{ healthService.status().responseTime }}ms</span>
+    <span class="trend-icon" [title]="'Latency trend: ' + healthService.circles().latencyTrend">
+      {{ getTrendIcon() }}
+    </span>
+  </div>
+</div>
