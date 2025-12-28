@@ -179,9 +179,11 @@
         "sash.hoverBorder": "#13648c"
     },
     // ======================================================
-    // TERMINAL — ШРИФТ
+    // TERMINAL — ШРИФТ И НАСТРОЙКИ
     // ======================================================
     "terminal.integrated.fontFamily": "'JetBrains Mono', 'Fira Code', monospace",
     "terminal.integrated.fontSize": 12,
-    "terminal.integrated.lineHeight": 1.2
+    "terminal.integrated.lineHeight": 1.2,
+    // Дефолтная директория для терминала
+    "terminal.integrated.cwd": "D:\\_PROGECT\\pr_aurora_admin"
 }

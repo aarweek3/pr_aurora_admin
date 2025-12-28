@@ -3,7 +3,115 @@
   font-family: "JetBrains Mono", "Fira Code", monospace;
   font-size: 13px;
   line-height: 1.5;
-  color: #d1d1d1;
+  color: var(--lc-text-main);
+}
+
+.json-node {
+  padding-left: 4px;
+
+  &.expandable {
+    .node-header {
+      cursor: pointer;
+      &:hover {
+        background: var(--lc-bg-hover);
+      }
+    }
+  }
+}
+
+.node-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 4px;
+  border-radius: 4px;
+  position: relative;
+  white-space: nowrap;
+
+  &:hover .copy-path-btn {
+    opacity: 1;
+  }
+}
+
+.toggle-icon {
+  font-size: 8px;
+  display: inline-block;
+  transition: transform 0.2s;
+  color: var(--lc-text-muted);
+  width: 12px;
+  text-align: center;
+
+  &.expanded {
+    transform: rotate(90deg);
+  }
+
+  &.empty {
+    opacity: 0;
+  }
+}
+
+.node-key {
+  color: var(--lc-json-key);
+  font-weight: 500;
+}
+
+.type-label {
+  color: var(--lc-color-prefix); /* Reusing prefix color or could use a specific one */
+  font-style: italic;
+  font-size: 11px;
+  margin-right: 6px;
+}
+
+.collapsed-preview {
+  color: var(--lc-text-muted);
+  font-size: 11px;
+}
+
+/* Стили для типов данных */
+.primitive-value {
+  &.type-string {
+    color: var(--lc-json-string);
+  }
+  &.type-number {
+    color: var(--lc-json-number);
+  }
+  &.type-boolean {
+    color: var(--lc-json-boolean);
+  }
+  &.type-null {
+    color: var(--lc-json-null);
+    font-weight: bold;
+  }
+  &.type-undefined {
+    color: var(--lc-json-undefined);
+  }
+}
+
+.node-children {
+  margin-left: 12px;
+  border-left: 1px solid var(--lc-bg-hover); /* Using subtle hover color for guides */
+  padding-left: 4px;
+}
+
+.copy-path-btn {
+  opacity: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0 4px;
+  font-size: 12px;
+  transition: opacity 0.2s, transform 0.2s;
+  color: var(--lc-text-muted);
+  margin-left: auto;
+
+  &:hover {
+    color: var(--lc-text-main);
+    transform: scale(1.2);
+  }
+
+  .copy-icon {
+    line-height: 1;
+  }
 }
 
 .json-node {

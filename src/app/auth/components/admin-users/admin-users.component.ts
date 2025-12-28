@@ -1,22 +1,28 @@
 // src/app/auth/components/admin-users/admin-users.component.ts
-import { Component, inject, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Subject, takeUntil } from 'rxjs';
-import { NzTableModule } from 'ng-zorro-antd/table';
+import { Component, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
+import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzTagModule } from 'ng-zorro-antd/tag';
-import { FormsModule } from '@angular/forms';
-import { LoggingService } from '@shared/infrastructures/logging/logging.service';
+import { Subject, takeUntil } from 'rxjs';
+
+import { LoggingService } from '@shared/infrastructure/logging/logging.service';
+import { RoleDto } from '../../models/role.models';
+import {
+  CreateUserDto,
+  UpdateUserDto,
+  UserDetailDto,
+  UserFilterDto,
+} from '../../models/user.models';
+import { RoleService } from '../../services/role.service';
+import { RoleAssignModalComponent } from './role-assign-modal.component';
 import { UserApiService } from './user-api.service';
 import { UserModalComponent } from './user-modal.component';
-import { UserFilterDto, CreateUserDto, UpdateUserDto, UserDetailDto } from '@auth/models/user.models';
-import { RoleService } from '@auth/services/role.service';
-import { RoleDto } from '@auth/models/role.models';
-import { RoleAssignModalComponent } from './role-assign-modal.component';
 
 @Component({
   selector: 'app-admin-users',
@@ -30,7 +36,7 @@ import { RoleAssignModalComponent } from './role-assign-modal.component';
     NzInputModule,
     NzModalModule,
     NzTagModule,
-    UserModalComponent, 
+    UserModalComponent,
   ],
   template: `
     <div class="users-container">
@@ -38,8 +44,8 @@ import { RoleAssignModalComponent } from './role-assign-modal.component';
         <h2>Управление пользователями</h2>
         <div class="actions">
           <nz-input-group [nzSuffix]="suffixIconSearch" class="search-input">
-            <input 
-              nz-input 
+            <input
+              nz-input
               placeholder="Поиск пользователей..."
               [(ngModel)]="searchTerm"
               (ngModelChange)="onSearch()"
@@ -48,32 +54,27 @@ import { RoleAssignModalComponent } from './role-assign-modal.component';
           <ng-template #suffixIconSearch>
             <span nz-icon nzType="search"></span>
           </ng-template>
-          <button 
-            nz-button 
-            nzType="primary"
-            (click)="showCreateModal()">
+          <button nz-button nzType="primary" (click)="showCreateModal()">
             <span nz-icon nzType="plus"></span>
             Добавить пользователя
           </button>
-          <button 
-            nz-button 
-            nzType="default" 
-            (click)="loadUsers()">
+          <button nz-button nzType="default" (click)="loadUsers()">
             <span nz-icon nzType="reload"></span>
             Обновить
           </button>
         </div>
       </div>
 
-      <nz-table 
-        #usersTable 
+      <nz-table
+        #usersTable
         [nzData]="users"
         [nzLoading]="loading"
         [nzPageSize]="pageSize"
         [nzPageIndex]="pageNumber"
         [nzTotal]="total"
         (nzPageIndexChange)="onPageChange($event)"
-        (nzPageSizeChange)="onPageSizeChange($event)">
+        (nzPageSizeChange)="onPageSizeChange($event)"
+      >
         <thead>
           <tr>
             <th>Email</th>
@@ -104,46 +105,35 @@ import { RoleAssignModalComponent } from './role-assign-modal.component';
                 {{ user.isActive ? 'Активен' : 'Неактивен' }}
               </nz-tag>
             </td>
-            <td>{{ user.createdAt | date:'short' }}</td>
-            <td>{{ user.lastLogin ? (user.lastLogin | date:'short') : 'Никогда' }}</td>
+            <td>{{ user.createdAt | date : 'short' }}</td>
+            <td>{{ user.lastLogin ? (user.lastLogin | date : 'short') : 'Никогда' }}</td>
             <td>
-              <button 
-                nz-button 
-                nzType="link" 
-                nzSize="small"
-                (click)="viewUser(user)">
+              <button nz-button nzType="link" nzSize="small" (click)="viewUser(user)">
                 <span nz-icon nzType="eye"></span>
               </button>
-              <button 
-                nz-button 
-                nzType="link" 
-                nzSize="small"
-                (click)="manageUserRoles(user)">
+              <button nz-button nzType="link" nzSize="small" (click)="manageUserRoles(user)">
                 <span nz-icon nzType="team"></span>
               </button>
-              <button 
+              <button
                 *ngIf="user.isActive"
-                nz-button 
-                nzType="link" 
+                nz-button
+                nzType="link"
                 nzSize="small"
                 nzDanger
-                (click)="deactivateUser(user)">
+                (click)="deactivateUser(user)"
+              >
                 <span nz-icon nzType="stop"></span>
               </button>
-              <button 
+              <button
                 *ngIf="!user.isActive"
-                nz-button 
-                nzType="link" 
+                nz-button
+                nzType="link"
                 nzSize="small"
-                (click)="activateUser(user)">
+                (click)="activateUser(user)"
+              >
                 <span nz-icon nzType="check-circle"></span>
               </button>
-              <button 
-                nz-button 
-                nzType="link" 
-                nzSize="small"
-                nzDanger
-                (click)="deleteUser(user)">
+              <button nz-button nzType="link" nzSize="small" nzDanger (click)="deleteUser(user)">
                 <span nz-icon nzType="delete"></span>
               </button>
             </td>
@@ -155,42 +145,45 @@ import { RoleAssignModalComponent } from './role-assign-modal.component';
         #userModal
         (userCreated)="createUser($event)"
         (userUpdated)="updateUser($event)"
-        (cancelled)="onModalCancelled()">
+        (cancelled)="onModalCancelled()"
+      >
       </app-user-modal>
     </div>
   `,
-  styles: [`
-    .users-container {
-      padding: 24px;
-      background: #fff;
-      border-radius: 8px;
-    }
+  styles: [
+    `
+      .users-container {
+        padding: 24px;
+        background: #fff;
+        border-radius: 8px;
+      }
 
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 24px;
-    }
+      .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 24px;
+      }
 
-    .header h2 {
-      margin: 0;
-    }
+      .header h2 {
+        margin: 0;
+      }
 
-    .actions {
-      display: flex;
-      gap: 12px;
-      align-items: center;
-    }
+      .actions {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+      }
 
-    .search-input {
-      width: 300px;
-    }
-  `]
+      .search-input {
+        width: 300px;
+      }
+    `,
+  ],
 })
 export class AdminUsersComponent implements OnInit, OnDestroy {
   @ViewChild('userModal') userModal!: UserModalComponent;
-  
+
   private readonly destroy$ = new Subject<void>();
   private readonly userApi = inject(UserApiService);
   private readonly roleService = inject(RoleService);
@@ -226,7 +219,8 @@ export class AdminUsersComponent implements OnInit, OnDestroy {
       filter.searchTerm = this.searchTerm.trim();
     }
 
-    this.userApi.getUsers(filter)
+    this.userApi
+      .getUsers(filter)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response) => {
@@ -247,7 +241,7 @@ export class AdminUsersComponent implements OnInit, OnDestroy {
           this.logger.error('AdminUsersComponent', 'Ошибка загрузки', error);
           this.message.error('Ошибка при загрузке пользователей');
           this.loading = false;
-        }
+        },
       });
   }
 
@@ -276,7 +270,7 @@ export class AdminUsersComponent implements OnInit, OnDestroy {
     const userDetail: UserDetailDto = {
       ...user,
       firstName: user.fullName.split(' ')[0] || '',
-      lastName: user.fullName.split(' ').slice(1).join(' ') || ''
+      lastName: user.fullName.split(' ').slice(1).join(' ') || '',
     };
     this.userModal.show('view', userDetail);
   }
@@ -285,14 +279,14 @@ export class AdminUsersComponent implements OnInit, OnDestroy {
     this.roleService.getAllRoles().subscribe({
       next: (rolesResponse) => {
         const allRoles = rolesResponse.data;
-        
+
         this.roleService.getUserRoles(user.id).subscribe({
           next: (userRolesResponse) => {
             const userRoles = userRolesResponse.data;
             this.showRoleModal(user, allRoles, userRoles);
-          }
+          },
         });
-      }
+      },
     });
   }
 
@@ -303,13 +297,13 @@ export class AdminUsersComponent implements OnInit, OnDestroy {
       nzData: {
         user,
         allRoles,
-        userRoles
+        userRoles,
       },
       nzWidth: 500,
-      nzFooter: null
+      nzFooter: null,
     });
 
-    modal.afterClose.subscribe(result => {
+    modal.afterClose.subscribe((result) => {
       if (result?.success) {
         this.loadUsers();
       }
@@ -318,15 +312,16 @@ export class AdminUsersComponent implements OnInit, OnDestroy {
 
   getRoleColor(roleName: string): string {
     const colors: { [key: string]: string } = {
-      'Admin': 'red',
-      'User': 'blue',
-      'Moderator': 'orange'
+      Admin: 'red',
+      User: 'blue',
+      Moderator: 'orange',
     };
     return colors[roleName] || 'default';
   }
 
   createUser(userData: CreateUserDto): void {
-    this.userApi.createUser(userData)
+    this.userApi
+      .createUser(userData)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response) => {
@@ -336,12 +331,13 @@ export class AdminUsersComponent implements OnInit, OnDestroy {
         error: (error) => {
           this.logger.error('AdminUsersComponent', 'Ошибка создания', error);
           this.message.error(error.error?.message || 'Ошибка при создании пользователя');
-        }
+        },
       });
   }
 
   updateUser(data: { id: string; data: UpdateUserDto }): void {
-    this.userApi.updateUser(data.id, data.data)
+    this.userApi
+      .updateUser(data.id, data.data)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: () => {
@@ -351,12 +347,13 @@ export class AdminUsersComponent implements OnInit, OnDestroy {
         error: (error) => {
           this.logger.error('AdminUsersComponent', 'Ошибка обновления', error);
           this.message.error(error.error?.message || 'Ошибка при обновлении');
-        }
+        },
       });
   }
 
   activateUser(user: any): void {
-    this.userApi.activateUser(user.id)
+    this.userApi
+      .activateUser(user.id)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: () => {
@@ -366,12 +363,13 @@ export class AdminUsersComponent implements OnInit, OnDestroy {
         error: (error) => {
           this.logger.error('AdminUsersComponent', 'Ошибка активации', error);
           this.message.error('Ошибка при активации пользователя');
-        }
+        },
       });
   }
 
   deactivateUser(user: any): void {
-    this.userApi.deactivateUser(user.id)
+    this.userApi
+      .deactivateUser(user.id)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: () => {
@@ -381,7 +379,7 @@ export class AdminUsersComponent implements OnInit, OnDestroy {
         error: (error) => {
           this.logger.error('AdminUsersComponent', 'Ошибка деактивации', error);
           this.message.error('Ошибка при деактивации пользователя');
-        }
+        },
       });
   }
 
@@ -395,7 +393,8 @@ export class AdminUsersComponent implements OnInit, OnDestroy {
       nzCancelText: 'Отмена',
       nzOnOk: () => {
         return new Promise((resolve, reject) => {
-          this.userApi.deleteUser(user.id)
+          this.userApi
+            .deleteUser(user.id)
             .pipe(takeUntil(this.destroy$))
             .subscribe({
               next: () => {
@@ -407,10 +406,10 @@ export class AdminUsersComponent implements OnInit, OnDestroy {
                 this.logger.error('AdminUsersComponent', 'Ошибка удаления', error);
                 this.message.error(error.error?.message || 'Ошибка при удалении пользователя');
                 reject();
-              }
+              },
             });
         });
-      }
+      },
     });
   }
 

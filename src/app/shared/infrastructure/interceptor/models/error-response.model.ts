@@ -1,16 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-export type ErrorStatus =
-  | 0
-  | 400
-  | 401
-  | 403
-  | 404
-  | 409
-  | 422
-  | 500
-  | 502
-  | 503
-  | 504;
+export type ErrorStatus = 0 | 400 | 401 | 403 | 404 | 409 | 422 | 500 | 502 | 503 | 504;
 export interface IErrorResponse {
   title: string;
   status: ErrorStatus;
@@ -47,7 +36,7 @@ export const errorMessages: Record<ErrorStatus, string> = {
   400: 'Запрос содержит некорректные данные.',
   401: 'Сессия истекла. Необходимо войти в систему заново.',
   403: 'У вас нет прав для выполнения этой операции.',
-  404: 'Запрашиваемый ресурс не найден.',
+  404: 'Запрашиваемый ресурс не найден. Возможно, сервер недоступен или неверен адрес API.',
   409: 'Операция не может быть выполнена из-за конфликта данных.',
   422: 'Проверьте правильность заполнения всех полей.',
   500: 'Внутренняя ошибка сервера. Попробуйте позже.',
@@ -60,7 +49,7 @@ export const errorRecommendations: Record<ErrorStatus, string> = {
   400: 'Проверьте правильность введенных данных и попробуйте снова.',
   401: 'Нажмите "Понятно" для перехода на страницу входа.',
   403: 'Обратитесь к администратору для получения необходимых прав доступа.',
-  404: 'Убедитесь, что ресурс существует, или обратитесь к администратору.',
+  404: 'Убедитесь, что ресурс существует, и проверьте, запущен ли сервер.',
   409: 'Измените данные и повторите попытку.',
   422: 'Исправьте ошибки в форме (выделены красным) и отправьте заново.',
   500: 'Попробуйте повторить операцию через несколько минут.',
@@ -69,9 +58,7 @@ export const errorRecommendations: Record<ErrorStatus, string> = {
   504: 'Подождите несколько минут и повторите попытку.',
 };
 export function toErrorStatus(status: number): ErrorStatus {
-  const validStatuses: ErrorStatus[] = [
-    0, 400, 401, 403, 404, 409, 422, 500, 502, 503, 504,
-  ];
+  const validStatuses: ErrorStatus[] = [0, 400, 401, 403, 404, 409, 422, 500, 502, 503, 504];
   if (validStatuses.includes(status as ErrorStatus)) {
     return status as ErrorStatus;
   }
@@ -117,7 +104,7 @@ export class ErrorResponse implements IExtendedErrorResponse {
   private validateRequired(data: IErrorResponse): void {
     if (!data.title || !data.detail || !data.instance) {
       throw new Error(
-        'ErrorResponse: обязательные поля title, detail, instance должны быть заполнены'
+        'ErrorResponse: обязательные поля title, detail, instance должны быть заполнены',
       );
     }
   }
@@ -166,10 +153,7 @@ export class ErrorResponse implements IExtendedErrorResponse {
       userMessage: this.userMessage,
     };
   }
-  static createNetworkError(
-    requestUrl: string,
-    detail?: string
-  ): ErrorResponse {
+  static createNetworkError(requestUrl: string, detail?: string): ErrorResponse {
     return new ErrorResponse({
       title: errorTitles[0],
       status: 0,
@@ -179,10 +163,7 @@ export class ErrorResponse implements IExtendedErrorResponse {
       userMessage: errorMessages[0],
     });
   }
-  static fromServerResponse(
-    serverError: any,
-    requestUrl: string
-  ): ErrorResponse {
+  static fromServerResponse(serverError: any, requestUrl: string): ErrorResponse {
     if (serverError && typeof serverError === 'object' && serverError.title) {
       return new ErrorResponse({
         title: serverError.title,
@@ -207,13 +188,9 @@ export class ErrorResponse implements IExtendedErrorResponse {
       userMessage: errorMessages[500],
     });
   }
-  static fromHttpError(
-    httpError: HttpErrorResponse,
-    requestUrl: string
-  ): ErrorResponse {
+  static fromHttpError(httpError: HttpErrorResponse, requestUrl: string): ErrorResponse {
     return new ErrorResponse({
-      title:
-        httpError.statusText || errorTitles[toErrorStatus(httpError.status)],
+      title: httpError.statusText || errorTitles[toErrorStatus(httpError.status)],
       status: toErrorStatus(httpError.status),
       detail:
         httpError.error?.message ||
@@ -258,8 +235,6 @@ export function isErrorResponse(obj: any): obj is IErrorResponse {
     typeof obj.instance === 'string'
   );
 }
-export function isExtendedErrorResponse(
-  obj: any
-): obj is IExtendedErrorResponse {
+export function isExtendedErrorResponse(obj: any): obj is IExtendedErrorResponse {
   return isErrorResponse(obj);
 }

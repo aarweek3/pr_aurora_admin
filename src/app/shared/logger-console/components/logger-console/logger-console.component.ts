@@ -11,11 +11,17 @@ import { LoggerConsoleJsonViewerComponent } from '../logger-console-json-viewer/
   imports: [CommonModule, FormsModule, LoggerConsoleJsonViewerComponent],
   templateUrl: './logger-console.component.html',
   styleUrls: ['./logger-console.component.scss'],
+  host: {
+    '[class.light-theme]': '!isDarkTheme()',
+  },
 })
 export class LoggerConsoleComponent {
   public loggerService = inject(LoggerConsoleService);
 
   @ViewChild('scrollContainer') private scrollContainer!: ElementRef;
+
+  /** Тема консоли: true = темная, false = светлая */
+  isDarkTheme = signal(true);
 
   /** Поисковый запрос */
   searchQuery = signal('');
@@ -88,6 +94,11 @@ export class LoggerConsoleComponent {
   /** Экспорт в JSON через сервис */
   export(): void {
     this.loggerService.exportToJSON();
+  }
+
+  /** Переключение темы */
+  toggleTheme(): void {
+    this.isDarkTheme.update((v) => !v);
   }
 
   /** Копирование сообщения в буфер */

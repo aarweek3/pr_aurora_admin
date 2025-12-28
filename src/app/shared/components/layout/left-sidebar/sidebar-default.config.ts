@@ -10,6 +10,37 @@ export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
   state: 'expanded',
   menuGroups: [
     {
+      id: 'administration',
+      title: 'Администрирование',
+      items: [
+        {
+          id: 'admin-users',
+          icon: 'team',
+          label: 'Пользователи',
+          type: 'link',
+          route: '/admin/users',
+        },
+        {
+          id: 'admin-roles',
+          icon: 'safety-certificate',
+          label: 'Роли и права',
+          type: 'link',
+          route: '/admin/roles',
+        },
+        {
+          id: 'auth-control',
+          icon: 'security-scan',
+          label: 'Auth Control',
+          type: 'link',
+          route: '/auth-control',
+          badge: {
+            value: 'v2',
+            intent: 'success',
+          },
+        },
+      ],
+    },
+    {
       id: 'main',
       title: 'Основное',
       items: [
@@ -284,13 +315,6 @@ export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
           label: 'Аналитика',
           type: 'link',
           route: '/analytics',
-        },
-        {
-          id: 'users',
-          icon: 'user',
-          label: 'Пользователи',
-          type: 'link',
-          route: '/users',
         },
       ],
     },
@@ -717,6 +741,7 @@ export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
         },
       ],
     },
+
     {
       id: 'system',
       title: 'Система',
@@ -759,17 +784,7 @@ export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
             },
           ],
         },
-        {
-          id: 'auth-control',
-          icon: 'security-scan', // security-scan иконка из ant design
-          label: 'Auth Control',
-          type: 'link',
-          route: '/auth-control',
-          badge: {
-            value: 'v2',
-            intent: 'success',
-          },
-        },
+
         {
           id: 'monitoring',
           icon: 'radar-chart',

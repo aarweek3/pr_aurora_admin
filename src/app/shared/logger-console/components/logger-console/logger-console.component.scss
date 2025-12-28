@@ -2,18 +2,105 @@
   display: block;
   height: 100%;
   width: 100%;
-  background: #1e1e1e;
-  color: #cccccc;
-  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
   overflow: hidden;
-  border-radius: 8px;
-  border: 1px solid #333;
 }
 
 .logger-container {
   display: flex;
   flex-direction: column;
   height: 100%;
+
+  /* Defaults (Dark Theme) */
+  --lc-bg-main: #1e1e1e;
+  --lc-bg-toolbar: #252526;
+  --lc-bg-input: #3c3c3c;
+  --lc-bg-panel: #161616;
+  --lc-bg-hover: rgba(255, 255, 255, 0.05);
+  --lc-bg-active: #37373d;
+
+  --lc-text-main: #cccccc;
+  --lc-text-input: #eeeeee;
+  --lc-text-muted: #888888;
+  --lc-text-inverse: #ffffff;
+
+  --lc-border-main: #333;
+  --lc-border-light: #444;
+  --lc-border-panel: #2d2d2d;
+
+  --lc-color-error: #f14c4c;
+  --lc-bg-error: rgba(241, 76, 76, 0.05);
+
+  --lc-color-warn: #cca700;
+  --lc-bg-warn: rgba(204, 167, 0, 0.05);
+
+  --lc-color-info: #007acc;
+  --lc-color-debug: #808080;
+  --lc-color-prefix: #569cd6;
+
+  --lc-btn-primary-bg: #0e639c;
+  --lc-btn-primary-hover: #1177bb;
+
+  --lc-footer-bg: #007acc;
+  --lc-footer-text: #ffffff;
+
+  /* JSON Viewer Colors (Dark) */
+  --lc-json-key: #9cdcfe;
+  --lc-json-string: #ce9178;
+  --lc-json-number: #b5cea8;
+  --lc-json-boolean: #569cd6;
+  --lc-json-null: #569cd6;
+  --lc-json-undefined: #808080;
+
+  /* Apply Vars */
+  background: var(--lc-bg-main);
+  color: var(--lc-text-main);
+  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+  border-radius: 8px;
+  border: 1px solid var(--lc-border-main);
+  transition: background 0.3s, color 0.3s;
+}
+
+/* Light Theme Overrides applied to container */
+.logger-container.light-theme {
+  --lc-bg-main: #ffffff;
+  --lc-bg-toolbar: #f3f3f3;
+  --lc-bg-input: #ffffff;
+  --lc-bg-panel: #f8f8f8;
+  --lc-bg-hover: rgba(0, 0, 0, 0.05);
+  --lc-bg-active: #e4e4e4;
+
+  --lc-text-main: #333333;
+  --lc-text-input: #333333;
+  --lc-text-muted: #666666;
+  --lc-text-inverse: #333333;
+
+  --lc-border-main: #e0e0e0;
+  --lc-border-light: #d0d0d0;
+  --lc-border-panel: #d0d0d0;
+
+  --lc-color-error: #e51400;
+  --lc-bg-error: rgba(229, 20, 0, 0.05);
+
+  --lc-color-warn: #dd8800;
+  --lc-bg-warn: rgba(221, 136, 0, 0.05);
+
+  --lc-color-info: #007acc;
+  --lc-color-debug: #666666;
+  --lc-color-prefix: #005cc5;
+
+  --lc-btn-primary-bg: #0078d4;
+  --lc-btn-primary-hover: #106ebe;
+
+  --lc-footer-bg: #0078d4;
+  --lc-footer-text: #ffffff;
+
+  /* JSON Viewer Colors (Light) */
+  --lc-json-key: #0451a5;
+  --lc-json-string: #a31515;
+  --lc-json-number: #098658;
+  --lc-json-boolean: #0000ff;
+  --lc-json-null: #0000ff;
+  --lc-json-undefined: #666666;
 }
 
 /* Toolbar */
@@ -22,8 +109,8 @@
   justify-content: space-between;
   align-items: center;
   padding: 8px 12px;
-  background: #252526;
-  border-bottom: 1px solid #333;
+  background: var(--lc-bg-toolbar);
+  border-bottom: 1px solid var(--lc-border-main);
   gap: 16px;
 }
 
@@ -34,13 +121,19 @@
   flex: 1;
 }
 
+.toolbar-right {
+  display: flex;
+  align-items: center;
+  gap: 8px; /* Gap between actions */
+}
+
 .search-box {
   display: flex;
   align-items: center;
-  background: #3c3c3c;
+  background: var(--lc-bg-input);
   border-radius: 4px;
   padding: 2px 8px;
-  border: 1px solid #444;
+  border: 1px solid var(--lc-border-light);
   flex: 1;
   max-width: 400px;
 
@@ -53,11 +146,16 @@
   input {
     background: none;
     border: none;
-    color: #eee;
+    color: var(--lc-text-input);
     font-size: 13px;
     outline: none;
     width: 100%;
     height: 24px;
+
+    &::placeholder {
+      color: var(--lc-text-muted);
+      opacity: 0.7;
+    }
   }
 }
 
@@ -73,20 +171,20 @@
   padding: 4px 10px;
   border: 1px solid transparent;
   background: transparent;
-  color: #888;
+  color: var(--lc-text-muted);
   border-radius: 4px;
   cursor: pointer;
   font-size: 12px;
   transition: all 0.2s;
 
   &:hover {
-    background: rgba(255, 255, 255, 0.05);
+    background: var(--lc-bg-hover);
   }
 
   &.active {
-    background: #37373d;
-    color: #fff;
-    border-color: #444;
+    background: var(--lc-bg-active);
+    color: var(--lc-text-main);
+    border-color: var(--lc-border-light);
   }
 
   .level-count {
@@ -95,25 +193,26 @@
   }
 
   &.btn-error.active {
-    border-bottom: 2px solid #f14c4c;
-    color: #f14c4c;
+    border-bottom: 2px solid var(--lc-color-error);
+    color: var(--lc-color-error);
+    background: var(--lc-bg-active); // Reset active bg logic slightly for color
   }
   &.btn-warn.active {
-    border-bottom: 2px solid #cca700;
-    color: #cca700;
+    border-bottom: 2px solid var(--lc-color-warn);
+    color: var(--lc-color-warn);
   }
   &.btn-info.active {
-    border-bottom: 2px solid #007acc;
-    color: #007acc;
+    border-bottom: 2px solid var(--lc-color-info);
+    color: var(--lc-color-info);
   }
   &.btn-debug.active {
-    border-bottom: 2px solid #808080;
-    color: #808080;
+    border-bottom: 2px solid var(--lc-color-debug);
+    color: var(--lc-color-debug);
   }
 }
 
 .action-btn {
-  background: #0e639c;
+  background: var(--lc-btn-primary-bg);
   color: white;
   border: none;
   padding: 4px 12px;
@@ -121,15 +220,33 @@
   font-size: 12px;
   cursor: pointer;
 
+  /* Flex allow alignment */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
   &:hover {
-    background: #1177bb;
+    background: var(--lc-btn-primary-hover);
   }
+
+  &.theme-toggle {
+    background: transparent;
+    border: 1px solid var(--lc-border-light);
+    color: var(--lc-text-main);
+    padding: 4px 8px;
+
+    &:hover {
+      background: var(--lc-bg-hover);
+    }
+  }
+
   &.danger {
     background: transparent;
-    border: 1px solid #444;
-    color: #f14c4c;
+    border: 1px solid var(--lc-border-light);
+    color: var(--lc-color-error);
     &:hover {
       background: rgba(241, 76, 76, 0.1);
+      /* Keep generic danger hover red-ish */
     }
   }
 }
@@ -139,7 +256,7 @@
   flex: 1;
   overflow-y: auto;
   scroll-behavior: smooth;
-  background: #1e1e1e;
+  background: var(--lc-bg-main);
   padding: 4px 0;
 }
 
@@ -152,13 +269,14 @@
   display: flex;
   flex-direction: column;
   padding: 2px 12px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+  border-bottom: 1px solid var(--lc-bg-hover); // Use hover bg as subtle separator
   font-family: "JetBrains Mono", "Consolas", monospace;
   font-size: 12px;
   transition: background 0.1s;
+  color: var(--lc-text-main);
 
   &:hover {
-    background: rgba(255, 255, 255, 0.03);
+    background: var(--lc-bg-hover);
   }
 
   .log-main {
@@ -170,31 +288,56 @@
 
   /* Level Specific Styles */
   &.level-error {
-    color: #f14c4c;
-    background: rgba(241, 76, 76, 0.05);
+    color: var(--lc-color-error);
+    background: var(--lc-bg-error);
+    border-left: 2px solid var(--lc-color-error);
+    padding-left: 10px; /* offset border */
     .log-message {
       font-weight: bold;
     }
   }
   &.level-warn {
-    color: #cca700;
-    background: rgba(204, 167, 0, 0.05);
+    color: var(--lc-color-warn);
+    background: var(--lc-bg-warn);
+    border-left: 2px solid var(--lc-color-warn);
+    padding-left: 10px;
   }
   &.level-info {
-    border-left: 3px solid #007acc;
+    border-left: 2px solid var(--lc-color-info);
+    padding-left: 10px;
   }
   &.level-debug {
-    color: #808080;
+    color: var(--lc-color-debug);
     font-style: italic;
+    border-left: 2px solid var(--lc-color-debug);
+    padding-left: 10px;
   }
 
   .log-time {
-    color: #808080;
-    min-width: 80px;
-    font-size: 11px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end; /* Right align the time stack */
+    justify-content: center;
+    color: var(--lc-color-debug);
+    min-width: 55px;
+    margin-left: auto; /* Push to the right properly if flex:1 doesn't cover it fully, though message has flex:1 */
+    padding-left: 8px;
+    line-height: 1.1;
+    font-family: sans-serif;
+    text-align: right;
+
+    .time-base {
+      font-size: 11px;
+      font-weight: 500;
+    }
+
+    .time-ms {
+      font-size: 10px;
+      opacity: 0.8;
+    }
   }
   .log-prefix {
-    color: #569cd6;
+    color: var(--lc-color-prefix);
     font-weight: bold;
     min-width: 60px;
   }
@@ -224,9 +367,9 @@
 .log-details {
   margin: 4px 0 8px 88px;
   padding: 8px;
-  background: #161616;
+  background: var(--lc-bg-panel);
   border-radius: 4px;
-  border: 1px solid #2d2d2d;
+  border: 1px solid var(--lc-border-panel);
 }
 
 .empty-state {
@@ -234,7 +377,7 @@
   justify-content: center;
   align-items: center;
   height: 100px;
-  color: #555;
+  color: var(--lc-text-muted);
   font-style: italic;
 }
 
@@ -243,7 +386,7 @@
   display: flex;
   justify-content: space-between;
   padding: 4px 12px;
-  background: #007acc; // VSCode blue status bar style
-  color: white;
+  background: var(--lc-footer-bg);
+  color: var(--lc-footer-text);
   font-size: 11px;
 }

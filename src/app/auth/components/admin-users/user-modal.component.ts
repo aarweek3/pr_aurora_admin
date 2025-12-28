@@ -1,14 +1,14 @@
 // src/app/auth/components/admin-users/user-modal.component.ts
-import { Component, EventEmitter, Output, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { NzModalModule } from 'ng-zorro-antd/modal';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzDescriptionsModule } from 'ng-zorro-antd/descriptions';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
-import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzSwitchModule } from 'ng-zorro-antd/switch';
-import { NzDescriptionsModule } from 'ng-zorro-antd/descriptions';
-import { CreateUserDto, UpdateUserDto, UserDetailDto, UserModalMode } from '@auth/models/user.models';
+import { CreateUserDto, UpdateUserDto, UserDetailDto, UserModalMode } from '../../models';
 
 @Component({
   selector: 'app-user-modal',
@@ -21,7 +21,7 @@ import { CreateUserDto, UpdateUserDto, UserDetailDto, UserModalMode } from '@aut
     NzInputModule,
     NzButtonModule,
     NzSwitchModule,
-    NzDescriptionsModule
+    NzDescriptionsModule,
   ],
   template: `
     <nz-modal
@@ -37,20 +37,22 @@ import { CreateUserDto, UpdateUserDto, UserDetailDto, UserModalMode } from '@aut
           <nz-descriptions-item nzTitle="Email">{{ user.email }}</nz-descriptions-item>
           <nz-descriptions-item nzTitle="Имя">{{ user.firstName }}</nz-descriptions-item>
           <nz-descriptions-item nzTitle="Фамилия">{{ user.lastName }}</nz-descriptions-item>
-          <nz-descriptions-item nzTitle="Отдел">{{ user.department || 'Не указан' }}</nz-descriptions-item>
+          <nz-descriptions-item nzTitle="Отдел">{{
+            user.department || 'Не указан'
+          }}</nz-descriptions-item>
           <nz-descriptions-item nzTitle="Статус">
             <span [style.color]="user.isActive ? 'green' : 'red'">
               {{ user.isActive ? 'Активен' : 'Неактивен' }}
             </span>
           </nz-descriptions-item>
           <nz-descriptions-item nzTitle="Дата создания">
-            {{ user.createdAt | date:'medium' }}
+            {{ user.createdAt | date : 'medium' }}
           </nz-descriptions-item>
           <nz-descriptions-item nzTitle="Последний вход">
-            {{ user.lastLogin ? (user.lastLogin | date:'medium') : 'Никогда' }}
+            {{ user.lastLogin ? (user.lastLogin | date : 'medium') : 'Никогда' }}
           </nz-descriptions-item>
           <nz-descriptions-item nzTitle="Внешний аккаунт">
-            {{ user.isExternalAccount ? ('Да (' + user.externalProvider + ')') : 'Нет' }}
+            {{ user.isExternalAccount ? 'Да (' + user.externalProvider + ')' : 'Нет' }}
           </nz-descriptions-item>
         </nz-descriptions>
 
@@ -80,7 +82,12 @@ import { CreateUserDto, UpdateUserDto, UserDetailDto, UserModalMode } from '@aut
           <nz-form-item *ngIf="mode === 'create'">
             <nz-form-label [nzSpan]="24" nzRequired>Пароль</nz-form-label>
             <nz-form-control [nzSpan]="24" nzErrorTip="Пароль должен быть не менее 6 символов">
-              <input nz-input formControlName="password" type="password" placeholder="Минимум 6 символов" />
+              <input
+                nz-input
+                formControlName="password"
+                type="password"
+                placeholder="Минимум 6 символов"
+              />
             </nz-form-control>
           </nz-form-item>
 
@@ -114,7 +121,7 @@ import { CreateUserDto, UpdateUserDto, UserDetailDto, UserModalMode } from '@aut
         </button>
       </ng-template>
     </nz-modal>
-  `
+  `,
 })
 export class UserModalComponent {
   @Output() userCreated = new EventEmitter<CreateUserDto>();
@@ -137,16 +144,20 @@ export class UserModalComponent {
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       department: [''],
-      isActive: [true]
+      isActive: [true],
     });
   }
 
   getTitle(): string {
     switch (this.mode) {
-      case 'create': return 'Создать нового пользователя';
-      case 'edit': return 'Редактировать пользователя';
-      case 'view': return 'Информация о пользователе';
-      default: return '';
+      case 'create':
+        return 'Создать нового пользователя';
+      case 'edit':
+        return 'Редактировать пользователя';
+      case 'view':
+        return 'Информация о пользователе';
+      default:
+        return '';
     }
   }
 
@@ -162,7 +173,7 @@ export class UserModalComponent {
       this.form.patchValue({
         firstName: user.firstName,
         lastName: user.lastName,
-        department: user.department
+        department: user.department,
       });
       this.setValidators(false);
     }
@@ -205,7 +216,7 @@ export class UserModalComponent {
       const updateData: UpdateUserDto = {
         firstName: this.form.value.firstName,
         lastName: this.form.value.lastName,
-        department: this.form.value.department
+        department: this.form.value.department,
       };
       this.userUpdated.emit({ id: this.user.id, data: updateData });
     }

@@ -1,18 +1,18 @@
 // src/app/auth/components/admin-roles/admin-roles.component.ts
-import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzButtonModule } from 'ng-zorro-antd/button';
-import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
+import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzMessageService } from 'ng-zorro-antd/message';
-import { NzCardModule } from 'ng-zorro-antd/card';
-import { NzTagModule } from 'ng-zorro-antd/tag';
+import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
-import { RoleService } from '@auth/services/role.service';
-import { RoleDto } from '@auth/models/role.models';
+import { NzTableModule } from 'ng-zorro-antd/table';
+import { NzTagModule } from 'ng-zorro-antd/tag';
+import { RoleDto } from '../../models/role.models';
+import { RoleService } from '../../services/role.service';
 
 @Component({
   selector: 'app-admin-roles',
@@ -27,7 +27,7 @@ import { RoleDto } from '@auth/models/role.models';
     NzInputModule,
     NzCardModule,
     NzTagModule,
-    NzPopconfirmModule
+    NzPopconfirmModule,
   ],
   template: `
     <nz-card nzTitle="Управление ролями" [nzExtra]="extraTemplate">
@@ -51,15 +51,16 @@ import { RoleDto } from '@auth/models/role.models';
               <button nz-button nzType="link" nzSize="small" (click)="editRole(role)">
                 Изменить
               </button>
-              <button 
-                nz-button 
-                nzType="link" 
-                nzSize="small" 
+              <button
+                nz-button
+                nzType="link"
+                nzSize="small"
                 nzDanger
                 nz-popconfirm
                 nzPopconfirmTitle="Удалить эту роль?"
                 (nzOnConfirm)="deleteRole(role.id)"
-                [disabled]="isSystemRole(role.name)">
+                [disabled]="isSystemRole(role.name)"
+              >
                 Удалить
               </button>
             </td>
@@ -69,9 +70,7 @@ import { RoleDto } from '@auth/models/role.models';
     </nz-card>
 
     <ng-template #extraTemplate>
-      <button nz-button nzType="primary" (click)="showCreateModal()">
-        Создать роль
-      </button>
+      <button nz-button nzType="primary" (click)="showCreateModal()">Создать роль</button>
     </ng-template>
 
     <!-- Модальное окно создания/редактирования -->
@@ -79,7 +78,8 @@ import { RoleDto } from '@auth/models/role.models';
       [(nzVisible)]="isModalVisible"
       [nzTitle]="modalTitle"
       (nzOnCancel)="handleCancel()"
-      (nzOnOk)="handleOk()">
+      (nzOnOk)="handleOk()"
+    >
       <ng-container *nzModalContent>
         <form nz-form [formGroup]="roleForm">
           <nz-form-item>
@@ -92,11 +92,12 @@ import { RoleDto } from '@auth/models/role.models';
           <nz-form-item>
             <nz-form-label [nzSpan]="6">Описание</nz-form-label>
             <nz-form-control [nzSpan]="18">
-              <textarea 
-                nz-input 
-                formControlName="description" 
+              <textarea
+                nz-input
+                formControlName="description"
                 placeholder="Описание роли"
-                [nzAutosize]="{ minRows: 3, maxRows: 6 }">
+                [nzAutosize]="{ minRows: 3, maxRows: 6 }"
+              >
               </textarea>
             </nz-form-control>
           </nz-form-item>
@@ -104,12 +105,14 @@ import { RoleDto } from '@auth/models/role.models';
       </ng-container>
     </nz-modal>
   `,
-  styles: [`
-    :host {
-      display: block;
-      padding: 24px;
-    }
-  `]
+  styles: [
+    `
+      :host {
+        display: block;
+        padding: 24px;
+      }
+    `,
+  ],
 })
 export class AdminRolesComponent implements OnInit {
   private roleService = inject(RoleService);
@@ -124,7 +127,7 @@ export class AdminRolesComponent implements OnInit {
 
   roleForm: FormGroup = this.fb.group({
     name: ['', Validators.required],
-    description: ['']
+    description: [''],
   });
 
   ngOnInit() {
@@ -141,7 +144,7 @@ export class AdminRolesComponent implements OnInit {
       error: () => {
         this.message.error('Ошибка загрузки ролей');
         this.loading = false;
-      }
+      },
     });
   }
 
@@ -157,7 +160,7 @@ export class AdminRolesComponent implements OnInit {
     this.editingRoleId = role.id;
     this.roleForm.patchValue({
       name: role.name,
-      description: role.description
+      description: role.description,
     });
     this.isModalVisible = true;
   }
@@ -173,7 +176,7 @@ export class AdminRolesComponent implements OnInit {
           this.isModalVisible = false;
           this.loadRoles();
         },
-        error: () => this.message.error('Ошибка обновления роли')
+        error: () => this.message.error('Ошибка обновления роли'),
       });
     } else {
       // Создание
@@ -183,7 +186,7 @@ export class AdminRolesComponent implements OnInit {
           this.isModalVisible = false;
           this.loadRoles();
         },
-        error: () => this.message.error('Ошибка создания роли')
+        error: () => this.message.error('Ошибка создания роли'),
       });
     }
   }
@@ -198,15 +201,15 @@ export class AdminRolesComponent implements OnInit {
         this.message.success('Роль удалена');
         this.loadRoles();
       },
-      error: () => this.message.error('Ошибка удаления роли')
+      error: () => this.message.error('Ошибка удаления роли'),
     });
   }
 
   getRoleColor(roleName: string): string {
     const colors: { [key: string]: string } = {
-      'Admin': 'red',
-      'User': 'blue',
-      'Moderator': 'orange'
+      Admin: 'red',
+      User: 'blue',
+      Moderator: 'orange',
     };
     return colors[roleName] || 'default';
   }

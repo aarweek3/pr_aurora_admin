@@ -1,8 +1,9 @@
 // src/app/core/guards/guards.ts
 import { inject } from '@angular/core';
-import { Router, CanActivateFn } from '@angular/router';
-import { AuthService } from '@auth/services/auth.service';
+import { CanActivateFn, Router } from '@angular/router';
+
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { AuthService } from '../services/auth.service';
 
 /**
  * Базовый guard для авторизации

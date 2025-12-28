@@ -1,4 +1,4 @@
-<div class="logger-container">
+<div class="logger-container" [class.light-theme]="!isDarkTheme()">
   <!-- Toolbox / Header -->
   <header class="logger-toolbar">
     <div class="toolbar-left">
@@ -28,6 +28,13 @@
     </div>
 
     <div class="toolbar-right">
+      <button
+        class="action-btn theme-toggle"
+        (click)="toggleTheme()"
+        [title]="isDarkTheme() ? 'Switch to Light Mode' : 'Switch to Dark Mode'"
+      >
+        {{ isDarkTheme() ? '☀️' : '🌙' }}
+      </button>
       <button class="action-btn" (click)="export()" title="Download JSON">📥 Export</button>
       <button class="action-btn danger" (click)="clear()" title="Clear logs">🗑️ Clear</button>
     </div>
@@ -39,11 +46,15 @@
       @for (log of filteredLogs(); track log.id) {
       <div class="log-entry" [ngClass]="['level-' + log.level]">
         <div class="log-main">
-          <span class="log-time">{{ log.timestamp | date : 'HH:mm:ss.SSS' }}</span>
           <span class="log-prefix">{{ log.prefix }}</span>
           <span class="log-message">{{ log.message }}</span>
 
           <button class="copy-entry-btn" (click)="copyMessage(log.message)" title="Copy message">📋</button>
+
+          <div class="log-time">
+            <span class="time-base">{{ log.timestamp | date : 'HH:mm' }}</span>
+            <span class="time-ms">{{ log.timestamp | date : ':ss.SSS' }}</span>
+          </div>
         </div>
 
         <!-- JSON Viewer for detailed data (if present) -->
