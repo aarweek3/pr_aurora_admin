@@ -760,6 +760,17 @@ export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
           ],
         },
         {
+          id: 'auth-control',
+          icon: 'security-scan', // security-scan иконка из ant design
+          label: 'Auth Control',
+          type: 'link',
+          route: '/auth-control',
+          badge: {
+            value: 'v2',
+            intent: 'success',
+          },
+        },
+        {
           id: 'monitoring',
           icon: 'radar-chart',
           label: 'Мониторинг',

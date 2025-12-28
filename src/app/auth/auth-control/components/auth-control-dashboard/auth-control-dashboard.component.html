@@ -1,0 +1,85 @@
+<div class="auth-control-container">
+  <!-- Header Section -->
+  <div class="dashboard-header">
+    <div class="header-content">
+      <div class="title-section">
+        <div class="icon-wrapper">
+          <span nz-icon nzType="security-scan" nzTheme="twotone" [nzTwotoneColor]="'#1890ff'"></span>
+        </div>
+        <div>
+          <h1>Auth Control Panel</h1>
+          <p class="subtitle">Client-side Authentication & Security Testing</p>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <nz-tag [nzColor]="'blue'">v2.0 Beta</nz-tag>
+        <button nz-button nzType="text" nzShape="circle">
+          <span nz-icon nzType="setting" nzTheme="outline"></span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="dashboard-content">
+    <nz-tabset
+      [nzSelectedIndex]="selectedIndex()"
+      (nzSelectedIndexChange)="handleTabChange($event)"
+      nzType="card"
+      class="auth-tabs"
+    >
+      <!-- Session Tab -->
+      <nz-tab [nzTitle]="sessionTitle">
+        <ng-template #sessionTitle> <span nz-icon nzType="user"></span> Session </ng-template>
+        <div class="tab-content">
+          <app-session-tab></app-session-tab>
+        </div>
+      </nz-tab>
+
+      <!-- Tokens Tab -->
+      <nz-tab [nzTitle]="tokensTitle">
+        <ng-template #tokensTitle> <span nz-icon nzType="safety-certificate"></span> Tokens </ng-template>
+        <div class="tab-content">
+          <app-tokens-tab></app-tokens-tab>
+        </div>
+      </nz-tab>
+
+      <!-- Roles Tab -->
+      <nz-tab [nzTitle]="rolesTitle">
+        <ng-template #rolesTitle> <span nz-icon nzType="team"></span> Roles </ng-template>
+        <div class="tab-content">
+          <div class="placeholder-content">
+            <h3>Roles & Permissions</h3>
+            <p>Roles Tab Component will be loaded here.</p>
+            <!-- <app-roles-tab></app-roles-tab> -->
+          </div>
+        </div>
+      </nz-tab>
+
+      <!-- Simulator Tab -->
+      <nz-tab [nzTitle]="simulatorTitle">
+        <ng-template #simulatorTitle> <span nz-icon nzType="warning"></span> Simulator </ng-template>
+        <div class="tab-content">
+          <div class="placeholder-content">
+            <h3>Error Simulator</h3>
+            <p>Simulator Tab Component will be loaded here.</p>
+            <!-- <app-simulator-tab></app-simulator-tab> -->
+          </div>
+        </div>
+      </nz-tab>
+
+      <!-- Playground Tab -->
+      <nz-tab [nzTitle]="playgroundTitle">
+        <ng-template #playgroundTitle> <span nz-icon nzType="experiment"></span> Playground </ng-template>
+        <div class="tab-content">
+          <div class="placeholder-content">
+            <h3>Full API Playground</h3>
+            <p>Playground Tab Component will be loaded here.</p>
+            <!-- <app-playground-tab></app-playground-tab> -->
+          </div>
+        </div>
+      </nz-tab>
+    </nz-tabset>
+  </div>
+</div>

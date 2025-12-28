@@ -1,16 +1,10 @@
 // src/app/auth/services/auth.service.ts
-import { Injectable, inject, signal, computed } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Injectable, computed, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable, tap, catchError, throwError, of } from 'rxjs';
-import {
-  ApiResponse,
-  LoginDto,
-  RegisterDto,
-  ChangePasswordDto,
-  UserProfileDto,
-} from '@auth/models';
-import { ApiEndpoints, STORAGE_KEYS } from '@environments/api-endpoints';
+import { Observable, catchError, of, tap, throwError } from 'rxjs';
+import { ApiEndpoints, STORAGE_KEYS } from '../../../environments/api-endpoints';
+import { ApiResponse, ChangePasswordDto, LoginDto, RegisterDto, UserProfileDto } from '../models';
 import { TokenService } from './token.service';
 
 @Injectable({

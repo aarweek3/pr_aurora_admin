@@ -1,0 +1,85 @@
+<div class="session-tab-container">
+  <div class="main-info">
+    <!-- User Profile Card -->
+    <nz-card [nzBordered]="false" class="profile-card">
+      <nz-card-meta
+        [nzTitle]="titleTemplate"
+        [nzDescription]="descriptionTemplate"
+        [nzAvatar]="avatarTemplate"
+      ></nz-card-meta>
+
+      <ng-template #avatarTemplate>
+        <nz-avatar [nzSize]="64" [nzSrc]="currentUser()?.avatar" [nzIcon]="'user'" style="background-color: #1890ff">
+        </nz-avatar>
+      </ng-template>
+
+      <ng-template #titleTemplate>
+        <div class="card-header">
+          <h3>{{ currentUser()?.fullName || 'Guest User' }}</h3>
+          <nz-tag [nzColor]="isAuthenticated() ? 'success' : 'default'">
+            {{ isAuthenticated() ? 'Authenticated' : 'Guest' }}
+          </nz-tag>
+        </div>
+      </ng-template>
+
+      <ng-template #descriptionTemplate>
+        <div class="user-details">
+          <p class="email">
+            <span nz-icon nzType="mail"></span>
+            {{ currentUser()?.email || 'No email' }}
+          </p>
+          <div class="roles-list">
+            <nz-tag *ngFor="let role of userRoles()" [nzColor]="'blue'">
+              {{ role }}
+            </nz-tag>
+          </div>
+        </div>
+      </ng-template>
+
+      <div class="card-actions">
+        <button nz-button nzType="primary" (click)="refreshSession()">
+          <span nz-icon nzType="sync"></span> Refresh Details
+        </button>
+        <button nz-button nzDanger (click)="logout()"><span nz-icon nzType="logout"></span> Force Logout</button>
+      </div>
+    </nz-card>
+
+    <!-- Session Stats -->
+    <div class="stats-grid">
+      <nz-card>
+        <nz-statistic
+          [nzValue]="(currentUser()?.lastLogin | date : 'shortTime') || '-'"
+          [nzTitle]="'Logon Time'"
+          [nzPrefix]="prefixLogin"
+        >
+        </nz-statistic>
+        <ng-template #prefixLogin><span nz-icon nzType="login"></span></ng-template>
+      </nz-card>
+
+      <nz-card>
+        <nz-statistic [nzValue]="'2h 15m'" [nzTitle]="'Duration'" [nzPrefix]="prefixClock"> </nz-statistic>
+        <ng-template #prefixClock><span nz-icon nzType="clock-circle"></span></ng-template>
+      </nz-card>
+    </div>
+  </div>
+
+  <!-- Timeline Side -->
+  <div class="timeline-section">
+    <nz-card [nzTitle]="'Session Events'" [nzBordered]="false" class="timeline-card">
+      <nz-list [nzDataSource]="sessionEvents()" [nzRenderItem]="item" [nzItemLayout]="'horizontal'">
+        <ng-template #item let-item>
+          <nz-list-item>
+            <nz-list-item-meta [nzTitle]="item.type | titlecase" [nzDescription]="item.message">
+              <nz-list-item-meta-avatar>
+                <div class="event-icon" [class]="item.status">
+                  <span nz-icon [nzType]="item.status === 'success' ? 'check-circle' : 'info-circle'"></span>
+                </div>
+              </nz-list-item-meta-avatar>
+            </nz-list-item-meta>
+            <div>{{ item.timestamp | date : 'HH:mm:ss' }}</div>
+          </nz-list-item>
+        </ng-template>
+      </nz-list>
+    </nz-card>
+  </div>
+</div>

@@ -1,0 +1,99 @@
+<div class="tokens-tab-container">
+  <!-- Access Token Card -->
+  <nz-card [nzTitle]="'Access Token'" [nzExtra]="accessExtra" class="token-card">
+    <ng-template #accessExtra>
+      <nz-tag [nzColor]="tokenStatus()?.valid ? 'success' : 'error'">
+        {{ tokenStatus()?.valid ? 'Valid' : 'Expired/Missing' }}
+      </nz-tag>
+    </ng-template>
+
+    <div class="token-details">
+      <div class="time-section">
+        <div class="label-row">
+          <span>Time Remaining</span>
+          <span class="time-value" [style.color]="statusColor()">
+            {{ tokenStatus()?.timeUntilExpiry | number : '1.0-0' }}ms
+            <!-- (Ideally format to MM:SS) -->
+          </span>
+        </div>
+        <nz-progress
+          [nzPercent]="timeLeftPercent()"
+          [nzShowInfo]="false"
+          [nzStrokeColor]="statusColor()"
+          [nzStatus]="tokenStatus()?.valid ? 'active' : 'exception'"
+        >
+        </nz-progress>
+        <div class="expiry-date">Expires: {{ tokenStatus()?.expiresAt | date : 'mediumTime' }}</div>
+      </div>
+
+      <div class="claims-section" *ngIf="tokenStatus()?.claims as claims">
+        <h4>Decoded Claims</h4>
+        <div class="claims-grid">
+          <div class="claim-item">
+            <span class="label">Email:</span>
+            <span class="value">{{ claims.email || '-' }}</span>
+          </div>
+          <div class="claim-item">
+            <span class="label">User ID:</span>
+            <span class="value">{{ claims.sub || '-' }}</span>
+          </div>
+          <div class="claim-item">
+            <span class="label">Roles:</span>
+            <span class="value">{{ claims.roles || '-' }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="actions-row">
+        <button nz-button nzType="default" (click)="copyToken()" nz-tooltip nzTooltipTitle="Copy JSON">
+          <span nz-icon nzType="copy"></span> Copy Data
+        </button>
+        <button nz-button nzType="default"><span nz-icon nzType="export"></span> Export</button>
+      </div>
+    </div>
+  </nz-card>
+
+  <!-- Refresh Token Card -->
+  <nz-card [nzTitle]="'Refresh Token'" [nzExtra]="refreshExtra" class="token-card">
+    <ng-template #refreshExtra>
+      <!-- Refresh token status is inferred usually, hard to know client side without checking -->
+      <nz-tag [nzColor]="'blue'">HttpOnly</nz-tag>
+    </ng-template>
+
+    <div class="token-details">
+      <div class="info-block">
+        <p>Refresh Token is stored in a secure <strong>HttpOnly</strong> cookie.</p>
+        <p>It cannot be accessed by JavaScript code.</p>
+      </div>
+
+      <div class="refresh-stats">
+        <div class="stat-row">
+          <span>Status Check:</span>
+          <nz-tag [nzColor]="'success'">Server Confimed</nz-tag>
+        </div>
+        <div class="stat-row">
+          <span>Last Used:</span>
+          <span>{{ tokenStatus()?.lastChecked | date : 'mediumTime' }}</span>
+        </div>
+      </div>
+
+      <div class="actions-row">
+        <button nz-button nzType="primary" (click)="forceRefresh()">
+          <span nz-icon nzType="sync"></span> Force Refresh
+        </button>
+        <button nz-button nzDanger><span nz-icon nzType="delete"></span> Revoke Token</button>
+      </div>
+    </div>
+  </nz-card>
+
+  <!-- Server Validation Section -->
+  <nz-card [nzTitle]="'Server Validation'" class="full-width-card">
+    <div class="validation-content">
+      <div class="validation-status">
+        <span nz-icon nzType="check-circle" [nzTheme]="'twotone'" [nzTwotoneColor]="'#52c41a'"></span>
+        <span>Client and Server states are consistent</span>
+      </div>
+      <button nz-button>Check Consistency</button>
+    </div>
+  </nz-card>
+</div>

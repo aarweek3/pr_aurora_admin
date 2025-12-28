@@ -39,6 +39,11 @@ export const routes: Routes = [
         path: 'test',
         loadChildren: () => import('./pages/test/test.routes').then((m) => m.TEST_ROUTES),
       },
+      {
+        path: 'auth-control',
+        loadChildren: () =>
+          import('./auth/auth-control/auth-control.routes').then((m) => m.AUTH_CONTROL_ROUTES),
+      },
       // TODO: Add feature modules (Phase 7)
       // { path: 'users', loadChildren: () => import('./pages/users/users.routes') },
       // { path: 'content', loadChildren: () => import('./pages/content/content.routes') },

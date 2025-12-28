@@ -1,0 +1,96 @@
+.session-tab-container {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 24px;
+
+  @media (max-width: 992px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.main-info {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.profile-card {
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 4px;
+
+    h3 {
+      margin: 0;
+      font-size: 18px;
+    }
+  }
+
+  .user-details {
+    .email {
+      color: #8c8c8c;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .roles-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+  }
+
+  .card-actions {
+    margin-top: 24px;
+    display: flex;
+    gap: 12px;
+    border-top: 1px solid #f0f0f0;
+    padding-top: 16px;
+  }
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+
+  nz-card {
+    border-radius: 8px;
+  }
+}
+
+.timeline-card {
+  border-radius: 8px;
+  height: 100%;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+
+  .event-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &.success {
+      background: #f6ffed;
+      color: #52c41a;
+    }
+
+    &.error {
+      background: #fff1f0;
+      color: #ff4d4f;
+    }
+
+    &.warning {
+      background: #fffbe6;
+      color: #faad14;
+    }
+  }
+}

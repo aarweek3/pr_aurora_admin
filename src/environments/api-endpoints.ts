@@ -193,11 +193,12 @@ export class ApiEndpoints {
 }
 
 // // Экспорт констант для хранения токенов
-// export const STORAGE_KEYS = {
-//   ACCESS_TOKEN: environment.tokenKey,
-//   REFRESH_TOKEN: environment.refreshTokenKey,
-//   USER_DATA: 'user_data',
-// };
+// Экспорт констант для хранения токенов
+export const STORAGE_KEYS = {
+  ACCESS_TOKEN: environment.auth.tokenKey,
+  REFRESH_TOKEN: environment.auth.refreshTokenKey,
+  USER_DATA: 'user_data',
+};
 
 // Экспорт настроек пагинации
 export const PAGINATION_DEFAULTS = {
