@@ -1,4 +1,12 @@
-import { effect, Injectable, Signal, signal, WritableSignal } from '@angular/core';
+import {
+  effect,
+  inject,
+  Injectable,
+  Injector,
+  Signal,
+  signal,
+  WritableSignal,
+} from '@angular/core';
 import { environment } from '@environments/environment';
 import {
   ClientInfo,
@@ -8,6 +16,12 @@ import {
   LoggerConsoleConfig,
 } from '../models/logger-console.model';
 import { SimpleLoggerConsole } from './logger-console.engine';
+
+export interface CommandHandler {
+  name: string;
+  description: string;
+  execute: (args: string[]) => string | Promise<string> | void;
+}
 
 @Injectable({
   providedIn: 'root',
@@ -27,11 +41,19 @@ export class LoggerConsoleService {
   private logsSignal: WritableSignal<LogEntry[]> = signal([]);
 
   /** Информация о клиенте */
-  private clientInfoSignal: WritableSignal<ClientInfo> = signal(this.detectClientInfo());
+  private clientInfoSignal = signal<ClientInfo>(this.detectClientInfo());
+  private injector = inject(Injector);
 
   /** Публичный сигнал для UI-компонентов (только для чтения) */
   readonly logs = this.logsSignal.asReadonly();
   readonly clientInfo = this.clientInfoSignal.asReadonly();
+
+  /** Реестр команд терминала */
+  private commands = new Map<string, CommandHandler>();
+
+  /** История команд для терминала */
+  private terminalHistorySignal = signal<string[]>([]);
+  readonly terminalHistory = this.terminalHistorySignal.asReadonly();
 
   constructor() {
     // Слушаем изменение размера окна для обновления viewport
@@ -43,6 +65,112 @@ export class LoggerConsoleService {
 
     // Инициализируем трекинг действий пользователя
     this.setupInteractionTracking();
+
+    // Регистрируем встроенные команды
+    this.registerDefaultCommands();
+  }
+
+  /** Регистрация новой команды */
+  registerCommand(handler: CommandHandler): void {
+    this.commands.set(handler.name.toLowerCase(), handler);
+  }
+
+  /** Выполнение команды из строки */
+  async executeCommand(commandLine: string): Promise<string> {
+    const parts = commandLine.trim().split(/\s+/);
+    const commandName = parts[0].toLowerCase();
+    const args = parts.slice(1);
+
+    // Добавляем в историю
+    this.terminalHistorySignal.update((h) => [...h, commandLine]);
+
+    const handler = this.commands.get(commandName);
+    if (!handler) {
+      return `Error: Command "${commandName}" not found. Type "help" for list of commands.`;
+    }
+
+    try {
+      const result = await handler.execute(args);
+      return result || `Command "${commandName}" executed successfully.`;
+    } catch (err: any) {
+      return `Error executing "${commandName}": ${err.message || err}`;
+    }
+  }
+
+  /** Получить список всех команд */
+  getCommandsList(): CommandHandler[] {
+    return Array.from(this.commands.values());
+  }
+
+  private registerDefaultCommands(): void {
+    this.registerCommand({
+      name: 'help',
+      description: 'Показать список всех доступных команд с описанием',
+      execute: () => {
+        const header = '=== Доступные команды ===\n';
+        const list = this.getCommandsList()
+          .map((c) => `${c.name.padEnd(15)} - ${c.description}`)
+          .join('\n');
+        return header + list;
+      },
+    });
+
+    this.registerCommand({
+      name: 'clear',
+      description: 'Очистить историю терминала и буфер логов консоли',
+      execute: () => {
+        this.clear();
+        return 'Очистка выполнена успешно.';
+      },
+    });
+
+    this.registerCommand({
+      name: 'echo',
+      description: 'Вывести текст в терминал (пример: echo привет)',
+      execute: (args) => args.join(' '),
+    });
+
+    this.registerCommand({
+      name: 'clear-cache',
+      description: 'Полная очистка LocalStorage и SessionStorage',
+      execute: () => {
+        localStorage.clear();
+        sessionStorage.clear();
+        return 'Кэш браузера (Storage) полностью очищен.';
+      },
+    });
+
+    this.registerCommand({
+      name: 'toggle-theme',
+      description: 'Переключить тему оформления (Светлая/Темная)',
+      execute: () => {
+        return 'Запрос на смену темы отправлен.';
+      },
+    });
+
+    this.registerCommand({
+      name: 'auth-status',
+      description: 'Состояние авторизации (кто залогинен, роли, токен)',
+      execute: () => {
+        // Ленивое получение AuthService через Injector для избежания круговой зависимости
+        const authService = this.injector.get(AuthService);
+        const user = authService.getCurrentUser();
+        const roles = authService.getUserRoles();
+        const isAuth = authService.isLoggedIn();
+
+        if (!isAuth) {
+          return 'Статус: Гость (Не авторизован)';
+        }
+
+        return [
+          `=== Информация об аккаунте ===`,
+          `Email: ${user?.email}`,
+          `Имя  : ${user?.fullName}`,
+          `Роли : ${roles.join(', ') || 'Нет ролей'}`,
+          `Статус: Авторизован ✅`,
+        ].join('\n');
+      },
+    });
   }
 
   /**
@@ -220,3 +348,6 @@ export class LoggerConsoleService {
     });
   }
 }
+
+// Импорт в конце файла для использования в Injector.get(AuthService)
+import { AuthService } from '../../../auth/services/auth.service';

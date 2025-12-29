@@ -4,12 +4,21 @@ import { FormsModule } from '@angular/forms';
 import { LogLevel } from '../../models/logger-console.model';
 import { LoggerConsoleService } from '../../services/logger-console.service';
 import { LoggerConsoleJsonViewerComponent } from '../logger-console-json-viewer/logger-console-json-viewer.component';
+import { LoggerStorageEditorComponent } from '../logger-storage-editor/logger-storage-editor.component';
+import { LoggerTerminalComponent } from '../logger-terminal/logger-terminal.component';
 import { NavigationTrailComponent } from '../navigation-trail/navigation-trail.component';
 
 @Component({
   selector: 'app-logger-console',
   standalone: true,
-  imports: [CommonModule, FormsModule, LoggerConsoleJsonViewerComponent, NavigationTrailComponent],
+  imports: [
+    CommonModule,
+    FormsModule,
+    LoggerConsoleJsonViewerComponent,
+    NavigationTrailComponent,
+    LoggerStorageEditorComponent,
+    LoggerTerminalComponent,
+  ],
   templateUrl: './logger-console.component.html',
   styleUrls: ['./logger-console.component.scss'],
   host: {
@@ -22,7 +31,7 @@ export class LoggerConsoleComponent {
   @ViewChild('scrollContainer') private scrollContainer!: ElementRef;
 
   /** Активная вкладка */
-  activeTab = signal<'logs' | 'navigation'>('logs');
+  activeTab = signal<'logs' | 'navigation' | 'storage' | 'terminal'>('logs');
 
   /** Тема консоли: true = темная, false = светлая */
   isDarkTheme = signal(true);
@@ -56,6 +65,9 @@ export class LoggerConsoleComponent {
 
   /** Флаг авто-скролла */
   autoScroll = true;
+
+  /** Флаг состояния копирования всех логов */
+  isCopied = signal(false);
 
   /** Отфильтрованный список логов */
   filteredLogs = computed(() => {
@@ -166,6 +178,75 @@ export class LoggerConsoleComponent {
   /** Копирование сообщения в буфер */
   copyMessage(message: string): void {
     navigator.clipboard.writeText(message);
+  }
+
+  /** Копирование всех отфильтрованных логов в текстовом формате */
+  copyAllLogs(): void {
+    const logs = this.filteredLogs();
+    const text = logs
+      .map((log) => {
+        const time = new Date(log.timestamp).toLocaleTimeString('ru-RU', {
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit',
+          fractionalSecondDigits: 3,
+        });
+        const level = log.level.toUpperCase().padEnd(5);
+        let content = '';
+
+        if (log.type === 'http' && log.httpDetails) {
+          content = `[HTTP] ${log.httpDetails.method} ${log.httpDetails.statusCode} ${log.httpDetails.url} (${log.httpDetails.duration}ms)`;
+        } else if (log.type === 'interaction' && log.interactionDetails) {
+          content = `[ACTION] [${log.prefix}] ${log.interactionDetails.element}: ${log.interactionDetails.text}`;
+        } else if (log.type === 'state' && log.stateDetails) {
+          const oldVal = JSON.stringify(log.stateDetails.oldValue);
+          const newVal = JSON.stringify(log.stateDetails.newValue);
+          content = `[STATE] [${log.prefix}] ${log.stateDetails.name}: ${oldVal} -> ${newVal}`;
+        } else {
+          content = (log.prefix ? `[${log.prefix}] ` : '') + log.message;
+        }
+
+        const dataStr =
+          log.data && log.data.length > 0
+            ? '\n  Data: ' + JSON.stringify(log.data, null, 2).replace(/\n/g, '\n  ')
+            : '';
+
+        return `[${time}] ${level} ${content}${dataStr}`;
+      })
+      .join('\n');
+
+    navigator.clipboard.writeText(text);
+
+    // Устанавливаем статус "Скопировано" на 5 секунд
+    this.isCopied.set(true);
+    setTimeout(() => {
+      this.isCopied.set(false);
+    }, 5000);
+  }
+
+  /** Копирование HTTP запроса как cURL */
+  copyAsCurl(log: any): void {
+    const details = log.httpDetails;
+    if (!details) return;
+
+    let curl = `curl -X ${details.method} '${details.url}'`;
+
+    // Добавляем заголовки
+    if (details.headers) {
+      Object.entries(details.headers).forEach(([key, value]) => {
+        curl += ` \\\n  -H '${key}: ${value}'`;
+      });
+    }
+
+    // Ищем тело запроса в data
+    const requestBodyItem = log.data?.find((d: any) => d && d['Request Body']);
+    if (requestBodyItem) {
+      const body = requestBodyItem['Request Body'];
+      const bodyStr = typeof body === 'string' ? body : JSON.stringify(body);
+      curl += ` \\\n  --data-raw '${bodyStr}'`;
+    }
+
+    navigator.clipboard.writeText(curl);
   }
 
   /** Обработка скролла пользователем (для отключения авто-скролла) */

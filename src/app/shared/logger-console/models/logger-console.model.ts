@@ -17,6 +17,7 @@ export interface HttpLogDetails {
   statusCode: number;
   statusText: string;
   duration: number;
+  headers?: Record<string, string>;
 }
 
 /** Детали взаимодействия пользователя */

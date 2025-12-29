@@ -12,88 +12,87 @@ export class ApiEndpoints {
   // Role
   // Добавьте в ApiEndpoints класс:
   static readonly ROLES = {
-    BASE: `${this.BASE_URL}/api/roles`,
-    BY_ID: (id: string) => `${this.BASE_URL}/api/roles/${id}`,
-    CREATE: `${this.BASE_URL}/api/roles`,
-    UPDATE: (id: string) => `${this.BASE_URL}/api/roles/${id}`,
-    DELETE: (id: string) => `${this.BASE_URL}/api/roles/${id}`,
-    USER_ROLES: (userId: string) => `${this.BASE_URL}/api/roles/user/${userId}`,
-    ASSIGN: `${this.BASE_URL}/api/roles/assign`,
-    USERS_IN_ROLE: (roleName: string) => `${this.BASE_URL}/api/roles/${roleName}/users`,
+    BASE: `${this.BASE_URL}/roles`,
+    BY_ID: (id: string) => `${this.BASE_URL}/roles/${id}`,
+    CREATE: `${this.BASE_URL}/roles`,
+    UPDATE: (id: string) => `${this.BASE_URL}/roles/${id}`,
+    DELETE: (id: string) => `${this.BASE_URL}/roles/${id}`,
+    USER_ROLES: (userId: string) => `${this.BASE_URL}/roles/user/${userId}`,
+    ASSIGN: `${this.BASE_URL}/roles/assign`,
+    USERS_IN_ROLE: (roleName: string) => `${this.BASE_URL}/roles/${roleName}/users`,
   };
 
   // Auth endpoints
   static readonly AUTH = {
-    BASE: `${this.BASE_URL}/api/Auth`,
-    REGISTER: `${this.BASE_URL}/api/Auth/register`,
-    LOGIN: `${this.BASE_URL}/api/Auth/login`,
-    LOGOUT: `${this.BASE_URL}/api/Auth/logout`,
-    REFRESH: `${this.BASE_URL}/api/Auth/refresh`,
-    CHANGE_PASSWORD: `${this.BASE_URL}/api/Auth/change-password`,
-    PROFILE: `${this.BASE_URL}/api/Auth/profile`,
+    BASE: `${this.BASE_URL}/Auth`,
+    REGISTER: `${this.BASE_URL}/Auth/register`,
+    LOGIN: `${this.BASE_URL}/Auth/login`,
+    LOGOUT: `${this.BASE_URL}/Auth/logout`,
+    REFRESH: `${this.BASE_URL}/Auth/refresh`,
+    CHANGE_PASSWORD: `${this.BASE_URL}/Auth/change-password`,
+    PROFILE: `${this.BASE_URL}/Auth/profile`,
   };
 
   // Password endpoints (отдельный контроллер)
   static readonly PASSWORD = {
-    FORGOT: `${this.BASE_URL}/api/password/forgot-password`,
-    RESET: `${this.BASE_URL}/api/password/reset-password`,
+    FORGOT: `${this.BASE_URL}/password/forgot-password`,
+    RESET: `${this.BASE_URL}/password/reset-password`,
   };
 
   // Users endpoints
   static readonly USERS = {
-    BASE: `${this.BASE_URL}/api/users`,
-    BY_ID: (id: string) => `${this.BASE_URL}/api/users/${id}`,
-    BY_EMAIL: (email: string) => `${this.BASE_URL}/api/users/by-email/${email}`,
-    ACTIVATE: (id: string) => `${this.BASE_URL}/api/users/${id}/activate`,
-    DEACTIVATE: (id: string) => `${this.BASE_URL}/api/users/${id}/deactivate`,
-    STATISTICS: `${this.BASE_URL}/api/users/statistics`,
-    SEARCH: `${this.BASE_URL}/api/users/search`,
+    BASE: `${this.BASE_URL}/users`,
+    BY_ID: (id: string) => `${this.BASE_URL}/users/${id}`,
+    BY_EMAIL: (email: string) => `${this.BASE_URL}/users/by-email/${email}`,
+    ACTIVATE: (id: string) => `${this.BASE_URL}/users/${id}/activate`,
+    DEACTIVATE: (id: string) => `${this.BASE_URL}/users/${id}/deactivate`,
+    STATISTICS: `${this.BASE_URL}/users/statistics`,
+    SEARCH: `${this.BASE_URL}/users/search`,
   };
 
   // Sessions endpoints
   static readonly SESSIONS = {
-    BASE: `${this.BASE_URL}/api/sessions`,
-    BY_TOKEN: (token: string) => `${this.BASE_URL}/api/sessions/${token}`,
-    REVOKE: (id: number) => `${this.BASE_URL}/api/sessions/${id}/revoke`,
-    REVOKE_ALL: `${this.BASE_URL}/api/sessions/revoke-all`,
-    UPDATE: (id: number) => `${this.BASE_URL}/api/sessions/${id}`,
-    CLEANUP: `${this.BASE_URL}/api/sessions/cleanup`,
-    VALIDATE: (token: string) => `${this.BASE_URL}/api/sessions/${token}/validate`,
+    BASE: `${this.BASE_URL}/sessions`,
+    BY_TOKEN: (token: string) => `${this.BASE_URL}/sessions/${token}`,
+    REVOKE: (id: number) => `${this.BASE_URL}/sessions/${id}/revoke`,
+    REVOKE_ALL: `${this.BASE_URL}/sessions/revoke-all`,
+    UPDATE: (id: number) => `${this.BASE_URL}/sessions/${id}`,
+    CLEANUP: `${this.BASE_URL}/sessions/cleanup`,
+    VALIDATE: (token: string) => `${this.BASE_URL}/sessions/${token}/validate`,
   };
 
   // Activity logs endpoints
   static readonly ACTIVITY_LOGS = {
-    BASE: `${this.BASE_URL}/api/activitylogs`,
-    BY_ID: (id: number) => `${this.BASE_URL}/api/activitylogs/${id}`,
-    BY_USER: (userId: string) => `${this.BASE_URL}/api/activitylogs/user/${userId}`,
-    MY: `${this.BASE_URL}/api/activitylogs/my`,
-    RECENT: `${this.BASE_URL}/api/activitylogs/recent`,
-    STATISTICS: `${this.BASE_URL}/api/activitylogs/statistics`,
-    CLEANUP: `${this.BASE_URL}/api/activitylogs/cleanup`,
+    BASE: `${this.BASE_URL}/activitylogs`,
+    BY_ID: (id: number) => `${this.BASE_URL}/activitylogs/${id}`,
+    BY_USER: (userId: string) => `${this.BASE_URL}/activitylogs/user/${userId}`,
+    MY: `${this.BASE_URL}/activitylogs/my`,
+    RECENT: `${this.BASE_URL}/activitylogs/recent`,
+    STATISTICS: `${this.BASE_URL}/activitylogs/statistics`,
+    CLEANUP: `${this.BASE_URL}/activitylogs/cleanup`,
   };
 
   // Admin endpoints
   static readonly ADMIN = {
-    USERS: `${this.BASE_URL}/api/admin-panel/users`,
-    USER_BY_ID: (id: string) => `${this.BASE_URL}/api/admin-panel/users/${id}`,
-    USER_ACTIVATE: (id: string) => `${this.BASE_URL}/api/admin-panel/users/${id}/activate`,
-    USER_DEACTIVATE: (id: string) => `${this.BASE_URL}/api/admin-panel/users/${id}/deactivate`,
+    USERS: `${this.BASE_URL}/admin-panel/users`,
+    USER_BY_ID: (id: string) => `${this.BASE_URL}/admin-panel/users/${id}`,
+    USER_ACTIVATE: (id: string) => `${this.BASE_URL}/admin-panel/users/${id}/activate`,
+    USER_DEACTIVATE: (id: string) => `${this.BASE_URL}/admin-panel/users/${id}/deactivate`,
     USER_CHANGE_PASSWORD: (id: string) =>
-      `${this.BASE_URL}/api/admin-panel/users/${id}/change-password`,
-    USER_SESSIONS: (id: string) => `${this.BASE_URL}/api/admin-panel/users/${id}/sessions`,
+      `${this.BASE_URL}/admin-panel/users/${id}/change-password`,
+    USER_SESSIONS: (id: string) => `${this.BASE_URL}/admin-panel/users/${id}/sessions`,
     USER_SESSIONS_REVOKE_ALL: (id: string) =>
-      `${this.BASE_URL}/api/admin-panel/users/${id}/sessions/revoke-all`,
-    USER_ACTIVITY_LOGS: (id: string) =>
-      `${this.BASE_URL}/api/admin-panel/users/${id}/activity-logs`,
-    SESSIONS: `${this.BASE_URL}/api/admin-panel/sessions`,
-    SESSION_REVOKE: (id: number) => `${this.BASE_URL}/api/admin-panel/sessions/${id}/revoke`,
-    ACTIVITY_LOGS: `${this.BASE_URL}/api/admin-panel/activity-logs`,
-    STATISTICS: `${this.BASE_URL}/api/admin-panel/statistics`,
+      `${this.BASE_URL}/admin-panel/users/${id}/sessions/revoke-all`,
+    USER_ACTIVITY_LOGS: (id: string) => `${this.BASE_URL}/admin-panel/users/${id}/activity-logs`,
+    SESSIONS: `${this.BASE_URL}/admin-panel/sessions`,
+    SESSION_REVOKE: (id: number) => `${this.BASE_URL}/admin-panel/sessions/${id}/revoke`,
+    ACTIVITY_LOGS: `${this.BASE_URL}/admin-panel/activity-logs`,
+    STATISTICS: `${this.BASE_URL}/admin-panel/statistics`,
   };
 
   // Images endpoints
   static readonly IMAGES = {
-    UPLOAD_SIMPLE: `${this.BASE_URL}/api/images/upload-simple`,
+    UPLOAD_SIMPLE: `${this.BASE_URL}/images/upload-simple`,
     UPLOADS_PATH: `${this.BASE_URL}/uploads`,
     GET_BY_PATH: (relativePath: string) => `${this.BASE_URL}/uploads/${relativePath}`,
   };

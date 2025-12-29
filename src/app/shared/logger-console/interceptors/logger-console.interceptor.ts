@@ -54,6 +54,7 @@ export class LoggerInterceptor implements HttpInterceptor {
         statusCode: res.status,
         statusText: res.statusText,
         duration: duration,
+        headers: this.extractHeaders(req),
       },
       data: [
         req.body ? { 'Request Body': req.body } : null,
@@ -78,6 +79,7 @@ export class LoggerInterceptor implements HttpInterceptor {
         statusCode: error.status,
         statusText: error.statusText,
         duration: duration,
+        headers: this.extractHeaders(req),
       },
       data: [
         req.body ? { 'Request Body': req.body } : null,
@@ -85,5 +87,14 @@ export class LoggerInterceptor implements HttpInterceptor {
       ].filter((x): x is any => x !== null),
     };
     this.loggerService.addEntry(entry);
+  }
+
+  private extractHeaders(req: HttpRequest<any>): Record<string, string> {
+    const headers: Record<string, string> = {};
+    req.headers.keys().forEach((key) => {
+      const value = req.headers.get(key);
+      if (value) headers[key] = value;
+    });
+    return headers;
   }
 }

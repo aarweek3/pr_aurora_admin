@@ -47,9 +47,11 @@ export function HttpErrorInterceptor(
         errorResponse = createEnhancedErrorResponse(httpError, req);
       }
 
-      // Не показываем глобальное сообщение об ошибке для иконок и HealthCheck
+      // Не показываем глобальное сообщение об ошибке для иконок, HealthCheck и диагностики токенов
       const isIconRequest = req.url.endsWith('.svg') || req.url.includes('assets/icons');
-      if (!isIconRequest && !isHealthCheck) {
+      const isDebugToken = req.url.includes('debug-token');
+
+      if (!isIconRequest && !isHealthCheck && !isDebugToken) {
         errorHandlingService.handleError(errorResponse);
       }
 

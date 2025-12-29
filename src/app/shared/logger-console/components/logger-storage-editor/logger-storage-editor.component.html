@@ -1,0 +1,62 @@
+<div class="storage-editor">
+  <div class="storage-toolbar">
+    <div class="type-selector">
+      <button class="type-btn" [class.active]="activeType() === 'local'" (click)="setType('local')">📍 Local</button>
+      <button class="type-btn" [class.active]="activeType() === 'session'" (click)="setType('session')">
+        ⏱️ Session
+      </button>
+      <button class="type-btn" [class.active]="activeType() === 'cookie'" (click)="setType('cookie')">
+        🍪 Cookies
+      </button>
+    </div>
+
+    <div class="search-box">
+      <input
+        type="text"
+        placeholder="Search keys or values..."
+        [ngModel]="searchQuery()"
+        (ngModelChange)="searchQuery.set($event)"
+      />
+    </div>
+
+    <div class="actions">
+      <button class="action-btn" (click)="refresh()" title="Refresh">🔄</button>
+      <button class="action-btn danger" (click)="clearAll()" title="Clear All">🗑️</button>
+    </div>
+  </div>
+
+  <div class="storage-table-container">
+    <table class="storage-table">
+      <thead>
+        <tr>
+          <th>Key</th>
+          <th>Value</th>
+          <th class="actions-col">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (item of filteredItems; track item.key) {
+        <tr>
+          <td class="key-cell" [title]="item.key">{{ item.key }}</td>
+          <td class="value-cell">
+            <input
+              #valInput
+              type="text"
+              [value]="item.value"
+              (blur)="saveItem(item, valInput.value)"
+              (keydown.enter)="saveItem(item, valInput.value)"
+            />
+          </td>
+          <td class="actions-col">
+            <button class="delete-btn" (click)="deleteItem(item)">×</button>
+          </td>
+        </tr>
+        } @empty {
+        <tr>
+          <td colspan="3" class="empty-msg">No items found in {{ activeType() }} storage</td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>

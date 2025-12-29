@@ -216,6 +216,22 @@
       &.online {
         background: #098658;
         box-shadow: 0 0 4px #098658;
+        animation: pulse-green 2s infinite;
+      }
+    }
+
+    @keyframes pulse-green {
+      0% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(9, 134, 88, 0.7);
+      }
+      70% {
+        transform: scale(1);
+        box-shadow: 0 0 0 6px rgba(9, 134, 88, 0);
+      }
+      100% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(9, 134, 88, 0);
       }
     }
 
@@ -365,6 +381,17 @@
       /* Keep generic danger hover red-ish */
     }
   }
+
+  &.copied {
+    background: #098658 !important; /* Success green */
+    color: white !important;
+    border-color: #098658 !important;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background: #076d48 !important;
+    }
+  }
 }
 
 /* Viewport */
@@ -478,6 +505,24 @@
 .copy-entry-btn:hover {
   opacity: 1 !important;
   transform: scale(1.1);
+}
+
+.curl-btn {
+  font-family: inherit;
+  font-size: 10px;
+  background: var(--lc-bg-panel);
+  border: 1px solid var(--lc-border-light);
+  color: var(--lc-text-muted);
+  border-radius: 3px;
+  padding: 0 4px;
+  margin-right: 4px;
+  text-transform: none;
+
+  &:hover {
+    background: var(--lc-bg-hover);
+    color: var(--lc-color-info);
+    border-color: var(--lc-color-info);
+  }
 }
 
 /* HTTP Specific Styles */
@@ -766,6 +811,32 @@
   flex-direction: column;
 
   app-navigation-trail {
+    flex: 1;
+    overflow: hidden;
+    display: block;
+  }
+}
+
+.storage-tab-content {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+
+  app-logger-storage-editor {
+    flex: 1;
+    overflow: hidden;
+    display: block;
+  }
+}
+
+.terminal-tab-content {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+
+  app-logger-terminal {
     flex: 1;
     overflow: hidden;
     display: block;

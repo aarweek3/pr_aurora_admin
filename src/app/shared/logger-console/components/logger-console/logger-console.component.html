@@ -12,6 +12,12 @@
           <button class="tab-btn" [class.active]="activeTab() === 'navigation'" (click)="activeTab.set('navigation')">
             🧭 Navigation
           </button>
+          <button class="tab-btn" [class.active]="activeTab() === 'storage'" (click)="activeTab.set('storage')">
+            📦 Storage
+          </button>
+          <button class="tab-btn" [class.active]="activeTab() === 'terminal'" (click)="activeTab.set('terminal')">
+            💻 Terminal
+          </button>
         </div>
 
         @if (activeTab() === 'logs') {
@@ -37,6 +43,9 @@
           [title]="isDarkTheme() ? 'Switch to Light Mode' : 'Switch to Dark Mode'"
         >
           {{ isDarkTheme() ? '☀️' : '🌙' }}
+        </button>
+        <button class="action-btn" [class.copied]="isCopied()" (click)="copyAllLogs()" title="Copy all visible logs">
+          {{ isCopied() ? '✅ Copied' : '📋 Copy All' }}
         </button>
         <button class="action-btn" (click)="export()" title="Download JSON">📥 Export</button>
         <button class="action-btn danger" (click)="clear()" title="Clear logs">🗑️ Clear</button>
@@ -161,8 +170,9 @@
           <!-- STANDARD LOG LAYOUT -->
           <span class="log-prefix">{{ log.prefix }}</span>
           <span class="log-message">{{ log.message }}</span>
+          } @if (log.type === 'http') {
+          <button class="copy-entry-btn curl-btn" (click)="copyAsCurl(log)" title="Copy as cURL">cURL</button>
           }
-
           <button class="copy-entry-btn" (click)="copyMessage(log.message)" title="Copy message">📋</button>
 
           <div class="log-time">
@@ -236,6 +246,33 @@
           </ul>
         </section>
 
+        <section>
+          <h4>🗄️ Storage Editor</h4>
+          <p>
+            Просмотр и редактирование <strong>LocalStorage</strong>, <strong>SessionStorage</strong> и
+            <strong>Cookies</strong> прямо в консоли.
+          </p>
+          <p>
+            Вкладка <strong>📦 Storage</strong>. Значения можно редактировать на лету — просто измените текст и нажмите
+            Enter или кликните вне поля.
+          </p>
+        </section>
+
+        <section>
+          <h4>⌨️ Terminal (CLI)</h4>
+          <p>Выполнение команд внутри приложения. Вкладка <strong>💻 Terminal</strong>.</p>
+          <p>Примеры: <code>clear-cache</code>, <code>help</code>, <code>echo hello</code>.</p>
+        </section>
+
+        <section>
+          <h4>🧭 Navigation Trail</h4>
+          <p>Визуализация пути переходов пользователя по страницам (роутам).</p>
+          <p>
+            Вкладка <strong>🧭 Navigation</strong> показывает историю переходов с параметрами и временем пребывания на
+            странице.
+          </p>
+        </section>
+
         <section class="help-sandbox-info">
           <h4>🏗️ Где проверить? (Песочница)</h4>
           <p>Страница «Песочницы» для проверки всех функций доступна в боковом меню:</p>
@@ -254,6 +291,16 @@
   <!-- Navigation Trail Component -->
   <div class="navigation-tab-content">
     <app-navigation-trail />
+  </div>
+  } @else if (activeTab() === 'storage') {
+  <!-- Storage Editor Component -->
+  <div class="storage-tab-content">
+    <app-logger-storage-editor />
+  </div>
+  } @else if (activeTab() === 'terminal') {
+  <!-- Terminal Component -->
+  <div class="terminal-tab-content">
+    <app-logger-terminal />
   </div>
   }
 </div>

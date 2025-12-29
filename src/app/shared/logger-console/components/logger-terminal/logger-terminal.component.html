@@ -1,0 +1,23 @@
+<div class="terminal-container" (click)="focusInput()">
+  <div class="terminal-body" #terminalBody>
+    @for (line of lines(); track $index) {
+    <div class="terminal-line" [ngClass]="['type-' + line.type]">
+      <span class="line-time">[{{ line.timestamp | date : 'HH:mm:ss' }}]</span>
+      <pre class="line-content">{{ line.text }}</pre>
+    </div>
+    }
+  </div>
+  <div class="terminal-input-wrapper">
+    <span class="prompt">aurora&#64;admin:~$</span>
+    <input
+      #cmdInput
+      type="text"
+      class="cmd-input"
+      [(ngModel)]="currentCommand"
+      (keydown.enter)="runCommand()"
+      placeholder="Wait for command..."
+      autocomplete="off"
+      spellcheck="false"
+    />
+  </div>
+</div>

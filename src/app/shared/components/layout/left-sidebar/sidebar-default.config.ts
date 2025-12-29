@@ -14,6 +14,13 @@ export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
       title: 'Администрирование',
       items: [
         {
+          id: 'admin-login',
+          icon: 'login',
+          label: 'Вход в систему',
+          type: 'link',
+          route: '/auth/login',
+        },
+        {
           id: 'admin-users',
           icon: 'team',
           label: 'Пользователи',
@@ -188,7 +195,7 @@ export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
               id: 'logger-console',
               label: 'Logger Console 🛠️',
               route: '/ui-demo/logger-console',
-              icon: 'terminal',
+              icon: 'code',
             },
           ],
         },

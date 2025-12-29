@@ -333,8 +333,13 @@ export class ErrorHandlingService implements OnDestroy {
   }
 
   private handleAutoRedirect(status: number): void {
+    // Не делаем редирект, если мы уже на странице авторизации
+    if (this.router.url.startsWith('/auth/')) {
+      return;
+    }
+
     const redirects: Record<number, string> = {
-      401: '/login',
+      401: '/auth/login',
       404: '/not-found',
       500: '/',
     };
