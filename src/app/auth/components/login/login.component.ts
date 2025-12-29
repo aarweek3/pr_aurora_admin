@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit, effect, inject, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { ApiEndpoints } from '@environments/api-endpoints';
 import { LoggerConsoleService } from '@shared/logger-console/services/logger-console.service';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzCardModule } from 'ng-zorro-antd/card';
@@ -83,6 +84,22 @@ import { AuthService } from '../../services/auth.service';
             <nz-form-control>
               <button nz-button nzType="primary" nzBlock [nzLoading]="isLoading()" type="submit">
                 Войти
+              </button>
+            </nz-form-control>
+          </nz-form-item>
+
+          <nz-form-item>
+            <nz-form-control>
+              <button
+                nz-button
+                nzType="default"
+                nzBlock
+                (click)="loginWithGoogle()"
+                type="button"
+                style="display: flex; align-items: center; justify-content: center; gap: 8px;"
+              >
+                <span nz-icon nzType="google" nzTheme="outline"></span>
+                Войти через Google
               </button>
             </nz-form-control>
           </nz-form-item>
@@ -174,10 +191,11 @@ export class LoginComponent implements OnInit {
 
   onSubmit(): void {
     if (!this.loginForm.valid || this.isLoading()) {
+      // ... (existing code)
       this.markFormGroupTouched();
       return;
     }
-
+    // ... (rest of onSubmit)
     this.isLoading.set(true);
     const formValue = this.loginForm.getRawValue();
 
@@ -205,6 +223,11 @@ export class LoginComponent implements OnInit {
           );
         },
       });
+  }
+
+  loginWithGoogle(): void {
+    this.logger.info('Запуск входа через Google');
+    window.location.href = ApiEndpoints.AUTH.EXTERNAL_LOGIN('Google');
   }
 
   private handleLoginSuccess(): void {

@@ -230,6 +230,30 @@ export class AuthService {
     this.tokenService.clearStatus();
   }
 
+  /**
+   * Установка сессии из внешних источников (например, после OAuth)
+   */
+  setSession(accessToken: string, refreshToken: string): void {
+    this.logger.debug('Setting session from external source');
+
+    // Пытаемся установить куки (на случай, если сервер этого не сделал или они не HttpOnly)
+    document.cookie = `accessToken=${accessToken}; path=/; max-age=3600; SameSite=Lax`;
+    document.cookie = `refreshToken=${refreshToken}; path=/; max-age=604800; SameSite=Lax`; // 7 дней
+
+    // Проверяем валидность сессии, запрашивая профиль
+    this.getProfile().subscribe({
+      next: (response) => {
+        if (response.success && response.data) {
+          this.handleAuthSuccess(response.data);
+          this.logger.info('External session validated successfully');
+        }
+      },
+      error: (error) => {
+        this.logger.warn('Failed to validate external session', error);
+      },
+    });
+  }
+
   // === PRIVATE METHODS ===
 
   /**

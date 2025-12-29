@@ -111,6 +111,9 @@ import { UserModalComponent } from './user-modal.component';
               <button nz-button nzType="link" nzSize="small" (click)="viewUser(user)">
                 <span nz-icon nzType="eye"></span>
               </button>
+              <button nz-button nzType="link" nzSize="small" (click)="editUser(user)">
+                <span nz-icon nzType="edit"></span>
+              </button>
               <button nz-button nzType="link" nzSize="small" (click)="manageUserRoles(user)">
                 <span nz-icon nzType="team"></span>
               </button>
@@ -273,6 +276,16 @@ export class AdminUsersComponent implements OnInit, OnDestroy {
       lastName: user.fullName.split(' ').slice(1).join(' ') || '',
     };
     this.userModal.show('view', userDetail);
+  }
+
+  editUser(user: any): void {
+    this.logger.info('AdminUsersComponent', 'Редактирование пользователя', { id: user.id });
+    const userDetail: UserDetailDto = {
+      ...user,
+      firstName: user.firstName || user.fullName?.split(' ')[0] || '',
+      lastName: user.lastName || user.fullName?.split(' ').slice(1).join(' ') || '',
+    };
+    this.userModal.show('edit', userDetail);
   }
 
   manageUserRoles(user: any): void {

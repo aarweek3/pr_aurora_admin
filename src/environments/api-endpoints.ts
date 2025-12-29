@@ -31,6 +31,7 @@ export class ApiEndpoints {
     REFRESH: `${this.BASE_URL}/Auth/refresh`,
     CHANGE_PASSWORD: `${this.BASE_URL}/Auth/change-password`,
     PROFILE: `${this.BASE_URL}/Auth/profile`,
+    EXTERNAL_LOGIN: (provider: string) => `${this.BASE_URL}/auth/external/login/${provider}`,
   };
 
   // Password endpoints (отдельный контроллер)

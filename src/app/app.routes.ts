@@ -13,6 +13,10 @@ export const routes: Routes = [
     redirectTo: 'dashboard', // Or 'auth/login'
     pathMatch: 'full',
   },
+  {
+    path: 'login/external-callback',
+    redirectTo: 'auth/external-callback',
+  },
   // Admin Layout - Phase 4 Complete
   {
     path: '',

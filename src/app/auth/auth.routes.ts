@@ -34,4 +34,12 @@ export const authRoutes: Routes = [
       ),
     title: 'Сброс пароля',
   },
+  {
+    path: 'external-callback',
+    loadComponent: () =>
+      import('./components/external-login-callback/external-login-callback.component').then(
+        (m) => m.ExternalLoginCallbackComponent,
+      ),
+    title: 'Вход...',
+  },
 ];
