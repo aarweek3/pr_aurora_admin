@@ -236,11 +236,22 @@ export class AuthService {
   setSession(accessToken: string, refreshToken: string): void {
     this.logger.debug('Setting session from external source');
 
-    // Пытаемся установить куки (на случай, если сервер этого не сделал или они не HttpOnly)
-    document.cookie = `accessToken=${accessToken}; path=/; max-age=3600; SameSite=Lax`;
-    document.cookie = `refreshToken=${refreshToken}; path=/; max-age=604800; SameSite=Lax`; // 7 дней
+    // 1. Сохраняем в localStorage (для немедленного доступа)
+    localStorage.setItem('accessToken', accessToken);
+    localStorage.setItem('refreshToken', refreshToken);
 
-    // Проверяем валидность сессии, запрашивая профиль
+    // 2. Очищаем старые cookies
+    document.cookie = 'accessToken=; path=/; max-age=0';
+    document.cookie = 'refreshToken=; path=/; max-age=0';
+
+    // 3. Устанавливаем новые cookies (как резервное хранилище)
+    const isSecure = window.location.protocol === 'https:';
+    const secureFlag = isSecure ? '; Secure' : '';
+
+    document.cookie = `accessToken=${accessToken}; path=/; max-age=3600; SameSite=Lax${secureFlag}`;
+    document.cookie = `refreshToken=${refreshToken}; path=/; max-age=2592000; SameSite=Lax${secureFlag}`; // 30 дней
+
+    // 4. Проверяем валидность сессии (токен уже в localStorage, будет использован сразу)
     this.getProfile().subscribe({
       next: (response) => {
         if (response.success && response.data) {
@@ -250,6 +261,9 @@ export class AuthService {
       },
       error: (error) => {
         this.logger.warn('Failed to validate external session', error);
+        // Очищаем некорректные токены
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('refreshToken');
       },
     });
   }

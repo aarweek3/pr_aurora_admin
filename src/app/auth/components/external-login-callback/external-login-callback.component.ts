@@ -125,7 +125,12 @@ export class ExternalLoginCallbackComponent implements OnInit {
   }
 
   private handleSuccess(token: string, refreshToken: string | null): void {
-    this.logger.info('Токен получен, сохранение сессии');
+    this.logger.info('Токен получен, сохранение сессии', {
+      tokenLength: token?.length,
+      refreshLength: refreshToken?.length,
+      rawRefresh: refreshToken,
+      rawTokenStart: token?.substring(0, 10),
+    });
 
     // Сохраняем токены
     this.authService.setSession(token, refreshToken || '');

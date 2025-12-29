@@ -28,6 +28,30 @@
             <span nz-icon nzType="mail"></span>
             {{ currentUser()?.email || 'No email' }}
           </p>
+
+          <!-- Authentication Provider -->
+          <p class="auth-provider" *ngIf="currentUser()">
+            <span nz-icon nzType="login"></span>
+            <span *ngIf="!currentUser()?.isExternalAccount" class="provider-badge email-provider">
+              <span nz-icon nzType="mail"></span>
+              Email/Password
+            </span>
+            <span
+              *ngIf="currentUser()?.isExternalAccount && currentUser()?.externalProvider === 'Google'"
+              class="provider-badge google-provider"
+            >
+              <span nz-icon nzType="google"></span>
+              Google
+            </span>
+            <span
+              *ngIf="currentUser()?.isExternalAccount && currentUser()?.externalProvider === 'Facebook'"
+              class="provider-badge facebook-provider"
+            >
+              <span nz-icon nzType="facebook" nzTheme="fill"></span>
+              Facebook
+            </span>
+          </p>
+
           <div class="roles-list">
             <nz-tag *ngFor="let role of userRoles()" [nzColor]="'blue'">
               {{ role }}

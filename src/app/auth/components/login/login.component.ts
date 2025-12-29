@@ -106,6 +106,22 @@ import { AuthService } from '../../services/auth.service';
 
           <nz-form-item>
             <nz-form-control>
+              <button
+                nz-button
+                nzType="default"
+                nzBlock
+                (click)="loginWithFacebook()"
+                type="button"
+                style="display: flex; align-items: center; justify-content: center; gap: 8px;"
+              >
+                <span nz-icon nzType="facebook" nzTheme="fill" style="color: #1877f2;"></span>
+                Войти через Facebook
+              </button>
+            </nz-form-control>
+          </nz-form-item>
+
+          <nz-form-item>
+            <nz-form-control>
               <div style="text-align: center;">
                 Нет аккаунта?
                 <a [routerLink]="['/auth/register']">Зарегистрироваться</a>
@@ -228,6 +244,11 @@ export class LoginComponent implements OnInit {
   loginWithGoogle(): void {
     this.logger.info('Запуск входа через Google');
     window.location.href = ApiEndpoints.AUTH.EXTERNAL_LOGIN('Google');
+  }
+
+  loginWithFacebook(): void {
+    this.logger.info('Запуск входа через Facebook');
+    window.location.href = ApiEndpoints.AUTH.EXTERNAL_LOGIN('Facebook');
   }
 
   private handleLoginSuccess(): void {

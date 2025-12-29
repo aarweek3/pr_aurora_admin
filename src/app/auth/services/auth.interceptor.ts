@@ -26,12 +26,22 @@ export const authInterceptor: HttpInterceptorFn = (
   const authService = inject(AuthService);
   const isDevMode = !environment.production;
 
-  // Клонируем запрос с установкой withCredentials: true
+  // Получаем токен из localStorage (приоритет) или cookies
+  const token = localStorage.getItem('accessToken');
+
+  // Клонируем запрос с установкой withCredentials: true и Authorization header
+  const headers: Record<string, string> = {
+    'Content-Type': req.headers.get('Content-Type') || 'application/json',
+  };
+
+  // Добавляем Authorization header если токен есть
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+
   const authReq = req.clone({
     withCredentials: true,
-    setHeaders: {
-      'Content-Type': req.headers.get('Content-Type') || 'application/json',
-    },
+    setHeaders: headers,
   });
 
   // Логируем только в development режиме

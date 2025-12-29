@@ -58,6 +58,8 @@ export interface UserProfileDto {
   createdAt: string;
   lastLogin?: string;
   roles?: string[];
+  isExternalAccount?: boolean;
+  externalProvider?: string;
 }
 
 export interface ExternalLoginDto {
