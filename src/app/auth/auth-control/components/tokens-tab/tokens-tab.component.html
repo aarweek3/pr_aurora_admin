@@ -1,4 +1,17 @@
 <div class="tokens-tab-container">
+  <!-- System Health Report -->
+  <div class="health-alert full-width-card" *ngIf="systemHealth() as health">
+    <nz-alert [nzType]="health.level" [nzMessage]="health.title" [nzDescription]="alertDesc" nzShowIcon>
+      <ng-template #alertDesc>
+        <div class="health-desc">
+          <p>{{ health.message }}</p>
+          <div class="recommendation" *ngIf="health.recommendation">
+            <strong>Recommendation:</strong> {{ health.recommendation }}
+          </div>
+        </div>
+      </ng-template>
+    </nz-alert>
+  </div>
   <!-- Access Token Card -->
   <nz-card [nzTitle]="'Access Token'" [nzExtra]="accessExtra" class="token-card">
     <ng-template #accessExtra>
@@ -12,8 +25,9 @@
         <div class="label-row">
           <span>Time Remaining</span>
           <span class="time-value" [style.color]="statusColor()">
-            {{ tokenStatus()?.timeUntilExpiry | number : '1.0-0' }}ms
-            <!-- (Ideally format to MM:SS) -->
+            <!-- Format milliseconds to MM:ss approximately -->
+            {{ tokenStatus()?.timeUntilExpiry | date : 'mm:ss' }}
+            <small class="text-muted">({{ tokenStatus()?.timeUntilExpiry | number }} ms)</small>
           </span>
         </div>
         <nz-progress
@@ -26,20 +40,24 @@
         <div class="expiry-date">Expires: {{ tokenStatus()?.expiresAt | date : 'mediumTime' }}</div>
       </div>
 
-      <div class="claims-section" *ngIf="tokenStatus()?.claims as claims">
-        <h4>Decoded Claims</h4>
+      <div class="claims-section" *ngIf="tokenStatus() as status">
+        <h4>User Details & Roles</h4>
         <div class="claims-grid">
           <div class="claim-item">
             <span class="label">Email:</span>
-            <span class="value">{{ claims.email || '-' }}</span>
+            <span class="value">{{ status.userEmail || '-' }}</span>
           </div>
           <div class="claim-item">
             <span class="label">User ID:</span>
-            <span class="value">{{ claims.sub || '-' }}</span>
+            <!-- Show first chunk of ID for brevity if needed, or full -->
+            <span class="value" [title]="status.userId">{{ status.userId || '-' }}</span>
           </div>
           <div class="claim-item">
             <span class="label">Roles:</span>
-            <span class="value">{{ claims.roles || '-' }}</span>
+            <span class="value">
+              <nz-tag *ngFor="let role of status.userRoles" [nzColor]="'blue'">{{ role }}</nz-tag>
+              <span *ngIf="!status.userRoles?.length">-</span>
+            </span>
           </div>
         </div>
       </div>
@@ -48,7 +66,7 @@
         <button nz-button nzType="default" (click)="copyToken()" nz-tooltip nzTooltipTitle="Copy JSON">
           <span nz-icon nzType="copy"></span> Copy Data
         </button>
-        <button nz-button nzType="default"><span nz-icon nzType="export"></span> Export</button>
+        <button nz-button nzType="default" (click)="exportData()"><span nz-icon nzType="export"></span> Export</button>
       </div>
     </div>
   </nz-card>
@@ -57,19 +75,33 @@
   <nz-card [nzTitle]="'Refresh Token'" [nzExtra]="refreshExtra" class="token-card">
     <ng-template #refreshExtra>
       <!-- Refresh token status is inferred usually, hard to know client side without checking -->
-      <nz-tag [nzColor]="'blue'">HttpOnly</nz-tag>
+      <nz-tag [nzColor]="cookieStatus()?.hasRefreshToken ? 'success' : 'warning'">
+        {{ cookieStatus()?.hasRefreshToken ? 'Present' : 'Not Detected' }}
+      </nz-tag>
     </ng-template>
 
     <div class="token-details">
       <div class="info-block">
         <p>Refresh Token is stored in a secure <strong>HttpOnly</strong> cookie.</p>
-        <p>It cannot be accessed by JavaScript code.</p>
+        <p>It cannot be accessed by JavaScript code. Status is verified via server probe.</p>
       </div>
 
       <div class="refresh-stats">
         <div class="stat-row">
+          <span>Total Cookies:</span>
+          <span>{{ cookieStatus()?.cookieCount ?? '-' }}</span>
+        </div>
+        <div class="stat-row">
           <span>Status Check:</span>
-          <nz-tag [nzColor]="'success'">Server Confimed</nz-tag>
+          <nz-tag [nzColor]="cookieStatus()?.success ? 'success' : 'error'">
+            {{ cookieStatus()?.success ? 'Server Confirmed' : 'Check Failed' }}
+          </nz-tag>
+        </div>
+        <div class="stat-row">
+          <span>Refresh Cookie:</span>
+          <nz-tag [nzColor]="cookieStatus()?.hasRefreshToken ? 'processing' : 'default'">
+            {{ cookieStatus()?.hasRefreshToken ? 'Found' : 'Missing' }}
+          </nz-tag>
         </div>
         <div class="stat-row">
           <span>Last Used:</span>
@@ -87,13 +119,103 @@
   </nz-card>
 
   <!-- Server Validation Section -->
-  <nz-card [nzTitle]="'Server Validation'" class="full-width-card">
+  <nz-card [nzTitle]="'Server Validation'" [nzExtra]="validationExtra" class="full-width-card">
+    <ng-template #validationExtra>
+      <button nz-button nzType="text" (click)="isHelpVisible.set(true)">
+        <span nz-icon nzType="question-circle"></span> Help
+      </button>
+    </ng-template>
+
     <div class="validation-content">
-      <div class="validation-status">
-        <span nz-icon nzType="check-circle" [nzTheme]="'twotone'" [nzTwotoneColor]="'#52c41a'"></span>
-        <span>Client and Server states are consistent</span>
+      <div class="validation-status" *ngIf="consistencyStatus() as result; else notChecked">
+        <span
+          nz-icon
+          [nzType]="result.isConsistent ? 'check-circle' : 'warning'"
+          [nzTheme]="'twotone'"
+          [nzTwotoneColor]="result.isConsistent ? '#52c41a' : '#faad14'"
+        ></span>
+        <span>
+          {{
+            result.isConsistent
+              ? 'Client and Server states are consistent'
+              : 'Inconsistencies detected between Client and Server'
+          }}
+        </span>
       </div>
-      <button nz-button>Check Consistency</button>
+      <ng-template #notChecked>
+        <div class="validation-status">
+          <span nz-icon nzType="info-circle" nzTheme="outline"></span>
+          <span>Status checks pending...</span>
+        </div>
+      </ng-template>
+
+      <button nz-button [nzLoading]="isCheckingConsistency()" (click)="checkConsistency()">Check Consistency</button>
+    </div>
+
+    <!-- Differences List -->
+    <div class="differences-list" *ngIf="consistencyStatus()?.differences?.length">
+      <nz-tag [nzColor]="'red'" *ngFor="let diff of consistencyStatus().differences">
+        {{ diff }}
+      </nz-tag>
     </div>
   </nz-card>
 </div>
+
+<!-- Help Modal -->
+<nz-modal
+  [nzVisible]="isHelpVisible()"
+  nzTitle="Инструкция по проверке токенов"
+  (nzOnCancel)="isHelpVisible.set(false)"
+  (nzOnOk)="isHelpVisible.set(false)"
+  [nzWidth]="700"
+>
+  <ng-container *nzModalContent>
+    <div class="help-content">
+      <h3>1. Access Token (Токен доступа)</h3>
+      <p>Этот токен используется для авторизации всех API запросов.</p>
+      <ul>
+        <li>
+          <strong>Time Remaining:</strong> Показывает, сколько времени токен еще будет валиден. Если время истекло,
+          приложение попытается обновить его автоматически.
+        </li>
+        <li>
+          <strong>User Details:</strong> Данные, зашифрованные в самом токене (Email, ID, Роли). Сервер доверяет этим
+          данным, пока подпись токена валидна.
+        </li>
+        <li><span class="text-success">Valid</span>: Токен присутствует и срок действия не истек.</li>
+      </ul>
+
+      <h3>2. Refresh Token (Токен обновления)</h3>
+      <p>Используется для получения нового Access Token, когда старый истекает.</p>
+      <ul>
+        <li>Хранится в <strong>HttpOnly Cookie</strong>, поэтому JavaScript не может прочитать его напрямую.</li>
+        <li>
+          <strong>Status Check (Server Confirmed):</strong> Мы делаем специальный запрос на сервер, чтобы он проверил
+          наличие куки. Если вы видите "Found/Present", значит механизм бесшовного обновления сессии работает.
+        </li>
+      </ul>
+
+      <h3>3. Server Validation (Проверка целостности)</h3>
+      <p>Сравнивает то, что "думает" клиент (браузер), с тем, как "видит" вас сервер.</p>
+      <ul>
+        <li>
+          <strong>Кнопка "Check Consistency":</strong> Отправляет ваш текущий email и список ролей на сервер. Сервер
+          сравнивает их с данными из расшифрованного токена на своей стороне.
+        </li>
+        <li>
+          <strong>Почему это важно?</strong> Если здесь есть ошибки (красный статус), значит произошла рассинхронизация.
+          Например, у вас остались старые роли в памяти, хотя токен уже новый. Это может привести к ошибкам "Access
+          Denied".
+        </li>
+      </ul>
+
+      <div class="alert-box">
+        <strong>Что делать при ошибках?</strong>
+        <p>
+          Нажмите <strong>Force Refresh</strong> в секции Refresh Token. Это принудительно обновит все токены и
+          синхронизирует состояние.
+        </p>
+      </div>
+    </div>
+  </ng-container>
+</nz-modal>

@@ -20,7 +20,7 @@ export interface UserListItemDto {
   lastLogin?: Date;
   isExternalAccount: boolean;
   externalProvider?: string;
-  roles?: string[];  
+  roles?: string[];
 }
 
 export interface UserSearchResultDto {
@@ -84,6 +84,7 @@ export interface UserDetailDto {
   lastLogin?: string;
   isExternalAccount: boolean;
   externalProvider?: string;
+  roles?: string[];
 }
 
 // Для универсального модального окна (создание/редактирование/просмотр)

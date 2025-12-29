@@ -1,18 +1,17 @@
 // src/app/auth/components/login/login.component.ts
-import { Component, OnInit, inject, signal, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router, ActivatedRoute, RouterModule } from '@angular/router';
-import { NzFormModule } from 'ng-zorro-antd/form';
-import { NzInputModule } from 'ng-zorro-antd/input';
+import { Component, OnInit, effect, inject, signal } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { LoggerConsoleService } from '@shared/logger-console/services/logger-console.service';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
+import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzMessageService } from 'ng-zorro-antd/message';
-
-import { AuthService } from '@auth/services/auth.service';
-import { LoggingService } from '@shared/infrastructures/logging/logging.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -117,7 +116,8 @@ export class LoginComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private fb = inject(FormBuilder);
   private message = inject(NzMessageService);
-  private logger = inject(LoggingService);
+  private logger = inject(LoggerConsoleService).getLogger('LoginComponent');
+  private loggerConsole = inject(LoggerConsoleService);
 
   public isLoading = signal<boolean>(false);
   public passwordVisible = signal<boolean>(false);
@@ -133,6 +133,8 @@ export class LoginComponent implements OnInit {
       rememberMe: [false],
     });
 
+    this.loggerConsole.trackSignal(this.isLoading, 'Login_Loading');
+
     effect(() => {
       const loading = this.isLoading();
       if (loading) {
@@ -144,7 +146,7 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.logger.debug(this.context, 'Инициализация компонента входа');
+    this.logger.debug('Инициализация компонента входа');
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'];
     this.setDevelopmentCredentials();
   }
@@ -179,7 +181,7 @@ export class LoginComponent implements OnInit {
     this.isLoading.set(true);
     const formValue = this.loginForm.getRawValue();
 
-    this.logger.debug(this.context, 'Начало процесса входа', {
+    this.logger.debug('Начало процесса входа', {
       email: formValue.email,
       rememberMe: formValue.rememberMe,
     });
@@ -206,7 +208,7 @@ export class LoginComponent implements OnInit {
   }
 
   private handleLoginSuccess(): void {
-    this.logger.debug(this.context, 'Успешный вход');
+    this.logger.info('Успешный вход в систему');
     this.message.success('Добро пожаловать!');
 
     setTimeout(() => {
@@ -216,7 +218,7 @@ export class LoginComponent implements OnInit {
   }
 
   private handleLoginError(errorMessage: string): void {
-    this.logger.error(this.context, 'Ошибка входа', { error: errorMessage });
+    this.logger.error('Ошибка входа', { error: errorMessage });
     this.isLoading.set(false);
 
     const userFriendlyMessage = this.getUserFriendlyErrorMessage(errorMessage);

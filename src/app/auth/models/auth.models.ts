@@ -33,7 +33,7 @@ export interface ForgotPasswordDto {
 export interface ResetPasswordDto {
   email: string;
   token: string;
-  newPassword: string;  
+  newPassword: string;
 }
 
 export interface AuthResponseDto {
@@ -57,6 +57,7 @@ export interface UserProfileDto {
   isActive: boolean;
   createdAt: string;
   lastLogin?: string;
+  roles?: string[];
 }
 
 export interface ExternalLoginDto {

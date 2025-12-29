@@ -2,6 +2,7 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
+import { LoggerConsoleService } from '@shared/logger-console/services/logger-console.service';
 import { Observable, catchError, of, tap, throwError } from 'rxjs';
 import { ApiEndpoints, STORAGE_KEYS } from '../../../environments/api-endpoints';
 import { ApiResponse, ChangePasswordDto, LoginDto, RegisterDto, UserProfileDto } from '../models';
@@ -14,6 +15,7 @@ export class AuthService {
   private http = inject(HttpClient);
   private router = inject(Router);
   private tokenService = inject(TokenService);
+  private logger = inject(LoggerConsoleService).getLogger('AuthService');
 
   // Простые сигналы состояния - только самое необходимое
   private currentUser = signal<UserProfileDto | null>(null);
@@ -146,10 +148,10 @@ export class AuthService {
     return this.tokenService.getUserRoles().pipe(
       tap((roles) => {
         this.userRoles.set(roles);
-        console.debug('User roles loaded:', roles);
+        this.logger.debug('Роли пользователя загружены', roles);
       }),
-      catchError((error) => {
-        console.error('Failed to load user roles:', error);
+      catchError((error: any) => {
+        this.logger.error('Ошибка загрузки ролей', error);
         this.userRoles.set([]);
         return of([]);
       }),
@@ -196,7 +198,7 @@ export class AuthService {
     // Определяем маршрут на основе ролей
     const roles = this.userRoles();
     if (roles.includes('Admin')) {
-      return '/admin-entrance-dashboard';
+      return '/auth-control';
     } else if (roles.includes('Moderator')) {
       return '/admin/dashboard';
     } else {
@@ -244,16 +246,16 @@ export class AuthService {
           next: () => {
             // Загружаем роли после успешной проверки профиля
             this.loadUserRoles().subscribe();
-            console.debug('Auth session restored');
+            this.logger.debug('Auth session restored');
           },
-          error: () => {
-            console.debug('Stored session invalid, clearing');
+          error: (error: any) => {
+            this.logger.debug('Stored session invalid, clearing', error);
             this.clearSessionData();
           },
         });
       }
-    } catch (error) {
-      console.error('Auth initialization error:', error);
+    } catch (error: any) {
+      this.logger.error('Auth initialization error:', error);
       this.clearSessionData();
     }
   }
@@ -263,15 +265,24 @@ export class AuthService {
    */
   private handleAuthSuccess(user: UserProfileDto): void {
     this.updateUserData(user);
-    this.saveUserToStorage(user);
 
-    // ВАЖНО: Запускаем мониторинг токенов ПОСЛЕ успешной авторизации
-    this.tokenService.startMonitoring();
+    // Если роли пришли сразу в объекте пользователя, используем их
+    if (user.roles && user.roles.length > 0) {
+      this.userRoles.set(user.roles);
+      this.logger.debug('Роли получены напрямую из ответа авторизации', user.roles);
+    }
 
-    // Загружаем роли
-    this.loadUserRoles().subscribe();
+    // Запускаем мониторинг токенов (с небольшой задержкой для стабильности кук)
+    setTimeout(() => {
+      this.tokenService.startMonitoring();
 
-    console.debug('Auth success:', user.email);
+      // Загружаем роли только если их еще нет
+      if (this.userRoles().length === 0) {
+        this.loadUserRoles().subscribe();
+      }
+    }, 500);
+
+    this.logger.debug('Авторизация успешна:', user.email);
   }
 
   /**
@@ -279,6 +290,12 @@ export class AuthService {
    */
   private updateUserData(user: UserProfileDto): void {
     this.currentUser.set(user);
+
+    // Если в объекте есть роли, обновляем и их
+    if (user.roles) {
+      this.userRoles.set(user.roles);
+    }
+
     this.saveUserToStorage(user);
   }
 
@@ -304,7 +321,7 @@ export class AuthService {
    * Обработка ошибок авторизации
    */
   private handleAuthError(error: HttpErrorResponse): Observable<never> {
-    console.error('Auth error:', error);
+    this.logger.error('Auth error:', error);
     return throwError(() => error);
   }
 

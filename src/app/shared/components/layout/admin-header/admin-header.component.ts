@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { NzIconModule } from 'ng-zorro-antd/icon';
-import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
 import { NzAvatarModule } from 'ng-zorro-antd/avatar';
 import { NzBadgeModule } from 'ng-zorro-antd/badge';
+import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { AuthService } from '../../../../auth/services/auth.service';
 
 /**
  * Admin Header Component
@@ -58,11 +59,17 @@ import { NzBadgeModule } from 'ng-zorro-antd/badge';
         </button>
 
         <!-- Пользователь -->
-        <div class="admin-header__user" nz-dropdown [nzDropdownMenu]="userMenu" nzPlacement="bottomRight">
+        <div
+          class="admin-header__user"
+          nz-dropdown
+          [nzDropdownMenu]="userMenu"
+          nzPlacement="bottomRight"
+        >
           <nz-avatar
             [nzText]="userInitials"
             nzSize="default"
-            style="background-color: #1890ff; cursor: pointer;">
+            style="background-color: #1890ff; cursor: pointer;"
+          >
           </nz-avatar>
           <span class="admin-header__username">{{ userName }}</span>
           <span nz-icon nzType="down"></span>
@@ -89,99 +96,118 @@ import { NzBadgeModule } from 'ng-zorro-antd/badge';
       </nz-dropdown-menu>
     </header>
   `,
-  styles: [`
-    .admin-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      height: 64px;
-      padding: 0 24px;
-      background: #fff;
-      border-bottom: 1px solid #f0f0f0;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    }
+  styles: [
+    `
+      .admin-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 64px;
+        padding: 0 24px;
+        background: #fff;
+        border-bottom: 1px solid #f0f0f0;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      }
 
-    .admin-header__branding {
-      display: flex;
-      align-items: center;
-    }
+      .admin-header__branding {
+        display: flex;
+        align-items: center;
+      }
 
-    .admin-header__logo {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-size: 20px;
-      font-weight: 600;
-      color: #1890ff;
-      text-decoration: none;
-      transition: opacity 0.3s;
-    }
+      .admin-header__logo {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 20px;
+        font-weight: 600;
+        color: #1890ff;
+        text-decoration: none;
+        transition: opacity 0.3s;
+      }
 
-    .admin-header__logo:hover {
-      opacity: 0.8;
-    }
+      .admin-header__logo:hover {
+        opacity: 0.8;
+      }
 
-    .admin-header__logo [nz-icon] {
-      font-size: 28px;
-    }
+      .admin-header__logo [nz-icon] {
+        font-size: 28px;
+      }
 
-    .admin-header__title {
-      color: #262626;
-    }
+      .admin-header__title {
+        color: #262626;
+      }
 
-    .admin-header__actions {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    }
+      .admin-header__actions {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+      }
 
-    .admin-header__action-btn {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 40px;
-      height: 40px;
-      border: none;
-      background: transparent;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 18px;
-      color: #595959;
-      transition: all 0.3s;
-    }
+      .admin-header__action-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        border: none;
+        background: transparent;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 18px;
+        color: #595959;
+        transition: all 0.3s;
+      }
 
-    .admin-header__action-btn:hover {
-      background: #f5f5f5;
-      color: #1890ff;
-    }
+      .admin-header__action-btn:hover {
+        background: #f5f5f5;
+        color: #1890ff;
+      }
 
-    .admin-header__user {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 4px 12px;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background 0.3s;
-    }
+      .admin-header__user {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 4px 12px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background 0.3s;
+      }
 
-    .admin-header__user:hover {
-      background: #f5f5f5;
-    }
+      .admin-header__user:hover {
+        background: #f5f5f5;
+      }
 
-    .admin-header__username {
-      font-weight: 500;
-      color: #262626;
-    }
-  `],
+      .admin-header__username {
+        font-weight: 500;
+        color: #262626;
+      }
+    `,
+  ],
 })
 export class AdminHeaderComponent {
+  private authService = inject(AuthService);
+
   userName = 'Администратор';
   userInitials = 'А';
   notificationCount = 3;
 
+  constructor() {
+    const user = this.authService.getCurrentUser();
+    if (user) {
+      this.userName = user.fullName;
+      this.userInitials = user.fullName.charAt(0).toUpperCase();
+    }
+  }
+
   onLogout(): void {
-    // TODO: Implement logout logic via AuthService (Phase 6)
     console.log('Logout clicked');
+    this.authService.logout().subscribe({
+      next: () => {
+        console.log('Logged out successfully');
+      },
+      error: (err) => {
+        console.error('Logout error:', err);
+      },
+    });
   }
 }

@@ -1,9 +1,11 @@
 // src/app/auth/services/token.service.ts
-import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, BehaviorSubject, of, timer, Subscription } from 'rxjs';
-import { catchError, map, tap, switchMap } from 'rxjs/operators';
+import { Injectable, Injector, inject } from '@angular/core';
 import { ApiEndpoints } from '@environments/api-endpoints';
+import { ILoggerConsole } from '@shared/logger-console/models/logger-console.model';
+import { LoggerConsoleService } from '@shared/logger-console/services/logger-console.service';
+import { BehaviorSubject, Observable, Subscription, of, timer } from 'rxjs';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
 
 export interface TokenStatus {
   exists: boolean;
@@ -41,6 +43,16 @@ export interface CookieInfo {
 })
 export class TokenService {
   private http = inject(HttpClient);
+  private injector = inject(Injector);
+  private _logger?: ILoggerConsole;
+
+  private get logger(): ILoggerConsole {
+    if (!this._logger) {
+      this._logger = this.injector.get(LoggerConsoleService).getLogger('TokenService');
+    }
+    return this._logger;
+  }
+
   private tokenStatus$ = new BehaviorSubject<TokenStatus>(this.getEmptyStatus());
   private checkInterval = 30000; // 30 секунд
   private monitoringSubscription?: Subscription;
@@ -58,7 +70,7 @@ export class TokenService {
   startMonitoring(): void {
     if (this.isMonitoring) return;
 
-    console.debug('TokenService: Starting monitoring');
+    this.logger.debug('Запуск мониторинга токенов');
     this.isMonitoring = true;
 
     this.checkTokenStatus().subscribe();
@@ -77,7 +89,7 @@ export class TokenService {
       this.monitoringSubscription = undefined;
     }
     this.isMonitoring = false;
-    console.debug('TokenService: Monitoring stopped');
+    this.logger.debug('Мониторинг токенов остановлен');
   }
 
   /**
@@ -114,10 +126,10 @@ export class TokenService {
         map((response) => this.mapServerResponseToStatus(response)),
         tap((status) => {
           this.tokenStatus$.next(status);
-          console.debug('TokenService: Status updated:', status);
+          this.logger.debug('Статус токена обновлен', status);
         }),
         catchError((error) => {
-          console.debug('TokenService: Check failed:', error);
+          this.logger.warn('Ошибка проверки токена (401)', { error });
           const emptyStatus = this.getEmptyStatus();
           this.tokenStatus$.next(emptyStatus);
           return of(emptyStatus);
@@ -144,8 +156,15 @@ export class TokenService {
       })
       .pipe(
         catchError((error) => {
-          console.error('Server token check failed:', error);
-          throw error;
+          this.logger.warn('Диагностика токена не удалась (401/error)', { error });
+          // Возвращаем пустой объект вместо ошибки, чтобы не триггерить глобальный редирект
+          return of({
+            success: false,
+            roles: [],
+            userId: '',
+            email: '',
+            isAuthenticated: false,
+          } as ServerTokenInfo);
         }),
       );
   }
@@ -215,7 +234,7 @@ export class TokenService {
       })
       .pipe(
         catchError((error) => {
-          console.error('Cookie info check failed:', error);
+          this.logger.error('Cookie info check failed:', error);
           return of({
             success: false,
             hasAccessToken: false,
@@ -242,7 +261,7 @@ export class TokenService {
   clearStatus(): void {
     this.stopMonitoring();
     this.tokenStatus$.next(this.getEmptyStatus());
-    console.debug('TokenService: Status cleared');
+    this.logger.debug('TokenService: Status cleared');
   }
 
   // === ВСПОМОГАТЕЛЬНЫЕ МЕТОДЫ ===

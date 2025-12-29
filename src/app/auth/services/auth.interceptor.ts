@@ -1,18 +1,18 @@
 import {
-  HttpEvent,
-  HttpHandlerFn,
-  HttpRequest,
   HttpErrorResponse,
-  HttpInterceptorFn,
+  HttpEvent,
   HttpEventType,
+  HttpHandlerFn,
+  HttpInterceptorFn,
+  HttpRequest,
 } from '@angular/common/http';
-import { Observable, throwError, BehaviorSubject } from 'rxjs';
-import { catchError, tap, filter, take, switchMap } from 'rxjs/operators';
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
+import { BehaviorSubject, Observable, throwError } from 'rxjs';
+import { catchError, filter, switchMap, take, tap } from 'rxjs/operators';
 
 import { environment } from '../../../environments/environment';
-import { AuthService } from '@auth/services/auth.service';
+import { AuthService } from './auth.service';
 
 // Глобальные переменные для контроля refresh токенов
 let isRefreshing = false;
@@ -111,8 +111,8 @@ function handle401Error(
   }
 
   return authService.refreshToken().pipe(
-    switchMap((response) => {
-      if (response.success) {
+    switchMap((response: any) => {
+      if (response && response.success) {
         isRefreshing = false;
         refreshTokenSubject.next(true);
 
@@ -176,8 +176,6 @@ function isAuthEndpoint(url: string): boolean {
     '/auth/logout',
     '/auth/forgot-password',
     '/auth/reset-password',
-    '/debug-cookies',
-    '/debug-token',
   ];
 
   const fullUrl = url.toLowerCase();
