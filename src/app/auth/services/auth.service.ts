@@ -195,12 +195,9 @@ export class AuthService {
       return returnUrl;
     }
 
-    // Определяем маршрут на основе ролей
     const roles = this.userRoles();
     if (roles.includes('Admin')) {
       return '/auth-control';
-    } else if (roles.includes('Moderator')) {
-      return '/admin/dashboard';
     } else {
       return '/dashboard';
     }

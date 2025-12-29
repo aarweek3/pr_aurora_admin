@@ -72,7 +72,7 @@ import { AuthService } from '../../services/auth.service';
 
           <nz-form-item>
             <nz-form-label [nzRequired]="true">Пароль</nz-form-label>
-            <nz-form-control [nzErrorTip]="passwordErrorTpl">
+            <nz-form-control [nzErrorTip]="passwordErrorTpl" [nzExtra]="passwordHintTpl">
               <nz-input-group [nzSuffix]="suffixTemplate">
                 <input
                   nz-input
@@ -94,8 +94,30 @@ import { AuthService } from '../../services/auth.service';
                   Пароль обязателен
                 </ng-container>
                 <ng-container *ngIf="control.hasError('minlength')">
-                  Минимум 6 символов
+                  Пароль должен быть не менее 8 символов
                 </ng-container>
+                <ng-container *ngIf="control.hasError('pattern')">
+                  Пароль не соответствует требованиям безопасности
+                </ng-container>
+              </ng-template>
+              <ng-template #passwordHintTpl>
+                <div class="password-requirements">
+                  <div class="requirement-title">Требования к паролю:</div>
+                  <ul class="requirement-list">
+                    <li [class.met]="registerForm.get('password')?.value?.length >= 8">
+                      <span nz-icon nzType="check-circle" nzTheme="outline"></span> Минимум 8
+                      символов
+                    </li>
+                    <li [class.met]="hasMixedCase(registerForm.get('password')?.value)">
+                      <span nz-icon nzType="check-circle" nzTheme="outline"></span> Заглавные и
+                      строчные буквы
+                    </li>
+                    <li [class.met]="hasNumber(registerForm.get('password')?.value)">
+                      <span nz-icon nzType="check-circle" nzTheme="outline"></span> Хотя бы одна
+                      цифра
+                    </li>
+                  </ul>
+                </div>
               </ng-template>
             </nz-form-control>
           </nz-form-item>
@@ -132,8 +154,10 @@ import { AuthService } from '../../services/auth.service';
       }
 
       .register-card {
-        width: 400px;
+        width: 450px; /* Увеличили ширину для комфортного отображения списка */
         max-width: 100%;
+        border-radius: 12px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
       }
 
       .links {
@@ -154,6 +178,44 @@ import { AuthService } from '../../services/auth.service';
 
       .password-toggle-icon:hover {
         color: rgba(0, 0, 0, 0.85);
+      }
+
+      .password-requirements {
+        margin-top: 8px;
+        padding: 12px;
+        background: #fafafa;
+        border-radius: 8px;
+        border: 1px solid #f0f0f0;
+        font-size: 12px;
+      }
+
+      .requirement-title {
+        font-weight: 600;
+        margin-bottom: 6px;
+        color: rgba(0, 0, 0, 0.65);
+      }
+
+      .requirement-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      .requirement-list li {
+        color: #ff4d4f;
+        margin-bottom: 4px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        transition: all 0.3s ease;
+      }
+
+      .requirement-list li.met {
+        color: #52c41a;
+      }
+
+      .requirement-list li span {
+        font-size: 14px;
       }
     `,
   ],
@@ -177,12 +239,30 @@ export class RegisterComponent implements OnDestroy {
       firstName: ['', [Validators.required, Validators.minLength(2)]],
       lastName: ['', [Validators.required, Validators.minLength(2)]],
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
+      password: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(8),
+          Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/),
+        ],
+      ],
     });
 
     this.logger.debug('Форма регистрации создана', {
       formControls: Object.keys(this.registerForm.controls),
     });
+  }
+
+  // Вспомогательные методы для UI
+  hasMixedCase(val: string): boolean {
+    if (!val) return false;
+    return /[a-z]/.test(val) && /[A-Z]/.test(val);
+  }
+
+  hasNumber(val: string): boolean {
+    if (!val) return false;
+    return /\d/.test(val);
   }
 
   ngOnDestroy(): void {
@@ -224,8 +304,8 @@ export class RegisterComponent implements OnDestroy {
 
           this.message.success('Регистрация успешна! Добро пожаловать!');
 
-          this.logger.debug('RegisterComponent', 'Переход на админ-панель');
-          this.router.navigate(['/admin/dashboard']);
+          this.logger.info('Переход после успешной регистрации');
+          this.authService.redirectAfterLogin();
         },
         error: (error) => {
           this.logger.error('Ошибка регистрации', {

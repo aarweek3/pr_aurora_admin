@@ -59,6 +59,21 @@
               <span *ngIf="!status.userRoles?.length">-</span>
             </span>
           </div>
+          <div class="claim-item" *ngIf="status.isExternalAccount">
+            <span class="label">Auth Provider:</span>
+            <span class="value">
+              <nz-tag [nzColor]="status.externalProvider === 'Google' ? 'red' : 'geekblue'">
+                <span nz-icon [nzType]="status.externalProvider?.toLowerCase() || 'global'"></span>
+                {{ status.externalProvider || 'External' }}
+              </nz-tag>
+            </span>
+          </div>
+          <div class="claim-item" *ngIf="!status.isExternalAccount">
+            <span class="label">Auth Type:</span>
+            <span class="value">
+              <nz-tag [nzColor]="'default'">Internal / Standard</nz-tag>
+            </span>
+          </div>
         </div>
       </div>
 
@@ -183,6 +198,11 @@
           данным, пока подпись токена валидна.
         </li>
         <li><span class="text-success">Valid</span>: Токен присутствует и срок действия не истек.</li>
+        <li>
+          <strong>Auth Provider:</strong> Указывает источник авторизации. "Internal" — стандартный вход по email/паролю,
+          "Google/Facebook" — внешняя авторизация. Для внешних аккаунтов часть функций управления паролем может быть
+          недоступна.
+        </li>
       </ul>
 
       <h3>2. Refresh Token (Токен обновления)</h3>

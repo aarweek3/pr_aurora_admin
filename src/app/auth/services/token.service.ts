@@ -18,7 +18,9 @@ export interface TokenStatus {
   expiresAt: Date | null;
   timeUntilExpiry: number;
   lastChecked: Date;
-  claims?: { email?: string };
+  claims?: { [key: string]: string };
+  isExternalAccount?: boolean;
+  externalProvider?: string | null;
 }
 
 export interface ServerTokenInfo {
@@ -29,6 +31,8 @@ export interface ServerTokenInfo {
   email: string;
   expiresAt?: string;
   isAuthenticated?: boolean;
+  isExternalAccount?: boolean;
+  externalProvider?: string | null;
 }
 
 export interface CookieInfo {
@@ -316,6 +320,18 @@ export class TokenService {
     // ✅ ИСПРАВЛЕНИЕ: Убираем дубликаты ролей
     const uniqueRoles = [...new Set(response.roles || [])];
 
+    // Преобразуем массив клеймов в удобный объект (map)
+    const claimsMap: { [key: string]: string } = {};
+    if (response.claims) {
+      response.claims.forEach((c) => {
+        const type = c.type || c.Type;
+        const value = c.value || c.Value;
+        if (type && value) {
+          claimsMap[type] = value;
+        }
+      });
+    }
+
     return {
       exists: response.success,
       valid: isValid,
@@ -323,11 +339,13 @@ export class TokenService {
       isValid,
       userEmail: response.email || null,
       userId: response.userId || null,
-      userRoles: uniqueRoles, // ← Используем уникальные роли
+      userRoles: uniqueRoles,
       expiresAt,
       timeUntilExpiry,
       lastChecked: new Date(),
-      claims: response.email ? { email: response.email } : undefined,
+      claims: claimsMap,
+      isExternalAccount: response.isExternalAccount,
+      externalProvider: response.externalProvider,
     };
   }
 
