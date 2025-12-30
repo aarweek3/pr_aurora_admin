@@ -29,6 +29,17 @@
         [nzPopoverContent]="simHelpRu"
         nzPopoverPlacement="bottomRight"
       ></span>
+
+      <!-- Request Trace Info (i) -->
+      <span
+        nz-icon
+        nzType="deployment-unit"
+        class="help-icon trace"
+        nz-popover
+        nzPopoverTitle="Визуальный Trace"
+        [nzPopoverContent]="traceHelpTpl"
+        nzPopoverPlacement="bottomRight"
+      ></span>
     </div>
   </div>
 
@@ -44,6 +55,42 @@
         <li><strong>Lifecycle:</strong> Test auto-refresh and session recovery.</li>
         <li><strong>Stress:</strong> Ensure queueing and stability under load.</li>
       </ul>
+    </div>
+  </ng-template>
+
+  <ng-template #traceHelpTpl>
+    <div class="popover-help-content russian">
+      <p><strong>Визуальный «Trace» (Трассировка запроса)</strong></p>
+      <p>Теперь вы можете буквально «заглянуть под капот» интерцептора.</p>
+
+      <div class="help-section">
+        <span class="section-title">Что изменилось:</span>
+        <ul class="trace-features">
+          <li>
+            <strong>RequestTraceService:</strong> Создан новый сервис-регистратор, записывающий каждый шаг HTTP-запроса.
+          </li>
+          <li>
+            <strong>Интеграция:</strong> Интерцептор сам шлет отчеты: «Прикрепил токен», «Получил 401», «Начал Refresh»
+            и т.д.
+          </li>
+          <li>
+            <strong>Visual Timeline:</strong> Стилизованная временная шкала с точностью до миллисекунды и цветовой
+            кодировкой шагов.
+          </li>
+        </ul>
+      </div>
+
+      <div class="help-section">
+        <span class="section-title">Как это проверить:</span>
+        <ol>
+          <li>Нажмите <b>«Протушить токен»</b> в Манипуляциях.</li>
+          <li>Запустите любой тест (например, <b>«Симулировать 401»</b>).</li>
+          <li>В отчете вы увидите подробный "водопад" событий восстановления сессии.</li>
+        </ol>
+        <p style="margin-top: 10px; font-style: italic">
+          Это дает 100% прозрачность: вы больше не гадаете, был ли Refresh — вы это видите.
+        </p>
+      </div>
     </div>
   </ng-template>
 
@@ -122,6 +169,40 @@
     </div>
   </ng-template>
 
+  <ng-template #securityHelpContent>
+    <div class="popover-help-content russian">
+      <p><strong>Инспектор защищенности среды (Security Scanner)</strong></p>
+      <p>Автоматическая проверка «гигиены» безопасности вашего приложения.</p>
+
+      <div class="help-section">
+        <span class="section-title">Что он делает:</span>
+        <ul class="trace-features">
+          <li>
+            <strong>XSS Leak Check:</strong> Поиск токенов в глобальном объекте <code>window</code>. Утечка туда делает
+            их доступными для вредоносных скриптов.
+          </li>
+          <li>
+            <strong>Storage Hygiene:</strong> Анализ LocalStorage. Напоминает, что хранение JWT в LS менее безопасно,
+            чем в HttpOnly Cookies.
+          </li>
+          <li>
+            <strong>HttpOnly Cookies Check:</strong> Проверяет наличие и активность защищенных кук через реальный запрос
+            к серверу.
+          </li>
+        </ul>
+      </div>
+
+      <div class="help-section">
+        <span class="section-title">Как пользоваться:</span>
+        <ol>
+          <li>Нажмите <b>«Запустить сканирование безопасности»</b>.</li>
+          <li>Система плавно выведет результаты с пояснениями.</li>
+          <li>Зеленые галочки — вы в безопасности, желтые/красные — есть повод для улучшения защиты.</li>
+        </ol>
+      </div>
+    </div>
+  </ng-template>
+
   <!-- Last Result Banner -->
   <nz-alert
     *ngIf="lastResult() as result"
@@ -154,6 +235,22 @@
       <div class="result-verdict" *ngIf="result.verdict">
         <div class="verdict-title">ПОДРОБНЫЙ РЕЗУЛЬТАТ:</div>
         <div class="verdict-text">{{ result.verdict }}</div>
+      </div>
+
+      <!-- Request Trace Timeline -->
+      <div class="request-trace" *ngIf="traceSteps().length > 0">
+        <div class="verdict-title">ЖИЗНЕННЫЙ ЦИКЛ ЗАПРОСА (TRACE):</div>
+        <nz-timeline nzMode="left">
+          <nz-timeline-item *ngFor="let step of traceSteps()" [nzColor]="getTimelineColor(step.type)">
+            <div class="trace-step">
+              <span class="trace-time">{{ step.timestamp | date : 'HH:mm:ss.SSS' }}</span>
+              <span class="trace-label"
+                ><b>{{ step.label }}</b></span
+              >
+              <div class="trace-details" *ngIf="step.details">{{ step.details }}</div>
+            </div>
+          </nz-timeline-item>
+        </nz-timeline>
       </div>
     </ng-template>
   </nz-alert>
@@ -230,7 +327,7 @@
     </div>
 
     <!-- 3. Stress Testing -->
-    <div nz-col [nzXs]="24">
+    <div nz-col [nzXs]="24" [nzLg]="12">
       <nz-card nzTitle="Стресс-тестирование">
         <div class="stress-container">
           <div class="stress-info">
@@ -257,6 +354,90 @@
               [nzStrokeColor]="'#722ed1'"
             ></nz-progress>
           </div>
+        </div>
+      </nz-card>
+    </div>
+
+    <!-- 4. Security Inspector -->
+    <div nz-col [nzXs]="24" [nzLg]="12">
+      <nz-card [nzTitle]="securityTitle" [nzExtra]="securityHelp" class="security-card">
+        <ng-template #securityTitle>
+          <span>Инспектор защищенности среды</span>
+        </ng-template>
+        <ng-template #securityHelp>
+          <span
+            nz-icon
+            nzType="question-circle"
+            class="help-icon info"
+            nz-popover
+            [nzPopoverContent]="securityHelpContent"
+            nzPopoverPlacement="bottomRight"
+            nzPopoverTitle="Гид по безопасности"
+          ></span>
+        </ng-template>
+        <p class="card-desc">Автоматическая проверка «гигиены» безопасности на стороне клиента.</p>
+
+        <div class="security-actions">
+          <button
+            nz-button
+            nzType="primary"
+            [nzLoading]="securityScanResults()?.isScanning"
+            (click)="runSecurityScan()"
+            nzBlock
+          >
+            <span nz-icon nzType="safety-certificate"></span>
+            Запустить сканирование безопасности
+          </button>
+        </div>
+
+        <div class="scan-results" *ngIf="securityScanResults() as results">
+          <nz-divider nzText="РЕЗУЛЬТАТЫ ПРОВЕРКИ"></nz-divider>
+
+          <div class="scan-item" [class.danger]="!results.xssCheck.success">
+            <div class="item-header">
+              <span
+                class="item-icon"
+                nz-icon
+                [nzType]="results.xssCheck.success ? 'check-circle' : 'warning'"
+                nzTheme="twotone"
+                [nzTwotoneColor]="results.xssCheck.success ? '#52c41a' : '#f5222d'"
+              ></span>
+              <strong>XSS Leak Check (Global Window)</strong>
+            </div>
+            <p class="item-details">{{ results.xssCheck.details }}</p>
+          </div>
+
+          <div class="scan-item" [class.warning]="!results.storageCheck.success">
+            <div class="item-header">
+              <span
+                class="item-icon"
+                nz-icon
+                [nzType]="results.storageCheck.success ? 'check-circle' : 'info-circle'"
+                nzTheme="twotone"
+                [nzTwotoneColor]="results.storageCheck.success ? '#52c41a' : '#faad14'"
+              ></span>
+              <strong>Storage Hygiene (LocalStorage)</strong>
+            </div>
+            <p class="item-details">{{ results.storageCheck.details }}</p>
+          </div>
+
+          <div class="scan-item" [class.danger]="!results.cookieCheck.success">
+            <div class="item-header">
+              <span
+                class="item-icon"
+                nz-icon
+                [nzType]="results.cookieCheck.success ? 'check-circle' : 'stop'"
+                nzTheme="twotone"
+                [nzTwotoneColor]="results.cookieCheck.success ? '#52c41a' : '#f5222d'"
+              ></span>
+              <strong>HttpOnly Cookies (Flags check)</strong>
+            </div>
+            <p class="item-details">{{ results.cookieCheck.details }}</p>
+          </div>
+
+          <p class="small-text security-summary">
+            * Сканер проверяет доступность токенов для скриптов в текущей вкладке браузера.
+          </p>
         </div>
       </nz-card>
     </div>

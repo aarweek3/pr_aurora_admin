@@ -13,10 +13,13 @@ import { NzPopoverModule } from 'ng-zorro-antd/popover';
 import { NzProgressModule } from 'ng-zorro-antd/progress';
 import { NzSpaceModule } from 'ng-zorro-antd/space';
 import { NzTagModule } from 'ng-zorro-antd/tag';
+import { NzTimelineModule } from 'ng-zorro-antd/timeline';
+import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 import { forkJoin, of } from 'rxjs';
 import { catchError, finalize, tap } from 'rxjs/operators';
 import { ApiEndpoints } from '../../../../../environments/api-endpoints';
 import { AuthService } from '../../../services/auth.service';
+import { RequestTraceService } from '../../../services/request-trace.service';
 import { TokenService } from '../../../services/token.service';
 
 @Component({
@@ -34,6 +37,8 @@ import { TokenService } from '../../../services/token.service';
     NzAlertModule,
     NzSpaceModule,
     NzProgressModule,
+    NzTimelineModule,
+    NzToolTipModule,
   ],
   templateUrl: './simulator-tab.component.html',
   styleUrls: ['./simulator-tab.component.scss'],
@@ -42,6 +47,11 @@ export class SimulatorTabComponent {
   private http = inject(HttpClient);
   private authService = inject(AuthService);
   private tokenService = inject(TokenService);
+  private trace = inject(RequestTraceService);
+
+  // Available Trace Steps from the service
+  traceSteps = this.trace.steps;
+
   private message = inject(NzMessageService);
   private logger = inject(LoggerConsoleService).getLogger('SimulatorTab');
 
@@ -59,6 +69,13 @@ export class SimulatorTabComponent {
   testResult = signal<{ name: string; success: boolean; message: string; timestamp: Date } | null>(
     null,
   );
+
+  securityScanResults = signal<{
+    xssCheck: { success: boolean; details: string };
+    cookieCheck: { success: boolean; details: string };
+    storageCheck: { success: boolean; details: string };
+    isScanning: boolean;
+  } | null>(null);
 
   constructor() {}
 
@@ -258,7 +275,100 @@ export class SimulatorTabComponent {
     }, 800);
   }
 
-  // --- Helper ---
+  // --- Security Scanner ---
+
+  runSecurityScan(): void {
+    this.logger.info('Запуск сканера защищенности среды...');
+    this.securityScanResults.set({
+      xssCheck: { success: false, details: 'Сканирование...' },
+      cookieCheck: { success: false, details: 'Запрос к API...' },
+      storageCheck: { success: false, details: 'Анализ...' },
+      isScanning: true,
+    });
+
+    // 1. XSS Leak Check (Global Window)
+    setTimeout(() => {
+      const sensitiveKeys = ['token', 'accessToken', 'jwt', 'secret', 'auth', 'pass', 'password'];
+      const leakedKeys = Object.keys(window).filter((key) =>
+        sensitiveKeys.some((sk) => key.toLowerCase().includes(sk.toLowerCase())),
+      );
+
+      const xssSuccess = leakedKeys.length === 0;
+      const xssDetails = xssSuccess
+        ? 'Глобальный объект window чист. Утечек токенов в глобальную область видимости не обнаружено.'
+        : `Обнаружены потенциально опасные ключи в window: ${leakedKeys.join(
+            ', ',
+          )}. Это может быть признаком уязвимости к XSS.`;
+
+      this.securityScanResults.update((s) =>
+        s ? { ...s, xssCheck: { success: xssSuccess, details: xssDetails } } : null,
+      );
+    }, 600);
+
+    // 2. Storage Hygiene
+    setTimeout(() => {
+      const hasTokenInLS = !!localStorage.getItem('accessToken');
+      const storageDetails = hasTokenInLS
+        ? 'Внимание: Access Token хранится в LocalStorage. Это удобно для отладки, но делает его уязвимым для XSS. Рекомендуется использовать только HttpOnly Cookies.'
+        : 'Токен отсутствует в LocalStorage. Высокий уровень защиты: сессия полностью изолирована в HttpOnly Cookies.';
+
+      this.securityScanResults.update((s) =>
+        s ? { ...s, storageCheck: { success: !hasTokenInLS, details: storageDetails } } : null,
+      );
+    }, 1200);
+
+    // 3. Cookie Flags (Server-side check)
+    this.http.get<any>(ApiEndpoints.AUTH.DEBUG_COOKIES, { withCredentials: true }).subscribe({
+      next: (res) => {
+        const hasCookies = res.hasAccessToken || res.hasRefreshToken;
+        const cookieDetails = hasCookies
+          ? 'HttpOnly Cookies обнаружены и активны. Сервер подтвердил наличие защищенного канала передачи сессии.'
+          : 'Cookies не обнаружены на сервере. Проверьте настройки CORS или credentials.';
+
+        this.securityScanResults.update((s) =>
+          s ? { ...s, cookieCheck: { success: hasCookies, details: cookieDetails } } : null,
+        );
+        this.finishScan();
+      },
+      error: () => {
+        this.securityScanResults.update((s) =>
+          s
+            ? {
+                ...s,
+                cookieCheck: { success: false, details: 'Ошибка при проверке Cookies на сервере.' },
+              }
+            : null,
+        );
+        this.finishScan();
+      },
+    });
+  }
+
+  private finishScan(): void {
+    setTimeout(() => {
+      this.securityScanResults.update((s) => (s ? { ...s, isScanning: false } : null));
+      this.message.success('Сканирование безопасности завершено');
+    }, 500);
+  }
+
+  // --- Helpers ---
+
+  getTimelineColor(type: string): string {
+    switch (type) {
+      case 'success':
+        return 'green';
+      case 'error':
+        return 'red';
+      case 'warning':
+        return 'orange';
+      case 'request':
+        return 'blue';
+      case 'retry':
+        return 'purple';
+      default:
+        return 'gray';
+    }
+  }
 
   private runTest(
     label: string,
@@ -266,6 +376,7 @@ export class SimulatorTabComponent {
     verdictFn: (res: any, isError: boolean) => { success: boolean; text: string },
     description: string = '',
   ): void {
+    this.trace.clear();
     this.isLoading.set(true);
     this.logger.info(`Симулятор: ${label}`);
 

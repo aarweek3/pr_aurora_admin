@@ -13,6 +13,7 @@ import { catchError, filter, switchMap, take, tap } from 'rxjs/operators';
 
 import { environment } from '../../../environments/environment';
 import { AuthService } from './auth.service';
+import { RequestTraceService } from './request-trace.service';
 
 // Глобальные переменные для контроля refresh токенов
 let isRefreshing = false;
@@ -24,7 +25,14 @@ export const authInterceptor: HttpInterceptorFn = (
 ): Observable<HttpEvent<unknown>> => {
   const router = inject(Router);
   const authService = inject(AuthService);
+  const trace = inject(RequestTraceService);
   const isDevMode = !environment.production;
+
+  const isSimulator = req.headers.has('X-Simulator-Request');
+
+  if (isSimulator) {
+    trace.logRequest(req.method, req.url);
+  }
 
   // Получаем токен из localStorage (приоритет) или cookies
   const token = localStorage.getItem('accessToken');
@@ -37,6 +45,15 @@ export const authInterceptor: HttpInterceptorFn = (
   // Добавляем Authorization header если токен есть
   if (token) {
     headers['Authorization'] = `Bearer ${token}`;
+    if (isSimulator) {
+      trace.addStep(
+        'Прикреплен Access Token',
+        'info',
+        `Header: Bearer ${token.substring(0, 10)}...`,
+      );
+    }
+  } else if (isSimulator) {
+    trace.addStep('Токен не найден в локальном хранилище', 'warning');
   }
 
   const authReq = req.clone({
@@ -71,11 +88,25 @@ export const authInterceptor: HttpInterceptorFn = (
 
       // Обрабатываем 401 ошибку (Unauthorized)
       if (error.status === 401) {
-        return handle401Error(authReq, next, router, authService, isDevMode);
+        if (isSimulator) {
+          trace.addStep(
+            'Получен статус 401 (Unauthorized)',
+            'warning',
+            'Запуск процесса восстановления сессии...',
+          );
+        }
+        return handle401Error(authReq, next, router, authService, isDevMode, trace);
       }
 
       // Обрабатываем 403 ошибку (Forbidden)
       if (error.status === 403) {
+        if (isSimulator) {
+          trace.addStep(
+            'Получен статус 403 (Forbidden)',
+            'error',
+            'Доступ к ресурсу ограничен сервером.',
+          );
+        }
         console.log('🚫 Доступ запрещен');
         // Возвращаем оригинальный HttpErrorResponse для тестов
         return throwError(() => error);
@@ -96,6 +127,7 @@ function handle401Error(
   router: Router,
   authService: AuthService,
   isDevMode: boolean,
+  trace: RequestTraceService,
 ): Observable<HttpEvent<unknown>> {
   // Если это auth endpoint, не пытаемся refresh
   if (isAuthEndpoint(request.url)) {
@@ -112,7 +144,7 @@ function handle401Error(
       take(1),
       switchMap((success) => {
         if (success) {
-          return next(applyLatestToken(request));
+          return next(applyLatestToken(request, trace));
         }
         return throwError(() => new Error('Session expired'));
       }),
@@ -137,7 +169,15 @@ function handle401Error(
           console.log('✅ Токен успешно обновлен, повторяем запрос');
         }
 
-        return next(applyLatestToken(request));
+        if (request.headers.has('X-Simulator-Request')) {
+          trace.addStep(
+            'Сессия успешно обновлена (Refresh)',
+            'success',
+            'Повторная отправка оригинального запроса...',
+          );
+        }
+
+        return next(applyLatestToken(request, trace));
       } else {
         throw new Error('Не удалось обновить токен');
       }
@@ -148,6 +188,14 @@ function handle401Error(
 
       if (isDevMode) {
         console.log('❌ Ошибка обновления токена или повторного запроса:', refreshError);
+      }
+
+      if (request.headers.has('X-Simulator-Request')) {
+        trace.addStep(
+          'Ошибка обновления сессии (Refresh Failed)',
+          'error',
+          refreshError.message || 'Сессия окончательно истекла',
+        );
       }
 
       const error = new Error('Сессия истекла. Пожалуйста, войдите заново');
@@ -168,18 +216,36 @@ function handle401Error(
 /**
  * Применяет актуальный токен к запросу перед повторной отправкой
  */
-function applyLatestToken(request: HttpRequest<unknown>): HttpRequest<unknown> {
+function applyLatestToken(
+  request: HttpRequest<unknown>,
+  trace: RequestTraceService,
+): HttpRequest<unknown> {
   const oldToken = request.headers.get('Authorization')?.replace('Bearer ', '');
   const latestToken = localStorage.getItem('accessToken');
+  const isSimulator = request.headers.has('X-Simulator-Request');
 
   // Если у нас появился новый токен, отличный от того, что был в упавшем запросе - используем его
   if (latestToken && latestToken !== oldToken) {
+    if (isSimulator) {
+      trace.addStep(
+        'Повтор запроса с НОВЫМ токеном',
+        'retry',
+        `Token: ${latestToken.substring(0, 10)}...`,
+      );
+    }
     return request.clone({
       setHeaders: { Authorization: `Bearer ${latestToken}` },
     });
   }
 
   // Если токена нет ИЛИ он такой же как старый (значит refresh обновил только HttpOnly куки),
+  if (isSimulator) {
+    trace.addStep(
+      'Повтор запроса через HttpOnly Cookies',
+      'retry',
+      'Authorization header удален для использования кук.',
+    );
+  }
   // принудительно удаляем заголовок Authorization, чтобы бекенд переключился на чтение кук.
   return request.clone({
     headers: request.headers.delete('Authorization'),
