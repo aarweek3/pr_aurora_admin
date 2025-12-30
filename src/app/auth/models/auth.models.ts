@@ -37,11 +37,11 @@ export interface ResetPasswordDto {
 }
 
 export interface AuthResponseDto {
-  accessToken: string;
-  refreshToken: string;
-  expiresAt: string;
-  user: UserProfileDto;
-  requiresTwoFactor: boolean;
+  accessToken?: string;
+  refreshToken?: string;
+  expiresAt?: string;
+  user?: UserProfileDto;
+  requiresTwoFactor?: boolean;
 }
 
 export interface TokenDto {

@@ -15,9 +15,9 @@
 
       <ng-template #titleTemplate>
         <div class="card-header">
-          <h3>{{ currentUser()?.fullName || 'Guest User' }}</h3>
+          <h3>{{ currentUser()?.fullName || 'Гость' }}</h3>
           <nz-tag [nzColor]="isAuthenticated() ? 'success' : 'default'">
-            {{ isAuthenticated() ? 'Authenticated' : 'Guest' }}
+            {{ isAuthenticated() ? 'Авторизован' : 'Гость' }}
           </nz-tag>
         </div>
       </ng-template>
@@ -62,9 +62,9 @@
 
       <div class="card-actions">
         <button nz-button nzType="primary" (click)="refreshSession()">
-          <span nz-icon nzType="sync"></span> Refresh Details
+          <span nz-icon nzType="sync"></span> Обновить данные
         </button>
-        <button nz-button nzDanger (click)="logout()"><span nz-icon nzType="logout"></span> Force Logout</button>
+        <button nz-button nzDanger (click)="logout()"><span nz-icon nzType="logout"></span> Выйти из системы</button>
       </div>
     </nz-card>
 
@@ -73,7 +73,7 @@
       <nz-card>
         <nz-statistic
           [nzValue]="(currentUser()?.lastLogin | date : 'shortTime') || '-'"
-          [nzTitle]="'Logon Time'"
+          [nzTitle]="'Время входа'"
           [nzPrefix]="prefixLogin"
         >
         </nz-statistic>
@@ -81,7 +81,7 @@
       </nz-card>
 
       <nz-card>
-        <nz-statistic [nzValue]="'2h 15m'" [nzTitle]="'Duration'" [nzPrefix]="prefixClock"> </nz-statistic>
+        <nz-statistic [nzValue]="'2ч 15м'" [nzTitle]="'Длительность'" [nzPrefix]="prefixClock"> </nz-statistic>
         <ng-template #prefixClock><span nz-icon nzType="clock-circle"></span></ng-template>
       </nz-card>
     </div>
@@ -89,7 +89,7 @@
 
   <!-- Timeline Side -->
   <div class="timeline-section">
-    <nz-card [nzTitle]="'Session Events'" [nzBordered]="false" class="timeline-card">
+    <nz-card [nzTitle]="'События сессии'" [nzBordered]="false" class="timeline-card">
       <nz-list [nzDataSource]="sessionEvents()" [nzRenderItem]="item" [nzItemLayout]="'horizontal'">
         <ng-template #item let-item>
           <nz-list-item>

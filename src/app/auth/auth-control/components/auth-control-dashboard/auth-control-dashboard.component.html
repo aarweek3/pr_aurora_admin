@@ -7,13 +7,23 @@
           <span nz-icon nzType="security-scan" nzTheme="twotone" [nzTwotoneColor]="'#1890ff'"></span>
         </div>
         <div>
-          <h1>Auth Control Panel</h1>
-          <p class="subtitle">Client-side Authentication & Security Testing</p>
+          <h1>Панель управления Auth</h1>
+          <p class="subtitle">Тестирование безопасности и аутентификации на клиенте</p>
         </div>
       </div>
 
       <div class="header-actions">
         <nz-tag [nzColor]="'blue'">v2.0 Beta</nz-tag>
+        <button
+          nz-button
+          nzType="primary"
+          nzShape="circle"
+          (click)="toggleHelp()"
+          nz-tooltip
+          nzTooltipTitle="Открыть справку"
+        >
+          <span nz-icon nzType="question" nzTheme="outline"></span>
+        </button>
         <button nz-button nzType="text" nzShape="circle">
           <span nz-icon nzType="setting" nzTheme="outline"></span>
         </button>
@@ -27,11 +37,12 @@
       [nzSelectedIndex]="selectedIndex()"
       (nzSelectedIndexChange)="handleTabChange($event)"
       nzType="card"
+      [nzAnimated]="false"
       class="auth-tabs"
     >
       <!-- Session Tab -->
       <nz-tab [nzTitle]="sessionTitle">
-        <ng-template #sessionTitle> <span nz-icon nzType="user"></span> Session </ng-template>
+        <ng-template #sessionTitle> <span nz-icon nzType="user"></span> Сессия </ng-template>
         <div class="tab-content">
           <app-session-tab></app-session-tab>
         </div>
@@ -39,7 +50,7 @@
 
       <!-- Tokens Tab -->
       <nz-tab [nzTitle]="tokensTitle">
-        <ng-template #tokensTitle> <span nz-icon nzType="safety-certificate"></span> Tokens </ng-template>
+        <ng-template #tokensTitle> <span nz-icon nzType="safety-certificate"></span> Токены </ng-template>
         <div class="tab-content">
           <app-tokens-tab></app-tokens-tab>
         </div>
@@ -47,39 +58,100 @@
 
       <!-- Roles Tab -->
       <nz-tab [nzTitle]="rolesTitle">
-        <ng-template #rolesTitle> <span nz-icon nzType="team"></span> Roles </ng-template>
+        <ng-template #rolesTitle> <span nz-icon nzType="team"></span> Роли </ng-template>
         <div class="tab-content">
-          <div class="placeholder-content">
-            <h3>Roles & Permissions</h3>
-            <p>Roles Tab Component will be loaded here.</p>
-            <!-- <app-roles-tab></app-roles-tab> -->
-          </div>
+          <app-roles-tab></app-roles-tab>
         </div>
       </nz-tab>
 
       <!-- Simulator Tab -->
       <nz-tab [nzTitle]="simulatorTitle">
-        <ng-template #simulatorTitle> <span nz-icon nzType="warning"></span> Simulator </ng-template>
+        <ng-template #simulatorTitle> <span nz-icon nzType="warning"></span> Симулятор </ng-template>
         <div class="tab-content">
-          <div class="placeholder-content">
-            <h3>Error Simulator</h3>
-            <p>Simulator Tab Component will be loaded here.</p>
-            <!-- <app-simulator-tab></app-simulator-tab> -->
-          </div>
+          <app-simulator-tab></app-simulator-tab>
         </div>
       </nz-tab>
 
       <!-- Playground Tab -->
       <nz-tab [nzTitle]="playgroundTitle">
-        <ng-template #playgroundTitle> <span nz-icon nzType="experiment"></span> Playground </ng-template>
+        <ng-template #playgroundTitle> <span nz-icon nzType="experiment"></span> Песочница </ng-template>
         <div class="tab-content">
-          <div class="placeholder-content">
-            <h3>Full API Playground</h3>
-            <p>Playground Tab Component will be loaded here.</p>
-            <!-- <app-playground-tab></app-playground-tab> -->
-          </div>
+          <app-playground-tab></app-playground-tab>
         </div>
       </nz-tab>
     </nz-tabset>
   </div>
+
+  <!-- Help Drawer -->
+  <nz-drawer
+    [nzClosable]="true"
+    [nzVisible]="isHelpVisible()"
+    nzPlacement="right"
+    nzTitle="Справка: Auth Control Panel"
+    (nzOnClose)="toggleHelp()"
+    [nzWidth]="500"
+  >
+    <ng-container *nzDrawerContent>
+      <div class="help-drawer-content" nz-typography>
+        <h3 nz-typography>Центр управления безопасностью</h3>
+        <p>
+          Это рабочее пространство для проверки всех механизмов аутентификации, авторизации и сессий. Здесь можно
+          симулировать сбои, проверять права доступа и следить за состоянием токенов.
+        </p>
+
+        <nz-divider nzText="Обзор вкладок" nzOrientation="left"></nz-divider>
+
+        <section class="help-section">
+          <h4 nz-typography><span nz-icon nzType="user"></span> 1. Session (Сессия)</h4>
+          <p>
+            Зеркало вашего текущего состояния. Показывает, под каким именем вас видит сервер, какие у вас роли и когда
+            истечет текущая сессия.
+          </p>
+        </section>
+
+        <section class="help-section">
+          <h4 nz-typography><span nz-icon nzType="safety-certificate"></span> 2. Tokens (Токены)</h4>
+          <p>
+            Позволяет заглянуть "под капот" JWT токенов. Кнопка <strong>"Check Consistency"</strong>
+            сравнивает данные в браузере с данными на сервере, выявляя расхождения.
+          </p>
+        </section>
+
+        <section class="help-section">
+          <h4 nz-typography><span nz-icon nzType="team"></span> 3. Roles (Роли и Права)</h4>
+          <p>
+            Визуализация матрицы доступа. Позволяет проверить, какие действия (Permissions) разрешены для разных ролей в
+            системе.
+          </p>
+        </section>
+
+        <section class="help-section">
+          <h4 nz-typography><span nz-icon nzType="warning"></span> 4. Simulator (Тестирование)</h4>
+          <p>Самая важная часть для отладки. Здесь можно специально "сломать" систему:</p>
+          <ul>
+            <li><strong>Simulate 401</strong>: Проверка автоматического обновления токенов (Refresh Flow).</li>
+            <li><strong>Simulate 403</strong>: Проверка защиты от несанкционированного доступа.</li>
+            <li>
+              <strong>Concurrency Test</strong>: Проверка того, как система справляется с 10 одновременными запросами
+              при "протухшем" токене.
+            </li>
+          </ul>
+        </section>
+
+        <section class="help-section">
+          <h4 nz-typography><span nz-icon nzType="experiment"></span> 5. Playground (Песочница)</h4>
+          <p>
+            Интерактивный инструмент для отправки живых запросов к API. Позволяет видеть чистый JSON-ответ от сервера
+            без лишнего шума.
+          </p>
+        </section>
+
+        <nz-divider></nz-divider>
+
+        <div class="help-footer">
+          <nz-tag [nzColor]="'processing'">Совет: Следите за Logger Console при запуске тестов!</nz-tag>
+        </div>
+      </div>
+    </ng-container>
+  </nz-drawer>
 </div>

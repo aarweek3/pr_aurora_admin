@@ -5,7 +5,14 @@ import { Router } from '@angular/router';
 import { LoggerConsoleService } from '@shared/logger-console/services/logger-console.service';
 import { Observable, catchError, of, tap, throwError } from 'rxjs';
 import { ApiEndpoints, STORAGE_KEYS } from '../../../environments/api-endpoints';
-import { ApiResponse, ChangePasswordDto, LoginDto, RegisterDto, UserProfileDto } from '../models';
+import {
+  ApiResponse,
+  AuthResponseDto,
+  ChangePasswordDto,
+  LoginDto,
+  RegisterDto,
+  UserProfileDto,
+} from '../models';
 import { TokenService } from './token.service';
 
 @Injectable({
@@ -35,15 +42,15 @@ export class AuthService {
   /**
    * Регистрация пользователя
    */
-  register(data: RegisterDto): Observable<ApiResponse<{ user: UserProfileDto }>> {
+  register(data: RegisterDto): Observable<ApiResponse<AuthResponseDto>> {
     return this.http
-      .post<ApiResponse<{ user: UserProfileDto }>>(ApiEndpoints.AUTH.REGISTER, data, {
+      .post<ApiResponse<AuthResponseDto>>(ApiEndpoints.AUTH.REGISTER, data, {
         withCredentials: true,
       })
       .pipe(
         tap((response) => {
           if (response.success && response.data) {
-            this.handleAuthSuccess(response.data.user);
+            this.handleAuthSuccess(response.data);
           }
         }),
         catchError((error) => this.handleAuthError(error)),
@@ -53,15 +60,15 @@ export class AuthService {
   /**
    * Вход в систему
    */
-  login(data: LoginDto): Observable<ApiResponse<{ user: UserProfileDto }>> {
+  login(data: LoginDto): Observable<ApiResponse<AuthResponseDto>> {
     return this.http
-      .post<ApiResponse<{ user: UserProfileDto }>>(ApiEndpoints.AUTH.LOGIN, data, {
+      .post<ApiResponse<AuthResponseDto>>(ApiEndpoints.AUTH.LOGIN, data, {
         withCredentials: true,
       })
       .pipe(
         tap((response) => {
           if (response.success && response.data) {
-            this.handleAuthSuccess(response.data.user);
+            this.handleAuthSuccess(response.data);
           }
         }),
         catchError((error) => this.handleAuthError(error)),
@@ -87,17 +94,13 @@ export class AuthService {
   /**
    * Обновление токена
    */
-  refreshToken(): Observable<ApiResponse<{ user: UserProfileDto }>> {
+  refreshToken(): Observable<ApiResponse<AuthResponseDto>> {
     return this.http
-      .post<ApiResponse<{ user: UserProfileDto }>>(
-        ApiEndpoints.AUTH.REFRESH,
-        {},
-        { withCredentials: true },
-      )
+      .post<ApiResponse<AuthResponseDto>>(ApiEndpoints.AUTH.REFRESH, {}, { withCredentials: true })
       .pipe(
         tap((response) => {
           if (response.success && response.data) {
-            this.handleAuthSuccess(response.data.user);
+            this.handleAuthSuccess(response.data);
           }
         }),
         catchError((error) => {
@@ -118,7 +121,7 @@ export class AuthService {
       .pipe(
         tap((response) => {
           if (response.success && response.data) {
-            this.updateUserData(response.data);
+            this.handleAuthSuccess(response.data);
           }
         }),
         catchError((error) => {
@@ -215,7 +218,7 @@ export class AuthService {
   /**
    * Принудительное обновление токена (алиас для совместимости)
    */
-  forceTokenRefresh(): Observable<ApiResponse<{ user: UserProfileDto }>> {
+  forceTokenRefresh(): Observable<ApiResponse<AuthResponseDto>> {
     return this.refreshToken();
   }
 
@@ -298,8 +301,27 @@ export class AuthService {
   /**
    * Обработка успешной авторизации
    */
-  private handleAuthSuccess(user: UserProfileDto): void {
-    this.updateUserData(user);
+  private handleAuthSuccess(data: AuthResponseDto | UserProfileDto): void {
+    // Поддержка разных форматов ответа: { user: ... } или { accessToken, user }
+    const authData = data as AuthResponseDto;
+    const user: UserProfileDto = authData.user || (data as UserProfileDto);
+
+    // Если токен пришел - обновляем, если нет (значит используются HttpOnly куки)
+    // и это был процесс авторизации/обновления - удаляем старый невалидный токен
+    if (authData.accessToken) {
+      this.updateUserData(user, authData.accessToken);
+    } else {
+      this.updateUserData(user);
+      if ('accessToken' in authData || (data as any).success) {
+        // Признак того, что это ответ от API Auth
+        localStorage.removeItem('accessToken');
+      }
+    }
+
+    // Если есть refreshToken в ответе, сохраняем и его
+    if (authData.refreshToken) {
+      localStorage.setItem('refreshToken', authData.refreshToken);
+    }
 
     // Если роли пришли сразу в объекте пользователя, используем их
     if (user.roles && user.roles.length > 0) {
@@ -323,8 +345,12 @@ export class AuthService {
   /**
    * Обновление данных пользователя
    */
-  private updateUserData(user: UserProfileDto): void {
+  private updateUserData(user: UserProfileDto, accessToken?: string): void {
     this.currentUser.set(user);
+
+    if (accessToken) {
+      localStorage.setItem('accessToken', accessToken);
+    }
 
     // Если в объекте есть роли, обновляем и их
     if (user.roles) {
@@ -367,6 +393,8 @@ export class AuthService {
     this.currentUser.set(null);
     this.userRoles.set([]);
     localStorage.removeItem(STORAGE_KEYS.USER_DATA);
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
   }
 
   /**

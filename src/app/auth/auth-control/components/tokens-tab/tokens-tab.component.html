@@ -16,18 +16,18 @@
   <nz-card [nzTitle]="'Access Token'" [nzExtra]="accessExtra" class="token-card">
     <ng-template #accessExtra>
       <nz-tag [nzColor]="tokenStatus()?.valid ? 'success' : 'error'">
-        {{ tokenStatus()?.valid ? 'Valid' : 'Expired/Missing' }}
+        {{ tokenStatus()?.valid ? 'Валиден' : 'Истек/Отсутствует' }}
       </nz-tag>
     </ng-template>
 
     <div class="token-details">
       <div class="time-section">
         <div class="label-row">
-          <span>Time Remaining</span>
+          <span>Осталось времени</span>
           <span class="time-value" [style.color]="statusColor()">
             <!-- Format milliseconds to MM:ss approximately -->
             {{ tokenStatus()?.timeUntilExpiry | date : 'mm:ss' }}
-            <small class="text-muted">({{ tokenStatus()?.timeUntilExpiry | number }} ms)</small>
+            <small class="text-muted">({{ tokenStatus()?.timeUntilExpiry | number }} мс)</small>
           </span>
         </div>
         <nz-progress
@@ -37,30 +37,30 @@
           [nzStatus]="tokenStatus()?.valid ? 'active' : 'exception'"
         >
         </nz-progress>
-        <div class="expiry-date">Expires: {{ tokenStatus()?.expiresAt | date : 'mediumTime' }}</div>
+        <div class="expiry-date">Истекает в: {{ tokenStatus()?.expiresAt | date : 'mediumTime' }}</div>
       </div>
 
       <div class="claims-section" *ngIf="tokenStatus() as status">
-        <h4>User Details & Roles</h4>
+        <h4>Данные пользователя и Роли</h4>
         <div class="claims-grid">
           <div class="claim-item">
             <span class="label">Email:</span>
             <span class="value">{{ status.userEmail || '-' }}</span>
           </div>
           <div class="claim-item">
-            <span class="label">User ID:</span>
+            <span class="label">ID пользователя:</span>
             <!-- Show first chunk of ID for brevity if needed, or full -->
             <span class="value" [title]="status.userId">{{ status.userId || '-' }}</span>
           </div>
           <div class="claim-item">
-            <span class="label">Roles:</span>
+            <span class="label">Роли:</span>
             <span class="value">
               <nz-tag *ngFor="let role of status.userRoles" [nzColor]="'blue'">{{ role }}</nz-tag>
               <span *ngIf="!status.userRoles?.length">-</span>
             </span>
           </div>
           <div class="claim-item" *ngIf="status.isExternalAccount">
-            <span class="label">Auth Provider:</span>
+            <span class="label">Провайдер:</span>
             <span class="value">
               <nz-tag [nzColor]="status.externalProvider === 'Google' ? 'red' : 'geekblue'">
                 <span nz-icon [nzType]="status.externalProvider?.toLowerCase() || 'global'"></span>
@@ -69,19 +69,19 @@
             </span>
           </div>
           <div class="claim-item" *ngIf="!status.isExternalAccount">
-            <span class="label">Auth Type:</span>
+            <span class="label">Тип входа:</span>
             <span class="value">
-              <nz-tag [nzColor]="'default'">Internal / Standard</nz-tag>
+              <nz-tag [nzColor]="'default'">Внутренний / Пароль</nz-tag>
             </span>
           </div>
         </div>
       </div>
 
       <div class="actions-row">
-        <button nz-button nzType="default" (click)="copyToken()" nz-tooltip nzTooltipTitle="Copy JSON">
-          <span nz-icon nzType="copy"></span> Copy Data
+        <button nz-button nzType="default" (click)="copyToken()" nz-tooltip nzTooltipTitle="Копировать JSON">
+          <span nz-icon nzType="copy"></span> Копировать
         </button>
-        <button nz-button nzType="default" (click)="exportData()"><span nz-icon nzType="export"></span> Export</button>
+        <button nz-button nzType="default" (click)="exportData()"><span nz-icon nzType="export"></span> Экспорт</button>
       </div>
     </div>
   </nz-card>
@@ -91,53 +91,53 @@
     <ng-template #refreshExtra>
       <!-- Refresh token status is inferred usually, hard to know client side without checking -->
       <nz-tag [nzColor]="cookieStatus()?.hasRefreshToken ? 'success' : 'warning'">
-        {{ cookieStatus()?.hasRefreshToken ? 'Present' : 'Not Detected' }}
+        {{ cookieStatus()?.hasRefreshToken ? 'Присутствует' : 'Не обнаружен' }}
       </nz-tag>
     </ng-template>
 
     <div class="token-details">
       <div class="info-block">
-        <p>Refresh Token is stored in a secure <strong>HttpOnly</strong> cookie.</p>
-        <p>It cannot be accessed by JavaScript code. Status is verified via server probe.</p>
+        <p>Refresh Token хранится в защищенной куке <strong>HttpOnly</strong>.</p>
+        <p>Он недоступен для JavaScript. Статус проверяется через серверный запрос.</p>
       </div>
 
       <div class="refresh-stats">
         <div class="stat-row">
-          <span>Total Cookies:</span>
+          <span>Всего кук:</span>
           <span>{{ cookieStatus()?.cookieCount ?? '-' }}</span>
         </div>
         <div class="stat-row">
-          <span>Status Check:</span>
+          <span>Проверка статуса:</span>
           <nz-tag [nzColor]="cookieStatus()?.success ? 'success' : 'error'">
-            {{ cookieStatus()?.success ? 'Server Confirmed' : 'Check Failed' }}
+            {{ cookieStatus()?.success ? 'Подтверждено сервером' : 'Ошибка проверки' }}
           </nz-tag>
         </div>
         <div class="stat-row">
-          <span>Refresh Cookie:</span>
+          <span>Refresh Кука:</span>
           <nz-tag [nzColor]="cookieStatus()?.hasRefreshToken ? 'processing' : 'default'">
-            {{ cookieStatus()?.hasRefreshToken ? 'Found' : 'Missing' }}
+            {{ cookieStatus()?.hasRefreshToken ? 'Найдена' : 'Отсутствует' }}
           </nz-tag>
         </div>
         <div class="stat-row">
-          <span>Last Used:</span>
+          <span>Последняя проверка:</span>
           <span>{{ tokenStatus()?.lastChecked | date : 'mediumTime' }}</span>
         </div>
       </div>
 
       <div class="actions-row">
         <button nz-button nzType="primary" (click)="forceRefresh()">
-          <span nz-icon nzType="sync"></span> Force Refresh
+          <span nz-icon nzType="sync"></span> Обновить принудительно
         </button>
-        <button nz-button nzDanger><span nz-icon nzType="delete"></span> Revoke Token</button>
+        <button nz-button nzDanger><span nz-icon nzType="delete"></span> Отозвать токен</button>
       </div>
     </div>
   </nz-card>
 
   <!-- Server Validation Section -->
-  <nz-card [nzTitle]="'Server Validation'" [nzExtra]="validationExtra" class="full-width-card">
+  <nz-card [nzTitle]="'Валидация на сервере'" [nzExtra]="validationExtra" class="full-width-card">
     <ng-template #validationExtra>
       <button nz-button nzType="text" (click)="isHelpVisible.set(true)">
-        <span nz-icon nzType="question-circle"></span> Help
+        <span nz-icon nzType="question-circle"></span> Помощь
       </button>
     </ng-template>
 
@@ -152,19 +152,21 @@
         <span>
           {{
             result.isConsistent
-              ? 'Client and Server states are consistent'
-              : 'Inconsistencies detected between Client and Server'
+              ? 'Состояние клиента и сервера согласовано'
+              : 'Обнаружены расхождения между клиентом и сервером'
           }}
         </span>
       </div>
       <ng-template #notChecked>
         <div class="validation-status">
           <span nz-icon nzType="info-circle" nzTheme="outline"></span>
-          <span>Status checks pending...</span>
+          <span>Ожидание проверки...</span>
         </div>
       </ng-template>
 
-      <button nz-button [nzLoading]="isCheckingConsistency()" (click)="checkConsistency()">Check Consistency</button>
+      <button nz-button [nzLoading]="isCheckingConsistency()" (click)="checkConsistency()">
+        Проверить согласованность
+      </button>
     </div>
 
     <!-- Differences List -->

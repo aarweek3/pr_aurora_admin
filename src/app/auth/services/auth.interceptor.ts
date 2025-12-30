@@ -100,7 +100,9 @@ function handle401Error(
   // Если это auth endpoint, не пытаемся refresh
   if (isAuthEndpoint(request.url)) {
     redirectToLogin(router, isDevMode);
-    return throwError(() => new Error('Ошибка аутентификации'));
+    const error = new Error('Ошибка аутентификации');
+    (error as any).status = 401;
+    return throwError(() => error);
   }
 
   // Если уже идет процесс refresh
@@ -108,7 +110,12 @@ function handle401Error(
     return refreshTokenSubject.pipe(
       filter((result) => result !== null),
       take(1),
-      switchMap(() => next(request)),
+      switchMap((success) => {
+        if (success) {
+          return next(applyLatestToken(request));
+        }
+        return throwError(() => new Error('Session expired'));
+      }),
     );
   }
 
@@ -121,7 +128,7 @@ function handle401Error(
   }
 
   return authService.refreshToken().pipe(
-    switchMap((response: any) => {
+    switchMap((response) => {
       if (response && response.success) {
         isRefreshing = false;
         refreshTokenSubject.next(true);
@@ -130,8 +137,7 @@ function handle401Error(
           console.log('✅ Токен успешно обновлен, повторяем запрос');
         }
 
-        // Повторяем оригинальный запрос
-        return next(request);
+        return next(applyLatestToken(request));
       } else {
         throw new Error('Не удалось обновить токен');
       }
@@ -141,15 +147,43 @@ function handle401Error(
       refreshTokenSubject.next(false);
 
       if (isDevMode) {
-        console.log('❌ Ошибка обновления токена:', refreshError);
+        console.log('❌ Ошибка обновления токена или повторного запроса:', refreshError);
       }
 
-      // Если refresh не удался, перенаправляем на логин
-      redirectToLogin(router, isDevMode);
+      const error = new Error('Сессия истекла. Пожалуйста, войдите заново');
+      (error as any).status = 401;
 
-      return throwError(() => new Error('Сессия истекла. Пожалуйста, войдите заново'));
+      // Если это запрос симулятора, не перенаправляем на логин автоматически,
+      // чтобы пользователь мог видеть результат ошибки прямо в симуляторе
+      if (request.headers.has('X-Simulator-Request')) {
+        return throwError(() => refreshError || error);
+      }
+
+      redirectToLogin(router, isDevMode);
+      return throwError(() => error);
     }),
   );
+}
+
+/**
+ * Применяет актуальный токен к запросу перед повторной отправкой
+ */
+function applyLatestToken(request: HttpRequest<unknown>): HttpRequest<unknown> {
+  const oldToken = request.headers.get('Authorization')?.replace('Bearer ', '');
+  const latestToken = localStorage.getItem('accessToken');
+
+  // Если у нас появился новый токен, отличный от того, что был в упавшем запросе - используем его
+  if (latestToken && latestToken !== oldToken) {
+    return request.clone({
+      setHeaders: { Authorization: `Bearer ${latestToken}` },
+    });
+  }
+
+  // Если токена нет ИЛИ он такой же как старый (значит refresh обновил только HttpOnly куки),
+  // принудительно удаляем заголовок Authorization, чтобы бекенд переключился на чтение кук.
+  return request.clone({
+    headers: request.headers.delete('Authorization'),
+  });
 }
 
 /**
@@ -267,7 +301,9 @@ function handleError(error: HttpErrorResponse): Error {
     });
   }
 
-  return new Error(errorMessage);
+  const finalError = new Error(errorMessage);
+  (finalError as any).status = error.status;
+  return finalError;
 }
 
 /**

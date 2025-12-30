@@ -1,0 +1,204 @@
+<div class="roles-tab-container">
+  <!-- 1. Current Roles Section -->
+  <nz-card class="section-card" nzTitle="Ваша активная личность">
+    <div class="current-roles-banner">
+      <div class="identity-info">
+        <span class="label">Текущие роли:</span>
+        <div class="roles-list">
+          <nz-tag *ngFor="let role of currentRoles()" [nzColor]="'blue'" class="role-badge">
+            <span nz-icon nzType="safety"></span> {{ role }}
+          </nz-tag>
+          <span *ngIf="!currentRoles().length" class="no-roles">Роли не назначены</span>
+        </div>
+      </div>
+      <div class="security-level">
+        <span class="label">Уровень доверия клиента:</span>
+        <nz-badge
+          [nzStatus]="checkRoleAccess('Admin') ? 'success' : 'processing'"
+          [nzText]="checkRoleAccess('Admin') ? 'Повышенный (Admin)' : 'Стандартный пользователь'"
+        ></nz-badge>
+      </div>
+    </div>
+  </nz-card>
+
+  <div class="roles-grid">
+    <!-- 2. Permission Matrix -->
+    <nz-card class="section-card grid-item" [nzTitle]="matrixTitle">
+      <ng-template #matrixTitle>
+        <div class="card-header">
+          <span><span nz-icon nzType="table"></span> Матрица прав доступа</span>
+          <nz-tag nzColor="orange">Только чтение</nz-tag>
+        </div>
+      </ng-template>
+
+      <nz-table #basicTable [nzData]="permissions" [nzFrontPagination]="false" nzSize="small">
+        <thead>
+          <tr>
+            <th>Разрешение</th>
+            <th>Admin</th>
+            <th>Модер</th>
+            <th>Пользователь</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let p of permissions">
+            <td>
+              <span class="perm-label" [nz-tooltip]="p.description">{{ p.label }}</span>
+            </td>
+            <td class="status-cell">
+              <span nz-icon nzType="check-circle" nzTheme="fill" class="success-icon"></span>
+            </td>
+            <td class="status-cell">
+              <span
+                nz-icon
+                [nzType]="getPermissionsForRole('Moderator').includes(p.key) ? 'check-circle' : 'minus-circle'"
+                [class.success-icon]="getPermissionsForRole('Moderator').includes(p.key)"
+                [class.disabled-icon]="!getPermissionsForRole('Moderator').includes(p.key)"
+              ></span>
+            </td>
+            <td class="status-cell">
+              <span
+                nz-icon
+                [nzType]="getPermissionsForRole('User').includes(p.key) ? 'check-circle' : 'minus-circle'"
+                [class.success-icon]="getPermissionsForRole('User').includes(p.key)"
+                [class.disabled-icon]="!getPermissionsForRole('User').includes(p.key)"
+              ></span>
+            </td>
+          </tr>
+        </tbody>
+      </nz-table>
+    </nz-card>
+
+    <!-- 3. Role Simulator -->
+    <nz-card class="section-card grid-item" [nzTitle]="simulatorTitle">
+      <ng-template #simulatorTitle>
+        <div class="card-header">
+          <div class="header-main"><span nz-icon nzType="experiment"></span> Симулятор доступа</div>
+          <div class="header-actions">
+            <!-- English Quick Help -->
+            <span
+              nz-icon
+              nzType="question-circle"
+              nzTheme="outline"
+              class="help-icon"
+              nz-popover
+              nzPopoverTitle="Quick Guide"
+              [nzPopoverContent]="simHelpTpl"
+              nzPopoverPlacement="bottomRight"
+            ></span>
+
+            <!-- Russian Expanded Help -->
+            <span
+              nz-icon
+              nzType="info-circle"
+              nzTheme="twotone"
+              class="help-icon"
+              nz-popover
+              nzPopoverTitle="О Симуляторе Доступа"
+              [nzPopoverContent]="simHelpRuTpl"
+              nzPopoverPlacement="bottomRight"
+            ></span>
+          </div>
+        </div>
+      </ng-template>
+
+      <ng-template #simHelpTpl>
+        <div class="simulator-help">
+          <p>
+            Этот инструмент позволяет проверить, дают ли ваши <strong>текущие роли</strong> определенные полномочия.
+          </p>
+          <p><strong>Частые ключи прав:</strong></p>
+          <ul>
+            <li><code>user:view</code> - Доступ обычного пользователя</li>
+            <li><code>user:delete</code> - Административный доступ</li>
+            <li><code>auth:control</code> - Доступ к этой панели</li>
+            <li><code>api:debug</code> - Логирование/API мониторинг</li>
+          </ul>
+          <p class="tip"><span nz-icon nzType="info-circle"></span> Поиск поддерживает частичные совпадения!</p>
+        </div>
+      </ng-template>
+
+      <ng-template #simHelpRuTpl>
+        <div class="simulator-help ru">
+          <p>
+            <strong>Симулятор доступа</strong> — это диагностический инструмент для проверки логики полномочий на
+            клиенте.
+          </p>
+          <p>
+            Он имитирует работу Guard-ов и структурных директив, позволяя вам мгновенно проверить, увидит ли
+            пользователь определенную кнопку или раздел.
+          </p>
+          <div class="help-features">
+            <div class="feature-item">
+              <span nz-icon nzType="check" class="success-icon"></span>
+              <span><strong>Без запросов:</strong> Проверка идет только по текущему JWT токену.</span>
+            </div>
+            <div class="feature-item">
+              <span nz-icon nzType="check" class="success-icon"></span>
+              <span><strong>Матрица:</strong> Использует предопределенную карту разрешений для каждой роли.</span>
+            </div>
+          </div>
+          <p class="description">
+            Это помогает отладить UI до того, как бэкенд вернет ошибку 403, обеспечивая бесшовный UX.
+          </p>
+        </div>
+      </ng-template>
+
+      <div class="simulator-box">
+        <p class="sim-tip">Проверьте, может ли ваша текущая личность выполнить действие.</p>
+
+        <div class="search-box">
+          <nz-input-group [nzSuffix]="suffixIconSearch">
+            <input
+              type="text"
+              nz-input
+              placeholder="напр. user:delete"
+              [ngModel]="searchPermission()"
+              (ngModelChange)="searchPermission.set($event)"
+            />
+          </nz-input-group>
+          <ng-template #suffixIconSearch>
+            <span nz-icon nzType="search"></span>
+          </ng-template>
+        </div>
+
+        <div class="result-area" *ngIf="searchPermission()">
+          <div class="result-card" [class.granted]="hasPermission()" [class.denied]="hasPermission() === false">
+            <div class="result-icon">
+              <span nz-icon [nzType]="hasPermission() ? 'check-circle' : 'close-circle'"></span>
+            </div>
+            <div class="result-text">
+              <div class="status-msg">{{ hasPermission() ? 'ДОСТУП РАЗРЕШЕН' : 'ДОСТУП ЗАПРЕЩЕН' }}</div>
+              <div class="status-desc" *ngIf="hasPermission()">У вас достаточно прав для этого ключа.</div>
+              <div class="status-desc" *ngIf="!hasPermission()">Ваши текущие роли не позволяют эту операцию.</div>
+            </div>
+          </div>
+        </div>
+
+        <nz-empty *ngIf="!searchPermission()" nzNotFoundContent="Введите ключ полномочия для теста"></nz-empty>
+      </div>
+    </nz-card>
+  </div>
+
+  <!-- 4. Route Guard Testing -->
+  <nz-card class="section-card" nzTitle="Статус защиты маршрутов">
+    <div class="routes-container">
+      <div class="route-item" *ngFor="let route of guardedRoutes">
+        <div class="route-info">
+          <div class="route-path">
+            <code>{{ route.path }}</code>
+          </div>
+          <div class="route-label">{{ route.label }}</div>
+        </div>
+        <div class="route-requirements">
+          <nz-tag nzColor="default">Нужна роль: {{ route.role }}</nz-tag>
+        </div>
+        <div class="route-status">
+          <nz-tag [nzColor]="checkRoleAccess(route.role) ? 'success' : 'error'">
+            {{ checkRoleAccess(route.role) ? 'Доступно' : 'Заблокировано' }}
+          </nz-tag>
+        </div>
+      </div>
+    </div>
+  </nz-card>
+</div>

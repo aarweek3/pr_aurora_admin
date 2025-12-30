@@ -1,0 +1,189 @@
+<div class="playground-container" [@fadeIn]>
+  <!-- Help & Info -->
+  <div class="playground-header">
+    <div class="info-badges">
+      <nz-tag [nzColor]="'purple'"> <span nz-icon nzType="api"></span> Исследователь API </nz-tag>
+
+      <!-- Russian Help -->
+      <nz-tag
+        [nzColor]="'geekblue'"
+        nz-popover
+        [nzPopoverContent]="helpRuTemplate"
+        nzPopoverTitle="Справка по Песочнице"
+      >
+        <span nz-icon nzType="question-circle"></span> Помощь
+      </nz-tag>
+      <ng-template #helpRuTemplate>
+        <div class="help-content-popover ru">
+          <p>Интерактивный инструмент для проверки серверных эндпоинтов в реальном времени.</p>
+
+          <div class="help-section">
+            <span class="section-title">🛡️ Как это работает технически:</span>
+            <ul>
+              <li>
+                <strong>HttpOnly Cookies:</strong> Все запросы автоматически включают ваши текущие Cookies. Фронтенд не
+                имеет к ним доступа, их прикрепляет сам браузер для максимальной безопасности.
+              </li>
+              <li>
+                <strong>X-Simulator-Request:</strong> Мы добавляем этот заголовок, чтобы сервер понимал: запрос пришел
+                из панели управления. Это позволяет серверу вести отдельную статистику или особым образом логировать
+                отладку.
+              </li>
+              <li>
+                <strong>Авто-восстановление:</strong> Если во время отправки запроса ваша сессия истекла, система
+                сначала выполнит Refresh-поток, а затем «прозрачно» отправит ваш отладочный запрос с новыми данными.
+              </li>
+            </ul>
+          </div>
+
+          <div class="help-section">
+            <span class="section-title">⚙️ Порядок действий:</span>
+            <p>1. Выберите нужный URL (например, проверку Профиля или Админ-статистику).</p>
+            <p>
+              2. Нажмите «Выполнить». В блоке ответа вы увидите <i>честный</i> результат от сервера: от JSON-данных до
+              сообщений об отказе в доступе (403).
+            </p>
+          </div>
+
+          <div class="help-section">
+            <span class="section-title">🌟 Реальный сценарий (Пример):</span>
+            <div
+              class="example-box"
+              style="
+                background: rgba(24, 144, 255, 0.05);
+                border-left: 4px solid #1890ff;
+                padding: 10px;
+                border-radius: 4px;
+              "
+            >
+              <strong>Проверка доступа администратора:</strong>
+              <p>
+                Вы считаете, что у вас есть права админа, но в интерфейсе кнопка заблокирована. В Песочнице выберите
+                эндпоинт <code>/api/Admin/statistics</code> и нажмите «Выполнить».
+              </p>
+              <p style="margin-top: 5px; font-size: 11px">
+                <i>Кстати:</i> Если в списке нет нужного адреса, выберите <b>«Свой запрос...»</b> и введите любой URL
+                вручную.
+              </p>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+
+  <div nz-row [nzGutter]="24">
+    <!-- Configuration Column -->
+    <div nz-col [nzSpan]="10">
+      <nz-card nzTitle="Настройка запроса" [nzBordered]="false" class="glass-card">
+        <div class="request-form">
+          <div class="form-item">
+            <label>Выберите эндпоинт:</label>
+            <nz-select [ngModel]="selectedIndex()" (ngModelChange)="onEndpointChange($event)" nzSize="large" nzBlock>
+              <nz-option *ngFor="let ep of endpoints; let i = index" [nzLabel]="ep.label" [nzValue]="i"></nz-option>
+            </nz-select>
+          </div>
+
+          <!-- URL Input for Predefined or Custom -->
+          <div class="form-item" *ngIf="selectedIndex() === endpoints.length - 1; else predefinedDetails">
+            <label>Метод и URL:</label>
+            <nz-input-group [nzAddOnBefore]="methodSelect">
+              <input
+                type="text"
+                nz-input
+                [(ngModel)]="customUrl"
+                placeholder="/api/MyController/action"
+                nzSize="large"
+              />
+            </nz-input-group>
+            <ng-template #methodSelect>
+              <nz-select [(ngModel)]="selectedMethod" style="width: 100px">
+                <nz-option nzLabel="GET" nzValue="GET"></nz-option>
+                <nz-option nzLabel="POST" nzValue="POST"></nz-option>
+                <nz-option nzLabel="PUT" nzValue="PUT"></nz-option>
+                <nz-option nzLabel="DELETE" nzValue="DELETE"></nz-option>
+              </nz-select>
+            </ng-template>
+            <p class="helper-text">Вы можете вводить как относительные (/api/..), так и полные (https://..) пути.</p>
+          </div>
+
+          <ng-template #predefinedDetails>
+            <div class="endpoint-details" *ngIf="endpoints[selectedIndex()] as ep">
+              <div class="method-url">
+                <span class="method-badge" [class]="ep.method.toLowerCase()">{{ ep.method }}</span>
+                <code class="url-text">{{ ep.url }}</code>
+              </div>
+              <p class="description-text">{{ ep.description }}</p>
+            </div>
+          </ng-template>
+
+          <nz-divider></nz-divider>
+
+          <div class="actions">
+            <button nz-button nzType="primary" nzSize="large" [nzLoading]="isLoading()" (click)="sendRequest()" nzBlock>
+              <span nz-icon nzType="send"></span> Выполнить запрос
+            </button>
+          </div>
+        </div>
+      </nz-card>
+
+      <nz-alert
+        nzType="info"
+        nzMessage="Блокировка интерцептора активна"
+        nzDescription="Параллельные запросы будут поставлены в очередь, если идет обновление токена."
+        nzShowIcon
+        style="margin-top: 16px"
+      ></nz-alert>
+    </div>
+
+    <!-- Response Column -->
+    <div nz-col [nzSpan]="14">
+      <nz-card
+        nzTitle="Просмотр ответа"
+        [nzBordered]="false"
+        class="glass-card response-card"
+        [nzExtra]="responseExtra"
+      >
+        <ng-template #responseExtra>
+          <button nz-button nzType="text" (click)="lastResponse.set(null)" [disabled]="!lastResponse()">
+            Очистить
+          </button>
+        </ng-template>
+
+        <div class="response-placeholder" *ngIf="!lastResponse() && !isLoading()">
+          <span nz-icon nzType="code-sandbox" class="p-icon"></span>
+          <p>Результаты появятся здесь после отправки запроса.</p>
+        </div>
+
+        <div class="response-spinner" *ngIf="isLoading()">
+          <nz-spin nzSimple nzTip="Загрузка..."></nz-spin>
+        </div>
+
+        <div class="response-content" *ngIf="lastResponse() as res">
+          <div class="response-header-meta">
+            <nz-tag [nzColor]="res.ok ? 'success' : 'error'" class="status-tag">
+              Статус: {{ res.status }} {{ res.statusText }}
+            </nz-tag>
+            <span class="timestamp">{{ res.timestamp | date : 'HH:mm:ss.SSS' }}</span>
+          </div>
+
+          <nz-tabset nzSize="small" [nzAnimated]="false">
+            <nz-tab nzTitle="Тело ответа (JSON)">
+              <div class="code-block">
+                <pre><code>{{ getJsonString(res.body) }}</code></pre>
+              </div>
+            </nz-tab>
+            <nz-tab nzTitle="Метаданные">
+              <nz-descriptions [nzColumn]="1" nzBordered nzSize="small">
+                <nz-descriptions-item nzTitle="Успешно">{{ res.ok ? 'Да' : 'Нет' }}</nz-descriptions-item>
+                <nz-descriptions-item nzTitle="Код статуса">{{ res.status }}</nz-descriptions-item>
+                <nz-descriptions-item nzTitle="Сообщение">{{ res.statusText }}</nz-descriptions-item>
+                <nz-descriptions-item nzTitle="Время">{{ res.timestamp | date : 'medium' }}</nz-descriptions-item>
+              </nz-descriptions>
+            </nz-tab>
+          </nz-tabset>
+        </div>
+      </nz-card>
+    </div>
+  </div>
+</div>

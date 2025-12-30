@@ -1,0 +1,232 @@
+.roles-tab-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 8px;
+}
+
+.section-card {
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  border: 1px solid #f0f0f0;
+
+  ::ng-deep .ant-card-head {
+    border-bottom: 1px solid #f0f0f0;
+    background: #fafafa;
+    border-radius: 12px 12px 0 0;
+  }
+}
+
+.current-roles-banner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+
+  .identity-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .label {
+    font-weight: 600;
+    color: rgba(0, 0, 0, 0.45);
+    text-transform: uppercase;
+    font-size: 11px;
+    letter-spacing: 0.5px;
+  }
+
+  .roles-list {
+    display: flex;
+    gap: 8px;
+  }
+
+  .role-badge {
+    padding: 2px 12px;
+    border-radius: 20px;
+    font-weight: 500;
+  }
+}
+
+.roles-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 20px;
+
+  @media (max-width: 1024px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+
+  .header-actions {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+
+  .help-icon {
+    font-size: 18px;
+    color: #1890ff;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+      transform: scale(1.15);
+      filter: brightness(1.1);
+    }
+  }
+}
+
+.status-cell {
+  text-align: center;
+  font-size: 16px;
+
+  .success-icon {
+    color: #52c41a;
+  }
+
+  .disabled-icon {
+    color: #d9d9d9;
+  }
+}
+
+.perm-label {
+  font-weight: 500;
+  cursor: help;
+  border-bottom: 1px dashed #d9d9d9;
+}
+
+// Simulator Styles
+.simulator-box {
+  .sim-tip {
+    color: rgba(0, 0, 0, 0.45);
+    font-size: 13px;
+    margin-bottom: 16px;
+  }
+
+  .search-box {
+    margin-bottom: 20px;
+  }
+
+  .result-area {
+    margin-top: 16px;
+  }
+}
+
+.simulator-help {
+  max-width: 320px;
+
+  p {
+    margin-bottom: 12px;
+    line-height: 1.5;
+  }
+
+  ul {
+    padding-left: 20px;
+    margin-bottom: 12px;
+
+    code {
+      background: #f5f5f5;
+      padding: 2px 5px;
+      border-radius: 4px;
+      color: #c41d7f;
+      font-family: "Roboto Mono", monospace;
+    }
+  }
+
+  &.ru {
+    .help-features {
+      margin: 12px 0;
+      background: rgba(24, 144, 255, 0.05);
+      padding: 10px;
+      border-radius: 6px;
+      border-left: 3px solid #1890ff;
+
+      .feature-item {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 6px;
+        font-size: 13px;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+
+        .success-icon {
+          color: #52c41a;
+          margin-top: 3px;
+        }
+      }
+    }
+
+    .description {
+      font-size: 12px;
+      color: #595959;
+      font-style: italic;
+    }
+  }
+
+  .tip {
+    font-size: 12px;
+    color: #8c8c8c;
+    border-top: 1px solid #f0f0f0;
+    padding-top: 8px;
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+}
+
+// Routes Styles
+.routes-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.route-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: #fafafa;
+  border-radius: 8px;
+  border: 1px solid #f0f0f0;
+
+  .route-info {
+    flex: 1;
+
+    .route-path code {
+      background: #f0f0f0;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 13px;
+      color: #003a8c;
+    }
+
+    .route-label {
+      font-size: 12px;
+      color: rgba(0, 0, 0, 0.45);
+      margin-top: 2px;
+    }
+  }
+
+  .route-requirements {
+    width: 150px;
+    text-align: center;
+  }
+
+  .route-status {
+    width: 100px;
+    text-align: right;
+  }
+}

@@ -1,0 +1,188 @@
+.playground-container {
+  padding: 8px;
+
+  .playground-header {
+    margin-bottom: 24px;
+    display: flex;
+    justify-content: flex-end;
+
+    .info-badges {
+      display: flex;
+      gap: 8px;
+    }
+  }
+
+  .glass-card {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+    border-radius: 12px;
+    transition: all 0.3s ease;
+
+    &:hover {
+      box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.12);
+    }
+  }
+
+  .request-form {
+    .form-item {
+      margin-bottom: 20px;
+
+      label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 8px;
+        color: #595959;
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .endpoint-select {
+        width: 100%;
+      }
+    }
+
+    .endpoint-details {
+      margin-top: 16px;
+      padding: 16px;
+      background: #f9f9f9;
+      border-radius: 8px;
+      border: 1px dashed #d9d9d9;
+
+      .method-url {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 8px;
+
+        .method-badge {
+          padding: 2px 8px;
+          border-radius: 4px;
+          font-weight: 800;
+          font-size: 11px;
+          color: white;
+
+          &.get {
+            background-color: #0cbb52;
+          }
+          &.post {
+            background-color: #ff9900;
+          }
+        }
+
+        .url-text {
+          font-family: "Fira Code", "Courier New", monospace;
+          font-size: 13px;
+          word-break: break-all;
+          color: #434343;
+        }
+      }
+
+      .description-text {
+        margin: 0;
+        font-size: 13px;
+        color: #8c8c8c;
+        line-height: 1.5;
+      }
+    }
+  }
+
+  .response-card {
+    min-height: 500px;
+    display: flex;
+    flex-direction: column;
+
+    .response-placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 300px;
+      color: #bfbfbf;
+
+      .p-icon {
+        font-size: 48px;
+        margin-bottom: 16px;
+        opacity: 0.5;
+      }
+
+      p {
+        font-size: 15px;
+      }
+    }
+
+    .response-header-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+
+      .status-tag {
+        font-size: 14px;
+        padding: 4px 12px;
+        font-weight: 600;
+      }
+
+      .timestamp {
+        font-size: 12px;
+        color: #8c8c8c;
+      }
+    }
+
+    .code-block {
+      background: #2b2b2b;
+      padding: 16px;
+      border-radius: 8px;
+      max-height: 400px;
+      overflow-y: auto;
+
+      pre {
+        margin: 0;
+      }
+
+      code {
+        color: #a9b7c6;
+        font-family: "Fira Code", "Courier New", monospace;
+        font-size: 13px;
+        line-height: 1.6;
+      }
+    }
+  }
+}
+
+// Help popover customization
+:host ::ng-deep .ant-popover-inner-content {
+  padding: 0;
+}
+
+.help-content-popover {
+  width: 320px;
+  padding: 16px;
+
+  p {
+    margin-bottom: 12px;
+  }
+
+  .help-list {
+    padding-left: 20px;
+    margin: 0;
+    li {
+      margin-bottom: 8px;
+      font-size: 13px;
+    }
+  }
+
+  &.ru {
+    .help-section {
+      margin-top: 12px;
+      .section-title {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 4px;
+        color: #1890ff;
+      }
+    }
+  }
+}

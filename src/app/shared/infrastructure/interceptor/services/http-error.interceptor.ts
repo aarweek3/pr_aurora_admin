@@ -47,11 +47,12 @@ export function HttpErrorInterceptor(
         errorResponse = createEnhancedErrorResponse(httpError, req);
       }
 
-      // Не показываем глобальное сообщение об ошибке для иконок, HealthCheck и диагностики токенов
+      // Не показываем глобальное сообщение об ошибке для иконок, HealthCheck, диагностики токенов и запросов симулятора
       const isIconRequest = req.url.endsWith('.svg') || req.url.includes('assets/icons');
       const isDebugToken = req.url.includes('debug-token');
+      const isSimulatorRequest = req.headers.has('X-Simulator-Request');
 
-      if (!isIconRequest && !isHealthCheck && !isDebugToken) {
+      if (!isIconRequest && !isHealthCheck && !isDebugToken && !isSimulatorRequest) {
         errorHandlingService.handleError(errorResponse);
       }
 

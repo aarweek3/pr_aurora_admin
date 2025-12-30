@@ -1,0 +1,264 @@
+<div class="simulator-tab-container">
+  <!-- Header with Help Icons -->
+  <div class="tab-section-header">
+    <div class="header-main">
+      <span nz-icon nzType="warning" nzTheme="twotone" [nzTwotoneColor]="'#faad14'"></span>
+      <h2>Симулятор Auth & API</h2>
+    </div>
+    <div class="header-actions">
+      <!-- Quick Help (?) -->
+      <span
+        nz-icon
+        nzType="question-circle"
+        nzTheme="outline"
+        class="help-icon"
+        nz-popover
+        nzPopoverTitle="Simulator Quick Guide"
+        [nzPopoverContent]="simHelpEn"
+        nzPopoverPlacement="bottomRight"
+      ></span>
+
+      <!-- Detailed Info (!) -->
+      <span
+        nz-icon
+        nzType="info-circle"
+        nzTheme="twotone"
+        class="help-icon info"
+        nz-popover
+        nzPopoverTitle="Инструкция симулятора"
+        [nzPopoverContent]="simHelpRu"
+        nzPopoverPlacement="bottomRight"
+      ></span>
+    </div>
+  </div>
+
+  <!-- Help Templates -->
+  <ng-template #simHelpEn>
+    <div class="popover-help-content">
+      <p>
+        Use these tools to test how the application handles various <strong>edge cases</strong> and
+        <strong>error states</strong>.
+      </p>
+      <ul>
+        <li><strong>HTTP Errors:</strong> Verify Interceptor and UI notification logic.</li>
+        <li><strong>Lifecycle:</strong> Test auto-refresh and session recovery.</li>
+        <li><strong>Stress:</strong> Ensure queueing and stability under load.</li>
+      </ul>
+    </div>
+  </ng-template>
+
+  <ng-template #simHelpRu>
+    <div class="popover-help-content russian">
+      <p>
+        <strong>Симулятор ошибок</strong> — это полигон для проверки надежности системы авторизации в экстремальных
+        условиях.
+      </p>
+
+      <div class="help-section">
+        <span class="section-title">1. Simulate 401 (Unauthorized)</span>
+        <p>Проверка <strong>Refresh Flow</strong>. Эмулирует истечение срока действия токена.</p>
+        <p class="outcome">
+          <em>Результат:</em> Интерцептор должен обновить токен в фоне и повторить запрос. Пользователь не должен
+          заметить ошибки или вылететь из системы.
+        </p>
+      </div>
+
+      <div class="help-section">
+        <span class="section-title">2. Simulate 403 (Forbidden)</span>
+        <p>Проверка <strong>прав доступа (RBAC)</strong>. Запрос к ресурсу, на который у вас нет прав.</p>
+        <p class="outcome">
+          <em>Результат:</em> Система должна показать отказ в доступе, но НЕ должна пытаться обновить токен или
+          редиректить на логин.
+        </p>
+      </div>
+
+      <div class="help-section">
+        <span class="section-title">3. Стресс-тест (Concurrency)</span>
+        <p>Проверка <strong>Refresh Lock</strong>. Симулирует 10 одновременных запросов при "протухшем" токене.</p>
+        <p class="outcome">
+          <em>Результат:</em> Система должна выполнить <strong>ровно один</strong> запрос на Refresh, задержав остальные
+          в очереди, а затем успешно завершить все 10 вызовов.
+        </p>
+      </div>
+
+      <p class="warning-note">⚠️ Внимание: Манипуляции с токеном в LS могут привести к разлогину.</p>
+    </div>
+  </ng-template>
+
+  <ng-template #tokenHelpContent>
+    <div class="popover-help-content russian">
+      <div class="help-section">
+        <span class="section-title">🛡️ Зачем нужны манипуляции?</span>
+        <p>
+          Эти инструменты позволяют мгновенно имитировать критические ситуации на стороне клиента (истечение срока или
+          повреждение токена), чтобы проверить реакцию системы защиты.
+        </p>
+      </div>
+
+      <div class="help-section">
+        <span class="section-title">🚀 Примеры использования:</span>
+        <div class="example-box">
+          <strong>1. Проверка авто-обновления (Flow Test):</strong>
+          <p>
+            Нажмите <b>«Протушить токен»</b> (статус изменится на <i>Expired</i>), а затем отправьте любой запрос в
+            Песочнице. Интерцептор сам обновит токен и прозрачно повторит ваш запрос.
+          </p>
+        </div>
+        <div class="example-box">
+          <strong>2. Тест на уязвимость (Security Test):</strong>
+          <p>
+            Нажмите <b>«Испортить токен»</b>. В LocalStorage запишется невалидная строка. Система должна распознать сбой
+            и выполнить Logout для защиты данных.
+          </p>
+        </div>
+        <div class="example-box">
+          <strong>3. Очистка интерфейса:</strong>
+          <p>
+            Нажмите <b>«Сбросить результаты»</b>, чтобы скрыть баннеры с отчетами о тестах и очистить визуальное
+            состояние симулятора для начала новой серии проверок.
+          </p>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+
+  <!-- Last Result Banner -->
+  <nz-alert
+    *ngIf="lastResult() as result"
+    [nzType]="result.type || 'info'"
+    [nzMessage]="msgTpl"
+    [nzDescription]="descTpl"
+    class="result-banner"
+    nzShowIcon
+    nzCloseable
+    (nzOnClose)="clearResults()"
+  >
+    <ng-template #msgTpl>
+      <div class="result-header">
+        <span class="test-label">{{ result.message }}</span>
+        <span class="status-badge" [class.success]="result.isSuccess" [class.error]="!result.isSuccess">
+          {{ result.isSuccess ? 'ТЕСТ УСПЕШЕН' : 'ТЕСТ НЕ ПРОШЕЛ' }}
+        </span>
+      </div>
+    </ng-template>
+
+    <ng-template #descTpl>
+      <div class="test-description" *ngIf="result.description">
+        {{ result.description }}
+      </div>
+
+      <div class="result-status">
+        <nz-tag [nzColor]="result.isSuccess ? 'success' : 'error'"> HTTP Status: {{ result.status }} </nz-tag>
+      </div>
+
+      <div class="result-verdict" *ngIf="result.verdict">
+        <div class="verdict-title">ПОДРОБНЫЙ РЕЗУЛЬТАТ:</div>
+        <div class="verdict-text">{{ result.verdict }}</div>
+      </div>
+    </ng-template>
+  </nz-alert>
+
+  <div nz-row [nzGutter]="[20, 20]">
+    <!-- 1. HTTP Error Triggers -->
+    <div nz-col [nzXs]="24" [nzLg]="12">
+      <nz-card nzTitle="Триггеры HTTP ошибок">
+        <p class="card-desc">Отправка реальных запросов, которые возвращают коды ошибок.</p>
+
+        <div class="button-grid">
+          <button nz-button nzDanger nzType="default" [nzLoading]="isLoading()" (click)="simulate401()">
+            Симулировать <span class="line-small">401 (Auth)</span>
+          </button>
+          <button nz-button nzDanger nzType="default" [nzLoading]="isLoading()" (click)="simulate403()">
+            Симулировать <span class="line-small">403 (Access)</span>
+          </button>
+          <button nz-button nzDanger nzType="default" [nzLoading]="isLoading()" (click)="simulate500()">
+            Симулировать <span class="line-small">500 (Fail)</span>
+          </button>
+          <button nz-button nzType="default" [nzLoading]="isLoading()" (click)="simulateNetworkError()">
+            Ошибка сети <span class="line-small">(CORS/DNS)</span>
+          </button>
+        </div>
+      </nz-card>
+    </div>
+
+    <!-- 2. Token Manipulation -->
+    <div nz-col [nzXs]="24" [nzLg]="12">
+      <nz-card [nzTitle]="tokenTitle" [nzExtra]="tokenHelp">
+        <ng-template #tokenTitle>
+          <span>Манипуляции с токенами</span>
+        </ng-template>
+        <ng-template #tokenHelp>
+          <span
+            nz-icon
+            nzType="question-circle"
+            class="help-icon info"
+            nz-popover
+            [nzPopoverContent]="tokenHelpContent"
+            nzPopoverPlacement="bottomRight"
+            nzPopoverTitle="Зачем нужны манипуляции?"
+          ></span>
+        </ng-template>
+        <p class="card-desc">Изменение локального состояния токенов для проверки реакции фронтенда.</p>
+
+        <div class="button-grid">
+          <button
+            nz-button
+            nzType="default"
+            (click)="expireTokenNow()"
+            nz-tooltip
+            nzTooltipTitle="Очистить статус в памяти"
+          >
+            "Протушить" <span class="line-small">токен</span>
+          </button>
+          <button
+            nz-button
+            nzType="default"
+            (click)="corruptToken()"
+            nz-tooltip
+            nzTooltipTitle="Записать мусор в LocalStorage"
+          >
+            Испортить токен <span class="line-small">(LocalStorage)</span>
+          </button>
+          <button nz-button nzType="default" (click)="clearResults()">
+            Сбросить <span class="line-small">результаты</span>
+          </button>
+        </div>
+
+        <nz-divider nzText="Рискованная зона"></nz-divider>
+        <p class="small-text">Эти действия обходят серверную логику и проверяют надежность на стороне клиента.</p>
+      </nz-card>
+    </div>
+
+    <!-- 3. Stress Testing -->
+    <div nz-col [nzXs]="24">
+      <nz-card nzTitle="Стресс-тестирование">
+        <div class="stress-container">
+          <div class="stress-info">
+            <h3>Многопоточный тест (Concurrency)</h3>
+            <p>
+              Запуск 10 параллельных запросов к API. Проверяет корректность работы блокировки при обновлении токена.
+            </p>
+            <button
+              nz-button
+              nzType="primary"
+              [nzLoading]="isLoading()"
+              (click)="runConcurrencyTest()"
+              class="stress-btn"
+            >
+              Запустить 10 запросов
+            </button>
+          </div>
+
+          <div class="stress-visual" *ngIf="concurrencyProgress() > 0">
+            <span class="label">Выполнение:</span>
+            <nz-progress
+              [nzPercent]="concurrencyProgress()"
+              [nzStatus]="'active'"
+              [nzStrokeColor]="'#722ed1'"
+            ></nz-progress>
+          </div>
+        </div>
+      </nz-card>
+    </div>
+  </div>
+</div>
