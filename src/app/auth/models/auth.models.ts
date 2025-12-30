@@ -60,6 +60,7 @@ export interface UserProfileDto {
   roles?: string[];
   isExternalAccount?: boolean;
   externalProvider?: string;
+  externalId?: string;
 }
 
 export interface ExternalLoginDto {

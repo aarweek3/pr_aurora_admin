@@ -180,7 +180,132 @@
     </nz-card>
   </div>
 
-  <!-- 4. Route Guard Testing -->
+  <!-- 4. Permission Predictor (The "What if...?" Tool) -->
+  <nz-card class="section-card predictor-card" [nzTitle]="predictorTitle">
+    <ng-template #predictorTitle>
+      <div class="card-header">
+        <div class="header-main"><span nz-icon nzType="calculator"></span> Калькулятор прав (Permission Predictor)</div>
+        <div class="header-actions">
+          <!-- Quick Help -->
+          <span
+            nz-icon
+            nzType="question-circle"
+            nzTheme="outline"
+            class="help-icon"
+            nz-popover
+            nzPopoverTitle="Predictor Guide"
+            [nzPopoverContent]="predHelpTpl"
+            nzPopoverPlacement="bottomRight"
+          ></span>
+
+          <!-- Russian Expanded Help -->
+          <span
+            nz-icon
+            nzType="info-circle"
+            nzTheme="twotone"
+            class="help-icon"
+            nz-popover
+            nzPopoverTitle="О Калькуляторе Прав"
+            [nzPopoverContent]="predHelpRuTpl"
+            nzPopoverPlacement="bottomRight"
+          ></span>
+        </div>
+      </div>
+    </ng-template>
+
+    <ng-template #predHelpTpl>
+      <div class="simulator-help">
+        <p>Simulates <strong>"What if"</strong> scenarios for different roles.</p>
+        <p><strong>Status Codes:</strong></p>
+        <ul>
+          <li><code>200 OK</code> - Explicitly granted permission</li>
+          <li><code>403 Forbidden</code> - Missing required claim</li>
+        </ul>
+        <p class="tip"><span nz-icon nzType="bulb"></span> Useful for designing new RBAC policies.</p>
+      </div>
+    </ng-template>
+
+    <ng-template #predHelpRuTpl>
+      <div class="simulator-help ru">
+        <p><strong>Калькулятор прав</strong> — это инструмент быстрого прототипирования системы доступов.</p>
+        <div class="help-features">
+          <div class="feature-item">
+            <span nz-icon nzType="interaction" class="success-icon"></span>
+            <span><strong>Zero-User:</strong> Вам не нужно создавать юзера в БД для проверки прав.</span>
+          </div>
+          <div class="feature-item">
+            <span nz-icon nzType="eye" class="success-icon"></span>
+            <span><strong>Visual:</strong> Мгновенная подсветка доступности критических API.</span>
+          </div>
+        </div>
+        <p class="description">
+          Выберите любую роль слева, и система покажет, «выживет» ли запрос к набору эндпоинтов на базе разрешений этой
+          роли.
+        </p>
+      </div>
+    </ng-template>
+
+    <div class="predictor-container">
+      <div class="predictor-sidebar">
+        <p class="sidebar-intro">Выберите роль для симуляции доступа к эндпоинтам:</p>
+        <div class="role-selector">
+          <button
+            *ngFor="let rm of roleMap"
+            nz-button
+            [nzType]="simulatedRole() === rm.role ? 'primary' : 'default'"
+            (click)="simulatedRole.set(rm.role)"
+            class="role-btn"
+          >
+            <span nz-icon nzType="user"></span> {{ rm.role }}
+          </button>
+          <button nz-button nzType="dashed" (click)="simulatedRole.set(null)" class="role-btn">Сбросить</button>
+        </div>
+
+        <div class="sim-verdict" *ngIf="simulatedRole()">
+          <div class="verdict-label">
+            Вы моделируете: <strong>{{ simulatedRole() }}</strong>
+          </div>
+          <p class="verdict-desc">
+            Система анализирует права роли {{ simulatedRole() }} против списка критических эндпоинтов.
+          </p>
+        </div>
+      </div>
+
+      <div class="predictor-main">
+        <div class="prediction-grid" *ngIf="predictionResults(); else emptyPrediction">
+          <div
+            *ngFor="let res of predictionResults()"
+            class="endpoint-item"
+            [class.allowed]="res.isAllowed"
+            [class.forbidden]="!res.isAllowed"
+          >
+            <div class="endpoint-header">
+              <span class="endpoint-name">{{ res.name }}</span>
+              <nz-tag [nzColor]="res.isAllowed ? 'success' : 'error'">
+                {{ res.isAllowed ? '200 OK' : '403 Forbidden' }}
+              </nz-tag>
+            </div>
+            <div class="endpoint-body">
+              <code class="endpoint-path">{{ res.path }}</code>
+              <div class="endpoint-req">
+                Требуется: <code>{{ res.requiredPermission }}</code>
+              </div>
+            </div>
+            <div class="endpoint-status-icon">
+              <span nz-icon [nzType]="res.isAllowed ? 'unlock' : 'lock'"></span>
+            </div>
+          </div>
+        </div>
+        <ng-template #emptyPrediction>
+          <div class="empty-state">
+            <nz-empty nzNotFoundContent="Выберите роль слева, чтобы увидеть предсказание доступа"></nz-empty>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+  </nz-card>
+
+  <!-- 5. Route Guard Testing -->
   <nz-card class="section-card" nzTitle="Статус защиты маршрутов">
     <div class="routes-container">
       <div class="route-item" *ngFor="let route of guardedRoutes">

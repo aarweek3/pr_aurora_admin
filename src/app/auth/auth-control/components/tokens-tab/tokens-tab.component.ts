@@ -60,9 +60,9 @@ export class TokensTabComponent implements OnInit, OnDestroy {
     if (!token?.valid) {
       return {
         level: 'error',
-        title: 'Authentication Failed',
-        message: 'Active session not found. Access Token is missing or expired.',
-        recommendation: 'Please perform a full Login via the Auth page.',
+        title: 'Ошибка аутентификации',
+        message: 'Активная сессия не найдена. Access Token отсутствует или истек.',
+        recommendation: 'Пожалуйста, выполните вход через страницу авторизации.',
       };
     }
 
@@ -70,10 +70,10 @@ export class TokensTabComponent implements OnInit, OnDestroy {
     if (consistency && !consistency.isConsistent) {
       return {
         level: 'error',
-        title: 'Security Mismatch Detected',
-        message: 'Critical desynchronization between Client and Server data.',
+        title: 'Обнаружено расхождение',
+        message: 'Критическая десинхронизация данных между клиентом и сервером.',
         recommendation:
-          'Immediate action required: Click "Force Refresh" or Logout/Login to restore integrity.',
+          'Требуется действие: Нажмите "Обновить принудительно" или перевойдите в систему до восстановления целостности.',
       };
     }
 
@@ -81,10 +81,10 @@ export class TokensTabComponent implements OnInit, OnDestroy {
     if (cookie && !cookie.hasRefreshToken) {
       return {
         level: 'warning',
-        title: 'Session Fragile',
-        message: 'Refresh Token cookie is missing. The session cannot be renewed automatically.',
+        title: 'Сессия нестабильна',
+        message: 'Кука Refresh Token отсутствует. Сессия не может быть обновлена автоматически.',
         recommendation:
-          'Check browser privacy settings or third-party cookie blockers. Re-login may fix this.',
+          'Проверьте настройки приватности браузера или блокировщики кук. Перевход может решить проблему.',
       };
     }
 
@@ -92,19 +92,20 @@ export class TokensTabComponent implements OnInit, OnDestroy {
     if (token.timeUntilExpiry < 300000) {
       return {
         level: 'warning',
-        title: 'Session Expiring Soon',
-        message: `Your session will expire in less than 5 minutes.`,
-        recommendation: 'The system should auto-renew shortly. You can also click "Force Refresh".',
+        title: 'Сессия скоро истекает',
+        message: `Ваша сессия истечет менее чем через 5 минут.`,
+        recommendation:
+          'Система должна обновиться автоматически. Также вы можете нажать "Обновить принудительно".',
       };
     }
 
     // 5. Success: All Good
     return {
       level: 'success',
-      title: 'System Healthy',
+      title: 'Система в норме',
       message:
-        'Authentication system is fully operational. Tokens are valid, and server data is consistent.',
-      recommendation: 'No actions required.',
+        'Система аутентификации полностью функциональна. Токены валидны, данные на сервере консистентны.',
+      recommendation: 'Действий не требуется.',
     };
   });
 

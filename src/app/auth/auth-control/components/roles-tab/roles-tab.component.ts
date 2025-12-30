@@ -121,13 +121,26 @@ export class RolesTabComponent {
     },
   ];
 
-  // Data: Routes to test
+  // Data: Routes to test (Route Guarding)
   guardedRoutes = [
     { path: '/auth-control', role: 'Admin', label: 'Auth Control Panel' },
     { path: '/admin/users', role: 'Moderator', label: 'User Management' },
     { path: '/admin/roles', role: 'Admin', label: 'Role Management' },
     { path: '/dashboard', role: 'User', label: 'Standard Dashboard' },
   ];
+
+  // Data: Prediction Endpoints (For Permission Predictor)
+  predictedEndpoints = [
+    { name: 'Get User List', path: '/api/users', requiredPermission: 'user:view' },
+    { name: 'Update User Profile', path: '/api/users/update', requiredPermission: 'user:edit' },
+    { name: 'Delete User Account', path: '/api/users/delete', requiredPermission: 'user:delete' },
+    { name: 'Access Audit Logs', path: '/api/admin/audit', requiredPermission: 'api:debug' },
+    { name: 'Auth Control Dash', path: '/api/auth/control', requiredPermission: 'auth:control' },
+    { name: 'Manage System Roles', path: '/api/roles/manage', requiredPermission: 'role:edit' },
+  ];
+
+  // Simulations
+  simulatedRole = signal<string | null>(null);
 
   // Computed
   currentRoles = computed(() => this.authService.getUserRoles());
@@ -144,6 +157,20 @@ export class RolesTabComponent {
         roles.includes(rd.role) &&
         rd.permissions.some((p) => p.toLowerCase().includes(search) || p === search),
     );
+  });
+
+  // Prediction Logic
+  predictionResults = computed(() => {
+    const simRole = this.simulatedRole();
+    if (!simRole) return null;
+
+    const roleDef = this.roleMap.find((r) => r.role === simRole);
+    if (!roleDef) return null;
+
+    return this.predictedEndpoints.map((ep) => ({
+      ...ep,
+      isAllowed: roleDef.permissions.includes(ep.requiredPermission),
+    }));
   });
 
   constructor() {}

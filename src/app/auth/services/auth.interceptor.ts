@@ -53,7 +53,7 @@ export const authInterceptor: HttpInterceptorFn = (
       );
     }
   } else if (isSimulator) {
-    trace.addStep('Токен не найден в локальном хранилище', 'warning');
+    trace.addStep('Токен не найден в локальном хранилище', 'info', 'Используются HttpOnly Cookies');
   }
 
   const authReq = req.clone({

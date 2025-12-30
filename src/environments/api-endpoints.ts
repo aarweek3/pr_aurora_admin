@@ -34,6 +34,11 @@ export class ApiEndpoints {
     EXTERNAL_LOGIN: (provider: string) => `${this.BASE_URL}/auth/external/login/${provider}`,
     DEBUG_TOKEN: `${this.BASE_URL}/Auth/debug-token`,
     DEBUG_COOKIES: `${this.BASE_URL}/Auth/debug-cookies`,
+    UNLINK_EXTERNAL: (provider: string) => `${this.BASE_URL}/Auth/external/unlink/${provider}`,
+    STRESS_TEST: `${this.BASE_URL}/Auth/stress-test`,
+    GET_USER_SESSIONS: (includeHistory: boolean) =>
+      `${this.BASE_URL}/Auth/sessions?includeHistory=${includeHistory}`,
+    REVOKE_SESSION: (id: number) => `${this.BASE_URL}/Auth/sessions/${id}/revoke`,
   };
 
   // Password endpoints (отдельный контроллер)

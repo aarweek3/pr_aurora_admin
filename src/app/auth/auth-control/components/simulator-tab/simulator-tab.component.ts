@@ -57,7 +57,11 @@ export class SimulatorTabComponent {
 
   // Signals
   isLoading = signal(false);
+  isBruteForcing = signal(false);
   concurrencyProgress = signal(0);
+  rateLimitProgress = signal(0);
+  rateLimitHistory = signal<Array<{ id: number; status: number; success: boolean }>>([]);
+
   lastResult = signal<{
     status: number;
     message: string;
@@ -66,6 +70,7 @@ export class SimulatorTabComponent {
     verdict?: string;
     isSuccess?: boolean;
   } | null>(null);
+
   testResult = signal<{ name: string; success: boolean; message: string; timestamp: Date } | null>(
     null,
   );
@@ -83,11 +88,6 @@ export class SimulatorTabComponent {
 
   simulate401(): void {
     this.logger.info('Запуск теста потока: 401 -> Обновление -> Успех');
-
-    // 1. Сохраняем оригинал токена (на всякий случай)
-    const originalToken = localStorage.getItem('accessToken');
-
-    // 2. Портим токен в LS, чтобы вызвать 401
     localStorage.setItem('accessToken', 'invalid_stale_token_' + Date.now());
 
     this.runTest(
@@ -148,7 +148,6 @@ export class SimulatorTabComponent {
   }
 
   simulate500(): void {
-    this.logger.info('Симуляция 500 Server Error (Ошибка сервера)');
     this.runTest(
       'Тест обработки критических ошибок сервера',
       (options) => {
@@ -171,7 +170,6 @@ export class SimulatorTabComponent {
   }
 
   simulateNetworkError(): void {
-    this.logger.info('Симуляция ошибки сети (Unknown Address)');
     this.runTest(
       'Тест устойчивости при обрыве связи',
       (options) => {
@@ -196,9 +194,8 @@ export class SimulatorTabComponent {
   // --- Token Lifecycle ---
 
   expireTokenNow(): void {
-    this.logger.warn('Force expiring token in client memory');
     this.tokenService.clearStatus();
-    this.message.warning('Token status cleared. Next request should trigger logic as "No Token".');
+    this.message.warning('Token status cleared.');
     this.lastResult.set({
       status: 0,
       message: 'Client-side Token Expired (Mock)',
@@ -207,11 +204,33 @@ export class SimulatorTabComponent {
   }
 
   corruptToken(): void {
-    this.logger.error('Corrupting token data...');
     localStorage.setItem('accessToken', 'invalid.token.payload');
-    this.message.error(
-      'Token corrupted in LocalStorage. Interceptor will likely fail next request.',
-    );
+    this.message.error('Token corrupted in LocalStorage.');
+  }
+
+  revokeServerSession(): void {
+    this.http.post(ApiEndpoints.AUTH.LOGOUT, {}, { withCredentials: true }).subscribe({
+      next: () => {
+        this.message.success('Сессия аннулирована на сервере.');
+        this.lastResult.set({
+          status: 200,
+          message: 'Сессия удалена на сервере',
+          description: 'Refresh-кука удалена.',
+          type: 'warning',
+          isSuccess: true,
+        });
+      },
+    });
+  }
+
+  spoofUserIdentity(): void {
+    const fakeId = 'Hacker-' + Math.floor(Math.random() * 1000);
+    this.tokenService.spoofStatus({
+      userId: fakeId,
+      userEmail: 'hacker@blackhat.com',
+      userRoles: ['Admin', 'Sudo', 'GodMode'],
+    });
+    this.message.error('UserID подменен в памяти!');
   }
 
   // --- Stress Testing ---
@@ -219,8 +238,6 @@ export class SimulatorTabComponent {
   runConcurrencyTest(): void {
     this.isLoading.set(true);
     this.concurrencyProgress.set(10);
-    this.testResult.set(null);
-    this.logger.info('Запуск конкурентного стресс-теста (10 параллельных запросов)');
 
     const requests = Array(10)
       .fill(null)
@@ -230,14 +247,8 @@ export class SimulatorTabComponent {
             headers: { 'X-Simulator-Request': 'true', 'X-Test-Id': i.toString() },
           })
           .pipe(
-            tap(() => {
-              this.concurrencyProgress.update((p) => p + 9); // Приблизительный прогресс
-              this.logger.debug(`Concurrency Request #${i} - Успешно`);
-            }),
-            catchError((err) => {
-              this.logger.error(`Concurrency Request #${i} - Ошибка`, err);
-              return of(null);
-            }),
+            tap(() => this.concurrencyProgress.update((p) => p + 9)),
+            catchError(() => of(null)),
           ),
       );
 
@@ -246,39 +257,78 @@ export class SimulatorTabComponent {
       .subscribe((results) => {
         const successCount = results.filter((r) => r !== null).length;
         this.concurrencyProgress.set(100);
-
         this.lastResult.set({
           status: successCount === 10 ? 200 : 207,
           message: 'Стресс-тест конкуренции',
-          description: 'Запуск 10 параллельных запросов для проверки устойчивости интерцептора.',
+          description: 'Запуск 10 параллельных запросов.',
           type: successCount === 10 ? 'success' : 'warning',
           verdict:
             successCount === 10
-              ? 'ТЕСТ УСПЕШЕН: Все 10 запросов прошли успешно. Система корректно блокирует конкурентные обновления и предотвращает дублирование Refresh-запросов.'
-              : `ТЕСТ НЕ ПРОШЕЛ: Только ${successCount} из 10 запросов завершились успешно.`,
+              ? 'ТЕСТ УСПЕШЕН: Все 10 запросов прошли успешно.'
+              : `ТЕСТ НЕ ПРОШЕЛ: Только ${successCount} из 10 успешно.`,
           isSuccess: successCount === 10,
         });
-
-        if (successCount === 10) {
-          this.logger.info(
-            'Стресс-тест успешно пройден: блокировка интерцептора работает корректно.',
-          );
-        }
       });
+  }
 
-    // Simulate progress with check
-    setTimeout(() => {
-      if (this.concurrencyProgress() < 100) this.concurrencyProgress.set(40);
-    }, 300);
-    setTimeout(() => {
-      if (this.concurrencyProgress() < 100) this.concurrencyProgress.set(70);
-    }, 800);
+  // --- Rate Limiting & Brute-force ---
+
+  runRateLimitTest(): void {
+    if (this.isBruteForcing()) return;
+
+    this.isBruteForcing.set(true);
+    this.rateLimitProgress.set(0);
+    this.rateLimitHistory.set([]);
+
+    const totalRequests = 15;
+    let completed = 0;
+
+    const sendRequest = (id: number) => {
+      return this.http
+        .get(ApiEndpoints.AUTH.STRESS_TEST, { headers: { 'X-Simulator-Request': 'true' } })
+        .pipe(
+          tap(() =>
+            this.rateLimitHistory.update((h) => [...h, { id, status: 200, success: true }]),
+          ),
+          catchError((err) => {
+            const status = err.status || 0;
+            this.rateLimitHistory.update((h) => [...h, { id, status, success: false }]);
+            return of(null);
+          }),
+          finalize(() => {
+            completed++;
+            this.rateLimitProgress.set(Math.round((completed / totalRequests) * 100));
+            if (completed === totalRequests) this.finishRateLimitTest();
+          }),
+        );
+    };
+
+    for (let i = 0; i < totalRequests; i++) {
+      setTimeout(() => sendRequest(i + 1).subscribe(), i * 150);
+    }
+  }
+
+  private finishRateLimitTest(): void {
+    this.isBruteForcing.set(false);
+    const history = this.rateLimitHistory();
+    const blockedCount = history.filter((h) => h.status === 429).length;
+
+    this.lastResult.set({
+      status: blockedCount > 0 ? 429 : 200,
+      message: 'Тест Rate Limiting (Блокировка)',
+      description: 'Симуляция превышения лимита запросов (Brute-force).',
+      type: blockedCount > 0 ? 'success' : 'warning',
+      verdict:
+        blockedCount > 0
+          ? `ТЕСТ УСПЕШЕН: Сервер заблокировал ${blockedCount} из 15 запросов (429 Too Many Requests).`
+          : 'ТЕСТ НЕ ПРОШЕЛ: Ни один запрос не был заблокирован.',
+      isSuccess: blockedCount > 0,
+    });
   }
 
   // --- Security Scanner ---
 
   runSecurityScan(): void {
-    this.logger.info('Запуск сканера защищенности среды...');
     this.securityScanResults.set({
       xssCheck: { success: false, details: 'Сканирование...' },
       cookieCheck: { success: false, details: 'Запрос к API...' },
@@ -286,58 +336,54 @@ export class SimulatorTabComponent {
       isScanning: true,
     });
 
-    // 1. XSS Leak Check (Global Window)
     setTimeout(() => {
-      const sensitiveKeys = ['token', 'accessToken', 'jwt', 'secret', 'auth', 'pass', 'password'];
+      const sensitiveKeys = ['token', 'accessToken', 'jwt', 'secret'];
       const leakedKeys = Object.keys(window).filter((key) =>
         sensitiveKeys.some((sk) => key.toLowerCase().includes(sk.toLowerCase())),
       );
-
-      const xssSuccess = leakedKeys.length === 0;
-      const xssDetails = xssSuccess
-        ? 'Глобальный объект window чист. Утечек токенов в глобальную область видимости не обнаружено.'
-        : `Обнаружены потенциально опасные ключи в window: ${leakedKeys.join(
-            ', ',
-          )}. Это может быть признаком уязвимости к XSS.`;
-
       this.securityScanResults.update((s) =>
-        s ? { ...s, xssCheck: { success: xssSuccess, details: xssDetails } } : null,
+        s
+          ? {
+              ...s,
+              xssCheck: {
+                success: leakedKeys.length === 0,
+                details: leakedKeys.length === 0 ? 'ОК' : 'Утечка',
+              },
+            }
+          : null,
       );
     }, 600);
 
-    // 2. Storage Hygiene
     setTimeout(() => {
       const hasTokenInLS = !!localStorage.getItem('accessToken');
-      const storageDetails = hasTokenInLS
-        ? 'Внимание: Access Token хранится в LocalStorage. Это удобно для отладки, но делает его уязвимым для XSS. Рекомендуется использовать только HttpOnly Cookies.'
-        : 'Токен отсутствует в LocalStorage. Высокий уровень защиты: сессия полностью изолирована в HttpOnly Cookies.';
-
       this.securityScanResults.update((s) =>
-        s ? { ...s, storageCheck: { success: !hasTokenInLS, details: storageDetails } } : null,
+        s
+          ? {
+              ...s,
+              storageCheck: { success: !hasTokenInLS, details: !hasTokenInLS ? 'Чисто' : 'В LS' },
+            }
+          : null,
       );
     }, 1200);
 
-    // 3. Cookie Flags (Server-side check)
     this.http.get<any>(ApiEndpoints.AUTH.DEBUG_COOKIES, { withCredentials: true }).subscribe({
       next: (res) => {
-        const hasCookies = res.hasAccessToken || res.hasRefreshToken;
-        const cookieDetails = hasCookies
-          ? 'HttpOnly Cookies обнаружены и активны. Сервер подтвердил наличие защищенного канала передачи сессии.'
-          : 'Cookies не обнаружены на сервере. Проверьте настройки CORS или credentials.';
-
         this.securityScanResults.update((s) =>
-          s ? { ...s, cookieCheck: { success: hasCookies, details: cookieDetails } } : null,
+          s
+            ? {
+                ...s,
+                cookieCheck: {
+                  success: res.hasAccessToken,
+                  details: res.hasAccessToken ? 'Активны' : 'Нет',
+                },
+              }
+            : null,
         );
         this.finishScan();
       },
       error: () => {
         this.securityScanResults.update((s) =>
-          s
-            ? {
-                ...s,
-                cookieCheck: { success: false, details: 'Ошибка при проверке Cookies на сервере.' },
-              }
-            : null,
+          s ? { ...s, cookieCheck: { success: false, details: 'Ошибка' } } : null,
         );
         this.finishScan();
       },
@@ -347,7 +393,7 @@ export class SimulatorTabComponent {
   private finishScan(): void {
     setTimeout(() => {
       this.securityScanResults.update((s) => (s ? { ...s, isScanning: false } : null));
-      this.message.success('Сканирование безопасности завершено');
+      this.message.success('Сканирование завершено');
     }, 500);
   }
 
@@ -378,38 +424,28 @@ export class SimulatorTabComponent {
   ): void {
     this.trace.clear();
     this.isLoading.set(true);
-    this.logger.info(`Симулятор: ${label}`);
-
     const options = { headers: { 'X-Simulator-Request': 'true' } };
 
     requestFn(options)
       .pipe(finalize(() => this.isLoading.set(false)))
       .subscribe({
         next: (res: any) => {
-          this.logger.info(`${label} - OK:`, res);
           const verdict = verdictFn(res, false);
-
           this.lastResult.set({
             status: 200,
             message: label,
-            description: description,
+            description,
             type: verdict.success ? 'success' : 'error',
             verdict: verdict.text,
             isSuccess: verdict.success,
           });
         },
         error: (err: any) => {
-          this.logger.error(`${label} - ERR:`, err);
-
-          const status = err.status !== undefined ? err.status : err.error?.status || 0;
-          const userMsg = err.userMessage || err.detail || err.message || 'Сбой запроса';
-
           const verdict = verdictFn(err, true);
-
           this.lastResult.set({
-            status: status,
+            status: err.status || 0,
             message: label,
-            description: description,
+            description,
             type: verdict.success ? 'success' : 'error',
             verdict: verdict.text,
             isSuccess: verdict.success,
@@ -421,5 +457,7 @@ export class SimulatorTabComponent {
   clearResults(): void {
     this.lastResult.set(null);
     this.concurrencyProgress.set(0);
+    this.rateLimitProgress.set(0);
+    this.rateLimitHistory.set([]);
   }
 }

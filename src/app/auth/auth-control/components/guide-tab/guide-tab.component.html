@@ -1,0 +1,762 @@
+<div class="guide-container">
+  <nz-tabset [nzSelectedIndex]="0" nzTabPosition="left" class="main-guide-tabset">
+    <!-- Раздел: Сессия (Теперь первый) -->
+    <nz-tab nzTitle="Сессия" (nzClick)="activeGuide.set('session')">
+      <ng-container *ngTemplateOutlet="sessionGuide"></ng-container>
+    </nz-tab>
+
+    <!-- Раздел: Менеджер сессий -->
+    <nz-tab nzTitle="Менеджер сессий" (nzClick)="activeGuide.set('sessions-manager')">
+      <ng-container *ngTemplateOutlet="sessionsManagerGuide"></ng-container>
+    </nz-tab>
+
+    <!-- Раздел: Токены -->
+    <nz-tab nzTitle="Токены" (nzClick)="activeGuide.set('tokens')">
+      <ng-container *ngTemplateOutlet="tokensGuide"></ng-container>
+    </nz-tab>
+
+    <nz-tab nzTitle="Роли" (nzClick)="activeGuide.set('roles')">
+      <ng-container *ngTemplateOutlet="rolesGuide"></ng-container>
+    </nz-tab>
+    <nz-tab nzTitle="Симулятор" (nzClick)="activeGuide.set('simulator')">
+      <ng-container *ngTemplateOutlet="simulatorGuide"></ng-container>
+    </nz-tab>
+    <nz-tab nzTitle="Песочница" (nzClick)="activeGuide.set('playground')">
+      <ng-container *ngTemplateOutlet="playgroundGuide"></ng-container>
+    </nz-tab>
+  </nz-tabset>
+
+  <!-- Шаблон для раздела СИМУЛЯТОР -->
+  <ng-template #simulatorGuide>
+    <div class="guide-content animate-fade-in">
+      <div class="guide-header">
+        <h2 nz-typography>
+          <span nz-icon nzType="warning" nzTheme="twotone" [nzTwotoneColor]="'#faad14'"></span> Справочник: Симулятор
+          безопасности
+        </h2>
+        <p class="guide-intro">
+          Инструменты для проверки устойчивости фронтенда к критическим сетевым ошибкам и попыткам взлома.
+        </p>
+      </div>
+
+      <nz-divider></nz-divider>
+
+      <!-- ТЕСТ: 401 Error & Refresh -->
+      <section class="test-card">
+        <div class="test-anchor">Тест №3</div>
+        <h3 class="test-title">Симуляция 401 (Auto-Refresh)</h3>
+        <p class="test-desc">Проверка механизма бесшовного обновления сессии при истечении токена.</p>
+
+        <div class="methodology-box">
+          <span class="label">Методика проведения:</span>
+          <nz-steps nzDirection="vertical" nzSize="small" class="custom-steps">
+            <nz-step nzTitle="Инициация" nzDescription="Нажмите кнопку 'Симулировать 401' в Симуляторе."></nz-step>
+            <nz-step
+              nzTitle="Перехват"
+              nzDescription="Интерцептор ловит 401 от сервера и ставит оригинальный запрос 'на паузу'."
+            ></nz-step>
+            <nz-step
+              nzTitle="Обновление"
+              nzDescription="Автоматически вызывается /api/Auth/refresh для получения нового Access Token."
+            ></nz-step>
+            <nz-step
+              nzTitle="Повтор"
+              nzDescription="После успеха Refresh, оригинальный запрос повторяется с новым токеном."
+            ></nz-step>
+          </nz-steps>
+        </div>
+
+        <div class="results-grid">
+          <div class="result-pane success">
+            <div class="pane-header">Ожидаемый результат: УСПЕХ</div>
+            <div class="pane-content">
+              <p>
+                Пользователь не замечает ошибки. Данные загружаются, в логах видна цепочка
+                <code>401 -> Refresh -> 200</code>.
+              </p>
+            </div>
+          </div>
+          <div class="result-pane failure">
+            <div class="pane-header">Ожидаемый результат: НЕ УСПЕХ</div>
+            <div class="pane-content">
+              <p>Бесконечный цикл запросов или мгновенное разлогинивание без попытки обновления.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <nz-divider nzDashed></nz-divider>
+
+      <!-- ТЕСТ: Session Hijacking -->
+      <section class="test-card">
+        <div class="test-anchor">Тест №4</div>
+        <h3 class="test-title">Угон сессии (Session Hijacking)</h3>
+        <p class="test-desc">Симуляция аннулирования сессии на уровне сервера (удаление куки).</p>
+
+        <div class="methodology-box">
+          <span class="label">Методика проведения:</span>
+          <nz-steps nzDirection="vertical" nzSize="small" class="custom-steps">
+            <nz-step
+              nzTitle="Угон"
+              nzDescription="Нажмите кнопку 'Угнать сессию'. Сервер стирает ваш Refresh Token в базе."
+            ></nz-step>
+            <nz-step
+              nzTitle="Триггер"
+              nzDescription="Выполните любое действие, требующее запроса (напр. 'Симулировать 401')."
+            ></nz-step>
+            <nz-step
+              nzTitle="Провал обновления"
+              nzDescription="Т.к. куки нет, запрос на Refresh вернет 401 (Invalid Token)."
+            ></nz-step>
+          </nz-steps>
+        </div>
+
+        <div class="results-grid">
+          <div class="result-pane success">
+            <div class="pane-header">Ожидаемый результат: УСПЕХ</div>
+            <div class="pane-content">
+              <p>Система понимает, что сессия скомпрометирована, и выполняет принудительный безопасный Logout.</p>
+            </div>
+          </div>
+          <div class="result-pane failure">
+            <div class="pane-header">Ожидаемый результат: НЕ УСПЕХ</div>
+            <div class="pane-content">
+              <p>Приложение зависает на пустом экране или продолжает показывать старые данные в UI.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <nz-divider nzDashed></nz-divider>
+
+      <!-- ТЕСТ: Identity Spoofing -->
+      <section class="test-card">
+        <div class="test-anchor">Тест №5</div>
+        <h3 class="test-title">Подмена личности (Identity Spoofing)</h3>
+        <p class="test-desc">Манипуляция состоянием (State) в оперативной памяти клиента.</p>
+
+        <div class="methodology-box">
+          <span class="label">Методика проведения:</span>
+          <nz-steps nzDirection="vertical" nzSize="small" class="custom-steps">
+            <nz-step
+              nzTitle="Инъекция"
+              nzDescription="Нажмите 'Подменить UserID'. В сигналы TokenService записываются ложные данные."
+            ></nz-step>
+            <nz-step
+              nzTitle="Визуальный аудит"
+              nzDescription="Проверьте, изменилось ли приветствие и права в UI."
+            ></nz-step>
+            <nz-step
+              nzTitle="Детекция"
+              nzDescription="Запустите проверку консистентности (см. раздел Токены)."
+            ></nz-step>
+          </nz-steps>
+        </div>
+
+        <div class="results-grid">
+          <div class="result-pane success">
+            <div class="pane-header">Ожидаемый результат: УСПЕХ</div>
+            <div class="pane-content">
+              <p>
+                Система детекции обнаруживает подвох. API запросы по-прежнему выполняются от реального имени (т.к.
+                сервер верит только куке).
+              </p>
+            </div>
+          </div>
+          <div class="result-pane failure">
+            <div class="pane-header">Ожидаемый результат: НЕ УСПЕХ</div>
+            <div class="pane-content">
+              <p>Система «верит» подмененным данным и не сигнализирует о расхождениях.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- ТЕСТ: 403 Forbidden -->
+      <section class="test-card">
+        <div class="test-anchor">Тест №6</div>
+        <h3 class="test-title">Доступ запрещен (403 Forbidden)</h3>
+        <p class="test-desc">Проверка реакции системы на отсутствие необходимых прав (ролей).</p>
+
+        <div class="methodology-box">
+          <span class="label">Методика проведения:</span>
+          <nz-steps nzDirection="vertical" nzSize="small" class="custom-steps">
+            <nz-step
+              nzTitle="Запрос"
+              nzDescription="Нажмите 'Симулировать 403'. Сервер вернет ошибку доступа."
+            ></nz-step>
+            <nz-step
+              nzTitle="Обработка"
+              nzDescription="Интерцептор должен распознать 403 и не пытаться обновлять токен."
+            ></nz-step>
+            <nz-step nzTitle="Уведомление" nzDescription="Система выводит предупреждение о нехватке прав."></nz-step>
+          </nz-steps>
+        </div>
+
+        <div class="results-grid">
+          <div class="result-pane success">
+            <div class="pane-header">Ожидаемый результат: УСПЕХ</div>
+            <div class="pane-content">
+              <p>
+                Появляется системное уведомление: «Доступ запрещен». Вы остаетесь авторизованы, но действие блокируется.
+              </p>
+            </div>
+          </div>
+          <div class="result-pane failure">
+            <div class="pane-header">Ожидаемый результат: НЕ УСПЕХ</div>
+            <div class="pane-content">
+              <p>Приложение делает ложную попытку Refresh или выбрасывает на страницу логина.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <nz-divider nzDashed></nz-divider>
+
+      <!-- ТЕСТ: Concurrency -->
+      <section class="test-card">
+        <div class="test-anchor">Тест №7</div>
+        <h3 class="test-title">Многопоточный тест (Concurrency)</h3>
+        <p class="test-desc">Проверка блокировки запросов (Request Queueing) во время обновления токена.</p>
+
+        <div class="methodology-box">
+          <span class="label">Методика проведения:</span>
+          <nz-steps nzDirection="vertical" nzSize="small" class="custom-steps">
+            <nz-step nzTitle="Подготовка" nzDescription="Нажмите 'Протушить' токен (сделать его истекшим)."></nz-step>
+            <nz-step
+              nzTitle="Шторм"
+              nzDescription="Нажмите 'Запустить 10 запросов'. Все они уйдут одновременно."
+            ></nz-step>
+            <nz-step
+              nzTitle="Синхронизация"
+              nzDescription="Интерцептор должен отправить только 1 запрос на Refresh, а остальные 9 поставить в очередь."
+            ></nz-step>
+          </nz-steps>
+        </div>
+
+        <div class="results-grid">
+          <div class="result-pane success">
+            <div class="pane-header">Ожидаемый результат: УСПЕХ</div>
+            <div class="pane-content">
+              <p>В логах виден 1 вызов <code>/refresh</code> и 10 последующих успешных вызовов API с новым токеном.</p>
+            </div>
+          </div>
+          <div class="result-pane failure">
+            <div class="pane-header">Ожидаемый результат: НЕ УСПЕХ</div>
+            <div class="pane-content">
+              <p>
+                Сервер получает 10 одновременных запросов на обновление (Race Condition) или часть запросов падает с
+                ошибкой.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <nz-divider nzDashed></nz-divider>
+
+      <!-- ТЕСТ: Security Inspector -->
+      <section class="test-card">
+        <div class="test-anchor">Тест №14</div>
+        <h3 class="test-title">Инспектор защищенности (Security Scan)</h3>
+        <p class="test-desc">Автоматизированный аудит безопасности клиентской среды.</p>
+
+        <div class="methodology-box">
+          <span class="label">Методика проведения:</span>
+          <nz-steps nzDirection="vertical" nzSize="small" class="custom-steps">
+            <nz-step nzTitle="Запуск" nzDescription="Нажмите 'Запустить сканирование безопасности'."></nz-step>
+            <nz-step
+              nzTitle="XSS Check"
+              nzDescription="Проверка на наличие секретов в глобальном объекте window."
+            ></nz-step>
+            <nz-step
+              nzTitle="Cookie Check"
+              nzDescription="Запрос к серверу для проверки флагов HttpOnly и Secure."
+            ></nz-step>
+            <nz-step
+              nzTitle="Storage Hygiene"
+              nzDescription="Проверка LocalStorage на отсутствие чувствительных данных."
+            ></nz-step>
+          </nz-steps>
+        </div>
+
+        <div class="results-grid">
+          <div class="result-pane success">
+            <div class="pane-header">Ожидаемый результат: УСПЕХ</div>
+            <div class="pane-content">
+              <p>Все три индикатора горят зеленым. Статус системы: «Безобидно/Чисто».</p>
+            </div>
+          </div>
+          <div class="result-pane failure">
+            <div class="pane-header">Ожидаемый результат: НЕ УСПЕХ</div>
+            <div class="pane-content">
+              <p>
+                Обнаружение токенов в LocalStorage или инъекция данных в window. Система выдает предупреждение о рисках.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </ng-template>
+
+  <!-- Шаблон для раздела ТОКЕНЫ -->
+  <ng-template #tokensGuide>
+    <div class="guide-content animate-fade-in">
+      <div class="guide-header">
+        <h2 nz-typography>
+          <span nz-icon nzType="safety-certificate" nzTheme="twotone"></span> Справочник: Работа с токенами
+        </h2>
+        <p class="guide-intro">
+          Этот раздел описывает методы проверки JWT токенов (Access/Refresh) и механизмы валидации их целостности.
+        </p>
+      </div>
+
+      <nz-divider></nz-divider>
+
+      <!-- ТЕСТ: Consistency Check -->
+      <section class="test-card">
+        <div class="test-anchor">Тест №1</div>
+        <h3 class="test-title">Проверка согласованности (Consistency Check)</h3>
+        <p class="test-desc">Аудит соответствия локальных данных (Signals) и серверного состояния сессии.</p>
+
+        <div class="methodology-box">
+          <span class="label">Методика проведения:</span>
+          <nz-steps nzDirection="vertical" nzSize="small" class="custom-steps">
+            <nz-step
+              nzTitle="Запрос к API"
+              nzDescription="Перейдите во вкладку 'Токены' и нажмите кнопку 'Проверить согласованность'. Система отправит GET запрос к /api/Auth/debug-token."
+            ></nz-step>
+            <nz-step
+              nzTitle="Анализ клеймов"
+              nzDescription="Интерцептор выделит JWT претензии (Claims) из подписанной куки и вернет их в декодированном виде."
+            ></nz-step>
+            <nz-step
+              nzTitle="Кросс-валидация"
+              nzDescription="Фронтент сравнит Email и Roles из ответа сервера с текущими значениями, хранящимися в AuthService."
+            ></nz-step>
+          </nz-steps>
+        </div>
+
+        <div class="results-grid">
+          <div class="result-pane success">
+            <div class="pane-header">
+              <span nz-icon nzType="check-circle" nzTheme="fill"></span>
+              Ожидаемый результат: УСПЕХ
+            </div>
+            <div class="pane-content">
+              <ul>
+                <li>Баннер подтверждения согласованности (зеленый цвет).</li>
+                <li>Email клиента и сервера идентичны.</li>
+                <li>Список ролей совпадает до последнего элемента.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="result-pane failure">
+            <div class="pane-header">
+              <span nz-icon nzType="close-circle" nzTheme="fill"></span>
+              Ожидаемый результат: НЕ УСПЕХ
+            </div>
+            <div class="pane-content">
+              <ul>
+                <li>Критический баннер расхождения (красный цвет).</li>
+                <li>Индикация конкретного поля ошибки (напр. Roles differ).</li>
+                <li>Рекомендация: Выполнить принудительный Refresh или Logout.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <nz-divider nzDashed></nz-divider>
+
+      <!-- ТЕСТ: JWT Decoding -->
+      <section class="test-card">
+        <div class="test-anchor">Тест №2</div>
+        <h3 class="test-title">Декодирование JWT Claims</h3>
+        <p class="test-desc">Проверка корректности структуры полезной нагрузки токена доступа.</p>
+
+        <div class="methodology-box">
+          <span class="label">Методика проведения:</span>
+          <nz-steps nzDirection="vertical" nzSize="small" class="custom-steps">
+            <nz-step
+              nzTitle="Загрузка системы"
+              nzDescription="При инициализации или обновлении панель читает Access Token."
+            ></nz-step>
+            <nz-step
+              nzTitle="Парсинг"
+              nzDescription="Токен разбивается на части (Header.Payload.Signature) без секретного ключа (только чтение Payload)."
+            ></nz-step>
+          </nz-steps>
+        </div>
+
+        <div class="results-grid">
+          <div class="result-pane success">
+            <div class="pane-header">Ожидаемый результат: УСПЕХ</div>
+            <div class="pane-content">
+              <p>
+                В таблице отображаются стандартные клейма: <code>sub</code>, <code>iat</code>, <code>exp</code>,
+                <code>email</code>. Время жизни токена отображается корректным таймером.
+              </p>
+            </div>
+          </div>
+          <div class="result-pane failure">
+            <div class="pane-header">Ожидаемый результат: НЕ УСПЕХ</div>
+            <div class="pane-content">
+              <p>
+                Список клеймов пуст или содержит <code>Invalid Token</code>. Прогресс-бар горит серым или мгновенно
+                обнуляется.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </ng-template>
+
+  <!-- Шаблон для раздела МЕНЕДЖЕР СЕССИЙ -->
+  <ng-template #sessionsManagerGuide>
+    <div class="guide-content animate-fade-in">
+      <div class="guide-header">
+        <h2 nz-typography>
+          <span nz-icon nzType="desktop" nzTheme="twotone" [nzTwotoneColor]="'#13c2c2'"></span> Справочник: Менеджер
+          сессий
+        </h2>
+        <p class="guide-intro">
+          Центр управления безопасностью устройств. Позволяет видеть, где используется ваш аккаунт, и удаленно завершать
+          недоверенные сессии.
+        </p>
+      </div>
+
+      <nz-divider></nz-divider>
+
+      <!-- ТЕСТ: Активные сессии -->
+      <section class="test-card">
+        <div class="test-anchor">Тест №15</div>
+        <h3 class="test-title">Аудит активных подключений</h3>
+        <p class="test-desc">Проверка корректности определения устройств, IP-адресов и времени входа.</p>
+
+        <div class="methodology-box">
+          <span class="label">Методика проведения:</span>
+          <nz-steps nzDirection="vertical" nzSize="small" class="custom-steps">
+            <nz-step
+              nzTitle="Вход с нового устройства"
+              nzDescription="Авторизуйтесь в системе с другого браузера или в режиме Инкогнито."
+            ></nz-step>
+            <nz-step
+              nzTitle="Обнаружение"
+              nzDescription="Откройте вкладку 'Менеджер сессий' в основном браузере. В списке должна появиться новая запись."
+            ></nz-step>
+            <nz-step
+              nzTitle="Верификация данных"
+              nzDescription="Сравните отображаемый Browser/OS и время входа с реальными данными."
+            ></nz-step>
+          </nz-steps>
+        </div>
+
+        <div class="results-grid">
+          <div class="result-pane success">
+            <div class="pane-header">Ожидаемый результат: УСПЕХ</div>
+            <div class="pane-content">
+              <p>
+                Новая сессия видна в списке. Иконка устройства (Desktop/Mobile) и название браузера соответствуют
+                реальности. Текущая сессия помечена тегом.
+              </p>
+            </div>
+          </div>
+          <div class="result-pane failure">
+            <div class="pane-header">Ожидаемый результат: НЕ УСПЕХ</div>
+            <div class="pane-content">
+              <p>Список пуст, не обновляется или отображает `Unknown Device`. IP адрес не определяется.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <nz-divider nzDashed></nz-divider>
+
+      <!-- ТЕСТ: Удаленное завершение -->
+      <section class="test-card">
+        <div class="test-anchor">Тест №16</div>
+        <h3 class="test-title">Принудительное завершение сессии (Revoke)</h3>
+        <p class="test-desc">Проверка механизма удаленной инвалидации Refresh Token'а.</p>
+
+        <div class="methodology-box">
+          <span class="label">Методика проведения:</span>
+          <nz-steps nzDirection="vertical" nzSize="small" class="custom-steps">
+            <nz-step
+              nzTitle="Выбор цели"
+              nzDescription="Найдите в списке активных сессий 'чужое' устройство (например, окно в Инкогнито)."
+            ></nz-step>
+            <nz-step nzTitle="Удар Kill-Switch" nzDescription="Нажмите красную кнопку 'Завершить' (Revoke)."></nz-step>
+            <nz-step
+              nzTitle="Проверка эффекта"
+              nzDescription="Перейдите в окно Инкогнито и попробуйте выполнить действие (напр. обновить страницу)."
+            ></nz-step>
+          </nz-steps>
+        </div>
+
+        <div class="results-grid">
+          <div class="result-pane success">
+            <div class="pane-header">Ожидаемый результат: УСПЕХ</div>
+            <div class="pane-content">
+              <p>
+                В целевом браузере сессия мгновенно становится невалидной. При попытке обновления токена сервер вернет
+                401, и пользователь будет разлогинен.
+              </p>
+            </div>
+          </div>
+          <div class="result-pane failure">
+            <div class="pane-header">Ожидаемый результат: НЕ УСПЕХ</div>
+            <div class="pane-content">
+              <p>Целевой пользователь продолжает работу как ни в чем не бывало. Кнопка Revoke не работает.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <nz-divider nzDashed></nz-divider>
+
+      <section class="help-desc-card">
+        <h4 class="help-title"><span nz-icon nzType="history" nzTheme="outline"></span> История подключений</h4>
+        <p>
+          Используйте переключатель <strong>"Показать историю"</strong>, чтобы увидеть завершенные и истекшие сессии.
+          Это полезно для расследования инцидентов ("Был ли вход в мой аккаунт вчера ночью?").
+        </p>
+      </section>
+    </div>
+  </ng-template>
+
+  <!-- Шаблон для раздела СЕССИЯ -->
+  <ng-template #sessionGuide>
+    <div class="guide-content animate-fade-in">
+      <div class="guide-header">
+        <h2 nz-typography><span nz-icon nzType="user" nzTheme="twotone"></span> Справочник: Управление сессией</h2>
+        <p class="guide-intro">Мониторинг текущего состояния авторизации и времени жизни сеанса.</p>
+      </div>
+
+      <!-- Help: Модуль аудита провайдеров -->
+      <section class="help-desc-card">
+        <h4 class="help-title">
+          <span nz-icon nzType="safety-certificate" nzTheme="twotone"></span> Модуль: Аудит внешних провайдеров
+        </h4>
+        <p>
+          Этот модуль предназначен для контроля связей текущего пользователя с внешними системами идентификации
+          (OAuth2/OpenID Connect).
+        </p>
+        <div class="help-points">
+          <div class="point">
+            <strong>External ID:</strong> Это уникальный неизменяемый идентификатор, который сервер получает от
+            провайдера (например, <code>sub</code> claim в Google). Он используется для поиска вашего профиля при
+            повторном входе.
+          </div>
+          <div class="point">
+            <strong>Разрыв связи:</strong> Данная операция удаляет привязку внешней учетной записи. Аккаунт переходит в
+            разряд "локальных", и вход через соцсеть станет невозможен до повторной привязки.
+          </div>
+        </div>
+      </section>
+
+      <nz-divider></nz-divider>
+
+      <section class="test-card">
+        <div class="test-anchor">Тест №9</div>
+        <h3 class="test-title">Мониторинг активности</h3>
+        <p class="test-desc">Проверка корректного отображения данных пользователя (Signal Sync).</p>
+        <div class="methodology-box">
+          <span class="label">Методика проведения:</span>
+          <nz-steps nzDirection="vertical" nzSize="small" class="custom-steps">
+            <nz-step nzTitle="Вход" nzDescription="Выполните вход под разными пользователями."></nz-step>
+            <nz-step
+              nzTitle="Сверка"
+              nzDescription="Убедитесь, что Имя, Email и Аватар во вкладке 'Сессия' мгновенно обновляются."
+            ></nz-step>
+          </nz-steps>
+        </div>
+        <div class="results-grid">
+          <div class="result-pane success">
+            <div class="pane-header">УСПЕХ</div>
+            <div class="pane-content">
+              <p>Данные в UI соответствуют данным из последнего декодированного токена.</p>
+            </div>
+          </div>
+          <div class="result-pane failure">
+            <div class="pane-header">НЕ УСПЕХ</div>
+            <div class="pane-content"><p>UI показывает данные предыдущего пользователя ("Cache Leak").</p></div>
+          </div>
+        </div>
+      </section>
+
+      <nz-divider nzDashed></nz-divider>
+
+      <section class="test-card">
+        <div class="test-anchor">Тест №13</div>
+        <h3 class="test-title">Аудит внешней идентификации</h3>
+        <p class="test-desc">Верификация связей с внешними провайдерами (Google/Facebook).</p>
+        <div class="methodology-box">
+          <span class="label">Методика проведения:</span>
+          <nz-steps nzDirection="vertical" nzSize="small" class="custom-steps">
+            <nz-step nzTitle="Метод входа" nzDescription="Войдите через Google или Facebook."></nz-step>
+            <nz-step
+              nzTitle="Проверка ID"
+              nzDescription="Убедитесь, что в блоке 'Аудит' виден уникальный External ID провайдера."
+            ></nz-step>
+            <nz-step
+              nzTitle="Разрыв связи"
+              nzDescription="Нажмите 'Разрыв связи' и проверьте, что аккаунт перешел в статус 'Локальный'."
+            ></nz-step>
+          </nz-steps>
+        </div>
+        <div class="results-grid">
+          <div class="result-pane success">
+            <div class="pane-header">УСПЕХ</div>
+            <div class="pane-content">
+              <p>
+                Провайдер корректно идентифицирован, External ID соответствует данным OAuth, разрыв связи работает
+                корректно.
+              </p>
+            </div>
+          </div>
+          <div class="result-pane failure">
+            <div class="pane-header">НЕ УСПЕХ</div>
+            <div class="pane-content">
+              <p>External ID не отображается или кнопка 'Разрыв связи' не вызывает обновления профиля.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </ng-template>
+
+  <!-- Шаблон для раздела РОЛИ -->
+  <ng-template #rolesGuide>
+    <div class="guide-content animate-fade-in">
+      <div class="guide-header">
+        <h2 nz-typography>
+          <span nz-icon nzType="team" nzTheme="twotone" [nzTwotoneColor]="'#eb2f96'"></span> Справочник: Роли и Права
+        </h2>
+        <p class="guide-intro">Визуализация прав доступа и проверка работы RBAC (Role-Based Access Control).</p>
+      </div>
+      <nz-divider></nz-divider>
+
+      <section class="test-card">
+        <div class="test-anchor">Тест №10</div>
+        <h3 class="test-title">Валидация Матрицы Доступа</h3>
+        <p class="test-desc">Проверка соответствия прав текущей роли пользователя.</p>
+        <div class="methodology-box">
+          <span class="label">Методика проведения:</span>
+          <nz-steps nzDirection="vertical" nzSize="small" class="custom-steps">
+            <nz-step
+              nzTitle="Анализ"
+              nzDescription="Откройте вкладку 'Роли' и посмотрите список активных Permissions."
+            ></nz-step>
+            <nz-step
+              nzTitle="Кросс-чек"
+              nzDescription="Сравните их с требованиями ТЗ для вашей текущей роли (напр. Admin)."
+            ></nz-step>
+          </nz-steps>
+        </div>
+        <div class="results-grid">
+          <div class="result-pane success">
+            <div class="pane-header">УСПЕХ</div>
+            <div class="pane-content">
+              <p>Список прав точно соответствует вашей роли. Запрещенные действия скрыты или заблокированы.</p>
+            </div>
+          </div>
+          <div class="result-pane failure">
+            <div class="pane-header">НЕ УСПЕХ</div>
+            <div class="pane-content">
+              <p>Пользователю доступны действия, на которые у него нет прав ("Privilege Escalation").</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <nz-divider nzDashed></nz-divider>
+
+      <section class="test-card">
+        <div class="test-anchor">Тест №12</div>
+        <h3 class="test-title">Аудит предиктивной модели прав</h3>
+        <p class="test-desc">Моделирование сценариев "Что если...?" для проектируемых ролей.</p>
+        <div class="methodology-box">
+          <span class="label">Методика проведения:</span>
+          <nz-steps nzDirection="vertical" nzSize="small" class="custom-steps">
+            <nz-step
+              nzTitle="Выбор модели"
+              nzDescription="В калькуляторе прав выберите роль для симуляции (напр. Moderator)."
+            ></nz-step>
+            <nz-step
+              nzTitle="Анализ эндпоинтов"
+              nzDescription="Система сопоставит права роли со списком критических API-вызовов."
+            ></nz-step>
+            <nz-step
+              nzTitle="Верификация"
+              nzDescription="Проверьте, что эндпоинты с 403 Forbidden действительно должны быть запрещены для этой роли."
+            ></nz-step>
+          </nz-steps>
+        </div>
+        <div class="results-grid">
+          <div class="result-pane success">
+            <div class="pane-header">УСПЕХ</div>
+            <div class="pane-content">
+              <p>
+                Симуляция точно отражает будущую реакцию сервера. Подсветка помогает выявить избыточные или недостающие
+                права.
+              </p>
+            </div>
+          </div>
+          <div class="result-pane failure">
+            <div class="pane-header">НЕ УСПЕХ</div>
+            <div class="pane-content">
+              <p>Калькулятор показывает доступ (200), хотя роль не имеет нужных permissions в матрице.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </ng-template>
+
+  <!-- Шаблон для раздела ПЕСОЧНИЦА -->
+  <ng-template #playgroundGuide>
+    <div class="guide-content animate-fade-in">
+      <div class="guide-header">
+        <h2 nz-typography>
+          <span nz-icon nzType="experiment" nzTheme="twotone" [nzTwotoneColor]="'#722ed1'"></span> Справочник: Песочница
+          API
+        </h2>
+        <p class="guide-intro">Инструмент для ручного тестирования эндпоинтов и анализа ответов сервера.</p>
+      </div>
+      <nz-divider></nz-divider>
+
+      <section class="test-card">
+        <div class="test-anchor">Тест №11</div>
+        <h3 class="test-title">Ручной вызов защищенного API</h3>
+        <p class="test-desc">Проверка корректной передачи Access Token в заголовках ручного запроса.</p>
+        <div class="methodology-box">
+          <span class="label">Методика проведения:</span>
+          <nz-steps nzDirection="vertical" nzSize="small" class="custom-steps">
+            <nz-step
+              nzTitle="Запрос"
+              nzDescription="Выберите эндпоинт /api/Auth/profile и нажмите 'Отправить'."
+            ></nz-step>
+            <nz-step nzTitle="Анализ JSON" nzDescription="Изучите структуру ответа в окне предпросмотра."></nz-step>
+          </nz-steps>
+        </div>
+        <div class="results-grid">
+          <div class="result-pane success">
+            <div class="pane-header">УСПЕХ</div>
+            <div class="pane-content">
+              <p>Сервер возвращает статус 200 и валидный JSON. Токен был успешно прикреплен интерцептором.</p>
+            </div>
+          </div>
+          <div class="result-pane failure">
+            <div class="pane-header">НЕ УСПЕХ</div>
+            <div class="pane-content">
+              <p>Сервер возвращает 401, хотя сессия активна (Ошибка передачи заголовка Authorization).</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </ng-template>
+</div>

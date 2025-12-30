@@ -12,6 +12,7 @@ import {
   LoginDto,
   RegisterDto,
   UserProfileDto,
+  UserSessionDto,
 } from '../models';
 import { TokenService } from './token.service';
 
@@ -142,6 +143,40 @@ export class AuthService {
         withCredentials: true,
       })
       .pipe(catchError((error) => throwError(() => error)));
+  }
+
+  /**
+   * Разрыв связи с внешним провайдером
+   */
+  unlinkExternal(provider: string): Observable<ApiResponse<void>> {
+    const url = ApiEndpoints.AUTH.UNLINK_EXTERNAL(provider);
+    return this.http.post<ApiResponse<void>>(url, {}, { withCredentials: true }).pipe(
+      tap(() => {
+        this.getProfile().subscribe(); // Refresh profile after unlink
+      }),
+      catchError((error) => this.handleAuthError(error)),
+    );
+  }
+
+  /**
+   * Получение активных сессий пользователя
+   */
+  getUserSessions(includeHistory: boolean = false): Observable<ApiResponse<UserSessionDto[]>> {
+    return this.http
+      .get<ApiResponse<UserSessionDto[]>>(ApiEndpoints.AUTH.GET_USER_SESSIONS(includeHistory), {
+        withCredentials: true,
+      })
+      .pipe(catchError((error) => this.handleAuthError(error)));
+  }
+
+  /**
+   * Завершение сессии (Revoke)
+   */
+  revokeSession(sessionId: number): Observable<ApiResponse<void>> {
+    const url = ApiEndpoints.AUTH.REVOKE_SESSION(sessionId);
+    return this.http
+      .post<ApiResponse<void>>(url, {}, { withCredentials: true })
+      .pipe(catchError((error) => this.handleAuthError(error)));
   }
 
   /**

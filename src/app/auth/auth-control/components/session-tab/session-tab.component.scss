@@ -128,3 +128,176 @@
     }
   }
 }
+// Header Styles
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+
+  .header-actions {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+
+  .help-icon {
+    font-size: 18px;
+    color: #1890ff;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+      transform: scale(1.15);
+      filter: brightness(1.1);
+    }
+  }
+}
+
+// Help Template Styles
+.simulator-help {
+  max-width: 320px;
+
+  p {
+    margin-bottom: 12px;
+    line-height: 1.5;
+  }
+
+  ul {
+    padding-left: 20px;
+    margin-bottom: 12px;
+
+    code {
+      background: #f5f5f5;
+      padding: 2px 5px;
+      border-radius: 4px;
+      color: #c41d7f;
+      font-family: "Roboto Mono", monospace;
+    }
+  }
+
+  &.ru {
+    .help-features {
+      margin: 12px 0;
+      background: rgba(24, 144, 255, 0.05);
+      padding: 10px;
+      border-radius: 6px;
+      border-left: 3px solid #1890ff;
+
+      .feature-item {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 6px;
+        font-size: 13px;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+
+        .success-icon {
+          color: #52c41a;
+          margin-top: 3px;
+        }
+      }
+    }
+
+    .description {
+      font-size: 12px;
+      color: #595959;
+      font-style: italic;
+    }
+  }
+}
+
+// Provider Audit Styles
+.provider-audit-card {
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+
+  ::ng-deep .ant-card-head {
+    border-bottom: 1px solid #f0f0f0;
+  }
+
+  .provider-item {
+    padding: 16px;
+    border-radius: 8px;
+    background: #fafafa;
+    border: 1px solid #f0f0f0;
+
+    &.linked {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #f6ffed;
+      border-color: #b7eb8f;
+
+      @media (max-width: 576px) {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+      }
+
+      .provider-info {
+        .provider-type {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          margin-bottom: 8px;
+
+          [nz-icon] {
+            font-size: 20px;
+          }
+
+          .name {
+            font-weight: 600;
+            font-size: 16px;
+          }
+        }
+
+        .external-id {
+          font-size: 12px;
+          color: #595959;
+
+          .label {
+            margin-right: 8px;
+            font-weight: 500;
+          }
+
+          code {
+            background: rgba(0, 0, 0, 0.05);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: "Roboto Mono", monospace;
+          }
+        }
+      }
+    }
+
+    &.empty {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 24px;
+      border: 1px dashed #d9d9d9;
+      background: #fff;
+
+      .info-icon {
+        font-size: 24px;
+        color: #bfbfbf;
+      }
+
+      .empty-text {
+        h4 {
+          margin: 0;
+          font-weight: 600;
+          color: #595959;
+        }
+        p {
+          margin: 4px 0 0;
+          font-size: 13px;
+          color: #8c8c8c;
+        }
+      }
+    }
+  }
+}

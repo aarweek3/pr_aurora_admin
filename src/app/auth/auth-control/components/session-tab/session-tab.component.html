@@ -85,6 +85,107 @@
         <ng-template #prefixClock><span nz-icon nzType="clock-circle"></span></ng-template>
       </nz-card>
     </div>
+
+    <nz-card [nzTitle]="providerTitle" class="provider-audit-card" *ngIf="currentUser()">
+      <ng-template #providerTitle>
+        <div class="card-header">
+          <div class="header-main">
+            <span nz-icon nzType="safety-certificate" nzTheme="twotone"></span> Аудит внешних провайдеров
+          </div>
+          <div class="header-actions">
+            <!-- Quick Help -->
+            <span
+              nz-icon
+              nzType="question-circle"
+              nzTheme="outline"
+              class="help-icon"
+              nz-popover
+              nzPopoverTitle="Provider Guide"
+              [nzPopoverContent]="provHelpTpl"
+              nzPopoverPlacement="bottomRight"
+            ></span>
+
+            <!-- Russian Expanded Help -->
+            <span
+              nz-icon
+              nzType="info-circle"
+              nzTheme="twotone"
+              class="help-icon"
+              nz-popover
+              nzPopoverTitle="Об Аудите Провайдеров"
+              [nzPopoverContent]="provHelpRuTpl"
+              nzPopoverPlacement="bottomRight"
+            ></span>
+          </div>
+        </div>
+      </ng-template>
+
+      <ng-template #provHelpTpl>
+        <div class="simulator-help">
+          <p>Tracks connection to external identity providers like Google or Facebook.</p>
+          <p><strong>Fields:</strong></p>
+          <ul>
+            <li><code>External ID</code> - Unique identifier from the provider (e.g., Google sub).</li>
+            <li><code>Unlink</code> - Removes the provider link and converts account to local.</li>
+          </ul>
+        </div>
+      </ng-template>
+
+      <ng-template #provHelpRuTpl>
+        <div class="simulator-help ru">
+          <p><strong>Аудит провайдеров</strong> — это панель управления вашими связанными аккаунтами.</p>
+          <div class="help-features">
+            <div class="feature-item">
+              <span nz-icon nzType="safety" class="success-icon"></span>
+              <span><strong>Безопасность:</strong> Вы видите точный ID, по которому вас узнает система.</span>
+            </div>
+            <div class="feature-item">
+              <span nz-icon nzType="disconnect" class="success-icon"></span>
+              <span><strong>Гибкость:</strong> Можно «отвязать» соцсеть и оставить только вход по паролю.</span>
+            </div>
+          </div>
+          <p class="description">Это позволяет тестировать миграцию пользователей и корректность OAuth-связок.</p>
+        </div>
+      </ng-template>
+
+      <div class="provider-status-grid">
+        <!-- Linked State -->
+        <div class="provider-item linked" *ngIf="currentUser()?.isExternalAccount">
+          <div class="provider-info">
+            <div class="provider-type">
+              <span nz-icon [nzType]="currentUser()?.externalProvider === 'Google' ? 'google' : 'facebook'"></span>
+              <span class="name">{{ currentUser()?.externalProvider }}</span>
+              <nz-tag nzColor="success">Связано</nz-tag>
+            </div>
+            <div class="external-id">
+              <span class="label">External ID:</span>
+              <code>{{ currentUser()?.externalId || 'Unknown' }}</code>
+            </div>
+          </div>
+          <div class="provider-actions">
+            <button
+              nz-button
+              nzType="default"
+              nzDanger
+              nz-popconfirm
+              nzPopconfirmTitle="Вы уверены, что хотите разорвать связь с этим аккаунтом? Вам потребуется основной пароль для входа."
+              (nzOnConfirm)="unlinkExternalAccount(currentUser()?.externalProvider!)"
+            >
+              <span nz-icon nzType="disconnect"></span> Разрыв связи
+            </button>
+          </div>
+        </div>
+
+        <!-- Not Linked State (Email) -->
+        <div class="provider-item empty" *ngIf="!currentUser()?.isExternalAccount">
+          <span nz-icon nzType="info-circle" class="info-icon"></span>
+          <div class="empty-text">
+            <h4>Локальный аккаунт</h4>
+            <p>Внешние провайдеры не подключены. Вы используете стандартную авторизацию (Email/Password).</p>
+          </div>
+        </div>
+      </div>
+    </nz-card>
   </div>
 
   <!-- Timeline Side -->

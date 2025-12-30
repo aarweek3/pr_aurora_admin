@@ -51,6 +51,13 @@
   &.trace {
     color: #722ed1;
   }
+
+  &.risk-info {
+    color: #ff4d4f;
+    font-size: 18px;
+    margin-left: 8px;
+    vertical-align: middle;
+  }
 }
 
 .popover-help-content {
@@ -77,6 +84,21 @@
       padding: 12px;
       border-radius: 8px;
       border-left: 4px solid #1890ff;
+
+      &.risk {
+        background: rgba(255, 77, 79, 0.05);
+        border-left-color: #ff4d4f;
+        .section-title {
+          color: #820014;
+        }
+      }
+
+      .trace-features.smaller {
+        font-size: 12px;
+        li {
+          margin-bottom: 2px;
+        }
+      }
 
       .section-title {
         display: block;
@@ -313,11 +335,22 @@ nz-card {
 // Stress Test Section
 .stress-container {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 30px;
+  flex-direction: column;
+  gap: 16px;
   padding: 10px 0;
+
+  .min-divider {
+    margin: 0;
+  }
+
+  .stress-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 30px;
+    width: 100%;
+  }
 
   .stress-info {
     flex: 1;
@@ -327,6 +360,10 @@ nz-card {
       margin-top: 0;
       color: #722ed1;
     }
+  }
+
+  .stress-btn {
+    margin-top: 16px;
   }
 
   .stress-visual {

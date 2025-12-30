@@ -9,9 +9,11 @@ import { NzTagModule } from 'ng-zorro-antd/tag';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 import { NzTypographyModule } from 'ng-zorro-antd/typography';
 
+import { GuideTabComponent } from '../guide-tab/guide-tab.component';
 import { PlaygroundTabComponent } from '../playground-tab/playground-tab.component';
 import { RolesTabComponent } from '../roles-tab/roles-tab.component';
 import { SessionTabComponent } from '../session-tab/session-tab.component';
+import { SessionsManagerTabComponent } from '../sessions-manager-tab/sessions-manager-tab.component';
 import { SimulatorTabComponent } from '../simulator-tab/simulator-tab.component';
 import { TokensTabComponent } from '../tokens-tab/tokens-tab.component';
 
@@ -25,11 +27,14 @@ import { TokensTabComponent } from '../tokens-tab/tokens-tab.component';
     NzButtonModule,
     NzTagModule,
     NzToolTipModule,
+    NzToolTipModule,
     SessionTabComponent,
+    SessionsManagerTabComponent,
     TokensTabComponent,
     RolesTabComponent,
     SimulatorTabComponent,
     PlaygroundTabComponent,
+    GuideTabComponent,
     NzDrawerModule,
     NzDividerModule,
     NzTypographyModule,
@@ -44,10 +49,12 @@ export class AuthControlDashboardComponent {
   // Tab configuration
   tabs = [
     { title: 'Сессия', icon: 'user', disabled: false },
+    { title: 'Менеджер сессий', icon: 'desktop', disabled: false },
     { title: 'Токены', icon: 'safety-certificate', disabled: false },
     { title: 'Роли', icon: 'team', disabled: false },
     { title: 'Симулятор', icon: 'warning', disabled: false },
     { title: 'Песочница', icon: 'experiment', disabled: false },
+    { title: 'Справочник', icon: 'book', disabled: false },
   ];
 
   constructor() {}

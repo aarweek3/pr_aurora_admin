@@ -165,6 +165,21 @@
             состояние симулятора для начала новой серии проверок.
           </p>
         </div>
+        <div class="example-box">
+          <strong>4. Угон сессии (Hijacking):</strong>
+          <p>
+            Нажмите <b>«Удалить сессию на сервере»</b>. Это удалит вашу Refresh-куку в БД, но фронтенд об этом не
+            узнает. Затем вызовите любую ошибку 401. Система попытается обновиться, получит отказ и должна будет штатно
+            разлогинить вас.
+          </p>
+        </div>
+        <div class="example-box">
+          <strong>5. Подмена ID (Spoofing):</strong>
+          <p>
+            Нажмите <b>«Подменить ID»</b>. В памяти приложения ваш ID изменится на Hacker-XXX. Это проверит, доверяет ли
+            интерфейс локальным данным больше, чем серверным (Consistency Check).
+          </p>
+        </div>
       </div>
     </div>
   </ng-template>
@@ -200,6 +215,87 @@
           <li>Зеленые галочки — вы в безопасности, желтые/красные — есть повод для улучшения защиты.</li>
         </ol>
       </div>
+    </div>
+  </ng-template>
+
+  <ng-template #riskHelpContent>
+    <div class="popover-help-content russian">
+      <p><strong>Тесты на угон сессии и подмену личности 🕵️‍♂️</strong></p>
+      <p>Инструменты для проверки реакции системы на критические изменения состояния вне контроля клиента.</p>
+
+      <div class="help-section">
+        <span class="section-title">1. "Угнать" сессию (Session Hijacking):</span>
+        <p>Кнопка вызывает реальный <code>logout</code> на бэкенде, что физически удаляет вашу Refresh Cookie из БД.</p>
+        <p>
+          <strong>Зачем это нужно:</strong> Проверка «чистого выхода». Нажмите её, а затем любой триггер (напр.
+          «Симулировать 401»). Вы увидите, как интерцептор попытается обновиться, получит отказ сервера и штатно
+          разлогинит вас.
+        </p>
+      </div>
+
+      <div class="help-section">
+        <span class="section-title">2. Подменить UserID (Identity Spoofing):</span>
+        <p>Мгновенно подменяет ваш ID в памяти на Hacker-777 и выдает роль Admin.</p>
+        <p>
+          <strong>Зачем это нужно:</strong> Проверка реакции UI и консистентности. Вы увидите, как изменятся имена в
+          интерфейсе, но сканер безопасности («Check Consistency») сразу обнаружит подвох, так как данные в памяти не
+          совпадут с данными в токене.
+        </p>
+      </div>
+
+      <div class="help-section risk">
+        <span class="section-title">Идеальный тест-кейс! 🎯</span>
+        <p>Логи подтверждают работу «по учебнику»:</p>
+        <ul class="trace-features smaller">
+          <li><b>Угон:</b> Сессия стерта на сервере, клиент пока «в неведении».</li>
+          <li><b>Сбой:</b> Запрос 401 -> Попытка Refresh.</li>
+          <li><b>Защита:</b> Сервер ответил 401 (Invalid token).</li>
+          <li><b>Результат:</b> Система поняла угрозу и выполнила Logout.</li>
+        </ul>
+      </div>
+
+      <div class="help-section">
+        <span class="section-title">Вывод:</span>
+        <p>Даже при аннуляции сессии на сервере, приложение не зависнет, а корректно и безопасно завершит сеанс.</p>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template #concurrentHelp>
+    <div class="popover-help-content russian">
+      <p><strong>Многопоточный тест (Concurrency)</strong></p>
+      <p>Проверяет, как приложение обрабатывает <strong>Race Conditions</strong> при обновлении токена.</p>
+      <div class="help-section">
+        <span class="section-title">Как это работает:</span>
+        <ol>
+          <li>Симулятор делает токен просроченным (Expired).</li>
+          <li>Одновременно отправляется 10 запросов.</li>
+          <li>
+            Интерцептор должен поймать все 10, отправить <strong>ТОЛЬКО ОДИН</strong> запрос на Refresh, и после успеха
+            повторить все 10.
+          </li>
+        </ol>
+      </div>
+      <p class="warning-note">
+        ⚠️ Если тест провалится, сервер получит 10 запросов на обновление, и часть из них упадет с ошибкой "Invalid
+        Grant".
+      </p>
+    </div>
+  </ng-template>
+
+  <ng-template #rateLimitHelp>
+    <div class="popover-help-content russian">
+      <p><strong>Тест Rate Limiting (Brute-force)</strong></p>
+      <p>Проверяет защиту сервера от <strong>перебора паролей</strong> и DoS-атак.</p>
+      <div class="help-section">
+        <span class="section-title">Сценарий атаки:</span>
+        <ol>
+          <li>Скрипт отправляет 15 быстрых запросов (интервал 150мс).</li>
+          <li>Лимит сервера: 10 запросов за 30 сек.</li>
+          <li>Ожидание: 10 запросов пройдут (200 OK), а 5 будут заблокированы (429 Too Many Requests).</li>
+        </ol>
+      </div>
+      <p class="warning-note">🛡️ Это доказывает, что хакер не сможет перебирать пароли бесконечно.</p>
     </div>
   </ng-template>
 
@@ -322,7 +418,39 @@
         </div>
 
         <nz-divider nzText="Рискованная зона"></nz-divider>
-        <p class="small-text">Эти действия обходят серверную логику и проверяют надежность на стороне клиента.</p>
+        <p class="small-text">
+          Эти действия обходят серверную логику и проверяют надежность на стороне клиента.
+          <span
+            nz-icon
+            nzType="question-circle"
+            class="help-icon risk-info"
+            nz-popover
+            [nzPopoverContent]="riskHelpContent"
+            nzPopoverPlacement="bottomRight"
+            nzPopoverTitle="Идеальный тест-кейс"
+          ></span>
+        </p>
+
+        <div class="button-grid" style="margin-top: 12px">
+          <button
+            nz-button
+            nzDanger
+            (click)="revokeServerSession()"
+            nz-tooltip
+            nzTooltipTitle="Удалить Refresh Cookie на сервере"
+          >
+            "Угнать" <span class="line-small">сессию</span>
+          </button>
+          <button
+            nz-button
+            nzDanger
+            (click)="spoofUserIdentity()"
+            nz-tooltip
+            nzTooltipTitle="Подменить UserID в памяти"
+          >
+            Подменить <span class="line-small">UserID</span>
+          </button>
+        </div>
       </nz-card>
     </div>
 
@@ -330,29 +458,79 @@
     <div nz-col [nzXs]="24" [nzLg]="12">
       <nz-card nzTitle="Стресс-тестирование">
         <div class="stress-container">
-          <div class="stress-info">
-            <h3>Многопоточный тест (Concurrency)</h3>
-            <p>
-              Запуск 10 параллельных запросов к API. Проверяет корректность работы блокировки при обновлении токена.
-            </p>
-            <button
-              nz-button
-              nzType="primary"
-              [nzLoading]="isLoading()"
-              (click)="runConcurrencyTest()"
-              class="stress-btn"
-            >
-              Запустить 10 запросов
-            </button>
+          <!-- Row 1: Concurrency -->
+          <div class="stress-row">
+            <div class="stress-info">
+              <h3>
+                Многопоточный тест (Concurrency)
+                <span
+                  nz-icon
+                  nzType="question-circle"
+                  class="help-icon info"
+                  style="font-size: 16px; margin-left: 8px; vertical-align: middle"
+                  nz-popover
+                  [nzPopoverContent]="concurrentHelp"
+                  nzPopoverPlacement="right"
+                ></span>
+              </h3>
+              <p>
+                Запуск 10 параллельных запросов к API. Проверяет корректность работы блокировки при обновлении токена.
+              </p>
+              <button
+                nz-button
+                nzType="primary"
+                [nzLoading]="isLoading()"
+                (click)="runConcurrencyTest()"
+                class="stress-btn"
+              >
+                Запустить 10 запросов
+              </button>
+            </div>
+
+            <div class="stress-visual" *ngIf="concurrencyProgress() > 0">
+              <span class="label">Выполнение:</span>
+              <nz-progress
+                [nzPercent]="concurrencyProgress()"
+                [nzStatus]="'active'"
+                [nzStrokeColor]="'#722ed1'"
+              ></nz-progress>
+            </div>
           </div>
 
-          <div class="stress-visual" *ngIf="concurrencyProgress() > 0">
-            <span class="label">Выполнение:</span>
-            <nz-progress
-              [nzPercent]="concurrencyProgress()"
-              [nzStatus]="'active'"
-              [nzStrokeColor]="'#722ed1'"
-            ></nz-progress>
+          <nz-divider class="mini-divider"></nz-divider>
+
+          <!-- Row 2: Rate Limiting -->
+          <div class="stress-row">
+            <div class="stress-info">
+              <h3>
+                Тест Rate Limiting (Brute-force)
+                <span
+                  nz-icon
+                  nzType="question-circle"
+                  class="help-icon info"
+                  style="font-size: 16px; margin-left: 8px; vertical-align: middle"
+                  nz-popover
+                  [nzPopoverContent]="rateLimitHelp"
+                  nzPopoverPlacement="right"
+                ></span>
+              </h3>
+              <p>Симуляция 15 запросов подряд. Сервер должен заблокировать (429) доступ после 10 попыток.</p>
+              <button
+                nz-button
+                nzType="primary"
+                nzDanger
+                [nzLoading]="isBruteForcing()"
+                (click)="runRateLimitTest()"
+                class="stress-btn"
+              >
+                Запустить Brute-force атаку
+              </button>
+            </div>
+
+            <div class="stress-visual" *ngIf="rateLimitProgress() > 0">
+              <span class="label">Атака:</span>
+              <nz-progress [nzPercent]="rateLimitProgress()" [nzStatus]="'exception'"></nz-progress>
+            </div>
           </div>
         </div>
       </nz-card>

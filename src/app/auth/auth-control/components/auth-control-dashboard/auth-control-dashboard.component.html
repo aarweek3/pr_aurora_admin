@@ -48,6 +48,14 @@
         </div>
       </nz-tab>
 
+      <!-- Sessions Manager Tab -->
+      <nz-tab [nzTitle]="sessionsManagerTitle">
+        <ng-template #sessionsManagerTitle> <span nz-icon nzType="desktop"></span> Менеджер сессий </ng-template>
+        <div class="tab-content">
+          <app-sessions-manager-tab></app-sessions-manager-tab>
+        </div>
+      </nz-tab>
+
       <!-- Tokens Tab -->
       <nz-tab [nzTitle]="tokensTitle">
         <ng-template #tokensTitle> <span nz-icon nzType="safety-certificate"></span> Токены </ng-template>
@@ -77,6 +85,14 @@
         <ng-template #playgroundTitle> <span nz-icon nzType="experiment"></span> Песочница </ng-template>
         <div class="tab-content">
           <app-playground-tab></app-playground-tab>
+        </div>
+      </nz-tab>
+
+      <!-- Guide Tab -->
+      <nz-tab [nzTitle]="guideTitle">
+        <ng-template #guideTitle> <span nz-icon nzType="book"></span> Справочник </ng-template>
+        <div class="tab-content">
+          <app-guide-tab></app-guide-tab>
         </div>
       </nz-tab>
     </nz-tabset>

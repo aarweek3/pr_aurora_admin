@@ -7,6 +7,9 @@ export interface UserSessionDto {
   isRevoked: boolean;
   revokedAt?: string;
   deviceInfo?: string;
+  ipAddress?: string;
+  userAgent?: string;
+  createdAt: string;
 }
 
 export interface UpdateSessionDto {

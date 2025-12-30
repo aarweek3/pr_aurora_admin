@@ -268,6 +268,16 @@ export class TokenService {
     this.logger.debug('TokenService: Status cleared');
   }
 
+  /**
+   * Мгновенно подменить статус (для ТЕСТОВ)
+   */
+  spoofStatus(partialStatus: Partial<TokenStatus>): void {
+    const current = this.getCurrentStatus();
+    const updated = { ...current, ...partialStatus, lastChecked: new Date() };
+    this.tokenStatus$.next(updated);
+    this.logger.warn('⚠️ СТАТУС ТОКЕНА БЫЛ ПОДМЕНЕН ВРУЧНУЮ (SPOOFED)', updated);
+  }
+
   // === ВСПОМОГАТЕЛЬНЫЕ МЕТОДЫ ===
 
   /**
