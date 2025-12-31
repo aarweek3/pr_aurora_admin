@@ -2,12 +2,18 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzDrawerModule } from 'ng-zorro-antd/drawer';
 import { NzInputModule } from 'ng-zorro-antd/input';
+import { NzMessageService } from 'ng-zorro-antd/message';
+import { NzModalModule } from 'ng-zorro-antd/modal';
+import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzTabsModule } from 'ng-zorro-antd/tabs';
 import { firstValueFrom } from 'rxjs';
+import { ApiEndpoints } from '../../../../environments/api-endpoints';
 import { IconComponent } from '../../../shared/components/ui/icon/icon.component';
+import { IconDataService } from '../../../shared/services/icon-data.service';
 import { IconMetadata } from '../../ui-demo/old-control/icon-ui/icon-metadata.model';
 import { ICON_REGISTRY, IconCategory } from '../../ui-demo/old-control/icon-ui/icon-registry';
 
@@ -22,6 +28,8 @@ import { ICON_REGISTRY, IconCategory } from '../../ui-demo/old-control/icon-ui/i
     NzTabsModule,
     NzButtonModule,
     NzInputModule,
+    NzModalModule,
+    NzSelectModule,
   ],
   template: `
     <div class="manager-wrapper">
@@ -38,33 +46,38 @@ import { ICON_REGISTRY, IconCategory } from '../../ui-demo/old-control/icon-ui/i
                 <av-icon type="system/av_cog" [size]="20"></av-icon>
               </div>
               <div class="brand-text">
-                <h2>IconStudio</h2>
-                <span>Professional Asset Manager</span>
+                <h2>Студия Иконок</h2>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <span>Профессиональный менеджер ассетов</span>
+                  <span class="source-badge" [class.backend]="dataSource() === 'backend'">
+                    {{ dataSource() === 'backend' ? '☁️ Бэкенд' : '🏠 Локально' }}
+                  </span>
+                </div>
               </div>
             </div>
           </div>
 
           <div class="sidebar-content">
             <div class="nav-section">
-              <label>Library</label>
+              <label>Библиотека</label>
               <div
                 class="nav-item"
                 [class.active]="selectedCategory() === null"
                 (click)="selectedCategory.set(null)"
               >
                 <av-icon type="general/av_home" [size]="18"></av-icon>
-                <span>All Assets</span>
+                <span>Все ресурсы</span>
                 <span class="badge">{{ totalIcons() }}</span>
               </div>
               <div class="nav-item">
                 <av-icon type="general/av_tag" [size]="18"></av-icon>
-                <span>Recently Added</span>
+                <span>Недавно добавленные</span>
               </div>
             </div>
 
             <div class="nav-section">
               <div class="section-header">
-                <label>Collections</label>
+                <label>Коллекции</label>
                 <button class="icon-btn-small">
                   <av-icon type="actions/av_add" [size]="14"></av-icon>
                 </button>
@@ -86,13 +99,13 @@ import { ICON_REGISTRY, IconCategory } from '../../ui-demo/old-control/icon-ui/i
           <div class="sidebar-footer">
             <div class="storage-card">
               <div class="storage-info">
-                <span>Storage</span>
+                <span>Хранилище</span>
                 <span>{{ storageUsage() }}%</span>
               </div>
               <div class="progress-bar">
                 <div class="progress-fill" [style.width.%]="storageUsage()"></div>
               </div>
-              <p>{{ ((totalIcons() * 1.5) / 1024).toFixed(2) }}MB of 5MB used</p>
+              <p>{{ ((totalIcons() * 1.5) / 1024).toFixed(2) }}MB из 5MB занято</p>
             </div>
           </div>
         </aside>
@@ -104,9 +117,9 @@ import { ICON_REGISTRY, IconCategory } from '../../ui-demo/old-control/icon-ui/i
               <av-icon type="actions/av_search" [size]="18"></av-icon>
               <input
                 type="text"
-                [(ngModel)]="searchQuery"
+                [ngModel]="searchQuery()"
                 (ngModelChange)="onSearchChange($event)"
-                placeholder="Search across {{ totalIcons() }} icons..."
+                placeholder="Поиск по {{ totalIcons() }} иконкам..."
               />
               @if (searchQuery()) {
               <button class="clear-btn" (click)="searchQuery.set('')">
@@ -119,15 +132,23 @@ import { ICON_REGISTRY, IconCategory } from '../../ui-demo/old-control/icon-ui/i
             <div class="header-actions">
               <button class="btn-outline" (click)="isBatchLabOpen.set(true)">
                 <av-icon type="system/av_cog" [size]="16"></av-icon>
-                Batch Lab
+                Лаборатория
               </button>
-              <button class="btn-outline">
-                <av-icon type="system/av_settings" [size]="16"></av-icon>
-                Settings
+              <button
+                class="btn-outline"
+                [disabled]="isSyncing()"
+                (click)="syncToLocal()"
+                title="Синхронизировать бэкенд с локальным файлом"
+              >
+                @if (isSyncing()) {
+                <div class="small-spinner"></div>
+                Синхронизация... } @else {
+                <av-icon type="actions/av_save" [size]="16"></av-icon>
+                Синхронизировать }
               </button>
               <button class="btn-primary" (click)="onUploadClick()">
                 <av-icon type="actions/av_upload" [size]="16"></av-icon>
-                Upload SVG
+                Загрузить SVG
               </button>
             </div>
           </header>
@@ -135,11 +156,11 @@ import { ICON_REGISTRY, IconCategory } from '../../ui-demo/old-control/icon-ui/i
           <div class="content">
             <div class="content-header">
               <div class="view-title">
-                <h1>{{ selectedCategory() || 'All Assets' }}</h1>
+                <h1>{{ selectedCategory() || 'Все ресурсы' }}</h1>
                 <div class="breadcrumbs">
-                  <span class="link" (click)="selectedCategory.set(null)">Library</span>
+                  <span class="link" (click)="selectedCategory.set(null)">Библиотека</span>
                   <av-icon type="arrows/av_arrow_right" [size]="12"></av-icon>
-                  <span class="current">{{ selectedCategory() || 'All Assets' }}</span>
+                  <span class="current">{{ selectedCategory() || 'Все ресурсы' }}</span>
                 </div>
               </div>
 
@@ -154,18 +175,23 @@ import { ICON_REGISTRY, IconCategory } from '../../ui-demo/old-control/icon-ui/i
                 </div>
                 <div class="divider"></div>
                 <select class="custom-select">
-                  <option>Sort by Name</option>
-                  <option>Newest First</option>
-                  <option>Size</option>
+                  <option>По названию</option>
+                  <option>Сначала новые</option>
+                  <option>По размеру</option>
                 </select>
               </div>
             </div>
 
-            @if (filteredIcons().length === 0) {
+            @if (isLoading()) {
+            <div class="loading-state">
+              <div class="spinner"></div>
+              <p>Загрузка библиотеки иконок...</p>
+            </div>
+            } @else if (filteredIcons().length === 0) {
             <div class="empty-state">
               <av-icon type="system/av_info" [size]="48"></av-icon>
-              <h3>No icons found</h3>
-              <p>Try adjusting your search or category</p>
+              <h3>Иконки не найдены</h3>
+              <p>Попробуйте изменить параметры поиска или категорию</p>
             </div>
             } @else {
             <div class="icon-grid">
@@ -178,14 +204,21 @@ import { ICON_REGISTRY, IconCategory } from '../../ui-demo/old-control/icon-ui/i
                   <div class="card-overlay">
                     <button
                       class="overlay-btn"
-                      title="Quick Copy"
+                      title="Копировать Angular компонент"
                       (click)="$event.stopPropagation(); copyCode(icon.type)"
                     >
-                      <av-icon type="actions/av_eye" [size]="16"></av-icon>
+                      <av-icon type="actions/av_copy" [size]="16"></av-icon>
                     </button>
                     <button
                       class="overlay-btn"
-                      title="Edit / Optimize"
+                      title="Копировать чистый SVG код"
+                      (click)="$event.stopPropagation(); copySvg(icon.type)"
+                    >
+                      <av-icon type="media/av_image" [size]="16"></av-icon>
+                    </button>
+                    <button
+                      class="overlay-btn"
+                      title="Технический инспектор"
                       (click)="$event.stopPropagation(); openEditor(icon)"
                     >
                       <av-icon type="system/av_cog" [size]="16"></av-icon>
@@ -208,7 +241,7 @@ import { ICON_REGISTRY, IconCategory } from '../../ui-demo/old-control/icon-ui/i
       <nz-drawer
         [nzVisible]="isEditorOpen()"
         [nzWidth]="640"
-        nzTitle="Icon Inspector & Lab"
+        nzTitle="Инспектор и лаборатория иконок"
         (nzOnClose)="isEditorOpen.set(false)"
       >
         <ng-container *nzDrawerContent>
@@ -217,16 +250,16 @@ import { ICON_REGISTRY, IconCategory } from '../../ui-demo/old-control/icon-ui/i
             <!-- Top Preview Area -->
             <div class="preview-section">
               <div class="preview-box raw">
-                <label>Original</label>
+                <label>Оригинал</label>
                 <div class="icon-wrapper">
                   <av-icon [type]="icon.type" [size]="64"></av-icon>
                 </div>
               </div>
               <div class="preview-box optimized" [class.active]="cleanedSvgCode()">
-                <label>Optimized (Live)</label>
+                <label>Результат (Live)</label>
                 <div class="icon-wrapper" [innerHTML]="safeCleanedSvg()"></div>
                 @if (!cleanedSvgCode()) {
-                <div class="placeholder">Click Optimize to preview</div>
+                <div class="placeholder">Нажмите "Оптимизировать" для предпросмотра</div>
                 }
               </div>
             </div>
@@ -234,11 +267,11 @@ import { ICON_REGISTRY, IconCategory } from '../../ui-demo/old-control/icon-ui/i
             <!-- Stats & Meta -->
             <div class="meta-section">
               <div class="meta-item">
-                <span class="label">Name</span>
+                <span class="label">Название</span>
                 <span class="value">{{ icon.name }}</span>
               </div>
               <div class="meta-item">
-                <span class="label">Path</span>
+                <span class="label">Путь</span>
                 <span class="value">{{ icon.type }}.svg</span>
               </div>
             </div>
@@ -265,7 +298,7 @@ import { ICON_REGISTRY, IconCategory } from '../../ui-demo/old-control/icon-ui/i
               </div>
               <div class="passport-grid">
                 <div class="p-item">
-                  <label>Original Size</label>
+                  <label>Исходный размер</label>
                   <span>{{ passport.originalWidth }} × {{ passport.originalHeight }}</span>
                 </div>
                 <div class="p-item">
@@ -273,13 +306,13 @@ import { ICON_REGISTRY, IconCategory } from '../../ui-demo/old-control/icon-ui/i
                   <code>{{ passport.viewBox }}</code>
                 </div>
                 <div class="p-item">
-                  <label>Elements</label>
-                  <span>{{ passport.pathCount }} paths</span>
+                  <label>Элементы</label>
+                  <span>{{ passport.pathCount }} путей</span>
                 </div>
                 <div class="p-item">
-                  <label>Style</label>
+                  <label>Стиль</label>
                   <span [class.text-success]="passport.hasCurrentColor">
-                    {{ passport.hasCurrentColor ? 'CurrentColor OK' : 'Hardcoded colors' }}
+                    {{ passport.hasCurrentColor ? 'CurrentColor OK' : 'Жесткие цвета' }}
                   </span>
                 </div>
               </div>
@@ -288,55 +321,59 @@ import { ICON_REGISTRY, IconCategory } from '../../ui-demo/old-control/icon-ui/i
 
             <!-- Code Tabs -->
             <nz-tabset>
-              <nz-tab nzTitle="Raw Source">
+              <nz-tab nzTitle="Исходный код">
                 <div class="code-editor-wrapper">
                   <textarea readonly>{{ rawSvgCode() }}</textarea>
                 </div>
               </nz-tab>
-              <nz-tab nzTitle="Enrich / Meta">
+              <nz-tab nzTitle="Метаданные">
                 <div class="enrich-form">
                   <div class="form-group">
                     <label>Accessibility Title</label>
                     <input
                       nz-input
                       [(ngModel)]="metaTitle"
-                      placeholder="e.g. Navigation checkmark"
+                      placeholder="Напр. Галочка подтверждения"
                     />
                   </div>
                   <div class="form-group">
-                    <label>Description (Context)</label>
+                    <label>Описание (Контекст)</label>
                     <textarea
                       nz-input
                       [(ngModel)]="metaDesc"
                       rows="3"
-                      placeholder="Describe the icon usage..."
+                      placeholder="Опишите использование иконки..."
                     ></textarea>
                   </div>
                   <div class="form-group">
-                    <label>Corporate Author</label>
+                    <label>Корпоративный автор</label>
                     <input
                       nz-input
                       [(ngModel)]="metaAuthor"
-                      placeholder="e.g. Aurora Design System"
+                      placeholder="Напр. Aurora Design System"
                     />
                   </div>
                   <div class="form-row">
                     <div class="form-group">
-                      <label>Data Attribute Key</label>
-                      <input nz-input [(ngModel)]="metaDataKey" placeholder="e.g. data-test" />
+                      <label>Ключ атрибута данных</label>
+                      <input nz-input [(ngModel)]="metaDataKey" placeholder="Напр. data-test" />
                     </div>
                     <div class="form-group">
-                      <label>Attribute Value</label>
-                      <input nz-input [(ngModel)]="metaDataValue" placeholder="e.g. icon-confirm" />
+                      <label>Значение атрибута</label>
+                      <input
+                        nz-input
+                        [(ngModel)]="metaDataValue"
+                        placeholder="Напр. icon-confirm"
+                      />
                     </div>
                   </div>
                   <button nz-button nzType="dashed" nzBlock (click)="applyMetadata()">
                     <av-icon type="actions/av_add" [size]="14"></av-icon>
-                    Inject Metadata into Code
+                    Внедрить метаданные в код
                   </button>
                 </div>
               </nz-tab>
-              <nz-tab nzTitle="Optimized Code" [nzDisabled]="!cleanedSvgCode()">
+              <nz-tab nzTitle="Оптимизированный код">
                 <div class="code-editor-wrapper">
                   <textarea readonly>{{ cleanedSvgCode() }}</textarea>
                 </div>
@@ -347,7 +384,7 @@ import { ICON_REGISTRY, IconCategory } from '../../ui-demo/old-control/icon-ui/i
             <div class="editor-footer">
               <button nz-button nzType="default" (click)="optimizeSvg()">
                 <av-icon type="system/av_cog" [size]="16"></av-icon>
-                Optimize & Clean
+                Оптимизировать
               </button>
               <div class="spacer"></div>
               <button
@@ -357,7 +394,7 @@ import { ICON_REGISTRY, IconCategory } from '../../ui-demo/old-control/icon-ui/i
                 (click)="saveChanges()"
               >
                 <av-icon type="actions/av_check_mark" [size]="16"></av-icon>
-                Save Changes
+                Сохранить изменения
               </button>
             </div>
           </div>
@@ -369,7 +406,7 @@ import { ICON_REGISTRY, IconCategory } from '../../ui-demo/old-control/icon-ui/i
       <nz-drawer
         [nzVisible]="isBatchLabOpen()"
         [nzWidth]="720"
-        nzTitle="Batch Operations Lab"
+        nzTitle="Лаборатория массовых операций"
         (nzOnClose)="isBatchLabOpen.set(false)"
       >
         <ng-container *nzDrawerContent>
@@ -407,7 +444,7 @@ import { ICON_REGISTRY, IconCategory } from '../../ui-demo/old-control/icon-ui/i
                   <av-icon type="actions/av_eraser" [size]="20"></av-icon>
                 </div>
                 <div class="action-info">
-                  <h4>Batch Optimize</h4>
+                  <h4>Массовая оптимизация</h4>
                   <p>Очистка от мусора, ID, классов и внедрение currentColor.</p>
                 </div>
               </div>
@@ -417,7 +454,7 @@ import { ICON_REGISTRY, IconCategory } from '../../ui-demo/old-control/icon-ui/i
                   <av-icon type="arrows/av_expand" [size]="20"></av-icon>
                 </div>
                 <div class="action-info">
-                  <h4>Standardize 24x24</h4>
+                  <h4>Стандартизация 24x24</h4>
                   <p>Масштабирование всех иконок под стандартный квадрат 24 на 24.</p>
                 </div>
               </div>
@@ -521,16 +558,19 @@ import { ICON_REGISTRY, IconCategory } from '../../ui-demo/old-control/icon-ui/i
                 <div
                   style="font-size: 10px; text-transform: uppercase; color: #94a3b8; font-weight: 800; letter-spacing: 0.05em;"
                 >
-                  Session Log
+                  Лог сессии
                 </div>
                 @if (batchLog().length > 0) {
                 <button
                   class="btn-outline"
-                  style="height: 24px; padding: 0 8px; font-size: 10px; border-radius: 6px;"
+                  [style.height]="'24px'"
+                  [style.padding]="'0 8px'"
+                  [style.font-size]="'10px'"
+                  [style.border-radius]="'6px'"
                   (click)="copyBatchLog()"
                 >
                   <av-icon type="actions/av_save" [size]="10" style="margin-right: 4px;"></av-icon>
-                  Copy Detailed Log
+                  Копировать лог
                 </button>
                 }
               </div>
@@ -590,6 +630,57 @@ import { ICON_REGISTRY, IconCategory } from '../../ui-demo/old-control/icon-ui/i
           </div>
         </ng-container>
       </nz-drawer>
+
+      <!-- Upload Modal -->
+      <nz-modal
+        [nzVisible]="isUploadModalOpen()"
+        nzTitle="Загрузка новой иконки"
+        (nzOnCancel)="isUploadModalOpen.set(false)"
+        (nzOnOk)="confirmUpload()"
+        [nzOkText]="'Загрузить'"
+        [nzCancelText]="'Отмена'"
+      >
+        <ng-container *nzModalContent>
+          <div style="display: flex; flex-direction: column; gap: 16px;">
+            <div>
+              <label style="display: block; margin-bottom: 8px; font-weight: 600;"
+                >Название (без расширения)</label
+              >
+              <input
+                nz-input
+                [ngModel]="uploadName()"
+                (ngModelChange)="uploadName.set($event)"
+                placeholder="Например: av_user_plus"
+              />
+            </div>
+            <div>
+              <label style="display: block; margin-bottom: 8px; font-weight: 600;">Категория</label>
+              <nz-select
+                [ngModel]="uploadCategory()"
+                (ngModelChange)="uploadCategory.set($event)"
+                style="width: 100%;"
+              >
+                <nz-option nzValue="Общие" nzLabel="Общие"></nz-option>
+                <nz-option nzValue="Действия" nzLabel="Действия"></nz-option>
+                <nz-option nzValue="Стрелки" nzLabel="Стрелки"></nz-option>
+                <nz-option nzValue="Графики" nzLabel="Графики"></nz-option>
+                <nz-option nzValue="Коммуникация" nzLabel="Коммуникация"></nz-option>
+                <nz-option nzValue="Редактор" nzLabel="Редактор"></nz-option>
+                <nz-option nzValue="Файлы" nzLabel="Файлы"></nz-option>
+                <nz-option nzValue="Медиа" nzLabel="Медиа"></nz-option>
+                <nz-option nzValue="Настройки" nzLabel="Настройки"></nz-option>
+                <nz-option nzValue="Система" nzLabel="Система"></nz-option>
+                <nz-option nzValue="Время" nzLabel="Время"></nz-option>
+                <nz-option nzValue="Пользователь" nzLabel="Пользователь"></nz-option>
+              </nz-select>
+            </div>
+            <div>
+              <label style="display: block; margin-bottom: 8px; font-weight: 600;">Файл SVG</label>
+              <input type="file" (change)="handleFileUpload($event)" accept=".svg" />
+            </div>
+          </div>
+        </ng-container>
+      </nz-modal>
 
       <!-- Toast -->
       @if (toastMessage()) {
@@ -709,6 +800,56 @@ import { ICON_REGISTRY, IconCategory } from '../../ui-demo/old-control/icon-ui/i
         font-size: 11px;
         color: #64748b;
         font-weight: 500;
+      }
+
+      .source-badge {
+        font-size: 8px;
+        padding: 1px 6px;
+        border-radius: 12px;
+        background: #f1f5f9;
+        color: #64748b;
+        font-weight: 700;
+        text-transform: uppercase;
+        border: 1px solid #e2e8f0;
+
+        &.backend {
+          background: #e0e7ff;
+          color: #4338ca;
+          border-color: #c7d2fe;
+        }
+      }
+
+      .loading-state {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 100px 0;
+        gap: 20px;
+        color: #6366f1;
+
+        .spinner {
+          width: 40px;
+          height: 40px;
+          border: 3px solid rgba(99, 102, 241, 0.1);
+          border-top-color: #6366f1;
+          border-radius: 50%;
+          animation: spin 1s linear infinite;
+        }
+
+        p {
+          font-weight: 500;
+          font-size: 16px;
+        }
+      }
+
+      .small-spinner {
+        width: 14px;
+        height: 14px;
+        border: 2px solid rgba(0, 0, 0, 0.1);
+        border-top-color: #6366f1;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
       }
 
       .sidebar-content {
@@ -1171,6 +1312,12 @@ import { ICON_REGISTRY, IconCategory } from '../../ui-demo/old-control/icon-ui/i
         border-radius: 12px;
         border: 1px solid #e2e8f0;
         color: #1e293b;
+
+        svg {
+          width: 64px;
+          height: 64px;
+          display: block;
+        }
       }
 
       .placeholder {
@@ -1536,8 +1683,15 @@ import { ICON_REGISTRY, IconCategory } from '../../ui-demo/old-control/icon-ui/i
 })
 export class IconManagerComponent {
   private http = inject(HttpClient);
+  private iconDataService = inject(IconDataService);
+  private message = inject(NzMessageService);
+  private sanitizer = inject(DomSanitizer);
 
   // State Signals
+  isLoading = signal(true);
+  isSyncing = signal(false);
+  dataSource = signal<'backend' | 'local'>('local');
+
   searchQuery = signal('');
   selectedCategory = signal<string | null>(null);
   toastMessage = signal('');
@@ -1567,6 +1721,12 @@ export class IconManagerComponent {
   metaDataKey = signal('');
   metaDataValue = signal('');
 
+  // Upload Signals
+  isUploadModalOpen = signal(false);
+  uploadCategory = signal('Общие');
+  uploadName = signal('');
+  uploadFileContent = signal<string | null>(null);
+
   // Technical Passport Signals
   iconPassport = signal<{
     originalWidth: string;
@@ -1578,10 +1738,53 @@ export class IconManagerComponent {
   } | null>(null);
 
   // Static/Computed Data
-  categories = signal(ICON_REGISTRY);
+  categories = signal<IconCategory[]>([]);
+
+  constructor() {
+    this.loadIcons();
+  }
+
+  private loadIcons() {
+    this.isLoading.set(true);
+    this.iconDataService.getIcons().subscribe({
+      next: (data) => {
+        const sorted = [...data].sort((a, b) => {
+          if (a.category === 'Другие') return 1;
+          if (b.category === 'Другие') return -1;
+          return a.category.localeCompare(b.category);
+        });
+        this.categories.set(sorted);
+        this.dataSource.set('backend');
+        this.isLoading.set(false);
+      },
+      error: (err: unknown) => {
+        console.error('Failed to load icons', err);
+        // Fallback to registry if API fails
+        this.categories.set([...ICON_REGISTRY]);
+        this.dataSource.set('local');
+        this.isLoading.set(false);
+        this.message.warning('Используется локальная библиотека иконок (бэкенд недоступен)');
+      },
+    });
+  }
+
+  syncToLocal() {
+    this.isSyncing.set(true);
+    this.http.post(ApiEndpoints.ICONS.SYNC_TO_LOCAL, {}).subscribe({
+      next: () => {
+        this.message.success('✅ Библиотека иконок успешно синхронизирована с фронтендом!');
+        this.isSyncing.set(false);
+      },
+      error: (err: unknown) => {
+        console.error('Sync failed', err);
+        this.message.error('❌ Ошибка синхронизации иконок');
+        this.isSyncing.set(false);
+      },
+    });
+  }
 
   totalIcons = computed(() => {
-    return ICON_REGISTRY.reduce((acc: number, cat: IconCategory) => acc + cat.icons.length, 0);
+    return this.categories().reduce((acc: number, cat: IconCategory) => acc + cat.icons.length, 0);
   });
 
   storageUsage = computed(() => {
@@ -1592,7 +1795,7 @@ export class IconManagerComponent {
   filteredIcons = computed(() => {
     const query = this.searchQuery().toLowerCase().trim();
     const category = this.selectedCategory();
-    let icons = ICON_REGISTRY.flatMap((c: IconCategory) => c.icons);
+    let icons = this.categories().flatMap((c: IconCategory) => c.icons);
 
     if (category) icons = icons.filter((i: IconMetadata) => i.category === category);
     if (query) {
@@ -1605,9 +1808,10 @@ export class IconManagerComponent {
   });
 
   // Safe preview for innerHTML
-  safeCleanedSvg = computed(() => {
+  safeCleanedSvg = computed<SafeHtml>(() => {
     const code = this.cleanedSvgCode();
-    return code || '';
+    if (!code) return '';
+    return this.sanitizer.bypassSecurityTrustHtml(code);
   });
 
   onSearchChange(val: string) {
@@ -1618,7 +1822,7 @@ export class IconManagerComponent {
   openEditor(icon: any) {
     this.selectedIcon.set(icon);
     this.cleanedSvgCode.set('');
-    this.rawSvgCode.set('Loading source...');
+    this.rawSvgCode.set('Загрузка кода...');
     this.isEditorOpen.set(true);
 
     // Reset enrichment
@@ -1636,7 +1840,7 @@ export class IconManagerComponent {
         this.generatePassport(code);
       },
       error: (err) => {
-        let errorMsg = 'Error loading SVG source.';
+        let errorMsg = 'Ошибка загрузки SVG.';
 
         if (err?.status === 404) {
           errorMsg = `⚠️ Файл не найден: ${icon.type}.svg\n\nФайл может быть:\n- Удалён из assets/icons\n- Переименован\n- Указан неверный путь в реестре`;
@@ -1744,10 +1948,10 @@ export class IconManagerComponent {
       const normalized = new XMLSerializer().serializeToString(doc);
       this.cleanedSvgCode.set(normalized);
       this.generatePassport(normalized); // Update passport data
-      this.showToast('Icon successfully scaled to 24x24 standard!');
+      this.showToast('Иконка успешно масштабирована до стандарта 24x24!');
     } catch (e) {
       console.error(e);
-      this.showToast('Error during normalization.');
+      this.showToast('Ошибка при нормализации.');
     }
   }
 
@@ -1758,9 +1962,9 @@ export class IconManagerComponent {
     try {
       const enriched = this.internalApplyMetadata(raw);
       this.cleanedSvgCode.set(enriched);
-      this.showToast('Metadata injected successfully!');
+      this.showToast('Метаданные успешно внедрены!');
     } catch (e) {
-      this.showToast('Error applying metadata.');
+      this.showToast('Ошибка при применении метаданных.');
     }
   }
 
@@ -1888,18 +2092,86 @@ export class IconManagerComponent {
       cleaned = cleaned.replace(/<\?xml.*\?>/g, '').trim();
 
       this.cleanedSvgCode.set(cleaned);
-      this.showToast('Optimization complete! Cleaned & CurrentColor injected.');
+      this.showToast('Оптимизация завершена! Код очищен и внедрен currentColor.');
     } catch (e) {
-      this.showToast('Failed to parse SVG for optimization.');
+      this.showToast('Не удалось разобрать SVG для оптимизации.');
     }
   }
 
   saveChanges() {
-    this.showToast('Backend SAVE is not implemented yet.');
+    const icon = this.selectedIcon();
+    const content = this.cleanedSvgCode();
+
+    if (!icon || !content) {
+      this.showToast('⚠️ Нет данных для сохранения');
+      return;
+    }
+
+    this.http
+      .post(ApiEndpoints.ICONS.UPDATE, {
+        iconType: icon.type,
+        svgContent: content,
+      })
+      .subscribe({
+        next: (res: any) => {
+          this.showToast(`✅ ${res.message || 'Иконка успешно сохранена!'}`);
+          // Optionally reload icons or update local state
+        },
+        error: (err) => {
+          console.error('Save failed', err);
+          this.showToast('❌ Ошибка при сохранении иконки на сервере');
+        },
+      });
   }
 
   onUploadClick() {
-    this.showToast('Функция загрузки будет реализована в следующем этапе.');
+    this.isUploadModalOpen.set(true);
+    this.uploadName.set('');
+    this.uploadFileContent.set(null);
+  }
+
+  handleFileUpload(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      this.uploadName.set(file.name.replace('.svg', ''));
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.uploadFileContent.set(e.target.result);
+      };
+      reader.readAsText(file);
+    }
+  }
+
+  confirmUpload() {
+    const name = this.uploadName();
+    const category = this.uploadCategory();
+    const content = this.uploadFileContent();
+
+    if (!name || !category || !content) {
+      this.showToast('⚠️ Заполните все поля и выберите файл');
+      return;
+    }
+
+    const iconType = `${category.toLowerCase()}/${name}`;
+
+    this.http
+      .post(ApiEndpoints.ICONS.UPDATE, {
+        iconType: iconType,
+        svgContent: content,
+      })
+      .subscribe({
+        next: (res: any) => {
+          this.showToast(`✅ Иконка "${name}" успешно загружена в категорию "${category}"!`);
+          this.isUploadModalOpen.set(false);
+          // Suggest sync
+          this.message.info('Не забудьте нажать "Синхронизировать" для обновления реестра');
+          this.loadIcons(); // Refresh grid
+        },
+        error: (err) => {
+          console.error('Upload failed', err);
+          this.showToast('❌ Ошибка при загрузке иконки');
+        },
+      });
   }
 
   deleteIcon(type: string) {
@@ -1917,18 +2189,29 @@ export class IconManagerComponent {
     this.showToast('Код компонента скопирован!');
   }
 
+  copySvg(type: string) {
+    const path = `assets/icons/${type}.svg`;
+    this.http.get(path, { responseType: 'text' }).subscribe({
+      next: (code) => {
+        navigator.clipboard.writeText(code);
+        this.showToast('Чистый SVG код скопирован!');
+      },
+      error: () => this.showToast('❌ Ошибка загрузки SVG для копирования'),
+    });
+  }
+
   // Batch Operations
   async startBatchProcess(type: 'optimize' | 'normalize' | 'replace' | 'metadata') {
     const icons =
       this.batchMode() === 'all'
-        ? ICON_REGISTRY.flatMap((c: IconCategory) => c.icons)
+        ? this.categories().flatMap((c: IconCategory) => c.icons)
         : this.filteredIcons();
 
     this.batchTotal.set(icons.length);
     this.batchCurrent.set(0);
     this.batchProgress.set(0);
     this.isBatchProcessing.set(true);
-    this.batchLog.set([`Starting batch ${type} for ${icons.length} icons...`]);
+    this.batchLog.set([`Запуск массовой обработки (${type}) для ${icons.length} иконок...`]);
 
     for (let i = 0; i < icons.length; i++) {
       const icon = icons[i];
@@ -1957,10 +2240,10 @@ export class IconManagerComponent {
         // For now we simulate success
         this.batchCurrent.set(i + 1);
         this.batchProgress.set(Math.round(((i + 1) / icons.length) * 100));
-        this.addBatchLog(`✅ Processed: ${icon.type}`, 'success');
+        this.addBatchLog(`✅ Обработано: ${icon.type}`, 'success');
       } catch (e: any) {
         // Детальная обработка ошибок
-        let errorMessage = `❌ Failed: ${icon.type}`;
+        let errorMessage = `❌ Ошибка: ${icon.type}`;
 
         if (e?.status === 404) {
           errorMessage += ' - Файл не существует (404)';
@@ -1977,7 +2260,7 @@ export class IconManagerComponent {
       }
     }
 
-    this.addBatchLog(`Batch ${type} completed!`, 'success');
+    this.addBatchLog(`Массовая обработка (${type}) завершена!`, 'success');
     setTimeout(() => this.isBatchProcessing.set(false), 2000);
   }
 
@@ -2058,7 +2341,7 @@ export class IconManagerComponent {
   copyBatchLog() {
     const log = this.batchLog().join('\n');
     navigator.clipboard.writeText(log);
-    this.showToast('Log copied to clipboard!');
+    this.showToast('Лог скопирован в буфер обмена!');
   }
 
   private showToast(msg: string) {

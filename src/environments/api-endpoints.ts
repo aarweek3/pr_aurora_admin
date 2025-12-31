@@ -115,6 +115,7 @@ export class ApiEndpoints {
     FLAT: `${this.BASE_URL}/Icons/flat`,
     COUNT: `${this.BASE_URL}/Icons/count`,
     SYNC_TO_LOCAL: `${this.BASE_URL}/Icons/sync-to-local`,
+    UPDATE: `${this.BASE_URL}/Icons/update`,
   };
 
   // Images endpoints
