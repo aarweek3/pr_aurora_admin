@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, Input, signal } from '@angular/core';
+import { Component, computed, inject, Input, signal } from '@angular/core';
 import { SystemStatus } from '../../models/health.model';
 import { HealthCheckService } from '../../services/health.service';
 
-type HealthTab = 'Overview' | 'Infra' | 'Auth' | 'Network';
+type HealthTab = 'Обзор' | 'Инфраструктура' | 'Авторизация' | 'Сеть';
 
 import { NzIconModule } from 'ng-zorro-antd/icon';
 
@@ -17,18 +17,76 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
 export class HealthPanelDetailsComponent {
   public healthService = inject(HealthCheckService);
 
-  /** Настройка начального таба */
-  @Input() set initialTab(tab: HealthTab) {
-    if (tab) this.activeTab.set(tab);
+  /** Настройка начального таба (с маппингом из английского для обратной совместимости) */
+  @Input() set initialTab(tab: string) {
+    const map: Record<string, HealthTab> = {
+      Overview: 'Обзор',
+      Infra: 'Инфраструктура',
+      Auth: 'Авторизация',
+      Network: 'Сеть',
+    };
+    const translated = map[tab] || (tab as HealthTab);
+    if (translated) this.activeTab.set(translated);
   }
 
   /** Активный таб */
-  activeTab = signal<HealthTab>('Overview');
+  activeTab = signal<HealthTab>('Обзор');
 
-  tabs: HealthTab[] = ['Overview', 'Infra', 'Auth', 'Network'];
+  tabs: HealthTab[] = ['Обзор', 'Инфраструктура', 'Авторизация', 'Сеть'];
 
   setActiveTab(tab: HealthTab): void {
     this.activeTab.set(tab);
+  }
+
+  /** Отфильтрованные проверки для текущей вкладки */
+  filteredChecks = computed(() => {
+    const s = this.healthService.status();
+    const tab = this.activeTab();
+
+    if (tab === 'Инфраструктура') {
+      return s.checks.filter(
+        (c) =>
+          c.tags?.includes('infra') ||
+          c.tags?.includes('db') ||
+          c.name.toLowerCase().includes('db') ||
+          c.name.toLowerCase().includes('sql'),
+      );
+    }
+    if (tab === 'Авторизация') {
+      return s.checks.filter(
+        (c) =>
+          c.tags?.includes('auth') ||
+          c.name.toLowerCase().includes('auth') ||
+          c.name.toLowerCase().includes('identity'),
+      );
+    }
+
+    return s.checks;
+  });
+
+  translateStatus(status: string): string {
+    const map: Record<string, string> = {
+      Healthy: 'Здоров',
+      Degraded: 'Ограничен',
+      Unhealthy: 'Критичен',
+      Offline: 'Оффлайн',
+      Online: 'Онлайн',
+      'Checking...': 'Проверка...',
+    };
+    return map[status] || status;
+  }
+
+  /** Оценка здоровья задержки API (hardcoded) */
+  getLatencyClass(ms: number): string {
+    if (ms < 150) return 'latency-good';
+    if (ms < 400) return 'latency-fair';
+    return 'latency-poor';
+  }
+
+  getLatencyStatus(ms: number): string {
+    if (ms < 150) return 'Стабильно';
+    if (ms < 400) return 'Задержка';
+    return 'Медленно';
   }
 
   /** Хелпер для определения цвета статуса в таблице */

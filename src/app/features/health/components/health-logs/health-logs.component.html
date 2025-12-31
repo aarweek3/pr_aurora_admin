@@ -42,15 +42,15 @@
             <code>{{ log.endpoint }}</code>
           </td>
           <td class="status">
-            <span class="badge">{{ log.status }}</span>
+            <span class="badge">{{ translateStatus(log.status) }}</span>
           </td>
-          <td class="duration" [class.slow]="log.durationMs > 500">{{ log.durationMs }}ms</td>
+          <td class="duration" [class.slow]="log.durationMs > 500">{{ log.durationMs }}мс</td>
           <td class="token">
-            <span *ngIf="log.hasAccessToken" title="Valid Token">🔑</span>
+            <span *ngIf="log.hasAccessToken" title="Действующий токен">🔑</span>
             <span *ngIf="!log.hasAccessToken" class="no-token">❌</span>
             <small *ngIf="log.tokenFingerprint" class="fingerprint">{{ log.tokenFingerprint }}</small>
           </td>
-          <td class="ip">{{ log.clientIp || 'local' }}</td>
+          <td class="ip">{{ log.clientIp || 'локально' }}</td>
         </tr>
 
         <tr *ngIf="filteredLogs().length === 0">

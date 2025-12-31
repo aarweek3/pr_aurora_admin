@@ -7,6 +7,7 @@ export interface HealthCheckItem {
   status: SystemStatus; // Состояние
   duration: number; // Время выполнения (ms)
   description?: string; // Детализация ошибки
+  tags?: string[]; // Теги для фильтрации
 }
 
 /** Полный ответ от HealthCheckController */

@@ -20,6 +20,16 @@ export class HealthMonitorComponent implements OnInit {
   readonly alerts = this.healthService.currentAlerts;
   readonly isLoading = this.healthService.loading;
 
+  translateStatus(status: string): string {
+    const map: Record<string, string> = {
+      Healthy: 'Здоров',
+      Degraded: 'Ограничен',
+      Unhealthy: 'Критичен',
+      Unknown: 'Неизвестно',
+    };
+    return map[status] || status;
+  }
+
   readonly activeTab = signal<'overview' | 'logs' | 'metrics'>('overview');
 
   ngOnInit() {

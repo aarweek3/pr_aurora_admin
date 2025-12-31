@@ -18,6 +18,16 @@ export class HealthLogsComponent implements OnInit {
   readonly searchQuery = signal<string>('');
   readonly filterSeverity = signal<string>('all');
 
+  translateStatus(status: string): string {
+    const map: Record<string, string> = {
+      Healthy: 'Здоров',
+      Degraded: 'Ограничен',
+      Unhealthy: 'Критичен',
+      Unknown: 'Неизвестно',
+    };
+    return map[status] || status;
+  }
+
   // Отфильтрованные логи
   readonly filteredLogs = computed(() => {
     let list = this.logs();

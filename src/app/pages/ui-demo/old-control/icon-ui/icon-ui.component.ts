@@ -1,7 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, signal } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { NzMessageService } from 'ng-zorro-antd/message';
+import { ApiEndpoints } from '../../../../../environments/api-endpoints';
 import { AvIconConfig, IconComponent } from '../../../../shared/components/ui/icon';
+import { IconDataService } from '../../../../shared/services/icon-data.service';
 import { AvIconCategory } from './icon-metadata.model';
 import { ICON_REGISTRY } from './icon-registry';
 
@@ -16,15 +20,33 @@ import { ICON_REGISTRY } from './icon-registry';
       <div class="icon-ui__header glass">
         <div class="header-main">
           <div class="title-group">
-            <h1>Icon Library</h1>
+            <div class="title-with-badge">
+              <h1>Icon Library</h1>
+              <span class="source-badge" [class.backend]="dataSource() === 'backend'">
+                {{ dataSource() === 'backend' ? '☁️ Backend' : '🏠 Local' }}
+              </span>
+            </div>
 
             <p class="text-secondary">
               {{ totalIcons() }} иконок в {{ categories().length }} категориях
             </p>
-            <p class="text-secondary">
-              Компонент: IconUiComponent
-              (pr_aurora_admin/src/app/pages/ui-demo/icon-ui/icon-ui.component.ts)
-            </p>
+            <div class="action-info">
+              <p class="text-secondary">Компонент: IconUiComponent</p>
+              @if (dataSource() === 'backend') {
+              <button
+                class="sync-btn"
+                [disabled]="isSyncing()"
+                (click)="syncToLocal()"
+                title="Синхронизировать бэкенд с локальным файлом"
+              >
+                @if (isSyncing()) {
+                <div class="small-spinner"></div>
+                Syncing... } @else {
+                <av-icon type="actions/av_save" [size]="14"></av-icon>
+                Sync to Local }
+              </button>
+              }
+            </div>
           </div>
 
           <div class="search-box">
@@ -45,7 +67,12 @@ import { ICON_REGISTRY } from './icon-registry';
 
         <!-- Main Content -->
         <div class="icon-ui__content">
-          @if (filteredCategories().length === 0) {
+          @if (isLoading()) {
+          <div class="loading-state">
+            <div class="spinner"></div>
+            <p>Загрузка библиотеки иконок...</p>
+          </div>
+          } @else if (filteredCategories().length === 0) {
           <div class="empty-state">
             <av-icon type="system/av_info" [size]="48"></av-icon>
             <h3>Ничего не найдено</h3>
@@ -77,16 +104,10 @@ import { ICON_REGISTRY } from './icon-registry';
           </section>
           }
         </div>
-
-        <!-- Toast Notification (Simplified) -->
-        @if (toastMessage()) {
-        <div class="toast-notification fade-in">
-          {{ toastMessage() }}
-        </div>
-        }
       </div>
     </div>
   `,
+
   styles: [
     `
       .icon-ui {
@@ -122,6 +143,61 @@ import { ICON_REGISTRY } from './icon-registry';
         background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
+      }
+
+      .title-with-badge {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 4px;
+      }
+
+      .source-badge {
+        font-size: 10px;
+        padding: 2px 8px;
+        border-radius: 12px;
+        background: #f1f5f9;
+        color: #64748b;
+        font-weight: 700;
+        text-transform: uppercase;
+        border: 1px solid #e2e8f0;
+
+        &.backend {
+          background: #e0e7ff;
+          color: #4338ca;
+          border-color: #c7d2fe;
+        }
+      }
+
+      .action-info {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        margin-top: 4px;
+      }
+
+      .sync-btn {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        background: #6366f1;
+        color: white;
+        border: none;
+        padding: 4px 12px;
+        border-radius: 8px;
+        font-size: 11px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+
+        &:hover {
+          background: #4f46e5;
+          transform: translateY(-1px);
+        }
+
+        &:active {
+          transform: translateY(0);
+        }
       }
 
       .search-box {
@@ -271,41 +347,105 @@ import { ICON_REGISTRY } from './icon-registry';
         color: var(--text-tertiary);
       }
 
-      .toast-notification {
-        position: fixed;
-        bottom: 40px;
-        left: 50%;
-        transform: translateX(-50%);
-        background: #1e293b;
-        color: white;
-        padding: 12px 24px;
-        border-radius: 12px;
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-        z-index: 1000;
-        pointer-events: none;
+      .loading-state {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 100px 0;
+        gap: 20px;
+        color: #6366f1;
+
+        .spinner {
+          width: 40px;
+          height: 40px;
+          border: 3px solid rgba(99, 102, 241, 0.1);
+          border-top-color: #6366f1;
+          border-radius: 50%;
+          animation: spin 1s linear infinite;
+        }
+
+        p {
+          font-weight: 500;
+          font-size: 16px;
+        }
       }
 
-      .fade-in {
-        animation: fadeIn 0.3s ease-out;
+      .small-spinner {
+        width: 14px;
+        height: 14px;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-top-color: white;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
       }
 
-      @keyframes fadeIn {
+      @keyframes spin {
         from {
-          opacity: 0;
-          transform: translate(-50%, 20px);
+          transform: rotate(0deg);
         }
         to {
-          opacity: 1;
-          transform: translate(-50%, 0);
+          transform: rotate(360deg);
         }
       }
     `,
   ],
 })
 export class IconUiComponent {
+  private iconService = inject(IconDataService);
+  private http = inject(HttpClient);
+  private message = inject(NzMessageService);
+
   // Reactive state
   searchQuery = signal('');
-  toastMessage = signal('');
+  toastMessage = signal(''); // Keeps for compatibility if used elsewhere, but we'll use nz-message
+  categories = signal<AvIconCategory[]>([]);
+  isLoading = signal(true);
+  isSyncing = signal(false);
+  dataSource = signal<'backend' | 'local'>('local');
+
+  constructor() {
+    this.loadIcons();
+  }
+
+  private loadIcons() {
+    this.isLoading.set(true);
+    this.iconService.getIcons().subscribe({
+      next: (data) => {
+        const sorted = [...data].sort((a, b) => {
+          if (a.category === 'Другие') return 1;
+          if (b.category === 'Другие') return -1;
+          return a.category.localeCompare(b.category);
+        });
+        this.categories.set(sorted);
+        this.dataSource.set('backend');
+        this.isLoading.set(false);
+      },
+      error: (err: unknown) => {
+        console.error('Failed to load icons', err);
+        // Fallback to registry if API fails
+        this.categories.set([...ICON_REGISTRY]);
+        this.dataSource.set('local');
+        this.isLoading.set(false);
+        this.message.warning('Используется локальная библиотека иконок (бэкенд недоступен)');
+      },
+    });
+  }
+
+  syncToLocal() {
+    this.isSyncing.set(true);
+    this.http.post(ApiEndpoints.ICONS.SYNC_TO_LOCAL, {}).subscribe({
+      next: () => {
+        this.message.success('✅ Библиотека иконок успешно синхронизирована с фронтендом!');
+        this.isSyncing.set(false);
+      },
+      error: (err: unknown) => {
+        console.error('Sync failed', err);
+        this.message.error('❌ Ошибка синхронизации иконок');
+        this.isSyncing.set(false);
+      },
+    });
+  }
 
   // Icon configuration for our settings control
   iconConfig = signal<AvIconConfig>({
@@ -342,16 +482,8 @@ export class IconUiComponent {
 
   // Computed state
   totalIcons = computed(() => {
-    return ICON_REGISTRY.reduce((acc, cat) => acc + cat.icons.length, 0);
+    return this.categories().reduce((acc, cat) => acc + cat.icons.length, 0);
   });
-
-  categories = signal<AvIconCategory[]>(
-    [...ICON_REGISTRY].sort((a, b) => {
-      if (a.category === 'Другие') return 1;
-      if (b.category === 'Другие') return -1;
-      return a.category.localeCompare(b.category);
-    }),
-  );
 
   filteredCategories = computed(() => {
     const query = this.searchQuery().toLowerCase().trim();

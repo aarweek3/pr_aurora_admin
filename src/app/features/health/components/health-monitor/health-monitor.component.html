@@ -4,7 +4,7 @@
       <h1>Мониторинг системы</h1>
       <div class="status-badge" [class]="status().status.toLowerCase()">
         <app-health-indicator [status]="status().status" [pulse]="true"></app-health-indicator>
-        <span>{{ status().status }}</span>
+        <span>{{ translateStatus(status().status) }}</span>
       </div>
     </div>
 
@@ -20,7 +20,7 @@
   <!-- Карточки быстрой статистики -->
   <div class="quick-stats">
     <div class="stat-card">
-      <label>CPU</label>
+      <label>ЦПУ</label>
       <div class="value">{{ metrics()?.cpuUsagePercentage || 0 }}%</div>
       <div class="progress-bar">
         <div class="fill" [style.width.%]="metrics()?.cpuUsagePercentage || 0"></div>
@@ -34,8 +34,8 @@
       </div>
     </div>
     <div class="stat-card">
-      <label>Uptime</label>
-      <div class="value">{{ metrics()?.getUptimeFormatted() || '0m' }}</div>
+      <label>Аптайм</label>
+      <div class="value">{{ metrics()?.getUptimeFormatted() || '0м' }}</div>
     </div>
   </div>
 
@@ -51,13 +51,13 @@
       <section class="info-panel">
         <h3>Доступность API</h3>
         <p>
-          Среда: <strong>{{ status().environment || 'N/A' }}</strong>
+          Окружение: <strong>{{ status().environment || 'N/A' }}</strong>
         </p>
         <p>
           Версия: <strong>{{ status().version || '1.0.0' }}</strong>
         </p>
         <p>
-          Response Time: <strong>{{ status().responseTime }}ms</strong>
+          Время отклика: <strong>{{ status().responseTime }}мс</strong>
         </p>
       </section>
 

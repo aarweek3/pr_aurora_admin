@@ -13,7 +13,7 @@
           <!-- Готовый контрол иконок -->
           <av-icon-settings-control
             [(value)]="iconConfig"
-            [presets]="iconPresets"
+            [presets]="iconPresets()"
             (valueChange)="onIconConfigChange($event)"
           >
           </av-icon-settings-control>

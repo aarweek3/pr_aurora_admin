@@ -31,6 +31,7 @@ export class ApiEndpoints {
     REFRESH: `${this.BASE_URL}/Auth/refresh`,
     CHANGE_PASSWORD: `${this.BASE_URL}/Auth/change-password`,
     PROFILE: `${this.BASE_URL}/Auth/profile`,
+    UPDATE_PROFILE: `${this.BASE_URL}/Auth/profile`,
     EXTERNAL_LOGIN: (provider: string) => `${this.BASE_URL}/auth/external/login/${provider}`,
     DEBUG_TOKEN: `${this.BASE_URL}/Auth/debug-token`,
     DEBUG_COOKIES: `${this.BASE_URL}/Auth/debug-cookies`,
@@ -106,6 +107,14 @@ export class ApiEndpoints {
     RESET: `${this.BASE_URL}/settings/reset`,
     EXISTS: `${this.BASE_URL}/settings/exists`,
     BY_USER_ID: (userId: string) => `${this.BASE_URL}/settings/user/${userId}`,
+  };
+
+  // Icons endpoints
+  static readonly ICONS = {
+    BASE: `${this.BASE_URL}/Icons`,
+    FLAT: `${this.BASE_URL}/Icons/flat`,
+    COUNT: `${this.BASE_URL}/Icons/count`,
+    SYNC_TO_LOCAL: `${this.BASE_URL}/Icons/sync-to-local`,
   };
 
   // Images endpoints

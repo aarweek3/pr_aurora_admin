@@ -59,6 +59,13 @@ export const routes: Routes = [
         loadChildren: () =>
           import('./auth/pages/settings-user/settings-user.routes').then((m) => m.SETTINGS_ROUTES),
       },
+      {
+        path: 'profile',
+        loadChildren: () =>
+          import('./auth/pages/user-profile/user-profile.routes').then(
+            (m) => m.USER_PROFILE_ROUTES,
+          ),
+      },
       // { path: 'reports', loadChildren: () => import('./pages/reports/reports.routes') },
     ],
   },
