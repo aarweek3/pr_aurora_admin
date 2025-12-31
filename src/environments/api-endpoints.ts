@@ -98,6 +98,16 @@ export class ApiEndpoints {
     STATISTICS: `${this.BASE_URL}/admin-panel/statistics`,
   };
 
+  // User Settings endpoints
+  static readonly SETTINGS = {
+    BASE: `${this.BASE_URL}/settings`,
+    GET: `${this.BASE_URL}/settings`,
+    UPDATE: `${this.BASE_URL}/settings`,
+    RESET: `${this.BASE_URL}/settings/reset`,
+    EXISTS: `${this.BASE_URL}/settings/exists`,
+    BY_USER_ID: (userId: string) => `${this.BASE_URL}/settings/user/${userId}`,
+  };
+
   // Images endpoints
   static readonly IMAGES = {
     UPLOAD_SIMPLE: `${this.BASE_URL}/images/upload-simple`,

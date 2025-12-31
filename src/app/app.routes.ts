@@ -4,8 +4,7 @@ import { AdminLayoutComponent } from './shared/components/layout/admin-layout/ad
 // TODO: Import AuthLayout when created (Phase 6)
 // import { AuthLayoutComponent } from './shared/components/layout/auth-layout/auth-layout.component';
 
-// TODO: Import Guards (Phase 6)
-// import { authGuard } from './core/guards/auth.guard';
+import { authGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
   {
@@ -21,7 +20,7 @@ export const routes: Routes = [
   {
     path: '',
     component: AdminLayoutComponent,
-    canActivate: [], // TODO: Add [authGuard] in Phase 6
+    canActivate: [authGuard],
     children: [
       {
         path: 'dashboard',
@@ -55,7 +54,11 @@ export const routes: Routes = [
       // TODO: Add feature modules (Phase 7)
       // { path: 'users', loadChildren: () => import('./pages/users/users.routes') },
       // { path: 'content', loadChildren: () => import('./pages/content/content.routes') },
-      // { path: 'settings', loadChildren: () => import('./pages/settings/settings.routes') },
+      {
+        path: 'settings',
+        loadChildren: () =>
+          import('./auth/pages/settings-user/settings-user.routes').then((m) => m.SETTINGS_ROUTES),
+      },
       // { path: 'reports', loadChildren: () => import('./pages/reports/reports.routes') },
     ],
   },

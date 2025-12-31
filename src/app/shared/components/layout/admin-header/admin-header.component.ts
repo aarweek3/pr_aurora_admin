@@ -54,7 +54,7 @@ import { AuthService } from '../../../../auth/services/auth.service';
         </button>
 
         <!-- Настройки -->
-        <button class="admin-header__action-btn" title="Настройки">
+        <button class="admin-header__action-btn" title="Настройки" routerLink="/settings">
           <span nz-icon nzType="setting"></span>
         </button>
 
@@ -79,11 +79,11 @@ import { AuthService } from '../../../../auth/services/auth.service';
       <!-- Dropdown меню пользователя -->
       <nz-dropdown-menu #userMenu="nzDropdownMenu">
         <ul nz-menu>
-          <li nz-menu-item>
+          <li nz-menu-item routerLink="/profile">
             <span nz-icon nzType="user"></span>
             Профиль
           </li>
-          <li nz-menu-item>
+          <li nz-menu-item routerLink="/settings">
             <span nz-icon nzType="setting"></span>
             Настройки
           </li>
@@ -194,9 +194,28 @@ export class AdminHeaderComponent {
   constructor() {
     const user = this.authService.getCurrentUser();
     if (user) {
-      this.userName = user.fullName;
-      this.userInitials = user.fullName.charAt(0).toUpperCase();
+      this.userName = this.formatUserName(user);
+      this.userInitials = this.userName.charAt(0).toUpperCase();
     }
+  }
+
+  private formatUserName(user: any): string {
+    const fullName = user.fullName || '';
+    const email = user.email || '';
+
+    // Если fullName пустой, вернем email
+    if (!fullName) return email;
+
+    // 1. Проверка на повторение (например "email@test.com email@test.com")
+    const parts = fullName.trim().split(/\s+/);
+    if (parts.length === 2 && parts[0] === parts[1]) {
+      return parts[0];
+    }
+
+    // 2. Если fullName совпадает с email (даже в одном экземпляре), можно вернуть его как есть
+    // Но если "email email", это уже обработано выше.
+
+    return fullName;
   }
 
   onLogout(): void {
