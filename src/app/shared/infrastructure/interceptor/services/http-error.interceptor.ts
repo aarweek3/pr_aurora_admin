@@ -51,8 +51,15 @@ export function HttpErrorInterceptor(
       const isIconRequest = req.url.endsWith('.svg') || req.url.includes('assets/icons');
       const isDebugToken = req.url.includes('debug-token');
       const isSimulatorRequest = req.headers.has('X-Simulator-Request');
+      const shouldSkipErrorHandler = req.headers.has('X-Skip-Error-Handler');
 
-      if (!isIconRequest && !isHealthCheck && !isDebugToken && !isSimulatorRequest) {
+      if (
+        !isIconRequest &&
+        !isHealthCheck &&
+        !isDebugToken &&
+        !isSimulatorRequest &&
+        !shouldSkipErrorHandler
+      ) {
         errorHandlingService.handleError(errorResponse);
       }
 

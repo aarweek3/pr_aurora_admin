@@ -11,6 +11,16 @@ export interface IconCategory {
 
 export const ICON_REGISTRY: IconCategory[] = [
   {
+    "category": "редактор",
+    "icons": [
+      {
+        "name": "av_stop",
+        "type": "редактор/av_stop",
+        "category": "редактор"
+      }
+    ]
+  },
+  {
     "category": "Действия",
     "icons": [
       {
@@ -54,8 +64,18 @@ export const ICON_REGISTRY: IconCategory[] = [
         "category": "Действия"
       },
       {
+        "name": "av_galka-ok",
+        "type": "actions/av_galka-ok",
+        "category": "Действия"
+      },
+      {
         "name": "av_hammer",
         "type": "actions/av_hammer",
+        "category": "Действия"
+      },
+      {
+        "name": "av_load-icon",
+        "type": "actions/av_load-icon",
         "category": "Действия"
       },
       {
@@ -94,31 +114,6 @@ export const ICON_REGISTRY: IconCategory[] = [
     "category": "Стрелки",
     "icons": [
       {
-        "name": "av_arrow_down",
-        "type": "arrows/av_arrow_down",
-        "category": "Стрелки"
-      },
-      {
-        "name": "av_arrow_down_right",
-        "type": "arrows/av_arrow_down_right",
-        "category": "Стрелки"
-      },
-      {
-        "name": "av_arrow_left",
-        "type": "arrows/av_arrow_left",
-        "category": "Стрелки"
-      },
-      {
-        "name": "av_arrow_right",
-        "type": "arrows/av_arrow_right",
-        "category": "Стрелки"
-      },
-      {
-        "name": "av_arrow_up",
-        "type": "arrows/av_arrow_up",
-        "category": "Стрелки"
-      },
-      {
         "name": "av_arrow-down",
         "type": "arrows/av_arrow-down",
         "category": "Стрелки"
@@ -141,6 +136,31 @@ export const ICON_REGISTRY: IconCategory[] = [
       {
         "name": "av_arrows_out",
         "type": "arrows/av_arrows_out",
+        "category": "Стрелки"
+      },
+      {
+        "name": "av_arrow_down",
+        "type": "arrows/av_arrow_down",
+        "category": "Стрелки"
+      },
+      {
+        "name": "av_arrow_down_right",
+        "type": "arrows/av_arrow_down_right",
+        "category": "Стрелки"
+      },
+      {
+        "name": "av_arrow_left",
+        "type": "arrows/av_arrow_left",
+        "category": "Стрелки"
+      },
+      {
+        "name": "av_arrow_right",
+        "type": "arrows/av_arrow_right",
+        "category": "Стрелки"
+      },
+      {
+        "name": "av_arrow_up",
+        "type": "arrows/av_arrow_up",
         "category": "Стрелки"
       },
       {
@@ -249,16 +269,6 @@ export const ICON_REGISTRY: IconCategory[] = [
     "category": "Редактор",
     "icons": [
       {
-        "name": "av_align_center",
-        "type": "editor/av_align_center",
-        "category": "Редактор"
-      },
-      {
-        "name": "av_align_right",
-        "type": "editor/av_align_right",
-        "category": "Редактор"
-      },
-      {
         "name": "av_align-center",
         "type": "editor/av_align-center",
         "category": "Редактор"
@@ -276,6 +286,21 @@ export const ICON_REGISTRY: IconCategory[] = [
       {
         "name": "av_align-right",
         "type": "editor/av_align-right",
+        "category": "Редактор"
+      },
+      {
+        "name": "av_alignment-big",
+        "type": "editor/av_alignment-big",
+        "category": "Редактор"
+      },
+      {
+        "name": "av_align_center",
+        "type": "editor/av_align_center",
+        "category": "Редактор"
+      },
+      {
+        "name": "av_align_right",
+        "type": "editor/av_align_right",
         "category": "Редактор"
       },
       {
@@ -299,8 +324,28 @@ export const ICON_REGISTRY: IconCategory[] = [
         "category": "Редактор"
       },
       {
+        "name": "av_format-list-numbered",
+        "type": "editor/av_format-list-numbered",
+        "category": "Редактор"
+      },
+      {
+        "name": "av_input-quote",
+        "type": "editor/av_input-quote",
+        "category": "Редактор"
+      },
+      {
         "name": "av_italic",
         "type": "editor/av_italic",
+        "category": "Редактор"
+      },
+      {
+        "name": "av_list-numbered",
+        "type": "editor/av_list-numbered",
+        "category": "Редактор"
+      },
+      {
+        "name": "av_list-svgrepo",
+        "type": "editor/av_list-svgrepo",
         "category": "Редактор"
       },
       {
@@ -309,8 +354,33 @@ export const ICON_REGISTRY: IconCategory[] = [
         "category": "Редактор"
       },
       {
+        "name": "av_open-font",
+        "type": "editor/av_open-font",
+        "category": "Редактор"
+      },
+      {
         "name": "av_paint",
         "type": "editor/av_paint",
+        "category": "Редактор"
+      },
+      {
+        "name": "av_quote",
+        "type": "editor/av_quote",
+        "category": "Редактор"
+      },
+      {
+        "name": "av_stop",
+        "type": "editor/av_stop",
+        "category": "Редактор"
+      },
+      {
+        "name": "av_style-quote",
+        "type": "editor/av_style-quote",
+        "category": "Редактор"
+      },
+      {
+        "name": "av_writing",
+        "type": "editor/av_writing",
         "category": "Редактор"
       }
     ]
@@ -344,8 +414,268 @@ export const ICON_REGISTRY: IconCategory[] = [
     "category": "Общие",
     "icons": [
       {
+        "name": "av_alert-circle",
+        "type": "general/av_alert-circle",
+        "category": "Общие"
+      },
+      {
+        "name": "av_alert-triangle",
+        "type": "general/av_alert-triangle",
+        "category": "Общие"
+      },
+      {
+        "name": "av_align-center",
+        "type": "general/av_align-center",
+        "category": "Общие"
+      },
+      {
+        "name": "av_align-justify",
+        "type": "general/av_align-justify",
+        "category": "Общие"
+      },
+      {
+        "name": "av_align-left",
+        "type": "general/av_align-left",
+        "category": "Общие"
+      },
+      {
+        "name": "av_align-right",
+        "type": "general/av_align-right",
+        "category": "Общие"
+      },
+      {
+        "name": "av_api",
+        "type": "general/av_api",
+        "category": "Общие"
+      },
+      {
+        "name": "av_arrow-down-circle",
+        "type": "general/av_arrow-down-circle",
+        "category": "Общие"
+      },
+      {
+        "name": "av_arrow-down-left",
+        "type": "general/av_arrow-down-left",
+        "category": "Общие"
+      },
+      {
+        "name": "av_arrow-down-right",
+        "type": "general/av_arrow-down-right",
+        "category": "Общие"
+      },
+      {
+        "name": "av_arrow-down",
+        "type": "general/av_arrow-down",
+        "category": "Общие"
+      },
+      {
+        "name": "av_arrow-left",
+        "type": "general/av_arrow-left",
+        "category": "Общие"
+      },
+      {
+        "name": "av_arrow-right-circle",
+        "type": "general/av_arrow-right-circle",
+        "category": "Общие"
+      },
+      {
+        "name": "av_arrow-right",
+        "type": "general/av_arrow-right",
+        "category": "Общие"
+      },
+      {
+        "name": "av_arrow-up-circle",
+        "type": "general/av_arrow-up-circle",
+        "category": "Общие"
+      },
+      {
+        "name": "av_arrow-up-left",
+        "type": "general/av_arrow-up-left",
+        "category": "Общие"
+      },
+      {
+        "name": "av_arrow-up-right",
+        "type": "general/av_arrow-up-right",
+        "category": "Общие"
+      },
+      {
+        "name": "av_arrow-up",
+        "type": "general/av_arrow-up",
+        "category": "Общие"
+      },
+      {
+        "name": "av_at-sign",
+        "type": "general/av_at-sign",
+        "category": "Общие"
+      },
+      {
+        "name": "av_black-mac-folder-13646",
+        "type": "general/av_black-mac-folder-13646",
+        "category": "Общие"
+      },
+      {
+        "name": "av_blue-linkedin-logo-15916",
+        "type": "general/av_blue-linkedin-logo-15916",
+        "category": "Общие"
+      },
+      {
+        "name": "av_blue-twitter-verified-sign-18759",
+        "type": "general/av_blue-twitter-verified-sign-18759",
+        "category": "Общие"
+      },
+      {
+        "name": "av_bold",
+        "type": "general/av_bold",
+        "category": "Общие"
+      },
+      {
         "name": "av_book",
         "type": "general/av_book",
+        "category": "Общие"
+      },
+      {
+        "name": "av_bookmark",
+        "type": "general/av_bookmark",
+        "category": "Общие"
+      },
+      {
+        "name": "av_businessman",
+        "type": "general/av_businessman",
+        "category": "Общие"
+      },
+      {
+        "name": "av_chatgpt-green-circular-logo-22057",
+        "type": "general/av_chatgpt-green-circular-logo-22057",
+        "category": "Общие"
+      },
+      {
+        "name": "av_check-7050",
+        "type": "general/av_check-7050",
+        "category": "Общие"
+      },
+      {
+        "name": "av_check-circle",
+        "type": "general/av_check-circle",
+        "category": "Общие"
+      },
+      {
+        "name": "av_check-mark-10126",
+        "type": "general/av_check-mark-10126",
+        "category": "Общие"
+      },
+      {
+        "name": "av_check-square",
+        "type": "general/av_check-square",
+        "category": "Общие"
+      },
+      {
+        "name": "av_chevron-down",
+        "type": "general/av_chevron-down",
+        "category": "Общие"
+      },
+      {
+        "name": "av_chevron-left",
+        "type": "general/av_chevron-left",
+        "category": "Общие"
+      },
+      {
+        "name": "av_chevron-right",
+        "type": "general/av_chevron-right",
+        "category": "Общие"
+      },
+      {
+        "name": "av_chevron-up",
+        "type": "general/av_chevron-up",
+        "category": "Общие"
+      },
+      {
+        "name": "av_chevrons-down",
+        "type": "general/av_chevrons-down",
+        "category": "Общие"
+      },
+      {
+        "name": "av_chevrons-left",
+        "type": "general/av_chevrons-left",
+        "category": "Общие"
+      },
+      {
+        "name": "av_chevrons-right",
+        "type": "general/av_chevrons-right",
+        "category": "Общие"
+      },
+      {
+        "name": "av_chevrons-up",
+        "type": "general/av_chevrons-up",
+        "category": "Общие"
+      },
+      {
+        "name": "av_code",
+        "type": "general/av_code",
+        "category": "Общие"
+      },
+      {
+        "name": "av_component",
+        "type": "general/av_component",
+        "category": "Общие"
+      },
+      {
+        "name": "av_copy",
+        "type": "general/av_copy",
+        "category": "Общие"
+      },
+      {
+        "name": "av_corner-down-left",
+        "type": "general/av_corner-down-left",
+        "category": "Общие"
+      },
+      {
+        "name": "av_corner-down-right",
+        "type": "general/av_corner-down-right",
+        "category": "Общие"
+      },
+      {
+        "name": "av_corner-left-down",
+        "type": "general/av_corner-left-down",
+        "category": "Общие"
+      },
+      {
+        "name": "av_corner-left-up",
+        "type": "general/av_corner-left-up",
+        "category": "Общие"
+      },
+      {
+        "name": "av_corner-right-down",
+        "type": "general/av_corner-right-down",
+        "category": "Общие"
+      },
+      {
+        "name": "av_corner-right-up",
+        "type": "general/av_corner-right-up",
+        "category": "Общие"
+      },
+      {
+        "name": "av_corner-up-left",
+        "type": "general/av_corner-up-left",
+        "category": "Общие"
+      },
+      {
+        "name": "av_corner-up-right",
+        "type": "general/av_corner-up-right",
+        "category": "Общие"
+      },
+      {
+        "name": "av_crop",
+        "type": "general/av_crop",
+        "category": "Общие"
+      },
+      {
+        "name": "av_database",
+        "type": "general/av_database",
+        "category": "Общие"
+      },
+      {
+        "name": "av_delete",
+        "type": "general/av_delete",
         "category": "Общие"
       },
       {
@@ -354,8 +684,163 @@ export const ICON_REGISTRY: IconCategory[] = [
         "category": "Общие"
       },
       {
+        "name": "av_dollar-sign",
+        "type": "general/av_dollar-sign",
+        "category": "Общие"
+      },
+      {
+        "name": "av_download-cloud",
+        "type": "general/av_download-cloud",
+        "category": "Общие"
+      },
+      {
+        "name": "av_download",
+        "type": "general/av_download",
+        "category": "Общие"
+      },
+      {
+        "name": "av_droplet",
+        "type": "general/av_droplet",
+        "category": "Общие"
+      },
+      {
         "name": "av_earth",
         "type": "general/av_earth",
+        "category": "Общие"
+      },
+      {
+        "name": "av_edit-2",
+        "type": "general/av_edit-2",
+        "category": "Общие"
+      },
+      {
+        "name": "av_edit-3",
+        "type": "general/av_edit-3",
+        "category": "Общие"
+      },
+      {
+        "name": "av_edit",
+        "type": "general/av_edit",
+        "category": "Общие"
+      },
+      {
+        "name": "av_error-failure-10382",
+        "type": "general/av_error-failure-10382",
+        "category": "Общие"
+      },
+      {
+        "name": "av_external-link",
+        "type": "general/av_external-link",
+        "category": "Общие"
+      },
+      {
+        "name": "av_eye-off",
+        "type": "general/av_eye-off",
+        "category": "Общие"
+      },
+      {
+        "name": "av_eye",
+        "type": "general/av_eye",
+        "category": "Общие"
+      },
+      {
+        "name": "av_facebook-logo",
+        "type": "general/av_facebook-logo",
+        "category": "Общие"
+      },
+      {
+        "name": "av_file-minus",
+        "type": "general/av_file-minus",
+        "category": "Общие"
+      },
+      {
+        "name": "av_file-plus",
+        "type": "general/av_file-plus",
+        "category": "Общие"
+      },
+      {
+        "name": "av_file-text",
+        "type": "general/av_file-text",
+        "category": "Общие"
+      },
+      {
+        "name": "av_file",
+        "type": "general/av_file",
+        "category": "Общие"
+      },
+      {
+        "name": "av_flag",
+        "type": "general/av_flag",
+        "category": "Общие"
+      },
+      {
+        "name": "av_folder-plus",
+        "type": "general/av_folder-plus",
+        "category": "Общие"
+      },
+      {
+        "name": "av_folder",
+        "type": "general/av_folder",
+        "category": "Общие"
+      },
+      {
+        "name": "av_gear-1213",
+        "type": "general/av_gear-1213",
+        "category": "Общие"
+      },
+      {
+        "name": "av_github",
+        "type": "general/av_github",
+        "category": "Общие"
+      },
+      {
+        "name": "av_globe",
+        "type": "general/av_globe",
+        "category": "Общие"
+      },
+      {
+        "name": "av_green-arrow-up-11385",
+        "type": "general/av_green-arrow-up-11385",
+        "category": "Общие"
+      },
+      {
+        "name": "av_green-check-mark-correct-tick",
+        "type": "general/av_green-check-mark-correct-tick",
+        "category": "Общие"
+      },
+      {
+        "name": "av_grid",
+        "type": "general/av_grid",
+        "category": "Общие"
+      },
+      {
+        "name": "av_hash",
+        "type": "general/av_hash",
+        "category": "Общие"
+      },
+      {
+        "name": "av_heart-329",
+        "type": "general/av_heart-329",
+        "category": "Общие"
+      },
+      {
+        "name": "av_heart",
+        "type": "general/av_heart",
+        "category": "Общие"
+      },
+      {
+        "name": "av_help-circle",
+        "type": "general/av_help-circle",
+        "category": "Общие"
+      },
+      {
+        "name": "av_home-175",
+        "type": "general/av_home-175",
+        "category": "Общие"
+      },
+      {
+        "name": "av_home-2490",
+        "type": "general/av_home-2490",
         "category": "Общие"
       },
       {
@@ -369,8 +854,233 @@ export const ICON_REGISTRY: IconCategory[] = [
         "category": "Общие"
       },
       {
+        "name": "av_image",
+        "type": "general/av_image",
+        "category": "Общие"
+      },
+      {
+        "name": "av_india-flag-circular-17791",
+        "type": "general/av_india-flag-circular-17791",
+        "category": "Общие"
+      },
+      {
+        "name": "av_iphone-phone-green-button-21468",
+        "type": "general/av_iphone-phone-green-button-21468",
+        "category": "Общие"
+      },
+      {
+        "name": "av_italic",
+        "type": "general/av_italic",
+        "category": "Общие"
+      },
+      {
+        "name": "av_key",
+        "type": "general/av_key",
+        "category": "Общие"
+      },
+      {
         "name": "av_like",
         "type": "general/av_like",
+        "category": "Общие"
+      },
+      {
+        "name": "av_link-2",
+        "type": "general/av_link-2",
+        "category": "Общие"
+      },
+      {
+        "name": "av_link",
+        "type": "general/av_link",
+        "category": "Общие"
+      },
+      {
+        "name": "av_linkedin-130",
+        "type": "general/av_linkedin-130",
+        "category": "Общие"
+      },
+      {
+        "name": "av_list-numbered",
+        "type": "general/av_list-numbered",
+        "category": "Общие"
+      },
+      {
+        "name": "av_list",
+        "type": "general/av_list",
+        "category": "Общие"
+      },
+      {
+        "name": "av_loader",
+        "type": "general/av_loader",
+        "category": "Общие"
+      },
+      {
+        "name": "av_log-in",
+        "type": "general/av_log-in",
+        "category": "Общие"
+      },
+      {
+        "name": "av_log-out",
+        "type": "general/av_log-out",
+        "category": "Общие"
+      },
+      {
+        "name": "av_mail",
+        "type": "general/av_mail",
+        "category": "Общие"
+      },
+      {
+        "name": "av_male-symbol-2239",
+        "type": "general/av_male-symbol-2239",
+        "category": "Общие"
+      },
+      {
+        "name": "av_map-pin",
+        "type": "general/av_map-pin",
+        "category": "Общие"
+      },
+      {
+        "name": "av_maximize-2",
+        "type": "general/av_maximize-2",
+        "category": "Общие"
+      },
+      {
+        "name": "av_maximize",
+        "type": "general/av_maximize",
+        "category": "Общие"
+      },
+      {
+        "name": "av_menu",
+        "type": "general/av_menu",
+        "category": "Общие"
+      },
+      {
+        "name": "av_message-circle",
+        "type": "general/av_message-circle",
+        "category": "Общие"
+      },
+      {
+        "name": "av_message-square",
+        "type": "general/av_message-square",
+        "category": "Общие"
+      },
+      {
+        "name": "av_minimize-2",
+        "type": "general/av_minimize-2",
+        "category": "Общие"
+      },
+      {
+        "name": "av_minimize",
+        "type": "general/av_minimize",
+        "category": "Общие"
+      },
+      {
+        "name": "av_minus-circle",
+        "type": "general/av_minus-circle",
+        "category": "Общие"
+      },
+      {
+        "name": "av_minus-square",
+        "type": "general/av_minus-square",
+        "category": "Общие"
+      },
+      {
+        "name": "av_minus",
+        "type": "general/av_minus",
+        "category": "Общие"
+      },
+      {
+        "name": "av_more-horizontal",
+        "type": "general/av_more-horizontal",
+        "category": "Общие"
+      },
+      {
+        "name": "av_more-vertical",
+        "type": "general/av_more-vertical",
+        "category": "Общие"
+      },
+      {
+        "name": "av_note",
+        "type": "general/av_note",
+        "category": "Общие"
+      },
+      {
+        "name": "av_number-one-13217",
+        "type": "general/av_number-one-13217",
+        "category": "Общие"
+      },
+      {
+        "name": "av_page",
+        "type": "general/av_page",
+        "category": "Общие"
+      },
+      {
+        "name": "av_paperclip",
+        "type": "general/av_paperclip",
+        "category": "Общие"
+      },
+      {
+        "name": "av_pdf-2616",
+        "type": "general/av_pdf-2616",
+        "category": "Общие"
+      },
+      {
+        "name": "av_pdf-download-3388",
+        "type": "general/av_pdf-download-3388",
+        "category": "Общие"
+      },
+      {
+        "name": "av_percent",
+        "type": "general/av_percent",
+        "category": "Общие"
+      },
+      {
+        "name": "av_pinterest-113",
+        "type": "general/av_pinterest-113",
+        "category": "Общие"
+      },
+      {
+        "name": "av_play-button-4213",
+        "type": "general/av_play-button-4213",
+        "category": "Общие"
+      },
+      {
+        "name": "av_plus-circle",
+        "type": "general/av_plus-circle",
+        "category": "Общие"
+      },
+      {
+        "name": "av_plus-square",
+        "type": "general/av_plus-square",
+        "category": "Общие"
+      },
+      {
+        "name": "av_plus",
+        "type": "general/av_plus",
+        "category": "Общие"
+      },
+      {
+        "name": "av_power",
+        "type": "general/av_power",
+        "category": "Общие"
+      },
+      {
+        "name": "av_red-arrow-down-11380",
+        "type": "general/av_red-arrow-down-11380",
+        "category": "Общие"
+      },
+      {
+        "name": "av_refresh-ccw",
+        "type": "general/av_refresh-ccw",
+        "category": "Общие"
+      },
+      {
+        "name": "av_refresh-cw",
+        "type": "general/av_refresh-cw",
+        "category": "Общие"
+      },
+      {
+        "name": "av_repeat",
+        "type": "general/av_repeat",
         "category": "Общие"
       },
       {
@@ -379,8 +1089,128 @@ export const ICON_REGISTRY: IconCategory[] = [
         "category": "Общие"
       },
       {
+        "name": "av_rotate-ccw",
+        "type": "general/av_rotate-ccw",
+        "category": "Общие"
+      },
+      {
+        "name": "av_rotate-cw",
+        "type": "general/av_rotate-cw",
+        "category": "Общие"
+      },
+      {
+        "name": "av_russia-flag-circular-17765",
+        "type": "general/av_russia-flag-circular-17765",
+        "category": "Общие"
+      },
+      {
+        "name": "av_sad-face-2692",
+        "type": "general/av_sad-face-2692",
+        "category": "Общие"
+      },
+      {
+        "name": "av_save",
+        "type": "general/av_save",
+        "category": "Общие"
+      },
+      {
+        "name": "av_search-tolstii",
+        "type": "general/av_search-tolstii",
+        "category": "Общие"
+      },
+      {
+        "name": "av_search",
+        "type": "general/av_search",
+        "category": "Общие"
+      },
+      {
+        "name": "av_settings-5666",
+        "type": "general/av_settings-5666",
+        "category": "Общие"
+      },
+      {
+        "name": "av_settings",
+        "type": "general/av_settings",
+        "category": "Общие"
+      },
+      {
+        "name": "av_share",
+        "type": "general/av_share",
+        "category": "Общие"
+      },
+      {
+        "name": "av_shopping-cart-3041",
+        "type": "general/av_shopping-cart-3041",
+        "category": "Общие"
+      },
+      {
+        "name": "av_shopping-cart-3045",
+        "type": "general/av_shopping-cart-3045",
+        "category": "Общие"
+      },
+      {
+        "name": "av_shopping-cart",
+        "type": "general/av_shopping-cart",
+        "category": "Общие"
+      },
+      {
+        "name": "av_skype-132",
+        "type": "general/av_skype-132",
+        "category": "Общие"
+      },
+      {
+        "name": "av_smile",
+        "type": "general/av_smile",
+        "category": "Общие"
+      },
+      {
+        "name": "av_star",
+        "type": "general/av_star",
+        "category": "Общие"
+      },
+      {
+        "name": "av_stop-circle",
+        "type": "general/av_stop-circle",
+        "category": "Общие"
+      },
+      {
+        "name": "av_table",
+        "type": "general/av_table",
+        "category": "Общие"
+      },
+      {
         "name": "av_tag",
         "type": "general/av_tag",
+        "category": "Общие"
+      },
+      {
+        "name": "av_telegram-logo",
+        "type": "general/av_telegram-logo",
+        "category": "Общие"
+      },
+      {
+        "name": "av_thermometer",
+        "type": "general/av_thermometer",
+        "category": "Общие"
+      },
+      {
+        "name": "av_thumbs-down-14922",
+        "type": "general/av_thumbs-down-14922",
+        "category": "Общие"
+      },
+      {
+        "name": "av_thumbs-down-14924",
+        "type": "general/av_thumbs-down-14924",
+        "category": "Общие"
+      },
+      {
+        "name": "av_thumbs-down",
+        "type": "general/av_thumbs-down",
+        "category": "Общие"
+      },
+      {
+        "name": "av_thumbs-up",
+        "type": "general/av_thumbs-up",
         "category": "Общие"
       },
       {
@@ -389,13 +1219,173 @@ export const ICON_REGISTRY: IconCategory[] = [
         "category": "Общие"
       },
       {
+        "name": "av_tiktok-logo-10295",
+        "type": "general/av_tiktok-logo-10295",
+        "category": "Общие"
+      },
+      {
+        "name": "av_toggle-left",
+        "type": "general/av_toggle-left",
+        "category": "Общие"
+      },
+      {
+        "name": "av_toggle-right",
+        "type": "general/av_toggle-right",
+        "category": "Общие"
+      },
+      {
+        "name": "av_tool",
+        "type": "general/av_tool",
+        "category": "Общие"
+      },
+      {
+        "name": "av_trash-2",
+        "type": "general/av_trash-2",
+        "category": "Общие"
+      },
+      {
+        "name": "av_trash",
+        "type": "general/av_trash",
+        "category": "Общие"
+      },
+      {
+        "name": "av_triangle",
+        "type": "general/av_triangle",
+        "category": "Общие"
+      },
+      {
         "name": "av_trophy",
         "type": "general/av_trophy",
         "category": "Общие"
       },
       {
-        "name": "av_list_numbered",
-        "type": "general/av_list_numbered",
+        "name": "av_truck",
+        "type": "general/av_truck",
+        "category": "Общие"
+      },
+      {
+        "name": "av_tv",
+        "type": "general/av_tv",
+        "category": "Общие"
+      },
+      {
+        "name": "av_twitter",
+        "type": "general/av_twitter",
+        "category": "Общие"
+      },
+      {
+        "name": "av_type",
+        "type": "general/av_type",
+        "category": "Общие"
+      },
+      {
+        "name": "av_umbrella",
+        "type": "general/av_umbrella",
+        "category": "Общие"
+      },
+      {
+        "name": "av_underline",
+        "type": "general/av_underline",
+        "category": "Общие"
+      },
+      {
+        "name": "av_united-arab-emirates-flag-circular-17754",
+        "type": "general/av_united-arab-emirates-flag-circular-17754",
+        "category": "Общие"
+      },
+      {
+        "name": "av_user-check",
+        "type": "general/av_user-check",
+        "category": "Общие"
+      },
+      {
+        "name": "av_user-minus",
+        "type": "general/av_user-minus",
+        "category": "Общие"
+      },
+      {
+        "name": "av_user-plus",
+        "type": "general/av_user-plus",
+        "category": "Общие"
+      },
+      {
+        "name": "av_user-x",
+        "type": "general/av_user-x",
+        "category": "Общие"
+      },
+      {
+        "name": "av_user",
+        "type": "general/av_user",
+        "category": "Общие"
+      },
+      {
+        "name": "av_users-267",
+        "type": "general/av_users-267",
+        "category": "Общие"
+      },
+      {
+        "name": "av_users",
+        "type": "general/av_users",
+        "category": "Общие"
+      },
+      {
+        "name": "av_visa-credit-card-payment",
+        "type": "general/av_visa-credit-card-payment",
+        "category": "Общие"
+      },
+      {
+        "name": "av_vk-120",
+        "type": "general/av_vk-120",
+        "category": "Общие"
+      },
+      {
+        "name": "av_warning-sign-9763",
+        "type": "general/av_warning-sign-9763",
+        "category": "Общие"
+      },
+      {
+        "name": "av_website-4946",
+        "type": "general/av_website-4946",
+        "category": "Общие"
+      },
+      {
+        "name": "av_whatsapp-139",
+        "type": "general/av_whatsapp-139",
+        "category": "Общие"
+      },
+      {
+        "name": "av_wrench-and-screwdriver-9453",
+        "type": "general/av_wrench-and-screwdriver-9453",
+        "category": "Общие"
+      },
+      {
+        "name": "av_x-10327",
+        "type": "general/av_x-10327",
+        "category": "Общие"
+      },
+      {
+        "name": "av_x",
+        "type": "general/av_x",
+        "category": "Общие"
+      },
+      {
+        "name": "av_youtube-logo-7121",
+        "type": "general/av_youtube-logo-7121",
+        "category": "Общие"
+      },
+      {
+        "name": "av_youtube",
+        "type": "general/av_youtube",
+        "category": "Общие"
+      },
+      {
+        "name": "av_zoom-in",
+        "type": "general/av_zoom-in",
+        "category": "Общие"
+      },
+      {
+        "name": "av_zoom-out",
+        "type": "general/av_zoom-out",
         "category": "Общие"
       }
     ]
@@ -499,13 +1489,13 @@ export const ICON_REGISTRY: IconCategory[] = [
         "category": "Настройки"
       },
       {
-        "name": "av_bell",
-        "type": "settings/av_bell",
+        "name": "av_bell-crossed",
+        "type": "settings/av_bell-crossed",
         "category": "Настройки"
       },
       {
-        "name": "av_bell-crossed",
-        "type": "settings/av_bell-crossed",
+        "name": "av_bell",
+        "type": "settings/av_bell",
         "category": "Настройки"
       },
       {
@@ -549,11 +1539,6 @@ export const ICON_REGISTRY: IconCategory[] = [
         "category": "Настройки"
       },
       {
-        "name": "av_speaker",
-        "type": "settings/av_speaker",
-        "category": "Настройки"
-      },
-      {
         "name": "av_speaker-mute",
         "type": "settings/av_speaker-mute",
         "category": "Настройки"
@@ -566,6 +1551,11 @@ export const ICON_REGISTRY: IconCategory[] = [
       {
         "name": "av_speaker-volume-up",
         "type": "settings/av_speaker-volume-up",
+        "category": "Настройки"
+      },
+      {
+        "name": "av_speaker",
+        "type": "settings/av_speaker",
         "category": "Настройки"
       },
       {

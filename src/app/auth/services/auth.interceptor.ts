@@ -46,14 +46,17 @@ export const authInterceptor: HttpInterceptorFn = (
   // Получаем токен из localStorage (приоритет) или cookies
   const token = localStorage.getItem('accessToken');
 
-  // Клонируем запрос с установкой withCredentials: true и Authorization header
-  const headers: Record<string, string> = {
-    'Content-Type': req.headers.get('Content-Type') || 'application/json',
-  };
+  // Клонируем запрос с установкой withCredentials: true
+  // Используем .clone({ setHeaders: ... }) который в Angular корректно мерджит заголовки,
+  // не затирая существующие (такие как X-Skip-Error-Handler)
+  const additionalHeaders: Record<string, string> = {};
 
-  // Добавляем Authorization header если токен есть
+  if (!req.headers.has('Content-Type')) {
+    additionalHeaders['Content-Type'] = 'application/json';
+  }
+
   if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
+    additionalHeaders['Authorization'] = `Bearer ${token}`;
     if (isSimulator) {
       trace.addStep(
         'Прикреплен Access Token',
@@ -67,7 +70,7 @@ export const authInterceptor: HttpInterceptorFn = (
 
   const authReq = req.clone({
     withCredentials: true,
-    setHeaders: headers,
+    setHeaders: additionalHeaders,
   });
 
   // Логируем только в development режиме

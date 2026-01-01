@@ -116,7 +116,10 @@ export class ApiEndpoints {
     COUNT: `${this.BASE_URL}/Icons/count`,
     SYNC_TO_LOCAL: `${this.BASE_URL}/Icons/sync-to-local`,
     UPDATE: `${this.BASE_URL}/Icons/update`,
+    BATCH_UPDATE: `${this.BASE_URL}/Icons/batch-update`,
     SYNC_STATUS: `${this.BASE_URL}/Icons/sync-status`,
+    REFACTOR_NAMES: `${this.BASE_URL}/Icons/refactor-names`,
+    MOVE: `${this.BASE_URL}/Icons/move`,
     DELETE: (type: string, b: boolean, f: boolean) =>
       `${this.BASE_URL}/Icons/delete?iconType=${type}&fromBackend=${b}&fromFrontend=${f}`,
   };

@@ -7,13 +7,15 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzDrawerModule } from 'ng-zorro-antd/drawer';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzMessageService } from 'ng-zorro-antd/message';
-import { NzModalModule } from 'ng-zorro-antd/modal';
+import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzTabsModule } from 'ng-zorro-antd/tabs';
 import { firstValueFrom } from 'rxjs';
 import { ApiEndpoints } from '../../../../environments/api-endpoints';
 import { IconComponent } from '../../../shared/components/ui/icon/icon.component';
 import { IconDataService } from '../../../shared/services/icon-data.service';
+import { IconCategory as DbCategory } from '../../icon-category-manager/models/icon-category.model';
+import { IconCategoryService } from '../../icon-category-manager/services/icon-category.service';
 import { IconMetadata } from '../../ui-demo/old-control/icon-ui/icon-metadata.model';
 import { ICON_REGISTRY, IconCategory } from '../../ui-demo/old-control/icon-ui/icon-registry';
 
@@ -136,6 +138,14 @@ import { ICON_REGISTRY, IconCategory } from '../../ui-demo/old-control/icon-ui/i
               </button>
               <button
                 class="btn-outline"
+                (click)="isHelpModalOpen.set(true)"
+                title="Справка"
+                style="padding: 0 10px;"
+              >
+                <av-icon type="system/av_info" [size]="16"></av-icon>
+              </button>
+              <button
+                class="btn-outline"
                 [disabled]="isSyncing()"
                 (click)="syncToLocal()"
                 title="Синхронизировать бэкенд с локальным файлом"
@@ -145,6 +155,10 @@ import { ICON_REGISTRY, IconCategory } from '../../ui-demo/old-control/icon-ui/i
                 Синхронизация... } @else {
                 <av-icon type="actions/av_save" [size]="16"></av-icon>
                 Синхронизировать }
+              </button>
+              <button class="btn-outline" (click)="onBulkUploadClick()">
+                <av-icon type="actions/av_upload" [size]="16"></av-icon>
+                Загрузить пакет
               </button>
               <button class="btn-primary" (click)="onUploadClick()">
                 <av-icon type="actions/av_upload" [size]="16"></av-icon>
@@ -223,6 +237,13 @@ import { ICON_REGISTRY, IconCategory } from '../../ui-demo/old-control/icon-ui/i
                     >
                       <av-icon type="system/av_cog" [size]="16"></av-icon>
                     </button>
+                    <button
+                      class="overlay-btn"
+                      title="Переместить в другую папку"
+                      (click)="$event.stopPropagation(); openMoveModal(icon)"
+                    >
+                      <av-icon type="actions/av_share" [size]="16"></av-icon>
+                    </button>
                   </div>
                 </div>
                 <div class="card-info">
@@ -291,6 +312,15 @@ import { ICON_REGISTRY, IconCategory } from '../../ui-demo/old-control/icon-ui/i
                     Исправить на 24x24
                   </button>
                   }
+                  <button
+                    class="fix-btn danger"
+                    nz-tooltip
+                    nzTooltipTitle="Удалить иконку отовсюду"
+                    (click)="deleteCurrentIcon()"
+                  >
+                    <av-icon type="actions/av_trash" [size]="12"></av-icon>
+                    Удалить
+                  </button>
                   <div class="status-badge" [class.ok]="passport.isStandard">
                     {{ passport.isStandard ? 'Standard 24x24' : 'Non-Standard' }}
                   </div>
@@ -499,6 +529,16 @@ import { ICON_REGISTRY, IconCategory } from '../../ui-demo/old-control/icon-ui/i
                   <p>Масштабирование всех иконок под стандартный квадрат 24 на 24.</p>
                 </div>
               </div>
+
+              <div class="batch-action-card" (click)="refactorIcons()">
+                <div class="action-icon" style="background: #f1f5f9; color: #475569;">
+                  <av-icon type="actions/av_eraser" [size]="24"></av-icon>
+                </div>
+                <div class="action-info">
+                  <h4>Рефакторинг имен</h4>
+                  <p>Очистка имен (av-, _av) и приведение к стандарту av_ prefix.</p>
+                </div>
+              </div>
             </div>
 
             <div class="batch-header-info" style="margin-top: 16px; background: #f1f5f9;">
@@ -602,17 +642,40 @@ import { ICON_REGISTRY, IconCategory } from '../../ui-demo/old-control/icon-ui/i
                   Лог сессии
                 </div>
                 @if (batchLog().length > 0) {
-                <button
-                  class="btn-outline"
-                  [style.height]="'24px'"
-                  [style.padding]="'0 8px'"
-                  [style.font-size]="'10px'"
-                  [style.border-radius]="'6px'"
-                  (click)="copyBatchLog()"
-                >
-                  <av-icon type="actions/av_save" [size]="10" style="margin-right: 4px;"></av-icon>
-                  Копировать лог
-                </button>
+                <div style="display: flex; gap: 8px;">
+                  <button
+                    class="btn-outline"
+                    [style.height]="'24px'"
+                    [style.padding]="'0 8px'"
+                    [style.font-size]="'10px'"
+                    [style.border-radius]="'6px'"
+                    (click)="copyBatchLog()"
+                  >
+                    <av-icon
+                      type="actions/av_save"
+                      [size]="10"
+                      style="margin-right: 4px;"
+                    ></av-icon>
+                    Копировать лог
+                  </button>
+                  <button
+                    class="btn-outline"
+                    [style.height]="'24px'"
+                    [style.padding]="'0 8px'"
+                    [style.font-size]="'10px'"
+                    [style.border-radius]="'6px'"
+                    [style.color]="'#f43f5e'"
+                    [style.border-color]="'rgba(244, 63, 94, 0.2)'"
+                    (click)="clearBatchLog()"
+                  >
+                    <av-icon
+                      type="actions/av_eraser"
+                      [size]="10"
+                      style="margin-right: 4px;"
+                    ></av-icon>
+                    Очистить
+                  </button>
+                </div>
                 }
               </div>
               <div class="log-scroll">
@@ -672,6 +735,130 @@ import { ICON_REGISTRY, IconCategory } from '../../ui-demo/old-control/icon-ui/i
         </ng-container>
       </nz-drawer>
 
+      <!-- Help Modal -->
+      <nz-modal
+        [(nzVisible)]="isHelpModalOpen"
+        nzTitle="Справка: Студия Иконок Aurora"
+        (nzOnCancel)="isHelpModalOpen.set(false)"
+        [nzFooter]="null"
+        [nzWidth]="800"
+      >
+        <ng-container *nzModalContent>
+          <div
+            class="help-content"
+            style="max-height: 600px; overflow-y: auto; padding-right: 12px;"
+          >
+            <section style="margin-bottom: 24px;">
+              <h3 style="color: #6366f1; border-bottom: 2px solid #f1f5f9; padding-bottom: 8px;">
+                🚀 Общая логика
+              </h3>
+              <p>
+                Студия иконок — это инструмент для управления визуальными ресурсами системы Aurora.
+                Она работает по принципу <b>двухслойного хранения</b>:
+              </p>
+              <ul>
+                <li>
+                  <b>Master (Backend)</b>: Основное хранилище иконок в файловой системе сервера. Это
+                  "источник истины".
+                </li>
+                <li>
+                  <b>Distribution (Frontend)</b>: Копия иконок в папке ассетов Angular приложения
+                  (assets/icons), используемая для отображения в браузере.
+                </li>
+              </ul>
+              <p>
+                Любое изменение (загрузка, удаление, рефакторинг) по умолчанию применяется к обоим
+                слоям.
+              </p>
+            </section>
+
+            <section style="margin-bottom: 24px;">
+              <h3 style="color: #6366f1; border-bottom: 2px solid #f1f5f9; padding-bottom: 8px;">
+                📂 Загрузка ресурсов
+              </h3>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                <div style="background: #f8fafc; padding: 12px; border-radius: 12px;">
+                  <h4 style="margin-top: 0;">Одиночная</h4>
+                  <p style="font-size: 13px; margin-bottom: 0;">
+                    Кнопка "Загрузить SVG". Позволяет задать точное имя и категорию для одной
+                    иконки.
+                  </p>
+                </div>
+                <div style="background: #f8fafc; padding: 12px; border-radius: 12px;">
+                  <h4 style="margin-top: 0;">Пакетная</h4>
+                  <p style="font-size: 13px; margin-bottom: 0;">
+                    Кнопка "Загрузить пакет". Массовая загрузка файлов. Имена берутся из названий
+                    файлов.
+                  </p>
+                </div>
+              </div>
+            </section>
+
+            <section style="margin-bottom: 24px;">
+              <h3 style="color: #6366f1; border-bottom: 2px solid #f1f5f9; padding-bottom: 8px;">
+                ✨ Лаборатория (Batch Lab)
+              </h3>
+              <p>Инструменты для массовой обработки всей библиотеки:</p>
+              <ul style="display: flex; flex-direction: column; gap: 8px;">
+                <li>
+                  <b>Массовая оптимизация</b>: Очистка кода от мусора (metadata, IDs, inline styles)
+                  и внедрение <code>currentColor</code> для управления цветом через CSS.
+                </li>
+                <li>
+                  <b>Стандартизация 24x24</b>: Приведение всех viewBox к стандарту 24 на 24 пикселя
+                  без искажения пропорций.
+                </li>
+                <li>
+                  <b>Рефакторинг имен</b>: Автоматическая очистка имен от лишних суффиксов (av-,
+                  _av) и добавление обязательного префикса <code>av_</code>.
+                </li>
+                <li>
+                  <b>Массовое редактирование</b>: Поиск и замена фрагментов кода во всех иконках
+                  одновременно.
+                </li>
+              </ul>
+            </section>
+
+            <section style="margin-bottom: 24px;">
+              <h3 style="color: #6366f1; border-bottom: 2px solid #f1f5f9; padding-bottom: 8px;">
+                🔄 Синхронизация
+              </h3>
+              <p>
+                После внесения изменений в файлы необходимо нажать кнопку
+                <b>"Синхронизировать"</b> в верхнем меню. Это действие:
+              </p>
+              <ol>
+                <li>Пересканирует физические папки на сервере.</li>
+                <li>Обновляет файл <code>icon-registry.ts</code> на фронтенде.</li>
+                <li>Гарантирует, что новые иконки появятся в списке выбора во всем приложении.</li>
+              </ol>
+            </section>
+
+            <section>
+              <h3 style="color: #6366f1; border-bottom: 2px solid #f1f5f9; padding-bottom: 8px;">
+                📇 Паспорт иконки
+              </h3>
+              <p>При клике на иконку открывается Drawer, где можно:</p>
+              <ul>
+                <li>Напрямую редактировать SVG код.</li>
+                <li>Проверить статус наличия файла на Back/Front.</li>
+                <li>Удалить иконку выборочно с одного из слоев или отовсюду.</li>
+              </ul>
+            </section>
+
+            <div
+              style="margin-top: 32px; padding: 16px; background: #f0fdf4; border-radius: 12px; border: 1px solid #bbf7d0; display: flex; align-items: center; gap: 12px;"
+            >
+              <av-icon type="actions/av_check_mark" [size]="20" style="color: #16a34a;"></av-icon>
+              <span style="color: #166534; font-weight: 500;"
+                >Подсказка: Используйте Лог сессии в Лаборатории, чтобы видеть детальные отчеты о
+                каждой операции.</span
+              >
+            </div>
+          </div>
+        </ng-container>
+      </nz-modal>
+
       <!-- Upload Modal -->
       <nz-modal
         [nzVisible]="isUploadModalOpen()"
@@ -718,6 +905,150 @@ import { ICON_REGISTRY, IconCategory } from '../../ui-demo/old-control/icon-ui/i
             <div>
               <label style="display: block; margin-bottom: 8px; font-weight: 600;">Файл SVG</label>
               <input type="file" (change)="handleFileUpload($event)" accept=".svg" />
+            </div>
+          </div>
+        </ng-container>
+      </nz-modal>
+
+      <!-- Bulk Upload Modal -->
+      <nz-modal
+        [nzVisible]="isBulkUploadModalOpen()"
+        nzTitle="Массовая загрузка иконок"
+        (nzOnCancel)="isBulkUploadModalOpen.set(false)"
+        (nzOnOk)="confirmBulkUpload()"
+        [nzOkText]="'Загрузить пакет'"
+        [nzCancelText]="'Отмена'"
+        [nzOkDisabled]="bulkUploadFiles().length === 0 || isBulkUploading()"
+        [nzWidth]="600"
+      >
+        <ng-container *nzModalContent>
+          <div style="display: flex; flex-direction: column; gap: 16px;">
+            <div
+              class="bulk-upload-info"
+              style="background: #f0f9ff; padding: 12px; border-radius: 12px; border: 1px solid #bae6fd; font-size: 13px; color: #0369a1;"
+            >
+              <av-icon type="system/av_info" [size]="16" style="margin-right: 8px;"></av-icon>
+              <span>Выберите несколько SVG файлов. Они будут загружены в выбранную категорию.</span>
+            </div>
+
+            <div>
+              <label style="display: block; margin-bottom: 8px; font-weight: 600;"
+                >Категория для всех иконок</label
+              >
+              <nz-select
+                [ngModel]="bulkUploadCategory()"
+                (ngModelChange)="bulkUploadCategory.set($event)"
+                style="width: 100%;"
+              >
+                <nz-option nzValue="general" nzLabel="Общие"></nz-option>
+                <nz-option nzValue="actions" nzLabel="Действия"></nz-option>
+                <nz-option nzValue="arrows" nzLabel="Стрелки"></nz-option>
+                <nz-option nzValue="charts" nzLabel="Графики"></nz-option>
+                <nz-option nzValue="communication" nzLabel="Коммуникация"></nz-option>
+                <nz-option nzValue="editor" nzLabel="Редактор"></nz-option>
+                <nz-option nzValue="files" nzLabel="Файлы"></nz-option>
+                <nz-option nzValue="media" nzLabel="Медиа"></nz-option>
+                <nz-option nzValue="settings" nzLabel="Настройки"></nz-option>
+                <nz-option nzValue="system" nzLabel="Система"></nz-option>
+                <nz-option nzValue="time" nzLabel="Время"></nz-option>
+                <nz-option nzValue="user" nzLabel="Пользователь"></nz-option>
+              </nz-select>
+            </div>
+
+            <div>
+              <label style="display: block; margin-bottom: 8px; font-weight: 600;"
+                >Выбор файлов (SVG)</label
+              >
+              <input
+                type="file"
+                (change)="handleBulkFileUpload($event)"
+                accept=".svg"
+                multiple
+                style="width: 100%; padding: 8px; border: 1px dashed #cbd5e1; border-radius: 8px; cursor: pointer;"
+              />
+            </div>
+
+            @if (bulkUploadFiles().length > 0) {
+            <div
+              class="file-list"
+              style="max-height: 200px; overflow-y: auto; background: #f8fafc; border-radius: 12px; padding: 12px; border: 1px solid #e2e8f0;"
+            >
+              <div
+                style="font-size: 11px; font-weight: 700; color: #94a3b8; text-transform: uppercase; margin-bottom: 8px;"
+              >
+                Список файлов ({{ bulkUploadFiles().length }})
+              </div>
+              @for (file of bulkUploadFiles(); track file.name) {
+              <div
+                style="display: flex; align-items: center; gap: 8px; padding: 4px 0; font-size: 13px; color: #475569;"
+              >
+                <av-icon type="media/av_image" [size]="14"></av-icon>
+                <span
+                  style="flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"
+                  >{{ file.name }}</span
+                >
+                <span style="font-size: 11px; color: #94a3b8;"
+                  >{{ (file.size / 1024).toFixed(1) }} KB</span
+                >
+              </div>
+              }
+            </div>
+            } @if (isBulkUploading()) {
+            <div style="margin-top: 8px;">
+              <div
+                style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px;"
+              >
+                <span>Загрузка...</span>
+                <span>{{ bulkUploadProgress() }}%</span>
+              </div>
+              <div
+                class="progress-bar"
+                style="height: 8px; background: #f1f5f9; border-radius: 4px; overflow: hidden;"
+              >
+                <div
+                  class="progress-fill"
+                  [style.width.%]="bulkUploadProgress()"
+                  style="height: 100%; background: #6366f1; transition: width 0.3s;"
+                ></div>
+              </div>
+            </div>
+            }
+          </div>
+        </ng-container>
+      </nz-modal>
+
+      <!-- Move Icon Modal -->
+      <nz-modal
+        [nzVisible]="isMoveModalOpen()"
+        nzTitle="Переместить иконку"
+        (nzOnCancel)="handleMoveCancel()"
+        (nzOnOk)="confirmMove()"
+        [nzOkText]="'Переместить'"
+        [nzCancelText]="'Отмена'"
+        [nzOkLoading]="isMoving()"
+      >
+        <ng-container *nzModalContent>
+          <div *ngIf="moveIconSelected() as icon">
+            <p>
+              Выберите целевую папку для иконки <b>{{ icon.name }}</b
+              >:
+            </p>
+            <nz-select
+              [ngModel]="targetCategoryFolderName()"
+              (ngModelChange)="targetCategoryFolderName.set($event)"
+              style="width: 100%; margin-top: 12px;"
+              nzPlaceHolder="Выберите категорию"
+              nzShowSearch
+            >
+              @for (dbCat of dbCategories(); track dbCat.id) {
+              <nz-option [nzValue]="dbCat.folderName" [nzLabel]="dbCat.displayName"></nz-option>
+              }
+            </nz-select>
+            <div
+              style="margin-top: 16px; padding: 12px; background: #fff7ed; border-radius: 8px; border: 1px solid #ffedd5; font-size: 13px; color: #9a3412;"
+            >
+              <av-icon type="system/av_info" [size]="14" style="margin-right: 8px;"></av-icon>
+              <span>Внимание: файл будет физически перемещен на сервере.</span>
             </div>
           </div>
         </ng-container>
@@ -1541,6 +1872,17 @@ import { ICON_REGISTRY, IconCategory } from '../../ui-demo/old-control/icon-ui/i
         }
       }
 
+      .fix-btn.danger {
+        background: #fff1f2;
+        color: #e11d48;
+        border-color: #fecdd3;
+      }
+
+      .fix-btn.danger:hover {
+        background: #ffe4e6;
+        border-color: #fda4af;
+      }
+
       .status-badge {
         font-size: 10px;
         font-weight: 800;
@@ -1826,7 +2168,9 @@ export class IconManagerComponent {
   private http = inject(HttpClient);
   private iconDataService = inject(IconDataService);
   private message = inject(NzMessageService);
+  private modal = inject(NzModalService);
   private sanitizer = inject(DomSanitizer);
+  private dbCategoryService = inject(IconCategoryService);
 
   // State Signals
   isLoading = signal(true);
@@ -1845,6 +2189,7 @@ export class IconManagerComponent {
 
   // Batch Lab Signals
   isBatchLabOpen = signal(false);
+  isHelpModalOpen = signal(false);
   isBatchProcessing = signal(false);
   batchProgress = signal(0);
   batchLog = signal<string[]>([]);
@@ -1868,6 +2213,20 @@ export class IconManagerComponent {
   uploadName = signal('');
   uploadFileContent = signal<string | null>(null);
 
+  // Bulk Upload Signals
+  isBulkUploadModalOpen = signal(false);
+  bulkUploadCategory = signal('general');
+  bulkUploadFiles = signal<File[]>([]);
+  isBulkUploading = signal(false);
+  bulkUploadProgress = signal(0);
+
+  // Move Signals
+  isMoving = signal(false);
+  isMoveModalOpen = signal(false);
+  moveIconSelected = signal<IconMetadata | null>(null);
+  targetCategoryFolderName = signal('');
+  dbCategories = signal<DbCategory[]>([]);
+
   // Technical Passport Signals
   iconPassport = signal<{
     originalWidth: string;
@@ -1883,6 +2242,13 @@ export class IconManagerComponent {
 
   constructor() {
     this.loadIcons();
+    this.loadDbCategories();
+  }
+
+  private loadDbCategories() {
+    this.dbCategoryService.getAll().subscribe((res) => {
+      this.dbCategories.set(res.data);
+    });
   }
 
   private loadIcons(force: boolean = false) {
@@ -1925,6 +2291,45 @@ export class IconManagerComponent {
       error: (err: unknown) => {
         console.error('[IconManager] ❌ Sync failed', err);
         this.message.error('❌ Ошибка синхронизации иконок');
+        this.isSyncing.set(false);
+      },
+    });
+  }
+
+  refactorIcons() {
+    this.isSyncing.set(true);
+    console.log('[IconManager] 🪄 refactorIcons started...');
+    this.addBatchLog('Запуск рефакторинга имен для всей библиотеки...', 'info');
+
+    this.http.post(ApiEndpoints.ICONS.REFACTOR_NAMES, {}).subscribe({
+      next: (res: any) => {
+        console.log('[IconManager] ✅ Names refactored successfully.', res);
+
+        if (res.details && res.details.length > 0) {
+          res.details.forEach((d: any) => {
+            const loc = d.location ? ` [${d.location}]` : '';
+            if (d.success) {
+              this.addBatchLog(`✅${loc} [${d.category}] ${d.oldName} -> ${d.newName}`, 'success');
+            } else {
+              this.addBatchLog(`❌${loc} [${d.category}] ${d.oldName}: ${d.message}`, 'error');
+            }
+          });
+          const successCount = res.details.filter((d: any) => d.success).length;
+          this.addBatchLog(`Рефакторинг завершен. Изменено иконок: ${successCount}`, 'success');
+        } else {
+          this.addBatchLog(
+            'Изменений не потребовалось. Все имена соответствуют стандарту.',
+            'success',
+          );
+        }
+
+        this.message.success('✅ Имена иконок успешно реорганизованы!');
+        this.isSyncing.set(false);
+        this.loadIcons(true); // Force reload after rename
+      },
+      error: (err: unknown) => {
+        console.error('[IconManager] ❌ Refactor failed', err);
+        this.message.error('❌ Ошибка при рефакторинге имен');
         this.isSyncing.set(false);
       },
     });
@@ -2100,6 +2505,33 @@ export class IconManagerComponent {
       console.error(e);
       this.showToast('Ошибка при нормализации.');
     }
+  }
+
+  deleteCurrentIcon() {
+    const icon = this.selectedIcon();
+    if (!icon) return;
+
+    this.modal.confirm({
+      nzTitle: 'Вы уверены, что хотите удалить эту иконку?',
+      nzContent: `<b style="color: #e11d48;">${icon.name}</b> будет удалена из Master (Backend) и Assets (Frontend). Это действие необратимо.`,
+      nzOkText: 'Удалить',
+      nzOkType: 'primary',
+      nzOkDanger: true,
+      nzOnOk: () => {
+        this.http.delete(ApiEndpoints.ICONS.DELETE(icon.type, true, true)).subscribe({
+          next: () => {
+            this.message.success(`Иконка ${icon.name} успешно удалена`);
+            this.isEditorOpen.set(false);
+            this.loadIcons(true);
+          },
+          error: (err) => {
+            console.error('Delete failed', err);
+            this.message.error('Ошибка при удалении иконки');
+          },
+        });
+      },
+      nzCancelText: 'Отмена',
+    });
   }
 
   applyMetadata() {
@@ -2332,6 +2764,86 @@ export class IconManagerComponent {
       });
   }
 
+  onBulkUploadClick() {
+    this.isBulkUploadModalOpen.set(true);
+    this.bulkUploadFiles.set([]);
+    this.bulkUploadCategory.set('general');
+    this.bulkUploadProgress.set(0);
+    this.isBulkUploading.set(false);
+  }
+
+  handleBulkFileUpload(event: any) {
+    const files = Array.from(event.target.files) as File[];
+    const svgFiles = files.filter((f) => f.name.toLowerCase().endsWith('.svg'));
+    if (svgFiles.length < files.length) {
+      this.message.warning('Некоторые файлы не являются SVG и были пропущены');
+    }
+    this.bulkUploadFiles.set(svgFiles);
+  }
+
+  async confirmBulkUpload() {
+    const files = this.bulkUploadFiles();
+    const category = this.bulkUploadCategory();
+
+    if (files.length === 0) {
+      this.showToast('⚠️ Выберите файлы для загрузки');
+      return;
+    }
+
+    this.isBulkUploading.set(true);
+    this.bulkUploadProgress.set(0);
+
+    const requests: any[] = [];
+
+    try {
+      // 1. Read all files
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const content = await file.text();
+        const name = file.name.replace('.svg', '');
+        requests.push({
+          iconType: `${category}/${name}`,
+          svgContent: content,
+          toBackend: true,
+          toFrontend: true,
+        });
+
+        // Progress for reading
+        this.bulkUploadProgress.set(Math.round(((i + 1) / files.length) * 30));
+      }
+
+      // 2. Send batch request
+      this.http
+        .post(ApiEndpoints.ICONS.BATCH_UPDATE, requests, {
+          headers: { 'X-Skip-Error-Handler': 'true' },
+        })
+        .subscribe({
+          next: () => {
+            console.log('[IconManager] 📦 Batch upload response received');
+            this.bulkUploadProgress.set(100);
+            this.showToast(`✅ Пакет из ${files.length} иконок успешно загружен!`);
+            this.isBulkUploadModalOpen.set(false);
+            this.isBulkUploading.set(false);
+            this.syncToLocal(); // Auto-sync after bulk upload
+          },
+          error: (err) => {
+            console.error('[IconManager] ❌ Bulk upload failed', {
+              error: err,
+              requestsCount: requests.length,
+              sampleRequest: requests[0],
+            });
+            const detail = err?.detail || err?.message || 'Неизвестная ошибка';
+            this.showToast(`❌ Ошибка при массовой загрузке: ${detail}`);
+            this.isBulkUploading.set(false);
+          },
+        });
+    } catch (e) {
+      console.error('[IconManager] ❌ Error reading files', e);
+      this.showToast('❌ Ошибка при чтении файлов');
+      this.isBulkUploading.set(false);
+    }
+  }
+
   deleteIcon(type: string) {
     this.showToast(`Удаление иконки "${type}" заблокировано в демо-режиме.`);
   }
@@ -2381,7 +2893,12 @@ export class IconManagerComponent {
           // If no slash, maybe it's in folders? No, we should prefer the full path from type
         }
 
-        const code = await firstValueFrom(this.http.get(path, { responseType: 'text' }));
+        const code = await firstValueFrom(
+          this.http.get(path, {
+            responseType: 'text',
+            headers: { 'X-Skip-Error-Handler': 'true' },
+          }),
+        );
 
         let processed = code;
         if (type === 'optimize') {
@@ -2502,8 +3019,51 @@ export class IconManagerComponent {
     this.showToast('Лог скопирован в буфер обмена!');
   }
 
+  clearBatchLog() {
+    this.batchLog.set([]);
+    this.showToast('Лог сессии очищен');
+  }
+
   private showToast(msg: string) {
     this.toastMessage.set(msg);
     setTimeout(() => this.toastMessage.set(''), 3000);
+  }
+
+  // --- Move Icon Logic ---
+  openMoveModal(icon: IconMetadata) {
+    this.moveIconSelected.set(icon);
+    // Предзаполняем текущей категорией (если найдем по имени)
+    const currentCat = this.dbCategories().find((c) => c.displayName === icon.category);
+    this.targetCategoryFolderName.set(currentCat?.folderName || '');
+    this.isMoveModalOpen.set(true);
+  }
+
+  handleMoveCancel() {
+    this.isMoveModalOpen.set(false);
+    this.moveIconSelected.set(null);
+  }
+
+  confirmMove() {
+    const icon = this.moveIconSelected();
+    const targetFolder = this.targetCategoryFolderName();
+
+    if (!icon || !targetFolder) {
+      this.message.warning('Выберите целевую папку');
+      return;
+    }
+
+    this.isMoving.set(true);
+    this.iconDataService.moveIcon(icon.type, targetFolder).subscribe({
+      next: (res: any) => {
+        this.message.success(res.message || 'Иконка успешно перемещена');
+        this.isMoving.set(false);
+        this.isMoveModalOpen.set(false);
+        this.loadIcons(true); // Force reload after move
+      },
+      error: (err: any) => {
+        this.message.error(err.error?.message || 'Ошибка перемещения');
+        this.isMoving.set(false);
+      },
+    });
   }
 }

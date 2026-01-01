@@ -747,6 +747,13 @@ export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
           },
         },
         {
+          id: 'icon-categories',
+          icon: 'folder-open',
+          label: 'Папки иконок',
+          type: 'link',
+          route: '/icon-categories',
+        },
+        {
           id: 'aurora-editor',
           icon: 'edit',
           label: 'Редактор Aurora',

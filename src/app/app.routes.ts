@@ -66,6 +66,13 @@ export const routes: Routes = [
             (m) => m.USER_PROFILE_ROUTES,
           ),
       },
+      {
+        path: 'icon-categories',
+        loadChildren: () =>
+          import('./pages/icon-category-manager/routes/icon-category-manager.routes').then(
+            (m) => m.ICON_CATEGORY_MANAGER_ROUTES,
+          ),
+      },
       // { path: 'reports', loadChildren: () => import('./pages/reports/reports.routes') },
     ],
   },
