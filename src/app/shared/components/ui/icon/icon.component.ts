@@ -200,13 +200,16 @@ export class IconComponent {
     const mappedFile = this.iconFileMap[type];
     let iconPath = mappedFile ? `assets/icons/${mappedFile}` : type;
 
-    // Добавляем расширение и префикс если нужнопочему в компонетах разные контролы это должен быть наш один единственный контрол
+    // Добавляем расширение и префикс если нужно
 
     if (!iconPath.endsWith('.svg')) iconPath += '.svg';
-    if (!iconPath.startsWith('assets/')) iconPath = `assets/icons/${iconPath}`;
-
-    // HttpClient требует путь без ведущего слеша
-    if (iconPath.startsWith('/')) iconPath = iconPath.substring(1);
+    if (!iconPath.startsWith('/assets/')) {
+      if (iconPath.startsWith('assets/')) {
+        iconPath = '/' + iconPath;
+      } else {
+        iconPath = `/assets/icons/${iconPath}`;
+      }
+    }
 
     this.iconService.getIcon(iconPath).subscribe({
       next: (svgText: string) => {

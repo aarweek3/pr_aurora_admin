@@ -378,6 +378,47 @@ import { ICON_REGISTRY, IconCategory } from '../../ui-demo/old-control/icon-ui/i
                   <textarea readonly>{{ cleanedSvgCode() }}</textarea>
                 </div>
               </nz-tab>
+              <nz-tab nzTitle="Синхронизация">
+                <div class="sync-tab-content">
+                  <div class="sync-info-banner">
+                    <av-icon type="system/av_info" [size]="16"></av-icon>
+                    <span>Выберите целевое назначение для синхронизации текущих изменений</span>
+                  </div>
+
+                  <div class="sync-actions-list">
+                    <button class="sync-action-btn primary" (click)="granularSync(true, true)">
+                      <div class="btn-icon">
+                        <av-icon type="actions/av_save" [size]="20"></av-icon>
+                        <div class="plus-badge">+</div>
+                      </div>
+                      <div class="btn-text">
+                        <span class="title">Сервер + Клиент</span>
+                        <span class="desc">Полная синхронизация (Master + Assets)</span>
+                      </div>
+                    </button>
+
+                    <button class="sync-action-btn" (click)="granularSync(true, false)">
+                      <div class="btn-icon">
+                        <av-icon type="system/av_cog" [size]="20"></av-icon>
+                      </div>
+                      <div class="btn-text">
+                        <span class="title">Только на Сервер</span>
+                        <span class="desc">Сохранить только в Master хранилище</span>
+                      </div>
+                    </button>
+
+                    <button class="sync-action-btn" (click)="granularSync(false, true)">
+                      <div class="btn-icon">
+                        <av-icon type="actions/av_upload" [size]="20"></av-icon>
+                      </div>
+                      <div class="btn-text">
+                        <span class="title">Только на Клиент</span>
+                        <span class="desc">Обновить только ассеты фронтенда</span>
+                      </div>
+                    </button>
+                  </div>
+                </div>
+              </nz-tab>
             </nz-tabset>
 
             <!-- Actions Footer -->
@@ -391,10 +432,10 @@ import { ICON_REGISTRY, IconCategory } from '../../ui-demo/old-control/icon-ui/i
                 nz-button
                 nzType="primary"
                 [disabled]="!cleanedSvgCode()"
-                (click)="saveChanges()"
+                (click)="granularSync(true, true)"
               >
                 <av-icon type="actions/av_check_mark" [size]="16"></av-icon>
-                Сохранить изменения
+                Сохранить везде
               </button>
             </div>
           </div>
@@ -660,18 +701,18 @@ import { ICON_REGISTRY, IconCategory } from '../../ui-demo/old-control/icon-ui/i
                 (ngModelChange)="uploadCategory.set($event)"
                 style="width: 100%;"
               >
-                <nz-option nzValue="Общие" nzLabel="Общие"></nz-option>
-                <nz-option nzValue="Действия" nzLabel="Действия"></nz-option>
-                <nz-option nzValue="Стрелки" nzLabel="Стрелки"></nz-option>
-                <nz-option nzValue="Графики" nzLabel="Графики"></nz-option>
-                <nz-option nzValue="Коммуникация" nzLabel="Коммуникация"></nz-option>
-                <nz-option nzValue="Редактор" nzLabel="Редактор"></nz-option>
-                <nz-option nzValue="Файлы" nzLabel="Файлы"></nz-option>
-                <nz-option nzValue="Медиа" nzLabel="Медиа"></nz-option>
-                <nz-option nzValue="Настройки" nzLabel="Настройки"></nz-option>
-                <nz-option nzValue="Система" nzLabel="Система"></nz-option>
-                <nz-option nzValue="Время" nzLabel="Время"></nz-option>
-                <nz-option nzValue="Пользователь" nzLabel="Пользователь"></nz-option>
+                <nz-option nzValue="general" nzLabel="Общие"></nz-option>
+                <nz-option nzValue="actions" nzLabel="Действия"></nz-option>
+                <nz-option nzValue="arrows" nzLabel="Стрелки"></nz-option>
+                <nz-option nzValue="charts" nzLabel="Графики"></nz-option>
+                <nz-option nzValue="communication" nzLabel="Коммуникация"></nz-option>
+                <nz-option nzValue="editor" nzLabel="Редактор"></nz-option>
+                <nz-option nzValue="files" nzLabel="Файлы"></nz-option>
+                <nz-option nzValue="media" nzLabel="Медиа"></nz-option>
+                <nz-option nzValue="settings" nzLabel="Настройки"></nz-option>
+                <nz-option nzValue="system" nzLabel="Система"></nz-option>
+                <nz-option nzValue="time" nzLabel="Время"></nz-option>
+                <nz-option nzValue="user" nzLabel="Пользователь"></nz-option>
               </nz-select>
             </div>
             <div>
@@ -1400,6 +1441,106 @@ import { ICON_REGISTRY, IconCategory } from '../../ui-demo/old-control/icon-ui/i
         color: #1e293b;
       }
 
+      .sync-tab-content {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        padding-top: 8px;
+      }
+
+      .sync-info-banner {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: #f0f9ff;
+        color: #0369a1;
+        padding: 12px;
+        border-radius: 12px;
+        font-size: 13px;
+        font-weight: 500;
+        border: 1px solid #bae6fd;
+      }
+
+      .sync-actions-list {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .sync-action-btn {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 16px;
+        border: 1px solid #e2e8f0;
+        background: white;
+        border-radius: 16px;
+        cursor: pointer;
+        transition: all 0.2s;
+        text-align: left;
+
+        &:hover {
+          border-color: #6366f1;
+          background: #f8fafc;
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        &.primary {
+          border-color: #6366f1;
+          background: #f5f3ff;
+
+          .btn-icon {
+            background: #6366f1;
+            color: white;
+          }
+        }
+
+        .btn-icon {
+          width: 48px;
+          height: 48px;
+          background: #f1f5f9;
+          border-radius: 12px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: #6366f1;
+          position: relative;
+
+          .plus-badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background: #10b981;
+            color: white;
+            font-size: 10px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            border: 2px solid white;
+          }
+        }
+
+        .btn-text {
+          display: flex;
+          flex-direction: column;
+
+          .title {
+            font-weight: 700;
+            font-size: 15px;
+            color: #1e293b;
+          }
+          .desc {
+            font-size: 12px;
+            color: #64748b;
+          }
+        }
+      }
+
       .status-badge {
         font-size: 10px;
         font-weight: 800;
@@ -1723,7 +1864,7 @@ export class IconManagerComponent {
 
   // Upload Signals
   isUploadModalOpen = signal(false);
-  uploadCategory = signal('Общие');
+  uploadCategory = signal('general');
   uploadName = signal('');
   uploadFileContent = signal<string | null>(null);
 
@@ -1744,10 +1885,12 @@ export class IconManagerComponent {
     this.loadIcons();
   }
 
-  private loadIcons() {
+  private loadIcons(force: boolean = false) {
+    console.log(`[IconManager] 🛠️ loadIcons(force=${force}) started...`);
     this.isLoading.set(true);
-    this.iconDataService.getIcons().subscribe({
+    this.iconDataService.getIcons(force).subscribe({
       next: (data) => {
+        console.log(`[IconManager] 📦 Data received in component: ${data.length} categories`);
         const sorted = [...data].sort((a, b) => {
           if (a.category === 'Другие') return 1;
           if (b.category === 'Другие') return -1;
@@ -1756,9 +1899,10 @@ export class IconManagerComponent {
         this.categories.set(sorted);
         this.dataSource.set('backend');
         this.isLoading.set(false);
+        console.log('[IconManager] 🏁 UI Refresh complete.');
       },
       error: (err: unknown) => {
-        console.error('Failed to load icons', err);
+        console.error('[IconManager] ❌ Failed to load icons', err);
         // Fallback to registry if API fails
         this.categories.set([...ICON_REGISTRY]);
         this.dataSource.set('local');
@@ -1770,13 +1914,16 @@ export class IconManagerComponent {
 
   syncToLocal() {
     this.isSyncing.set(true);
+    console.log('[IconManager] 🔄 syncToLocal started...');
     this.http.post(ApiEndpoints.ICONS.SYNC_TO_LOCAL, {}).subscribe({
       next: () => {
+        console.log('[IconManager] ✅ Sync to local success. Triggering force reload...');
         this.message.success('✅ Библиотека иконок успешно синхронизирована с фронтендом!');
         this.isSyncing.set(false);
+        this.loadIcons(true); // Force reload after sync
       },
       error: (err: unknown) => {
-        console.error('Sync failed', err);
+        console.error('[IconManager] ❌ Sync failed', err);
         this.message.error('❌ Ошибка синхронизации иконок');
         this.isSyncing.set(false);
       },
@@ -2098,28 +2245,40 @@ export class IconManagerComponent {
     }
   }
 
-  saveChanges() {
+  granularSync(toBackend: boolean, toFrontend: boolean) {
     const icon = this.selectedIcon();
-    const content = this.cleanedSvgCode();
+    const content = this.cleanedSvgCode() || this.rawSvgCode();
 
     if (!icon || !content) {
-      this.showToast('⚠️ Нет данных для сохранения');
+      this.showToast('⚠️ Нет данных для синхронизации');
       return;
     }
+
+    const typeStr =
+      toBackend && toFrontend
+        ? 'на сервер и клиент'
+        : toBackend
+        ? 'только на сервер'
+        : 'только на клиент';
+    this.showToast(`📡 Запуск синхронизации ${typeStr}...`);
 
     this.http
       .post(ApiEndpoints.ICONS.UPDATE, {
         iconType: icon.type,
         svgContent: content,
+        toBackend: toBackend,
+        toFrontend: toFrontend,
       })
       .subscribe({
         next: (res: any) => {
-          this.showToast(`✅ ${res.message || 'Иконка успешно сохранена!'}`);
-          // Optionally reload icons or update local state
+          this.showToast(`✅ Синхронизация ${typeStr} выполнена успешно!`);
+          if (toFrontend) {
+            this.loadIcons(true); // Refresh grid if frontend was updated
+          }
         },
         error: (err) => {
-          console.error('Save failed', err);
-          this.showToast('❌ Ошибка при сохранении иконки на сервере');
+          console.error('Granular sync failed', err);
+          this.showToast('❌ Ошибка при выполнении синхронизации');
         },
       });
   }
@@ -2152,7 +2311,7 @@ export class IconManagerComponent {
       return;
     }
 
-    const iconType = `${category.toLowerCase()}/${name}`;
+    const iconType = `${category}/${name}`;
 
     this.http
       .post(ApiEndpoints.ICONS.UPDATE, {
@@ -2161,14 +2320,13 @@ export class IconManagerComponent {
       })
       .subscribe({
         next: (res: any) => {
-          this.showToast(`✅ Иконка "${name}" успешно загружена в категорию "${category}"!`);
+          console.log(`[IconManager] ✅ Upload success for ${name}. Triggering auto-sync...`);
+          this.showToast(`✅ Иконка "${name}" успешно загружена!`);
           this.isUploadModalOpen.set(false);
-          // Suggest sync
-          this.message.info('Не забудьте нажать "Синхронизировать" для обновления реестра');
-          this.loadIcons(); // Refresh grid
+          this.syncToLocal(); // Auto-sync after upload
         },
         error: (err) => {
-          console.error('Upload failed', err);
+          console.error('[IconManager] ❌ Upload failed', err);
           this.showToast('❌ Ошибка при загрузке иконки');
         },
       });

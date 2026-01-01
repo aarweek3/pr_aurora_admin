@@ -16,7 +16,8 @@ import { AuroraPlugin } from '../aurora-plugin.interface';
 export class AlignJustifyPlugin implements AuroraPlugin {
   name = 'alignJustify';
   title = 'Выровнять по ширине';
-  icon = '⬌'; // Стрелки влево-вправо (justify)
+  icon =
+    '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><g transform="scale(1.5000) translate(0, 0)"><path fill-rule="evenodd" clip-rule="evenodd" d="M15.011 1h-14v2h14V1zm0 4h-14v2h14V5zm-14 4h14v2h-14V9zm14 4h-14v2h14v-2z" fill="currentColor"/></g></svg>';
   shortcut = 'Ctrl+Shift+J';
 
   /**

@@ -6,7 +6,7 @@ import {
   HttpInterceptorFn,
   HttpRequest,
 } from '@angular/common/http';
-import { inject } from '@angular/core';
+import { Injector, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { catchError, filter, switchMap, take, tap } from 'rxjs/operators';
@@ -24,9 +24,18 @@ export const authInterceptor: HttpInterceptorFn = (
   next: HttpHandlerFn,
 ): Observable<HttpEvent<unknown>> => {
   const router = inject(Router);
-  const authService = inject(AuthService);
+  const injector = inject(Injector);
   const trace = inject(RequestTraceService);
   const isDevMode = !environment.production;
+
+  // Игнорируем запросы к локальным ассетам (SVG, JSON и т.д.)
+  // Это предотвращает добавление Bearer токенов к публичным ресурсам
+  // и решает проблемы с относительными путями при роутинге
+  const isLocalAsset =
+    req.url.startsWith('assets/') || req.url.startsWith('/assets/') || req.url.endsWith('.svg');
+  if (isLocalAsset) {
+    return next(req);
+  }
 
   const isSimulator = req.headers.has('X-Simulator-Request');
 
@@ -95,7 +104,7 @@ export const authInterceptor: HttpInterceptorFn = (
             'Запуск процесса восстановления сессии...',
           );
         }
-        return handle401Error(authReq, next, router, authService, isDevMode, trace);
+        return handle401Error(authReq, next, router, injector, isDevMode, trace);
       }
 
       // Обрабатываем 403 ошибку (Forbidden)
@@ -125,10 +134,13 @@ function handle401Error(
   request: HttpRequest<unknown>,
   next: HttpHandlerFn,
   router: Router,
-  authService: AuthService,
+  injector: Injector,
   isDevMode: boolean,
   trace: RequestTraceService,
 ): Observable<HttpEvent<unknown>> {
+  // Lazily inject AuthService to avoid circular dependency
+  const authService = injector.get(AuthService);
+
   // Если это auth endpoint, не пытаемся refresh
   if (isAuthEndpoint(request.url)) {
     redirectToLogin(router, isDevMode);

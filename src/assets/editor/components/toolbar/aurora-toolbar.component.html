@@ -27,7 +27,7 @@ AURORA TOOLBAR TEMPLATE
         (click)="onButtonClick(plugin, $event)"
         (mousedown)="$event.preventDefault()"
       >
-        <span class="aurora-toolbar-button-icon" [innerHTML]="plugin.icon"></span>
+        <span class="aurora-toolbar-button-icon" [innerHTML]="getSafeHtml(plugin.icon)"></span>
       </button>
 
       <!-- Dropdown для плагинов выбора шрифта и размера -->
@@ -42,7 +42,7 @@ AURORA TOOLBAR TEMPLATE
           (click)="toggleDropdown(plugin.name, $event)"
           (mousedown)="$event.preventDefault()"
         >
-          <span class="aurora-toolbar-button-icon" [innerHTML]="plugin.icon"></span>
+          <span class="aurora-toolbar-button-icon" [innerHTML]="getSafeHtml(plugin.icon)"></span>
           <span class="aurora-toolbar-dropdown-arrow">▼</span>
         </button>
 
@@ -203,7 +203,7 @@ AURORA TOOLBAR TEMPLATE
       (click)="onButtonClick(plugin, $event)"
       (mousedown)="$event.preventDefault()"
     >
-      <span class="aurora-toolbar-button-icon" [innerHTML]="plugin.icon"></span>
+      <span class="aurora-toolbar-button-icon" [innerHTML]="getSafeHtml(plugin.icon)"></span>
     </button>
   </div>
 
@@ -222,7 +222,7 @@ AURORA TOOLBAR TEMPLATE
       (click)="onButtonClick(plugin, $event)"
       (mousedown)="$event.preventDefault()"
     >
-      <span class="aurora-toolbar-button-icon" [innerHTML]="plugin.icon"></span>
+      <span class="aurora-toolbar-button-icon" [innerHTML]="getSafeHtml(plugin.icon)"></span>
     </button>
   </div>
 
@@ -241,7 +241,7 @@ AURORA TOOLBAR TEMPLATE
       (click)="onButtonClick(plugin, $event)"
       (mousedown)="$event.preventDefault()"
     >
-      <span class="aurora-toolbar-button-icon" [innerHTML]="plugin.icon"></span>
+      <span class="aurora-toolbar-button-icon" [innerHTML]="getSafeHtml(plugin.icon)"></span>
     </button>
   </div>
 
@@ -262,7 +262,7 @@ AURORA TOOLBAR TEMPLATE
         (click)="onButtonClick(plugin, $event)"
         (mousedown)="$event.preventDefault()"
       >
-        <span class="aurora-toolbar-button-icon" [innerHTML]="plugin.icon"></span>
+        <span class="aurora-toolbar-button-icon" [innerHTML]="getSafeHtml(plugin.icon)"></span>
       </button>
 
       <!-- Dropdown для плагина заголовков -->
@@ -277,7 +277,7 @@ AURORA TOOLBAR TEMPLATE
           (click)="toggleDropdown(plugin.name, $event)"
           (mousedown)="$event.preventDefault()"
         >
-          <span class="aurora-toolbar-button-icon" [innerHTML]="plugin.icon"></span>
+          <span class="aurora-toolbar-button-icon" [innerHTML]="getSafeHtml(plugin.icon)"></span>
           <span class="aurora-toolbar-dropdown-arrow">▼</span>
         </button>
 
@@ -318,7 +318,7 @@ AURORA TOOLBAR TEMPLATE
         (click)="onButtonClick(plugin, $event)"
         (mousedown)="$event.preventDefault()"
       >
-        <span class="aurora-toolbar-button-icon" [innerHTML]="plugin.icon"></span>
+        <span class="aurora-toolbar-button-icon" [innerHTML]="getSafeHtml(plugin.icon)"></span>
       </button>
 
       <!-- Dropdown для специальных символов -->
@@ -333,7 +333,7 @@ AURORA TOOLBAR TEMPLATE
           (click)="toggleDropdown(plugin.name, $event)"
           (mousedown)="$event.preventDefault()"
         >
-          <span class="aurora-toolbar-button-icon" [innerHTML]="plugin.icon"></span>
+          <span class="aurora-toolbar-button-icon" [innerHTML]="getSafeHtml(plugin.icon)"></span>
           <span class="aurora-toolbar-dropdown-arrow">▼</span>
         </button>
 
@@ -367,15 +367,13 @@ AURORA TOOLBAR TEMPLATE
           (click)="toggleDropdown(plugin.name, $event)"
           (mousedown)="$event.preventDefault()"
         >
-          <span class="aurora-toolbar-button-icon" [innerHTML]="plugin.icon"></span>
+          <span class="aurora-toolbar-button-icon" [innerHTML]="getSafeHtml(plugin.icon)"></span>
           <span class="aurora-toolbar-dropdown-arrow">▼</span>
         </button>
 
         <!-- Dropdown меню для Эмодзи -->
         <div *ngIf="openDropdown === plugin.name" class="aurora-toolbar-dropdown-menu aurora-toolbar-emoji-picker">
-          <app-emoji-picker
-            [categories]="getEmojiCategories()"
-            (emojiSelect)="onEmojiSelect(plugin, $event)">
+          <app-emoji-picker [categories]="getEmojiCategories()" (emojiSelect)="onEmojiSelect(plugin, $event)">
           </app-emoji-picker>
         </div>
       </div>
@@ -397,7 +395,7 @@ AURORA TOOLBAR TEMPLATE
       (click)="onButtonClick(plugin, $event)"
       (mousedown)="$event.preventDefault()"
     >
-      <span class="aurora-toolbar-button-icon" [innerHTML]="plugin.icon"></span>
+      <span class="aurora-toolbar-button-icon" [innerHTML]="getSafeHtml(plugin.icon)"></span>
     </button>
   </div>
 
@@ -416,7 +414,7 @@ AURORA TOOLBAR TEMPLATE
       (click)="onButtonClick(plugin, $event)"
       (mousedown)="$event.preventDefault()"
     >
-      <span class="aurora-toolbar-button-icon" [innerHTML]="plugin.icon"></span>
+      <span class="aurora-toolbar-button-icon" [innerHTML]="getSafeHtml(plugin.icon)"></span>
     </button>
   </div>
 
@@ -435,7 +433,7 @@ AURORA TOOLBAR TEMPLATE
       (click)="onButtonClick(plugin, $event)"
       (mousedown)="$event.preventDefault()"
     >
-      <span class="aurora-toolbar-button-icon" [innerHTML]="plugin.icon"></span>
+      <span class="aurora-toolbar-button-icon" [innerHTML]="getSafeHtml(plugin.icon)"></span>
     </button>
   </div>
 </div>

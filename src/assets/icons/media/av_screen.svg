@@ -1,9 +1,5 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
-<svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 width="533.333px" height="533.334px" viewBox="0 0 533.333 533.334" style="enable-background:new 0 0 533.333 533.334;"
-	 xml:space="preserve">
+﻿<?xml version="1.0" encoding="iso-8859-1"?><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g transform="scale(0.0450) translate(0, 0)">
 <g>
-	<path d="M533.333,433.333v-400H0v400h233.333v33.334h-100V500H400v-33.333H300v-33.334H533.333z M66.667,100h400v266.667h-400V100z
-		"/>
+	<path d="M533.333,433.333v-400H0v400h233.333v33.334h-100V500H400v-33.333H300v-33.334H533.333z M66.667,100h400v266.667h-400V100z   "/>
 </g>
-</svg>
+</g></svg>

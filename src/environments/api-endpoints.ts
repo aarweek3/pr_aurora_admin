@@ -116,6 +116,9 @@ export class ApiEndpoints {
     COUNT: `${this.BASE_URL}/Icons/count`,
     SYNC_TO_LOCAL: `${this.BASE_URL}/Icons/sync-to-local`,
     UPDATE: `${this.BASE_URL}/Icons/update`,
+    SYNC_STATUS: `${this.BASE_URL}/Icons/sync-status`,
+    DELETE: (type: string, b: boolean, f: boolean) =>
+      `${this.BASE_URL}/Icons/delete?iconType=${type}&fromBackend=${b}&fromFrontend=${f}`,
   };
 
   // Images endpoints

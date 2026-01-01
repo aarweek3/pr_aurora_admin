@@ -392,6 +392,11 @@ export const ICON_REGISTRY: IconCategory[] = [
         "name": "av_trophy",
         "type": "general/av_trophy",
         "category": "Общие"
+      },
+      {
+        "name": "av_list_numbered",
+        "type": "general/av_list_numbered",
+        "category": "Общие"
       }
     ]
   },

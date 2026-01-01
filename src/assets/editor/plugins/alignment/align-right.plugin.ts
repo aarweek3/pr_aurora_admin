@@ -16,7 +16,8 @@ import { AuroraPlugin } from '../aurora-plugin.interface';
 export class AlignRightPlugin implements AuroraPlugin {
   name = 'alignRight';
   title = 'Выровнять по правому краю';
-  icon = '➡️'; // Стрелка вправо
+  icon =
+    '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><g transform="scale(1.5000) translate(0, 0)"><path fill-rule="evenodd" clip-rule="evenodd" d="M9.008 1.004h6.01v2h-6.01v-2zM4.008 5h11.01v2H4.009V5zm11.01 4.004h-9.01v2h9.01v-2zM1.009 13h14.01v2H1.009v-2z" fill="currentColor"/></g></svg>';
   shortcut = 'Ctrl+Shift+R';
 
   /**

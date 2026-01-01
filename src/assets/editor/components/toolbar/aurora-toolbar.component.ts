@@ -10,7 +10,8 @@
  */
 
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, HostListener, Input, Output } from '@angular/core';
+import { Component, EventEmitter, HostListener, Input, Output, inject } from '@angular/core';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { AuroraPlugin } from '../../plugins/aurora-plugin.interface';
 import { EmojiPickerComponent } from '../emoji-picker/emoji-picker.component';
 
@@ -33,6 +34,11 @@ export interface ToolbarButton {
   styleUrl: './aurora-toolbar.component.scss',
 })
 export class AuroraToolbarComponent {
+  private sanitizer = inject(DomSanitizer);
+
+  getSafeHtml(html: string | undefined): SafeHtml {
+    return this.sanitizer.bypassSecurityTrustHtml(html || '');
+  }
   /**
    * Список плагинов для отображения в тулбаре
    */
