@@ -41,6 +41,9 @@
       ],
       "@assets/*": [
         "./src/assets/*"
+      ],
+      "@editor/*": [
+        "./src/assets/editor/*"
       ]
     }
   },

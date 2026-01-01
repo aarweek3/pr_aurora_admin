@@ -2,6 +2,7 @@ import { Environment } from './environment.interface';
 
 export const environment: Environment = {
   production: true,
+  apiUrl: 'https://api.aurora-admin.com',
 
   api: {
     baseUrl: 'https://api.aurora-admin.com/v1',

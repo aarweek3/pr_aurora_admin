@@ -1,0 +1,115 @@
+<div
+  class="table-modal-overlay"
+  *ngIf="isVisible"
+  (click)="onOverlayClick($event)"
+  (keydown)="onKeyDown($event)"
+  tabindex="0"
+>
+  <div class="table-modal">
+    <div class="modal-header">
+      <h3>📊 Вставить таблицу</h3>
+      <button class="close-button" (click)="close()" aria-label="Закрыть">✕</button>
+    </div>
+
+    <div class="modal-body">
+      <!-- Размер таблицы -->
+      <div class="form-group">
+        <label>Размер таблицы:</label>
+        <div class="size-controls">
+          <div class="size-control">
+            <label for="rows">Строки:</label>
+            <div class="number-input">
+              <button type="button" (click)="decrement('rows')" [disabled]="rows <= 1">−</button>
+              <input id="rows" type="number" [(ngModel)]="rows" min="1" max="20" />
+              <button type="button" (click)="increment('rows')" [disabled]="rows >= 20">+</button>
+            </div>
+          </div>
+
+          <div class="size-control">
+            <label for="cols">Столбцы:</label>
+            <div class="number-input">
+              <button type="button" (click)="decrement('cols')" [disabled]="cols <= 1">−</button>
+              <input id="cols" type="number" [(ngModel)]="cols" min="1" max="10" />
+              <button type="button" (click)="increment('cols')" [disabled]="cols >= 10">+</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Опции стилей -->
+      <div class="form-group">
+        <label>Опции стилей:</label>
+        <div class="checkbox-group">
+          <label class="checkbox-label">
+            <input type="checkbox" [(ngModel)]="hasHeader" />
+            <span>☑ Заголовок (header row)</span>
+          </label>
+
+          <label class="checkbox-label">
+            <input type="checkbox" [(ngModel)]="bordered" />
+            <span>☑ Границы</span>
+          </label>
+
+          <label class="checkbox-label">
+            <input type="checkbox" [(ngModel)]="striped" />
+            <span>☐ Чередующиеся строки</span>
+          </label>
+
+          <label class="checkbox-label">
+            <input type="checkbox" [(ngModel)]="hover" />
+            <span>☑ Hover эффект</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Ширина таблицы -->
+      <div class="form-group">
+        <label>Ширина таблицы:</label>
+        <div class="radio-group">
+          <label class="radio-label">
+            <input type="radio" name="widthType" value="full" [(ngModel)]="widthType" />
+            <span>● 100%</span>
+          </label>
+
+          <label class="radio-label">
+            <input type="radio" name="widthType" value="auto" [(ngModel)]="widthType" />
+            <span>○ Авто</span>
+          </label>
+
+          <label class="radio-label">
+            <input type="radio" name="widthType" value="custom" [(ngModel)]="widthType" />
+            <span>○ Фиксированная</span>
+          </label>
+
+          <div class="custom-width" *ngIf="widthType === 'custom'">
+            <input type="number" [(ngModel)]="customWidth" min="200" max="1200" step="50" />
+            <span>px</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Предпросмотр -->
+      <div class="preview-section">
+        <label>Предпросмотр:</label>
+        <div class="preview-table">
+          <div
+            class="preview-grid"
+            [style.grid-template-columns]="'repeat(' + cols + ', 1fr)'"
+            [style.grid-template-rows]="'repeat(' + rows + ', 1fr)'"
+          >
+            <div
+              class="preview-cell"
+              *ngFor="let cell of Array(rows * cols).fill(0); let i = index"
+              [class.header]="hasHeader && i < cols"
+            ></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-cancel" (click)="close()">Отмена</button>
+      <button class="btn btn-confirm" (click)="confirm()">Создать таблицу</button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,63 @@
+<dialog #dialog class="link-to-anchor-modal">
+  <div class="modal-header">
+    <h2>Ссылка на якорь</h2>
+    <button class="close-button" (click)="onCancel()" aria-label="Закрыть">✕</button>
+  </div>
+
+  <div class="modal-body">
+    <form (keydown)="onKeyDown($event)">
+      <!-- Текст ссылки -->
+      <div class="form-group">
+        <label for="linkText">Текст ссылки:</label>
+        <input
+          #linkTextInput
+          id="linkText"
+          type="text"
+          [(ngModel)]="linkText"
+          name="linkText"
+          placeholder="Текст, который будет отображаться"
+          autocomplete="off"
+        />
+      </div>
+
+      <!-- Список доступных якорей -->
+      <div class="form-group">
+        <label>Выберите якорь:</label>
+        <div class="anchors-list" *ngIf="availableAnchors.length > 0; else noAnchors">
+          <div
+            *ngFor="let anchor of availableAnchors"
+            class="anchor-item"
+            [class.selected]="selectedAnchorId === anchor.id"
+            (click)="selectAnchor(anchor.id)"
+          >
+            <div class="anchor-icon">⚓</div>
+            <div class="anchor-info">
+              <div class="anchor-name">{{ anchor.name || anchor.id }}</div>
+              <div class="anchor-id">#{{ anchor.id }}</div>
+            </div>
+            <div class="anchor-check" *ngIf="selectedAnchorId === anchor.id">✓</div>
+          </div>
+        </div>
+        <ng-template #noAnchors>
+          <div class="no-anchors">
+            <p>📌 В документе нет якорей</p>
+            <p class="hint">
+              Сначала создайте якорь с помощью кнопки ⚓ "Создать якорь" или нажмите Ctrl+Alt+A
+            </p>
+          </div>
+        </ng-template>
+      </div>
+
+      <!-- Сообщение об ошибке -->
+      <div *ngIf="validationError" class="validation-error">❌ {{ validationError }}</div>
+    </form>
+  </div>
+
+  <div class="modal-footer">
+    <div class="footer-left"></div>
+    <div class="footer-right">
+      <button class="cancel-button" (click)="onCancel()" type="button">Отмена</button>
+      <button class="save-button" (click)="onSave()" type="button">Создать ссылку</button>
+    </div>
+  </div>
+</dialog>

@@ -1,0 +1,87 @@
+<dialog #dialog class="blockquote-modal">
+  <div class="modal-header">
+    <h2>Вставить цитату</h2>
+    <button class="close-button" (click)="onCancel()" aria-label="Закрыть">✕</button>
+  </div>
+
+  <div class="modal-body">
+    <form (keydown)="onKeyDown($event)">
+      <!-- Текст цитаты -->
+      <div class="form-group">
+        <label for="quoteText">Текст цитаты <span class="required">*</span></label>
+        <textarea
+          #quoteTextArea
+          id="quoteText"
+          [(ngModel)]="quoteText"
+          name="quoteText"
+          rows="4"
+          placeholder="Введите текст цитаты..."
+          (input)="onQuoteTextInput()"
+          [class.error]="validationError"
+          autocomplete="off"
+          required
+        ></textarea>
+        <div class="hint">Нажмите Ctrl+Enter для быстрой вставки</div>
+      </div>
+
+      <!-- Автор цитаты -->
+      <div class="form-group">
+        <label for="author">Автор (необязательно)</label>
+        <input
+          id="author"
+          type="text"
+          [(ngModel)]="author"
+          name="author"
+          placeholder="Имя автора"
+          autocomplete="off"
+        />
+      </div>
+
+      <!-- Источник цитаты -->
+      <div class="form-group">
+        <label for="source">Источник (необязательно)</label>
+        <input
+          id="source"
+          type="text"
+          [(ngModel)]="source"
+          name="source"
+          placeholder="Книга, статья, URL..."
+          autocomplete="off"
+        />
+      </div>
+
+      <!-- Выбор стиля -->
+      <div class="form-group">
+        <label>Стиль оформления</label>
+        <div class="style-options">
+          <div
+            *ngFor="let style of quoteStyles"
+            class="style-option"
+            [class.selected]="selectedStyle === style.value"
+            (click)="selectStyle(style.value)"
+          >
+            <div class="style-radio">
+              <span *ngIf="selectedStyle === style.value">●</span>
+              <span *ngIf="selectedStyle !== style.value">○</span>
+            </div>
+            <div class="style-info">
+              <div class="style-label">{{ style.label }}</div>
+              <div class="style-description">{{ style.description }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Сообщение об ошибке -->
+      <div *ngIf="validationError" class="validation-error">❌ {{ validationError }}</div>
+    </form>
+  </div>
+
+  <div class="modal-footer">
+    <div class="footer-left"></div>
+    <div class="footer-right">
+      <button class="cancel-button" (click)="onCancel()" type="button">Отмена</button>
+      <button class="save-button" (click)="onSave()" type="button">Вставить цитату</button>
+    </div>
+  </div>
+</dialog>

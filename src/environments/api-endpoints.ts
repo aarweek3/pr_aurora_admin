@@ -140,6 +140,14 @@ export class ApiEndpoints {
     ],
   };
 
+  // Advanced Images endpoints
+  static readonly ADVANCED_IMAGES = {
+    SAVE: `${this.BASE_URL}/advanced-image/save`,
+    LOAD: (id: string) => `${this.BASE_URL}/advanced-image/load/${id}`,
+    DELETE: (id: string) => `${this.BASE_URL}/advanced-image/delete/${id}`,
+    LIST: `${this.BASE_URL}/advanced-image/list`,
+  };
+
   // TinyMCE configuration
   static readonly TINYMCE_CONFIG = {
     DEBUG_ENABLED: environment.production ? false : true,

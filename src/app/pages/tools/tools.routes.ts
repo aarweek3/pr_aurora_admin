@@ -11,4 +11,9 @@ export const TOOLS_ROUTES: Routes = [
     loadComponent: () =>
       import('./icon-manager/icon-manager.component').then((m) => m.IconManagerComponent),
   },
+  {
+    path: 'aurora-editor',
+    loadComponent: () =>
+      import('./editor-demo/editor-demo.component').then((m) => m.EditorDemoComponent),
+  },
 ];

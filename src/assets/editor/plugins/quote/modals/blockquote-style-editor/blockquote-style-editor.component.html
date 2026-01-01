@@ -1,0 +1,401 @@
+<dialog #dialog class="blockquote-style-editor-modal">
+  <div class="modal-container">
+    <!-- Заголовок -->
+    <div class="modal-header">
+      <h2>{{ isEditMode ? 'Редактировать стиль' : 'Создать стиль' }}</h2>
+      <button class="close-btn" type="button" (click)="cancel()" title="Закрыть">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Сообщения -->
+    <div class="messages" *ngIf="errorMessage || successMessage">
+      <div class="error-message" *ngIf="errorMessage">
+        {{ errorMessage }}
+      </div>
+      <div class="success-message" *ngIf="successMessage">
+        {{ successMessage }}
+      </div>
+    </div>
+
+    <!-- Основной контент (2 колонки) -->
+    <div class="modal-body">
+      <!-- ЛЕВАЯ ПАНЕЛЬ: LIVE PREVIEW -->
+      <div class="preview-panel">
+        <h3>Предварительный просмотр</h3>
+        <div class="preview-container">
+          <blockquote class="preview-blockquote" [ngStyle]="getPreviewQuoteStyles()">
+            <!-- Before элемент -->
+            <span
+              *ngIf="showBeforeElement"
+              class="preview-before"
+              [ngStyle]="getPreviewBeforeStyles()"
+            >
+              {{ quoteStyles.beforeContent }}
+            </span>
+
+            <p class="preview-text">{{ previewText }}</p>
+
+            <footer class="preview-footer" [ngStyle]="getPreviewFooterStyles()">
+              — <cite>{{ previewSource }}</cite>, {{ previewAuthor }}
+            </footer>
+          </blockquote>
+        </div>
+      </div>
+
+      <!-- ПРАВАЯ ПАНЕЛЬ: НАСТРОЙКИ -->
+      <div class="settings-panel">
+        <!-- Название стиля -->
+        <div class="form-group">
+          <label for="styleName">Название стиля *</label>
+          <input
+            type="text"
+            id="styleName"
+            [(ngModel)]="styleName"
+            placeholder="Например: Мой красивый стиль"
+            required
+            [disabled]="isLoading"
+          />
+        </div>
+
+        <!-- Вкладки -->
+        <div class="tabs">
+          <button
+            type="button"
+            class="tab-btn"
+            [class.active]="activeTab === 'quote'"
+            (click)="switchTab('quote')"
+          >
+            Цитата
+          </button>
+          <button
+            type="button"
+            class="tab-btn"
+            [class.active]="activeTab === 'footer'"
+            (click)="switchTab('footer')"
+          >
+            Подпись
+          </button>
+        </div>
+
+        <!-- Вкладка "Цитата" -->
+        <div class="tab-content" *ngIf="activeTab === 'quote'">
+          <div class="settings-grid">
+            <!-- Фон -->
+            <div class="form-group">
+              <label for="backgroundColor">Цвет фона</label>
+              <input
+                type="color"
+                id="backgroundColor"
+                [(ngModel)]="quoteStyles.backgroundColor"
+                [disabled]="isLoading"
+              />
+              <input
+                type="text"
+                [(ngModel)]="quoteStyles.backgroundColor"
+                placeholder="#f9f9f9"
+                [disabled]="isLoading"
+              />
+            </div>
+
+            <!-- Цвет текста -->
+            <div class="form-group">
+              <label for="color">Цвет текста</label>
+              <input
+                type="color"
+                id="color"
+                [(ngModel)]="quoteStyles.color"
+                [disabled]="isLoading"
+              />
+              <input
+                type="text"
+                [(ngModel)]="quoteStyles.color"
+                placeholder="#555"
+                [disabled]="isLoading"
+              />
+            </div>
+
+            <!-- Цвет границы -->
+            <div class="form-group">
+              <label for="borderColor">Цвет границы</label>
+              <input
+                type="color"
+                id="borderColor"
+                [(ngModel)]="quoteStyles.borderColor"
+                [disabled]="isLoading"
+              />
+              <input
+                type="text"
+                [(ngModel)]="quoteStyles.borderColor"
+                placeholder="#ccc"
+                [disabled]="isLoading"
+              />
+            </div>
+
+            <!-- Толщина границы -->
+            <div class="form-group">
+              <label for="borderWidth">Толщина границы</label>
+              <input
+                type="text"
+                id="borderWidth"
+                [(ngModel)]="quoteStyles.borderWidth"
+                placeholder="0 0 0 4px"
+                [disabled]="isLoading"
+              />
+            </div>
+
+            <!-- Стиль границы -->
+            <div class="form-group">
+              <label for="borderStyle">Стиль границы</label>
+              <select id="borderStyle" [(ngModel)]="quoteStyles.borderStyle" [disabled]="isLoading">
+                <option value="solid">Сплошная</option>
+                <option value="dashed">Пунктирная</option>
+                <option value="dotted">Точечная</option>
+                <option value="double">Двойная</option>
+              </select>
+            </div>
+
+            <!-- Скругление углов -->
+            <div class="form-group">
+              <label for="borderRadius">Скругление углов</label>
+              <input
+                type="text"
+                id="borderRadius"
+                [(ngModel)]="quoteStyles.borderRadius"
+                placeholder="0 или 8px"
+                [disabled]="isLoading"
+              />
+            </div>
+
+            <!-- Отступы внутри -->
+            <div class="form-group">
+              <label for="padding">Отступы (padding)</label>
+              <input
+                type="text"
+                id="padding"
+                [(ngModel)]="quoteStyles.padding"
+                placeholder="1em 1.5em"
+                [disabled]="isLoading"
+              />
+            </div>
+
+            <!-- Отступы снаружи -->
+            <div class="form-group">
+              <label for="margin">Отступы (margin)</label>
+              <input
+                type="text"
+                id="margin"
+                [(ngModel)]="quoteStyles.margin"
+                placeholder="1.5em 0"
+                [disabled]="isLoading"
+              />
+            </div>
+
+            <!-- Стиль шрифта -->
+            <div class="form-group">
+              <label for="fontStyle">Стиль шрифта</label>
+              <select id="fontStyle" [(ngModel)]="quoteStyles.fontStyle" [disabled]="isLoading">
+                <option value="normal">Обычный</option>
+                <option value="italic">Курсив</option>
+              </select>
+            </div>
+
+            <!-- Размер шрифта -->
+            <div class="form-group">
+              <label for="fontSize">Размер шрифта</label>
+              <input
+                type="text"
+                id="fontSize"
+                [(ngModel)]="quoteStyles.fontSize"
+                placeholder="1em"
+                [disabled]="isLoading"
+              />
+            </div>
+
+            <!-- Высота строки -->
+            <div class="form-group">
+              <label for="lineHeight">Высота строки</label>
+              <input
+                type="text"
+                id="lineHeight"
+                [(ngModel)]="quoteStyles.lineHeight"
+                placeholder="1.6"
+                [disabled]="isLoading"
+              />
+            </div>
+
+            <!-- Тень -->
+            <div class="form-group">
+              <label for="boxShadow">Тень (box-shadow)</label>
+              <input
+                type="text"
+                id="boxShadow"
+                [(ngModel)]="quoteStyles.boxShadow"
+                placeholder="none или 0 2px 8px rgba(0,0,0,0.1)"
+                [disabled]="isLoading"
+              />
+            </div>
+
+            <!-- Кавычки (before) -->
+            <div class="form-group full-width">
+              <h4>Кавычки / Иконка</h4>
+            </div>
+
+            <div class="form-group">
+              <label for="beforeContent">Символ</label>
+              <input
+                type="text"
+                id="beforeContent"
+                [(ngModel)]="quoteStyles.beforeContent"
+                placeholder='" или 💬'
+                [disabled]="isLoading"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="beforeFontSize">Размер</label>
+              <input
+                type="text"
+                id="beforeFontSize"
+                [(ngModel)]="quoteStyles.beforeFontSize"
+                placeholder="3em"
+                [disabled]="isLoading"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="beforeColor">Цвет</label>
+              <input
+                type="color"
+                id="beforeColor"
+                [(ngModel)]="quoteStyles.beforeColor"
+                [disabled]="isLoading"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="beforeOpacity">Прозрачность</label>
+              <input
+                type="text"
+                id="beforeOpacity"
+                [(ngModel)]="quoteStyles.beforeOpacity"
+                placeholder="0.3"
+                [disabled]="isLoading"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="beforeLeft">Позиция Left</label>
+              <input
+                type="text"
+                id="beforeLeft"
+                [(ngModel)]="quoteStyles.beforePosition!.left"
+                placeholder="-0.4em"
+                [disabled]="isLoading"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="beforeTop">Позиция Top</label>
+              <input
+                type="text"
+                id="beforeTop"
+                [(ngModel)]="quoteStyles.beforePosition!.top"
+                placeholder="-0.2em"
+                [disabled]="isLoading"
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- Вкладка "Подпись" -->
+        <div class="tab-content" *ngIf="activeTab === 'footer'">
+          <div class="settings-grid">
+            <div class="form-group">
+              <label for="footerFontSize">Размер шрифта</label>
+              <input
+                type="text"
+                id="footerFontSize"
+                [(ngModel)]="footerStyles.fontSize"
+                placeholder="0.9em"
+                [disabled]="isLoading"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="footerColor">Цвет</label>
+              <input
+                type="color"
+                id="footerColor"
+                [(ngModel)]="footerStyles.color"
+                [disabled]="isLoading"
+              />
+              <input
+                type="text"
+                [(ngModel)]="footerStyles.color"
+                placeholder="#666"
+                [disabled]="isLoading"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="footerFontStyle">Стиль шрифта</label>
+              <select id="footerFontStyle" [(ngModel)]="footerStyles.fontStyle" [disabled]="isLoading">
+                <option value="normal">Обычный</option>
+                <option value="italic">Курсив</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="footerFontWeight">Толщина шрифта</label>
+              <select id="footerFontWeight" [(ngModel)]="footerStyles.fontWeight" [disabled]="isLoading">
+                <option value="normal">Normal (400)</option>
+                <option value="500">Medium (500)</option>
+                <option value="600">Semibold (600)</option>
+                <option value="bold">Bold (700)</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="footerTextAlign">Выравнивание</label>
+              <select id="footerTextAlign" [(ngModel)]="footerStyles.textAlign" [disabled]="isLoading">
+                <option value="left">Слева</option>
+                <option value="center">По центру</option>
+                <option value="right">Справа</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="footerMarginTop">Отступ сверху</label>
+              <input
+                type="text"
+                id="footerMarginTop"
+                [(ngModel)]="footerStyles.marginTop"
+                placeholder="1em"
+                [disabled]="isLoading"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Футер -->
+    <div class="modal-footer">
+      <button class="btn btn-secondary" type="button" (click)="cancel()" [disabled]="isLoading">
+        Отмена
+      </button>
+      <button class="btn btn-primary" type="button" (click)="save()" [disabled]="isLoading">
+        {{ isEditMode ? 'Сохранить' : 'Создать' }}
+      </button>
+    </div>
+
+    <!-- Индикатор загрузки -->
+    <div class="loading-overlay" *ngIf="isLoading">
+      <div class="spinner"></div>
+    </div>
+  </div>
+</dialog>

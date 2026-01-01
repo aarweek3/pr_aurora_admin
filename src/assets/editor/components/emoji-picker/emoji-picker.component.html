@@ -1,0 +1,61 @@
+<!--
+════════════════════════════════════════════════════════════════════════════
+EMOJI PICKER
+════════════════════════════════════════════════════════════════════════════
+-->
+
+<div class="emoji-picker">
+  <!-- Search Bar -->
+  <div class="emoji-picker__search">
+    <input
+      type="text"
+      class="emoji-picker__search-input"
+      [(ngModel)]="searchQuery"
+      (input)="onSearch()"
+      placeholder="🔍 Поиск эмодзи..."
+      autocomplete="off"
+    />
+  </div>
+
+  <!-- Category Tabs -->
+  <div class="emoji-picker__categories">
+    <button
+      *ngFor="let category of categories"
+      type="button"
+      class="emoji-picker__category-btn"
+      [class.emoji-picker__category-btn--active]="activeCategory === category.id"
+      [title]="category.name"
+      (click)="selectCategory(category.id)"
+    >
+      {{ category.icon }}
+    </button>
+  </div>
+
+  <!-- Emoji Grid -->
+  <div class="emoji-picker__grid">
+    <button
+      *ngFor="let emoji of getEmojisToDisplay()"
+      type="button"
+      class="emoji-picker__emoji"
+      [title]="emoji"
+      (click)="onEmojiClick(emoji)"
+    >
+      {{ emoji }}
+    </button>
+
+    <!-- Empty State -->
+    <div *ngIf="getEmojisToDisplay().length === 0" class="emoji-picker__empty">
+      <div class="emoji-picker__empty-icon">🔍</div>
+      <div class="emoji-picker__empty-text">
+        {{ searchQuery ? 'Эмодзи не найдены' : 'Выберите категорию' }}
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer Info -->
+  <div class="emoji-picker__footer">
+    <div class="emoji-picker__footer-text">
+      💡 Альтернатива: Win+. или Cmd+Ctrl+Space
+    </div>
+  </div>
+</div>

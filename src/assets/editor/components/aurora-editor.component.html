@@ -1,0 +1,111 @@
+<!-- ════════════════════════════════════════════════════════════════════════════
+AURORA EDITOR TEMPLATE
+════════════════════════════════════════════════════════════════════════════
+
+Шаблон компонента Aurora Editor.
+
+Структура:
+- Wrapper с классом для fullscreen режима
+- Toolbar с кнопками форматирования
+- ContentEditable элемент редактора
+- Placeholder через CSS ::before
+- Character counter (опциональный)
+════════════════════════════════════════════════════════════════════════════ -->
+
+<div class="aurora-editor-wrapper" [class.fullscreen]="isFullscreen()" [class.disabled]="isDisabled()">
+  <!-- ═══════════════════════════════════════════════════════════════════════
+  TOOLBAR
+  ═══════════════════════════════════════════════════════════════════════ -->
+  <aurora-toolbar
+    [plugins]="plugins"
+    [activePlugins]="activePlugins()"
+    [editorElement]="editorElementRef.nativeElement"
+    (buttonClick)="onToolbarButtonClick($event)"
+  ></aurora-toolbar>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════
+  SEARCH PANEL (под тулбаром)
+  ═══════════════════════════════════════════════════════════════════════ -->
+  <aurora-search-panel
+    [visible]="searchPanelVisible()"
+    [showReplace]="searchPanelShowReplace()"
+    (visibleChange)="onSearchPanelVisibleChange($event)"
+  ></aurora-search-panel>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════
+  CONTENTEDITABLE ELEMENT
+  ═══════════════════════════════════════════════════════════════════════ -->
+  <div
+    #editorElement
+    class="aurora-editor aurora-editor-content"
+    contenteditable="true"
+    [attr.data-placeholder]="config?.placeholder || 'Начните вводить текст...'"
+    (input)="onInput()"
+    (keydown)="onKeyDown($event)"
+    (paste)="onPaste($event)"
+    (blur)="onBlur()"
+    (mouseup)="updateActivePlugins()"
+    (keyup)="updateActivePlugins()"
+    [attr.aria-label]="config?.ariaLabel || 'Редактор текста'"
+    role="textbox"
+    [attr.aria-multiline]="true"
+    [attr.aria-disabled]="isDisabled()"
+  ></div>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════
+  CHARACTER COUNTER
+  ═══════════════════════════════════════════════════════════════════════ -->
+  <div
+    *ngIf="showCharacterCount"
+    class="aurora-character-counter"
+    [class.over-limit]="isOverLimit()"
+    [attr.aria-live]="'polite'"
+  >
+    {{ characterCountText() }}
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════════════════
+SOURCE CODE MODAL
+════════════════════════════════════════════════════════════════════════════ -->
+<aurora-source-code-modal
+  (apply)="onSourceCodeApply($event)"
+  (cancel)="onSourceCodeCancel()"
+  (save)="onSourceCodeSave($event)"
+  (saveScss)="onScssCodeSave($event)"
+></aurora-source-code-modal>
+
+<!-- ════════════════════════════════════════════════════════════════════════════
+YOUTUBE MODAL
+════════════════════════════════════════════════════════════════════════════ -->
+<aurora-youtube-modal (insert)="onYouTubeInsert($event)"></aurora-youtube-modal>
+
+<!-- ════════════════════════════════════════════════════════════════════════════
+LINK PREVIEW MODAL
+════════════════════════════════════════════════════════════════════════════ -->
+<app-link-preview-modal (insert)="onLinkPreviewInsert($event)"></app-link-preview-modal>
+
+<!-- ════════════════════════════════════════════════════════════════════════════
+WORD COUNT MODAL
+════════════════════════════════════════════════════════════════════════════ -->
+<app-word-count-modal></app-word-count-modal>
+
+<!-- ════════════════════════════════════════════════════════════════════════════
+TABLE MODAL
+════════════════════════════════════════════════════════════════════════════ -->
+<app-table-modal></app-table-modal>
+
+<!-- ════════════════════════════════════════════════════════════════════════════
+IMAGE MODAL
+════════════════════════════════════════════════════════════════════════════ -->
+<app-image-modal></app-image-modal>
+
+<!-- ════════════════════════════════════════════════════════════════════════════
+IMAGE CONTEXT MENU
+════════════════════════════════════════════════════════════════════════════ -->
+<app-image-context-menu></app-image-context-menu>
+
+<!-- ════════════════════════════════════════════════════════════════════════════
+TOAST NOTIFICATION
+════════════════════════════════════════════════════════════════════════════ -->
+<app-toast-notification></app-toast-notification>

@@ -1,0 +1,218 @@
+/**
+ * ════════════════════════════════════════════════════════════════════════════
+ * EMOJI PICKER STYLES
+ * ════════════════════════════════════════════════════════════════════════════
+ */
+
+.emoji-picker {
+  width: 320px;
+  max-height: 400px;
+  display: flex;
+  flex-direction: column;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // SEARCH BAR
+  // ═══════════════════════════════════════════════════════════════════════
+
+  &__search {
+    padding: 12px;
+    border-bottom: 1px solid #e0e0e0;
+    background: #f8f9fa;
+  }
+
+  &__search-input {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s;
+
+    &:focus {
+      border-color: #4285f4;
+    }
+
+    &::placeholder {
+      color: #999;
+    }
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // CATEGORY TABS
+  // ═══════════════════════════════════════════════════════════════════════
+
+  &__categories {
+    display: flex;
+    justify-content: space-around;
+    padding: 8px 4px;
+    border-bottom: 1px solid #e0e0e0;
+    background: white;
+    overflow-x: auto;
+    gap: 4px;
+
+    // Скроллбар для категорий
+    &::-webkit-scrollbar {
+      height: 4px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: #f1f1f1;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: #888;
+      border-radius: 2px;
+
+      &:hover {
+        background: #555;
+      }
+    }
+  }
+
+  &__category-btn {
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: transparent;
+    font-size: 20px;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+      background: #f0f0f0;
+      transform: scale(1.1);
+    }
+
+    &--active {
+      background: #e3f2fd;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // EMOJI GRID
+  // ═══════════════════════════════════════════════════════════════════════
+
+  &__grid {
+    flex: 1;
+    padding: 12px;
+    overflow-y: auto;
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 4px;
+    align-content: start;
+
+    // Скроллбар для grid
+    &::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 4px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: #888;
+      border-radius: 4px;
+
+      &:hover {
+        background: #555;
+      }
+    }
+  }
+
+  &__emoji {
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: transparent;
+    font-size: 24px;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+
+    &:hover {
+      background: #f0f0f0;
+      transform: scale(1.2);
+    }
+
+    &:active {
+      transform: scale(1.1);
+    }
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // EMPTY STATE
+  // ═══════════════════════════════════════════════════════════════════════
+
+  &__empty {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    color: #999;
+  }
+
+  &__empty-icon {
+    font-size: 48px;
+    margin-bottom: 12px;
+    opacity: 0.5;
+  }
+
+  &__empty-text {
+    font-size: 14px;
+    text-align: center;
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // FOOTER
+  // ═══════════════════════════════════════════════════════════════════════
+
+  &__footer {
+    padding: 8px 12px;
+    border-top: 1px solid #e0e0e0;
+    background: #f8f9fa;
+  }
+
+  &__footer-text {
+    font-size: 11px;
+    color: #666;
+    text-align: center;
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// RESPONSIVE
+// ═══════════════════════════════════════════════════════════════════════
+
+@media (max-width: 480px) {
+  .emoji-picker {
+    width: 280px;
+
+    &__grid {
+      grid-template-columns: repeat(7, 1fr);
+    }
+
+    &__emoji {
+      width: 28px;
+      height: 28px;
+      font-size: 20px;
+    }
+  }
+}

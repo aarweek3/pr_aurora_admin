@@ -1,0 +1,309 @@
+<div class="modal-backdrop" *ngIf="isOpen" (click)="onBackdropClick($event)">
+  <div class="modal-container">
+    <!-- Header -->
+    <div class="modal-header">
+      <div class="modal-title">
+        <span class="modal-icon">📦</span>
+        <span>Настройки изображения</span>
+      </div>
+      <button class="close-btn" (click)="close()" [disabled]="isProcessing">×</button>
+    </div>
+
+    <!-- Body -->
+    <div class="modal-body">
+      <!-- File Name - Inline -->
+      <div class="form-group form-group-inline">
+        <label for="fileName">Имя файла:</label>
+        <input
+          type="text"
+          id="fileName"
+          [(ngModel)]="fileName"
+          class="file-name-input"
+          placeholder="Введите имя файла"
+          [disabled]="isProcessing"
+        />
+      </div>
+
+      <!-- Row 1: Alignment + Format + Quality -->
+      <div class="form-group form-group-triple">
+        <div class="alignment-section">
+          <label>Выравнивание:</label>
+          <div class="alignment-buttons">
+            <button
+              class="alignment-btn mini"
+              [class.active]="alignment === 'left'"
+              (click)="alignment = 'left'"
+              [disabled]="isProcessing"
+              title="По левому краю"
+            >
+              ⬅️
+            </button>
+            <button
+              class="alignment-btn mini"
+              [class.active]="alignment === 'center'"
+              (click)="alignment = 'center'"
+              [disabled]="isProcessing"
+              title="По центру"
+            >
+              ↔️
+            </button>
+            <button
+              class="alignment-btn mini"
+              [class.active]="alignment === 'right'"
+              (click)="alignment = 'right'"
+              [disabled]="isProcessing"
+              title="По правому краю"
+            >
+              ➡️
+            </button>
+          </div>
+        </div>
+        <div class="format-section">
+          <label>Формат:</label>
+          <div class="format-buttons">
+            <button
+              class="format-btn mini"
+              [class.active]="selectedFormat === 'jpg'"
+              (click)="selectFormat('jpg')"
+              [disabled]="isProcessing"
+            >
+              JPG
+            </button>
+            <button
+              class="format-btn mini"
+              [class.active]="selectedFormat === 'png'"
+              (click)="selectFormat('png')"
+              [disabled]="isProcessing"
+            >
+              PNG
+            </button>
+            <button
+              class="format-btn mini"
+              [class.active]="selectedFormat === 'webp'"
+              (click)="selectFormat('webp')"
+              [disabled]="isProcessing"
+            >
+              WebP
+            </button>
+          </div>
+        </div>
+        <div class="quality-section">
+          <label for="quality"
+            >Качество: <span class="quality-value">{{ quality }}%</span></label
+          >
+          <input
+            type="range"
+            id="quality"
+            [(ngModel)]="quality"
+            (input)="onQualityChange()"
+            min="1"
+            max="100"
+            class="quality-slider"
+            [disabled]="isProcessing"
+          />
+        </div>
+      </div>
+
+      <!-- Container Settings Toggle -->
+      <div class="form-group">
+        <div class="container-toggle">
+          <label class="checkbox-label container-header">
+            <input
+              type="checkbox"
+              [(ngModel)]="useContainer"
+              (change)="onContainerToggle()"
+              [disabled]="isProcessing"
+            />
+            <span>Использовать контейнер (настройка размеров и режима отображения)</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Container Settings Block -->
+      <div class="container-settings-block" *ngIf="useContainer">
+        <h4 class="container-settings-title">Настройки контейнера</h4>
+        <div class="container-settings">
+          <!-- Mode Selector -->
+          <div class="mode-selector">
+            <button
+              class="mode-btn"
+              [class.active]="containerMode === 'custom'"
+              (click)="containerMode = 'custom'; onContainerModeChange()"
+              [disabled]="isProcessing"
+            >
+              📏 Произвольный размер
+            </button>
+            <button
+              class="mode-btn"
+              [class.active]="containerMode === 'aspect'"
+              (click)="containerMode = 'aspect'; onContainerModeChange()"
+              [disabled]="isProcessing"
+            >
+              📐 Формат сторон
+            </button>
+          </div>
+
+          <!-- Custom Size Mode -->
+          <div class="custom-mode" *ngIf="containerMode === 'custom'">
+            <div class="size-inputs-inline">
+              <div class="input-group-horizontal">
+                <label for="containerWidth">Ширина (px):</label>
+                <input
+                  type="number"
+                  id="containerWidth"
+                  [(ngModel)]="containerWidth"
+                  (input)="onContainerSizeChange('width')"
+                  min="1"
+                  max="3000"
+                  [disabled]="isProcessing"
+                  class="size-input"
+                />
+              </div>
+
+              <div class="input-group-horizontal">
+                <label for="containerHeight">Высота (px):</label>
+                <input
+                  type="number"
+                  id="containerHeight"
+                  [(ngModel)]="containerHeight"
+                  (input)="onContainerSizeChange('height')"
+                  min="1"
+                  max="3000"
+                  [disabled]="isProcessing || isProportional"
+                  class="size-input"
+                />
+              </div>
+
+              <button
+                class="lock-btn"
+                [class.locked]="isProportional"
+                (click)="toggleProportional()"
+                [disabled]="isProcessing"
+                title="{{ isProportional ? 'Отключить пропорциональность' : 'Включить пропорциональность' }}"
+              >
+                <span class="lock-icon">{{ isProportional ? '🔒' : '🔓' }}</span>
+                <span class="lock-text">Пропорционально</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Aspect Ratio Mode -->
+          <div class="aspect-mode" *ngIf="containerMode === 'aspect'">
+            <!-- Aspect Ratio Presets -->
+            <div class="aspect-presets">
+              <button
+                *ngFor="let preset of aspectRatioPresets"
+                class="aspect-preset-btn"
+                [class.active]="selectedAspectRatio === preset.label"
+                (click)="selectAspectRatio(preset)"
+                [disabled]="isProcessing"
+              >
+                {{ preset.label }}
+              </button>
+            </div>
+
+            <!-- Dimension Selection - Всегда показываем -->
+            <div class="dimension-selector">
+              <div class="radio-group">
+                <label class="radio-label">
+                  <input
+                    type="radio"
+                    name="dimension"
+                    value="width"
+                    [(ngModel)]="aspectRatioDimension"
+                    (change)="onAspectRatioDimensionChange()"
+                    [disabled]="isProcessing"
+                  />
+                  <span>Ширина (px)</span>
+                </label>
+                <label class="radio-label">
+                  <input
+                    type="radio"
+                    name="dimension"
+                    value="height"
+                    [(ngModel)]="aspectRatioDimension"
+                    (change)="onAspectRatioDimensionChange()"
+                    [disabled]="isProcessing"
+                  />
+                  <span>Высота (px)</span>
+                </label>
+              </div>
+
+              <input
+                type="number"
+                [(ngModel)]="aspectRatioValue"
+                (input)="onAspectRatioValueChange()"
+                min="1"
+                max="3000"
+                class="aspect-value-input"
+                [disabled]="isProcessing || !selectedAspectRatio"
+                [placeholder]="
+                  selectedAspectRatio
+                    ? aspectRatioDimension === 'width'
+                      ? 'Введите ширину'
+                      : 'Введите высоту'
+                    : 'Сначала выберите формат'
+                "
+              />
+            </div>
+          </div>
+
+          <!-- Object-fit Selection -->
+          <div class="objectfit-section">
+            <label>Заполнение:</label>
+            <div class="objectfit-buttons">
+              <button
+                class="objectfit-btn"
+                [class.active]="objectFit === 'cover'"
+                (click)="selectObjectFit('cover')"
+                [disabled]="isProcessing"
+                title="Обрезать края, сохранить пропорции"
+              >
+                📐 Cover
+              </button>
+              <button
+                class="objectfit-btn"
+                [class.active]="objectFit === 'fill'"
+                (click)="selectObjectFit('fill')"
+                [disabled]="isProcessing"
+                title="Растянуть, может деформировать"
+              >
+                ⚠️ Fill
+              </button>
+            </div>
+            <div class="objectfit-warning" *ngIf="objectFit === 'fill'">
+              ⚠️ Режим Fill может деформировать изображение
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Image Info - Single Line Layout -->
+      <div class="image-info compact">
+        <div class="info-line single-line">
+          <span class="info-item"> <strong>Размер:</strong> {{ imageWidth }} × {{ imageHeight }} px </span>
+          <span class="info-separator">•</span>
+          <span class="info-item">
+            <strong>Формат:</strong> {{ originalFormat }} → {{ selectedFormat.toUpperCase() }}
+          </span>
+          <span class="info-separator">•</span>
+          <span class="info-item">
+            <strong>Размер файла:</strong> {{ formattedOriginalSize }} →
+            <span class="new-size" [ngClass]="sizeDifferenceClass">
+              {{ formattedFileSize }} ({{ sizeDifference }})
+            </span>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="modal-footer">
+      <button class="btn btn-secondary" (click)="close()" [disabled]="isProcessing">Отмена</button>
+      <button class="btn btn-primary" (click)="download()" [disabled]="isProcessing">
+        <span *ngIf="!isProcessing">✅ Вставить картинку</span>
+        <span *ngIf="isProcessing">⏳ Загрузка на сервер...</span>
+      </button>
+    </div>
+  </div>
+</div>

@@ -746,6 +746,13 @@ export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
             intent: 'info',
           },
         },
+        {
+          id: 'aurora-editor',
+          icon: 'edit',
+          label: 'Редактор Aurora',
+          type: 'link',
+          route: '/tools/aurora-editor',
+        },
       ],
     },
 

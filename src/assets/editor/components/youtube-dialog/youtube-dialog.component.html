@@ -1,0 +1,175 @@
+<!-- ════════════════════════════════════════════════════════════════════════════
+YOUTUBE DIALOG TEMPLATE
+════════════════════════════════════════════════════════════════════════════ -->
+
+<div class="youtube-dialog-overlay" (click)="onCancel()">
+  <div class="youtube-dialog-content" (click)="$event.stopPropagation()">
+    <div class="youtube-dialog-header">
+      <h2>📺 Вставить YouTube видео</h2>
+      <button class="close-button" (click)="onCancel()" title="Закрыть">&times;</button>
+    </div>
+
+    <div class="youtube-dialog-body">
+      <!-- URL Input -->
+      <div class="form-group">
+        <label for="youtube-url">YouTube URL:</label>
+        <input
+          id="youtube-url"
+          type="text"
+          class="form-control"
+          placeholder="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+          [(ngModel)]="youtubeUrl"
+          (ngModelChange)="onUrlChange()"
+          autofocus
+        />
+        <div class="form-help">Поддерживаются форматы: youtube.com/watch?v=, youtu.be/, youtube.com/embed/</div>
+      </div>
+
+      <!-- Video Preview -->
+      <div class="video-preview" *ngIf="videoId">
+        <img [src]="getThumbnailUrl()" [alt]="'YouTube video ' + videoId" class="thumbnail" />
+        <div class="video-id">ID: {{ videoId }}</div>
+      </div>
+
+      <!-- Settings -->
+      <div class="settings-section" *ngIf="videoId">
+        <h3>⚙️ Настройки</h3>
+
+        <!-- Size Type -->
+        <div class="form-group">
+          <label>
+            <input type="checkbox" [(ngModel)]="settings.responsive" />
+            Адаптивный размер (responsive)
+          </label>
+        </div>
+
+        <!-- Fixed Size Settings -->
+        <div class="size-settings" *ngIf="!settings.responsive">
+          <div class="form-group">
+            <label for="size-preset">Размер:</label>
+            <select
+              id="size-preset"
+              class="form-control"
+              [(ngModel)]="selectedPreset"
+              (ngModelChange)="applyPreset($event)"
+            >
+              <option *ngFor="let preset of sizePresets" [value]="preset.name">
+                {{ preset.label }}
+              </option>
+            </select>
+          </div>
+
+          <div class="size-inputs">
+            <div class="form-group">
+              <label for="width">Ширина (px):</label>
+              <input id="width" type="number" class="form-control" [(ngModel)]="settings.width" min="200" max="2000" />
+            </div>
+
+            <div class="form-group">
+              <label for="height">Высота (px):</label>
+              <input
+                id="height"
+                type="number"
+                class="form-control"
+                [(ngModel)]="settings.height"
+                min="150"
+                max="1500"
+              />
+            </div>
+
+            <button class="btn btn-secondary" (click)="maintainAspectRatio()" title="Сохранить пропорции 16:9">
+              📐 16:9
+            </button>
+          </div>
+        </div>
+
+        <!-- Playback Options -->
+        <div class="form-group">
+          <h4>⚙️ Параметры воспроизведения</h4>
+          <div class="checkbox-group">
+            <label>
+              <input type="checkbox" [(ngModel)]="settings.autoplay" />
+              Автовоспроизведение
+            </label>
+            <label>
+              <input type="checkbox" [(ngModel)]="settings.controls" />
+              Показать элементы управления
+            </label>
+            <label>
+              <input type="checkbox" [(ngModel)]="settings.loop" />
+              Зациклить воспроизведение
+            </label>
+            <label>
+              <input type="checkbox" [(ngModel)]="settings.mute" />
+              Отключить звук
+            </label>
+          </div>
+        </div>
+
+        <!-- Start Time -->
+        <div class="form-group">
+          <label for="start-time">Начать с (секунды):</label>
+          <input
+            id="start-time"
+            type="number"
+            class="form-control"
+            [(ngModel)]="settings.startTime"
+            min="0"
+            placeholder="0"
+          />
+        </div>
+
+        <!-- Title and Caption -->
+        <div class="form-group">
+          <label for="video-title">Заголовок (необязательно):</label>
+          <input
+            id="video-title"
+            type="text"
+            class="form-control"
+            [(ngModel)]="settings.title"
+            placeholder="Введите заголовок"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="video-caption">Подпись (необязательно):</label>
+          <textarea
+            id="video-caption"
+            class="form-control"
+            [(ngModel)]="settings.caption"
+            rows="2"
+            placeholder="Введите описание или подпись"
+          ></textarea>
+        </div>
+
+        <!-- Alignment -->
+        <div class="form-group">
+          <label>Выравнивание:</label>
+          <div class="radio-group">
+            <label>
+              <input type="radio" name="alignment" value="left" [(ngModel)]="settings.alignment" />
+              По левому краю
+            </label>
+            <label>
+              <input type="radio" name="alignment" value="center" [(ngModel)]="settings.alignment" />
+              По центру
+            </label>
+            <label>
+              <input type="radio" name="alignment" value="right" [(ngModel)]="settings.alignment" />
+              По правому краю
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Error Message -->
+      <div class="error-message" *ngIf="errorMessage">{{ errorMessage }}</div>
+    </div>
+
+    <!-- Footer -->
+    <div class="youtube-dialog-footer">
+      <button class="btn btn-secondary" (click)="onCancel()">Отмена</button>
+      <button class="btn btn-primary" (click)="onInsert()" [disabled]="!isValid()">Вставить видео</button>
+    </div>
+  </div>
+</div>

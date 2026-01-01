@@ -1,0 +1,1363 @@
+<div class="modal-backdrop" *ngIf="isOpen" (click)="close()"></div>
+
+<div #modalWindow class="image-modal" *ngIf="isOpen" (click)="$event.stopPropagation()" [ngStyle]="getModalStyle()">
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <!-- DIV 1: Header -->
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <div class="modal-header" (mousedown)="onModalHeaderMouseDown($event)" [class.dragging]="isDraggingModal">
+    <h2>Вставить изображение</h2>
+    <button class="aurora-btn-close" (click)="close()" aria-label="Закрыть">×</button>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <!-- DIV 2: Navigation + Actions -->
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <div class="modal-navigation">
+    <!-- Левая часть: вкладки -->
+    <div class="nav-tabs">
+      <button
+        class="aurora-btn aurora-btn-ghost aurora-btn-sm"
+        [class.aurora-btn-active]="activeTab === 'upload'"
+        (click)="switchTab('upload')"
+      >
+        📤 Загрузить
+      </button>
+      <button
+        class="aurora-btn aurora-btn-ghost aurora-btn-sm"
+        [class.aurora-btn-active]="activeTab === 'crop'"
+        (click)="switchTab('crop')"
+        [disabled]="!previewUrl"
+      >
+        ✂️ Обрезать
+      </button>
+      <button
+        class="aurora-btn aurora-btn-ghost aurora-btn-sm"
+        [class.aurora-btn-active]="activeTab === 'circle'"
+        (click)="switchTab('circle')"
+        [disabled]="!previewUrl"
+      >
+        ⭕ Круг
+      </button>
+      <button
+        class="aurora-btn aurora-btn-ghost aurora-btn-sm"
+        [class.aurora-btn-active]="activeTab === 'frame'"
+        (click)="switchTab('frame')"
+        [disabled]="!previewUrl"
+      >
+        🖼️ Рамка
+      </button>
+      <button
+        class="aurora-btn aurora-btn-ghost aurora-btn-sm"
+        [class.aurora-btn-active]="activeTab === 'edit'"
+        (click)="switchTab('edit')"
+        [disabled]="!previewUrl"
+      >
+        🎨 Обработка
+      </button>
+      <button
+        class="aurora-btn aurora-btn-ghost aurora-btn-sm"
+        [class.aurora-btn-active]="activeTab === 'watermark'"
+        (click)="switchTab('watermark')"
+        [disabled]="!previewUrl"
+      >
+        💧 Водяной знак
+      </button>
+      <button
+        class="aurora-btn aurora-btn-ghost aurora-btn-sm"
+        [class.aurora-btn-active]="activeTab === 'settings'"
+        (click)="switchTab('settings')"
+        [disabled]="!previewUrl"
+      >
+        ⚙️ Настройки
+      </button>
+    </div>
+
+    <!-- Правая часть: действия -->
+    <div class="nav-actions">
+      <button class="aurora-btn aurora-btn-ghost aurora-btn-md" (click)="close()" [disabled]="uploadState.isUploading">
+        Отмена
+      </button>
+      <button
+        class="aurora-btn aurora-btn-primary aurora-btn-md"
+        (click)="applyAndInsert()"
+        [disabled]="!previewUrl || uploadState.isUploading"
+      >
+        <span *ngIf="!uploadState.isUploading">Вставить</span>
+        <span *ngIf="uploadState.isUploading">⏳ Загрузка...</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <!-- DIV 3: Body (универсальная структура для всех вкладок) -->
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <div class="modal-body">
+    <!-- DIV 3.1: Canvas Area (1/3) -->
+    <div class="body-canvas" #bodyCanvas>
+      <!-- Содержимое меняется в зависимости от вкладки -->
+
+      <!-- Upload: Превью загруженного изображения -->
+      <ng-container *ngIf="activeTab === 'upload'">
+        <div *ngIf="previewUrl" class="upload-container">
+          <div class="canvas-wrapper">
+            <canvas #uploadCanvas></canvas>
+          </div>
+        </div>
+        <div *ngIf="!previewUrl" class="canvas-placeholder">
+          <span class="placeholder-icon">🖼️</span>
+          <p class="placeholder-text">Изображение появится здесь</p>
+        </div>
+      </ng-container>
+
+      <!-- Crop: Canvas с overlay -->
+      <ng-container *ngIf="activeTab === 'crop'">
+        <div class="crop-container">
+          <div class="canvas-wrapper">
+            <canvas #cropCanvas></canvas>
+            <canvas #cropOverlay class="crop-overlay"></canvas>
+          </div>
+        </div>
+      </ng-container>
+
+      <!-- Circle: Canvas с круговой обрезкой -->
+      <ng-container *ngIf="activeTab === 'circle'">
+        <div class="circle-container">
+          <div class="canvas-wrapper">
+            <canvas #circleCanvas></canvas>
+            <canvas #circleOverlay class="circle-overlay"></canvas>
+          </div>
+        </div>
+      </ng-container>
+
+      <!-- Frame: Canvas с рамками -->
+      <ng-container *ngIf="activeTab === 'frame'">
+        <div class="frame-container">
+          <div class="canvas-wrapper">
+            <canvas #frameCanvas class="frame-canvas"></canvas>
+          </div>
+        </div>
+      </ng-container>
+
+      <!-- Edit: Canvas с эффектами -->
+      <ng-container *ngIf="activeTab === 'edit'">
+        <img
+          [src]="imageData.current || previewUrl"
+          alt="Обрабатываемое изображение"
+          [style.filter]="
+            'brightness(' +
+            (100 + brightness) +
+            '%) ' +
+            'contrast(' +
+            (100 + contrast) +
+            '%) ' +
+            'saturate(' +
+            (100 + saturation) +
+            '%) ' +
+            'hue-rotate(' +
+            hueRotate +
+            'deg) ' +
+            'blur(' +
+            blur +
+            'px) ' +
+            'grayscale(' +
+            grayscale +
+            '%) ' +
+            'sepia(' +
+            sepia +
+            '%) ' +
+            'invert(' +
+            invert +
+            '%)'
+          "
+        />
+        <div class="canvas-badge" *ngIf="legacyCroppedDimensions">
+          {{ legacyCroppedDimensions.width }}×{{ legacyCroppedDimensions.height }}px
+        </div>
+      </ng-container>
+
+      <!-- Watermark: Canvas с preview водяного знака -->
+      <ng-container *ngIf="activeTab === 'watermark'">
+        <div class="watermark-preview-container">
+          <canvas #watermarkCanvas class="watermark-canvas"></canvas>
+        </div>
+      </ng-container>
+
+      <!-- Settings: Финальное превью -->
+      <ng-container *ngIf="activeTab === 'settings'">
+        <figure [attr.data-align]="config.alignment" [attr.data-width]="config.width" class="aurora-image">
+          <img [src]="previewUrl" [alt]="config.alt || ''" />
+          <figcaption *ngIf="config.caption">{{ config.caption }}</figcaption>
+        </figure>
+      </ng-container>
+    </div>
+
+    <!-- DIV 3.2: Controls Panel (2/3 или flex:1) -->
+    <div class="body-controls">
+      <!-- Содержимое меняется в зависимости от вкладки -->
+
+      <!-- ═══════════════ UPLOAD TAB ═══════════════ -->
+      <ng-container *ngIf="activeTab === 'upload'">
+        <!-- Информация о файле -->
+        <div class="file-info" *ngIf="previewUrl">
+          <h4>📁 {{ imageFileName }}</h4>
+          <p>{{ formatFileSize(imageFileSize) }}</p>
+        </div>
+
+        <!-- Кнопки выбора источника - горизонтальное меню -->
+        <div class="source-buttons-horizontal">
+          <button
+            class="aurora-btn aurora-btn-ghost aurora-btn-sm"
+            [class.aurora-btn-active]="sourceType === 'file'"
+            (click)="sourceType = 'file'"
+          >
+            <span class="btn-icon">📄</span>
+            <span class="btn-label">Файл</span>
+          </button>
+          <button
+            class="aurora-btn aurora-btn-ghost aurora-btn-sm"
+            [class.aurora-btn-active]="sourceType === 'url'"
+            (click)="sourceType = 'url'"
+          >
+            <span class="btn-icon">🔗</span>
+            <span class="btn-label">URL</span>
+          </button>
+          <button
+            class="aurora-btn aurora-btn-ghost aurora-btn-sm"
+            [class.aurora-btn-active]="sourceType === 'drop'"
+            (click)="sourceType = 'drop'"
+          >
+            <span class="btn-icon">📥</span>
+            <span class="btn-label">Перетащить</span>
+          </button>
+        </div>
+
+        <!-- Контент источника -->
+        <div class="source-content">
+          <!-- File Input -->
+          <div *ngIf="sourceType === 'file'" class="source-section">
+            <input type="file" #fileInput accept="image/*" (change)="onFileSelected($event)" style="display: none" />
+            <button (click)="fileInput.click()" class="aurora-btn aurora-btn-primary aurora-btn-md aurora-btn-w-full">
+              📁 Выбрать файл
+            </button>
+            <p class="source-hint">JPEG, PNG, GIF, WebP</p>
+          </div>
+
+          <!-- URL Input -->
+          <div *ngIf="sourceType === 'url'" class="source-section">
+            <input
+              type="url"
+              class="url-input"
+              placeholder="https://example.com/image.jpg"
+              [(ngModel)]="imageUrl"
+              (keyup.enter)="loadFromUrl()"
+            />
+            <button (click)="loadFromUrl()" class="aurora-btn aurora-btn-primary aurora-btn-md aurora-btn-w-full">
+              🔗 Загрузить
+            </button>
+            <p class="source-hint">Введите URL изображения</p>
+          </div>
+
+          <!-- Drag & Drop Zone -->
+          <div *ngIf="sourceType === 'drop'" class="source-section">
+            <div
+              class="drop-zone"
+              [class.drag-over]="isDragOver"
+              (drop)="onDrop($event)"
+              (dragover)="onDragOver($event)"
+              (dragleave)="onDragLeave($event)"
+            >
+              <span class="drop-icon">📥</span>
+              <p class="drop-text">Перетащите сюда</p>
+              <small class="drop-hint">Поддерживаемые форматы</small>
+            </div>
+          </div>
+        </div>
+
+        <!-- Error Message -->
+        <div class="error-message" *ngIf="errorMessage">
+          <span class="error-icon">⚠️</span>
+          <span class="error-text">{{ errorMessage }}</span>
+        </div>
+      </ng-container>
+
+      <!-- ═══════════════ CROP TAB ═══════════════ -->
+      <ng-container *ngIf="activeTab === 'crop'">
+        <!-- Фиксированная панель управления -->
+        <div class="crop-controls-fixed">
+          <div class="crop-controls-row">
+            <!-- Чекбоксы -->
+            <label class="checkbox-label">
+              <input type="checkbox" [(ngModel)]="cropConfig.proportional" (change)="onProportionalChange()" checked />
+              <span>Пропорционально</span>
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" [(ngModel)]="cropConfig.showGrid" (change)="onGridChange()" checked />
+              <span>Показать сетку</span>
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" [(ngModel)]="cropConfig.hardSizeEnabled" (change)="onHardSizeChange()" checked />
+              <span>Свой размер</span>
+            </label>
+
+            <!-- Кнопка обрезать справа -->
+            <button class="aurora-btn aurora-btn-primary aurora-btn-md crop-btn-right" (click)="applyCrop()">
+              ✂️ Обрезать
+            </button>
+          </div>
+        </div>
+
+        <!-- Прокручиваемый контент -->
+        <div class="crop-scrollable-content">
+          <!-- Свой размер -->
+          <div class="hard-size-section-compact" *ngIf="cropConfig.hardSizeEnabled">
+            <h4>Свой размер (px)</h4>
+            <div class="size-input-row-tall">
+              <input
+                type="number"
+                placeholder="Ширина"
+                [(ngModel)]="cropConfig.targetWidth"
+                (input)="onTargetSizeChange('width')"
+                min="1"
+              />
+              <button
+                class="aurora-btn aurora-btn-ghost aurora-btn-xs aurora-btn-icon"
+                [class.aurora-btn-active]="cropConfig.proportionLocked"
+                (click)="toggleProportionLock()"
+                title="{{ cropConfig.proportionLocked ? 'Разблокировать пропорции' : 'Заблокировать пропорции' }}"
+              >
+                {{ cropConfig.proportionLocked ? '🔒' : '🔓' }}
+              </button>
+              <input
+                type="number"
+                placeholder="Высота"
+                [(ngModel)]="cropConfig.targetHeight"
+                (input)="onTargetSizeChange('height')"
+                min="1"
+              />
+              <button
+                class="aurora-btn aurora-btn-primary aurora-btn-sm"
+                (click)="applyTargetSize()"
+                title="Применить размер к рамке обрезки"
+              >
+                Применить размер
+              </button>
+            </div>
+          </div>
+
+          <!-- Разделитель между "Свой размер" и "Предустановленные размеры" -->
+          <hr class="crop-section-divider" *ngIf="cropConfig.hardSizeEnabled" />
+
+          <!-- Пресеты -->
+          <app-crop-presets [(selectedPreset)]="selectedPreset" (presetSelected)="onPresetSelected($event)">
+          </app-crop-presets>
+        </div>
+      </ng-container>
+
+      <!-- ═══════════════ CIRCLE TAB ═══════════════ -->
+      <ng-container *ngIf="activeTab === 'circle'">
+        <!-- Фиксированная панель управления для круговой обрезки -->
+        <div class="circle-controls-fixed">
+          <div class="circle-controls-row">
+            <!-- Информация о круге -->
+            <div class="circle-info" *ngIf="circleConfig.radius > 0">
+              <span>R: {{ circleConfig.radius }}px</span>
+              <span>⌀ {{ circleConfig.radius * 2 }}px</span>
+            </div>
+
+            <!-- Кнопки управления -->
+            <div class="circle-actions">
+              <button
+                class="aurora-btn aurora-btn-ghost aurora-btn-sm"
+                (click)="centerCircle()"
+                title="Центрировать круг (Ctrl+C)"
+              >
+                ⊙ Центр
+              </button>
+              <button
+                class="aurora-btn aurora-btn-ghost aurora-btn-sm"
+                (click)="resetCircleToOptimal()"
+                title="Оптимальный размер (Ctrl+R)"
+              >
+                ↻ Сброс
+              </button>
+              <button
+                class="aurora-btn aurora-btn-primary aurora-btn-md circle-btn-right"
+                (click)="applyCircle()"
+                title="Применить круговую обрезку (Enter)"
+              >
+                ⭕ Обрезать в круг
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Прокручиваемый контент с настройками круга -->
+        <div class="circle-scrollable-content">
+          <!-- Настройки визуализации -->
+          <section class="control-block">
+            <h4>🎨 Настройки отображения</h4>
+            <div class="circle-settings-grid">
+              <!-- Цвет обводки -->
+              <div class="color-picker-wrapper">
+                <label>Цвет обводки:</label>
+                <input
+                  type="color"
+                  [(ngModel)]="circleConfig.strokeColor"
+                  (change)="updateCircleOverlay()"
+                  class="color-input"
+                />
+              </div>
+
+              <!-- Прозрачность затемнения -->
+              <div class="slider-wrapper">
+                <label>Затемнение: {{ Math.round(circleConfig.fillOpacity * 100) }}%</label>
+                <input
+                  type="range"
+                  min="0"
+                  max="1"
+                  step="0.1"
+                  [(ngModel)]="circleConfig.fillOpacity"
+                  (input)="updateCircleOverlay()"
+                  class="slider"
+                />
+              </div>
+            </div>
+          </section>
+          <!-- Информация -->
+          <section class="control-block" *ngIf="circleConfig.radius > 0">
+            <h4>📊 Информация</h4>
+            <div class="info-grid">
+              <div class="info-item">
+                <span class="info-label">Центр:</span>
+                <span class="info-value">{{ circleConfig.centerX }}, {{ circleConfig.centerY }}</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Радиус:</span>
+                <span class="info-value">{{ circleConfig.radius }}px</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Диаметр:</span>
+                <span class="info-value">{{ circleConfig.radius * 2 }}px</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Площадь:</span>
+                <span class="info-value">{{ Math.round(Math.PI * circleConfig.radius * circleConfig.radius) }}px²</span>
+              </div>
+            </div>
+          </section>
+
+          <!-- Горячие клавиши -->
+          <section class="control-block">
+            <h4>⌨️ Горячие клавиши</h4>
+            <div class="shortcuts-list">
+              <div class="shortcut-item">
+                <kbd>Enter</kbd>
+                <span>Применить обрезку</span>
+              </div>
+              <div class="shortcut-item">
+                <kbd>Escape</kbd>
+                <span>Отменить</span>
+              </div>
+              <div class="shortcut-item">
+                <kbd>Ctrl+C</kbd>
+                <span>Центрировать круг</span>
+              </div>
+              <div class="shortcut-item">
+                <kbd>Ctrl+R</kbd>
+                <span>Сбросить размер</span>
+              </div>
+            </div>
+          </section>
+        </div>
+      </ng-container>
+
+      <!-- ═══════════════ FRAME TAB ═══════════════ -->
+      <ng-container *ngIf="activeTab === 'frame'">
+        <!-- Фиксированная панель управления для рамок -->
+        <div class="frame-controls-fixed">
+          <div class="frame-controls-row">
+            <!-- Информация о рамке и размере -->
+            <div class="frame-info" *ngIf="frameConfig.thickness > 0">
+              <span>{{ frameConfig.thickness }}px {{ frameConfig.type }}</span>
+              <span class="frame-size-info" [class.size-changed]="getFramedImageSize().mode === 'around'">
+                📐 {{ getFramedImageSize().width }}×{{ getFramedImageSize().height }}px
+                <small>({{ getFramedImageSize().sizeChange }})</small>
+              </span>
+            </div>
+
+            <!-- Кнопки управления -->
+            <div class="frame-actions">
+              <button
+                class="aurora-btn aurora-btn-ghost aurora-btn-sm"
+                (click)="resetFrameConfig()"
+                title="Сбросить настройки (Ctrl+R)"
+              >
+                ↻ Сброс
+              </button>
+              <button
+                class="aurora-btn aurora-btn-primary aurora-btn-md frame-btn-right"
+                (click)="applyFrame()"
+                title="Применить рамку (Enter)"
+              >
+                🖼️ Применить рамку
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Прокручиваемый контент с настройками рамок -->
+        <div class="frame-scrollable-content">
+          <!-- Быстрые стили рамок -->
+          <section class="control-block">
+            <h4>✨ Быстрые стили</h4>
+            <div class="frame-presets-grid">
+              <div
+                class="frame-preset-item"
+                *ngFor="let preset of framePresets"
+                [class.active]="selectedFramePreset === preset.id"
+                (click)="selectFramePreset(preset.id)"
+                [title]="preset.description"
+              >
+                <div class="preset-preview" [innerHTML]="preset.preview"></div>
+                <span class="preset-name">{{ preset.name }}</span>
+              </div>
+            </div>
+          </section>
+
+          <!-- Основные настройки рамки -->
+          <section class="control-block">
+            <h4>🎨 Настройки рамки</h4>
+            <div class="frame-settings-grid">
+              <!-- Тип рамки -->
+              <div class="select-wrapper">
+                <label>Тип:</label>
+                <select [(ngModel)]="frameConfig.type" (change)="updateFramePreview()" class="frame-select">
+                  <option value="solid">Сплошная</option>
+                  <option value="dashed">Пунктирная</option>
+                  <option value="dotted">Точечная</option>
+                  <option value="double">Двойная</option>
+                  <option value="groove">Вдавленная</option>
+                  <option value="ridge">Выпуклая</option>
+                  <option value="shadow">Тень</option>
+                  <option value="gradient">Градиент</option>
+                  <option value="rounded">Скругленная</option>
+                </select>
+              </div>
+
+              <!-- Толщина -->
+              <div class="slider-wrapper">
+                <label>Толщина: {{ frameConfig.thickness }}px</label>
+                <input
+                  type="range"
+                  min="1"
+                  max="50"
+                  step="1"
+                  [(ngModel)]="frameConfig.thickness"
+                  (input)="updateFramePreview()"
+                  class="slider"
+                />
+              </div>
+
+              <!-- Цвет рамки -->
+              <div class="color-picker-wrapper">
+                <label>Цвет:</label>
+                <input
+                  type="color"
+                  [(ngModel)]="frameConfig.color"
+                  (change)="updateFramePreview()"
+                  class="color-input"
+                />
+              </div>
+
+              <!-- Прозрачность -->
+              <div class="slider-wrapper">
+                <label>Прозрачность: {{ Math.round(frameConfig.opacity * 100) }}%</label>
+                <input
+                  type="range"
+                  min="0"
+                  max="1"
+                  step="0.1"
+                  [(ngModel)]="frameConfig.opacity"
+                  (input)="updateFramePreview()"
+                  class="slider"
+                />
+              </div>
+
+              <!-- Отступ -->
+              <div class="slider-wrapper">
+                <label>Отступ: {{ frameConfig.padding }}px</label>
+                <input
+                  type="range"
+                  min="0"
+                  max="20"
+                  step="1"
+                  [(ngModel)]="frameConfig.padding"
+                  (input)="updateFramePreview()"
+                  class="slider"
+                />
+              </div>
+
+              <!-- Скругление углов -->
+              <div class="slider-wrapper">
+                <label>Скругление: {{ frameConfig.borderRadius }}px</label>
+                <input
+                  type="range"
+                  min="0"
+                  max="25"
+                  step="1"
+                  [(ngModel)]="frameConfig.borderRadius"
+                  (input)="updateFramePreview()"
+                  class="slider"
+                />
+              </div>
+            </div>
+          </section>
+
+          <!-- Дополнительные настройки -->
+          <section class="control-block" *ngIf="frameConfig.type === 'shadow' || frameConfig.type === 'gradient'">
+            <h4>⚙️ Дополнительные настройки</h4>
+
+            <!-- Настройки тени -->
+            <div class="frame-settings-grid" *ngIf="frameConfig.type === 'shadow'">
+              <div class="slider-wrapper">
+                <label>Размытие тени: {{ frameConfig.shadow?.blur || 0 }}px</label>
+                <input
+                  type="range"
+                  min="0"
+                  max="50"
+                  step="1"
+                  [ngModel]="frameConfig.shadow?.blur || 0"
+                  (input)="updateShadowBlur($event); updateFramePreview()"
+                  class="slider"
+                />
+              </div>
+
+              <div class="color-picker-wrapper">
+                <label>Цвет тени:</label>
+                <input
+                  type="color"
+                  [ngModel]="frameConfig.shadow?.color || '#000000'"
+                  (change)="updateShadowColor($event); updateFramePreview()"
+                  class="color-input"
+                />
+              </div>
+            </div>
+
+            <!-- Настройки градиента -->
+            <div class="frame-settings-grid" *ngIf="frameConfig.type === 'gradient'">
+              <div class="select-wrapper">
+                <label>Направление:</label>
+                <select
+                  [ngModel]="frameConfig.gradient?.direction || 'to-right'"
+                  (change)="updateGradientDirection($event); updateFramePreview()"
+                  class="frame-select"
+                >
+                  <option value="to-right">Слева направо</option>
+                  <option value="to-left">Справа налево</option>
+                  <option value="to-bottom">Сверху вниз</option>
+                  <option value="to-top">Снизу вверх</option>
+                  <option value="to-bottom-right">Диагональ ↘</option>
+                  <option value="to-bottom-left">Диагональ ↙</option>
+                  <option value="radial">Радиальный</option>
+                </select>
+              </div>
+            </div>
+          </section>
+
+          <!-- Информация о рамке -->
+          <section class="control-block" *ngIf="frameConfig.thickness > 0">
+            <h4>📊 Информация</h4>
+            <div class="info-grid">
+              <div class="info-item">
+                <span class="info-label">Тип:</span>
+                <span class="info-value">{{ getFrameTypeLabel(frameConfig.type) }}</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Толщина:</span>
+                <span class="info-value">{{ frameConfig.thickness }}px</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Отступ:</span>
+                <span class="info-value">{{ frameConfig.padding }}px</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Прозрачность:</span>
+                <span class="info-value">{{ Math.round(frameConfig.opacity * 100) }}%</span>
+              </div>
+            </div>
+          </section>
+
+          <!-- Горячие клавиши -->
+          <section class="control-block">
+            <h4>⌨️ Горячие клавиши</h4>
+            <ul class="hotkeys-list">
+              <li><kbd>Enter</kbd> — Применить рамку</li>
+              <li><kbd>Escape</kbd> — Отменить изменения</li>
+              <li><kbd>Ctrl+R</kbd> — Сбросить настройки</li>
+            </ul>
+          </section>
+        </div>
+      </ng-container>
+
+      <!-- ═══════════════ EDIT TAB ═══════════════ -->
+      <ng-container *ngIf="activeTab === 'edit'">
+        <!-- Трансформация -->
+        <section class="control-block">
+          <h3 class="control-title">🔄 Трансформация</h3>
+          <div class="control-buttons-row">
+            <button class="aurora-btn aurora-btn-ghost aurora-btn-sm" (click)="applyRotation(90)">↻ 90°</button>
+            <button class="aurora-btn aurora-btn-ghost aurora-btn-sm" (click)="applyRotation(180)">↻ 180°</button>
+            <button class="aurora-btn aurora-btn-ghost aurora-btn-sm" (click)="applyRotation(270)">↻ 270°</button>
+            <button class="aurora-btn aurora-btn-ghost aurora-btn-sm" (click)="applyFlip('horizontal')">⇄ H</button>
+            <button class="aurora-btn aurora-btn-ghost aurora-btn-sm" (click)="applyFlip('vertical')">⇅ V</button>
+          </div>
+        </section>
+
+        <!-- Фильтры -->
+        <section class="control-block">
+          <h3 class="control-title">🎨 Фильтры</h3>
+          <!-- Первый ряд: Яркость, Контраст, Насыщенность -->
+          <div class="sliders-row">
+            <div class="slider-group">
+              <label
+                >Яркость <span>{{ brightness }}</span></label
+              >
+              <input type="range" [(ngModel)]="brightness" min="-100" max="100" />
+            </div>
+            <div class="slider-group">
+              <label
+                >Контраст <span>{{ contrast }}</span></label
+              >
+              <input type="range" [(ngModel)]="contrast" min="-100" max="100" />
+            </div>
+            <div class="slider-group">
+              <label
+                >Насыщенность <span>{{ saturation }}</span></label
+              >
+              <input type="range" [(ngModel)]="saturation" min="-100" max="100" />
+            </div>
+          </div>
+          <!-- Второй ряд: остальные фильтры -->
+          <div class="sliders-row">
+            <div class="slider-group">
+              <label
+                >Оттенок <span>{{ hueRotate }}°</span></label
+              >
+              <input type="range" [(ngModel)]="hueRotate" min="0" max="360" />
+            </div>
+            <div class="slider-group">
+              <label
+                >Размытие <span>{{ blur }}px</span></label
+              >
+              <input type="range" [(ngModel)]="blur" min="0" max="10" step="0.5" />
+            </div>
+            <div class="slider-group">
+              <label
+                >Ч/Б <span>{{ grayscale }}%</span></label
+              >
+              <input type="range" [(ngModel)]="grayscale" min="0" max="100" />
+            </div>
+            <div class="slider-group">
+              <label
+                >Сепия <span>{{ sepia }}%</span></label
+              >
+              <input type="range" [(ngModel)]="sepia" min="0" max="100" />
+            </div>
+            <div class="slider-group">
+              <label
+                >Инверсия <span>{{ invert }}%</span></label
+              >
+              <input type="range" [(ngModel)]="invert" min="0" max="100" />
+            </div>
+          </div>
+          <div class="control-buttons-row">
+            <button class="aurora-btn aurora-btn-secondary aurora-btn-sm" (click)="resetFilters()">↺ Сбросить</button>
+          </div>
+        </section>
+
+        <!-- Эффекты -->
+        <section class="control-block">
+          <h3 class="control-title">🖼️ Эффекты</h3>
+          <div class="control-buttons-row">
+            <button
+              class="aurora-btn aurora-btn-ghost aurora-btn-md aurora-btn-icon"
+              (click)="applyPresetFilter('grayscale')"
+            >
+              ⚫
+            </button>
+            <button
+              class="aurora-btn aurora-btn-ghost aurora-btn-md aurora-btn-icon"
+              (click)="applyPresetFilter('sepia')"
+            >
+              🟤
+            </button>
+            <button
+              class="aurora-btn aurora-btn-ghost aurora-btn-md aurora-btn-icon"
+              (click)="applyPresetFilter('vintage')"
+            >
+              📷
+            </button>
+            <button
+              class="aurora-btn aurora-btn-ghost aurora-btn-md aurora-btn-icon"
+              (click)="applyPresetFilter('cold')"
+            >
+              ❄️
+            </button>
+            <button
+              class="aurora-btn aurora-btn-ghost aurora-btn-md aurora-btn-icon"
+              (click)="applyPresetFilter('warm')"
+            >
+              🔥
+            </button>
+          </div>
+        </section>
+      </ng-container>
+
+      <!-- ═══════════════ WATERMARK TAB (v2) ═══════════════ -->
+      <ng-container *ngIf="activeTab === 'watermark'">
+        <div class="watermark-controls">
+          <!-- Включение водяного знака -->
+          <div class="form-group">
+            <label class="checkbox-label">
+              <input type="checkbox" [(ngModel)]="watermarkConfig.enabled" (change)="onWatermarkChange()" />
+              <span>Включить водяной знак</span>
+            </label>
+          </div>
+
+          <!-- Переключатель Text/Image (v2) -->
+          <div class="form-group" *ngIf="watermarkConfig.enabled">
+            <label>Тип водяного знака</label>
+            <div class="type-toggle">
+              <button [class.active]="watermarkConfig.type === 'text'" (click)="onTypeChange('text')" type="button">
+                📝 Текст
+              </button>
+              <button [class.active]="watermarkConfig.type === 'image'" (click)="onTypeChange('image')" type="button">
+                🖼️ Изображение
+              </button>
+            </div>
+          </div>
+
+          <!-- ═══ ТЕКСТОВЫЙ ВОДЯНОЙ ЗНАК ═══ -->
+          <ng-container *ngIf="watermarkConfig.enabled && watermarkConfig.type === 'text'">
+            <!-- Текст водяного знака -->
+            <div class="form-group">
+              <label for="watermark-text">Текст водяного знака</label>
+              <input
+                type="text"
+                id="watermark-text"
+                [(ngModel)]="watermarkConfig.text"
+                (ngModelChange)="onWatermarkChange()"
+                placeholder="© 2025 Ваша компания"
+                maxlength="100"
+              />
+            </div>
+
+            <!-- Размер шрифта (v2) -->
+            <div class="form-group">
+              <label for="font-size">
+                Размер шрифта:
+                <span class="slider-value">{{ watermarkConfig.fontSize || 'Авто' }}px</span>
+              </label>
+              <input
+                type="range"
+                id="font-size"
+                min="12"
+                max="72"
+                step="1"
+                [(ngModel)]="watermarkConfig.fontSize"
+                (ngModelChange)="onFontSizeChange($event)"
+              />
+            </div>
+
+            <!-- Семейство шрифта (v2) -->
+            <div class="form-group">
+              <label for="font-family">Шрифт</label>
+              <select
+                id="font-family"
+                [(ngModel)]="watermarkConfig.fontFamily"
+                (change)="onFontFamilyChange(watermarkConfig.fontFamily)"
+              >
+                <option *ngFor="let font of availableFonts" [value]="font.value">
+                  {{ font.label }}
+                </option>
+              </select>
+            </div>
+
+            <!-- Цвет текста (v2) -->
+            <div class="form-group">
+              <label for="text-color">Цвет текста</label>
+              <div class="color-picker-wrapper">
+                <input
+                  type="color"
+                  id="text-color"
+                  [(ngModel)]="watermarkConfig.color"
+                  (change)="onColorChange(watermarkConfig.color)"
+                />
+                <span class="color-value">{{ watermarkConfig.color }}</span>
+              </div>
+            </div>
+          </ng-container>
+
+          <!-- ═══ ВОДЯНОЙ ЗНАК - ИЗОБРАЖЕНИЕ ═══ -->
+          <ng-container *ngIf="watermarkConfig.enabled && watermarkConfig.type === 'image'">
+            <!-- Загрузка логотипа -->
+            <div class="form-group">
+              <label>Логотип</label>
+              <div class="image-upload-zone">
+                <input
+                  type="file"
+                  #logoFileInput
+                  accept="image/png,image/jpeg,image/svg+xml"
+                  (change)="onLogoFileChange($event)"
+                  style="display: none"
+                />
+                <button type="button" (click)="logoFileInput.click()">📂 Выбрать файл</button>
+                <span class="upload-hint">PNG, JPEG, SVG</span>
+              </div>
+
+              <!-- Превью логотипа -->
+              <div class="image-preview-box" *ngIf="logoPreviewUrl">
+                <img [src]="logoPreviewUrl" alt="Логотип" />
+                <button type="button" class="remove-btn" (click)="removeLogo()" title="Удалить">🗑️</button>
+              </div>
+            </div>
+
+            <!-- Размеры логотипа (v2) -->
+            <div class="form-group" *ngIf="logoPreviewUrl">
+              <label>
+                Размер:
+                <span class="slider-value"> {{ watermarkConfig.imageWidth }}x{{ watermarkConfig.imageHeight }}px </span>
+              </label>
+              <div class="size-controls">
+                <div class="size-control">
+                  <label>Ширина</label>
+                  <input
+                    type="range"
+                    min="50"
+                    max="500"
+                    step="10"
+                    [(ngModel)]="watermarkConfig.imageWidth"
+                    (ngModelChange)="onWatermarkChange()"
+                  />
+                </div>
+                <div class="size-control">
+                  <label>Высота</label>
+                  <input
+                    type="range"
+                    min="50"
+                    max="500"
+                    step="10"
+                    [(ngModel)]="watermarkConfig.imageHeight"
+                    (ngModelChange)="onWatermarkChange()"
+                  />
+                </div>
+              </div>
+            </div>
+          </ng-container>
+
+          <!-- ═══ ОБЩИЕ НАСТРОЙКИ (для обоих типов) ═══ -->
+          <ng-container *ngIf="watermarkConfig.enabled && (watermarkConfig.text || logoPreviewUrl)">
+            <!-- Позиция (сетка 3x3) -->
+            <div class="position-grid">
+              <button
+                class="position-btn"
+                [class.active]="watermarkConfig.position === 'top-left'"
+                (click)="setWatermarkPosition('top-left')"
+                title="Верхний левый угол"
+              >
+                ↖
+              </button>
+              <button
+                class="position-btn"
+                [class.active]="watermarkConfig.position === 'top-center'"
+                (click)="setWatermarkPosition('top-center')"
+                title="Верхний центр"
+              >
+                ↑
+              </button>
+              <button
+                class="position-btn"
+                [class.active]="watermarkConfig.position === 'top-right'"
+                (click)="setWatermarkPosition('top-right')"
+                title="Верхний правый угол"
+              >
+                ↗
+              </button>
+              <button
+                class="position-btn"
+                [class.active]="watermarkConfig.position === 'center-left'"
+                (click)="setWatermarkPosition('center-left')"
+                title="Центр слева"
+              >
+                ←
+              </button>
+              <button
+                class="position-btn"
+                [class.active]="watermarkConfig.position === 'center'"
+                (click)="setWatermarkPosition('center')"
+                title="По центру"
+              >
+                ●
+              </button>
+              <button
+                class="position-btn"
+                [class.active]="watermarkConfig.position === 'center-right'"
+                (click)="setWatermarkPosition('center-right')"
+                title="Центр справа"
+              >
+                →
+              </button>
+              <button
+                class="position-btn"
+                [class.active]="watermarkConfig.position === 'bottom-left'"
+                (click)="setWatermarkPosition('bottom-left')"
+                title="Нижний левый угол"
+              >
+                ↙
+              </button>
+              <button
+                class="position-btn"
+                [class.active]="watermarkConfig.position === 'bottom-center'"
+                (click)="setWatermarkPosition('bottom-center')"
+                title="Нижний центр"
+              >
+                ↓
+              </button>
+              <button
+                class="position-btn"
+                [class.active]="watermarkConfig.position === 'bottom-right'"
+                (click)="setWatermarkPosition('bottom-right')"
+                title="Нижний правый угол"
+              >
+                ↘
+              </button>
+            </div>
+
+            <!-- Прозрачность (v2) -->
+            <div class="form-group">
+              <label for="opacity">
+                Прозрачность:
+                <span class="slider-value">{{ watermarkConfig.opacity }}%</span>
+              </label>
+              <input
+                type="range"
+                id="opacity"
+                min="0"
+                max="100"
+                step="1"
+                [(ngModel)]="watermarkConfig.opacity"
+                (ngModelChange)="onOpacityChange($event)"
+              />
+            </div>
+
+            <!-- Поворот (v2) -->
+            <div class="form-group">
+              <label for="rotation">
+                Поворот:
+                <span class="slider-value">{{ watermarkConfig.rotation }}°</span>
+              </label>
+              <input
+                type="range"
+                id="rotation"
+                min="-180"
+                max="180"
+                step="1"
+                [(ngModel)]="watermarkConfig.rotation"
+                (ngModelChange)="onRotationChange($event)"
+              />
+            </div>
+
+            <!-- Смещение (v2) -->
+            <div class="form-group">
+              <label>Смещение</label>
+              <div class="offset-controls">
+                <div class="offset-control">
+                  <label for="offset-x">
+                    X:
+                    <span class="slider-value">{{ watermarkConfig.offsetX }}px</span>
+                  </label>
+                  <input
+                    type="range"
+                    id="offset-x"
+                    min="-500"
+                    max="500"
+                    step="5"
+                    [(ngModel)]="watermarkConfig.offsetX"
+                    (ngModelChange)="onOffsetChange('x', $event)"
+                  />
+                </div>
+                <div class="offset-control">
+                  <label for="offset-y">
+                    Y:
+                    <span class="slider-value">{{ watermarkConfig.offsetY }}px</span>
+                  </label>
+                  <input
+                    type="range"
+                    id="offset-y"
+                    min="-500"
+                    max="500"
+                    step="5"
+                    [(ngModel)]="watermarkConfig.offsetY"
+                    (ngModelChange)="onOffsetChange('y', $event)"
+                  />
+                </div>
+              </div>
+            </div>
+          </ng-container>
+
+          <!-- Кнопки действий -->
+          <div class="control-buttons-row" *ngIf="watermarkConfig.enabled && (watermarkConfig.text || logoPreviewUrl)">
+            <button class="aurora-btn aurora-btn-secondary aurora-btn-md" (click)="resetWatermark()">↺ Сбросить</button>
+            <button class="aurora-btn aurora-btn-primary aurora-btn-md" (click)="applyWatermark()">✓ Применить</button>
+          </div>
+        </div>
+      </ng-container>
+
+      <!-- ═══════════════ SETTINGS TAB ═══════════════ -->
+      <ng-container *ngIf="activeTab === 'settings'">
+        <!-- Alt Text -->
+        <div class="form-group form-group-inline">
+          <label for="alt-text">Alt текст</label>
+          <input type="text" id="alt-text" [(ngModel)]="config.alt" placeholder="Описание изображения" />
+        </div>
+
+        <!-- Caption -->
+        <div class="form-group form-group-inline">
+          <label for="caption">Подпись</label>
+          <input type="text" id="caption" [(ngModel)]="config.caption" placeholder="Подпись под изображением" />
+        </div>
+
+        <!-- Title (описание при наведении) -->
+        <div class="form-group form-group-inline">
+          <label for="title-text">Описание</label>
+          <input
+            type="text"
+            id="title-text"
+            [(ngModel)]="config.title"
+            placeholder="Текст при наведении на изображение"
+          />
+        </div>
+
+        <!-- Width -->
+        <div class="form-group form-group-inline form-group-compact">
+          <label>Ширина</label>
+          <div class="width-controls-row">
+            <button
+              class="aurora-btn aurora-btn-ghost aurora-btn-xs"
+              [class.aurora-btn-active]="config.width === '100%'"
+              (click)="config.width = '100%'"
+            >
+              100%
+            </button>
+            <button
+              class="aurora-btn aurora-btn-ghost aurora-btn-xs"
+              [class.aurora-btn-active]="config.width === '75%'"
+              (click)="config.width = '75%'"
+            >
+              75%
+            </button>
+            <button
+              class="aurora-btn aurora-btn-ghost aurora-btn-xs"
+              [class.aurora-btn-active]="config.width === '50%'"
+              (click)="config.width = '50%'"
+            >
+              50%
+            </button>
+            <button
+              class="aurora-btn aurora-btn-ghost aurora-btn-xs"
+              [class.aurora-btn-active]="config.width === 'auto'"
+              (click)="config.width = 'auto'"
+            >
+              Auto
+            </button>
+            <input
+              type="number"
+              [(ngModel)]="customWidth"
+              placeholder="px"
+              min="100"
+              max="2000"
+              class="custom-width-input"
+            />
+            <button class="aurora-btn aurora-btn-primary aurora-btn-xs" (click)="config.width = customWidth + 'px'">
+              Применить
+            </button>
+          </div>
+        </div>
+
+        <!-- Alignment -->
+        <div class="form-group form-group-compact">
+          <label>Выравнивание</label>
+          <div class="aurora-btn-group alignment-buttons">
+            <button
+              class="aurora-btn aurora-btn-ghost aurora-btn-xs"
+              [class.aurora-btn-active]="config.alignment === 'left'"
+              (click)="config.alignment = 'left'"
+              title="По левому краю"
+            >
+              ⬅️
+            </button>
+            <button
+              class="aurora-btn aurora-btn-ghost aurora-btn-xs"
+              [class.aurora-btn-active]="config.alignment === 'center'"
+              (click)="config.alignment = 'center'"
+              title="По центру"
+            >
+              ↔️
+            </button>
+            <button
+              class="aurora-btn aurora-btn-ghost aurora-btn-xs"
+              [class.aurora-btn-active]="config.alignment === 'right'"
+              (click)="config.alignment = 'right'"
+              title="По правому краю"
+            >
+              ➡️
+            </button>
+          </div>
+        </div>
+
+        <!-- Link URL -->
+        <div class="form-group form-group-compact form-group-inline">
+          <label for="link-url">Ссылка (опционально)</label>
+          <input type="url" id="link-url" [(ngModel)]="config.linkUrl" placeholder="https://..." />
+        </div>
+
+        <!-- Clickable Checkbox -->
+        <div class="form-group form-group-compact form-group-checkbox">
+          <label class="checkbox-label">
+            <input type="checkbox" [(ngModel)]="config.clickable" [disabled]="!config.linkUrl" />
+            <span>Сделать изображение кликабельным</span>
+          </label>
+          <small *ngIf="!config.linkUrl">Добавьте ссылку выше, чтобы активировать эту опцию</small>
+        </div>
+
+        <!-- Open in New Window Checkbox -->
+        <div class="form-group form-group-compact form-group-checkbox">
+          <label class="checkbox-label">
+            <input
+              type="checkbox"
+              [(ngModel)]="config.openInNewWindow"
+              [disabled]="!config.linkUrl || !config.clickable"
+            />
+            <span>Открывать ссылку в новом окне</span>
+          </label>
+          <small *ngIf="!config.clickable">Сначала активируйте опцию "Кликабельное изображение"</small>
+        </div>
+      </ng-container>
+    </div>
+
+    <!-- DIV 3.3: Sidebar (опционально, 40px) -->
+    <div class="body-sidebar" *ngIf="showSidebar">
+      <!-- Будет заполнено позже -->
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <!-- DIV 4: Status Bar -->
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <div class="modal-status">
+    <!-- Upload Progress -->
+    <div class="status-message" *ngIf="uploadState.isUploading">
+      <span class="status-icon status-spinner">⏳</span>
+      <span class="status-text">Загрузка изображения на сервер...</span>
+    </div>
+
+    <!-- Upload Error -->
+    <div class="status-message status-error" *ngIf="uploadState.uploadError && !uploadState.isUploading">
+      <span class="status-icon">❌</span>
+      <span class="status-text">{{ uploadState.uploadError }}</span>
+    </div>
+
+    <!-- Normal Status -->
+    <div class="status-message" *ngIf="!uploadState.isUploading && !uploadState.uploadError">
+      <span class="status-icon">{{ statusIcon }}</span>
+      <span class="status-text">{{ statusMessage }}</span>
+    </div>
+    <!-- ══════════════════════════════════════════════════════════════ -->
+    <!-- Статус-бар с расширенной информацией -->
+    <!-- ══════════════════════════════════════════════════════════════ -->
+    <div class="status-info" *ngIf="previewUrl && statusBarInfo">
+      <span class="status-bar-content">{{ statusBarInfo }}</span>
+      <button
+        class="aurora-btn aurora-btn-ghost aurora-btn-xs info-button"
+        (click)="toggleImageInfoPopover()"
+        title="Подробная информация"
+        aria-label="Показать подробную информацию об изображении"
+      >
+        ℹ️
+      </button>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════════════ -->
+    <!-- Popover с детальной информацией -->
+    <!-- ══════════════════════════════════════════════════════════════ -->
+    <div class="image-info-popover" *ngIf="showImageInfoPopover" @fadeInOut>
+      <div class="popover-header">
+        <h4>📊 Информация об изображении</h4>
+        <button class="close-btn" (click)="toggleImageInfoPopover()" aria-label="Закрыть">×</button>
+      </div>
+      <div class="popover-content" *ngIf="imageData.metadata as meta">
+        <div class="info-row">
+          <span class="info-label">📁 Имя файла:</span>
+          <span class="info-value">{{ meta.fileName }}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">🖼️ Формат:</span>
+          <span class="info-value">
+            {{ getFormatDisplayName(meta.format) }}
+            <span
+              *ngIf="meta.originalWidth && getImageFormatFromDataUrl(imageData.original!) !== meta.format"
+              class="format-converted"
+            >
+              (конвертировано из {{ getFormatDisplayName(getImageFormatFromDataUrl(imageData.original!)) }})
+            </span>
+          </span>
+        </div>
+
+        <div class="info-divider"></div>
+
+        <div class="info-row">
+          <span class="info-label">📏 Текущий размер:</span>
+          <span class="info-value">{{ meta.width }} × {{ meta.height }} px</span>
+        </div>
+        <div class="info-row" *ngIf="meta.originalWidth && meta.originalHeight">
+          <span class="info-label">📐 Оригинальный:</span>
+          <span class="info-value">{{ meta.originalWidth }} × {{ meta.originalHeight }} px</span>
+        </div>
+        <div class="info-row" *ngIf="meta.originalWidth && meta.originalHeight">
+          <span class="info-label">📊 Изменение:</span>
+          <span class="info-value">{{ getImageSizeChangePercent(meta) }}%</span>
+        </div>
+
+        <div class="info-divider"></div>
+
+        <div class="info-row">
+          <span class="info-label">💾 Текущий вес:</span>
+          <span class="info-value">{{ formatFileSize(meta.fileSize) }}</span>
+        </div>
+        <div class="info-row" *ngIf="meta.originalFileSize">
+          <span class="info-label">💾 Оригинальный:</span>
+          <span class="info-value">{{ formatFileSize(meta.originalFileSize) }}</span>
+        </div>
+        <div class="info-row" *ngIf="meta.originalFileSize">
+          <span class="info-label">📊 Уменьшение:</span>
+          <span class="info-value">{{ getFileSizeChangePercent(meta) }}%</span>
+        </div>
+
+        <div class="info-divider"></div>
+
+        <div class="info-row">
+          <span class="info-label">🔗 Источник:</span>
+          <span class="info-value">{{ getSourceDisplayName(meta.source) }}</span>
+        </div>
+        <div class="info-row" *ngIf="meta.sourceUrl">
+          <span class="info-label">🌐 URL:</span>
+          <span class="info-value info-url" [title]="meta.sourceUrl">{{ meta.sourceUrl }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Export Image Modal -->
+<app-export-image-modal #exportModal (exported)="handleExportComplete($event)" (closed)="onExportModalClosed()">
+</app-export-image-modal>

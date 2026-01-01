@@ -1,5 +1,6 @@
 export interface Environment {
   production: boolean;
+  apiUrl: string;
 
   api: {
     baseUrl: string;

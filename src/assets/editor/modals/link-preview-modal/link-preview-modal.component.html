@@ -1,0 +1,107 @@
+<!--
+════════════════════════════════════════════════════════════════════════════
+LINK PREVIEW MODAL
+════════════════════════════════════════════════════════════════════════════
+-->
+
+<dialog #dialogRef class="link-preview-modal">
+  <div class="link-preview-modal__header">
+    <h2 class="link-preview-modal__title">🎴 Вставить превью ссылки</h2>
+    <button
+      type="button"
+      class="link-preview-modal__close"
+      (click)="onCancel()"
+      aria-label="Закрыть"
+    >
+      ✕
+    </button>
+  </div>
+
+  <div class="link-preview-modal__body">
+    <!-- URL Input -->
+    <div class="link-preview-modal__section">
+      <label class="link-preview-modal__label">
+        🔗 URL адрес
+        <span class="link-preview-modal__required">*</span>
+      </label>
+      <input
+        type="url"
+        class="link-preview-modal__input"
+        [(ngModel)]="url"
+        (input)="onUrlChange()"
+        placeholder="https://example.com"
+        autocomplete="off"
+      />
+      <div *ngIf="urlError" class="link-preview-modal__error">
+        {{ urlError }}
+      </div>
+      <div class="link-preview-modal__hint">
+        Введите полный URL адрес страницы для создания превью
+      </div>
+    </div>
+
+    <!-- Size Selection -->
+    <div class="link-preview-modal__section">
+      <label class="link-preview-modal__label">
+        📐 Размер карточки
+      </label>
+
+      <div class="link-preview-modal__size-options">
+        <label
+          *ngFor="let sizeOption of sizes"
+          class="link-preview-modal__size-option"
+          [class.link-preview-modal__size-option--selected]="size === sizeOption.value"
+        >
+          <input
+            type="radio"
+            name="size"
+            [value]="sizeOption.value"
+            [(ngModel)]="size"
+            class="link-preview-modal__size-radio"
+          />
+          <div class="link-preview-modal__size-content">
+            <div class="link-preview-modal__size-icon">{{ sizeOption.icon }}</div>
+            <div class="link-preview-modal__size-info">
+              <div class="link-preview-modal__size-name">{{ sizeOption.name }}</div>
+              <div class="link-preview-modal__size-description">{{ sizeOption.description }}</div>
+            </div>
+          </div>
+        </label>
+      </div>
+    </div>
+
+    <!-- Preview Example -->
+    <div class="link-preview-modal__section">
+      <div class="link-preview-modal__preview-label">👁️ Пример:</div>
+      <div class="link-preview-modal__preview">
+        <div class="link-preview-modal__preview-card" [attr.data-size]="size">
+          <div class="link-preview-modal__preview-image"></div>
+          <div class="link-preview-modal__preview-content">
+            <div class="link-preview-modal__preview-title">Заголовок страницы</div>
+            <div class="link-preview-modal__preview-description" *ngIf="size !== 'small'">
+              Описание страницы будет загружено автоматически
+            </div>
+            <div class="link-preview-modal__preview-url">🔗 example.com</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="link-preview-modal__footer">
+    <button
+      type="button"
+      class="link-preview-modal__button link-preview-modal__button--cancel"
+      (click)="onCancel()"
+    >
+      Отмена
+    </button>
+    <button
+      type="button"
+      class="link-preview-modal__button link-preview-modal__button--insert"
+      (click)="onInsert()"
+    >
+      Вставить превью
+    </button>
+  </div>
+</dialog>

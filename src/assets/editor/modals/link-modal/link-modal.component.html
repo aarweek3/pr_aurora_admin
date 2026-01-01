@@ -1,0 +1,85 @@
+<dialog #dialog class="link-modal">
+  <div class="modal-header">
+    <h2>{{ existingUrl ? 'Редактировать ссылку' : 'Создать ссылку' }}</h2>
+    <button class="close-button" (click)="onCancel()" aria-label="Закрыть">✕</button>
+  </div>
+
+  <div class="modal-body">
+    <form (keydown)="onKeyDown($event)">
+      <!-- Поле URL -->
+      <div class="form-group">
+        <label for="url">URL:</label>
+        <input
+          #urlInput
+          id="url"
+          type="text"
+          [(ngModel)]="url"
+          (ngModelChange)="onUrlChange()"
+          name="url"
+          placeholder="https://example.com"
+          [class.error]="validationError"
+          autocomplete="url"
+          spellcheck="false"
+        />
+        <div class="hint">Поддерживаются протоколы: http, https, mailto, tel</div>
+      </div>
+
+      <!-- Поле текста ссылки -->
+      <div class="form-group">
+        <label for="linkText">Текст ссылки:</label>
+        <input
+          id="linkText"
+          type="text"
+          [(ngModel)]="linkText"
+          name="linkText"
+          placeholder="Текст, который будет отображаться"
+          autocomplete="off"
+        />
+      </div>
+
+      <!-- Поле заголовка (title) -->
+      <div class="form-group">
+        <label for="linkTitle">Заголовок (всплывающая подсказка):</label>
+        <input
+          id="linkTitle"
+          type="text"
+          [(ngModel)]="linkTitle"
+          name="linkTitle"
+          placeholder="Подсказка при наведении (необязательно)"
+          autocomplete="off"
+        />
+      </div>
+
+      <!-- Чекбокс "Открывать в новом окне" -->
+      <div class="form-group checkbox-group">
+        <label class="checkbox-label">
+          <input id="openInNewTab" type="checkbox" [(ngModel)]="openInNewTab" name="openInNewTab" />
+          <span>Открывать в новом окне</span>
+        </label>
+      </div>
+
+      <!-- Чекбокс "Разрешить индексацию" -->
+      <div class="form-group checkbox-group">
+        <label class="checkbox-label">
+          <input id="allowIndex" type="checkbox" [(ngModel)]="allowIndex" name="allowIndex" />
+          <span>Разрешить индексацию поисковыми системами</span>
+        </label>
+      </div>
+
+      <!-- Сообщение об ошибке -->
+      <div *ngIf="validationError" class="validation-error">❌ {{ validationError }}</div>
+    </form>
+  </div>
+
+  <div class="modal-footer">
+    <div class="footer-left">
+      <button *ngIf="existingUrl" class="unlink-button" (click)="onUnlink()" type="button">🔗⛔ Удалить ссылку</button>
+    </div>
+    <div class="footer-right">
+      <button class="cancel-button" (click)="onCancel()" type="button">Отмена</button>
+      <button class="save-button" (click)="onSave()" type="button">
+        {{ existingUrl ? 'Сохранить' : 'Создать' }}
+      </button>
+    </div>
+  </div>
+</dialog>

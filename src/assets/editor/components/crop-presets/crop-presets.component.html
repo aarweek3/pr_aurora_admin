@@ -1,0 +1,98 @@
+<div class="presets-section">
+  <!-- Заголовок с кнопкой + рядом, отцентрированный -->
+  <div class="presets-header-centered">
+    <h4>Предустановленные размеры</h4>
+    <button
+      class="aurora-btn aurora-btn-ghost aurora-btn-sm aurora-btn-icon"
+      (click)="toggleCreatePreset()"
+      title="Добавить свой размер"
+    >
+      ➕
+    </button>
+  </div>
+
+  <!-- Форма создания пресета -->
+  <div class="create-preset-form" *ngIf="showCreatePreset">
+    <div class="form-header">
+      <h5>Создать собственный размер</h5>
+      <button
+        class="aurora-btn aurora-btn-ghost aurora-btn-xs aurora-btn-icon"
+        (click)="toggleCreatePreset()"
+        title="Отмена"
+      >
+        ✖
+      </button>
+    </div>
+
+    <input type="text" placeholder="Название" [(ngModel)]="newPreset.name" class="preset-input" maxlength="50" />
+
+    <div class="preset-size-inputs">
+      <input type="number" placeholder="Ширина" [(ngModel)]="newPreset.width" min="1" />
+      <span>×</span>
+      <input type="number" placeholder="Высота" [(ngModel)]="newPreset.height" min="1" />
+    </div>
+
+    <input type="text" placeholder="Иконка (emoji)" [(ngModel)]="newPreset.icon" maxlength="2" class="preset-input" />
+
+    <button
+      class="aurora-btn aurora-btn-primary aurora-btn-sm aurora-btn-w-full"
+      (click)="saveCustomPreset()"
+      [disabled]="!isPresetValid()"
+    >
+      Сохранить
+    </button>
+  </div>
+
+  <!-- Собственные пресеты (без заголовка, используем те же стили что и для предустановленных) -->
+  <div class="custom-presets" *ngIf="customPresets.length > 0">
+    <div class="preset-grid preset-grid-4-columns">
+      <div
+        *ngFor="let preset of customPresets"
+        class="preset-card"
+        [class.active]="selectedPreset?.id === preset.id"
+        (click)="selectPreset(preset)"
+      >
+        <button class="preset-delete" (click)="deletePreset(preset, $event)" title="Удалить">×</button>
+
+        <div class="preset-icon">{{ preset.icon }}</div>
+        <div class="preset-name">{{ preset.name }}</div>
+        <div class="preset-size">{{ preset.width }} × {{ preset.height }}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Системные пресеты -->
+  <div class="social-presets">
+    <div class="preset-grid preset-grid-4-columns">
+      <div
+        *ngFor="let preset of socialPresets"
+        class="preset-card"
+        [class.active]="selectedPreset?.id === preset.id"
+        (click)="selectPreset(preset)"
+      >
+        <div class="preset-icon">{{ preset.icon }}</div>
+        <div class="preset-name">{{ preset.name }}</div>
+        <div class="preset-size">{{ preset.width }} × {{ preset.height }}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Export/Import -->
+  <div class="preset-actions">
+    <button
+      class="aurora-btn aurora-btn-ghost aurora-btn-sm"
+      (click)="exportPresets()"
+      [disabled]="customPresets.length === 0"
+      title="Экспортировать собственные пресеты в JSON"
+    >
+      📤 Export
+    </button>
+    <button
+      class="aurora-btn aurora-btn-ghost aurora-btn-sm"
+      (click)="importPresets()"
+      title="Импортировать пресеты из JSON"
+    >
+      📥 Import
+    </button>
+  </div>
+</div>

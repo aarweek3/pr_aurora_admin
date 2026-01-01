@@ -1,0 +1,277 @@
+// ═══════════════════════════════════════════════════════════════
+// ANCHOR MODAL COMPONENT STYLES
+// ═══════════════════════════════════════════════════════════════
+
+.anchor-modal {
+  opacity: 1;
+  transform: scale(1);
+  transition: opacity 0.2s ease, transform 0.2s ease, overlay 0.2s ease allow-discrete,
+    display 0.2s ease allow-discrete;
+  border: none;
+  border-radius: 12px;
+  padding: 0;
+  max-width: 500px;
+  width: 90%;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial,
+    sans-serif;
+
+  // Разрешаем изменение размера
+  resize: both;
+  overflow: auto;
+  min-width: 350px;
+  min-height: 300px;
+
+  &::backdrop {
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+  }
+
+  // Анимация открытия
+  @starting-style {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// Modal Header
+// ═══════════════════════════════════════════════════════════════
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  border-bottom: 1px solid #e1e4e8;
+
+  h2 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 600;
+    color: #24292e;
+  }
+
+  .close-button {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #586069;
+    cursor: pointer;
+    padding: 0;
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+
+    &:hover {
+      background: #f6f8fa;
+      color: #24292e;
+    }
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// Modal Body
+// ═══════════════════════════════════════════════════════════════
+
+.modal-body {
+  padding: 24px;
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    label {
+      font-size: 14px;
+      font-weight: 600;
+      color: #24292e;
+    }
+
+    input[type="text"] {
+      padding: 8px 12px;
+      border: 1px solid #d1d5da;
+      border-radius: 6px;
+      font-size: 14px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial,
+        sans-serif;
+      transition: all 0.2s;
+      width: 100%;
+      box-sizing: border-box;
+
+      &:focus {
+        outline: none;
+        border-color: #0366d6;
+        box-shadow: 0 0 0 3px rgba(3, 102, 214, 0.1);
+      }
+
+      &.error {
+        border-color: #d73a49;
+        background: #ffeef0;
+      }
+
+      &::placeholder {
+        color: #959da5;
+      }
+    }
+  }
+
+  .hint {
+    font-size: 12px;
+    color: #586069;
+    font-style: italic;
+  }
+
+  .auto-generate-button {
+    padding: 8px 16px;
+    background: #f6f8fa;
+    border: 1px solid #d1d5da;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #24292e;
+    cursor: pointer;
+    transition: all 0.2s;
+    align-self: flex-start;
+
+    &:hover {
+      background: #e1e4e8;
+      border-color: #c7cbd1;
+    }
+
+    &:active {
+      background: #d1d5da;
+    }
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// Validation Error
+// ═══════════════════════════════════════════════════════════════
+
+.validation-error {
+  padding: 12px 16px;
+  background: #fff3cd;
+  border: 1px solid #ffeaa7;
+  border-radius: 6px;
+  color: #856404;
+  font-size: 14px;
+  font-weight: 500;
+  animation: shake 0.3s;
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  75% {
+    transform: translateX(5px);
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// Modal Footer
+// ═══════════════════════════════════════════════════════════════
+
+.modal-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  border-top: 1px solid #e1e4e8;
+  background: #f6f8fa;
+  border-radius: 0 0 12px 12px;
+
+  .footer-left {
+    display: flex;
+    gap: 8px;
+  }
+
+  .footer-right {
+    display: flex;
+    gap: 8px;
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// Buttons
+// ═══════════════════════════════════════════════════════════════
+
+.cancel-button,
+.save-button,
+.remove-button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial,
+    sans-serif;
+}
+
+.cancel-button {
+  background: #ffffff;
+  border: 1px solid #d1d5da;
+  color: #24292e;
+
+  &:hover {
+    background: #f6f8fa;
+    border-color: #c7cbd1;
+  }
+}
+
+.save-button {
+  background: #2ea44f;
+  color: white;
+
+  &:hover {
+    background: #2c974b;
+  }
+
+  &:active {
+    background: #298e46;
+  }
+}
+
+.remove-button {
+  background: #d73a49;
+  color: white;
+
+  &:hover {
+    background: #cb2431;
+  }
+
+  &:active {
+    background: #b61827;
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// Accessibility
+// ═══════════════════════════════════════════════════════════════
+
+button:focus-visible {
+  outline: 2px solid #0366d6;
+  outline-offset: 2px;
+}
+
+input:focus-visible {
+  outline: 2px solid #0366d6;
+  outline-offset: 2px;
+}

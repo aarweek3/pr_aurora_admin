@@ -1,0 +1,311 @@
+/**
+ * Стили для компонента Circle Toolbar
+ * Кнопка и мини-панель для управления круговой обрезкой
+ */
+
+.circle-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border: 1px solid var(--border-color, #ddd);
+  border-radius: 6px;
+  background: var(--background-color, #ffffff);
+  color: var(--text-color, #333333);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+
+  &:hover {
+    background: var(--hover-background, #f5f5f5);
+    border-color: var(--hover-border, #bbb);
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  &.active {
+    background: var(--primary-color, #007bff);
+    color: white;
+    border-color: var(--primary-color, #007bff);
+    box-shadow: 0 2px 8px rgba(0, 123, 255, 0.3);
+
+    .circle-icon {
+      filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.5));
+    }
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  &.processing {
+    .circle-icon {
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+  }
+}
+
+.circle-icon {
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+
+  circle {
+    transition: all 0.2s ease;
+  }
+
+  &.animate-pulse {
+    animation: pulse 1.5s ease-in-out infinite;
+  }
+}
+
+.btn-text {
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+/* Мини-панель управления */
+.circle-mini-panel {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 8px;
+  background: var(--panel-background, #ffffff);
+  border: 1px solid var(--border-color, #ddd);
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  min-width: 240px;
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: all 0.2s ease;
+  pointer-events: none;
+
+  &.show {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: -6px;
+    left: 16px;
+    width: 12px;
+    height: 12px;
+    background: var(--panel-background, #ffffff);
+    border: 1px solid var(--border-color, #ddd);
+    border-bottom: none;
+    border-right: none;
+    transform: rotate(45deg);
+  }
+}
+
+.mini-panel-content {
+  padding: 12px;
+}
+
+.circle-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: var(--info-background, #f8f9fa);
+  border-radius: 6px;
+  margin-bottom: 12px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--info-text, #666);
+
+  .info-item {
+    color: var(--primary-color, #007bff);
+    font-weight: 600;
+  }
+
+  .info-separator {
+    opacity: 0.5;
+  }
+}
+
+.quick-actions {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.mini-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--border-color, #ddd);
+  border-radius: 6px;
+  background: var(--background-color, #ffffff);
+  color: var(--text-color, #333);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+
+  &:hover {
+    background: var(--hover-background, #f5f5f5);
+    transform: scale(1.05);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    transform: none !important;
+  }
+
+  &.center-btn {
+    &:hover {
+      background: #e3f2fd;
+      color: #1976d2;
+      border-color: #1976d2;
+    }
+  }
+
+  &.reset-btn {
+    &:hover {
+      background: #fff3e0;
+      color: #f57c00;
+      border-color: #f57c00;
+    }
+  }
+
+  &.apply-btn {
+    background: var(--success-color, #28a745);
+    color: white;
+    border-color: var(--success-color, #28a745);
+
+    &:hover:not(:disabled) {
+      background: #218838;
+      border-color: #218838;
+    }
+  }
+
+  &.cancel-btn {
+    background: var(--danger-color, #dc3545);
+    color: white;
+    border-color: var(--danger-color, #dc3545);
+
+    &:hover {
+      background: #c82333;
+      border-color: #c82333;
+    }
+  }
+}
+
+/* Анимации */
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.05);
+  }
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .circle-mini-panel {
+    min-width: 200px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-10px);
+
+    &.show {
+      transform: translateX(-50%) translateY(0);
+    }
+
+    &::before {
+      left: 50%;
+      transform: translateX(-50%) rotate(45deg);
+    }
+  }
+
+  .circle-info {
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+
+  .mini-btn {
+    width: 28px;
+    height: 28px;
+    font-size: 13px;
+  }
+
+  .btn-text {
+    display: none;
+  }
+}
+
+/* Темная тема */
+@media (prefers-color-scheme: dark) {
+  .circle-btn {
+    --background-color: #2d3748;
+    --text-color: #e2e8f0;
+    --border-color: #4a5568;
+    --hover-background: #4a5568;
+    --hover-border: #718096;
+  }
+
+  .circle-mini-panel {
+    --panel-background: #2d3748;
+    --border-color: #4a5568;
+  }
+
+  .circle-info {
+    --info-background: #1a202c;
+    --info-text: #a0aec0;
+  }
+
+  .mini-btn {
+    --background-color: #2d3748;
+    --text-color: #e2e8f0;
+    --border-color: #4a5568;
+    --hover-background: #4a5568;
+  }
+}
+
+/* Интеграция с существующей темой редактора */
+.toolbar-btn.circle-btn {
+  /* Наследуем стили от общих стилей toolbar */
+  font-family: inherit;
+
+  /* Специфичные переопределения */
+  &.active {
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+  }
+}
+
+/* Состояния для accessibility */
+.circle-btn {
+  &:focus-visible {
+    outline: 2px solid var(--focus-color, #007bff);
+    outline-offset: 2px;
+  }
+}
+
+.mini-btn {
+  &:focus-visible {
+    outline: 2px solid var(--focus-color, #007bff);
+    outline-offset: 1px;
+  }
+}

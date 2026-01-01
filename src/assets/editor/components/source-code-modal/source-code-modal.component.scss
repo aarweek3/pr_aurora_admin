@@ -1,0 +1,468 @@
+/**
+ * ════════════════════════════════════════════════════════════════════════════
+ * SOURCE CODE MODAL STYLES
+ * ════════════════════════════════════════════════════════════════════════════
+ *
+ * Стили модального окна для HTML-кода.
+ *
+ * Включает:
+ * - Backdrop (затемнение фона)
+ * - Модальное окно по центру
+ * - Textarea с моноширинным шрифтом
+ * - Кнопки с hover эффектами
+ * - Адаптивный дизайн
+ */
+
+// ════════════════════════════════════════════════════════════════════════════
+// ПЕРЕМЕННЫЕ
+// ════════════════════════════════════════════════════════════════════════════
+
+$modal-bg: #ffffff;
+$modal-border: #ddd;
+$modal-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+$backdrop-bg: rgba(0, 0, 0, 0.5);
+
+$header-bg: #f8f9fa;
+$header-border: #dee2e6;
+
+$textarea-bg: #f5f5f5;
+$textarea-border: #ccc;
+$textarea-focus-border: #4a90e2;
+
+$button-primary-bg: #4a90e2;
+$button-primary-hover: #357abd;
+$button-secondary-bg: #6c757d;
+$button-secondary-hover: #5a6268;
+
+$hint-bg: #e7f3ff;
+$hint-border: #b3d9ff;
+
+// ════════════════════════════════════════════════════════════════════════════
+// DIALOG ELEMENT
+// ════════════════════════════════════════════════════════════════════════════
+
+.source-code-modal {
+  border: 1px solid $modal-border;
+  border-radius: 8px;
+  padding: 0;
+  max-width: 800px;
+  width: 90vw;
+  max-height: 90vh;
+  box-shadow: $modal-shadow;
+  background: $modal-bg;
+
+  // Разрешаем изменение размера
+  resize: both;
+  overflow: auto;
+  min-width: 400px;
+  min-height: 300px;
+
+  // Backdrop (затемнение фона)
+  &::backdrop {
+    background: $backdrop-bg;
+    backdrop-filter: blur(2px);
+  }
+
+  // Убираем стандартные отступы
+  margin: auto;
+
+  // Анимация появления
+  @starting-style {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+
+  &[open] {
+    opacity: 1;
+    transform: scale(1);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+// ЗАГОЛОВОК
+// ════════════════════════════════════════════════════════════════════════════
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 24px;
+  background: $header-bg;
+  border-bottom: 1px solid $header-border;
+  border-radius: 8px 8px 0 0;
+}
+
+.modal-title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: #333;
+}
+
+.modal-close {
+  background: transparent;
+  border: none;
+  font-size: 24px;
+  color: #666;
+  cursor: pointer;
+  padding: 4px 8px;
+  line-height: 1;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.1);
+    color: #333;
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+// TOOLBAR С ПЕРЕКЛЮЧАТЕЛЯМИ
+// ════════════════════════════════════════════════════════════════════════════
+
+.modal-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 24px;
+  background: linear-gradient(to bottom, #fafbfc, #f6f8fa);
+  border-bottom: 1px solid #e1e4e8;
+}
+
+.mode-switcher {
+  display: flex;
+  gap: 8px;
+  background: white;
+  padding: 4px;
+  border-radius: 6px;
+  border: 1px solid #d1d5da;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.mode-button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 16px;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: #586069;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: #f3f4f6;
+    color: #24292e;
+  }
+
+  &.active {
+    background: #0366d6;
+    color: white;
+    box-shadow: 0 1px 3px rgba(3, 102, 214, 0.3);
+
+    &:hover {
+      background: #0256c7;
+      color: white;
+    }
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+.mode-icon {
+  font-size: 16px;
+  line-height: 1;
+}
+
+.mode-label {
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+.toolbar-info {
+  display: flex;
+  align-items: center;
+}
+
+.info-text {
+  font-size: 13px;
+  color: #586069;
+  font-weight: 500;
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+// СОДЕРЖИМОЕ
+// ════════════════════════════════════════════════════════════════════════════
+
+.modal-body {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.source-code-textarea {
+  width: 100%;
+  min-height: 400px;
+  padding: 12px;
+  border: 1px solid $textarea-border;
+  border-radius: 4px;
+  background: $textarea-bg;
+  font-family: "Fira Code", "Courier New", monospace;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #333;
+  resize: vertical;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+  &:focus {
+    outline: none;
+    border-color: $textarea-focus-border;
+    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+    background: #fff;
+  }
+
+  // Убираем стандартное выделение в Firefox
+  &::-moz-selection {
+    background: rgba(74, 144, 226, 0.3);
+  }
+
+  &::selection {
+    background: rgba(74, 144, 226, 0.3);
+  }
+
+  // SCSS редактор с особой цветовой схемой
+  &.scss-editor {
+    background: #282c34;
+    color: #abb2bf;
+    border-color: #181a1f;
+
+    &:focus {
+      border-color: #61afef;
+      background: #282c34;
+      box-shadow: 0 0 0 3px rgba(97, 175, 239, 0.2);
+    }
+
+    &::selection {
+      background: rgba(97, 175, 239, 0.3);
+    }
+
+    // Состояние ошибки
+    &.error {
+      border-color: #e74c3c;
+      box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.2);
+    }
+
+    // Состояние успеха
+    &.success {
+      border-color: #2ecc71;
+      box-shadow: 0 0 0 3px rgba(46, 204, 113, 0.2);
+    }
+  }
+}
+
+// Сообщения валидации
+.validation-error {
+  padding: 12px 16px;
+  background: #fff3cd;
+  border: 1px solid #ffc107;
+  border-left: 4px solid #e74c3c;
+  border-radius: 4px;
+  font-size: 14px;
+  color: #721c24;
+  line-height: 1.5;
+  animation: slideIn 0.3s ease;
+
+  strong {
+    font-weight: 600;
+    color: #e74c3c;
+  }
+}
+
+.validation-success {
+  padding: 12px 16px;
+  background: #d4edda;
+  border: 1px solid #c3e6cb;
+  border-left: 4px solid #2ecc71;
+  border-radius: 4px;
+  font-size: 14px;
+  color: #155724;
+  line-height: 1.5;
+  animation: slideIn 0.3s ease;
+
+  strong {
+    font-weight: 600;
+    color: #2ecc71;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.modal-hint {
+  padding: 12px 16px;
+  background: $hint-bg;
+  border: 1px solid $hint-border;
+  border-radius: 4px;
+  font-size: 14px;
+  color: #004085;
+  line-height: 1.5;
+
+  strong {
+    font-weight: 600;
+  }
+
+  small {
+    display: block;
+    margin-top: 4px;
+    font-size: 12px;
+    color: #6c757d;
+  }
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+// ФУТЕР С КНОПКАМИ
+// ════════════════════════════════════════════════════════════════════════════
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 16px 24px;
+  background: $header-bg;
+  border-top: 1px solid $header-border;
+  border-radius: 0 0 8px 8px;
+}
+
+.modal-button {
+  padding: 10px 24px;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #fff;
+
+  &:active {
+    transform: translateY(1px);
+  }
+}
+
+.modal-button-primary {
+  background: $button-primary-bg;
+
+  &:hover {
+    background: $button-primary-hover;
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.3);
+  }
+}
+
+.modal-button-secondary {
+  background: $button-secondary-bg;
+
+  &:hover {
+    background: $button-secondary-hover;
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(108, 117, 125, 0.3);
+  }
+}
+
+.modal-button-success {
+  background: #28a745;
+
+  &:hover {
+    background: #218838;
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.3);
+  }
+}
+
+.modal-button-info {
+  background: #17a2b8;
+
+  &:hover {
+    background: #138496;
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(23, 162, 184, 0.3);
+  }
+
+  &.success {
+    background: #28a745;
+
+    &:hover {
+      background: #218838;
+    }
+  }
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+// АДАПТИВНЫЙ ДИЗАЙН
+// ════════════════════════════════════════════════════════════════════════════
+
+@media (max-width: 768px) {
+  .source-code-modal {
+    width: 95vw;
+    max-height: 95vh;
+  }
+
+  .modal-header,
+  .modal-body,
+  .modal-footer {
+    padding: 12px 16px;
+  }
+
+  .source-code-textarea {
+    min-height: 300px;
+    font-size: 13px;
+  }
+
+  .modal-footer {
+    flex-direction: column-reverse;
+
+    .modal-button {
+      width: 100%;
+    }
+  }
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+// АНИМАЦИЯ ЗАКРЫТИЯ
+// ════════════════════════════════════════════════════════════════════════════
+
+.source-code-modal:not([open]) {
+  opacity: 0;
+  transform: scale(0.9);
+  pointer-events: none;
+}

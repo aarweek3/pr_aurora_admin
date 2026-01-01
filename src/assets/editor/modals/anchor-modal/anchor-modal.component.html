@@ -1,0 +1,68 @@
+<dialog #dialog class="anchor-modal">
+  <div class="modal-header">
+    <h2>{{ existingId ? 'Редактировать якорь' : 'Создать якорь' }}</h2>
+    <button class="close-button" (click)="onCancel()" aria-label="Закрыть">✕</button>
+  </div>
+
+  <div class="modal-body">
+    <form (keydown)="onKeyDown($event)">
+      <!-- Поле ID якоря -->
+      <div class="form-group">
+        <label for="anchorId">ID якоря:</label>
+        <input
+          #anchorIdInput
+          id="anchorId"
+          type="text"
+          [(ngModel)]="anchorId"
+          name="anchorId"
+          placeholder="section-1"
+          (input)="onAnchorIdInput()"
+          [class.error]="validationError"
+          autocomplete="off"
+          spellcheck="false"
+        />
+        <div class="hint">
+          ID должен быть уникальным, содержать только буквы, цифры, дефисы и подчеркивания
+        </div>
+      </div>
+
+      <!-- Поле названия якоря (необязательное) -->
+      <div class="form-group">
+        <label for="anchorName">Название (отображается рядом с якорем):</label>
+        <input
+          id="anchorName"
+          type="text"
+          [(ngModel)]="anchorName"
+          name="anchorName"
+          placeholder="Название раздела (необязательно)"
+          autocomplete="off"
+        />
+        <div class="hint">Это название будет отображаться рядом со значком якоря</div>
+      </div>
+
+      <!-- Кнопка автогенерации -->
+      <div class="form-group">
+        <button class="auto-generate-button" (click)="onAutoGenerate()" type="button">
+          🔄 Сгенерировать ID из текста элемента
+        </button>
+      </div>
+
+      <!-- Сообщение об ошибке -->
+      <div *ngIf="validationError" class="validation-error">❌ {{ validationError }}</div>
+    </form>
+  </div>
+
+  <div class="modal-footer">
+    <div class="footer-left">
+      <button *ngIf="existingId" class="remove-button" (click)="onRemove()" type="button">
+        ⚓⛔ Удалить якорь
+      </button>
+    </div>
+    <div class="footer-right">
+      <button class="cancel-button" (click)="onCancel()" type="button">Отмена</button>
+      <button class="save-button" (click)="onSave()" type="button">
+        {{ existingId ? 'Сохранить' : 'Создать' }}
+      </button>
+    </div>
+  </div>
+</dialog>

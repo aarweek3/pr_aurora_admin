@@ -1,0 +1,14 @@
+<div class="toast-container">
+  <div
+    class="toast"
+    [class.show]="isVisible"
+    [class.toast-success]="type === 'success'"
+    [class.toast-error]="type === 'error'"
+    [class.toast-warning]="type === 'warning'"
+    [class.toast-info]="type === 'info'"
+  >
+    <span class="toast-icon">{{ getIcon() }}</span>
+    <span class="toast-message">{{ message }}</span>
+    <button class="toast-close" (click)="close()" aria-label="Закрыть">×</button>
+  </div>
+</div>

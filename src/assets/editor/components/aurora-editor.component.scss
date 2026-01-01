@@ -1,0 +1,452 @@
+@use "../plugins/insert/link-preview.styles.scss";
+/**
+ * ════════════════════════════════════════════════════════════════════════════
+ * AURORA EDITOR STYLES
+ * ════════════════════════════════════════════════════════════════════════════
+ *
+ * Стили компонента Aurora Editor.
+ *
+ * Включает:
+ * - Базовые стили редактора
+ * - Placeholder стили
+ * - Character counter
+ * - Fullscreen режим
+ * - Disabled состояние
+ * - Адаптивность
+ */
+
+// ════════════════════════════════════════════════════════════════════════════
+// VARIABLES
+// ════════════════════════════════════════════════════════════════════════════
+
+$editor-border-color: #d0d0d0;
+$editor-border-color-focus: #4a90e2;
+$editor-bg-color: #ffffff;
+$editor-text-color: #333333;
+$editor-placeholder-color: #999999;
+$editor-disabled-bg: #f5f5f5;
+$editor-disabled-text: #999999;
+$counter-color: #666666;
+$counter-over-limit: #e74c3c;
+$editor-padding: 12px;
+$editor-min-height: 150px;
+$editor-border-radius: 4px;
+$editor-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial,
+  sans-serif;
+$editor-font-size: 14px;
+$editor-line-height: 1.6;
+
+// ════════════════════════════════════════════════════════════════════════════
+// WRAPPER
+// ════════════════════════════════════════════════════════════════════════════
+
+.aurora-editor-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid $editor-border-color;
+  border-radius: $editor-border-radius;
+  background-color: $editor-bg-color;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+  // Focus состояние
+  &:focus-within {
+    border-color: $editor-border-color-focus;
+    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+    outline: none;
+  }
+
+  // Disabled состояние
+  &.disabled {
+    background-color: $editor-disabled-bg;
+    cursor: not-allowed;
+    opacity: 0.7;
+
+    .aurora-editor-content {
+      color: $editor-disabled-text;
+      cursor: not-allowed;
+      user-select: none;
+    }
+  }
+
+  // Fullscreen режим
+  &.fullscreen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 9999;
+    border: none;
+    border-radius: 0;
+    margin: 0;
+
+    .aurora-editor-content {
+      min-height: calc(100vh - 60px); // Учитываем высоту toolbar и counter
+      max-height: calc(100vh - 60px);
+    }
+  }
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+// CONTENT EDITABLE ELEMENT
+// ════════════════════════════════════════════════════════════════════════════
+
+.aurora-editor-content {
+  min-height: $editor-min-height;
+  max-height: 500px;
+  padding: $editor-padding;
+  font-family: $editor-font-family;
+  font-size: $editor-font-size;
+  line-height: $editor-line-height;
+  color: $editor-text-color;
+  overflow-y: auto;
+  overflow-x: hidden;
+  word-wrap: break-word;
+  outline: none;
+  cursor: text;
+
+  // Прокрутка для длинного контента
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #c0c0c0;
+    border-radius: 4px;
+
+    &:hover {
+      background: #a0a0a0;
+    }
+  }
+
+  // Placeholder через data-атрибут
+  &[contenteditable="true"]:empty::before {
+    content: attr(data-placeholder);
+    color: $editor-placeholder-color;
+    cursor: text;
+    pointer-events: none;
+  }
+
+  // Типографика для контента
+  p {
+    margin: 0 0 1em 0;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    margin: 1em 0 0.5em 0;
+    font-weight: 600;
+
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+
+  h1 {
+    font-size: 2em;
+  }
+  h2 {
+    font-size: 1.75em;
+  }
+  h3 {
+    font-size: 1.5em;
+  }
+  h4 {
+    font-size: 1.25em;
+  }
+  h5 {
+    font-size: 1.1em;
+  }
+  h6 {
+    font-size: 1em;
+  }
+
+  ul,
+  ol {
+    margin: 0.5em 0;
+    padding-left: 2em;
+  }
+
+  li {
+    margin: 0.25em 0;
+  }
+
+  blockquote {
+    margin: 1em 0;
+    padding: 0.5em 1em;
+    border-left: 4px solid $editor-border-color-focus;
+    background-color: rgba(74, 144, 226, 0.05);
+    font-style: italic;
+  }
+
+  code {
+    padding: 2px 6px;
+    background-color: #f5f5f5;
+    border: 1px solid #e0e0e0;
+    border-radius: 3px;
+    font-family: "Courier New", Courier, monospace;
+    font-size: 0.9em;
+  }
+
+  pre {
+    padding: 12px;
+    background-color: #f5f5f5;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    overflow-x: auto;
+    font-family: "Courier New", Courier, monospace;
+    font-size: 0.9em;
+    line-height: 1.4;
+
+    code {
+      padding: 0;
+      background: none;
+      border: none;
+    }
+  }
+
+  a {
+    color: $editor-border-color-focus;
+    text-decoration: underline;
+    cursor: pointer;
+
+    &:hover {
+      text-decoration: none;
+    }
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+    display: inline-block;
+    vertical-align: top;
+    margin: 1em 0;
+    border-radius: 4px;
+  }
+
+  // Figure element for images (inserted via image modal)
+  figure.aurora-image {
+    display: inline-block;
+    vertical-align: top;
+    margin: 1em 0;
+    padding: 0;
+
+    img {
+      margin: 0;
+    }
+
+    figcaption {
+      text-align: center;
+      font-size: 13px;
+      font-style: italic;
+      color: #666;
+      margin-top: 8px;
+    }
+
+    // Убираем верхний margin для float-элементов (при обтекании)
+    &[data-align="left"],
+    &[data-align="right"] {
+      margin-top: 0 !important; // !important чтобы переопределить inline-стиль
+    }
+  }
+
+  // Убираем верхний margin у первого параграфа после float-изображения
+  figure.aurora-image[data-align="left"] + p,
+  figure.aurora-image[data-align="right"] + p {
+    margin-top: 0 !important;
+  }
+
+  hr {
+    margin: 1.5em 0;
+    border: none;
+    border-top: 2px solid $editor-border-color;
+  }
+
+  strong,
+  b {
+    font-weight: 700;
+  }
+
+  em,
+  i {
+    font-style: italic;
+  }
+
+  u {
+    text-decoration: underline;
+  }
+
+  del,
+  s,
+  strike {
+    text-decoration: line-through;
+  }
+
+  mark {
+    background-color: #ffeb3b;
+    padding: 2px 4px;
+    border-radius: 2px;
+  }
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+// CHARACTER COUNTER
+// ════════════════════════════════════════════════════════════════════════════
+
+.aurora-character-counter {
+  padding: 8px $editor-padding;
+  border-top: 1px solid $editor-border-color;
+  background-color: #fafafa;
+  font-size: 12px;
+  color: $counter-color;
+  text-align: right;
+  user-select: none;
+
+  // Превышение лимита
+  &.over-limit {
+    color: $counter-over-limit;
+    font-weight: 600;
+  }
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+// RESPONSIVE
+// ════════════════════════════════════════════════════════════════════════════
+
+@media (max-width: 768px) {
+  .aurora-editor-content {
+    font-size: 16px; // Увеличиваем для мобильных устройств
+    min-height: 120px;
+  }
+
+  .aurora-editor-wrapper.fullscreen {
+    .aurora-editor-content {
+      min-height: calc(100vh - 50px);
+      max-height: calc(100vh - 50px);
+    }
+  }
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+// ANCHOR INDICATOR STYLES
+// ════════════════════════════════════════════════════════════════════════════
+
+:host ::ng-deep .anchor-indicator {
+  display: inline-block;
+  margin-left: 4px;
+  padding: 2px 6px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  font-size: 11px;
+  font-weight: 600;
+  border-radius: 4px;
+  cursor: pointer;
+  user-select: none;
+  vertical-align: middle;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  &:hover {
+    transform: scale(1.05);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+  }
+
+  &::before {
+    content: attr(data-anchor-id);
+    display: none;
+  }
+}
+
+// Показываем ID якоря при наведении через tooltip
+:host ::ng-deep .anchor-indicator[data-anchor-id]::after {
+  content: "ID: " attr(data-anchor-id);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #333;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+  margin-bottom: 4px;
+  z-index: 1000;
+}
+
+:host ::ng-deep .anchor-indicator:hover::after {
+  opacity: 1;
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+// YOUTUBE VIDEO STYLES
+// ════════════════════════════════════════════════════════════════════════════
+
+:host ::ng-deep .youtube-video-container {
+  margin: 20px auto;
+  max-width: 100%;
+  position: relative;
+  padding-bottom: 56.25%; /* 16:9 aspect ratio */
+  height: 0;
+  overflow: hidden;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+  iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+    border-radius: 8px;
+  }
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+// PRINT STYLES
+// ════════════════════════════════════════════════════════════════════════════
+
+@media print {
+  .aurora-editor-wrapper {
+    border: none;
+    box-shadow: none;
+  }
+
+  .aurora-character-counter {
+    display: none;
+  }
+
+  .aurora-editor-content {
+    max-height: none;
+    overflow: visible;
+  }
+
+  // Скрываем индикаторы якорей при печати
+  :host ::ng-deep .anchor-indicator {
+    display: none;
+  }
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+// LINK PREVIEW CARD STYLES
+// ════════════════════════════════════════════════════════════════════════════

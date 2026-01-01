@@ -1,0 +1,191 @@
+<!-- ════════════════════════════════════════════════════════════════════════════
+YOUTUBE MODAL TEMPLATE
+════════════════════════════════════════════════════════════════════════════
+
+Модальное окно для вставки YouTube видео.
+
+Структура:
+- Нативный <dialog> элемент
+- Форма с настройками видео
+- Предпросмотр миниатюры
+- Кнопки "Вставить" и "Отмена"
+════════════════════════════════════════════════════════════════════════════ -->
+
+<dialog #dialog class="youtube-modal">
+  <!-- ═══════════════════════════════════════════════════════════════════════
+  ЗАГОЛОВОК
+  ═══════════════════════════════════════════════════════════════════════ -->
+  <div class="modal-header">
+    <h2 class="modal-title">📺 Вставить YouTube видео</h2>
+    <button type="button" class="modal-close" (click)="onCancel()" aria-label="Закрыть">✕</button>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════
+  СОДЕРЖИМОЕ
+  ═══════════════════════════════════════════════════════════════════════ -->
+  <div class="modal-body">
+    <!-- URL видео -->
+    <div class="form-group">
+      <label for="youtube-url" class="form-label">URL YouTube видео *</label>
+      <input
+        type="text"
+        id="youtube-url"
+        class="form-input"
+        [(ngModel)]="url"
+        (ngModelChange)="onUrlChange()"
+        placeholder="https://www.youtube.com/watch?v=..."
+        [class.error]="urlError"
+      />
+      <span *ngIf="urlError" class="form-error">{{ urlError }}</span>
+      <span *ngIf="settings.videoId && !urlError" class="form-success">✓ Видео найдено</span>
+    </div>
+
+    <!-- Предпросмотр -->
+    <div *ngIf="hasValidVideo()" class="preview-section">
+      <label class="form-label">Предпросмотр</label>
+      <div class="video-preview">
+        <img [src]="getPreviewUrl()" alt="Предпросмотр видео" class="preview-thumbnail" />
+        <span class="video-id">ID: {{ settings.videoId }}</span>
+      </div>
+    </div>
+
+    <!-- Разделитель -->
+    <div *ngIf="hasValidVideo()" class="divider"></div>
+
+    <!-- Настройки (показываем только если видео найдено) -->
+    <div *ngIf="hasValidVideo()" class="settings-section">
+      <h3 class="section-title">Настройки встраивания</h3>
+
+      <!-- Адаптивный режим -->
+      <div class="form-group checkbox-group">
+        <label class="checkbox-label">
+          <input type="checkbox" [(ngModel)]="settings.responsive" />
+          <span>Адаптивный размер (рекомендуется)</span>
+        </label>
+        <span class="form-hint">Видео автоматически подстраивается под ширину экрана</span>
+      </div>
+
+      <!-- Размеры видео -->
+      <div class="form-row">
+        <div class="form-group">
+          <label for="video-width" class="form-label">
+            Ширина (px)
+          </label>
+          <input
+            type="number"
+            id="video-width"
+            class="form-input"
+            [(ngModel)]="settings.width"
+            min="320"
+            max="1920"
+          />
+          <span class="form-hint">Используется при фиксированном размере</span>
+        </div>
+        <div class="form-group">
+          <label for="video-height" class="form-label">
+            Высота (px)
+          </label>
+          <input
+            type="number"
+            id="video-height"
+            class="form-input"
+            [(ngModel)]="settings.height"
+            min="180"
+            max="1080"
+          />
+          <span class="form-hint">Используется при фиксированном размере</span>
+        </div>
+      </div>
+
+      <!-- Выравнивание -->
+      <div class="form-group">
+        <label class="form-label">Выравнивание</label>
+        <div class="button-group">
+          <button
+            type="button"
+            class="alignment-btn"
+            [class.active]="settings.alignment === 'left'"
+            (click)="settings.alignment = 'left'"
+            title="По левому краю"
+          >
+            ⬅️ Слева
+          </button>
+          <button
+            type="button"
+            class="alignment-btn"
+            [class.active]="settings.alignment === 'center'"
+            (click)="settings.alignment = 'center'"
+            title="По центру"
+          >
+            ↔️ Центр
+          </button>
+          <button
+            type="button"
+            class="alignment-btn"
+            [class.active]="settings.alignment === 'right'"
+            (click)="settings.alignment = 'right'"
+            title="По правому краю"
+          >
+            ➡️ Справа
+          </button>
+        </div>
+      </div>
+
+      <!-- Параметры воспроизведения -->
+      <div class="form-group">
+        <label class="form-label">Параметры воспроизведения</label>
+        <div class="checkbox-group">
+          <label class="checkbox-label">
+            <input type="checkbox" [(ngModel)]="settings.autoplay" />
+            <span>Автовоспроизведение</span>
+          </label>
+          <label class="checkbox-label">
+            <input type="checkbox" [(ngModel)]="settings.controls" />
+            <span>Показывать панель управления</span>
+          </label>
+          <label class="checkbox-label">
+            <input type="checkbox" [(ngModel)]="settings.loop" />
+            <span>Повтор видео</span>
+          </label>
+          <label class="checkbox-label">
+            <input type="checkbox" [(ngModel)]="settings.mute" />
+            <span>Без звука</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Заголовок и подпись -->
+      <div class="form-group">
+        <label for="video-title" class="form-label">Заголовок (необязательно)</label>
+        <input
+          type="text"
+          id="video-title"
+          class="form-input"
+          [(ngModel)]="settings.title"
+          placeholder="Заголовок для видео"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="video-caption" class="form-label">Подпись (необязательно)</label>
+        <input
+          type="text"
+          id="video-caption"
+          class="form-input"
+          [(ngModel)]="settings.caption"
+          placeholder="Описание видео"
+        />
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════
+  ФУТЕР С КНОПКАМИ
+  ═══════════════════════════════════════════════════════════════════════ -->
+  <div class="modal-footer">
+    <button type="button" class="btn btn-cancel" (click)="onCancel()">Отмена</button>
+    <button type="button" class="btn btn-primary" (click)="onInsert()" [disabled]="!hasValidVideo()">
+      Вставить видео
+    </button>
+  </div>
+</dialog>

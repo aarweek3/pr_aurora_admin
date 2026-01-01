@@ -1,0 +1,75 @@
+<dialog #dialog class="color-picker-modal">
+  <div class="modal-container">
+    <!-- Header -->
+    <div class="modal-header">
+      <h2>{{ title }}</h2>
+      <button class="close-btn" (click)="cancel()" type="button" aria-label="Закрыть">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Body -->
+    <div class="modal-body">
+      <!-- Текущий цвет -->
+      <div class="current-color-section">
+        <label>Выбранный цвет:</label>
+        <div class="color-display">
+          <div class="color-preview" [style.background-color]="selectedColor"></div>
+          <input
+            type="text"
+            [(ngModel)]="customColorInput"
+            (input)="onCustomColorChange()"
+            placeholder="#000000"
+            maxlength="7"
+            class="color-input"
+          />
+        </div>
+      </div>
+
+      <!-- Палитра цветов -->
+      <div class="color-palette">
+        <div class="palette-row" *ngFor="let row of predefinedColors">
+          <button
+            *ngFor="let color of row"
+            class="color-swatch"
+            [class.selected]="selectedColor === color"
+            [style.background-color]="color"
+            (click)="selectColor(color)"
+            type="button"
+            [attr.aria-label]="'Выбрать цвет ' + color"
+          >
+            <span class="checkmark" *ngIf="selectedColor === color">✓</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- HTML5 Color Picker -->
+      <div class="html5-color-picker">
+        <label>Выбор произвольного цвета:</label>
+        <input
+          type="color"
+          [(ngModel)]="selectedColor"
+          (change)="customColorInput = selectedColor"
+          class="native-color-input"
+        />
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="modal-footer">
+      <button class="btn btn-secondary" (click)="cancel()" type="button">Отмена</button>
+      <button
+        *ngIf="showRemoveOption"
+        class="btn btn-remove"
+        (click)="remove()"
+        type="button"
+      >
+        Удалить цвет
+      </button>
+      <button class="btn btn-primary" (click)="apply()" type="button">Применить</button>
+    </div>
+  </div>
+</dialog>

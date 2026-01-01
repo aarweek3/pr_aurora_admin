@@ -1,0 +1,140 @@
+<!--
+════════════════════════════════════════════════════════════════════════════
+WORD COUNT MODAL
+════════════════════════════════════════════════════════════════════════════
+-->
+
+<dialog #dialogRef class="word-count-modal">
+  <div class="word-count-modal__header">
+    <h2 class="word-count-modal__title">📊 Статистика текста</h2>
+    <button
+      type="button"
+      class="word-count-modal__close"
+      (click)="onClose()"
+      aria-label="Закрыть"
+    >
+      ✕
+    </button>
+  </div>
+
+  <div class="word-count-modal__body">
+    <!-- Main Statistics -->
+    <div class="word-count-modal__section">
+      <h3 class="word-count-modal__section-title">Основная статистика</h3>
+
+      <div class="word-count-modal__stats-grid">
+        <!-- Words -->
+        <div class="word-count-modal__stat-item word-count-modal__stat-item--primary">
+          <div class="word-count-modal__stat-icon">🔢</div>
+          <div class="word-count-modal__stat-content">
+            <div class="word-count-modal__stat-label">Слов</div>
+            <div class="word-count-modal__stat-value">{{ statistics.words | number }}</div>
+          </div>
+        </div>
+
+        <!-- Characters with spaces -->
+        <div class="word-count-modal__stat-item">
+          <div class="word-count-modal__stat-icon">📏</div>
+          <div class="word-count-modal__stat-content">
+            <div class="word-count-modal__stat-label">Символов (с пробелами)</div>
+            <div class="word-count-modal__stat-value">{{ statistics.characters | number }}</div>
+          </div>
+        </div>
+
+        <!-- Characters without spaces -->
+        <div class="word-count-modal__stat-item">
+          <div class="word-count-modal__stat-icon">📐</div>
+          <div class="word-count-modal__stat-content">
+            <div class="word-count-modal__stat-label">Символов (без пробелов)</div>
+            <div class="word-count-modal__stat-value">{{ statistics.charactersNoSpaces | number }}</div>
+          </div>
+        </div>
+
+        <!-- Paragraphs -->
+        <div class="word-count-modal__stat-item">
+          <div class="word-count-modal__stat-icon">📄</div>
+          <div class="word-count-modal__stat-content">
+            <div class="word-count-modal__stat-label">Параграфов</div>
+            <div class="word-count-modal__stat-value">{{ statistics.paragraphs | number }}</div>
+          </div>
+        </div>
+
+        <!-- Sentences -->
+        <div class="word-count-modal__stat-item">
+          <div class="word-count-modal__stat-icon">📝</div>
+          <div class="word-count-modal__stat-content">
+            <div class="word-count-modal__stat-label">Предложений</div>
+            <div class="word-count-modal__stat-value">{{ statistics.sentences | number }}</div>
+          </div>
+        </div>
+
+        <!-- Reading time -->
+        <div class="word-count-modal__stat-item word-count-modal__stat-item--accent">
+          <div class="word-count-modal__stat-icon">⏱️</div>
+          <div class="word-count-modal__stat-content">
+            <div class="word-count-modal__stat-label">Время чтения</div>
+            <div class="word-count-modal__stat-value">{{ formatReadingTime(statistics.readingTime) }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Advanced Statistics -->
+    <div class="word-count-modal__section">
+      <h3 class="word-count-modal__section-title">Дополнительная статистика</h3>
+
+      <div class="word-count-modal__stats-list">
+        <!-- Average word length -->
+        <div class="word-count-modal__stat-row">
+          <div class="word-count-modal__stat-row-label">
+            <span class="word-count-modal__stat-row-icon">📊</span>
+            Средняя длина слова
+          </div>
+          <div class="word-count-modal__stat-row-value">
+            {{ averageWordLength }} символов
+          </div>
+        </div>
+
+        <!-- Average sentence length -->
+        <div class="word-count-modal__stat-row">
+          <div class="word-count-modal__stat-row-label">
+            <span class="word-count-modal__stat-row-icon">📈</span>
+            Средняя длина предложения
+          </div>
+          <div class="word-count-modal__stat-row-value">
+            {{ averageSentenceLength }} слов
+          </div>
+        </div>
+
+        <!-- Text density -->
+        <div class="word-count-modal__stat-row">
+          <div class="word-count-modal__stat-row-label">
+            <span class="word-count-modal__stat-row-icon">🎯</span>
+            Плотность текста
+          </div>
+          <div class="word-count-modal__stat-row-value">
+            {{ textDensity }} слов/параграф
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Info Note -->
+    <div class="word-count-modal__info">
+      <div class="word-count-modal__info-icon">ℹ️</div>
+      <div class="word-count-modal__info-text">
+        Время чтения рассчитано на основе средней скорости чтения 200 слов в минуту.
+      </div>
+    </div>
+  </div>
+
+  <div class="word-count-modal__footer">
+    <button
+      type="button"
+      class="word-count-modal__button word-count-modal__button--close"
+      (click)="onClose()"
+    >
+      Закрыть
+    </button>
+  </div>
+</dialog>

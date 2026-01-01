@@ -1,0 +1,441 @@
+<!-- ════════════════════════════════════════════════════════════════════════════
+AURORA TOOLBAR TEMPLATE
+════════════════════════════════════════════════════════════════════════════
+
+Шаблон панели инструментов Aurora Editor.
+
+Структура:
+- Контейнер с кнопками
+- Кнопки группируются по типу (форматирование, блоки, вставка)
+════════════════════════════════════════════════════════════════════════════ -->
+
+<div class="aurora-toolbar">
+  <!-- ═══════════════════════════════════════════════════════════════════════
+  ГРУППА: ФОРМАТИРОВАНИЕ ТЕКСТА (Bold, Italic, Underline, Strikethrough, Font, Size)
+  ═══════════════════════════════════════════════════════════════════════ -->
+  <div class="aurora-toolbar-group">
+    <ng-container *ngFor="let plugin of formatPlugins">
+      <!-- Обычная кнопка для плагинов без dropdown -->
+      <button
+        *ngIf="!plugin.isDropdown"
+        type="button"
+        class="aurora-toolbar-button"
+        [class.active]="isButtonActive(plugin.name)"
+        [title]="getTooltip(plugin)"
+        [attr.aria-label]="plugin.title"
+        [attr.aria-pressed]="isButtonActive(plugin.name)"
+        (click)="onButtonClick(plugin, $event)"
+        (mousedown)="$event.preventDefault()"
+      >
+        <span class="aurora-toolbar-button-icon" [innerHTML]="plugin.icon"></span>
+      </button>
+
+      <!-- Dropdown для плагинов выбора шрифта и размера -->
+      <div *ngIf="plugin.isDropdown" class="aurora-toolbar-dropdown">
+        <button
+          type="button"
+          class="aurora-toolbar-button aurora-toolbar-dropdown-button"
+          [class.active]="openDropdown === plugin.name"
+          [title]="getTooltip(plugin)"
+          [attr.aria-label]="plugin.title"
+          [attr.aria-expanded]="openDropdown === plugin.name"
+          (click)="toggleDropdown(plugin.name, $event)"
+          (mousedown)="$event.preventDefault()"
+        >
+          <span class="aurora-toolbar-button-icon" [innerHTML]="plugin.icon"></span>
+          <span class="aurora-toolbar-dropdown-arrow">▼</span>
+        </button>
+
+        <!-- Dropdown меню для Font Family -->
+        <div *ngIf="openDropdown === plugin.name && plugin.name === 'fontFamily'" class="aurora-toolbar-dropdown-menu">
+          <div
+            *ngFor="let font of getFontFamilies()"
+            class="aurora-toolbar-dropdown-item"
+            [style.fontFamily]="font.family"
+            (click)="onDropdownSelect(plugin, { fontFamily: font.value })"
+          >
+            {{ font.label }}
+          </div>
+        </div>
+
+        <!-- Dropdown меню для Font Size -->
+        <div *ngIf="openDropdown === plugin.name && plugin.name === 'fontSize'" class="aurora-toolbar-dropdown-menu">
+          <div
+            *ngFor="let size of getFontSizes()"
+            class="aurora-toolbar-dropdown-item"
+            [style.fontSize]="size.value"
+            (click)="onDropdownSelect(plugin, { fontSize: size.value })"
+          >
+            {{ size.label }}
+          </div>
+        </div>
+
+        <!-- Dropdown меню для Line Height -->
+        <div *ngIf="openDropdown === plugin.name && plugin.name === 'lineHeight'" class="aurora-toolbar-dropdown-menu">
+          <div
+            *ngFor="let lineHeight of getLineHeights()"
+            class="aurora-toolbar-dropdown-item"
+            [style.lineHeight]="lineHeight.value"
+            (click)="onDropdownSelect(plugin, { lineHeight: lineHeight.value })"
+          >
+            {{ lineHeight.label }}
+          </div>
+        </div>
+
+        <!-- Dropdown меню для Text Color -->
+        <div
+          *ngIf="openDropdown === plugin.name && plugin.name === 'textColor'"
+          class="aurora-toolbar-dropdown-menu aurora-toolbar-color-menu"
+        >
+          <div
+            *ngFor="let color of getTextColors()"
+            class="aurora-toolbar-dropdown-item aurora-toolbar-color-item"
+            (click)="onDropdownSelect(plugin, { color: color.value })"
+          >
+            <span class="aurora-toolbar-color-preview" [style.backgroundColor]="color.value"></span>
+            <span class="aurora-toolbar-color-label">{{ color.label }}</span>
+          </div>
+        </div>
+
+        <!-- Dropdown меню для Background Color -->
+        <div
+          *ngIf="openDropdown === plugin.name && plugin.name === 'backgroundColor'"
+          class="aurora-toolbar-dropdown-menu aurora-toolbar-color-menu"
+        >
+          <div
+            *ngFor="let color of getBackgroundColors()"
+            class="aurora-toolbar-dropdown-item aurora-toolbar-color-item"
+            (click)="onDropdownSelect(plugin, { backgroundColor: color.value })"
+          >
+            <span class="aurora-toolbar-color-preview" [style.backgroundColor]="color.value"></span>
+            <span class="aurora-toolbar-color-label">{{ color.label }}</span>
+          </div>
+        </div>
+
+        <!-- Dropdown меню для Highlight (маркер) -->
+        <div
+          *ngIf="openDropdown === plugin.name && plugin.name === 'highlight'"
+          class="aurora-toolbar-dropdown-menu aurora-toolbar-color-menu"
+        >
+          <div
+            *ngFor="let color of getHighlightColors()"
+            class="aurora-toolbar-dropdown-item aurora-toolbar-color-item"
+            (click)="onDropdownSelect(plugin, { color: color.color })"
+          >
+            <span class="aurora-toolbar-color-preview" [style.backgroundColor]="color.color">{{ color.emoji }}</span>
+            <span class="aurora-toolbar-color-label">{{ color.name }}</span>
+          </div>
+        </div>
+
+        <!-- Dropdown меню для Text Alignment Advanced (расширенное выравнивание) -->
+        <div
+          *ngIf="openDropdown === plugin.name && plugin.name === 'textAlignmentAdvanced'"
+          class="aurora-toolbar-dropdown-menu"
+        >
+          <!-- Text Indent (красная строка) -->
+          <div class="aurora-toolbar-dropdown-section">
+            <div class="aurora-toolbar-dropdown-section-title">📐 Красная строка (Text Indent)</div>
+            <div
+              *ngFor="let option of getTextIndentOptions()"
+              class="aurora-toolbar-dropdown-item"
+              (click)="onDropdownSelect(plugin, { type: 'textIndent', value: option.value })"
+            >
+              <span>{{ option.emoji }}</span>
+              <span>{{ option.name }}</span>
+            </div>
+          </div>
+
+          <!-- Letter Spacing (межбуквенный интервал) -->
+          <div class="aurora-toolbar-dropdown-section">
+            <div class="aurora-toolbar-dropdown-section-title">📏 Межбуквенный интервал</div>
+            <div
+              *ngFor="let option of getLetterSpacingOptions()"
+              class="aurora-toolbar-dropdown-item"
+              (click)="onDropdownSelect(plugin, { type: 'letterSpacing', value: option.value })"
+            >
+              <span>{{ option.emoji }}</span>
+              <span>{{ option.name }}</span>
+            </div>
+          </div>
+
+          <!-- Word Spacing (интервал между словами) -->
+          <div class="aurora-toolbar-dropdown-section">
+            <div class="aurora-toolbar-dropdown-section-title">📐 Интервал между словами</div>
+            <div
+              *ngFor="let option of getWordSpacingOptions()"
+              class="aurora-toolbar-dropdown-item"
+              (click)="onDropdownSelect(plugin, { type: 'wordSpacing', value: option.value })"
+            >
+              <span>{{ option.emoji }}</span>
+              <span>{{ option.name }}</span>
+            </div>
+          </div>
+
+          <!-- Vertical Align (вертикальное выравнивание) -->
+          <div class="aurora-toolbar-dropdown-section">
+            <div class="aurora-toolbar-dropdown-section-title">↕️ Вертикальное выравнивание</div>
+            <div
+              *ngFor="let option of getVerticalAlignOptions()"
+              class="aurora-toolbar-dropdown-item"
+              (click)="onDropdownSelect(plugin, { type: 'verticalAlign', value: option.value })"
+            >
+              <span>{{ option.emoji }}</span>
+              <span>{{ option.name }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════
+  ГРУППА: СПИСКИ (Ordered, Unordered)
+  ═══════════════════════════════════════════════════════════════════════ -->
+  <div class="aurora-toolbar-group">
+    <button
+      *ngFor="let plugin of listPlugins"
+      type="button"
+      class="aurora-toolbar-button"
+      [class.active]="isButtonActive(plugin.name)"
+      [title]="getTooltip(plugin)"
+      [attr.aria-label]="plugin.title"
+      [attr.aria-pressed]="isButtonActive(plugin.name)"
+      (click)="onButtonClick(plugin, $event)"
+      (mousedown)="$event.preventDefault()"
+    >
+      <span class="aurora-toolbar-button-icon" [innerHTML]="plugin.icon"></span>
+    </button>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════
+  ГРУППА: ОТСТУПЫ (Indent, Outdent)
+  ═══════════════════════════════════════════════════════════════════════ -->
+  <div class="aurora-toolbar-group">
+    <button
+      *ngFor="let plugin of indentPlugins"
+      type="button"
+      class="aurora-toolbar-button"
+      [class.active]="isButtonActive(plugin.name)"
+      [title]="getTooltip(plugin)"
+      [attr.aria-label]="plugin.title"
+      [attr.aria-pressed]="isButtonActive(plugin.name)"
+      (click)="onButtonClick(plugin, $event)"
+      (mousedown)="$event.preventDefault()"
+    >
+      <span class="aurora-toolbar-button-icon" [innerHTML]="plugin.icon"></span>
+    </button>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════
+  ГРУППА: ВЫРАВНИВАНИЕ (Left, Center, Right, Justify)
+  ═══════════════════════════════════════════════════════════════════════ -->
+  <div class="aurora-toolbar-group">
+    <button
+      *ngFor="let plugin of alignmentPlugins"
+      type="button"
+      class="aurora-toolbar-button"
+      [class.active]="isButtonActive(plugin.name)"
+      [title]="getTooltip(plugin)"
+      [attr.aria-label]="plugin.title"
+      [attr.aria-pressed]="isButtonActive(plugin.name)"
+      (click)="onButtonClick(plugin, $event)"
+      (mousedown)="$event.preventDefault()"
+    >
+      <span class="aurora-toolbar-button-icon" [innerHTML]="plugin.icon"></span>
+    </button>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════
+  ГРУППА: БЛОКИ (Заголовки, параграфы)
+  ═══════════════════════════════════════════════════════════════════════ -->
+  <div class="aurora-toolbar-group">
+    <ng-container *ngFor="let plugin of blockPlugins">
+      <!-- Обычная кнопка для плагинов без dropdown -->
+      <button
+        *ngIf="!plugin.isDropdown"
+        type="button"
+        class="aurora-toolbar-button"
+        [class.active]="isButtonActive(plugin.name)"
+        [title]="getTooltip(plugin)"
+        [attr.aria-label]="plugin.title"
+        [attr.aria-pressed]="isButtonActive(plugin.name)"
+        (click)="onButtonClick(plugin, $event)"
+        (mousedown)="$event.preventDefault()"
+      >
+        <span class="aurora-toolbar-button-icon" [innerHTML]="plugin.icon"></span>
+      </button>
+
+      <!-- Dropdown для плагина заголовков -->
+      <div *ngIf="plugin.isDropdown && plugin.name === 'heading'" class="aurora-toolbar-dropdown">
+        <button
+          type="button"
+          class="aurora-toolbar-button aurora-toolbar-dropdown-button"
+          [class.active]="openDropdown === plugin.name"
+          [title]="getTooltip(plugin)"
+          [attr.aria-label]="plugin.title"
+          [attr.aria-expanded]="openDropdown === plugin.name"
+          (click)="toggleDropdown(plugin.name, $event)"
+          (mousedown)="$event.preventDefault()"
+        >
+          <span class="aurora-toolbar-button-icon" [innerHTML]="plugin.icon"></span>
+          <span class="aurora-toolbar-dropdown-arrow">▼</span>
+        </button>
+
+        <!-- Dropdown меню для Heading -->
+        <div *ngIf="openDropdown === plugin.name" class="aurora-toolbar-dropdown-menu">
+          <button
+            *ngFor="let option of getHeadingOptions(plugin)"
+            type="button"
+            class="aurora-toolbar-dropdown-item"
+            [class.active]="getHeadingCurrentValue(plugin) === option.value"
+            (click)="onDropdownItemClick(plugin, option.value, $event)"
+            (mousedown)="$event.preventDefault()"
+          >
+            <span class="heading-preview" [style.font-size]="getHeadingSize(option.value)">
+              {{ option.tag }}
+            </span>
+            <span>{{ option.label }}</span>
+          </button>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════
+  ГРУППА: ВСТАВКА (Ссылки, изображения, специальные символы)
+  ═══════════════════════════════════════════════════════════════════════ -->
+  <div class="aurora-toolbar-group" *ngIf="insertPlugins.length > 0">
+    <ng-container *ngFor="let plugin of insertPlugins">
+      <!-- Обычная кнопка для плагинов без dropdown -->
+      <button
+        *ngIf="!plugin.isDropdown"
+        type="button"
+        class="aurora-toolbar-button"
+        [class.active]="isButtonActive(plugin.name)"
+        [title]="getTooltip(plugin)"
+        [attr.aria-label]="plugin.title"
+        [attr.aria-pressed]="isButtonActive(plugin.name)"
+        (click)="onButtonClick(plugin, $event)"
+        (mousedown)="$event.preventDefault()"
+      >
+        <span class="aurora-toolbar-button-icon" [innerHTML]="plugin.icon"></span>
+      </button>
+
+      <!-- Dropdown для специальных символов -->
+      <div *ngIf="plugin.isDropdown && plugin.name === 'specialCharacters'" class="aurora-toolbar-dropdown">
+        <button
+          type="button"
+          class="aurora-toolbar-button aurora-toolbar-dropdown-button"
+          [class.active]="openDropdown === plugin.name"
+          [title]="getTooltip(plugin)"
+          [attr.aria-label]="plugin.title"
+          [attr.aria-expanded]="openDropdown === plugin.name"
+          (click)="toggleDropdown(plugin.name, $event)"
+          (mousedown)="$event.preventDefault()"
+        >
+          <span class="aurora-toolbar-button-icon" [innerHTML]="plugin.icon"></span>
+          <span class="aurora-toolbar-dropdown-arrow">▼</span>
+        </button>
+
+        <!-- Dropdown меню для Специальных символов -->
+        <div
+          *ngIf="openDropdown === plugin.name"
+          class="aurora-toolbar-dropdown-menu aurora-toolbar-special-chars-grid"
+        >
+          <button
+            *ngFor="let char of getSpecialCharacters(plugin)"
+            type="button"
+            class="aurora-toolbar-special-char-cell"
+            [title]="char.label + ' (' + char.code + ')'"
+            (click)="onDropdownItemClick(plugin, char.char, $event)"
+            (mousedown)="$event.preventDefault()"
+          >
+            {{ char.char }}
+          </button>
+        </div>
+      </div>
+
+      <!-- Dropdown для эмодзи -->
+      <div *ngIf="plugin.isDropdown && plugin.name === 'emoji'" class="aurora-toolbar-dropdown">
+        <button
+          type="button"
+          class="aurora-toolbar-button aurora-toolbar-dropdown-button"
+          [class.active]="openDropdown === plugin.name"
+          [title]="getTooltip(plugin)"
+          [attr.aria-label]="plugin.title"
+          [attr.aria-expanded]="openDropdown === plugin.name"
+          (click)="toggleDropdown(plugin.name, $event)"
+          (mousedown)="$event.preventDefault()"
+        >
+          <span class="aurora-toolbar-button-icon" [innerHTML]="plugin.icon"></span>
+          <span class="aurora-toolbar-dropdown-arrow">▼</span>
+        </button>
+
+        <!-- Dropdown меню для Эмодзи -->
+        <div *ngIf="openDropdown === plugin.name" class="aurora-toolbar-dropdown-menu aurora-toolbar-emoji-picker">
+          <app-emoji-picker
+            [categories]="getEmojiCategories()"
+            (emojiSelect)="onEmojiSelect(plugin, $event)">
+          </app-emoji-picker>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════
+  ГРУППА: ИСТОРИЯ (Undo, Redo)
+  ═══════════════════════════════════════════════════════════════════════ -->
+  <div class="aurora-toolbar-group" *ngIf="historyPlugins.length > 0">
+    <button
+      *ngFor="let plugin of historyPlugins"
+      type="button"
+      class="aurora-toolbar-button"
+      [class.active]="isButtonActive(plugin.name)"
+      [title]="getTooltip(plugin)"
+      [attr.aria-label]="plugin.title"
+      [attr.aria-pressed]="isButtonActive(plugin.name)"
+      (click)="onButtonClick(plugin, $event)"
+      (mousedown)="$event.preventDefault()"
+    >
+      <span class="aurora-toolbar-button-icon" [innerHTML]="plugin.icon"></span>
+    </button>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════
+  ГРУППА: ПОИСК (Search, Find and Replace)
+  ═══════════════════════════════════════════════════════════════════════ -->
+  <div class="aurora-toolbar-group" *ngIf="searchPlugins.length > 0">
+    <button
+      *ngFor="let plugin of searchPlugins"
+      type="button"
+      class="aurora-toolbar-button"
+      [class.active]="isButtonActive(plugin.name)"
+      [title]="getTooltip(plugin)"
+      [attr.aria-label]="plugin.title"
+      [attr.aria-pressed]="isButtonActive(plugin.name)"
+      (click)="onButtonClick(plugin, $event)"
+      (mousedown)="$event.preventDefault()"
+    >
+      <span class="aurora-toolbar-button-icon" [innerHTML]="plugin.icon"></span>
+    </button>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════
+  ГРУППА: УТИЛИТЫ (Source Code, History, Fullscreen)
+  ═══════════════════════════════════════════════════════════════════════ -->
+  <div class="aurora-toolbar-group" *ngIf="utilityPlugins.length > 0">
+    <button
+      *ngFor="let plugin of utilityPlugins"
+      type="button"
+      class="aurora-toolbar-button"
+      [class.active]="isButtonActive(plugin.name)"
+      [title]="getTooltip(plugin)"
+      [attr.aria-label]="plugin.title"
+      [attr.aria-pressed]="isButtonActive(plugin.name)"
+      (click)="onButtonClick(plugin, $event)"
+      (mousedown)="$event.preventDefault()"
+    >
+      <span class="aurora-toolbar-button-icon" [innerHTML]="plugin.icon"></span>
+    </button>
+  </div>
+</div>

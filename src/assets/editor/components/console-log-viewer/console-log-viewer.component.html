@@ -1,0 +1,76 @@
+<!-- ════════════════════════════════════════════════════════════════════════════
+CONSOLE LOG VIEWER TEMPLATE
+════════════════════════════════════════════════════════════════════════════ -->
+
+<div class="console-log-viewer" [class.collapsed]="!isExpanded">
+  <!-- Заголовок панели -->
+  <div class="console-log-viewer-header">
+    <div class="console-log-viewer-title">
+      <span class="console-log-viewer-icon">📋</span>
+      <span>Console Log</span>
+      <span class="console-log-viewer-count">({{ logs.length }})</span>
+    </div>
+
+    <div class="console-log-viewer-actions">
+      <!-- Кнопка копирования -->
+      <button
+        type="button"
+        class="console-log-viewer-button"
+        title="Скопировать все логи"
+        (click)="copyToClipboard()"
+        [disabled]="logs.length === 0"
+      >
+        📋 Копировать
+      </button>
+
+      <!-- Кнопка очистки -->
+      <button
+        type="button"
+        class="console-log-viewer-button"
+        title="Очистить логи"
+        (click)="clearLogs()"
+        [disabled]="logs.length === 0"
+      >
+        🗑️ Очистить
+      </button>
+
+      <!-- Кнопка сворачивания -->
+      <button
+        type="button"
+        class="console-log-viewer-button console-log-viewer-toggle"
+        title="{{ isExpanded ? 'Свернуть' : 'Развернуть' }}"
+        (click)="toggleExpanded()"
+      >
+        {{ isExpanded ? '▼' : '▲' }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Содержимое панели -->
+  <div class="console-log-viewer-content" *ngIf="isExpanded">
+    <!-- Сообщение если логов нет -->
+    <div class="console-log-viewer-empty" *ngIf="logs.length === 0">
+      <p>Логи пусты. Все console.log вызовы будут отображаться здесь.</p>
+    </div>
+
+    <!-- Список логов -->
+    <div class="console-log-viewer-list" *ngIf="logs.length > 0">
+      <div *ngFor="let log of logs; let i = index" class="console-log-entry" [ngClass]="getLogClass(log.type)">
+        <!-- Номер и время -->
+        <div class="console-log-entry-meta">
+          <span class="console-log-entry-index">{{ i + 1 }}</span>
+          <span class="console-log-entry-time">{{ formatTime(log.timestamp) }}</span>
+          <span class="console-log-entry-type">{{ log.type.toUpperCase() }}</span>
+        </div>
+
+        <!-- Сообщение -->
+        <div class="console-log-entry-message">
+          <pre>{{ log.message }}</pre>
+        </div>
+
+        <!-- Кнопка копирования отдельного лога -->
+        <button type="button" class="console-log-entry-copy" title="Скопировать" (click)="copyLog(log)">📋</button>
+      </div>
+    </div>
+  </div>
+</div>
