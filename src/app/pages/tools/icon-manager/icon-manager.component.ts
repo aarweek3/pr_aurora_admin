@@ -12,6 +12,7 @@ import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzTabsModule } from 'ng-zorro-antd/tabs';
 import { firstValueFrom } from 'rxjs';
 import { ApiEndpoints } from '../../../../environments/api-endpoints';
+import { IconService as GlobalIconService } from '../../../core/services/icon/icon.service';
 import { IconComponent } from '../../../shared/components/ui/icon/icon.component';
 import { IconDataService } from '../../../shared/services/icon-data.service';
 import { IconCategory as DbCategory } from '../../icon-category-manager/models/icon-category.model';
@@ -25,6 +26,7 @@ import { ICON_REGISTRY, IconCategory } from '../../ui-demo/old-control/icon-ui/i
   imports: [
     CommonModule,
     IconComponent,
+
     FormsModule,
     NzDrawerModule,
     NzTabsModule,
@@ -90,7 +92,7 @@ import { ICON_REGISTRY, IconCategory } from '../../ui-demo/old-control/icon-ui/i
                 [class.active]="selectedCategory() === cat.category"
                 (click)="selectedCategory.set(cat.category)"
               >
-                <av-icon type="folder_icon-icons.com_70963" [size]="18"></av-icon>
+                <av-icon type="av_folder" [size]="18"></av-icon>
                 <span>{{ cat.category }}</span>
                 <span class="count">{{ cat.icons.length }}</span>
               </div>
@@ -353,7 +355,16 @@ import { ICON_REGISTRY, IconCategory } from '../../ui-demo/old-control/icon-ui/i
             <nz-tabset>
               <nz-tab nzTitle="Исходный код">
                 <div class="code-editor-wrapper">
+                  <div class="code-label">Original</div>
                   <textarea readonly>{{ rawSvgCode() }}</textarea>
+
+                  @if (cleanedSvgCode()) {
+                  <div class="code-connector">
+                    <av-icon type="arrows/av_arrow_down" [size]="20"></av-icon>
+                    <span>Optimized Output</span>
+                  </div>
+                  <textarea readonly class="optimized">{{ cleanedSvgCode() }}</textarea>
+                  }
                 </div>
               </nz-tab>
               <nz-tab nzTitle="Метаданные">
@@ -401,52 +412,6 @@ import { ICON_REGISTRY, IconCategory } from '../../ui-demo/old-control/icon-ui/i
                     <av-icon type="actions/av_add" [size]="14"></av-icon>
                     Внедрить метаданные в код
                   </button>
-                </div>
-              </nz-tab>
-              <nz-tab nzTitle="Оптимизированный код">
-                <div class="code-editor-wrapper">
-                  <textarea readonly>{{ cleanedSvgCode() }}</textarea>
-                </div>
-              </nz-tab>
-              <nz-tab nzTitle="Синхронизация">
-                <div class="sync-tab-content">
-                  <div class="sync-info-banner">
-                    <av-icon type="system/av_info" [size]="16"></av-icon>
-                    <span>Выберите целевое назначение для синхронизации текущих изменений</span>
-                  </div>
-
-                  <div class="sync-actions-list">
-                    <button class="sync-action-btn primary" (click)="granularSync(true, true)">
-                      <div class="btn-icon">
-                        <av-icon type="actions/av_save" [size]="20"></av-icon>
-                        <div class="plus-badge">+</div>
-                      </div>
-                      <div class="btn-text">
-                        <span class="title">Сервер + Клиент</span>
-                        <span class="desc">Полная синхронизация (Master + Assets)</span>
-                      </div>
-                    </button>
-
-                    <button class="sync-action-btn" (click)="granularSync(true, false)">
-                      <div class="btn-icon">
-                        <av-icon type="system/av_cog" [size]="20"></av-icon>
-                      </div>
-                      <div class="btn-text">
-                        <span class="title">Только на Сервер</span>
-                        <span class="desc">Сохранить только в Master хранилище</span>
-                      </div>
-                    </button>
-
-                    <button class="sync-action-btn" (click)="granularSync(false, true)">
-                      <div class="btn-icon">
-                        <av-icon type="actions/av_upload" [size]="20"></av-icon>
-                      </div>
-                      <div class="btn-text">
-                        <span class="title">Только на Клиент</span>
-                        <span class="desc">Обновить только ассеты фронтенда</span>
-                      </div>
-                    </button>
-                  </div>
                 </div>
               </nz-tab>
             </nz-tabset>
@@ -888,18 +853,9 @@ import { ICON_REGISTRY, IconCategory } from '../../ui-demo/old-control/icon-ui/i
                 (ngModelChange)="uploadCategory.set($event)"
                 style="width: 100%;"
               >
-                <nz-option nzValue="general" nzLabel="Общие"></nz-option>
-                <nz-option nzValue="actions" nzLabel="Действия"></nz-option>
-                <nz-option nzValue="arrows" nzLabel="Стрелки"></nz-option>
-                <nz-option nzValue="charts" nzLabel="Графики"></nz-option>
-                <nz-option nzValue="communication" nzLabel="Коммуникация"></nz-option>
-                <nz-option nzValue="editor" nzLabel="Редактор"></nz-option>
-                <nz-option nzValue="files" nzLabel="Файлы"></nz-option>
-                <nz-option nzValue="media" nzLabel="Медиа"></nz-option>
-                <nz-option nzValue="settings" nzLabel="Настройки"></nz-option>
-                <nz-option nzValue="system" nzLabel="Система"></nz-option>
-                <nz-option nzValue="time" nzLabel="Время"></nz-option>
-                <nz-option nzValue="user" nzLabel="Пользователь"></nz-option>
+                > @for (cat of dbCategories(); track cat.id) {
+                <nz-option [nzValue]="cat.folderName" [nzLabel]="cat.displayName"></nz-option>
+                }
               </nz-select>
             </div>
             <div>
@@ -940,18 +896,9 @@ import { ICON_REGISTRY, IconCategory } from '../../ui-demo/old-control/icon-ui/i
                 (ngModelChange)="bulkUploadCategory.set($event)"
                 style="width: 100%;"
               >
-                <nz-option nzValue="general" nzLabel="Общие"></nz-option>
-                <nz-option nzValue="actions" nzLabel="Действия"></nz-option>
-                <nz-option nzValue="arrows" nzLabel="Стрелки"></nz-option>
-                <nz-option nzValue="charts" nzLabel="Графики"></nz-option>
-                <nz-option nzValue="communication" nzLabel="Коммуникация"></nz-option>
-                <nz-option nzValue="editor" nzLabel="Редактор"></nz-option>
-                <nz-option nzValue="files" nzLabel="Файлы"></nz-option>
-                <nz-option nzValue="media" nzLabel="Медиа"></nz-option>
-                <nz-option nzValue="settings" nzLabel="Настройки"></nz-option>
-                <nz-option nzValue="system" nzLabel="Система"></nz-option>
-                <nz-option nzValue="time" nzLabel="Время"></nz-option>
-                <nz-option nzValue="user" nzLabel="Пользователь"></nz-option>
+                > @for (cat of dbCategories(); track cat.id) {
+                <nz-option [nzValue]="cat.folderName" [nzLabel]="cat.displayName"></nz-option>
+                }
               </nz-select>
             </div>
 
@@ -1017,7 +964,6 @@ import { ICON_REGISTRY, IconCategory } from '../../ui-demo/old-control/icon-ui/i
         </ng-container>
       </nz-modal>
 
-      <!-- Move Icon Modal -->
       <nz-modal
         [nzVisible]="isMoveModalOpen()"
         nzTitle="Переместить иконку"
@@ -1029,26 +975,45 @@ import { ICON_REGISTRY, IconCategory } from '../../ui-demo/old-control/icon-ui/i
       >
         <ng-container *nzModalContent>
           <div *ngIf="moveIconSelected() as icon">
-            <p>
-              Выберите целевую папку для иконки <b>{{ icon.name }}</b
-              >:
-            </p>
+            <div
+              style="margin-bottom: 16px; padding: 12px; background: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0; display: flex; align-items: center; gap: 12px;"
+            >
+              <div
+                style="width: 40px; height: 40px; background: #fff; border-radius: 8px; display: flex; align-items: center; justify-content: center; border: 1px solid #e2e8f0;"
+              >
+                <av-icon [type]="icon.type" [size]="24"></av-icon>
+              </div>
+              <div>
+                <div style="font-size: 14px; font-weight: 700; color: #1e293b;">
+                  {{ icon.name }}
+                </div>
+                <div style="font-size: 11px; color: #64748b;">
+                  Текущая категория: <b>{{ currentCategoryName() }}</b>
+                </div>
+              </div>
+            </div>
+
+            <label
+              style="display: block; margin-bottom: 8px; font-weight: 600; font-size: 13px; color: #475569;"
+              >Целевая категория:</label
+            >
             <nz-select
-              [ngModel]="targetCategoryFolderName()"
-              (ngModelChange)="targetCategoryFolderName.set($event)"
-              style="width: 100%; margin-top: 12px;"
+              [ngModel]="targetCategoryId()"
+              (ngModelChange)="targetCategoryId.set($event)"
+              style="width: 100%;"
               nzPlaceHolder="Выберите категорию"
               nzShowSearch
             >
               @for (dbCat of dbCategories(); track dbCat.id) {
-              <nz-option [nzValue]="dbCat.folderName" [nzLabel]="dbCat.displayName"></nz-option>
+              <nz-option [nzValue]="dbCat.id" [nzLabel]="dbCat.displayName"></nz-option>
               }
             </nz-select>
+
             <div
-              style="margin-top: 16px; padding: 12px; background: #fff7ed; border-radius: 8px; border: 1px solid #ffedd5; font-size: 13px; color: #9a3412;"
+              style="margin-top: 16px; padding: 12px; background: #f0f9ff; border-radius: 8px; border: 1px solid #bae6fd; font-size: 13px; color: #0369a1;"
             >
               <av-icon type="system/av_info" [size]="14" style="margin-right: 8px;"></av-icon>
-              <span>Внимание: файл будет физически перемещен на сервере.</span>
+              <span>Информация: Категория иконки будет обновлена в базе данных.</span>
             </div>
           </div>
         </ng-container>
@@ -1951,24 +1916,58 @@ import { ICON_REGISTRY, IconCategory } from '../../ui-demo/old-control/icon-ui/i
       }
 
       .code-editor-wrapper {
-        margin-top: 12px;
-      }
+        background: #f8fafc;
+        border-radius: 8px;
+        padding: 12px;
+        border: 1px solid #e2e8f0;
 
-      .code-editor-wrapper textarea {
-        width: 100%;
-        height: 250px;
-        background: #1e293b;
-        color: #cbd5e1;
-        border-radius: 12px;
-        padding: 16px;
-        font-family: 'Fira Code', 'Courier New', monospace;
-        font-size: 12px;
-        line-height: 1.6;
-        border: none;
-        resize: none;
-        outline: none;
-      }
+        textarea {
+          width: 100%;
+          height: 180px;
+          background: #1e293b;
+          color: #e2e8f0;
+          border: none;
+          border-radius: 6px;
+          padding: 12px;
+          font-family: 'Fira Code', monospace;
+          font-size: 13px;
+          line-height: 1.5;
+          resize: vertical;
 
+          &.optimized {
+            border: 2px solid #22c55e;
+          }
+
+          &:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+          }
+        }
+
+        .code-label {
+          font-size: 11px;
+          font-weight: 700;
+          text-transform: uppercase;
+          color: #64748b;
+          margin-bottom: 6px;
+          letter-spacing: 0.05em;
+        }
+
+        .code-connector {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+          margin: 16px 0;
+          color: #6366f1;
+          font-size: 12px;
+          font-weight: 600;
+
+          av-icon {
+            color: #6366f1;
+          }
+        }
+      }
       .editor-footer {
         margin-top: auto;
         padding-top: 24px;
@@ -2170,6 +2169,7 @@ export class IconManagerComponent {
   private message = inject(NzMessageService);
   private modal = inject(NzModalService);
   private sanitizer = inject(DomSanitizer);
+  private globalIconService = inject(GlobalIconService);
   private dbCategoryService = inject(IconCategoryService);
 
   // State Signals
@@ -2224,7 +2224,8 @@ export class IconManagerComponent {
   isMoving = signal(false);
   isMoveModalOpen = signal(false);
   moveIconSelected = signal<IconMetadata | null>(null);
-  targetCategoryFolderName = signal('');
+  currentCategoryName = signal('');
+  targetCategoryId = signal<number | null>(null);
   dbCategories = signal<DbCategory[]>([]);
 
   // Technical Passport Signals
@@ -2257,6 +2258,18 @@ export class IconManagerComponent {
     this.iconDataService.getIcons(force).subscribe({
       next: (data) => {
         console.log(`[IconManager] 📦 Data received in component: ${data.length} categories`);
+
+        // Debug logging for categories
+        data.forEach((c) => {
+          console.log(`[IconManager] 📂 Category: '${c.category}', Icons: ${c.icons.length}`);
+          if (c.category.toLowerCase() === 'editor') {
+            console.log(
+              `[IconManager] 🔍 Editor icons:`,
+              c.icons.map((i) => i.name),
+            );
+          }
+        });
+
         const sorted = [...data].sort((a, b) => {
           if (a.category === 'Другие') return 1;
           if (b.category === 'Другие') return -1;
@@ -2280,17 +2293,19 @@ export class IconManagerComponent {
 
   syncToLocal() {
     this.isSyncing.set(true);
-    console.log('[IconManager] 🔄 syncToLocal started...');
+    console.log('[IconManager] 🔄 Triggering backend synchronization...');
+
     this.http.post(ApiEndpoints.ICONS.SYNC_TO_LOCAL, {}).subscribe({
-      next: () => {
-        console.log('[IconManager] ✅ Sync to local success. Triggering force reload...');
-        this.message.success('✅ Библиотека иконок успешно синхронизирована с фронтендом!');
+      next: (res: any) => {
+        console.log('[IconManager] ✅ Backend sync successful:', res);
+        this.message.success('✅ Библиотека иконок синхронизирована!');
+        this.globalIconService.refreshCache(); // Refresh global SVG cache
+        this.loadIcons(true); // Refresh grid with updated data
         this.isSyncing.set(false);
-        this.loadIcons(true); // Force reload after sync
       },
-      error: (err: unknown) => {
+      error: (err: any) => {
         console.error('[IconManager] ❌ Sync failed', err);
-        this.message.error('❌ Ошибка синхронизации иконок');
+        this.message.error('❌ Ошибка при синхронизации!');
         this.isSyncing.set(false);
       },
     });
@@ -2384,23 +2399,18 @@ export class IconManagerComponent {
     this.metaDataKey.set('data-icon-id');
     this.metaDataValue.set(icon.name);
 
-    // Load actual SVG file
-    const path = `assets/icons/${icon.type}.svg`;
-    this.http.get(path, { responseType: 'text' }).subscribe({
+    // Load actual SVG content from Backend
+    this.http.get(ApiEndpoints.ICONS.CONTENT(icon.name), { responseType: 'text' }).subscribe({
       next: (code) => {
         this.rawSvgCode.set(code);
         this.generatePassport(code);
       },
       error: (err) => {
-        let errorMsg = 'Ошибка загрузки SVG.';
+        let errorMsg = 'Ошибка загрузки SVG из базы данных.';
+        console.error(`Failed to load icon content for: ${icon.name}`, err);
 
         if (err?.status === 404) {
-          errorMsg = `⚠️ Файл не найден: ${icon.type}.svg\n\nФайл может быть:\n- Удалён из assets/icons\n- Переименован\n- Указан неверный путь в реестре`;
-          console.error(`Icon file not found: ${path}`, err);
-        } else if (err?.status === 0) {
-          errorMsg = '⚠️ Ошибка сети. Проверьте подключение.';
-        } else if (err?.message) {
-          errorMsg = `⚠️ Ошибка: ${err.message}`;
+          errorMsg = `⚠️ Иконка "${icon.name}" не найдена в БД.`;
         }
 
         this.rawSvgCode.set(errorMsg);
@@ -2594,86 +2604,19 @@ export class IconManagerComponent {
     if (!raw || raw.startsWith('Loading')) return;
 
     try {
-      const parser = new DOMParser();
-      const doc = parser.parseFromString(raw, 'image/svg+xml');
-      const svg = doc.querySelector('svg');
+      console.log('[IconManager] optimizeSvg called, invoking internalOptimize...');
+      const optimized = this.internalOptimize(raw);
+      this.cleanedSvgCode.set(optimized);
 
-      if (!svg) throw new Error('Invalid SVG');
-
-      // 1. Root-level cleanup
-      const attributesToRemove = [
-        'width',
-        'height',
-        'id',
-        'class',
-        'version',
-        'x',
-        'y',
-        'xml:space',
-        'style',
-        'xmlns:xlink',
-      ];
-      attributesToRemove.forEach((attr) => svg.removeAttribute(attr));
-
-      // 2. Remove comments and processing instructions
-      const iterator = doc.createNodeIterator(
-        doc,
-        NodeFilter.SHOW_COMMENT | NodeFilter.SHOW_PROCESSING_INSTRUCTION,
-      );
-      let node;
-      while ((node = iterator.nextNode())) {
-        node.parentNode?.removeChild(node);
-      }
-
-      // 3. Recursive cleanup for all child elements
-      const all = svg.querySelectorAll('*');
-      all.forEach((el) => {
-        // Remove common junk attributes
-        el.removeAttribute('id');
-        el.removeAttribute('class');
-        el.removeAttribute('style');
-
-        // Clean namespaces and meta attributes (often from AI/Figma)
-        for (let i = 0; i < el.attributes.length; i++) {
-          const attr = el.attributes[i];
-          if (
-            attr.name.startsWith('inkscape:') ||
-            attr.name.startsWith('sodipodi:') ||
-            attr.name.startsWith('adobe:')
-          ) {
-            el.removeAttribute(attr.name);
-          }
-        }
-
-        // Inject currentColor for managed fills/strokes
-        if (el.hasAttribute('fill')) {
-          const fill = el.getAttribute('fill');
-          if (fill && fill !== 'none' && fill !== 'currentColor') {
-            el.setAttribute('fill', 'currentColor');
-          }
-        } else if (!el.hasAttribute('stroke')) {
-          // If no fill and no stroke, assume it's a fill path that needs currentColor
-          el.setAttribute('fill', 'currentColor');
-        }
-
-        if (el.hasAttribute('stroke')) {
-          const stroke = el.getAttribute('stroke');
-          if (stroke && stroke !== 'none' && stroke !== 'currentColor') {
-            el.setAttribute('stroke', 'currentColor');
-          }
-        }
+      this.iconPassport.update((p) => {
+        if (!p) return null;
+        return { ...p, isStandard: true };
       });
 
-      // 4. Serialize and final string cleanup
-      let cleaned = new XMLSerializer().serializeToString(doc);
-
-      // Remove any remaining XML declarations if serialization added them
-      cleaned = cleaned.replace(/<\?xml.*\?>/g, '').trim();
-
-      this.cleanedSvgCode.set(cleaned);
-      this.showToast('Оптимизация завершена! Код очищен и внедрен currentColor.');
+      this.showToast('✅ SVG код оптимизирован (предпросмотр)');
     } catch (e) {
-      this.showToast('Не удалось разобрать SVG для оптимизации.');
+      console.error('Optimization error:', e);
+      this.showToast('❌ Ошибка оптимизации');
     }
   }
 
@@ -2755,9 +2698,10 @@ export class IconManagerComponent {
           console.log(`[IconManager] ✅ Upload success for ${name}. Triggering auto-sync...`);
           this.showToast(`✅ Иконка "${name}" успешно загружена!`);
           this.isUploadModalOpen.set(false);
+          this.globalIconService.refreshCache();
           this.syncToLocal(); // Auto-sync after upload
         },
-        error: (err) => {
+        error: (err: any) => {
           console.error('[IconManager] ❌ Upload failed', err);
           this.showToast('❌ Ошибка при загрузке иконки');
         },
@@ -2824,9 +2768,10 @@ export class IconManagerComponent {
             this.showToast(`✅ Пакет из ${files.length} иконок успешно загружен!`);
             this.isBulkUploadModalOpen.set(false);
             this.isBulkUploading.set(false);
+            this.globalIconService.refreshCache();
             this.syncToLocal(); // Auto-sync after bulk upload
           },
-          error: (err) => {
+          error: (err: any) => {
             console.error('[IconManager] ❌ Bulk upload failed', {
               error: err,
               requestsCount: requests.length,
@@ -2859,14 +2804,19 @@ export class IconManagerComponent {
     this.showToast('Код компонента скопирован!');
   }
 
-  copySvg(type: string) {
-    const path = `assets/icons/${type}.svg`;
-    this.http.get(path, { responseType: 'text' }).subscribe({
+  copySvg(input: any) {
+    const name = typeof input === 'string' ? input.split('/').pop() : input.name;
+    if (!name) {
+      this.showToast('❌ Не удалось определить имя иконки');
+      return;
+    }
+
+    this.http.get(ApiEndpoints.ICONS.CONTENT(name), { responseType: 'text' }).subscribe({
       next: (code) => {
         navigator.clipboard.writeText(code);
-        this.showToast('Чистый SVG код скопирован!');
+        this.showToast('✅ SVG скопирован из базы данных');
       },
-      error: () => this.showToast('❌ Ошибка загрузки SVG для копирования'),
+      error: () => this.showToast('❌ Ошибка загрузки SVG из БД'),
     });
   }
 
@@ -2888,13 +2838,8 @@ export class IconManagerComponent {
       this.batchCurrentName.set(icon.name || icon.type);
       try {
         // Find correct path: icon.type might be "category/name" or just "name"
-        let path = `assets/icons/${icon.type}.svg`;
-        if (!icon.type.includes('/')) {
-          // If no slash, maybe it's in folders? No, we should prefer the full path from type
-        }
-
         const code = await firstValueFrom(
-          this.http.get(path, {
+          this.http.get(ApiEndpoints.ICONS.CONTENT(icon.name), {
             responseType: 'text',
             headers: { 'X-Skip-Error-Handler': 'true' },
           }),
@@ -2911,11 +2856,19 @@ export class IconManagerComponent {
           processed = this.internalApplyMetadata(code);
         }
 
-        // In a real app we'd send to backend here
-        // For now we simulate success
+        // Send to backend
+        await firstValueFrom(
+          this.http.post(ApiEndpoints.ICONS.UPDATE, {
+            iconType: icon.type,
+            svgContent: processed,
+            toBackend: true,
+            toFrontend: true,
+          }),
+        );
+
         this.batchCurrent.set(i + 1);
         this.batchProgress.set(Math.round(((i + 1) / icons.length) * 100));
-        this.addBatchLog(`✅ Обработано: ${icon.type}`, 'success');
+        this.addBatchLog(`✅ Обработано и сохранено: ${icon.type}`, 'success');
       } catch (e: any) {
         // Детальная обработка ошибок
         let errorMessage = `❌ Ошибка: ${icon.type}`;
@@ -2940,11 +2893,13 @@ export class IconManagerComponent {
   }
 
   private internalOptimize(raw: string): string {
+    // 1. Parse string to DOM
     const parser = new DOMParser();
     const doc = parser.parseFromString(raw, 'image/svg+xml');
     const svg = doc.querySelector('svg');
     if (!svg) return raw;
 
+    // 2. Remove unwanted attributes from ROOT <svg>
     const attributesToRemove = [
       'width',
       'height',
@@ -2956,20 +2911,47 @@ export class IconManagerComponent {
       'xml:space',
       'style',
       'xmlns:xlink',
+      'xmlns',
+      // Note: we might want to keep xmlns if not inline, but for inline it's often redundant.
+      // Safest is to keep xmlns="http://www.w3.org/2000/svg" but remove others.
     ];
     attributesToRemove.forEach((attr) => svg.removeAttribute(attr));
 
+    // Ensure strictly standard xmlns if missing
+    if (!svg.getAttribute('xmlns')) {
+      svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+    }
+
+    // 3. Clean all children elements
     svg.querySelectorAll('*').forEach((el) => {
       el.removeAttribute('id');
       el.removeAttribute('class');
       el.removeAttribute('style');
-      if (el.hasAttribute('fill') && el.getAttribute('fill') !== 'none')
+
+      // Force currentColor
+      if (el.hasAttribute('fill') && el.getAttribute('fill') !== 'none') {
         el.setAttribute('fill', 'currentColor');
-      if (el.hasAttribute('stroke') && el.getAttribute('stroke') !== 'none')
+      }
+      if (el.hasAttribute('stroke') && el.getAttribute('stroke') !== 'none') {
         el.setAttribute('stroke', 'currentColor');
+      }
     });
 
-    return new XMLSerializer().serializeToString(doc);
+    // 4. Serialize back to string
+    const serializer = new XMLSerializer();
+    let serialized = serializer.serializeToString(svg);
+
+    console.log('[IconManager] Pre-regex serialized:', serialized);
+
+    // 5. Final Regex Cleanup
+    // Explicitly remove XML declaration, DOCTYPE, and comments
+    serialized = serialized.replace(/<\?xml.*?\?>/gi, '');
+    serialized = serialized.replace(/<!DOCTYPE[^>]*>/gi, '');
+    serialized = serialized.replace(/<!--[\s\S]*?-->/g, '');
+
+    const final = serialized.trim();
+    console.log('[IconManager] Post-regex final:', final);
+    return final;
   }
 
   private internalNormalize(raw: string): string {
@@ -3032,9 +3014,12 @@ export class IconManagerComponent {
   // --- Move Icon Logic ---
   openMoveModal(icon: IconMetadata) {
     this.moveIconSelected.set(icon);
-    // Предзаполняем текущей категорией (если найдем по имени)
+    this.currentCategoryName.set(icon.category || 'Без категории');
+
+    // Пытаемся найти ID текущей категории для предзаполнения
     const currentCat = this.dbCategories().find((c) => c.displayName === icon.category);
-    this.targetCategoryFolderName.set(currentCat?.folderName || '');
+    this.targetCategoryId.set(currentCat?.id || null);
+
     this.isMoveModalOpen.set(true);
   }
 
@@ -3045,22 +3030,27 @@ export class IconManagerComponent {
 
   confirmMove() {
     const icon = this.moveIconSelected();
-    const targetFolder = this.targetCategoryFolderName();
+    const targetId = this.targetCategoryId();
 
-    if (!icon || !targetFolder) {
-      this.message.warning('Выберите целевую папку');
+    if (!icon || !targetId) {
+      this.message.warning('Выберите целевую категорию');
       return;
     }
 
+    console.log(`[IconManager] 🚀 confirmMove: Icon=${icon.type}, TargetId=${targetId}`);
     this.isMoving.set(true);
-    this.iconDataService.moveIcon(icon.type, targetFolder).subscribe({
+
+    this.iconDataService.moveIcon(icon.type, targetId).subscribe({
       next: (res: any) => {
+        console.log('[IconManager] ✅ Move response:', res);
         this.message.success(res.message || 'Иконка успешно перемещена');
         this.isMoving.set(false);
         this.isMoveModalOpen.set(false);
+        this.globalIconService.refreshCache();
         this.loadIcons(true); // Force reload after move
       },
       error: (err: any) => {
+        console.error('[IconManager] ❌ Move error:', err);
         this.message.error(err.error?.message || 'Ошибка перемещения');
         this.isMoving.set(false);
       },

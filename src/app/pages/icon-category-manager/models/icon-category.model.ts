@@ -6,6 +6,7 @@ export interface IconCategory {
   menuIcon?: string;
   createdAt: string;
   updatedAt?: string;
+  iconCount: number;
 }
 
 export interface IconCategoryCreateDto {

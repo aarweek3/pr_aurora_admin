@@ -58,7 +58,7 @@ export class IconDataService {
     return this.http.get<number>(ApiEndpoints.ICONS.COUNT);
   }
 
-  moveIcon(iconType: string, targetCategoryFolderName: string): Observable<any> {
-    return this.http.post(ApiEndpoints.ICONS.MOVE, { iconType, targetCategoryFolderName });
+  moveIcon(iconType: string, targetCategoryId: number): Observable<any> {
+    return this.http.post(ApiEndpoints.ICONS.MOVE, { iconType, targetCategoryId });
   }
 }

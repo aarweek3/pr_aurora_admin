@@ -197,21 +197,28 @@ export class IconComponent {
   private loadIcon(type: string): void {
     if (!type) return;
 
-    const mappedFile = this.iconFileMap[type];
-    let iconPath = mappedFile ? `assets/icons/${mappedFile}` : type;
+    const mappedName = this.iconFileMap[type];
+    // If mapped, use the map result (e.g. 'download' -> 'arrows/av_arrow_down.svg').
+    // We need to extract just the name 'av_arrow_down'.
 
-    // Добавляем расширение и префикс если нужно
+    let iconName = type;
 
-    if (!iconPath.endsWith('.svg')) iconPath += '.svg';
-    if (!iconPath.startsWith('/assets/')) {
-      if (iconPath.startsWith('assets/')) {
-        iconPath = '/' + iconPath;
-      } else {
-        iconPath = `/assets/icons/${iconPath}`;
+    if (mappedName) {
+      // e.g. "arrows/av_arrow_down.svg" -> "av_arrow_down"
+      const parts = mappedName.split('/');
+      iconName = parts[parts.length - 1].replace('.svg', '');
+    } else {
+      // e.g. "actions/av_save" -> "av_save"
+      // or just "av_save" -> "av_save"
+      if (iconName.includes('/')) {
+        const parts = iconName.split('/');
+        iconName = parts[parts.length - 1];
       }
+      iconName = iconName.replace('.svg', '');
     }
 
-    this.iconService.getIcon(iconPath).subscribe({
+    // Now iconName should be just "av_save"
+    this.iconService.getIcon(iconName).subscribe({
       next: (svgText: string) => {
         // ГЛУБОКАЯ ОЧИСТКА SVG
         const cleanedSvg = svgText
@@ -226,7 +233,7 @@ export class IconComponent {
         this.svgContent.set(this.sanitizer.bypassSecurityTrustHtml(cleanedSvg));
       },
       error: (err: any) => {
-        console.error(`[IconComponent] ❌ Error loading: ${iconPath}`, err);
+        console.error(`[IconComponent] ❌ Error loading: ${iconName}`, err);
         // Fallback: красный квадрат
         this.svgContent.set(
           this.sanitizer.bypassSecurityTrustHtml(

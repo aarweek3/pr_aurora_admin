@@ -120,6 +120,7 @@ export class ApiEndpoints {
     SYNC_STATUS: `${this.BASE_URL}/Icons/sync-status`,
     REFACTOR_NAMES: `${this.BASE_URL}/Icons/refactor-names`,
     MOVE: `${this.BASE_URL}/Icons/move`,
+    CONTENT: (name: string) => `${this.BASE_URL}/Icons/content/${name}`,
     DELETE: (type: string, b: boolean, f: boolean) =>
       `${this.BASE_URL}/Icons/delete?iconType=${type}&fromBackend=${b}&fromFrontend=${f}`,
   };

@@ -17,6 +17,7 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
 import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzTagModule } from 'ng-zorro-antd/tag';
+import { IconComponent } from '../../shared/components/ui/icon/icon.component';
 import {
   IconCategory,
   IconCategoryCreateDto,
@@ -40,6 +41,7 @@ import { IconCategoryService } from './services/icon-category.service';
     NzInputModule,
     NzTagModule,
     NzBreadCrumbModule,
+    IconComponent,
   ],
   template: `
     <div class="page-container">
@@ -52,10 +54,12 @@ import { IconCategoryService } from './services/icon-category.service';
           <h1>Управление папками иконок</h1>
           <div class="actions">
             <button nz-button nzType="default" (click)="onSync()" [nzLoading]="isSyncing()">
-              <span nz-icon nzType="sync"></span> Синхронизировать с диском
+              <av-icon type="actions/av_save" [size]="16" style="margin-right: 8px;"></av-icon>
+              Синхронизировать с диском
             </button>
             <button nz-button nzType="primary" (click)="showCreateModal()">
-              <span nz-icon nzType="plus"></span> Добавить коллекцию
+              <av-icon type="actions/av_add" [size]="16" style="margin-right: 8px;"></av-icon>
+              Добавить рубрику для иконок
             </button>
           </div>
         </div>
@@ -84,12 +88,15 @@ import { IconCategoryService } from './services/icon-category.service';
             <tr *ngFor="let data of basicTable.data">
               <td>
                 <div class="icon-preview">
-                  <span nz-icon [nzType]="data.menuIcon || 'folder'"></span>
+                  <av-icon [type]="data.menuIcon || 'av_folder'" [size]="18"></av-icon>
                 </div>
               </td>
               <td class="display-name">{{ data.displayName }}</td>
               <td>
                 <code>{{ data.folderName }}</code>
+                <span style="color: #888; margin-left: 8px; font-size: 12px;"
+                  >({{ data.iconCount || 0 }} иконок)</span
+                >
               </td>
               <td>
                 <nz-tag [nzColor]="data.isSystem ? 'blue' : 'default'">
@@ -105,7 +112,7 @@ import { IconCategoryService } from './services/icon-category.service';
                     (click)="showEditModal(data)"
                     nz-tooltip="Редактировать"
                   >
-                    <span nz-icon nzType="edit"></span>
+                    <av-icon type="editor/av_edit" [size]="16"></av-icon>
                   </button>
                   <button
                     nz-button
@@ -115,7 +122,7 @@ import { IconCategoryService } from './services/icon-category.service';
                     [disabled]="data.isSystem"
                     nz-tooltip="Удалить"
                   >
-                    <span nz-icon nzType="delete"></span>
+                    <av-icon type="actions/av_trash" [size]="16"></av-icon>
                   </button>
                 </div>
               </td>

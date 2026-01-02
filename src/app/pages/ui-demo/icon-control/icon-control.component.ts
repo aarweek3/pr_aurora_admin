@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Component, computed, effect, signal } from '@angular/core';
+import { Component, computed, effect, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { IconService } from '@core/services/icon/icon.service';
 import { HelpCopyContainerComponent } from '@shared/components/ui/container-help-copy-ui/container-help-copy-ui.component';
 import {
   AvIconConfig,
@@ -45,6 +46,8 @@ import { ContainerUiHelpBaseComponent } from '../../../shared/containers/ui-help
   styleUrl: './icon-control.component.scss',
 })
 export class IconControlComponent {
+  private iconService = inject(IconService);
+
   constructor(private http: HttpClient) {
     // Effect to fetch raw SVG source
     effect(() => {
@@ -513,9 +516,9 @@ export interface AvHelpCopyProps {
   }
 
   private fetchRawSource(iconPath: string): void {
-    const url = `assets/icons/${iconPath}.svg`;
-    this.http.get(url, { responseType: 'text' }).subscribe({
-      next: (source) => this.pgRawSource.set(source),
+    // Use the injected iconService
+    this.iconService.getIcon(iconPath).subscribe({
+      next: (source: string) => this.pgRawSource.set(source),
       error: () => this.pgRawSource.set('Не удалось загрузить исходный код иконки'),
     });
   }
