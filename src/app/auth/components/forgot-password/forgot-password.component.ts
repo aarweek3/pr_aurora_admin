@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { LoggerConsoleService } from '@shared/logger-console/services/logger-console.service';
 import { NzAlertModule } from 'ng-zorro-antd/alert';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzCardModule } from 'ng-zorro-antd/card';
@@ -125,14 +124,12 @@ export class ForgotPasswordComponent {
   private readonly fb = inject(FormBuilder);
   private readonly passwordService = inject(PasswordService);
   private readonly message = inject(NzMessageService);
-  private readonly logger = inject(LoggerConsoleService).getLogger('ForgotPassword');
 
   form: FormGroup;
-  loading = true; // Temporary set to false in constructor, but let's fix the logic
+  loading = false;
   emailSent = false;
 
   constructor() {
-    this.loading = false;
     this.form = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
     });
@@ -142,13 +139,10 @@ export class ForgotPasswordComponent {
     if (!this.form.valid) return;
 
     this.loading = true;
-    this.logger.info('Запрос на восстановление пароля', { email: this.form.value.email });
-
     this.passwordService.forgotPassword(this.form.value).subscribe({
-      next: (response: any) => {
+      next: (response) => {
         this.emailSent = true;
         this.loading = false;
-        this.logger.info('Инструкции отправлены на email');
 
         if (response.debugToken) {
           console.log(
@@ -159,9 +153,8 @@ export class ForgotPasswordComponent {
           );
         }
       },
-      error: (err) => {
+      error: () => {
         this.loading = false;
-        this.logger.error('Ошибка восстановления пароля', err);
         this.message.error('Ошибка при отправке запроса');
       },
     });

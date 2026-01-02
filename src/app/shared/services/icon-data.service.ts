@@ -61,4 +61,28 @@ export class IconDataService {
   moveIcon(iconType: string, targetCategoryId: number): Observable<any> {
     return this.http.post(ApiEndpoints.ICONS.MOVE, { iconType, targetCategoryId });
   }
+
+  /**
+   * Переименовать иконку
+   * @param oldName - текущее имя иконки
+   * @param newName - новое имя иконки
+   */
+  renameIcon(oldName: string, newName: string): Observable<any> {
+    return this.http.post(ApiEndpoints.ICONS.RENAME, { oldName, newName }).pipe(
+      catchError((error) => {
+        // Обработка ошибок от backend
+        let errorMessage = 'Ошибка переименования';
+
+        if (error.status === 400) {
+          errorMessage = error.error.message || 'Недопустимое имя';
+        } else if (error.status === 409) {
+          errorMessage = 'Иконка с таким именем уже существует';
+        } else if (error.status === 404) {
+          errorMessage = 'Иконка не найдена';
+        }
+
+        throw new Error(errorMessage);
+      }),
+    );
+  }
 }

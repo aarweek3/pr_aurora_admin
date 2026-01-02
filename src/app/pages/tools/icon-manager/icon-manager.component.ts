@@ -289,13 +289,90 @@ import { ICON_REGISTRY, IconCategory } from '../../ui-demo/old-control/icon-ui/i
 
             <!-- Stats & Meta -->
             <div class="meta-section">
+              <!-- НАЗВАНИЕ (с inline редактированием) -->
               <div class="meta-item">
-                <span class="label">Название</span>
-                <span class="value">{{ icon.name }}</span>
+                <div class="meta-header">
+                  <span class="label">НАЗВАНИЕ</span>
+                  @if (!isEditingName()) {
+                  <button class="icon-btn-small" (click)="startEditName()" title="Переименовать">
+                    <av-icon type="actions/av_edit" [size]="14"></av-icon>
+                  </button>
+                  }
+                </div>
+
+                @if (isEditingName()) {
+                <!-- Режим редактирования -->
+                <div class="edit-mode">
+                  <input
+                    type="text"
+                    class="name-input"
+                    [ngModel]="editedName()"
+                    (ngModelChange)="editedName.set($event)"
+                    (keydown)="onNameKeyDown($event)"
+                    [disabled]="isRenamingInProgress()"
+                    autofocus
+                    placeholder="Введите новое имя"
+                  />
+                  <div class="edit-actions">
+                    <button
+                      class="save-btn"
+                      (click)="saveNewName()"
+                      [disabled]="isRenamingInProgress()"
+                      title="Сохранить"
+                    >
+                      @if (isRenamingInProgress()) {
+                      <div class="small-spinner"></div>
+                      } @else {
+                      <av-icon type="actions/av_check_mark" [size]="14"></av-icon>
+                      }
+                    </button>
+                    <button
+                      class="cancel-btn"
+                      (click)="cancelEditName()"
+                      [disabled]="isRenamingInProgress()"
+                      title="Отмена"
+                    >
+                      <av-icon type="actions/av_close" [size]="14"></av-icon>
+                    </button>
+                  </div>
+                </div>
+
+                @if (nameError()) {
+                <div class="error-message">⚠️ {{ nameError() }}</div>
+                }
+
+                <div class="hint-message">💡 Enter - сохранить, Escape - отмена</div>
+                } @else {
+                <!-- Режим просмотра -->
+                <span
+                  class="value editable"
+                  (dblclick)="onNameDoubleClick()"
+                  title="Двойной клик для редактирования"
+                >
+                  {{ icon.name }}
+                </span>
+                }
               </div>
+
+              <!-- КАТЕГОРИЯ (с кнопкой смены) -->
               <div class="meta-item">
-                <span class="label">Путь</span>
-                <span class="value">{{ icon.type }}.svg</span>
+                <div class="meta-header">
+                  <span class="label">КАТЕГОРИЯ</span>
+                  <button
+                    class="icon-btn-small"
+                    (click)="openMoveModal(icon)"
+                    title="Сменить категорию"
+                  >
+                    <av-icon type="av_folder" [size]="14"></av-icon>
+                  </button>
+                </div>
+                <span class="value">{{ icon.category }}</span>
+              </div>
+
+              <!-- ФОРМАТ -->
+              <div class="meta-item">
+                <span class="label">ФОРМАТ</span>
+                <span class="value">SVG</span>
               </div>
             </div>
 
@@ -1664,12 +1741,151 @@ import { ICON_REGISTRY, IconCategory } from '../../ui-demo/old-control/icon-ui/i
       }
 
       .meta-section {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
         background: #f1f5f9;
         padding: 16px;
         border-radius: 12px;
+      }
+
+      .meta-item {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .meta-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .meta-item .label {
+        font-size: 10px;
+        font-weight: 700;
+        color: #94a3b8;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      .meta-item .value {
+        font-size: 14px;
+        color: #1e293b;
+        font-weight: 500;
+
+        &.editable {
+          cursor: pointer;
+          padding: 4px 8px;
+          border-radius: 6px;
+          transition: all 0.2s;
+
+          &:hover {
+            background: #e2e8f0;
+          }
+        }
+      }
+
+      // Режим редактирования
+      .edit-mode {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+      }
+
+      .name-input {
+        flex: 1;
+        padding: 8px 12px;
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+        font-size: 14px;
+        font-family: monospace;
+        transition: all 0.2s;
+
+        &:focus {
+          outline: none;
+          border-color: #6366f1;
+          box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        &:disabled {
+          background: #f1f5f9;
+          cursor: not-allowed;
+        }
+      }
+
+      .edit-actions {
+        display: flex;
+        gap: 4px;
+      }
+
+      .save-btn,
+      .cancel-btn {
+        width: 32px;
+        height: 32px;
+        border-radius: 6px;
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s;
+
+        &:disabled {
+          opacity: 0.5;
+          cursor: not-allowed;
+        }
+      }
+
+      .save-btn {
+        background: #10b981;
+        color: white;
+
+        &:hover:not(:disabled) {
+          background: #059669;
+        }
+      }
+
+      .cancel-btn {
+        background: #f1f5f9;
+        color: #64748b;
+
+        &:hover:not(:disabled) {
+          background: #e2e8f0;
+        }
+      }
+
+      .error-message {
+        font-size: 12px;
+        color: #ef4444;
+        padding: 8px 12px;
+        background: #fef2f2;
+        border-radius: 6px;
+        border: 1px solid #fecaca;
+      }
+
+      .hint-message {
+        font-size: 11px;
+        color: #64748b;
+        font-style: italic;
+      }
+
+      .icon-btn-small {
+        width: 24px;
+        height: 24px;
+        border-radius: 6px;
+        border: 1px solid #e2e8f0;
+        background: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s;
+
+        &:hover {
+          background: #f8fafc;
+          border-color: #cbd5e1;
+        }
       }
 
       .passport-card {
@@ -2227,6 +2443,12 @@ export class IconManagerComponent {
   currentCategoryName = signal('');
   targetCategoryId = signal<number | null>(null);
   dbCategories = signal<DbCategory[]>([]);
+
+  // Rename Signals
+  isEditingName = signal(false);
+  editedName = signal('');
+  nameError = signal<string | null>(null);
+  isRenamingInProgress = signal(false);
 
   // Technical Passport Signals
   iconPassport = signal<{
@@ -3055,5 +3277,105 @@ export class IconManagerComponent {
         this.isMoving.set(false);
       },
     });
+  }
+
+  // --- Rename Icon Logic ---
+  startEditName() {
+    const icon = this.selectedIcon();
+    if (!icon) return;
+
+    this.isEditingName.set(true);
+    this.editedName.set(icon.name);
+    this.nameError.set(null);
+  }
+
+  cancelEditName() {
+    this.isEditingName.set(false);
+    this.editedName.set('');
+    this.nameError.set(null);
+  }
+
+  private validateName(name: string): boolean {
+    const icon = this.selectedIcon();
+    if (!icon) return false;
+
+    // Пустое имя
+    if (!name || name.trim() === '') {
+      this.nameError.set('Имя не может быть пустым');
+      return false;
+    }
+
+    // Формат: только a-z, 0-9, _
+    if (!/^[a-z0-9_]+$/.test(name)) {
+      this.nameError.set('Используйте только a-z, 0-9, _');
+      return false;
+    }
+
+    // Длина
+    if (name.length > 500) {
+      this.nameError.set('Имя не может быть длиннее 500 символов');
+      return false;
+    }
+
+    // Без изменений
+    if (name === icon.name) {
+      this.nameError.set('Имя не изменилось');
+      return false;
+    }
+
+    return true;
+  }
+
+  saveNewName() {
+    const icon = this.selectedIcon();
+    if (!icon) return;
+
+    const newName = this.editedName().trim();
+
+    // Валидация на frontend
+    if (!this.validateName(newName)) {
+      return;
+    }
+
+    this.isRenamingInProgress.set(true);
+    this.nameError.set(null);
+
+    this.iconDataService.renameIcon(icon.name, newName).subscribe({
+      next: () => {
+        // Обновить локальное состояние
+        const updatedIcon = { ...icon, name: newName, type: `${icon.category}/${newName}` };
+        this.selectedIcon.set(updatedIcon);
+
+        // Закрыть режим редактирования
+        this.isEditingName.set(false);
+
+        // Показать уведомление
+        this.message.success(`✅ Иконка переименована: ${icon.name} → ${newName}`);
+
+        // Обновить кеш и список
+        this.globalIconService.refreshCache();
+        this.loadIcons(true);
+
+        this.isRenamingInProgress.set(false);
+      },
+      error: (err: Error) => {
+        this.nameError.set(err.message);
+        this.isRenamingInProgress.set(false);
+      },
+    });
+  }
+
+  onNameDoubleClick() {
+    if (!this.isEditingName()) {
+      this.startEditName();
+    }
+  }
+
+  onNameKeyDown(event: KeyboardEvent) {
+    if (event.key === 'Enter') {
+      this.saveNewName();
+    } else if (event.key === 'Escape') {
+      this.cancelEditName();
+    }
   }
 }
