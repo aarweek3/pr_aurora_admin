@@ -530,24 +530,63 @@ import { ICON_REGISTRY, IconCategory } from '../../ui-demo/old-control/icon-ui/i
             </div>
 
             <div class="batch-options">
-              <div style="margin-bottom: 16px; display: flex; gap: 12px; align-items: center;">
-                <label style="font-size: 13px; font-weight: 600;">Область обработки:</label>
-                <button
-                  [class.btn-primary]="batchMode() === 'all'"
-                  [class.btn-outline]="batchMode() !== 'all'"
-                  style="padding: 4px 12px; height: 32px;"
-                  (click)="batchMode.set('all')"
+              <div style="margin-bottom: 16px; display: flex; flex-direction: column; gap: 12px;">
+                <div style="display: flex; gap: 12px; align-items: center;">
+                  <label style="font-size: 13px; font-weight: 600; min-width: 140px;"
+                    >Область обработки:</label
+                  >
+                  <button
+                    [class.btn-primary]="batchMode() === 'all'"
+                    [class.btn-outline]="batchMode() !== 'all'"
+                    style="padding: 4px 12px; height: 32px;"
+                    (click)="batchMode.set('all')"
+                  >
+                    Вся библиотека
+                  </button>
+                  <button
+                    [class.btn-primary]="batchMode() === 'category'"
+                    [class.btn-outline]="batchMode() !== 'category'"
+                    style="padding: 4px 12px; height: 32px;"
+                    (click)="batchMode.set('category')"
+                  >
+                    По категории
+                  </button>
+                  <button
+                    [class.btn-primary]="batchMode() === 'filtered'"
+                    [class.btn-outline]="batchMode() !== 'filtered'"
+                    style="padding: 4px 12px; height: 32px;"
+                    (click)="batchMode.set('filtered')"
+                  >
+                    Отфильтрованные
+                  </button>
+                </div>
+
+                @if (batchMode() === 'category') {
+                <div
+                  style="display: flex; gap: 12px; align-items: center; animation: slideDown 0.3s ease-out;"
                 >
-                  Вся библиотека ({{ totalIcons() }})
-                </button>
-                <button
-                  [class.btn-primary]="batchMode() === 'filtered'"
-                  [class.btn-outline]="batchMode() !== 'filtered'"
-                  style="padding: 4px 12px; height: 32px;"
-                  (click)="batchMode.set('filtered')"
+                  <label style="font-size: 13px; font-weight: 600; min-width: 140px;"
+                    >Выберите категорию:</label
+                  >
+                  <nz-select
+                    [ngModel]="batchCategoryId()"
+                    (ngModelChange)="onBatchCategoryChange($event)"
+                    style="width: 100%; max-width: 300px;"
+                    nzPlaceHolder="Выберите категорию для обработки"
+                  >
+                    @for (cat of dbCategories(); track cat.id) {
+                    <nz-option [nzValue]="cat.id" [nzLabel]="cat.displayName"></nz-option>
+                    }
+                  </nz-select>
+                </div>
+                }
+
+                <div
+                  style="font-size: 12px; color: #6366f1; font-weight: 700; background: #eef2ff; padding: 6px 12px; border-radius: 8px; width: fit-content;"
                 >
-                  Отфильтрованные ({{ filteredIcons().length }})
-                </button>
+                  <av-icon type="system/av_info" [size]="14" style="margin-right: 6px;"></av-icon>
+                  Будет обработано иконок: {{ batchIconsCount() }}
+                </div>
               </div>
             </div>
 
@@ -2376,6 +2415,17 @@ import { ICON_REGISTRY, IconCategory } from '../../ui-demo/old-control/icon-ui/i
           }
         }
       }
+
+      @keyframes slideDown {
+        from {
+          opacity: 0;
+          transform: translateY(-10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
     `,
   ],
 })
@@ -2412,7 +2462,9 @@ export class IconManagerComponent {
   batchTotal = signal(0);
   batchCurrent = signal(0);
   batchCurrentName = signal('');
-  batchMode = signal<'all' | 'filtered'>('all');
+  batchMode = signal<'all' | 'filtered' | 'category'>('all');
+  batchCategoryId = signal<number | null>(null);
+  batchCategoryName = signal<string>('');
   batchSearchQuery = signal('');
   batchReplaceQuery = signal('');
 
@@ -2536,9 +2588,22 @@ export class IconManagerComponent {
   refactorIcons() {
     this.isSyncing.set(true);
     console.log('[IconManager] 🪄 refactorIcons started...');
-    this.addBatchLog('Запуск рефакторинга имен для всей библиотеки...', 'info');
 
-    this.http.post(ApiEndpoints.ICONS.REFACTOR_NAMES, {}).subscribe({
+    let url = ApiEndpoints.ICONS.REFACTOR_NAMES;
+    const isCategoryMode = this.batchMode() === 'category';
+    const catId = this.batchCategoryId();
+
+    if (isCategoryMode && catId) {
+      url += `?categoryId=${catId}`;
+      this.addBatchLog(
+        `Запуск рефакторинга имен для категории [${this.batchCategoryName()}]...`,
+        'info',
+      );
+    } else {
+      this.addBatchLog('Запуск рефакторинга имен для всей библиотеки...', 'info');
+    }
+
+    this.http.post(url, {}).subscribe({
       next: (res: any) => {
         console.log('[IconManager] ✅ Names refactored successfully.', res);
 
@@ -2570,6 +2635,14 @@ export class IconManagerComponent {
         this.isSyncing.set(false);
       },
     });
+  }
+
+  onBatchCategoryChange(id: number) {
+    this.batchCategoryId.set(id);
+    const cat = this.dbCategories().find((c) => c.id === id);
+    if (cat) {
+      this.batchCategoryName.set(cat.displayName);
+    }
   }
 
   totalIcons = computed(() => {
@@ -3042,12 +3115,35 @@ export class IconManagerComponent {
     });
   }
 
+  batchIconsCount = computed(() => {
+    if (this.batchMode() === 'all') return this.totalIcons();
+    if (this.batchMode() === 'filtered') return this.filteredIcons().length;
+
+    // Category mode
+    const catName = this.batchCategoryName();
+    if (!catName) return 0;
+    const cat = this.categories().find((c) => c.category === catName);
+    return cat ? cat.icons.length : 0;
+  });
+
   // Batch Operations
   async startBatchProcess(type: 'optimize' | 'normalize' | 'replace' | 'metadata') {
-    const icons =
-      this.batchMode() === 'all'
-        ? this.categories().flatMap((c: IconCategory) => c.icons)
-        : this.filteredIcons();
+    let icons: IconMetadata[] = [];
+
+    if (this.batchMode() === 'all') {
+      icons = this.categories().flatMap((c: IconCategory) => c.icons);
+    } else if (this.batchMode() === 'filtered') {
+      icons = this.filteredIcons();
+    } else if (this.batchMode() === 'category') {
+      const catName = this.batchCategoryName();
+      const cat = this.categories().find((c) => c.category === catName);
+      icons = cat ? cat.icons : [];
+    }
+
+    if (icons.length === 0) {
+      this.showToast('⚠️ Нет иконок для обработки');
+      return;
+    }
 
     this.batchTotal.set(icons.length);
     this.batchCurrent.set(0);

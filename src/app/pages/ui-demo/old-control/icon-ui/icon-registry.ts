@@ -22,11 +22,6 @@ export const ICON_REGISTRY: IconCategory[] = [
   {
     "category": "Действия",
     "icons": [
-      {
-        "name": "av_stop",
-        "type": "Действия/av_stop",
-        "category": "Действия"
-      }
     ]
   },
   {
@@ -37,6 +32,11 @@ export const ICON_REGISTRY: IconCategory[] = [
   {
     "category": "Графики",
     "icons": [
+      {
+        "name": "av_stop_1",
+        "type": "Графики/av_stop_1",
+        "category": "Графики"
+      }
     ]
   },
   {
@@ -103,16 +103,6 @@ export const ICON_REGISTRY: IconCategory[] = [
     "category": "actions",
     "icons": [
       {
-        "name": "av_add",
-        "type": "actions/av_add",
-        "category": "actions"
-      },
-      {
-        "name": "av_calculator",
-        "type": "actions/av_calculator",
-        "category": "actions"
-      },
-      {
         "name": "av_check_mark",
         "type": "actions/av_check_mark",
         "category": "actions"
@@ -153,11 +143,6 @@ export const ICON_REGISTRY: IconCategory[] = [
         "category": "actions"
       },
       {
-        "name": "av_load-icon",
-        "type": "actions/av_load-icon",
-        "category": "actions"
-      },
-      {
         "name": "av_minus",
         "type": "actions/av_minus",
         "category": "actions"
@@ -185,6 +170,21 @@ export const ICON_REGISTRY: IconCategory[] = [
       {
         "name": "av_upload",
         "type": "actions/av_upload",
+        "category": "actions"
+      },
+      {
+        "name": "av_add",
+        "type": "actions/av_add",
+        "category": "actions"
+      },
+      {
+        "name": "av_calculator",
+        "type": "actions/av_calculator",
+        "category": "actions"
+      },
+      {
+        "name": "av_load-icon",
+        "type": "actions/av_load-icon",
         "category": "actions"
       }
     ]
@@ -253,11 +253,6 @@ export const ICON_REGISTRY: IconCategory[] = [
         "category": "arrows"
       },
       {
-        "name": "av_chevron-right",
-        "type": "arrows/av_chevron-right",
-        "category": "arrows"
-      },
-      {
         "name": "av_chevron-up",
         "type": "arrows/av_chevron-up",
         "category": "arrows"
@@ -296,6 +291,11 @@ export const ICON_REGISTRY: IconCategory[] = [
         "name": "av_undo",
         "type": "arrows/av_undo",
         "category": "arrows"
+      },
+      {
+        "name": "av_chevron-right",
+        "type": "arrows/av_chevron-right",
+        "category": "arrows"
       }
     ]
   },
@@ -308,13 +308,13 @@ export const ICON_REGISTRY: IconCategory[] = [
         "category": "charts"
       },
       {
-        "name": "av_line_chart",
-        "type": "charts/av_line_chart",
+        "name": "av_pie_chart",
+        "type": "charts/av_pie_chart",
         "category": "charts"
       },
       {
-        "name": "av_pie_chart",
-        "type": "charts/av_pie_chart",
+        "name": "av_line_chart",
+        "type": "charts/av_line_chart",
         "category": "charts"
       }
     ]
@@ -323,23 +323,23 @@ export const ICON_REGISTRY: IconCategory[] = [
     "category": "communication",
     "icons": [
       {
-        "name": "av_chat",
-        "type": "communication/av_chat",
-        "category": "communication"
-      },
-      {
         "name": "av_mail",
         "type": "communication/av_mail",
         "category": "communication"
       },
       {
-        "name": "av_phone",
-        "type": "communication/av_phone",
+        "name": "av_rss",
+        "type": "communication/av_rss",
         "category": "communication"
       },
       {
-        "name": "av_rss",
-        "type": "communication/av_rss",
+        "name": "av_chat",
+        "type": "communication/av_chat",
+        "category": "communication"
+      },
+      {
+        "name": "av_phone",
+        "type": "communication/av_phone",
         "category": "communication"
       }
     ]
@@ -408,11 +408,6 @@ export const ICON_REGISTRY: IconCategory[] = [
         "category": "editor"
       },
       {
-        "name": "av_input-quote",
-        "type": "editor/av_input-quote",
-        "category": "editor"
-      },
-      {
         "name": "av_italic",
         "type": "editor/av_italic",
         "category": "editor"
@@ -420,11 +415,6 @@ export const ICON_REGISTRY: IconCategory[] = [
       {
         "name": "av_list-numbered",
         "type": "editor/av_list-numbered",
-        "category": "editor"
-      },
-      {
-        "name": "av_list-svgrepo",
-        "type": "editor/av_list-svgrepo",
         "category": "editor"
       },
       {
@@ -448,6 +438,26 @@ export const ICON_REGISTRY: IconCategory[] = [
         "category": "editor"
       },
       {
+        "name": "av_write",
+        "type": "editor/av_write",
+        "category": "editor"
+      },
+      {
+        "name": "av_text_in_round",
+        "type": "editor/av_text_in_round",
+        "category": "editor"
+      },
+      {
+        "name": "av_input-quote",
+        "type": "editor/av_input-quote",
+        "category": "editor"
+      },
+      {
+        "name": "av_list-svgrepo",
+        "type": "editor/av_list-svgrepo",
+        "category": "editor"
+      },
+      {
         "name": "av_style-quote",
         "type": "editor/av_style-quote",
         "category": "editor"
@@ -455,11 +465,6 @@ export const ICON_REGISTRY: IconCategory[] = [
       {
         "name": "av_writing",
         "type": "editor/av_writing",
-        "category": "editor"
-      },
-      {
-        "name": "av_write",
-        "type": "editor/av_write",
         "category": "editor"
       }
     ]
@@ -523,11 +528,6 @@ export const ICON_REGISTRY: IconCategory[] = [
         "category": "general"
       },
       {
-        "name": "av_arrow-right-circle",
-        "type": "general/av_arrow-right-circle",
-        "category": "general"
-      },
-      {
         "name": "av_arrow-up-circle",
         "type": "general/av_arrow-up-circle",
         "category": "general"
@@ -545,11 +545,6 @@ export const ICON_REGISTRY: IconCategory[] = [
       {
         "name": "av_at-sign",
         "type": "general/av_at-sign",
-        "category": "general"
-      },
-      {
-        "name": "av_black-mac-folder-13646",
-        "type": "general/av_black-mac-folder-13646",
         "category": "general"
       },
       {
@@ -588,18 +583,8 @@ export const ICON_REGISTRY: IconCategory[] = [
         "category": "general"
       },
       {
-        "name": "av_businessman",
-        "type": "general/av_businessman",
-        "category": "general"
-      },
-      {
         "name": "av_chatgpt-green-circular-logo-22057",
         "type": "general/av_chatgpt-green-circular-logo-22057",
-        "category": "general"
-      },
-      {
-        "name": "av_check-7050",
-        "type": "general/av_check-7050",
         "category": "general"
       },
       {
@@ -648,11 +633,6 @@ export const ICON_REGISTRY: IconCategory[] = [
         "category": "general"
       },
       {
-        "name": "av_corner-left-up",
-        "type": "general/av_corner-left-up",
-        "category": "general"
-      },
-      {
         "name": "av_corner-right-down",
         "type": "general/av_corner-right-down",
         "category": "general"
@@ -685,11 +665,6 @@ export const ICON_REGISTRY: IconCategory[] = [
       {
         "name": "av_delete",
         "type": "general/av_delete",
-        "category": "general"
-      },
-      {
-        "name": "av_dice",
-        "type": "general/av_dice",
         "category": "general"
       },
       {
@@ -730,11 +705,6 @@ export const ICON_REGISTRY: IconCategory[] = [
       {
         "name": "av_folder-plus",
         "type": "general/av_folder-plus",
-        "category": "general"
-      },
-      {
-        "name": "av_earth",
-        "type": "general/av_earth",
         "category": "general"
       },
       {
@@ -780,11 +750,6 @@ export const ICON_REGISTRY: IconCategory[] = [
       {
         "name": "av_gear-1213",
         "type": "general/av_gear-1213",
-        "category": "general"
-      },
-      {
-        "name": "av_github",
-        "type": "general/av_github",
         "category": "general"
       },
       {
@@ -843,11 +808,6 @@ export const ICON_REGISTRY: IconCategory[] = [
         "category": "general"
       },
       {
-        "name": "av_home-175",
-        "type": "general/av_home-175",
-        "category": "general"
-      },
-      {
         "name": "av_home-2490",
         "type": "general/av_home-2490",
         "category": "general"
@@ -890,11 +850,6 @@ export const ICON_REGISTRY: IconCategory[] = [
       {
         "name": "av_link-2",
         "type": "general/av_link-2",
-        "category": "general"
-      },
-      {
-        "name": "av_linkedin-130",
-        "type": "general/av_linkedin-130",
         "category": "general"
       },
       {
@@ -958,11 +913,6 @@ export const ICON_REGISTRY: IconCategory[] = [
         "category": "general"
       },
       {
-        "name": "av_more-horizontal",
-        "type": "general/av_more-horizontal",
-        "category": "general"
-      },
-      {
         "name": "av_more-vertical",
         "type": "general/av_more-vertical",
         "category": "general"
@@ -970,11 +920,6 @@ export const ICON_REGISTRY: IconCategory[] = [
       {
         "name": "av_note",
         "type": "general/av_note",
-        "category": "general"
-      },
-      {
-        "name": "av_number-one-13217",
-        "type": "general/av_number-one-13217",
         "category": "general"
       },
       {
@@ -1005,11 +950,6 @@ export const ICON_REGISTRY: IconCategory[] = [
       {
         "name": "av_play-button-4213",
         "type": "general/av_play-button-4213",
-        "category": "general"
-      },
-      {
-        "name": "av_plus-circle",
-        "type": "general/av_plus-circle",
         "category": "general"
       },
       {
@@ -1073,16 +1013,6 @@ export const ICON_REGISTRY: IconCategory[] = [
         "category": "general"
       },
       {
-        "name": "av_search-tolstii",
-        "type": "general/av_search-tolstii",
-        "category": "general"
-      },
-      {
-        "name": "av_settings-5666",
-        "type": "general/av_settings-5666",
-        "category": "general"
-      },
-      {
         "name": "av_settings",
         "type": "general/av_settings",
         "category": "general"
@@ -1110,11 +1040,6 @@ export const ICON_REGISTRY: IconCategory[] = [
       {
         "name": "av_twitter",
         "type": "general/av_twitter",
-        "category": "general"
-      },
-      {
-        "name": "av_skype-132",
-        "type": "general/av_skype-132",
         "category": "general"
       },
       {
@@ -1160,11 +1085,6 @@ export const ICON_REGISTRY: IconCategory[] = [
       {
         "name": "av_trophy",
         "type": "general/av_trophy",
-        "category": "general"
-      },
-      {
-        "name": "av_thumbs-down-14924",
-        "type": "general/av_thumbs-down-14924",
         "category": "general"
       },
       {
@@ -1218,11 +1138,6 @@ export const ICON_REGISTRY: IconCategory[] = [
         "category": "general"
       },
       {
-        "name": "av_type",
-        "type": "general/av_type",
-        "category": "general"
-      },
-      {
         "name": "av_umbrella",
         "type": "general/av_umbrella",
         "category": "general"
@@ -1230,11 +1145,6 @@ export const ICON_REGISTRY: IconCategory[] = [
       {
         "name": "av_underline",
         "type": "general/av_underline",
-        "category": "general"
-      },
-      {
-        "name": "av_united-arab-emirates-flag-circular-17754",
-        "type": "general/av_united-arab-emirates-flag-circular-17754",
         "category": "general"
       },
       {
@@ -1273,33 +1183,13 @@ export const ICON_REGISTRY: IconCategory[] = [
         "category": "general"
       },
       {
-        "name": "av_visa-credit-card-payment",
-        "type": "general/av_visa-credit-card-payment",
-        "category": "general"
-      },
-      {
-        "name": "av_vk-120",
-        "type": "general/av_vk-120",
-        "category": "general"
-      },
-      {
         "name": "av_warning-sign-9763",
         "type": "general/av_warning-sign-9763",
         "category": "general"
       },
       {
-        "name": "av_website-4946",
-        "type": "general/av_website-4946",
-        "category": "general"
-      },
-      {
         "name": "av_whatsapp-139",
         "type": "general/av_whatsapp-139",
-        "category": "general"
-      },
-      {
-        "name": "av_wrench-and-screwdriver-9453",
-        "type": "general/av_wrench-and-screwdriver-9453",
         "category": "general"
       },
       {
@@ -1330,6 +1220,121 @@ export const ICON_REGISTRY: IconCategory[] = [
       {
         "name": "av_zoom-out",
         "type": "general/av_zoom-out",
+        "category": "general"
+      },
+      {
+        "name": "av_arrow-right-circle",
+        "type": "general/av_arrow-right-circle",
+        "category": "general"
+      },
+      {
+        "name": "av_black-mac-folder-13646",
+        "type": "general/av_black-mac-folder-13646",
+        "category": "general"
+      },
+      {
+        "name": "av_businessman",
+        "type": "general/av_businessman",
+        "category": "general"
+      },
+      {
+        "name": "av_check-7050",
+        "type": "general/av_check-7050",
+        "category": "general"
+      },
+      {
+        "name": "av_corner-left-up",
+        "type": "general/av_corner-left-up",
+        "category": "general"
+      },
+      {
+        "name": "av_dice",
+        "type": "general/av_dice",
+        "category": "general"
+      },
+      {
+        "name": "av_earth",
+        "type": "general/av_earth",
+        "category": "general"
+      },
+      {
+        "name": "av_github",
+        "type": "general/av_github",
+        "category": "general"
+      },
+      {
+        "name": "av_home-175",
+        "type": "general/av_home-175",
+        "category": "general"
+      },
+      {
+        "name": "av_linkedin-130",
+        "type": "general/av_linkedin-130",
+        "category": "general"
+      },
+      {
+        "name": "av_more-horizontal",
+        "type": "general/av_more-horizontal",
+        "category": "general"
+      },
+      {
+        "name": "av_number-one-13217",
+        "type": "general/av_number-one-13217",
+        "category": "general"
+      },
+      {
+        "name": "av_plus-circle",
+        "type": "general/av_plus-circle",
+        "category": "general"
+      },
+      {
+        "name": "av_search-tolstii",
+        "type": "general/av_search-tolstii",
+        "category": "general"
+      },
+      {
+        "name": "av_settings-5666",
+        "type": "general/av_settings-5666",
+        "category": "general"
+      },
+      {
+        "name": "av_skype-132",
+        "type": "general/av_skype-132",
+        "category": "general"
+      },
+      {
+        "name": "av_thumbs-down-14924",
+        "type": "general/av_thumbs-down-14924",
+        "category": "general"
+      },
+      {
+        "name": "av_type",
+        "type": "general/av_type",
+        "category": "general"
+      },
+      {
+        "name": "av_united-arab-emirates-flag-circular-17754",
+        "type": "general/av_united-arab-emirates-flag-circular-17754",
+        "category": "general"
+      },
+      {
+        "name": "av_visa-credit-card-payment",
+        "type": "general/av_visa-credit-card-payment",
+        "category": "general"
+      },
+      {
+        "name": "av_vk-120",
+        "type": "general/av_vk-120",
+        "category": "general"
+      },
+      {
+        "name": "av_website-4946",
+        "type": "general/av_website-4946",
+        "category": "general"
+      },
+      {
+        "name": "av_wrench-and-screwdriver-9453",
+        "type": "general/av_wrench-and-screwdriver-9453",
         "category": "general"
       }
     ]
@@ -1403,11 +1408,6 @@ export const ICON_REGISTRY: IconCategory[] = [
     "category": "settings",
     "icons": [
       {
-        "name": "av_adjust",
-        "type": "settings/av_adjust",
-        "category": "settings"
-      },
-      {
         "name": "av_battery-empty",
         "type": "settings/av_battery-empty",
         "category": "settings"
@@ -1420,11 +1420,6 @@ export const ICON_REGISTRY: IconCategory[] = [
       {
         "name": "av_battery-half",
         "type": "settings/av_battery-half",
-        "category": "settings"
-      },
-      {
-        "name": "av_bell-crossed",
-        "type": "settings/av_bell-crossed",
         "category": "settings"
       },
       {
@@ -1488,6 +1483,16 @@ export const ICON_REGISTRY: IconCategory[] = [
         "category": "settings"
       },
       {
+        "name": "av_adjust",
+        "type": "settings/av_adjust",
+        "category": "settings"
+      },
+      {
+        "name": "av_bell-crossed",
+        "type": "settings/av_bell-crossed",
+        "category": "settings"
+      },
+      {
         "name": "av_sterisk",
         "type": "settings/av_sterisk",
         "category": "settings"
@@ -1497,16 +1502,6 @@ export const ICON_REGISTRY: IconCategory[] = [
   {
     "category": "system",
     "icons": [
-      {
-        "name": "av_barcode",
-        "type": "system/av_barcode",
-        "category": "system"
-      },
-      {
-        "name": "av_brightness",
-        "type": "system/av_brightness",
-        "category": "system"
-      },
       {
         "name": "av_bug",
         "type": "system/av_bug",
@@ -1535,6 +1530,16 @@ export const ICON_REGISTRY: IconCategory[] = [
       {
         "name": "av_warning",
         "type": "system/av_warning",
+        "category": "system"
+      },
+      {
+        "name": "av_barcode",
+        "type": "system/av_barcode",
+        "category": "system"
+      },
+      {
+        "name": "av_brightness",
+        "type": "system/av_brightness",
         "category": "system"
       }
     ]
@@ -1572,10 +1577,1445 @@ export const ICON_REGISTRY: IconCategory[] = [
   {
     "category": "Оператор",
     "icons": [
+    ]
+  },
+  {
+    "category": "Редактор Aurora",
+    "icons": [
       {
-        "name": "av_text_in_round",
-        "type": "Оператор/av_text_in_round",
-        "category": "Оператор"
+        "name": "av_e_award",
+        "type": "Редактор Aurora/av_e_award",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_activity",
+        "type": "Редактор Aurora/av_e_activity",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_airplay",
+        "type": "Редактор Aurora/av_e_airplay",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_alert-circle",
+        "type": "Редактор Aurora/av_e_alert-circle",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_alert-octagon",
+        "type": "Редактор Aurora/av_e_alert-octagon",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_alert-triangle",
+        "type": "Редактор Aurora/av_e_alert-triangle",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_align-center",
+        "type": "Редактор Aurora/av_e_align-center",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_align-justify",
+        "type": "Редактор Aurora/av_e_align-justify",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_minus",
+        "type": "Редактор Aurora/av_e_minus",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_align-right",
+        "type": "Редактор Aurora/av_e_align-right",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_anchor",
+        "type": "Редактор Aurora/av_e_anchor",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_aperture",
+        "type": "Редактор Aurora/av_e_aperture",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_archive",
+        "type": "Редактор Aurora/av_e_archive",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_arrow-down",
+        "type": "Редактор Aurora/av_e_arrow-down",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_arrow-down-circle",
+        "type": "Редактор Aurora/av_e_arrow-down-circle",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_arrow-down-left",
+        "type": "Редактор Aurora/av_e_arrow-down-left",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_arrow-down-right",
+        "type": "Редактор Aurora/av_e_arrow-down-right",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_arrow-left",
+        "type": "Редактор Aurora/av_e_arrow-left",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_arrow-left-circle",
+        "type": "Редактор Aurora/av_e_arrow-left-circle",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_arrow-right",
+        "type": "Редактор Aurora/av_e_arrow-right",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_arrow-right-circle",
+        "type": "Редактор Aurora/av_e_arrow-right-circle",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_arrow-up",
+        "type": "Редактор Aurora/av_e_arrow-up",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_arrow-up-circle",
+        "type": "Редактор Aurora/av_e_arrow-up-circle",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_arrow-up-left",
+        "type": "Редактор Aurora/av_e_arrow-up-left",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_arrow-up-right",
+        "type": "Редактор Aurora/av_e_arrow-up-right",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_at-sign",
+        "type": "Редактор Aurora/av_e_at-sign",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_bar-chart-2",
+        "type": "Редактор Aurora/av_e_bar-chart-2",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_battery",
+        "type": "Редактор Aurora/av_e_battery",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_battery-charging",
+        "type": "Редактор Aurora/av_e_battery-charging",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_bell",
+        "type": "Редактор Aurora/av_e_bell",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_bell-off",
+        "type": "Редактор Aurora/av_e_bell-off",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_bluetooth",
+        "type": "Редактор Aurora/av_e_bluetooth",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_bold",
+        "type": "Редактор Aurora/av_e_bold",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_book",
+        "type": "Редактор Aurora/av_e_book",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_bookmark",
+        "type": "Редактор Aurora/av_e_bookmark",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_book-open",
+        "type": "Редактор Aurora/av_e_book-open",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_box",
+        "type": "Редактор Aurora/av_e_box",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_briefcase",
+        "type": "Редактор Aurora/av_e_briefcase",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_calendar",
+        "type": "Редактор Aurora/av_e_calendar",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_camera",
+        "type": "Редактор Aurora/av_e_camera",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_camera-off",
+        "type": "Редактор Aurora/av_e_camera-off",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_cast",
+        "type": "Редактор Aurora/av_e_cast",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_check",
+        "type": "Редактор Aurora/av_e_check",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_check-square",
+        "type": "Редактор Aurora/av_e_check-square",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_chevron-down",
+        "type": "Редактор Aurora/av_e_chevron-down",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_chevron-left",
+        "type": "Редактор Aurora/av_e_chevron-left",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_chevron-right",
+        "type": "Редактор Aurora/av_e_chevron-right",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_chevrons-down",
+        "type": "Редактор Aurora/av_e_chevrons-down",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_chevrons-left",
+        "type": "Редактор Aurora/av_e_chevrons-left",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_chevrons-right",
+        "type": "Редактор Aurora/av_e_chevrons-right",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_chevrons-up",
+        "type": "Редактор Aurora/av_e_chevrons-up",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_chevron-up",
+        "type": "Редактор Aurora/av_e_chevron-up",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_chrome",
+        "type": "Редактор Aurora/av_e_chrome",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_circle",
+        "type": "Редактор Aurora/av_e_circle",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_clipboard",
+        "type": "Редактор Aurora/av_e_clipboard",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_clock",
+        "type": "Редактор Aurora/av_e_clock",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_cloud",
+        "type": "Редактор Aurora/av_e_cloud",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_cloud-drizzle",
+        "type": "Редактор Aurora/av_e_cloud-drizzle",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_cloud-lightning",
+        "type": "Редактор Aurora/av_e_cloud-lightning",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_cloud-off",
+        "type": "Редактор Aurora/av_e_cloud-off",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_cloud-rain",
+        "type": "Редактор Aurora/av_e_cloud-rain",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_code",
+        "type": "Редактор Aurora/av_e_code",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_codepen",
+        "type": "Редактор Aurora/av_e_codepen",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_codesandbox",
+        "type": "Редактор Aurora/av_e_codesandbox",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_coffee",
+        "type": "Редактор Aurora/av_e_coffee",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_columns",
+        "type": "Редактор Aurora/av_e_columns",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_command",
+        "type": "Редактор Aurora/av_e_command",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_compass",
+        "type": "Редактор Aurora/av_e_compass",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_copy",
+        "type": "Редактор Aurora/av_e_copy",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_corner-down-left",
+        "type": "Редактор Aurora/av_e_corner-down-left",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_corner-down-right",
+        "type": "Редактор Aurora/av_e_corner-down-right",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_corner-left-down",
+        "type": "Редактор Aurora/av_e_corner-left-down",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_corner-left-up",
+        "type": "Редактор Aurora/av_e_corner-left-up",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_corner-right-down",
+        "type": "Редактор Aurora/av_e_corner-right-down",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_corner-right-up",
+        "type": "Редактор Aurora/av_e_corner-right-up",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_corner-up-left",
+        "type": "Редактор Aurora/av_e_corner-up-left",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_corner-up-right",
+        "type": "Редактор Aurora/av_e_corner-up-right",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_credit-card",
+        "type": "Редактор Aurora/av_e_credit-card",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_crop",
+        "type": "Редактор Aurora/av_e_crop",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_crosshair",
+        "type": "Редактор Aurora/av_e_crosshair",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_database",
+        "type": "Редактор Aurora/av_e_database",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_delete",
+        "type": "Редактор Aurora/av_e_delete",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_disc",
+        "type": "Редактор Aurora/av_e_disc",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_divide",
+        "type": "Редактор Aurora/av_e_divide",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_divide-circle",
+        "type": "Редактор Aurora/av_e_divide-circle",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_divide-square",
+        "type": "Редактор Aurora/av_e_divide-square",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_dollar-sign",
+        "type": "Редактор Aurora/av_e_dollar-sign",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_download",
+        "type": "Редактор Aurora/av_e_download",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_download-cloud",
+        "type": "Редактор Aurora/av_e_download-cloud",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_dribbble",
+        "type": "Редактор Aurora/av_e_dribbble",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_droplet",
+        "type": "Редактор Aurora/av_e_droplet",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_edit",
+        "type": "Редактор Aurora/av_e_edit",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_edit-2",
+        "type": "Редактор Aurora/av_e_edit-2",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_external-link",
+        "type": "Редактор Aurora/av_e_external-link",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_eye",
+        "type": "Редактор Aurora/av_e_eye",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_eye-off",
+        "type": "Редактор Aurora/av_e_eye-off",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_facebook",
+        "type": "Редактор Aurora/av_e_facebook",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_fast-forward",
+        "type": "Редактор Aurora/av_e_fast-forward",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_feather",
+        "type": "Редактор Aurora/av_e_feather",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_figma",
+        "type": "Редактор Aurora/av_e_figma",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_file",
+        "type": "Редактор Aurora/av_e_file",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_file-minus",
+        "type": "Редактор Aurora/av_e_file-minus",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_file-plus",
+        "type": "Редактор Aurora/av_e_file-plus",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_file-text",
+        "type": "Редактор Aurora/av_e_file-text",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_film",
+        "type": "Редактор Aurora/av_e_film",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_filter",
+        "type": "Редактор Aurora/av_e_filter",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_flag",
+        "type": "Редактор Aurora/av_e_flag",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_folder",
+        "type": "Редактор Aurora/av_e_folder",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_folder-minus",
+        "type": "Редактор Aurora/av_e_folder-minus",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_framer",
+        "type": "Редактор Aurora/av_e_framer",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_frown",
+        "type": "Редактор Aurora/av_e_frown",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_gift",
+        "type": "Редактор Aurora/av_e_gift",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_git-branch",
+        "type": "Редактор Aurora/av_e_git-branch",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_git-commit",
+        "type": "Редактор Aurora/av_e_git-commit",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_github",
+        "type": "Редактор Aurora/av_e_github",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_gitlab",
+        "type": "Редактор Aurora/av_e_gitlab",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_git-merge",
+        "type": "Редактор Aurora/av_e_git-merge",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_git-pull-request",
+        "type": "Редактор Aurora/av_e_git-pull-request",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_globe",
+        "type": "Редактор Aurora/av_e_globe",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_grid",
+        "type": "Редактор Aurora/av_e_grid",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_hard-drive",
+        "type": "Редактор Aurora/av_e_hard-drive",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_hash",
+        "type": "Редактор Aurora/av_e_hash",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_headphones",
+        "type": "Редактор Aurora/av_e_headphones",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_heart",
+        "type": "Редактор Aurora/av_e_heart",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_hexagon",
+        "type": "Редактор Aurora/av_e_hexagon",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_home",
+        "type": "Редактор Aurora/av_e_home",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_image",
+        "type": "Редактор Aurora/av_e_image",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_inbox",
+        "type": "Редактор Aurora/av_e_inbox",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_info",
+        "type": "Редактор Aurora/av_e_info",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_instagram",
+        "type": "Редактор Aurora/av_e_instagram",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_italic",
+        "type": "Редактор Aurora/av_e_italic",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_key",
+        "type": "Редактор Aurora/av_e_key",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_layers",
+        "type": "Редактор Aurora/av_e_layers",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_layout",
+        "type": "Редактор Aurora/av_e_layout",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_life-buoy",
+        "type": "Редактор Aurora/av_e_life-buoy",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_link",
+        "type": "Редактор Aurora/av_e_link",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_link-2",
+        "type": "Редактор Aurora/av_e_link-2",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_linkedin",
+        "type": "Редактор Aurora/av_e_linkedin",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_list",
+        "type": "Редактор Aurora/av_e_list",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_minus-circle",
+        "type": "Редактор Aurora/av_e_minus-circle",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_lock",
+        "type": "Редактор Aurora/av_e_lock",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_log-in",
+        "type": "Редактор Aurora/av_e_log-in",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_log-out",
+        "type": "Редактор Aurora/av_e_log-out",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_mail",
+        "type": "Редактор Aurora/av_e_mail",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_map",
+        "type": "Редактор Aurora/av_e_map",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_map-pin",
+        "type": "Редактор Aurora/av_e_map-pin",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_maximize",
+        "type": "Редактор Aurora/av_e_maximize",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_maximize-2",
+        "type": "Редактор Aurora/av_e_maximize-2",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_meh",
+        "type": "Редактор Aurora/av_e_meh",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_menu",
+        "type": "Редактор Aurora/av_e_menu",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_message-circle",
+        "type": "Редактор Aurora/av_e_message-circle",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_message-square",
+        "type": "Редактор Aurora/av_e_message-square",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_mic",
+        "type": "Редактор Aurora/av_e_mic",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_mic-off",
+        "type": "Редактор Aurora/av_e_mic-off",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_minimize",
+        "type": "Редактор Aurora/av_e_minimize",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_minimize-2",
+        "type": "Редактор Aurora/av_e_minimize-2",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_monitor",
+        "type": "Редактор Aurora/av_e_monitor",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_moon",
+        "type": "Редактор Aurora/av_e_moon",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_more-horizontal",
+        "type": "Редактор Aurora/av_e_more-horizontal",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_more-vertical",
+        "type": "Редактор Aurora/av_e_more-vertical",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_mouse-pointer",
+        "type": "Редактор Aurora/av_e_mouse-pointer",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_move",
+        "type": "Редактор Aurora/av_e_move",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_music",
+        "type": "Редактор Aurora/av_e_music",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_navigation",
+        "type": "Редактор Aurora/av_e_navigation",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_navigation-2",
+        "type": "Редактор Aurora/av_e_navigation-2",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_octagon",
+        "type": "Редактор Aurora/av_e_octagon",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_package",
+        "type": "Редактор Aurora/av_e_package",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_paperclip",
+        "type": "Редактор Aurora/av_e_paperclip",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_pause",
+        "type": "Редактор Aurora/av_e_pause",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_pause-circle",
+        "type": "Редактор Aurora/av_e_pause-circle",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_pen-tool",
+        "type": "Редактор Aurora/av_e_pen-tool",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_percent",
+        "type": "Редактор Aurora/av_e_percent",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_phone",
+        "type": "Редактор Aurora/av_e_phone",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_phone-forwarded",
+        "type": "Редактор Aurora/av_e_phone-forwarded",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_phone-incoming",
+        "type": "Редактор Aurora/av_e_phone-incoming",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_phone-missed",
+        "type": "Редактор Aurora/av_e_phone-missed",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_phone-off",
+        "type": "Редактор Aurora/av_e_phone-off",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_phone-outgoing",
+        "type": "Редактор Aurora/av_e_phone-outgoing",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_pie-chart",
+        "type": "Редактор Aurora/av_e_pie-chart",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_play",
+        "type": "Редактор Aurora/av_e_play",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_play-circle",
+        "type": "Редактор Aurora/av_e_play-circle",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_plus",
+        "type": "Редактор Aurora/av_e_plus",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_plus-circle",
+        "type": "Редактор Aurora/av_e_plus-circle",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_plus-square",
+        "type": "Редактор Aurora/av_e_plus-square",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_pocket",
+        "type": "Редактор Aurora/av_e_pocket",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_power",
+        "type": "Редактор Aurora/av_e_power",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_printer",
+        "type": "Редактор Aurora/av_e_printer",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_refresh-ccw",
+        "type": "Редактор Aurora/av_e_refresh-ccw",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_refresh-cw",
+        "type": "Редактор Aurora/av_e_refresh-cw",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_repeat",
+        "type": "Редактор Aurora/av_e_repeat",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_rewind",
+        "type": "Редактор Aurora/av_e_rewind",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_rotate-ccw",
+        "type": "Редактор Aurora/av_e_rotate-ccw",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_rotate-cw",
+        "type": "Редактор Aurora/av_e_rotate-cw",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_rss",
+        "type": "Редактор Aurora/av_e_rss",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_save",
+        "type": "Редактор Aurora/av_e_save",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_scissors",
+        "type": "Редактор Aurora/av_e_scissors",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_search",
+        "type": "Редактор Aurora/av_e_search",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_send",
+        "type": "Редактор Aurora/av_e_send",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_server",
+        "type": "Редактор Aurora/av_e_server",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_settings",
+        "type": "Редактор Aurora/av_e_settings",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_share",
+        "type": "Редактор Aurora/av_e_share",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_share-2",
+        "type": "Редактор Aurora/av_e_share-2",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_shield",
+        "type": "Редактор Aurora/av_e_shield",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_shopping-bag",
+        "type": "Редактор Aurora/av_e_shopping-bag",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_shopping-cart",
+        "type": "Редактор Aurora/av_e_shopping-cart",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_shuffle",
+        "type": "Редактор Aurora/av_e_shuffle",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_sidebar",
+        "type": "Редактор Aurora/av_e_sidebar",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_skip-back",
+        "type": "Редактор Aurora/av_e_skip-back",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_skip-forward",
+        "type": "Редактор Aurora/av_e_skip-forward",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_slack",
+        "type": "Редактор Aurora/av_e_slack",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_slash",
+        "type": "Редактор Aurora/av_e_slash",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_sliders",
+        "type": "Редактор Aurora/av_e_sliders",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_smartphone",
+        "type": "Редактор Aurora/av_e_smartphone",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_smile",
+        "type": "Редактор Aurora/av_e_smile",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_speaker",
+        "type": "Редактор Aurora/av_e_speaker",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_square",
+        "type": "Редактор Aurora/av_e_square",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_star",
+        "type": "Редактор Aurora/av_e_star",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_sunrise",
+        "type": "Редактор Aurora/av_e_sunrise",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_sunset",
+        "type": "Редактор Aurora/av_e_sunset",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_table",
+        "type": "Редактор Aurora/av_e_table",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_tablet",
+        "type": "Редактор Aurora/av_e_tablet",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_tag",
+        "type": "Редактор Aurora/av_e_tag",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_target",
+        "type": "Редактор Aurora/av_e_target",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_terminal",
+        "type": "Редактор Aurora/av_e_terminal",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_thermometer",
+        "type": "Редактор Aurora/av_e_thermometer",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_thumbs-down",
+        "type": "Редактор Aurora/av_e_thumbs-down",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_thumbs-up",
+        "type": "Редактор Aurora/av_e_thumbs-up",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_toggle-left",
+        "type": "Редактор Aurora/av_e_toggle-left",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_toggle-right",
+        "type": "Редактор Aurora/av_e_toggle-right",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_tool",
+        "type": "Редактор Aurora/av_e_tool",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_trash",
+        "type": "Редактор Aurora/av_e_trash",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_trash-2",
+        "type": "Редактор Aurora/av_e_trash-2",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_trending-down",
+        "type": "Редактор Aurora/av_e_trending-down",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_trending-up",
+        "type": "Редактор Aurora/av_e_trending-up",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_triangle",
+        "type": "Редактор Aurora/av_e_triangle",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_truck",
+        "type": "Редактор Aurora/av_e_truck",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_tv",
+        "type": "Редактор Aurora/av_e_tv",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_twitch",
+        "type": "Редактор Aurora/av_e_twitch",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_twitter",
+        "type": "Редактор Aurora/av_e_twitter",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_type",
+        "type": "Редактор Aurora/av_e_type",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_umbrella",
+        "type": "Редактор Aurora/av_e_umbrella",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_underline",
+        "type": "Редактор Aurora/av_e_underline",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_unlock",
+        "type": "Редактор Aurora/av_e_unlock",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_upload",
+        "type": "Редактор Aurora/av_e_upload",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_upload-cloud",
+        "type": "Редактор Aurora/av_e_upload-cloud",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_user",
+        "type": "Редактор Aurora/av_e_user",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_user-check",
+        "type": "Редактор Aurora/av_e_user-check",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_user-minus",
+        "type": "Редактор Aurora/av_e_user-minus",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_user-plus",
+        "type": "Редактор Aurora/av_e_user-plus",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_user-x",
+        "type": "Редактор Aurora/av_e_user-x",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_video",
+        "type": "Редактор Aurora/av_e_video",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_video-off",
+        "type": "Редактор Aurora/av_e_video-off",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_voicemail",
+        "type": "Редактор Aurora/av_e_voicemail",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_volume",
+        "type": "Редактор Aurora/av_e_volume",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_volume-1",
+        "type": "Редактор Aurora/av_e_volume-1",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_volume-2",
+        "type": "Редактор Aurora/av_e_volume-2",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_volume-x",
+        "type": "Редактор Aurora/av_e_volume-x",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_watch",
+        "type": "Редактор Aurora/av_e_watch",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_wifi",
+        "type": "Редактор Aurora/av_e_wifi",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_wifi-off",
+        "type": "Редактор Aurora/av_e_wifi-off",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_wind",
+        "type": "Редактор Aurora/av_e_wind",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_x",
+        "type": "Редактор Aurora/av_e_x",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_x-circle",
+        "type": "Редактор Aurora/av_e_x-circle",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_x-octagon",
+        "type": "Редактор Aurora/av_e_x-octagon",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_x-square",
+        "type": "Редактор Aurora/av_e_x-square",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_align-left",
+        "type": "Редактор Aurora/av_e_align-left",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_bar-chart",
+        "type": "Редактор Aurora/av_e_bar-chart",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_check-circle",
+        "type": "Редактор Aurora/av_e_check-circle",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_cloud-snow",
+        "type": "Редактор Aurora/av_e_cloud-snow",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_cpu",
+        "type": "Редактор Aurora/av_e_cpu",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_edit-3",
+        "type": "Редактор Aurora/av_e_edit-3",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_folder-plus",
+        "type": "Редактор Aurora/av_e_folder-plus",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_help-circle",
+        "type": "Редактор Aurora/av_e_help-circle",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_zap",
+        "type": "Редактор Aurora/av_e_zap",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_zap-off",
+        "type": "Редактор Aurora/av_e_zap-off",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_zoom-in",
+        "type": "Редактор Aurora/av_e_zoom-in",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_zoom-out",
+        "type": "Редактор Aurora/av_e_zoom-out",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_loader",
+        "type": "Редактор Aurora/av_e_loader",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_minus-square",
+        "type": "Редактор Aurora/av_e_minus-square",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_phone-call",
+        "type": "Редактор Aurora/av_e_phone-call",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_radio",
+        "type": "Редактор Aurora/av_e_radio",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_shield-off",
+        "type": "Редактор Aurora/av_e_shield-off",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_stop-circle",
+        "type": "Редактор Aurora/av_e_stop-circle",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_sun",
+        "type": "Редактор Aurora/av_e_sun",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_trello",
+        "type": "Редактор Aurora/av_e_trello",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_users",
+        "type": "Редактор Aurora/av_e_users",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_e_youtube",
+        "type": "Редактор Aurora/av_e_youtube",
+        "category": "Редактор Aurora"
       }
     ]
   }

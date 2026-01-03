@@ -121,6 +121,8 @@ export class ApiEndpoints {
     REFACTOR_NAMES: `${this.BASE_URL}/Icons/refactor-names`,
     MOVE: `${this.BASE_URL}/Icons/move`,
     RENAME: `${this.BASE_URL}/Icons/rename`,
+    BULK_RENAME: `${this.BASE_URL}/Icons/bulk-rename`,
+    BROWSE_FILESYSTEM: (path: string) => `${this.BASE_URL}/Icons/browse-filesystem?path=${path}`,
     CONTENT: (name: string) => `${this.BASE_URL}/Icons/content/${name}`,
     DELETE: (type: string, b: boolean, f: boolean) =>
       `${this.BASE_URL}/Icons/delete?iconType=${type}&fromBackend=${b}&fromFrontend=${f}`,

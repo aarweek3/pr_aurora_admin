@@ -85,4 +85,37 @@ export class IconDataService {
       }),
     );
   }
+
+  /**
+   * Массовое переименование файлов с префиксом
+   * @param fileNames - список имен файлов
+   * @param targetFolder - целевая папка
+   * @param prefix - префикс для добавления
+   * @param sourceFolder - исходная папка на диске
+   */
+  bulkRename(
+    fileNames: string[],
+    targetFolder: string,
+    prefix: string,
+    sourceFolder?: string,
+  ): Observable<any> {
+    const request = {
+      fileNames,
+      targetFolder,
+      prefix,
+      sourceFolder,
+      createFolderIfNotExists: true,
+      overwriteExisting: true,
+    };
+
+    return this.http.post(ApiEndpoints.ICONS.BULK_RENAME, request);
+  }
+
+  /**
+   * Получить список файлов и папок на сервере
+   * @param path - относительный путь
+   */
+  browseFileSystem(path: string = ''): Observable<any[]> {
+    return this.http.get<any[]>(ApiEndpoints.ICONS.BROWSE_FILESYSTEM(path));
+  }
 }

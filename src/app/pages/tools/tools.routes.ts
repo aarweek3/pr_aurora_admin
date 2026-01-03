@@ -16,4 +16,9 @@ export const TOOLS_ROUTES: Routes = [
     loadComponent: () =>
       import('./editor-demo/editor-demo.component').then((m) => m.EditorDemoComponent),
   },
+  {
+    path: 'rename-all',
+    loadComponent: () =>
+      import('./rename-all/rename-all.component').then((m) => m.RenameAllComponent),
+  },
 ];

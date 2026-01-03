@@ -760,6 +760,13 @@ export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
           type: 'link',
           route: '/tools/aurora-editor',
         },
+        {
+          id: 'rename-all',
+          icon: 'file-text',
+          label: 'Переименовать',
+          type: 'link',
+          route: '/tools/rename-all',
+        },
       ],
     },
 
