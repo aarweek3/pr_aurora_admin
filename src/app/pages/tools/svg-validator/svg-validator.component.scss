@@ -1,0 +1,97 @@
+.svg-validator-container {
+  padding: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  .page-header {
+    margin-bottom: 32px;
+
+    h1 {
+      font-size: 28px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: #262626;
+    }
+
+    .text-secondary {
+      font-size: 14px;
+      color: #8c8c8c;
+    }
+  }
+
+  h3 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    color: #262626;
+  }
+
+  .svg-input-section {
+    margin-bottom: 32px;
+    padding: 24px;
+    background: #ffffff;
+    border: 1px solid #f0f0f0;
+    border-radius: 8px;
+
+    .svg-textarea {
+      width: 100%;
+      font-family: "Courier New", monospace;
+      font-size: 13px;
+      resize: vertical;
+      min-height: 200px;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 12px;
+      margin-top: 16px;
+    }
+  }
+
+  .svg-preview-section {
+    margin-bottom: 32px;
+    padding: 24px;
+    background: #ffffff;
+    border: 1px solid #f0f0f0;
+    border-radius: 8px;
+
+    .svg-display-area {
+      padding: 24px;
+      background: #fafafa;
+      border: 1px solid #d9d9d9;
+      border-radius: 6px;
+      min-height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: auto;
+
+      ::ng-deep svg {
+        max-width: 100%;
+        height: auto;
+      }
+    }
+  }
+
+  .svg-code-section {
+    padding: 24px;
+    background: #ffffff;
+    border: 1px solid #f0f0f0;
+    border-radius: 8px;
+
+    .code-display {
+      padding: 16px;
+      background: #f5f5f5;
+      border: 1px solid #d9d9d9;
+      border-radius: 4px;
+      font-family: "Courier New", monospace;
+      font-size: 13px;
+      color: #262626;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      overflow-x: auto;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+  }
+}

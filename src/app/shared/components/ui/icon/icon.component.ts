@@ -49,19 +49,27 @@ import { AvIconProps } from './index';
           width: 100% !important;
           height: 100% !important;
           display: block;
-          /* Наследуем цвет от родителя */
-          fill: currentColor !important;
 
-          path,
-          circle,
-          rect,
-          polyline,
-          line,
-          polygon {
-            /* Приоритет: CSS переменная -> currentColor -> исходный цвет */
-            fill: var(--av-icon-color, currentColor) !important;
-            stroke: var(--av-icon-color, currentColor) !important;
-            vector-effect: non-scaling-stroke;
+          /* Только для одноцветных иконок применяем currentColor */
+          &:not([data-multicolor]) {
+            fill: currentColor !important;
+
+            path,
+            circle,
+            rect,
+            polyline,
+            line,
+            polygon {
+              /* Приоритет: CSS переменная -> currentColor */
+              fill: var(--av-icon-color, currentColor) !important;
+              stroke: var(--av-icon-color, currentColor) !important;
+              vector-effect: non-scaling-stroke;
+            }
+          }
+
+          /* Для многоцветных иконок НЕ применяем currentColor */
+          &[data-multicolor] {
+            /* Не переопределяем fill/stroke - оставляем inline-атрибуты из SVG */
           }
         }
       }
@@ -221,14 +229,91 @@ export class IconComponent {
     this.iconService.getIcon(iconName).subscribe({
       next: (svgText: string) => {
         // ГЛУБОКАЯ ОЧИСТКА SVG
-        const cleanedSvg = svgText
+        let cleanedSvg = svgText
           .replace(/<\?xml.*\?>/gi, '') // Убираем XML заголовок
           .replace(/width="[^"]*"/gi, '') // Убираем жесткую ширину
-          .replace(/height="[^"]*"/gi, '') // Убираем жесткую высоту
+          .replace(/height="[^"]*"/gi, ''); // Убираем жесткую высоту
+
+        // Проверяем, является ли это многоцветной иконкой (флаги, сложная графика)
+        // Ищем цвета в атрибутах fill="..." и stroke="..."
+        const fillMatches = svgText.match(/fill="(?!none)[^"]*"/gi) || [];
+        const strokeMatches = svgText.match(/stroke="(?!none)[^"]*"/gi) || [];
+
+        // Ищем цвета в inline-стилях style="fill: rgb(...)" или style="fill:#..."
+        const styleFillMatches = svgText.match(/fill:\s*(?:rgb|#)[^;")]+/gi) || [];
+        const styleStrokeMatches = svgText.match(/stroke:\s*(?:rgb|#)[^;")]+/gi) || [];
+
+        const allColors = [
+          ...fillMatches,
+          ...strokeMatches,
+          ...styleFillMatches,
+          ...styleStrokeMatches,
+        ];
+        const uniqueColors = new Set(allColors).size;
+
+        // Если уникальных цветов больше 1, считаем это многоцветной иконкой
+        const isMulticolor = uniqueColors > 1;
+
+        // 🐛 DEBUG: Логируем информацию о многоцветности
+        if (iconName.includes('flag') || iconName.includes('language')) {
+          console.log(`[IconComponent] 🎨 ${iconName}:`, {
+            isMulticolor,
+            uniqueColors,
+            fillMatches,
+            strokeMatches,
+            styleFillMatches,
+            styleStrokeMatches,
+            svgPreview: svgText.substring(0, 500),
+          });
+        }
+
+        if (!isMulticolor) {
           // Заменяем все fill="..." на fill="currentColor", кроме none
-          .replace(/fill="(?!none)[^"]*"/gi, 'fill="currentColor"')
-          // Аналогично для stroke
-          .replace(/stroke="(?!none)[^"]*"/gi, 'stroke="currentColor"');
+          cleanedSvg = cleanedSvg
+            .replace(/fill="(?!none)[^"]*"/gi, 'fill="currentColor"')
+            // Аналогично для stroke
+            .replace(/stroke="(?!none)[^"]*"/gi, 'stroke="currentColor"');
+        } else {
+          // Для многоцветных иконок:
+          // 1. Добавляем data-атрибут
+          cleanedSvg = cleanedSvg.replace(/<svg/i, '<svg data-multicolor="true"');
+
+          // 2. Преобразуем inline-стили в атрибуты (чтобы CSS не перекрывал их)
+          // Ищем style="...fill: rgb(...)..." и извлекаем fill
+          cleanedSvg = cleanedSvg.replace(/style="([^"]*)"/gi, (match, styleContent) => {
+            let newAttrs = '';
+
+            // Извлекаем fill
+            const fillMatch = styleContent.match(
+              /fill:\s*(rgb\([^)]+\)|#[0-9a-fA-F]{3,6}|[a-z]+)/i,
+            );
+            if (fillMatch) {
+              newAttrs += ` fill="${fillMatch[1].trim()}"`;
+            }
+
+            // Извлекаем stroke
+            const strokeMatch = styleContent.match(
+              /stroke:\s*(rgb\([^)]+\)|#[0-9a-fA-F]{3,6}|[a-z]+)/i,
+            );
+            if (strokeMatch) {
+              newAttrs += ` stroke="${strokeMatch[1].trim()}"`;
+            }
+
+            // Оставляем остальные стили (кроме fill/stroke)
+            const remainingStyles = styleContent
+              .replace(/fill:\s*[^;]+;?/gi, '')
+              .replace(/stroke:\s*[^;]+;?/gi, '')
+              .trim();
+
+            if (remainingStyles) {
+              return `style="${remainingStyles}"${newAttrs}`;
+            }
+
+            return newAttrs.trim();
+          });
+
+          console.log(`[IconComponent] ✅ ${iconName} marked as multicolor`);
+        }
 
         this.svgContent.set(this.sanitizer.bypassSecurityTrustHtml(cleanedSvg));
       },

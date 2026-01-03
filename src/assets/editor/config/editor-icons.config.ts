@@ -31,16 +31,16 @@ export const TEXT_ICONS = {
   bold: 'av_e_bold',
   italic: 'av_e_italic',
   underline: 'av_e_underline',
-  strikethrough: 'av_e_strikethrough',
+  strikethrough: 'av_e_minus', // Used minus as strike alternative
 
-  superscript: 'av_e_superscript',
-  subscript: 'av_e_subscript',
+  superscript: 'av_e_arrow-up',
+  subscript: 'av_e_arrow-down',
 
   code: 'av_e_code',
-  codeBlock: 'av_e_code_block',
-  preformatted: 'av_e_preformatted',
+  codeBlock: 'av_e_terminal',
+  preformatted: 'av_e_type',
 
-  removeFormat: 'av_e_remove_format',
+  removeFormat: 'av_e_trash',
 } as const;
 
 // ======================================================
@@ -48,17 +48,17 @@ export const TEXT_ICONS = {
 // ======================================================
 
 export const PARAGRAPH_ICONS = {
-  paragraph: 'av_e_paragraph',
+  paragraph: 'av_e_more-horizontal',
 
-  heading1: 'av_e_heading_1',
-  heading2: 'av_e_heading_2',
-  heading3: 'av_e_heading_3',
-  heading4: 'av_e_heading_4',
-  heading5: 'av_e_heading_5',
-  heading6: 'av_e_heading_6',
+  heading1: 'av_e_type',
+  heading2: 'av_e_type',
+  heading3: 'av_e_type',
+  heading4: 'av_e_type',
+  heading5: 'av_e_type',
+  heading6: 'av_e_type',
 
-  blockquote: 'av_e_blockquote',
-  horizontalRule: 'av_e_horizontal_rule',
+  blockquote: 'av_e_message-square',
+  horizontalRule: 'av_e_minus',
 } as const;
 
 // ======================================================
@@ -66,12 +66,12 @@ export const PARAGRAPH_ICONS = {
 // ======================================================
 
 export const LIST_ICONS = {
-  orderedList: 'av_e_list_ordered',
-  unorderedList: 'av_e_list_unordered',
-  checklist: 'av_e_list_check',
+  orderedList: 'av_e_list',
+  unorderedList: 'av_e_menu',
+  checklist: 'av_e_check-square',
 
-  indent: 'av_e_indent',
-  outdent: 'av_e_outdent',
+  indent: 'av_e_chevrons-right',
+  outdent: 'av_e_chevrons-left',
 } as const;
 
 // ======================================================
@@ -79,11 +79,11 @@ export const LIST_ICONS = {
 // ======================================================
 
 export const STYLE_ICONS = {
-  textColor: 'av_e_text_color',
-  backgroundColor: 'av_e_background_color',
+  textColor: 'av_e_droplet',
+  backgroundColor: 'av_e_box',
 
-  highlight: 'av_e_highlight',
-  clearColor: 'av_e_clear_color',
+  highlight: 'av_e_sun',
+  clearColor: 'av_e_x-circle',
 } as const;
 
 // ======================================================
@@ -92,18 +92,18 @@ export const STYLE_ICONS = {
 
 export const INSERT_ICONS = {
   link: 'av_e_link',
-  unlink: 'av_e_unlink',
+  unlink: 'av_e_link-2',
   anchor: 'av_e_anchor',
 
   image: 'av_e_image',
-  imageUpload: 'av_e_image_upload',
-  gallery: 'av_e_gallery',
+  imageUpload: 'av_e_upload-cloud',
+  gallery: 'av_e_grid',
 
   video: 'av_e_video',
-  audio: 'av_e_audio',
+  audio: 'av_e_music',
 
   file: 'av_e_file',
-  attachment: 'av_e_attachment',
+  attachment: 'av_e_paperclip',
 
   table: 'av_e_table',
 } as const;
@@ -134,14 +134,14 @@ export const TABLE_ICONS = {
 // ======================================================
 
 export const ALIGN_ICONS = {
-  alignLeft: 'av_e_align_left',
-  alignCenter: 'av_e_align_center',
-  alignRight: 'av_e_align_right',
-  alignJustify: 'av_e_align_justify',
+  alignLeft: 'av_e_align-left',
+  alignCenter: 'av_e_align-center',
+  alignRight: 'av_e_align-right',
+  alignJustify: 'av_e_align-justify',
 
-  verticalTop: 'av_e_vertical_top',
-  verticalMiddle: 'av_e_vertical_middle',
-  verticalBottom: 'av_e_vertical_bottom',
+  verticalTop: 'av_e_arrow-up',
+  verticalMiddle: 'av_e_more-horizontal',
+  verticalBottom: 'av_e_arrow-down',
 } as const;
 
 // ======================================================
@@ -149,14 +149,14 @@ export const ALIGN_ICONS = {
 // ======================================================
 
 export const HISTORY_ICONS = {
-  undo: 'av_e_undo',
-  redo: 'av_e_redo',
+  undo: 'av_e_rotate-ccw',
+  redo: 'av_e_rotate-cw',
 
   copy: 'av_e_copy',
-  cut: 'av_e_cut',
-  paste: 'av_e_paste',
+  cut: 'av_e_scissors',
+  paste: 'av_e_clipboard',
 
-  selectAll: 'av_e_select_all',
+  selectAll: 'av_e_maximize',
 } as const;
 
 // ======================================================
@@ -165,10 +165,10 @@ export const HISTORY_ICONS = {
 
 export const SEARCH_ICONS = {
   search: 'av_e_search',
-  replace: 'av_e_replace',
+  replace: 'av_e_repeat',
 
-  zoomIn: 'av_e_zoom_in',
-  zoomOut: 'av_e_zoom_out',
+  zoomIn: 'av_e_zoom-in',
+  zoomOut: 'av_e_zoom-out',
 } as const;
 
 // ======================================================
@@ -190,13 +190,13 @@ export const DEV_ICONS = {
 
 export const SYSTEM_ICONS = {
   settings: 'av_e_settings',
-  preferences: 'av_e_preferences',
+  preferences: 'av_e_sliders',
 
-  help: 'av_e_help',
+  help: 'av_e_help-circle',
   info: 'av_e_info',
 
-  warning: 'av_e_warning',
-  error: 'av_e_error',
+  warning: 'av_e_alert-triangle',
+  error: 'av_e_alert-circle',
 
   lock: 'av_e_lock',
   unlock: 'av_e_unlock',

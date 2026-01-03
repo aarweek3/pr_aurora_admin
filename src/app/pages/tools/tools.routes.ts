@@ -21,4 +21,9 @@ export const TOOLS_ROUTES: Routes = [
     loadComponent: () =>
       import('./rename-all/rename-all.component').then((m) => m.RenameAllComponent),
   },
+  {
+    path: 'svg-validator',
+    loadComponent: () =>
+      import('./svg-validator/svg-validator.component').then((m) => m.SvgValidatorComponent),
+  },
 ];

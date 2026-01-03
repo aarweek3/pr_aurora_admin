@@ -3018,5 +3018,80 @@ export const ICON_REGISTRY: IconCategory[] = [
         "category": "Редактор Aurora"
       }
     ]
+  },
+  {
+    "category": "language",
+    "icons": [
+      {
+        "name": "av_l_australia-flag",
+        "type": "language/av_l_australia-flag",
+        "category": "language"
+      },
+      {
+        "name": "av_l_canada-flag",
+        "type": "language/av_l_canada-flag",
+        "category": "language"
+      },
+      {
+        "name": "av_l_china-flag",
+        "type": "language/av_l_china-flag",
+        "category": "language"
+      },
+      {
+        "name": "av_l_european-union-flag",
+        "type": "language/av_l_european-union-flag",
+        "category": "language"
+      },
+      {
+        "name": "av_l_france-flag",
+        "type": "language/av_l_france-flag",
+        "category": "language"
+      },
+      {
+        "name": "av_l_germany-flag",
+        "type": "language/av_l_germany-flag",
+        "category": "language"
+      },
+      {
+        "name": "av_l_italy-flag",
+        "type": "language/av_l_italy-flag",
+        "category": "language"
+      },
+      {
+        "name": "av_l_japan-flag-circular-17764",
+        "type": "language/av_l_japan-flag-circular-17764",
+        "category": "language"
+      },
+      {
+        "name": "av_l_mexico-flag",
+        "type": "language/av_l_mexico-flag",
+        "category": "language"
+      },
+      {
+        "name": "av_l_netherlands-flag",
+        "type": "language/av_l_netherlands-flag",
+        "category": "language"
+      },
+      {
+        "name": "av_l_spain-flag",
+        "type": "language/av_l_spain-flag",
+        "category": "language"
+      },
+      {
+        "name": "av_l_turkey-flag",
+        "type": "language/av_l_turkey-flag",
+        "category": "language"
+      },
+      {
+        "name": "av_l_uk-flag",
+        "type": "language/av_l_uk-flag",
+        "category": "language"
+      },
+      {
+        "name": "av_l_usa-flag",
+        "type": "language/av_l_usa-flag",
+        "category": "language"
+      }
+    ]
   }
 ];

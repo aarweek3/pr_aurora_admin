@@ -767,6 +767,17 @@ export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
           type: 'link',
           route: '/tools/rename-all',
         },
+        {
+          id: 'svg-validator',
+          icon: 'check-circle',
+          label: 'Проверка SVG',
+          type: 'link',
+          route: '/tools/svg-validator',
+          badge: {
+            value: 'New',
+            intent: 'success',
+          },
+        },
       ],
     },
 
