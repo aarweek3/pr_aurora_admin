@@ -906,6 +906,12 @@ export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
               route: '/tools/test-mexico-flag',
               icon: 'flag',
             },
+            {
+              id: 'test-file-browser',
+              label: 'Test File Browser 📂',
+              route: '/tools/test-file-browser',
+              icon: 'folder-open',
+            },
           ],
         },
       ],

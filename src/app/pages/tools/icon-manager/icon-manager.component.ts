@@ -3151,57 +3151,7 @@ export class IconManagerComponent {
     if (!raw || raw.startsWith('Loading')) return;
 
     try {
-      const parser = new DOMParser();
-      const doc = parser.parseFromString(raw, 'image/svg+xml');
-      const svg = doc.querySelector('svg');
-      if (!svg) throw new Error('Invalid SVG');
-
-      // 1. Get current viewBox or dimensions
-      let vb = svg.getAttribute('viewBox');
-      let w = parseFloat(svg.getAttribute('width') || '0');
-      let h = parseFloat(svg.getAttribute('height') || '0');
-
-      let minX = 0,
-        minY = 0,
-        width = 0,
-        height = 0;
-
-      if (vb) {
-        const parts = vb.split(/[\s,]+/).map(parseFloat);
-        [minX, minY, width, height] = parts;
-      } else if (w && h) {
-        width = w;
-        height = h;
-      } else {
-        throw new Error('Could not determine original scale');
-      }
-
-      // 2. Wrap all content into a group for scaling
-      const children = Array.from(svg.childNodes);
-      const group = doc.createElementNS('http://www.w3.org/2000/svg', 'g');
-
-      // Calculate scale to fit into 24x24
-      const scaleX = 24 / width;
-      const scaleY = 24 / height;
-      const scale = Math.min(scaleX, scaleY);
-
-      // Move children to group
-      children.forEach((child) => group.appendChild(child));
-
-      // Apply transform to center and scale
-      // Offset by -minX/-minY to start from 0, then scale
-      group.setAttribute('transform', `scale(${scale.toFixed(4)}) translate(${-minX}, ${-minY})`);
-
-      // Clear SVG and add normalized group
-      svg.innerHTML = '';
-      svg.appendChild(group);
-
-      // 3. Set standard attributes
-      svg.setAttribute('viewBox', '0 0 24 24');
-      svg.removeAttribute('width');
-      svg.removeAttribute('height');
-
-      const normalized = new XMLSerializer().serializeToString(doc);
+      const normalized = this.internalNormalize(raw);
       this.cleanedSvgCode.set(normalized);
       this.generatePassport(normalized); // Update passport data
       this.showToast('Иконка успешно масштабирована до стандарта 24x24!');
@@ -3758,16 +3708,35 @@ export class IconManagerComponent {
   }
 
   private internalOptimize(raw: string): string {
-    // 1. Parse string to DOM
     const parser = new DOMParser();
     const doc = parser.parseFromString(raw, 'image/svg+xml');
     const svg = doc.querySelector('svg');
     if (!svg) return raw;
 
-    // 2. Remove unwanted attributes from ROOT <svg>
+    // 1. Color Analysis: Detect if the icon is multicolor
+    // ИСПРАВЛЕНИЕ: Учитываем цвета как из атрибутов, так и из inline-стилей
+    const activeColors = new Set<string>();
+    const graphicElements = svg.querySelectorAll(
+      'path, circle, rect, ellipse, line, polyline, polygon',
+    );
+
+    graphicElements.forEach((el) => {
+      const htmlEl = el as HTMLElement;
+      // Проверяем и атрибут, и стиль
+      const fill = el.getAttribute('fill') || htmlEl.style.fill;
+      const stroke = el.getAttribute('stroke') || htmlEl.style.stroke;
+
+      if (fill && fill !== 'none' && fill !== 'inherit' && !fill.startsWith('url'))
+        activeColors.add(fill.toLowerCase());
+      if (stroke && stroke !== 'none' && stroke !== 'inherit' && !stroke.startsWith('url'))
+        activeColors.add(stroke.toLowerCase());
+    });
+
+    // Monochrome if 0 or 1 unique colors (excluding none/inherit/url)
+    const isMonochrome = activeColors.size <= 1;
+
+    // 2. Clean ROOT <svg> attributes
     const attributesToRemove = [
-      'width',
-      'height',
       'id',
       'class',
       'version',
@@ -3776,47 +3745,74 @@ export class IconManagerComponent {
       'xml:space',
       'style',
       'xmlns:xlink',
-      'xmlns',
-      // Note: we might want to keep xmlns if not inline, but for inline it's often redundant.
-      // Safest is to keep xmlns="http://www.w3.org/2000/svg" but remove others.
     ];
     attributesToRemove.forEach((attr) => svg.removeAttribute(attr));
 
-    // Ensure strictly standard xmlns if missing
     if (!svg.getAttribute('xmlns')) {
       svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
     }
 
-    // 3. Clean all children elements
+    // 3. Clean elements
     svg.querySelectorAll('*').forEach((el) => {
+      const htmlEl = el as HTMLElement;
+
+      // ИСПРАВЛЕНИЕ: Извлекаем критические свойства из стиля в атрибуты ПЕРЕД удалением style
+      if (htmlEl.style.fill && !el.hasAttribute('fill')) {
+        el.setAttribute('fill', htmlEl.style.fill);
+      }
+      if (htmlEl.style.stroke && !el.hasAttribute('stroke')) {
+        el.setAttribute('stroke', htmlEl.style.stroke);
+      }
+
+      // Remove metadata/garbage attributes
       el.removeAttribute('id');
       el.removeAttribute('class');
+
+      // Handle transform: remove redundant ones
+      const transform = el.getAttribute('transform');
+      if (transform) {
+        const cleanTransform = transform.trim().toLowerCase();
+        if (
+          cleanTransform === 'matrix(1 0 0 1 0 0)' ||
+          cleanTransform === 'matrix(1, 0, 0, 1, 0, 0)' ||
+          cleanTransform === 'translate(0, 0)' ||
+          cleanTransform === 'translate(0 0)' ||
+          cleanTransform === 'scale(1)' ||
+          cleanTransform === 'scale(1 1)'
+        ) {
+          el.removeAttribute('transform');
+        }
+      }
+
+      // Теперь можно безопасно удалять стиль (цвета уже перенесены в атрибуты)
       el.removeAttribute('style');
 
-      // Force currentColor
-      if (el.hasAttribute('fill') && el.getAttribute('fill') !== 'none') {
-        el.setAttribute('fill', 'currentColor');
+      if (isMonochrome) {
+        if (
+          el.hasAttribute('fill') &&
+          el.getAttribute('fill') !== 'none' &&
+          !el.getAttribute('fill')?.startsWith('url')
+        ) {
+          el.setAttribute('fill', 'currentColor');
+        }
+        if (
+          el.hasAttribute('stroke') &&
+          el.getAttribute('stroke') !== 'none' &&
+          !el.getAttribute('stroke')?.startsWith('url')
+        ) {
+          el.setAttribute('stroke', 'currentColor');
+        }
       }
-      if (el.hasAttribute('stroke') && el.getAttribute('stroke') !== 'none') {
-        el.setAttribute('stroke', 'currentColor');
-      }
+      // Для многоцветных иконок сохраняем атрибуты fill/stroke как есть
     });
 
-    // 4. Serialize back to string
-    const serializer = new XMLSerializer();
-    let serialized = serializer.serializeToString(svg);
-
-    console.log('[IconManager] Pre-regex serialized:', serialized);
-
-    // 5. Final Regex Cleanup
-    // Explicitly remove XML declaration, DOCTYPE, and comments
+    // 4. Regex Cleanup
+    let serialized = new XMLSerializer().serializeToString(svg);
     serialized = serialized.replace(/<\?xml.*?\?>/gi, '');
     serialized = serialized.replace(/<!DOCTYPE[^>]*>/gi, '');
     serialized = serialized.replace(/<!--[\s\S]*?-->/g, '');
 
-    const final = serialized.trim();
-    console.log('[IconManager] Post-regex final:', final);
-    return final;
+    return serialized.trim();
   }
 
   private internalNormalize(raw: string): string {
@@ -3825,6 +3821,7 @@ export class IconManagerComponent {
     const svg = doc.querySelector('svg');
     if (!svg) return raw;
 
+    // 1. Get current viewBox or dimensions
     let vb = svg.getAttribute('viewBox');
     let w = parseFloat(svg.getAttribute('width') || '0');
     let h = parseFloat(svg.getAttribute('height') || '0');
@@ -3840,14 +3837,56 @@ export class IconManagerComponent {
       height = h;
     } else return raw;
 
+    // 2. Identify elements
     const children = Array.from(svg.childNodes);
+    const containerTags = ['defs', 'mask', 'clippath', 'style', 'title', 'desc', 'metadata'];
+    const graphicNodes: Node[] = [];
+    const containerNodes: Node[] = [];
+
+    children.forEach((node) => {
+      if (node.nodeType === 1) {
+        // Element
+        const tag = (node as Element).tagName.toLowerCase();
+        if (containerTags.includes(tag)) {
+          containerNodes.push(node);
+        } else {
+          graphicNodes.push(node);
+        }
+      } else {
+        // Keep comments/text (if any) or move to containers
+        containerNodes.push(node);
+      }
+    });
+
+    // 3. Create scaling group for graphics
     const group = doc.createElementNS('http://www.w3.org/2000/svg', 'g');
     const scale = Math.min(24 / width, 24 / height);
-    children.forEach((child) => group.appendChild(child));
-    group.setAttribute('transform', `scale(${scale.toFixed(4)}) translate(${-minX}, ${-minY})`);
 
+    graphicNodes.forEach((node) => {
+      // Apply vector-effect to preserve stroke width
+      if (node.nodeType === 1) {
+        const el = node as Element;
+        if (el.hasAttribute('stroke') || el.getAttribute('stroke-width')) {
+          el.setAttribute('vector-effect', 'non-scaling-stroke');
+        }
+        // Also check children for strokes
+        el.querySelectorAll('[stroke], [stroke-width]').forEach((child) => {
+          child.setAttribute('vector-effect', 'non-scaling-stroke');
+        });
+      }
+      group.appendChild(node);
+    });
+
+    // Правильный порядок: translate потом scale (трансформации применяются справа налево)
+    group.setAttribute('transform', `translate(${-minX}, ${-minY}) scale(${scale.toFixed(4)})`);
+
+    // 4. Reconstruct SVG
     svg.innerHTML = '';
+    // Put containers first
+    containerNodes.forEach((node) => svg.appendChild(node));
+    // Then the scaled graphics
     svg.appendChild(group);
+
     svg.setAttribute('viewBox', '0 0 24 24');
     svg.removeAttribute('width');
     svg.removeAttribute('height');

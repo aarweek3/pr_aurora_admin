@@ -47,4 +47,11 @@ export const TOOLS_ROUTES: Routes = [
         '@assets/tests/test-languageApp/test-language-app-get-massiv-icon-from-db.component'
       ).then((m) => m.TestLanguageAppGetMassivIconFromDbComponent),
   },
+  {
+    path: 'test-file-browser',
+    loadComponent: () =>
+      import('../../../assets/tests/test-file-browser/test-file-browser.component').then(
+        (m) => m.TestFileBrowserComponent,
+      ),
+  },
 ];
