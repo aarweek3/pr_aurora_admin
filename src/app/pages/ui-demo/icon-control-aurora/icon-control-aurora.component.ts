@@ -16,7 +16,7 @@ import {
   ShowcaseComponent,
   ShowcaseConfig,
 } from '../../../shared/components/ui/showcase/showcase.component';
-import { IconDataService } from '../../../shared/services/icon-data.service';
+import { IconLaboratoryService } from '../../../shared/services/icon-laboratory.service';
 import { AvIconCategory } from '../old-control/icon-ui/icon-metadata.model';
 import {
   API_EXAMPLE,
@@ -53,7 +53,7 @@ export { AvIconConfig as IconConfig } from '../../../shared/components/ui/icon';
   styleUrl: './icon-control-aurora.component.scss',
 })
 export class IconControlAuroraComponent implements OnDestroy {
-  private iconService = inject(IconDataService);
+  private iconService = inject(IconLaboratoryService);
 
   // Константы времени для улучшения читаемости
   private readonly MESSAGE_TIMEOUT = 3000; // 3 секунды
@@ -69,7 +69,7 @@ export class IconControlAuroraComponent implements OnDestroy {
   }
 
   private loadIconPresets() {
-    this.iconService.getIcons().subscribe({
+    this.iconService.getRegistry().subscribe({
       next: (categories: AvIconCategory[]) => {
         const flatIcons = categories.flatMap((cat) =>
           cat.icons.map((icon) => ({

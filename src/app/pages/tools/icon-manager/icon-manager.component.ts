@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, effect, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { NzButtonModule } from 'ng-zorro-antd/button';
@@ -9,16 +9,20 @@ import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
 import { NzSelectModule } from 'ng-zorro-antd/select';
+import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { NzTabsModule } from 'ng-zorro-antd/tabs';
 import { firstValueFrom } from 'rxjs';
+
 import { ApiEndpoints } from '../../../../environments/api-endpoints';
-import { IconService as GlobalIconService } from '../../../core/services/icon/icon.service';
+
+import { IconGetService } from '@core/services/icon/icon-get.service';
+import { IconLaboratoryService } from '@shared/services/icon-laboratory.service';
 import { IconComponent } from '../../../shared/components/ui/icon/icon.component';
-import { IconDataService } from '../../../shared/services/icon-data.service';
+import { IconCategoryManagerComponent } from '../../icon-category-manager/icon-category-manager.component';
 import { IconCategory as DbCategory } from '../../icon-category-manager/models/icon-category.model';
 import { IconCategoryService } from '../../icon-category-manager/services/icon-category.service';
 import { IconMetadata } from '../../ui-demo/old-control/icon-ui/icon-metadata.model';
-import { ICON_REGISTRY, IconCategory } from '../../ui-demo/old-control/icon-ui/icon-registry';
+import { IconCategory } from '../../ui-demo/old-control/icon-ui/icon-registry';
 
 @Component({
   selector: 'av-icon-manager',
@@ -34,6 +38,7 @@ import { ICON_REGISTRY, IconCategory } from '../../ui-demo/old-control/icon-ui/i
     NzInputModule,
     NzModalModule,
     NzSelectModule,
+    NzSpinModule,
   ],
   template: `
     <div class="manager-wrapper">
@@ -76,6 +81,10 @@ import { ICON_REGISTRY, IconCategory } from '../../ui-demo/old-control/icon-ui/i
               <div class="nav-item">
                 <av-icon type="general/av_tag" [size]="18"></av-icon>
                 <span>Недавно добавленные</span>
+              </div>
+              <div class="nav-item add-folder-btn" (click)="openCategoryManager()">
+                <av-icon type="actions/av_add" [size]="18"></av-icon>
+                <span>Создать папку</span>
               </div>
             </div>
 
@@ -429,20 +438,108 @@ import { ICON_REGISTRY, IconCategory } from '../../ui-demo/old-control/icon-ui/i
             }
 
             <!-- Code Tabs -->
-            <nz-tabset>
+            <nz-tabset
+              [nzSelectedIndex]="activeEditorTab()"
+              (nzSelectedIndexChange)="activeEditorTab.set($event)"
+            >
               <nz-tab nzTitle="Исходный код">
                 <div class="code-editor-wrapper">
                   <div class="code-label">Original</div>
                   <textarea readonly>{{ rawSvgCode() }}</textarea>
 
-                  @if (cleanedSvgCode()) {
+                  @if (cleanedSvgCode() || isManualEdit()) {
                   <div class="code-connector">
                     <av-icon type="arrows/av_arrow_down" [size]="20"></av-icon>
-                    <span>Optimized Output</span>
+                    <div style="display: flex; align-items: center; gap: 8px; width: 100%;">
+                      <span>Optimized Output</span>
+                      <button
+                        class="btn-outline"
+                        style="height: 24px; padding: 0 8px; font-size: 11px; border-radius: 4px;"
+                        [class.active-edit]="isManualEdit()"
+                        (click)="toggleManualEdit()"
+                      >
+                        <av-icon
+                          [type]="isManualEdit() ? 'actions/av_check_mark' : 'actions/av_edit'"
+                          [size]="12"
+                        ></av-icon>
+                        {{ isManualEdit() ? 'Применить' : 'Редактировать' }}
+                      </button>
+                      @if (isManualEdit()) {
+                      <button
+                        class="btn-outline refresh-animate"
+                        style="height: 24px; padding: 0 8px; font-size: 11px; border-radius: 4px; border-color: #6366f1; color: #6366f1;"
+                        (click)="refreshPreview()"
+                      >
+                        <av-icon
+                          type="general/av_refresh-cw"
+                          [size]="12"
+                          style="margin-right: 4px;"
+                        ></av-icon>
+                        Рефреш (Live)
+                      </button>
+                      }
+                    </div>
                   </div>
-                  <textarea readonly class="optimized">{{ cleanedSvgCode() }}</textarea>
+                  <textarea
+                    class="optimized"
+                    [readonly]="!isManualEdit()"
+                    [ngModel]="isManualEdit() ? manualEditedCode() : cleanedSvgCode()"
+                    (ngModelChange)="onManualCodeChange($event)"
+                    placeholder="Здесь появится оптимизированный код или введите свой..."
+                  ></textarea>
                   }
                 </div>
+
+                @if (activeEditorTab() === 0) {
+                <!-- Actions for Source Code Tab -->
+                <div
+                  class="editor-footer"
+                  style="margin-top: 24px; padding-top: 24px; border-top: 1px solid #f1f5f9;"
+                >
+                  <button nz-button nzType="default" (click)="optimizeSvg()">
+                    <av-icon type="system/av_cog" [size]="16"></av-icon>
+                    Оптимизировать
+                  </button>
+                  <div class="spacer"></div>
+                  <button
+                    nz-button
+                    nzType="primary"
+                    [disabled]="!cleanedSvgCode()"
+                    (click)="granularSync(true, true)"
+                  >
+                    <av-icon type="actions/av_check_mark" [size]="16"></av-icon>
+                    Сохранить везде
+                  </button>
+                </div>
+                }
+              </nz-tab>
+              <nz-tab nzTitle="Просмотр">
+                <div class="code-editor-wrapper">
+                  <div class="code-label">Код для просмотра</div>
+                  <textarea
+                    style="height: 400px;"
+                    [ngModel]="(viewCodeSignal() ?? cleanedSvgCode()) || rawSvgCode()"
+                    (ngModelChange)="viewCodeSignal.set($event)"
+                    placeholder="Здесь появится код для просмотра..."
+                  ></textarea>
+                </div>
+
+                @if (activeEditorTab() === 1) {
+                <div
+                  class="editor-footer"
+                  style="margin-top: 24px; padding-top: 24px; border-top: 1px solid #f1f5f9;"
+                >
+                  <button nz-button nzType="default" (click)="onPreviewClick()">
+                    <av-icon type="actions/av_eye" [size]="16"></av-icon>
+                    Превью
+                  </button>
+                  <div class="spacer"></div>
+                  <button nz-button nzType="default" (click)="onSaveToDiskClick()">
+                    <av-icon type="general/av_download" [size]="16"></av-icon>
+                    Сохранить на диск
+                  </button>
+                </div>
+                }
               </nz-tab>
               <nz-tab nzTitle="Метаданные">
                 <div class="enrich-form">
@@ -492,25 +589,8 @@ import { ICON_REGISTRY, IconCategory } from '../../ui-demo/old-control/icon-ui/i
                 </div>
               </nz-tab>
             </nz-tabset>
-
-            <!-- Actions Footer -->
-            <div class="editor-footer">
-              <button nz-button nzType="default" (click)="optimizeSvg()">
-                <av-icon type="system/av_cog" [size]="16"></av-icon>
-                Оптимизировать
-              </button>
-              <div class="spacer"></div>
-              <button
-                nz-button
-                nzType="primary"
-                [disabled]="!cleanedSvgCode()"
-                (click)="granularSync(true, true)"
-              >
-                <av-icon type="actions/av_check_mark" [size]="16"></av-icon>
-                Сохранить везде
-              </button>
-            </div>
           </div>
+
           }
         </ng-container>
       </nz-drawer>
@@ -1141,6 +1221,192 @@ import { ICON_REGISTRY, IconCategory } from '../../ui-demo/old-control/icon-ui/i
         {{ toastMessage() }}
       </div>
       }
+
+      <!-- Save to Disk Modal -->
+      <nz-modal
+        [(nzVisible)]="isSaveModalOpen"
+        nzTitle="Сохранить на диск"
+        (nzOnCancel)="isSaveModalOpen.set(false)"
+        (nzOnOk)="confirmSaveToDisk()"
+        [nzOkLoading]="isSavingToDisk()"
+        nzOkText="Сохранить"
+        nzCancelText="Отмена"
+      >
+        <ng-container *nzModalContent>
+          <div class="modal-form">
+            <div class="form-group" style="margin-bottom: 20px;">
+              <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #475569;"
+                >Имя файла</label
+              >
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <input
+                  nz-input
+                  [ngModel]="saveFileName()"
+                  (ngModelChange)="saveFileName.set($event)"
+                  placeholder="name"
+                />
+                <span style="color: #94a3b8; font-family: monospace;">.svg</span>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #475569;"
+                >Папка для сохранения</label
+              >
+              <div style="display: flex; gap: 8px;">
+                <input
+                  nz-input
+                  [ngModel]="saveFilePath()"
+                  (ngModelChange)="saveFilePath.set($event)"
+                  placeholder="C:/Icons/Export"
+                />
+                <button
+                  nz-button
+                  nzType="default"
+                  title="Выбрать папку"
+                  (click)="openFolderBrowser()"
+                >
+                  <av-icon type="av_folder" [size]="18"></av-icon>
+                </button>
+              </div>
+              <p style="margin-top: 8px; font-size: 11px; color: #64748b;">
+                ⚠️ Убедитесь, что у приложения есть права на запись в указанную директорию.
+              </p>
+            </div>
+          </div>
+        </ng-container>
+      </nz-modal>
+
+      <!-- Folder Browser Modal -->
+      <nz-modal
+        [(nzVisible)]="isFolderBrowserOpen"
+        nzTitle="Выбор папки на сервере"
+        (nzOnCancel)="isFolderBrowserOpen.set(false)"
+        [nzFooter]="browserFooter"
+        nzWidth="700px"
+      >
+        <ng-container *nzModalContent>
+          <div class="browser-container">
+            <div class="browser-header" style="margin-bottom: 16px; display: flex; gap: 8px;">
+              <button nz-button (click)="goUpInBrowser()" title="Наверх">
+                <av-icon type="av_arrow_left" [size]="16"></av-icon>
+              </button>
+              <button nz-button (click)="navigateToPath('')" title="Список дисков">
+                <av-icon type="av_e_hard-drive" [size]="16"></av-icon>
+              </button>
+              <input
+                nz-input
+                [ngModel]="currentBrowserPath()"
+                (keyup.enter)="navigateToPath(currentBrowserPath())"
+                readonly
+              />
+              <button
+                nz-button
+                nzType="primary"
+                (click)="isCreatingFolder.set(true)"
+                title="Создать папку"
+              >
+                <av-icon type="actions/av_add" [size]="16"></av-icon>
+              </button>
+            </div>
+
+            @if (isCreatingFolder()) {
+            <div
+              class="create-folder-bar"
+              style="margin-bottom: 16px; padding: 12px; background: #eff6ff; border-radius: 8px; display: flex; gap: 8px; align-items: center; border: 1px solid #bfdbfe; animation: slideDown 0.2s ease-out;"
+            >
+              <av-icon type="av_folder" [size]="20" style="color: #3b82f6;"></av-icon>
+              <input
+                nz-input
+                placeholder="Имя новой папки..."
+                [ngModel]="newFolderName()"
+                (ngModelChange)="newFolderName.set($event)"
+                (keyup.enter)="createNewFolderInBrowser()"
+                style="flex: 1;"
+                #newFolderInput
+              />
+              <button nz-button nzType="primary" (click)="createNewFolderInBrowser()">
+                Создать
+              </button>
+              <button
+                nz-button
+                nzType="default"
+                (click)="isCreatingFolder.set(false); newFolderName.set('')"
+              >
+                X
+              </button>
+            </div>
+            }
+
+            <div
+              class="browser-list"
+              style="height: 400px; overflow-y: auto; border: 1px solid #e2e8f0; border-radius: 8px;"
+            >
+              @if (isBrowserLoading()) {
+              <div
+                style="display: flex; justify-content: center; align-items: center; height: 100%;"
+              >
+                <nz-spin nzSimple></nz-spin>
+              </div>
+              } @else {
+              <div class="items-grid">
+                @for (item of browserItems(); track item.path) {
+                <div
+                  class="browser-item"
+                  (click)="
+                    item.type === 'folder' || item.type === 'drive'
+                      ? navigateToPath(item.path)
+                      : null
+                  "
+                  style="display: flex; align-items: center; padding: 10px 16px; cursor: pointer; border-bottom: 1px solid #f1f5f9; hover: background: #f8fafc;"
+                  [style.background]="
+                    item.type === 'folder' || item.type === 'drive' ? 'transparent' : '#f8fafc'
+                  "
+                >
+                  <av-icon
+                    [type]="
+                      item.type === 'drive'
+                        ? 'av_e_hard-drive'
+                        : item.type === 'folder'
+                        ? 'av_folder'
+                        : 'av_file'
+                    "
+                    [size]="20"
+                    [style.color]="
+                      item.type === 'drive'
+                        ? '#6366f1'
+                        : item.type === 'folder'
+                        ? '#3b82f6'
+                        : '#94a3b8'
+                    "
+                    style="margin-right: 12px;"
+                  ></av-icon>
+                  <span style="flex: 1; font-size: 14px; color: #1e293b;">{{ item.name }}</span>
+                  @if (item.type === 'folder' || item.type === 'drive') {
+                  <button
+                    nz-button
+                    nzType="link"
+                    (click)="$event.stopPropagation(); selectInBrowser(item.path)"
+                  >
+                    Выбрать
+                  </button>
+                  }
+                </div>
+                }
+              </div>
+              }
+            </div>
+          </div>
+        </ng-container>
+        <ng-template #browserFooter>
+          <button nz-button nzType="default" (click)="isFolderBrowserOpen.set(false)">
+            Отмена
+          </button>
+          <button nz-button nzType="primary" (click)="selectInBrowser(currentBrowserPath())">
+            Выбрать текущую папку
+          </button>
+        </ng-template>
+      </nz-modal>
     </div>
   `,
   styles: [
@@ -1370,6 +1636,19 @@ import { ICON_REGISTRY, IconCategory } from '../../ui-demo/old-control/icon-ui/i
         margin-left: auto;
         font-size: 11px;
         color: #94a3b8;
+      }
+
+      .add-folder-btn {
+        margin-top: 8px;
+        color: #6366f1;
+        border: 1px dashed rgba(99, 102, 241, 0.3);
+        background: rgba(99, 102, 241, 0.03);
+      }
+
+      .add-folder-btn:hover {
+        background: rgba(99, 102, 241, 0.08);
+        border-color: rgba(99, 102, 241, 0.5);
+        color: #4f46e5;
       }
 
       .text-danger {
@@ -2221,6 +2500,28 @@ import { ICON_REGISTRY, IconCategory } from '../../ui-demo/old-control/icon-ui/i
           av-icon {
             color: #6366f1;
           }
+
+          .active-edit {
+            background: #10b981 !important;
+            color: white !important;
+            border-color: #059669 !important;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+          }
+
+          @keyframes spin-refresh {
+            from {
+              transform: rotate(0deg);
+            }
+            to {
+              transform: rotate(360deg);
+            }
+          }
+
+          .refresh-animate {
+            &:active av-icon {
+              animation: spin-refresh 0.5s ease-out;
+            }
+          }
         }
       }
       .editor-footer {
@@ -2416,6 +2717,15 @@ import { ICON_REGISTRY, IconCategory } from '../../ui-demo/old-control/icon-ui/i
         }
       }
 
+      .browser-container {
+        .browser-item {
+          transition: all 0.2s;
+          &:hover {
+            background: #f1f5f9 !important;
+          }
+        }
+      }
+
       @keyframes slideDown {
         from {
           opacity: 0;
@@ -2431,11 +2741,11 @@ import { ICON_REGISTRY, IconCategory } from '../../ui-demo/old-control/icon-ui/i
 })
 export class IconManagerComponent {
   private http = inject(HttpClient);
-  private iconDataService = inject(IconDataService);
+  private iconDataService = inject(IconLaboratoryService);
   private message = inject(NzMessageService);
   private modal = inject(NzModalService);
   private sanitizer = inject(DomSanitizer);
-  private globalIconService = inject(GlobalIconService);
+  private globalIconService = inject(IconGetService);
   private dbCategoryService = inject(IconCategoryService);
 
   // State Signals
@@ -2502,6 +2812,32 @@ export class IconManagerComponent {
   nameError = signal<string | null>(null);
   isRenamingInProgress = signal(false);
 
+  // Manual Edit Signals
+  isManualEdit = signal(false);
+  manualEditedCode = signal('');
+
+  // Save to Disk Signals
+  isSaveModalOpen = signal(false);
+  saveFileName = signal('');
+  saveFilePath = signal('C:/'); // Start at C:/ for Windows
+  isSavingToDisk = signal(false);
+
+  // Folder Browser Signals
+  isFolderBrowserOpen = signal(false);
+  currentBrowserPath = signal('');
+  browserItems = signal<any[]>([]);
+  isBrowserLoading = signal(false);
+
+  // Create Folder in Browser Signals
+  isCreatingFolder = signal(false);
+  newFolderName = signal('');
+
+  // View Tab Code Signal
+  viewCodeSignal = signal<string | null>(null);
+
+  // Active Tab Tracking
+  activeEditorTab = signal(0); // 0=Исходный код, 1=Просмотр, 2=Метаданные
+
   // Technical Passport Signals
   iconPassport = signal<{
     originalWidth: string;
@@ -2512,55 +2848,101 @@ export class IconManagerComponent {
     hasCurrentColor: boolean;
   } | null>(null);
 
+  // Track which categories have their SVG content fully loaded
+  private loadedCategories = new Set<string>();
+
   // Static/Computed Data
   categories = signal<IconCategory[]>([]);
 
   constructor() {
-    this.loadIcons();
+    // this.loadIcons(); // Disabled initial load as per requirement
     this.loadDbCategories();
+
+    // Lazy load content when category changes
+    effect(() => {
+      const catName = this.selectedCategory();
+      if (catName && !this.loadedCategories.has(catName)) {
+        this.loadCategoryContent(catName);
+      }
+    });
   }
 
   private loadDbCategories() {
-    this.dbCategoryService.getAll().subscribe((res) => {
-      this.dbCategories.set(res.data);
+    this.dataSource.set('backend');
+    this.dbCategoryService.getAll().subscribe({
+      next: (res) => {
+        this.dbCategories.set(res.data);
+
+        // Initialize categories for sidebar with empty icon lists
+        const initialCats: IconCategory[] = res.data.map((c: any) => ({
+          category: c.displayName || c.folderName || c.name || 'Unnamed',
+          icons: [],
+        }));
+        this.categories.set(initialCats);
+        this.isLoading.set(false);
+      },
+      error: (err) => {
+        console.error('Failed to load categories', err);
+        this.isLoading.set(false);
+      },
     });
   }
 
   private loadIcons(force: boolean = false) {
-    console.log(`[IconManager] 🛠️ loadIcons(force=${force}) started...`);
-    this.isLoading.set(true);
-    this.iconDataService.getIcons(force).subscribe({
-      next: (data) => {
-        console.log(`[IconManager] 📦 Data received in component: ${data.length} categories`);
+    // Legacy method kept for reference or full reload if needed, but not used on init
+    // implementation omitted or kept as is if not conflicting
+    console.log('Legacy loadIcons called');
+  }
 
-        // Debug logging for categories
-        data.forEach((c) => {
-          console.log(`[IconManager] 📂 Category: '${c.category}', Icons: ${c.icons.length}`);
-          if (c.category.toLowerCase() === 'editor') {
-            console.log(
-              `[IconManager] 🔍 Editor icons:`,
-              c.icons.map((i) => i.name),
-            );
+  private loadCategoryContent(catName: string) {
+    const dbCat = this.dbCategories().find(
+      (c) => c.folderName === catName || c.displayName === catName,
+    );
+    if (!dbCat) return;
+
+    this.isLoading.set(true); // Show loading state
+
+    this.iconDataService.getCategoryContent(dbCat.id).subscribe({
+      next: (iconsWithContent: any[]) => {
+        const iconsMap: Record<string, string> = {};
+
+        // Map backend response to IconMetadata structure
+        const newIcons = iconsWithContent.map((i: any) => {
+          if (i.svgContent) {
+            iconsMap[i.name] = i.svgContent;
           }
+          return {
+            name: i.name,
+            category: catName,
+            type: `${catName}/${i.name}`,
+            svgContent: i.svgContent,
+            // Defaults for metadata
+            id: i.id,
+          };
         });
 
-        const sorted = [...data].sort((a, b) => {
-          if (a.category === 'Другие') return 1;
-          if (b.category === 'Другие') return -1;
-          return a.category.localeCompare(b.category);
-        });
-        this.categories.set(sorted);
-        this.dataSource.set('backend');
+        // 1. Update component's local state - POPULATE icons for this category
+        this.categories.update((cats) =>
+          cats.map((c) => {
+            if (c.category === catName) {
+              return {
+                ...c,
+                icons: newIcons, // Replace empty list with fetched icons
+              };
+            }
+            return c;
+          }),
+        );
+
+        // 2. IMPORTANT: Update the global IconService cache
+        (this.globalIconService as any).injectBatchContent(iconsMap);
+
+        this.loadedCategories.add(catName);
         this.isLoading.set(false);
-        console.log('[IconManager] 🏁 UI Refresh complete.');
       },
-      error: (err: unknown) => {
-        console.error('[IconManager] ❌ Failed to load icons', err);
-        // Fallback to registry if API fails
-        this.categories.set([...ICON_REGISTRY]);
-        this.dataSource.set('local');
+      error: (err: any) => {
+        console.error(`[IconManager] Failed to load content for category ${catName}`, err);
         this.isLoading.set(false);
-        this.message.warning('Используется локальная библиотека иконок (бэкенд недоступен)');
       },
     });
   }
@@ -2573,7 +2955,7 @@ export class IconManagerComponent {
       next: (res: any) => {
         console.log('[IconManager] ✅ Backend sync successful:', res);
         this.message.success('✅ Библиотека иконок синхронизирована!');
-        this.globalIconService.refreshCache(); // Refresh global SVG cache
+        this.globalIconService.clearCache(); // Refresh global SVG cache
         this.loadIcons(true); // Refresh grid with updated data
         this.isSyncing.set(false);
       },
@@ -2671,7 +3053,7 @@ export class IconManagerComponent {
 
   // Safe preview for innerHTML
   safeCleanedSvg = computed<SafeHtml>(() => {
-    const code = this.cleanedSvgCode();
+    const code = this.isManualEdit() ? this.manualEditedCode() : this.cleanedSvgCode();
     if (!code) return '';
     return this.sanitizer.bypassSecurityTrustHtml(code);
   });
@@ -2680,11 +3062,28 @@ export class IconManagerComponent {
     this.searchQuery.set(val);
   }
 
+  // --- Category Management ---
+  openCategoryManager() {
+    const modal = this.modal.create({
+      nzTitle: 'Управление папками иконок',
+      nzContent: IconCategoryManagerComponent,
+      nzWidth: 1000,
+      nzFooter: null,
+      nzClassName: 'category-manager-modal',
+    });
+
+    modal.afterClose.subscribe(() => {
+      // Перезагружаем категории после закрытия, так как они могли измениться
+      this.loadDbCategories();
+    });
+  }
+
   // Editor Actions
   openEditor(icon: any) {
     this.selectedIcon.set(icon);
     this.cleanedSvgCode.set('');
     this.rawSvgCode.set('Загрузка кода...');
+    this.viewCodeSignal.set(null);
     this.isEditorOpen.set(true);
 
     // Reset enrichment
@@ -2903,6 +3302,11 @@ export class IconManagerComponent {
       const optimized = this.internalOptimize(raw);
       this.cleanedSvgCode.set(optimized);
 
+      // If we are in manual edit mode, also update the manual code
+      if (this.isManualEdit()) {
+        this.manualEditedCode.set(optimized);
+      }
+
       this.iconPassport.update((p) => {
         if (!p) return null;
         return { ...p, isStandard: true };
@@ -2912,6 +3316,149 @@ export class IconManagerComponent {
     } catch (e) {
       console.error('Optimization error:', e);
       this.showToast('❌ Ошибка оптимизации');
+    }
+  }
+
+  toggleManualEdit() {
+    if (!this.isManualEdit()) {
+      // Start editing
+      this.manualEditedCode.set(this.cleanedSvgCode());
+      this.isManualEdit.set(true);
+    } else {
+      // Finish editing
+      this.cleanedSvgCode.set(this.manualEditedCode());
+      this.isManualEdit.set(false);
+      this.showToast('✅ Изменения зафиксированы');
+    }
+  }
+
+  refreshPreview() {
+    // Force a small update to trigger re-computation if needed,
+    // though signal update should handle it.
+    this.showToast('🔄 Предпросмотр обновлен');
+    // Generating passport for edited code
+    this.generatePassport(this.manualEditedCode());
+  }
+
+  onPreviewClick() {
+    const code = this.viewCodeSignal() ?? (this.cleanedSvgCode() || this.rawSvgCode());
+    if (code) {
+      this.cleanedSvgCode.set(code);
+      this.generatePassport(code);
+      this.showToast('✅ Предпросмотр обновлен из окна просмотра');
+    }
+  }
+
+  onSaveToDiskClick() {
+    const icon = this.selectedIcon();
+    if (!icon) return;
+
+    this.saveFileName.set(icon.name);
+    this.isSaveModalOpen.set(true);
+  }
+
+  confirmSaveToDisk() {
+    const name = this.saveFileName();
+    const path = this.saveFilePath();
+    const content = this.viewCodeSignal() ?? (this.cleanedSvgCode() || this.rawSvgCode());
+
+    if (!name || !path || !content) {
+      this.showToast('⚠️ Заполните все поля');
+      return;
+    }
+
+    this.isSavingToDisk.set(true);
+
+    this.iconDataService.saveToDisk(name, path, content).subscribe({
+      next: (res) => {
+        this.message.success(`✅ Иконка ${name}.svg успешно сохранена в ${path}`);
+        this.isSavingToDisk.set(false);
+        this.isSaveModalOpen.set(false);
+      },
+      error: (err) => {
+        console.error('[IconManager] ❌ Save failed', err);
+        this.message.error('❌ Ошибка при сохранении на диск');
+        this.isSavingToDisk.set(false);
+      },
+    });
+  }
+
+  // --- Folder Browser Methods ---
+  openFolderBrowser() {
+    this.isCreatingFolder.set(false);
+    this.newFolderName.set('');
+    this.isFolderBrowserOpen.set(true);
+    this.navigateToPath(this.saveFilePath() || '');
+  }
+
+  navigateToPath(path: string) {
+    this.isBrowserLoading.set(true);
+    this.currentBrowserPath.set(path);
+    this.iconDataService.browseFileSystem(path).subscribe({
+      next: (items) => {
+        this.browserItems.set(items);
+        this.isBrowserLoading.set(false);
+      },
+      error: (err) => {
+        this.message.error('Ошибка доступа к директории');
+        this.isBrowserLoading.set(false);
+      },
+    });
+  }
+
+  goUpInBrowser() {
+    const current = this.currentBrowserPath();
+    if (!current || current.length <= 3) {
+      this.navigateToPath(''); // Go back to drive list
+      return;
+    }
+
+    // Simple parent directory logic for Windows/Linux
+    const lastSlash = Math.max(current.lastIndexOf('/'), current.lastIndexOf('\\'));
+    if (lastSlash > 0) {
+      let parent = current.substring(0, lastSlash);
+      if (parent.endsWith(':')) parent += '/';
+      this.navigateToPath(parent);
+    } else {
+      this.navigateToPath('');
+    }
+  }
+
+  selectInBrowser(path: string) {
+    this.saveFilePath.set(path);
+    this.isFolderBrowserOpen.set(false);
+  }
+
+  createNewFolderInBrowser() {
+    const name = this.newFolderName().trim();
+    const current = this.currentBrowserPath();
+
+    if (!name || !current) {
+      if (!current) this.message.warning('Выберите диск перед созданием папки');
+      return;
+    }
+
+    const fullPath =
+      current.endsWith('/') || current.endsWith('\\') ? current + name : current + '/' + name;
+
+    this.isBrowserLoading.set(true);
+    this.iconDataService.createDirectory(fullPath).subscribe({
+      next: () => {
+        this.message.success(`Папка "${name}" успешно создана`);
+        this.isCreatingFolder.set(false);
+        this.newFolderName.set('');
+        this.navigateToPath(current); // Refresh
+      },
+      error: (err) => {
+        this.message.error('Ошибка при создании папки');
+        this.isBrowserLoading.set(false);
+      },
+    });
+  }
+
+  onManualCodeChange(code: string) {
+    if (this.isManualEdit()) {
+      this.manualEditedCode.set(code);
     }
   }
 
@@ -2993,7 +3540,7 @@ export class IconManagerComponent {
           console.log(`[IconManager] ✅ Upload success for ${name}. Triggering auto-sync...`);
           this.showToast(`✅ Иконка "${name}" успешно загружена!`);
           this.isUploadModalOpen.set(false);
-          this.globalIconService.refreshCache();
+          this.globalIconService.clearCache();
           this.syncToLocal(); // Auto-sync after upload
         },
         error: (err: any) => {
@@ -3063,7 +3610,7 @@ export class IconManagerComponent {
             this.showToast(`✅ Пакет из ${files.length} иконок успешно загружен!`);
             this.isBulkUploadModalOpen.set(false);
             this.isBulkUploading.set(false);
-            this.globalIconService.refreshCache();
+            this.globalIconService.clearCache();
             this.syncToLocal(); // Auto-sync after bulk upload
           },
           error: (err: any) => {
@@ -3364,7 +3911,7 @@ export class IconManagerComponent {
         this.message.success(res.message || 'Иконка успешно перемещена');
         this.isMoving.set(false);
         this.isMoveModalOpen.set(false);
-        this.globalIconService.refreshCache();
+        this.globalIconService.clearCache();
         this.loadIcons(true); // Force reload after move
       },
       error: (err: any) => {
@@ -3449,7 +3996,7 @@ export class IconManagerComponent {
         this.message.success(`✅ Иконка переименована: ${icon.name} → ${newName}`);
 
         // Обновить кеш и список
-        this.globalIconService.refreshCache();
+        this.globalIconService.clearCache();
         this.loadIcons(true);
 
         this.isRenamingInProgress.set(false);

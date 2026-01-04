@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component, computed, effect, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { IconService } from '@core/services/icon/icon.service';
+import { IconGetService } from '@core/services/icon/icon-get.service';
 import { HelpCopyContainerComponent } from '@shared/components/ui/container-help-copy-ui/container-help-copy-ui.component';
 import {
   AvIconConfig,
@@ -46,7 +46,7 @@ import { ContainerUiHelpBaseComponent } from '../../../shared/containers/ui-help
   styleUrl: './icon-control.component.scss',
 })
 export class IconControlComponent {
-  private iconService = inject(IconService);
+  private iconService = inject(IconGetService);
 
   constructor(private http: HttpClient) {
     // Effect to fetch raw SVG source

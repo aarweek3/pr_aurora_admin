@@ -1,8 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { Observable, from, of, throwError } from 'rxjs';
-import { catchError, map, shareReplay, switchMap } from 'rxjs/operators';
+import { Observable, of, throwError } from 'rxjs';
+import { catchError, delay, map, shareReplay, tap } from 'rxjs/operators';
 
+import { HARDCODED_FLAGS } from '@assets/languageApp/config/language-flags.const';
 import { ApiEndpoints } from '../../../../environments/api-endpoints';
 
 interface IconCategory {
@@ -22,142 +23,118 @@ export class IconService {
   private http = inject(HttpClient);
   private cache = new Map<string, Observable<string>>();
   private iconCache = new Map<string, string>(); // name -> svg content
-  private batchLoadPromise: Promise<void> | null = null;
 
   constructor() {
-    // Load all icons with content on service initialization
-    this.batchLoadPromise = this.loadAllIcons();
-  }
-
-  /**
-   * Loads all icons with SVG content in a single batch request
-   */
-  private async loadAllIcons(): Promise<void> {
-    console.log('[IconService] 🔄 Loading all icons with content...');
-
-    try {
-      const categories = await this.http
-        .get<IconCategory[]>(`${ApiEndpoints.ICONS.BASE}?includeSvgContent=true`)
-        .toPromise();
-
-      if (categories) {
-        let totalIcons = 0;
-        categories.forEach((cat) => {
-          cat.icons.forEach((icon) => {
-            if (icon.svgContent) {
-              this.iconCache.set(icon.name, icon.svgContent);
-              totalIcons++;
-            }
-          });
-        });
-        console.log(`[IconService] ✅ Batch loaded ${totalIcons} icons into cache`);
+    Object.entries(HARDCODED_FLAGS).forEach(([name, svg]) => {
+      if (svg && svg.trim().length > 0) {
+        this.iconCache.set(name, svg);
       }
-    } catch (err) {
-      console.error('[IconService] ❌ Failed to batch load icons', err);
-    }
+    });
   }
 
-  /**
-   * Получает SVG контент иконки по имени.
-   * Path может быть простым именем "av_save" или полным путем (для совместимости)
-   */
   getIcon(path: string): Observable<string> {
-    // Extract simple name if it looks like a path
     let name = path;
     if (name.includes('/')) {
       name = name.split('/').pop()?.replace('.svg', '') || name;
     }
 
-    // Wait for batch load to complete, then check cache
-    return from(this.batchLoadPromise || Promise.resolve()).pipe(
-      switchMap(() => {
-        // Check icon cache (from batch load)
-        if (this.iconCache.has(name)) {
-          const svg = this.iconCache.get(name)!;
-          return of(this.normalizeSvg(svg));
-        }
-
-        // Check Observable cache
-        if (this.cache.has(name)) {
-          return this.cache.get(name)!;
-        }
-
-        // Fallback: individual request (if batch load failed or icon not in cache)
-        console.warn(`[IconService] ⚠️ Icon "${name}" not in cache, fetching individually`);
-        const url = ApiEndpoints.ICONS.CONTENT(name);
-
-        const request$ = this.http.get(url, { responseType: 'text' }).pipe(
-          map((svg: string) => this.normalizeSvg(svg)),
-          catchError((err: any) => {
-            this.cache.delete(name);
-
-            // Детальное логирование ошибок
-            if (err?.status === 404) {
-              console.warn(`[IconService] Icon not found in DB: ${name} (path: ${path})`);
-            } else if (err?.status === 0) {
-              console.error(`[IconService] Network error loading icon: ${name}`);
-            } else {
-              console.error(`[IconService] Error loading icon: ${name}`, err);
-            }
-
-            return throwError(() => err);
-          }),
-          shareReplay(1),
-        );
-
-        this.cache.set(name, request$);
-        return request$;
-      }),
-    );
-  }
-
-  /**
-   * Нормализует SVG: удаляет жесткие размеры и подготавливает для масштабирования.
-   */
-  private normalizeSvg(svg: string): string {
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(svg, 'image/svg+xml');
-    const svgElement = doc.querySelector('svg');
-
-    if (!svgElement) return svg;
-
-    // Получаем текущие размеры
-    const width = svgElement.getAttribute('width');
-    const height = svgElement.getAttribute('height');
-    const viewBox = svgElement.getAttribute('viewBox');
-
-    // Если нет viewBox, но есть width/height - создаем его
-    if (!viewBox && width && height) {
-      svgElement.setAttribute(
-        'viewBox',
-        `0 0 ${width.replace('px', '')} ${height.replace('px', '')}`,
-      );
+    if (this.iconCache.has(name)) {
+      return of(this.normalizeSvg(this.iconCache.get(name)!)).pipe(delay(0));
     }
 
-    // Удаляем жесткие размеры, чтобы иконка управлялась через CSS/container
-    svgElement.removeAttribute('width');
-    svgElement.removeAttribute('height');
+    if (this.cache.has(name)) return this.cache.get(name)!;
 
-    // Гарантируем корректное масштабирование
-    svgElement.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+    const url = ApiEndpoints.ICONS.CONTENT(name);
+    const request$ = this.http.get(url, { responseType: 'text' }).pipe(
+      map((svg: string) => this.normalizeSvg(svg)),
+      catchError((err: any) => {
+        this.cache.delete(name);
+        return throwError(() => err);
+      }),
+      shareReplay(1),
+    );
 
-    return new XMLSerializer().serializeToString(doc);
+    this.cache.set(name, request$);
+    return request$;
   }
 
-  /**
-   * Предварительная загрузка списка иконок
-   */
+  private normalizeSvg(svg: string): string {
+    if (!svg) return '';
+    const trimmed = svg.trim();
+
+    // Быстрый возврат для простых SVG
+    if (trimmed.startsWith('<svg') && !trimmed.includes('<?xml')) {
+      return trimmed;
+    }
+
+    try {
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(trimmed, 'image/svg+xml');
+      const svgElement = doc.querySelector('svg');
+      if (!svgElement) return trimmed;
+
+      svgElement.removeAttribute('width');
+      svgElement.removeAttribute('height');
+      svgElement.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+      if (!svgElement.getAttribute('xmlns')) {
+        svgElement.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+      }
+
+      return new XMLSerializer().serializeToString(svgElement);
+    } catch (e) {
+      return trimmed;
+    }
+  }
+
   preloadIcons(paths: string[]): void {
     paths.forEach((path) => this.getIcon(path).subscribe());
   }
 
   /**
-   * Refresh the icon cache (useful after icon updates)
+   * Массовая загрузка контента для списка иконок
+   */
+  loadIconsBatch(names: string[]): Observable<Record<string, string>> {
+    const missingNames = names.filter((n) => !this.iconCache.has(n));
+    if (missingNames.length === 0) {
+      const result: Record<string, string> = {};
+      names.forEach((n) => (result[n] = this.iconCache.get(n)!));
+      return of(result);
+    }
+
+    return this.http
+      .post<Record<string, string>>(ApiEndpoints.ICONS.BATCH_CONTENT, missingNames)
+      .pipe(
+        tap((data) => {
+          Object.entries(data).forEach(([name, svg]) => {
+            this.iconCache.set(name, svg);
+          });
+        }),
+        map((data) => {
+          const result: Record<string, string> = {};
+          names.forEach((n) => (result[n] = this.iconCache.get(n) || ''));
+          return result;
+        }),
+        catchError((err) => {
+          console.error('[IconService] Batch load failed', err);
+          return throwError(() => err);
+        }),
+      );
+  }
+
+  /**
+   * Внедрить контент напрямую в кэш (например, после загрузки рубрики)
+   */
+  injectBatchContent(data: Record<string, string>): void {
+    Object.entries(data).forEach(([name, svg]) => {
+      this.iconCache.set(name, svg);
+    });
+  }
+
+  /**
+   * Полностью очистить кэш (принудительно потянет данные с сервера при следующем запросе)
    */
   async refreshCache(): Promise<void> {
     this.iconCache.clear();
     this.cache.clear();
-    this.batchLoadPromise = this.loadAllIcons();
-    await this.batchLoadPromise;
   }
 }

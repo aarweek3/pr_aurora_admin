@@ -20,6 +20,7 @@ import { NzModalModule } from 'ng-zorro-antd/modal';
 
 registerLocaleData(ru);
 
+import { LanguageService } from '@assets/languageApp/services/language.service';
 import { routes } from './app.routes';
 import { authInterceptor } from './auth/services/auth.interceptor';
 import { GlobalErrorHandler } from './shared/infrastructure/interceptor/services/global-error-handler.service';
@@ -82,6 +83,16 @@ export const appConfig: ApplicationConfig = {
           // Сервис инициализируется автоматически в конструкторе
           console.log('Navigation Trail initialized');
         };
+      },
+      multi: true,
+    },
+
+    // Инициализация LanguageService
+    {
+      provide: APP_INITIALIZER,
+      useFactory: () => {
+        const languageService = inject(LanguageService);
+        return () => languageService.init();
       },
       multi: true,
     },

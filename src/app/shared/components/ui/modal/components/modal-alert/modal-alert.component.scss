@@ -26,7 +26,7 @@
         height: 80px;
       }
 
-      ::ng-deep svg {
+      :host ::ng-deep svg {
         width: 100% !important;
         height: 100% !important;
         fill: currentColor !important;

@@ -14,9 +14,7 @@ export class IconDataService {
   // Reactive registry state
   private registry = signal<AvIconCategory[]>([]);
 
-  constructor() {
-    this.loadIcons();
-  }
+  constructor() {}
 
   /**
    * Fetches the latest icon registry from the backend.
@@ -117,5 +115,12 @@ export class IconDataService {
    */
   browseFileSystem(path: string = ''): Observable<any[]> {
     return this.http.get<any[]>(ApiEndpoints.ICONS.BROWSE_FILESYSTEM(path));
+  }
+
+  /**
+   * Загрузить полное содержимое (включая SVG) для конкретной категории
+   */
+  getCategoryContent(categoryId: number): Observable<any[]> {
+    return this.http.get<any[]>(ApiEndpoints.ICONS.CATEGORY_CONTENT(categoryId));
   }
 }

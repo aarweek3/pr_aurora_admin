@@ -7,6 +7,8 @@ import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { AuthService } from '../../../../auth/services/auth.service';
 
+import { LanguageSwitcherComponent } from '../../../../../assets/languageApp/components/language-switcher.component';
+
 /**
  * Admin Header Component
  *
@@ -30,6 +32,7 @@ import { AuthService } from '../../../../auth/services/auth.service';
     NzDropDownModule,
     NzAvatarModule,
     NzBadgeModule,
+    LanguageSwitcherComponent,
   ],
   template: `
     <header class="admin-header">
@@ -52,6 +55,9 @@ import { AuthService } from '../../../../auth/services/auth.service';
             <span nz-icon nzType="bell"></span>
           </nz-badge>
         </button>
+
+        <!-- Язык -->
+        <app-language-switcher></app-language-switcher>
 
         <!-- Настройки -->
         <button class="admin-header__action-btn" title="Настройки" routerLink="/settings">

@@ -14,7 +14,7 @@ import { NzRadioModule } from 'ng-zorro-antd/radio';
 import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzTagModule } from 'ng-zorro-antd/tag';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
-import { IconDataService } from '../../../shared/services/icon-data.service';
+import { IconLaboratoryService } from '../../../shared/services/icon-laboratory.service';
 
 interface FileSystemItem {
   name: string;
@@ -516,7 +516,7 @@ interface FileSystemItem {
   ],
 })
 export class RenameAllComponent implements OnInit {
-  private iconDataService = inject(IconDataService);
+  private iconDataService = inject(IconLaboratoryService);
   private message = inject(NzMessageService);
   private modal = inject(NzModalService);
 

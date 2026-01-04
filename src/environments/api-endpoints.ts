@@ -124,8 +124,21 @@ export class ApiEndpoints {
     BULK_RENAME: `${this.BASE_URL}/Icons/bulk-rename`,
     BROWSE_FILESYSTEM: (path: string) => `${this.BASE_URL}/Icons/browse-filesystem?path=${path}`,
     CONTENT: (name: string) => `${this.BASE_URL}/Icons/content/${name}`,
+    CATEGORY_CONTENT: (id: number) => `${this.BASE_URL}/Icons/category/${id}/content`,
+    BATCH_CONTENT: `${this.BASE_URL}/Icons/batch-content`,
+    SAVE_TO_DISK: `${this.BASE_URL}/Icons/save-to-disk`,
+    CREATE_DIRECTORY: (path: string) => `${this.BASE_URL}/Icons/create-directory?path=${path}`,
     DELETE: (type: string, b: boolean, f: boolean) =>
       `${this.BASE_URL}/Icons/delete?iconType=${type}&fromBackend=${b}&fromFrontend=${f}`,
+  };
+
+  // Language App endpoints
+  static readonly LANGUAGES_APP = {
+    BASE: `${this.BASE_URL}/v1/languages-app`,
+    AVAILABLE: `${this.BASE_URL}/v1/languages-app/available`,
+    BY_ID: (id: number) => `${this.BASE_URL}/v1/languages-app/${id}`,
+    DEFAULT: (id: number) => `${this.BASE_URL}/v1/languages-app/${id}/default`,
+    STATUS: (id: number) => `${this.BASE_URL}/v1/languages-app/${id}/status`,
   };
 
   // Images endpoints

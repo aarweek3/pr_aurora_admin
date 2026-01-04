@@ -1,16 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, effect, inject, input, signal } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import { IconService } from '@core/services/icon/icon.service';
+import { IconGetService } from '@core/services/icon/icon-get.service';
 
 import { AvIconProps } from './index';
 
-/**
- * Icon Component
- *
- * Высокопроизводительный компонент для отображения SVG-иконок.
- * Поддерживает автоматическую очистку SVG, трансформации и кастомизацию через Signals.
- */
 @Component({
   selector: 'av-icon',
   standalone: true,
@@ -44,32 +38,24 @@ import { AvIconProps } from './index';
         justify-content: center;
         width: 100%;
         height: 100%;
+      }
 
-        ::ng-deep svg {
-          width: 100% !important;
-          height: 100% !important;
-          display: block;
+      :host ::ng-deep svg {
+        width: 100% !important;
+        height: 100% !important;
+        display: block;
 
-          /* Только для одноцветных иконок применяем currentColor */
-          &:not([data-multicolor]) {
-            fill: currentColor !important;
-
-            path,
-            circle,
-            rect,
-            polyline,
-            line,
-            polygon {
-              /* Приоритет: CSS переменная -> currentColor */
-              fill: var(--av-icon-color, currentColor) !important;
-              stroke: var(--av-icon-color, currentColor) !important;
-              vector-effect: non-scaling-stroke;
-            }
-          }
-
-          /* Для многоцветных иконок НЕ применяем currentColor */
-          &[data-multicolor] {
-            /* Не переопределяем fill/stroke - оставляем inline-атрибуты из SVG */
+        &:not([data-multicolor]) {
+          fill: currentColor !important;
+          path,
+          circle,
+          rect,
+          polyline,
+          line,
+          polygon {
+            fill: var(--av-icon-color, currentColor) !important;
+            stroke: var(--av-icon-color, currentColor) !important;
+            vector-effect: non-scaling-stroke;
           }
         }
       }
@@ -77,52 +63,23 @@ import { AvIconProps } from './index';
   ],
 })
 export class IconComponent {
-  private iconService = inject(IconService);
+  private iconService = inject(IconGetService);
   private sanitizer = inject(DomSanitizer);
 
-  /**
-   * Конфигурационный объект (опционально).
-   * Если передан, значения из него перекрывают индивидуальные инпуты.
-   */
   config = input<AvIconProps | any | null>(null);
-
-  /** Тип иконки или путь (напр. 'delete' или 'actions/av_trash') */
   type = input<string>('');
-
-  /** Размер в пикселях */
   size = input<number>(24);
-
-  /** Цвет иконки (напр. '#ff0000', 'red', 'currentColor') */
   color = input<string | null>(null);
-
-  /** Угол поворота в градусах */
   rotation = input<number>(0);
-
-  /** Масштаб (1 - оригинальный размер) */
   scale = input<number>(1);
-
-  /** Прозрачность (0-1) */
   opacity = input<number>(1);
-
-  /** Отразить по горизонтали */
   flipX = input<boolean>(false);
-
-  /** Отразить по вертикали */
   flipY = input<boolean>(false);
-
-  /** Внутренние отступы (число = px, или строка с единицами) */
   padding = input<number | string>(0);
-
-  /** Фон иконки */
   background = input<string>('transparent');
-
-  /** Граница (напр. '1px solid #ccc') */
   border = input<string | null>(null);
-
-  /** Радиус скругления */
   radius = input<number | string>(0);
 
-  // Вычисляемые свойства (приоритет у config)
   finalType = computed(() => this.config()?.type || this.type());
   finalSize = computed(() => this.config()?.size ?? this.size());
   finalColor = computed(() => this.config()?.color ?? this.color());
@@ -132,7 +89,6 @@ export class IconComponent {
   finalFlipX = computed(() => this.config()?.flipX ?? this.flipX());
   finalFlipY = computed(() => this.config()?.flipY ?? this.flipY());
   finalBackground = computed(() => this.config()?.background ?? this.background());
-
   finalBorder = computed(() => {
     const cfg = this.config();
     if (!cfg) return this.border();
@@ -142,16 +98,13 @@ export class IconComponent {
     }
     return null;
   });
-
   finalPadding = computed(() => this.config()?.padding ?? this.padding());
-
   finalRadius = computed(() => {
     const cfg = this.config();
     if (!cfg) return this.radius();
     return cfg.radius ?? cfg.borderRadius ?? this.radius();
   });
 
-  /** Вычисляемая строка трансформации */
   transformStyle = computed(() => {
     const parts = [];
     if (this.finalRotation() !== 0) parts.push(`rotate(${this.finalRotation()}deg)`);
@@ -161,19 +114,16 @@ export class IconComponent {
     return parts.join(' ');
   });
 
-  /** Хелпер для отступов */
   paddingStyle = computed(() => {
     const p = this.finalPadding();
     return typeof p === 'number' ? `${p}px` : p;
   });
 
-  /** Хелпер для радиуса */
   radiusStyle = computed(() => {
     const r = this.finalRadius();
     return typeof r === 'number' ? `${r}px` : r;
   });
 
-  /** Обработанное содержимое SVG */
   svgContent = signal<SafeHtml>('');
 
   private iconFileMap: Record<string, string> = {
@@ -196,28 +146,24 @@ export class IconComponent {
   };
 
   constructor() {
-    // Реагируем на изменение типа
     effect(() => {
       this.loadIcon(this.finalType());
     });
   }
 
   private loadIcon(type: string): void {
-    if (!type) return;
+    if (!type) {
+      this.svgContent.set('');
+      return;
+    }
 
     const mappedName = this.iconFileMap[type];
-    // If mapped, use the map result (e.g. 'download' -> 'arrows/av_arrow_down.svg').
-    // We need to extract just the name 'av_arrow_down'.
-
     let iconName = type;
 
     if (mappedName) {
-      // e.g. "arrows/av_arrow_down.svg" -> "av_arrow_down"
       const parts = mappedName.split('/');
       iconName = parts[parts.length - 1].replace('.svg', '');
     } else {
-      // e.g. "actions/av_save" -> "av_save"
-      // or just "av_save" -> "av_save"
       if (iconName.includes('/')) {
         const parts = iconName.split('/');
         iconName = parts[parts.length - 1];
@@ -225,104 +171,80 @@ export class IconComponent {
       iconName = iconName.replace('.svg', '');
     }
 
-    // Now iconName should be just "av_save"
     this.iconService.getIcon(iconName).subscribe({
       next: (svgText: string) => {
-        // ГЛУБОКАЯ ОЧИСТКА SVG
-        let cleanedSvg = svgText
-          .replace(/<\?xml.*\?>/gi, '') // Убираем XML заголовок
-          .replace(/width="[^"]*"/gi, '') // Убираем жесткую ширину
-          .replace(/height="[^"]*"/gi, ''); // Убираем жесткую высоту
+        // 1. Определение многоцветности (ищем HEX, RGB(a) и все цветовые атрибуты)
+        const colors = new Set<string>();
 
-        // Проверяем, является ли это многоцветной иконкой (флаги, сложная графика)
-        // Ищем цвета в атрибутах fill="..." и stroke="..."
-        const fillMatches = svgText.match(/fill="(?!none)[^"]*"/gi) || [];
-        const strokeMatches = svgText.match(/stroke="(?!none)[^"]*"/gi) || [];
-
-        // Ищем цвета в inline-стилях style="fill: rgb(...)" или style="fill:#..."
-        const styleFillMatches = svgText.match(/fill:\s*(?:rgb|#)[^;")]+/gi) || [];
-        const styleStrokeMatches = svgText.match(/stroke:\s*(?:rgb|#)[^;")]+/gi) || [];
-
-        const allColors = [
-          ...fillMatches,
-          ...strokeMatches,
-          ...styleFillMatches,
-          ...styleStrokeMatches,
+        // Массив паттернов для поиска цветов
+        const patterns = [
+          /#(?:[0-9a-fA-F]{3}){1,2}\b/gi, // HEX
+          /rgba?\s*\(\s*\d+\s*,\s*\d+\s*,\s*\d+\s*(?:,\s*[\d.]+\s*)?\)/gi, // RGB(A)
+          /\b(?:fill|stroke)\s*[:=]\s*["']?(?!(?:rgb|rgba)\b)([a-z]+)["']?/gi, // Named colors (skip rgb/rgba)
         ];
-        const uniqueColors = new Set(allColors).size;
 
-        // Если уникальных цветов больше 1, считаем это многоцветной иконкой
-        const isMulticolor = uniqueColors > 1;
+        patterns.forEach((regex) => {
+          let match;
+          while ((match = regex.exec(svgText)) !== null) {
+            let color = (match[1] || match[0]).toLowerCase();
+            color = color
+              .replace(/^(fill|stroke)\s*[:=]\s*/, '')
+              .replace(/["']/g, '')
+              .trim();
+            if (
+              color &&
+              !['none', 'inherit', 'currentcolor', 'transparent', 'nonzero'].includes(color)
+            ) {
+              colors.add(color);
+            }
+          }
+        });
 
-        // 🐛 DEBUG: Логируем информацию о многоцветности
-        if (iconName.includes('flag') || iconName.includes('language')) {
-          console.log(`[IconComponent] 🎨 ${iconName}:`, {
-            isMulticolor,
-            uniqueColors,
-            fillMatches,
-            strokeMatches,
-            styleFillMatches,
-            styleStrokeMatches,
-            svgPreview: svgText.substring(0, 500),
-          });
+        const isFlag =
+          iconName.toLowerCase().includes('flag') || svgText.toLowerCase().includes('flag');
+        const isMulticolor = colors.size > 1 || isFlag;
+
+        // 2. Очистка и нормализация SVG
+        let cleanedSvg = svgText.replace(/<\?xml.*\?>/gi, '');
+
+        // Гарантируем viewBox
+        if (!cleanedSvg.includes('viewBox')) {
+          const wMatch = cleanedSvg.match(/\bwidth="([^"]+)"/i);
+          const hMatch = cleanedSvg.match(/\bheight="([^"]+)"/i);
+          if (wMatch && hMatch) {
+            const w = wMatch[1].replace('px', '');
+            const h = hMatch[1].replace('px', '');
+            cleanedSvg = cleanedSvg.replace(/<svg/i, `<svg viewBox="0 0 ${w} ${h}"`);
+          }
         }
 
+        // Обработка корневого тега
+        cleanedSvg = cleanedSvg.replace(/<svg\s([^>]*)/i, (match, attrs) => {
+          let cleanedAttrs = attrs
+            .replace(/\bwidth="[^"]*"/gi, '')
+            .replace(/\bheight="[^"]*"/gi, '');
+
+          cleanedAttrs += ` data-icon-name="${iconName}"`;
+          cleanedAttrs += ` data-colors-found="${colors.size}"`;
+          if (isMulticolor) {
+            cleanedAttrs += ' data-multicolor="true"';
+          }
+          return `<svg ${cleanedAttrs.trim()}`;
+        });
+
+        // Если иконка монохромная - принудительно ставим currentColor для атрибутов
         if (!isMulticolor) {
-          // Заменяем все fill="..." на fill="currentColor", кроме none
           cleanedSvg = cleanedSvg
             .replace(/fill="(?!none)[^"]*"/gi, 'fill="currentColor"')
-            // Аналогично для stroke
             .replace(/stroke="(?!none)[^"]*"/gi, 'stroke="currentColor"');
-        } else {
-          // Для многоцветных иконок:
-          // 1. Добавляем data-атрибут
-          cleanedSvg = cleanedSvg.replace(/<svg/i, '<svg data-multicolor="true"');
-
-          // 2. Преобразуем inline-стили в атрибуты (чтобы CSS не перекрывал их)
-          // Ищем style="...fill: rgb(...)..." и извлекаем fill
-          cleanedSvg = cleanedSvg.replace(/style="([^"]*)"/gi, (match, styleContent) => {
-            let newAttrs = '';
-
-            // Извлекаем fill
-            const fillMatch = styleContent.match(
-              /fill:\s*(rgb\([^)]+\)|#[0-9a-fA-F]{3,6}|[a-z]+)/i,
-            );
-            if (fillMatch) {
-              newAttrs += ` fill="${fillMatch[1].trim()}"`;
-            }
-
-            // Извлекаем stroke
-            const strokeMatch = styleContent.match(
-              /stroke:\s*(rgb\([^)]+\)|#[0-9a-fA-F]{3,6}|[a-z]+)/i,
-            );
-            if (strokeMatch) {
-              newAttrs += ` stroke="${strokeMatch[1].trim()}"`;
-            }
-
-            // Оставляем остальные стили (кроме fill/stroke)
-            const remainingStyles = styleContent
-              .replace(/fill:\s*[^;]+;?/gi, '')
-              .replace(/stroke:\s*[^;]+;?/gi, '')
-              .trim();
-
-            if (remainingStyles) {
-              return `style="${remainingStyles}"${newAttrs}`;
-            }
-
-            return newAttrs.trim();
-          });
-
-          console.log(`[IconComponent] ✅ ${iconName} marked as multicolor`);
         }
 
         this.svgContent.set(this.sanitizer.bypassSecurityTrustHtml(cleanedSvg));
       },
       error: (err: any) => {
-        console.error(`[IconComponent] ❌ Error loading: ${iconName}`, err);
-        // Fallback: красный квадрат
         this.svgContent.set(
           this.sanitizer.bypassSecurityTrustHtml(
-            `<svg viewBox="0 0 24 24"><rect width="24" height="24" fill="red" opacity="0.5"/></svg>`,
+            `<svg viewBox="0 0 24 24"><rect width="24" height="24" fill="red" opacity="0.3"/></svg>`,
           ),
         );
       },

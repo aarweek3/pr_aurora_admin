@@ -778,6 +778,13 @@ export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
             intent: 'success',
           },
         },
+        {
+          id: 'language-manager',
+          icon: 'global',
+          label: 'Управление языками',
+          type: 'link',
+          route: '/tools/language-manager',
+        },
       ],
     },
 
@@ -874,6 +881,32 @@ export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
           label: 'Резервные копии',
           type: 'link',
           route: '/system/backup',
+        },
+      ],
+    },
+    {
+      id: 'tests',
+      title: 'ТЕСТЫ',
+      items: [
+        {
+          id: 'tests-main',
+          icon: 'experiment',
+          label: 'Тесты',
+          type: 'submenu',
+          submenu: [
+            {
+              id: 'test-language-app',
+              label: 'Test languageApp',
+              route: '/tools/test-language-app',
+              icon: 'global',
+            },
+            {
+              id: 'test-mexico-flag',
+              label: 'Test Mexico Flag 🇲🇽',
+              route: '/tools/test-mexico-flag',
+              icon: 'flag',
+            },
+          ],
         },
       ],
     },

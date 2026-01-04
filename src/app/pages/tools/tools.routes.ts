@@ -26,4 +26,25 @@ export const TOOLS_ROUTES: Routes = [
     loadComponent: () =>
       import('./svg-validator/svg-validator.component').then((m) => m.SvgValidatorComponent),
   },
+  {
+    path: 'language-manager',
+    loadComponent: () =>
+      import('../../../assets/languageApp/components/language-manager.component').then(
+        (m) => m.LanguageManagerComponent,
+      ),
+  },
+  {
+    path: 'test-language-app',
+    loadComponent: () =>
+      import('../../../assets/tests/test-languageApp/test-language-app.component').then(
+        (m) => m.TestLanguageAppComponent,
+      ),
+  },
+  {
+    path: 'test-mexico-flag',
+    loadComponent: () =>
+      import(
+        '@assets/tests/test-languageApp/test-language-app-get-massiv-icon-from-db.component'
+      ).then((m) => m.TestLanguageAppGetMassivIconFromDbComponent),
+  },
 ];

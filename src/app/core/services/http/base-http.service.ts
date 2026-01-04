@@ -8,7 +8,9 @@ import { environment } from '../../../../environments/environment';
  */
 export interface HttpRequestOptions {
   headers?: HttpHeaders | { [header: string]: string | string[] };
-  params?: HttpParams | { [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean> };
+  params?:
+    | HttpParams
+    | { [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean> };
   responseType?: 'json' | 'text' | 'blob' | 'arraybuffer';
   observe?: 'body' | 'response';
   reportProgress?: boolean;
@@ -55,35 +57,35 @@ export class BaseHttpService {
    * GET запрос
    */
   get<T>(endpoint: string, options?: HttpRequestOptions): Observable<T> {
-    return this.http.get<T>(this.buildUrl(endpoint), options as any);
+    return this.http.get<T>(this.buildUrl(endpoint), options as any) as Observable<T>;
   }
 
   /**
    * POST запрос
    */
   post<T>(endpoint: string, body: any, options?: HttpRequestOptions): Observable<T> {
-    return this.http.post<T>(this.buildUrl(endpoint), body, options as any);
+    return this.http.post<T>(this.buildUrl(endpoint), body, options as any) as Observable<T>;
   }
 
   /**
    * PUT запрос
    */
   put<T>(endpoint: string, body: any, options?: HttpRequestOptions): Observable<T> {
-    return this.http.put<T>(this.buildUrl(endpoint), body, options as any);
+    return this.http.put<T>(this.buildUrl(endpoint), body, options as any) as Observable<T>;
   }
 
   /**
    * PATCH запрос
    */
   patch<T>(endpoint: string, body: any, options?: HttpRequestOptions): Observable<T> {
-    return this.http.patch<T>(this.buildUrl(endpoint), body, options as any);
+    return this.http.patch<T>(this.buildUrl(endpoint), body, options as any) as Observable<T>;
   }
 
   /**
    * DELETE запрос
    */
   delete<T>(endpoint: string, options?: HttpRequestOptions): Observable<T> {
-    return this.http.delete<T>(this.buildUrl(endpoint), options as any);
+    return this.http.delete<T>(this.buildUrl(endpoint), options as any) as Observable<T>;
   }
 
   /**

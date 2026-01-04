@@ -3091,6 +3091,16 @@ export const ICON_REGISTRY: IconCategory[] = [
         "name": "av_l_usa-flag",
         "type": "language/av_l_usa-flag",
         "category": "language"
+      },
+      {
+        "name": "av_l_germany",
+        "type": "language/av_l_germany",
+        "category": "language"
+      },
+      {
+        "name": "av_l_ru-flag",
+        "type": "language/av_l_ru-flag",
+        "category": "language"
       }
     ]
   }

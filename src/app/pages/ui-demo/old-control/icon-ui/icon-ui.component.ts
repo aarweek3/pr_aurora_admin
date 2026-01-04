@@ -2,10 +2,10 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { IconLaboratoryService } from '@shared/services/icon-laboratory.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { ApiEndpoints } from '../../../../../environments/api-endpoints';
 import { AvIconConfig, IconComponent } from '../../../../shared/components/ui/icon';
-import { IconDataService } from '../../../../shared/services/icon-data.service';
 import { AvIconCategory } from './icon-metadata.model';
 import { ICON_REGISTRY } from './icon-registry';
 
@@ -392,7 +392,7 @@ import { ICON_REGISTRY } from './icon-registry';
   ],
 })
 export class IconUiComponent {
-  private iconService = inject(IconDataService);
+  private iconService = inject(IconLaboratoryService);
   private http = inject(HttpClient);
   private message = inject(NzMessageService);
 
@@ -410,7 +410,7 @@ export class IconUiComponent {
 
   private loadIcons() {
     this.isLoading.set(true);
-    this.iconService.getIcons().subscribe({
+    this.iconService.getRegistry().subscribe({
       next: (data) => {
         const sorted = [...data].sort((a, b) => {
           if (a.category === 'Другие') return 1;
