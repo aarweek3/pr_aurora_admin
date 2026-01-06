@@ -54,4 +54,11 @@ export const TOOLS_ROUTES: Routes = [
         (m) => m.TestFileBrowserComponent,
       ),
   },
+  {
+    path: 'test-tinymce',
+    loadComponent: () =>
+      import('../../../assets/tests/test-tinymce/test-tinymce.component').then(
+        (m) => m.TestTinymceComponent,
+      ),
+  },
 ];

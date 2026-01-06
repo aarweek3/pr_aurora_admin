@@ -912,6 +912,12 @@ export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
               route: '/tools/test-file-browser',
               icon: 'folder-open',
             },
+            {
+              id: 'test-tinymce',
+              label: 'Test TinyMCE ✏️',
+              route: '/tools/test-tinymce',
+              icon: 'edit',
+            },
           ],
         },
       ],
