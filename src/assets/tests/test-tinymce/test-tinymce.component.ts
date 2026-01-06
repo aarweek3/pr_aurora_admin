@@ -72,7 +72,7 @@ import { AvTinymceControlComponent } from '../../controls/tinymce-control/tinymc
     `
       .tinymce-container {
         padding: 20px;
-        max-width: 1000px;
+        max-width: 1400px;
         margin: 0 auto;
         background: #f4f6f8;
         min-height: 100vh;

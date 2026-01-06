@@ -55,10 +55,10 @@ export class AvTinymceControlComponent implements OnInit, OnDestroy, ControlValu
   @Input() height: number = 400;
   @Input() placeholder: string = '';
   @Input() plugins: string =
-    'accordion advlist anchor autolink autoresize autosave charmap code codesample directionality emoticons fullscreen help image importcss insertdatetime letterspacing link lists media nonbreaking pagebreak preview quickbars save searchreplace table visualblocks visualchars wordcount';
+    'accordion advlist anchor autolink autoresize autosave charmap code codesample directionality emoticons fullscreen help image importcss insertdatetime letterspacing footnotes av-youtube av-image link lists media nonbreaking pagebreak preview quickbars save searchreplace table visualblocks visualchars wordcount';
   @Input() toolbar: string | string[] = [
     'letterspacing | undo redo code | accordion blocks fontfamily fontsize lineheight | bold italic underline strikethrough | forecolor backcolor',
-    'alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media table | charmap emoticons codesample | hr blockquote subscript superscript | removeformat',
+    'alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link av-image-text av-image image media table | av-youtube charmap emoticons codesample nonbreaking footnotes | hr blockquote subscript superscript | removeformat',
     'searchreplace fullscreen preview | save restoredraft pagebreak anchor insertdatetime | visualblocks visualchars wordcount | ltr rtl | help',
   ];
 
@@ -143,6 +143,9 @@ export class AvTinymceControlComponent implements OnInit, OnDestroy, ControlValu
       plugins: this.plugins,
       external_plugins: {
         letterspacing: '/assets/tinymce/plugins/letterspacing/plugin.js',
+        footnotes: '/assets/tinymce/plugins/footnotes/plugin.js',
+        'av-youtube': '/assets/tinymce/plugins/av-youtube/plugin.js',
+        'av-image': '/assets/tinymce/plugins/av-image/plugin.js',
       },
       toolbar: this.toolbar,
       content_style: 'body { font-family: Arial, sans-serif; font-size: 14px; }',

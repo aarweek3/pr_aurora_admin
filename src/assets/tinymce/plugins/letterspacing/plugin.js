@@ -18,7 +18,7 @@
     ];
 
     editor.ui.registry.addMenuButton('letterspacing', {
-      icon: 'character-count',
+      text: 'Интервал',
       tooltip: 'Межбуквенный интервал',
       fetch: function (callback) {
         var items = spacingValues.map(function (sv) {
