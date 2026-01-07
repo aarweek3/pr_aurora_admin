@@ -125,6 +125,58 @@
       });
     };
 
+    AvImageTools.prototype.rotate = function (dataUrl, angle) {
+      return new Promise(function (resolve, reject) {
+        var img = new Image();
+        img.onload = function () {
+          var canvas = document.createElement('canvas');
+          var ctx = canvas.getContext('2d');
+          var absAngle = Math.abs(angle % 360);
+          if (absAngle === 90 || absAngle === 270) {
+            canvas.width = img.height;
+            canvas.height = img.width;
+          } else {
+            canvas.width = img.width;
+            canvas.height = img.height;
+          }
+          ctx.translate(canvas.width / 2, canvas.height / 2);
+          ctx.rotate((angle * Math.PI) / 180);
+          ctx.drawImage(img, -img.width / 2, -img.height / 2);
+          resolve(canvas.toDataURL('image/png'));
+        };
+        img.onerror = function () {
+          reject('Failed to rotate image.');
+        };
+        img.src = dataUrl;
+      });
+    };
+
+    AvImageTools.prototype.flip = function (dataUrl, direction) {
+      return new Promise(function (resolve, reject) {
+        var img = new Image();
+        img.onload = function () {
+          var canvas = document.createElement('canvas');
+          canvas.width = img.width;
+          canvas.height = img.height;
+          var ctx = canvas.getContext('2d');
+          ctx.save();
+          if (direction === 'horizontal') {
+            ctx.scale(-1, 1);
+            ctx.drawImage(img, -img.width, 0);
+          } else {
+            ctx.scale(1, -1);
+            ctx.drawImage(img, 0, -img.height);
+          }
+          ctx.restore();
+          resolve(canvas.toDataURL('image/png'));
+        };
+        img.onerror = function () {
+          reject('Failed to flip image.');
+        };
+        img.src = dataUrl;
+      });
+    };
+
     AvImageTools.prototype.getRenderedImageRect = function (imgElement) {
       var canvasZone = imgElement.parentElement;
       if (!canvasZone) return null;
@@ -695,6 +747,24 @@
             presetsHtml +
             '</div>' +
             '</div>';
+        } else if (state.editTool === 'rotate') {
+          menuThree =
+            '<div class="av-rotate-tools" style="padding:20px; display:flex; flex-direction:column; gap:15px;">' +
+            '<div style="font-weight:bold; color:#1e293b; margin-bottom:5px; font-family:sans-serif;">Вращение</div>' +
+            '<div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">' +
+            '<div class="av-btn-main" id="av-btn-rotate-left" style="background:#475569; font-size:13px; cursor:pointer;">↩ -90°</div>' +
+            '<div class="av-btn-main" id="av-btn-rotate-right" style="background:#475569; font-size:13px; cursor:pointer;">90° ↪</div>' +
+            '</div>' +
+            '<div class="av-btn-main" id="av-btn-rotate-180" style="background:#475569; font-size:13px; cursor:pointer;">🔃 Повернуть на 180°</div>' +
+            '<div style="font-weight:bold; color:#1e293b; margin-top:10px; margin-bottom:5px; font-family:sans-serif;">Отражение</div>' +
+            '<div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">' +
+            '<div class="av-btn-main" id="av-btn-flip-h" style="background:#64748b; font-size:13px; cursor:pointer;">↔ Горизонт.</div>' +
+            '<div class="av-btn-main" id="av-btn-flip-v" style="background:#64748b; font-size:13px; cursor:pointer;">↕ Вертикал.</div>' +
+            '</div>' +
+            '<div style="margin-top:20px; padding:15px; background:#f1f5f9; border-radius:6px; font-size:12px; color:#64748b; font-family:sans-serif; line-height:1.4; border-left:4px solid #94a3b8;">' +
+            '<b>Примечание:</b> Поворот и отражение физически изменяют пиксели изображения.' +
+            '</div>' +
+            '</div>';
         }
 
         return (
@@ -709,7 +779,7 @@
           '<div class="av-menu-two">' +
           (state.editTool === 'crop'
             ? '<button class="av-btn-main" id="av-btn-crop-apply">Применить обрезку</button>'
-            : 'Инструменты...') +
+            : '<span style="color:#64748b; font-weight:bold; font-family:sans-serif;">Инструменты вращения</span>') +
           '</div>' +
           '<div class="av-workspace">' +
           '<div style="display:flex; flex-direction:column; flex: 0 0 33.333%; min-width:0; border-right:2px solid #e2e8f0;">' +
@@ -1141,6 +1211,63 @@
             });
           }
           return;
+        }
+
+        // --- NEW: ROTATION & FLIP ACTIONS ---
+        if (t.id === 'av-btn-rotate-left') {
+          return self.imageTools.rotate(self.loadedImage, -90).then(function (url) {
+            self.loadedImage = url;
+            self.addLog('Rotate: -90°');
+            if (self.cropManager) {
+              self.cropManager.destroy();
+              self.cropManager = null;
+            }
+            self.render();
+          });
+        }
+        if (t.id === 'av-btn-rotate-right') {
+          return self.imageTools.rotate(self.loadedImage, 90).then(function (url) {
+            self.loadedImage = url;
+            self.addLog('Rotate: +90°');
+            if (self.cropManager) {
+              self.cropManager.destroy();
+              self.cropManager = null;
+            }
+            self.render();
+          });
+        }
+        if (t.id === 'av-btn-rotate-180') {
+          return self.imageTools.rotate(self.loadedImage, 180).then(function (url) {
+            self.loadedImage = url;
+            self.addLog('Rotate: 180°');
+            if (self.cropManager) {
+              self.cropManager.destroy();
+              self.cropManager = null;
+            }
+            self.render();
+          });
+        }
+        if (t.id === 'av-btn-flip-h') {
+          return self.imageTools.flip(self.loadedImage, 'horizontal').then(function (url) {
+            self.loadedImage = url;
+            self.addLog('Flip: Horizontal');
+            if (self.cropManager) {
+              self.cropManager.destroy();
+              self.cropManager = null;
+            }
+            self.render();
+          });
+        }
+        if (t.id === 'av-btn-flip-v') {
+          return self.imageTools.flip(self.loadedImage, 'vertical').then(function (url) {
+            self.loadedImage = url;
+            self.addLog('Flip: Vertical');
+            if (self.cropManager) {
+              self.cropManager.destroy();
+              self.cropManager = null;
+            }
+            self.render();
+          });
         }
 
         // Presets
