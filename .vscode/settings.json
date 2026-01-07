@@ -131,14 +131,14 @@
     // Accent цвет (Peacock)
     "peacock.color": "#0d445f",
     "workbench.colorCustomizations": {
-        "titleBar.activeBackground": "#0d445f",
+        //"titleBar.activeBackground": "#0d445f",
         "titleBar.activeForeground": "#e7e7e7",
-        "titleBar.inactiveBackground": "#0d445f99",
+        //"titleBar.inactiveBackground": "#0d445f99",
         "titleBar.inactiveForeground": "#e7e7e799",
         "statusBar.background": "#0d445f",
         "statusBar.foreground": "#e7e7e7",
-        "statusBarItem.hoverBackground": "#13648c",
-        "statusBarItem.remoteBackground": "#0d445f",
+        // "statusBarItem.hoverBackground": "#13648c",
+        // "statusBarItem.remoteBackground": "#0d445f",
         "statusBarItem.remoteForeground": "#e7e7e7",
         "activityBar.background": "#13648c",
         "activityBar.foreground": "#e7e7e7",

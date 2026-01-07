@@ -291,6 +291,51 @@
       ctx.closePath();
     };
 
+    AvImageTools.prototype.applyShadow = function (dataUrl, cfg) {
+      var self = this;
+      return new Promise(function (resolve) {
+        var img = new Image();
+        img.onload = function () {
+          var w = img.width;
+          var h = img.height;
+
+          // Padding to avoid clipping the shadow (blur radius + absolute offset)
+          var pad = Math.ceil(cfg.blur * 2 + Math.max(Math.abs(cfg.x), Math.abs(cfg.y)));
+          var canvas = document.createElement('canvas');
+          canvas.width = w + pad * 2;
+          canvas.height = h + pad * 2;
+          var ctx = canvas.getContext('2d');
+
+          ctx.save();
+          // Shadow settings
+          ctx.shadowBlur = cfg.blur;
+          ctx.shadowOffsetX = cfg.x;
+          ctx.shadowOffsetY = cfg.y;
+
+          // Convert hex to RGBA for shadow color
+          var r = 0,
+            g = 0,
+            b = 0;
+          if (cfg.color.length === 7) {
+            r = parseInt(cfg.color.substring(1, 3), 16);
+            g = parseInt(cfg.color.substring(3, 5), 16);
+            b = parseInt(cfg.color.substring(5, 7), 16);
+          }
+          ctx.shadowColor = 'rgba(' + r + ',' + g + ',' + b + ',' + cfg.opacity + ')';
+
+          ctx.drawImage(img, pad, pad);
+          ctx.restore();
+
+          resolve({
+            dataUrl: canvas.toDataURL('image/png'),
+            width: canvas.width,
+            height: canvas.height,
+          });
+        };
+        img.src = dataUrl;
+      });
+    };
+
     /**
      * AvWatermarkManager - Manages watermark overlay rendering
      */
@@ -1047,7 +1092,7 @@
         '" data-sec="settings">Настройка</div>' +
         '</div>' +
         '<div class="av-sidebar-btns">' +
-        '<div class="av-btn-main" style="background:#059669">Вставить в текст</div>' +
+        '<div class="av-btn-main" id="av-btn-insert" style="background:#059669">Вставить в текст</div>' +
         '<div class="av-btn-main" style="background:#64748b" onclick="this.closest(\'.av-image-modal-root\').remove()">Отмена</div>' +
         '</div>' +
         '</div>' +
@@ -1092,11 +1137,45 @@
 
       var canvasContent = '';
       if (state.loadedImage) {
+        var previewBg = state.currentSection === 'settings' ? '#ffffff' : '#1e293b';
+        var imgStyle = 'max-width:100%; max-height:100%; object-fit:contain;';
+
+        if (state.currentSection === 'settings') {
+          if (state.commonConfig.shadowConfig.enabled) {
+            var cfg = state.commonConfig.shadowConfig;
+            var r = 0,
+              g = 0,
+              b = 0;
+            if (cfg.color.length === 7) {
+              r = parseInt(cfg.color.substring(1, 3), 16);
+              g = parseInt(cfg.color.substring(3, 5), 16);
+              b = parseInt(cfg.color.substring(5, 7), 16);
+            }
+            var shadowColor = 'rgba(' + r + ',' + g + ',' + b + ',' + cfg.opacity + ')';
+            imgStyle +=
+              ' filter: drop-shadow(' +
+              cfg.x +
+              'px ' +
+              cfg.y +
+              'px ' +
+              cfg.blur +
+              'px ' +
+              shadowColor +
+              ');';
+          }
+        } else {
+          imgStyle += ' box-shadow: 0 0 20px rgba(0,0,0,0.5);';
+        }
+
         canvasContent =
-          '<div style="position:absolute; top:0; left:0; width:100%; height:100%; display:flex; align-items:center; justify-content:center; background:#0f172a;">' +
+          '<div style="position:absolute; top:0; left:0; width:100%; height:100%; display:flex; align-items:center; justify-content:center; background:' +
+          previewBg +
+          ';">' +
           '<img id="av-main-img" src="' +
           state.loadedImage +
-          '" style="max-width:100%; max-height:100%; object-fit:contain; box-shadow: 0 0 20px rgba(0,0,0,0.5);">' +
+          '" style="' +
+          imgStyle +
+          '">' +
           '</div>';
         if (state.currentSection === 'edit' && state.editTool === 'crop') {
           canvasContent +=
@@ -1582,10 +1661,143 @@
 
       if (state.currentSection === 'settings') {
         return (
-          '<div class="av-menu-one"><span class="av-subnav-item active">Общие</span></div>' +
-          '<div class="av-settings-form">' +
-          '<div class="av-form-field"><label>Alt текст</label><input type="text"></div>' +
-          '</div>'
+          '<div class="av-menu-one">' +
+          '<span class="av-subnav-item active">Настройки изображения</span>' +
+          '</div>' +
+          '<div class="av-workspace">' +
+          // 1/3 - Image Preview & Logs
+          '<div style="flex: 0 0 35%; display: flex; flex-direction: column; background: #f1f5f9; border-right: 1px solid #e2e8f0; min-width: 0;">' +
+          '<div class="av-canvas-zone" style="flex: 1; background: #ffffff !important; padding: 20px;">' +
+          canvasContent +
+          '</div>' +
+          '<div style="height: 120px; background: #fff; border-top: 1px solid #e2e8f0; padding: 12px; font-family: monospace;">' +
+          '<div style="color: #94a3b8; font-size: 10px; margin-bottom: 4px; text-transform: uppercase;">Системный лог</div>' +
+          '<textarea class="av-info-textarea" readonly style="width: 100%; height: calc(100% - 15px); border: none; resize: none; font-size: 11px; color: #64748b; background: transparent;">' +
+          state.logs.join('\n') +
+          '</textarea>' +
+          '</div>' +
+          '</div>' +
+          // 2/3 - Parameters
+          '<div class="av-menu-three scroll-custom" style="flex: 1; padding: 32px; overflow-y: auto;">' +
+          // Grid Layout for Parameters (2 columns if enough space, but keeping it simple for now)
+          '<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">' +
+          // COLUMN 1: Basic Info & SEO
+          '<div>' +
+          '<div class="av-section-title">Размер и формат</div>' +
+          '<div class="av-control-card">' +
+          '<div style="display:flex; gap:6px; margin-bottom:12px;">' +
+          ['100%', '75%', '50%', 'Auto']
+            .map(function (w) {
+              return (
+                '<div class="av-btn-toggle ' +
+                (state.commonConfig.width === w ? 'active' : '') +
+                '" data-width="' +
+                w +
+                '">' +
+                w +
+                '</div>'
+              );
+            })
+            .join('') +
+          '</div>' +
+          '<div class="av-form-field">' +
+          '<label>Точная ширина (px)</label>' +
+          '<div style="display:flex; gap:8px;">' +
+          '<input type="number" id="av-set-width-px" value="' +
+          (parseInt(state.commonConfig.width) || '') +
+          '" style="flex:1;">' +
+          '<button class="av-btn-blue-sm" id="av-btn-apply-width">Ok</button>' +
+          '</div>' +
+          '</div>' +
+          '</div>' +
+          '<div class="av-section-title">SEO и атрибуты</div>' +
+          '<div class="av-control-card">' +
+          '<div class="av-form-field" style="margin-bottom:12px;"><label>Alt текст</label><input type="text" id="av-set-alt" value="' +
+          state.commonConfig.alt +
+          '" placeholder="Описание"></div>' +
+          '<div class="av-form-field" style="margin-bottom:12px;"><label>Заголовок (title)</label><input type="text" id="av-set-title" value="' +
+          state.commonConfig.title +
+          '" placeholder="Подсказка"></div>' +
+          '<div class="av-form-field"><label>Подпись под фото</label><textarea id="av-set-caption" class="av-input-text" style="height:60px; width:100%;">' +
+          state.commonConfig.caption +
+          '</textarea></div>' +
+          '</div>' +
+          '</div>' +
+          // COLUMN 2: Layout, Links & Shadow
+          '<div>' +
+          '<div class="av-section-title">Расположение</div>' +
+          '<div class="av-control-card">' +
+          '<div style="display:flex; gap:8px;">' +
+          [
+            { id: 'left', icon: '⬅️', label: 'Слева' },
+            { id: 'center', icon: '↕️', label: 'Центр' },
+            { id: 'right', icon: '➡️', label: 'Справа' },
+            { id: 'full', icon: '↔️', label: 'На всю' },
+          ]
+            .map(function (align) {
+              return (
+                '<div class="av-btn-toggle ' +
+                (state.commonConfig.alignment === align.id ? 'active' : '') +
+                '" data-align="' +
+                align.id +
+                '" title="' +
+                align.label +
+                '" style="font-size:18px; height:40px;">' +
+                align.icon +
+                '</div>'
+              );
+            })
+            .join('') +
+          '</div>' +
+          '</div>' +
+          '<div class="av-section-title">Ссылка и поведение</div>' +
+          '<div class="av-control-card">' +
+          '<div class="av-form-field" style="margin-bottom:12px;"><label>URL ссылки</label><input type="text" id="av-set-link" value="' +
+          state.commonConfig.link +
+          '" placeholder="https://..."></div>' +
+          '<div style="display:flex; flex-direction:column; gap:8px;">' +
+          '<label class="av-checkbox-label"><input type="checkbox" id="av-set-clickable" ' +
+          (state.commonConfig.isClickable ? 'checked' : '') +
+          '> Кликабельное</label>' +
+          '<label class="av-checkbox-label"><input type="checkbox" id="av-set-new-window" ' +
+          (state.commonConfig.openInNewWindow ? 'checked' : '') +
+          '> В новом окне</label>' +
+          '</div>' +
+          '</div>' +
+          '<div class="av-section-title">Тень и эффекты</div>' +
+          '<div class="av-control-card">' +
+          '<label class="av-checkbox-label" style="margin-bottom:16px;"><input type="checkbox" id="av-set-shadow-enabled" ' +
+          (state.commonConfig.shadowConfig.enabled ? 'checked' : '') +
+          '> Включить тень</label>' +
+          (state.commonConfig.shadowConfig.enabled
+            ? '<div class="av-wm-control-group"><label class="av-wm-label">Смещение X/Y: ' +
+              state.commonConfig.shadowConfig.x +
+              ' / ' +
+              state.commonConfig.shadowConfig.y +
+              '</label><div style="display:flex; gap:8px;"><input type="range" id="av-set-shadow-x" min="-30" max="30" value="' +
+              state.commonConfig.shadowConfig.x +
+              '" style="flex:1;"><input type="range" id="av-set-shadow-y" min="-30" max="30" value="' +
+              state.commonConfig.shadowConfig.y +
+              '" style="flex:1;"></div></div>' +
+              '<div class="av-wm-control-group"><label class="av-wm-label">Blur: ' +
+              state.commonConfig.shadowConfig.blur +
+              'px / Opacity: ' +
+              Math.round(state.commonConfig.shadowConfig.opacity * 100) +
+              '%</label><div style="display:flex; gap:8px;"><input type="range" id="av-set-shadow-blur" min="0" max="60" value="' +
+              state.commonConfig.shadowConfig.blur +
+              '" style="flex:1;"><input type="range" id="av-set-shadow-opacity" min="0" max="1" step="0.05" value="' +
+              state.commonConfig.shadowConfig.opacity +
+              '" style="flex:1;"></div></div>' +
+              '<div class="av-form-field"><label>Цвет тени</label><input type="color" id="av-set-shadow-color" value="' +
+              state.commonConfig.shadowConfig.color +
+              '" style="height:35px; width:100%; cursor:pointer;"></div>'
+            : '') +
+          '</div>' +
+          '</div>' +
+          '</div>' + // End Grid Columns
+          '</div>' +
+          '</div>' +
+          infoBlock
         );
       }
     };
@@ -1629,24 +1841,32 @@
         '.av-sidebar-btns { height: 200px; background: #dcfce7; padding: 25px; display: flex; flex-direction: column; gap: 15px; flex-shrink: 0; } ' +
         '.av-nav-item { padding: 12px; margin-bottom: 8px; background: #fff; border-radius: 6px; cursor: pointer; border: 1px solid #fdba74; font-weight: bold; font-family: sans-serif; text-align: center; color: #64748b; } ' +
         '.av-nav-item.active { background: #fff7ed; color: #c2410c; border-color: #c2410c; } ' +
-        '.av-main-part { flex: 1; display: flex; flex-direction: column; min-width: 0; } ' +
-        '.av-menu-one { height: 60px; background: #dcfce7; display: flex; align-items: center; padding: 0 25px; gap: 30px; border-bottom: 2px solid #bbf7d0; flex-shrink: 0; font-family: sans-serif; font-weight: bold; color: #166534; } ' +
-        '.av-subnav-item { cursor: pointer; opacity: 0.6; padding: 5px 0; } ' +
-        '.av-subnav-item.active { opacity: 1; border-bottom: 2px solid #166534; } ' +
-        '.av-menu-two { height: 75px; background: #f3e8ff; display: flex; align-items: center; padding: 0 25px; gap: 20px; border-bottom: 2px solid #e9d5ff; flex-shrink: 0; font-family: sans-serif; } ' +
-        '.av-workspace { flex: 1; display: flex; min-height: 0; } ' +
-        '.av-canvas-zone { flex: 1; background: #dbeafe; display: flex; align-items: center; justify-content: center; position: relative; border: 1px solid #bfdbfe; } ' +
-        '.av-preview-text { color: #5785a8; font-weight: bold; font-family: sans-serif; } ' +
-        '.av-dropbox-active { border: 4px dashed #3b82f6; width: 300px; height: 200px; display: flex; align-items: center; justify-content: center; color: #3b82f6; background: #eff6ff; border-radius: 12px; font-weight: bold; font-family: sans-serif; cursor: pointer; } ' +
-        '.av-menu-three { width: 400px; background: #fee2e2; border-left: 2px solid #fecaca; padding: 30px; display: flex; flex-direction: column; flex-shrink: 0; } ' +
-        '.av-menu-three-content { flex: 1; display: flex; align-items: center; justify-content: center; text-align: center; color: #b91c1c; font-size: 15px; font-weight: 500; font-family: sans-serif; } ' +
-        '.av-btn-main { background: #2563eb; color: #fff; border: none; padding: 12px; border-radius: 6px; cursor: pointer; font-weight: bold; text-align: center; font-size: 14px; font-family: sans-serif; } ' +
+        '.av-main-part { flex: 1; display: flex; flex-direction: column; min-width: 0; background: #f8fafc; } ' +
+        '.av-menu-one { height: 50px; background: #ffffff; display: flex; align-items: center; padding: 0 25px; gap: 30px; border-bottom: 1px solid #e2e8f0; flex-shrink: 0; font-family: sans-serif; font-weight: 600; color: #475569; } ' +
+        '.av-subnav-item { cursor: pointer; opacity: 0.7; padding: 14px 0; border-bottom: 2px solid transparent; transition: all 0.2s; } ' +
+        '.av-subnav-item.active { opacity: 1; color: #2563eb; border-bottom-color: #2563eb; } ' +
+        '.av-menu-two { height: 60px; background: #f1f5f9; display: flex; align-items: center; padding: 0 25px; gap: 20px; border-bottom: 1px solid #e2e8f0; flex-shrink: 0; font-family: sans-serif; } ' +
+        '.av-workspace { flex: 1; display: flex; min-height: 0; overflow: hidden; } ' +
+        '.av-canvas-zone { flex: 1; background: #ffffff; display: flex; align-items: center; justify-content: center; position: relative; } ' +
+        '.av-preview-text { color: #94a3b8; font-weight: 500; font-family: sans-serif; } ' +
+        '.av-dropbox-active { border: 2px dashed #3b82f6; width: 300px; height: 200px; display: flex; align-items: center; justify-content: center; color: #3b82f6; background: #eff6ff; border-radius: 12px; font-weight: 600; font-family: sans-serif; cursor: pointer; } ' +
+        '.av-menu-three { background: #ffffff; border-left: 1px solid #e2e8f0; display: flex; flex-direction: column; flex-shrink: 0; } ' +
+        '.av-menu-three-content { flex: 1; display: flex; align-items: center; justify-content: center; text-align: center; color: #64748b; font-size: 14px; font-weight: 500; font-family: sans-serif; padding: 40px; } ' +
+        '.av-btn-main { background: #2563eb; color: #fff; border: none; padding: 12px 24px; border-radius: 6px; cursor: pointer; font-weight: 600; text-align: center; font-size: 14px; font-family: sans-serif; transition: background 0.2s; } ' +
+        '.av-btn-main:hover { background: #1d4ed8; } ' +
         '.av-input-text { padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; width: 300px; } ' +
         '.av-modal-resizer { position: absolute; right: 0; bottom: 0; width: 24px; height: 24px; cursor: nwse-resize; background: linear-gradient(135deg, transparent 50%, #cbd5e1 50%); } ' +
         '.av-settings-form { padding: 40px; display: flex; flex-direction: column; gap: 20px; font-family: sans-serif; } ' +
         '.av-form-field { display: flex; flex-direction: column; gap: 8px; } ' +
-        '.av-form-field label { font-weight: bold; color: #334155; } ' +
-        '.av-form-field input, .av-form-field select { padding: 12px; border: 1px solid #cbd5e1; border-radius: 6px; } ' +
+        '.av-form-field label { font-size: 13px; font-weight: 600; color: #475569; font-family: sans-serif; } ' +
+        '.av-form-field input, .av-form-field select { padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; color: #1e293b; outline: none; transition: border-color 0.2s; } ' +
+        '.av-form-field input:focus { border-color: #3b82f6; } ' +
+        '.av-section-title { font-size: 14px; font-weight: 700; color: #1e293b; margin-bottom: 4px; font-family: sans-serif; text-transform: uppercase; letter-spacing: 0.025em; } ' +
+        '.av-section-divider { height: 1px; background: #e2e8f0; margin: 16px 0; } ' +
+        '.av-control-card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; margin-bottom: 12px; } ' +
+        '.av-btn-toggle { flex: 1; height: 36px; border: 1px solid #cbd5e1; border-radius: 6px; display: flex; align-items: center; justify-content: center; cursor: pointer; background: #fff; color: #64748b; font-size: 12px; font-weight: 600; transition: all 0.2s; } ' +
+        '.av-btn-toggle:hover { border-color: #94a3b8; color: #475569; } ' +
+        '.av-btn-toggle.active { background: #eff6ff; color: #2563eb; border-color: #3b82f6; } ' +
         '.av-info-picture { height: 80px; background: #f8fafc; border-top: 1px solid #e2e8f0; display: flex; flex-direction: column; justify-content: center; padding: 10px 20px; font-size: 12px; font-family: sans-serif; color: #64748b; font-weight: 500; flex-shrink: 0; gap: 5px; overflow-y: auto; position: relative; } ' +
         '.av-info-row { display: flex; gap: 10px; align-items: center; } ' +
         '.av-info-label { font-weight: bold; color: #475569; min-width: 100px; } ' +
@@ -1679,7 +1899,8 @@
     /**
      * AvModal - Main orchestrator of the plugin
      */
-    function AvModal() {
+    function AvModal(editor) {
+      this.editor = editor;
       // Services
       this.loader = new AvLoader();
       this.ui = new AvUIManager();
@@ -1746,6 +1967,25 @@
         rotation: 0,
         offsetX: 0,
         offsetY: 0,
+      };
+
+      this.commonConfig = {
+        alt: '',
+        title: '',
+        caption: '',
+        link: '',
+        isClickable: false,
+        openInNewWindow: false,
+        alignment: 'center',
+        width: 'Auto',
+        shadowConfig: {
+          enabled: false,
+          x: 5,
+          y: 5,
+          blur: 10,
+          opacity: 0.3,
+          color: '#000000',
+        },
       };
     }
 
@@ -2090,6 +2330,205 @@
         // Action Buttons
         if (t.id === 'av-btn-browse') return self.modal.querySelector('#av-input-file').click();
 
+        // Alignment Buttons
+        var alignBtn = t.closest('.av-btn-toggle[data-align]');
+        if (alignBtn) {
+          self.commonConfig.alignment = alignBtn.getAttribute('data-align');
+          self.addLog('Alignment set to: ' + self.commonConfig.alignment);
+          self.render();
+          return;
+        }
+
+        // Width Buttons
+        var widthBtn = t.closest('.av-btn-toggle[data-width]');
+        if (widthBtn) {
+          self.commonConfig.width = widthBtn.getAttribute('data-width');
+          self.addLog('Width set to: ' + self.commonConfig.width);
+          self.render();
+          return;
+        }
+
+        if (t.id === 'av-btn-apply-width') {
+          var val = parseInt(self.modal.querySelector('#av-set-width-px').value);
+          if (val > 0) {
+            self.commonConfig.width = val + 'px';
+            self.addLog('Custom width: ' + self.commonConfig.width);
+            self.render();
+          }
+          return;
+        }
+
+        // --- INSERT BUTTON HANDLER ---
+        if (t.id === 'av-btn-insert') {
+          if (!self.loadedImage) return;
+
+          // 1. UI Feedback
+          var btn = t;
+          var originalText = btn.innerText;
+          btn.innerText = 'Загрузка...';
+          btn.style.opacity = '0.7';
+          btn.style.pointerEvents = 'none';
+
+          // 2. Prepare Canvas for initial processing (Frame, etc.)
+          var canvas = document.createElement('canvas');
+          var ctx = canvas.getContext('2d');
+          var imgObj = new Image();
+
+          imgObj.onload = function () {
+            canvas.width = imgObj.naturalWidth;
+            canvas.height = imgObj.naturalHeight;
+            ctx.drawImage(imgObj, 0, 0);
+
+            // Apply Frame if enabled
+            if (self.frameConfig.enabled && self.frameManager) {
+              var fm = new AvFrameManager(
+                {
+                  width: canvas.width,
+                  height: canvas.height,
+                  getContext: function () {
+                    return ctx;
+                  },
+                },
+                null,
+              );
+              fm.draw(self.frameConfig);
+            }
+
+            var baseProcessedUrl = canvas.toDataURL('image/png');
+
+            // 3. Apply Shadow if enabled (Canvas Burning)
+            var finalStep;
+            if (self.commonConfig.shadowConfig.enabled) {
+              finalStep = self.imageTools.applyShadow(
+                baseProcessedUrl,
+                self.commonConfig.shadowConfig,
+              );
+            } else {
+              finalStep = Promise.resolve({ dataUrl: baseProcessedUrl });
+            }
+
+            finalStep
+              .then(function (finalResult) {
+                return self.uploadImage(finalResult.dataUrl);
+              })
+              .then(function (result) {
+                // 4. Construct HTML with Server URL (Aurora Image Format)
+                var imageUrl = result.imageUrl;
+                var imageId = result.imageId || 'img-' + Date.now();
+
+                // Convert relative URL to absolute if needed
+                if (imageUrl.startsWith('/')) {
+                  imageUrl = 'https://localhost:7233' + imageUrl;
+                }
+
+                // Build <img> tag with aurora-image__img class
+                var escapeHtml = function (str) {
+                  return String(str)
+                    .replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;')
+                    .replace(/"/g, '&quot;')
+                    .replace(/'/g, '&#039;');
+                };
+
+                var imgTag =
+                  '<img class="aurora-image__img" src="' +
+                  escapeHtml(imageUrl) +
+                  '"' +
+                  (self.commonConfig.alt
+                    ? ' alt="' + escapeHtml(self.commonConfig.alt) + '"'
+                    : '') +
+                  (self.commonConfig.title
+                    ? ' title="' + escapeHtml(self.commonConfig.title) + '"'
+                    : '') +
+                  ' style="max-width: 100%; height: auto; vertical-align: middle;">';
+
+                // Wrap in link if needed
+                var imageContent = imgTag;
+                if (self.commonConfig.link && self.commonConfig.isClickable) {
+                  var target = self.commonConfig.openInNewWindow
+                    ? ' target="_blank" rel="noopener noreferrer"'
+                    : '';
+                  imageContent =
+                    '<a href="' +
+                    escapeHtml(self.commonConfig.link) +
+                    '"' +
+                    target +
+                    '>' +
+                    imgTag +
+                    '</a>';
+                }
+
+                // Build <figcaption>
+                var captionTag = '';
+                if (self.commonConfig.caption) {
+                  captionTag =
+                    '<figcaption class="aurora-image__caption">' +
+                    escapeHtml(self.commonConfig.caption) +
+                    '</figcaption>';
+                }
+
+                // Build <figure> styles and attributes
+                var alignment = self.commonConfig.alignment || 'center';
+                var figureStyles = ['max-width: 100%'];
+
+                if (alignment === 'left') {
+                  figureStyles.push('float: left', 'margin: 0 16px 8px 0');
+                } else if (alignment === 'right') {
+                  figureStyles.push('float: right', 'margin: 0 0 8px 16px');
+                } else if (alignment === 'center') {
+                  figureStyles.push('margin-left: auto', 'margin-right: auto', 'display: table');
+                }
+
+                // Apply Width
+                var dataWidth = self.commonConfig.width || 'Auto';
+                if (dataWidth === 'Auto') {
+                  figureStyles.push('width: auto');
+                  // If centered and auto, display: table is good for shrinking to content
+                  if (alignment === 'center') {
+                    figureStyles.push('display: table');
+                  } else {
+                    figureStyles.push('display: inline-block');
+                  }
+                } else {
+                  figureStyles.push('width: ' + dataWidth);
+                  if (alignment === 'center') {
+                    figureStyles.push('display: table');
+                  } else {
+                    figureStyles.push('display: block');
+                  }
+                }
+
+                var imgHtml =
+                  '<figure class="aurora-image" data-image-id="' +
+                  escapeHtml(imageId) +
+                  '" data-align="' +
+                  alignment +
+                  '" data-width="' +
+                  escapeHtml(dataWidth) +
+                  '" style="' +
+                  figureStyles.join('; ') +
+                  '">' +
+                  imageContent +
+                  captionTag +
+                  '</figure>';
+
+                // Insert into Editor
+                self.editor.insertContent(imgHtml);
+                self.overlay.remove();
+              })
+              .catch(function (err) {
+                console.error('Final Step Error:', err);
+                alert('Ошибка: ' + (err.message || err));
+                btn.innerText = originalText;
+                btn.style.opacity = '1';
+                btn.style.pointerEvents = 'auto';
+              });
+          };
+          imgObj.src = self.loadedImage;
+          return;
+        }
+
         if (t.id === 'av-btn-load-url') {
           var url = self.modal.querySelector('#av-input-url').value.trim();
           if (!url) return;
@@ -2331,7 +2770,8 @@
         var isSpecial =
           id.indexOf('av-wm-') === 0 ||
           id.indexOf('av-frame-') === 0 ||
-          id.indexOf('av-circle-') === 0;
+          id.indexOf('av-circle-') === 0 ||
+          id.indexOf('av-set-') === 0;
         if (!isSpecial) {
           if (isNaN(val) || val < 1) return;
         }
@@ -2525,6 +2965,29 @@
             if (self.frameManager) self.frameManager.draw(self.frameConfig);
           }
         }
+        // --- SETTINGS INPUTS ---
+        if (id === 'av-set-alt') self.commonConfig.alt = e.target.value;
+        if (id === 'av-set-title') self.commonConfig.title = e.target.value;
+        if (id === 'av-set-caption') self.commonConfig.caption = e.target.value;
+        if (id === 'av-set-link') self.commonConfig.link = e.target.value;
+        if (id === 'av-set-clickable') self.commonConfig.isClickable = e.target.checked;
+        if (id === 'av-set-new-window') self.commonConfig.openInNewWindow = e.target.checked;
+
+        // Shadow Inputs
+        if (id === 'av-set-shadow-enabled') {
+          self.commonConfig.shadowConfig.enabled = e.target.checked;
+          self.render();
+        }
+        if (id.indexOf('av-set-shadow-') === 0 && id !== 'av-set-shadow-enabled') {
+          var key = id.replace('av-set-shadow-', '');
+          var val = e.target.value;
+          if (key === 'x' || key === 'y' || key === 'blur') val = parseInt(val);
+          if (key === 'opacity') val = parseFloat(val);
+          self.commonConfig.shadowConfig[key] = val;
+          // Partial re-render (just labels) or full re-render
+          // For now full render to keep it simple, but we could optimize
+          self.render();
+        }
       };
 
       this.modal.onchange = function (e) {
@@ -2621,6 +3084,49 @@
       };
     };
 
+    AvModal.prototype.uploadImage = function (dataUrl) {
+      var self = this;
+      return new Promise(function (resolve, reject) {
+        var base64Content = dataUrl.split(',')[1];
+        var mimeType = dataUrl.split(',')[0].split(':')[1].split(';')[0];
+        var extension = mimeType.split('/')[1] || 'png';
+        var fileName =
+          (self.fileInfo.name || 'image').split('.')[0] + '-' + Date.now() + '.' + extension;
+
+        var payload = {
+          FileName: fileName,
+          FileFormat: mimeType,
+          Base64Data: base64Content,
+        };
+
+        fetch('https://localhost:7233/api/editor/images/upload', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(payload),
+        })
+          .then(function (response) {
+            if (!response.ok) throw new Error('Upload failed: ' + response.statusText);
+            return response.json();
+          })
+          .then(function (data) {
+            if (data.success) {
+              resolve({
+                imageUrl: data.imageUrl,
+                imageId: data.imageId || 'img-' + Date.now(),
+              });
+            } else {
+              reject(data.message || 'Unknown upload error');
+            }
+          })
+          .catch(function (error) {
+            console.error('Upload Error:', error);
+            reject(error.message);
+          });
+      });
+    };
+
     AvModal.prototype.processFile = function (file, source) {
       var self = this;
       this.addLog('Loading ' + source + ': ' + file.name);
@@ -2640,7 +3146,7 @@
     editor.ui.registry.addButton('av-image-text', {
       text: 'Вставить изображение',
       onAction: function () {
-        var modal = new AvModal();
+        var modal = new AvModal(editor);
         modal.create();
       },
     });
