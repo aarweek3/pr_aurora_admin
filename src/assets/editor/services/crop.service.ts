@@ -352,25 +352,17 @@ export class CropService {
       return false;
     }
 
-    // Проверка - нужно ли увеличение изображения
-    let effectiveImageWidth = originalImageDimensions.width;
-    let effectiveImageHeight = originalImageDimensions.height;
+    // Проверка - размер рамки не должен превышать размер изображения
+    const naturalWidth = originalImageDimensions.width;
+    const naturalHeight = originalImageDimensions.height;
 
-    if (targetWidth > effectiveImageWidth || targetHeight > effectiveImageHeight) {
-      const upscaleX = targetWidth / effectiveImageWidth;
-      const upscaleY = targetHeight / effectiveImageHeight;
-      const upscale = Math.max(upscaleX, upscaleY);
-
-      effectiveImageWidth *= upscale;
-      effectiveImageHeight *= upscale;
-
+    if (targetWidth > naturalWidth || targetHeight > naturalHeight) {
       ToastNotificationComponent.show({
-        type: 'warning',
-        message: `Изображение увеличено в ${upscale.toFixed(
-          2,
-        )}x для обрезки ${targetWidth}×${targetHeight}`,
-        duration: 4000,
+        type: 'error',
+        message: `Размер рамки (${targetWidth}×${targetHeight}) превышает размер изображения (${naturalWidth}×${naturalHeight})`,
+        duration: 5000,
       });
+      return false;
     }
 
     // Вычисление размера рамки для отображения на canvas

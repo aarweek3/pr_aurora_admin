@@ -339,6 +339,11 @@ export class ImageModalComponent implements OnInit, OnDestroy, AfterViewInit {
   private cropTool: CropTool | null = null;
   private cropImage: HTMLImageElement | null = null;
 
+  // Resize State (for manual upscaling)
+  resizeWidth: number = 0;
+  resizeHeight: number = 0;
+  resizeProportionLocked: boolean = false;
+
   // Circle crop state
   circleConfig: CircleConfig = {
     centerX: 0,
@@ -1812,6 +1817,10 @@ export class ImageModalComponent implements OnInit, OnDestroy, AfterViewInit {
         this.canvasDisplayDimensions = result.canvasDisplayDimensions;
         this.originalImageDimensions = result.originalImageDimensions;
 
+        // Инициализируем поля для увеличения изображения текущими размерами
+        this.resizeWidth = this.originalImageDimensions.width;
+        this.resizeHeight = this.originalImageDimensions.height;
+
         console.log('✅ CropTool initialized successfully', {
           displayScale: this.displayScale,
           canvasDisplayDimensions: this.canvasDisplayDimensions,
@@ -2183,10 +2192,6 @@ export class ImageModalComponent implements OnInit, OnDestroy, AfterViewInit {
    * Применить обрезку
    * Использует новую архитектуру с applyOperation() для автоматического обновления метаданных
    */
-  /**
-   * Применить обрезку
-   * Использует новую архитектуру с applyOperation() для автоматического обновления метаданных
-   */
   async applyCrop(): Promise<void> {
     if (!this.cropTool || !this.cropCanvas || !this.cropImage) {
       ToastNotificationComponent.show({
@@ -2235,6 +2240,101 @@ export class ImageModalComponent implements OnInit, OnDestroy, AfterViewInit {
       ToastNotificationComponent.show({
         type: 'error',
         message: 'Ошибка при обрезке изображения',
+      });
+    }
+  }
+
+  /**
+   * Переключить замок пропорций для увеличения
+   */
+  toggleResizeProportionLock(): void {
+    this.resizeProportionLocked = !this.resizeProportionLocked;
+
+    // Если замок включен, сразу пересчитать высоту на основе текущей ширины
+    if (this.resizeProportionLocked && this.resizeWidth) {
+      this.onResizeSizeChange('width');
+    }
+  }
+
+  /**
+   * Изменение размера в блоке увеличения
+   */
+  onResizeSizeChange(dimension: 'width' | 'height'): void {
+    if (
+      !this.resizeProportionLocked ||
+      !this.originalImageDimensions.width ||
+      !this.originalImageDimensions.height
+    )
+      return;
+
+    const ratio = this.originalImageDimensions.width / this.originalImageDimensions.height;
+
+    if (dimension === 'width' && this.resizeWidth) {
+      this.resizeHeight = Math.round(this.resizeWidth / ratio);
+    } else if (dimension === 'height' && this.resizeHeight) {
+      this.resizeWidth = Math.round(this.resizeHeight * ratio);
+    }
+  }
+
+  /**
+   * Явное увеличение размера всего изображения
+   * Реализует логику "Увеличить все изображение" перед обрезкой
+   */
+  async resizeImageExplicitly(): Promise<void> {
+    if (!this.imageData.current) return;
+
+    if (
+      !this.resizeWidth ||
+      !this.resizeHeight ||
+      this.resizeWidth <= 0 ||
+      this.resizeHeight <= 0
+    ) {
+      ToastNotificationComponent.show({
+        type: 'error',
+        message: 'Укажите корректные размеры для увеличения',
+      });
+      return;
+    }
+
+    try {
+      this.uploadState.isUploading = true;
+
+      await this.applyOperation(
+        'resize' as any,
+        { width: this.resizeWidth, height: this.resizeHeight },
+        async (currentDataUrl) => {
+          const img = await this.createImageElement(currentDataUrl);
+          const canvas = document.createElement('canvas');
+          canvas.width = this.resizeWidth;
+          canvas.height = this.resizeHeight;
+          const ctx = canvas.getContext('2d');
+          if (!ctx) throw new Error('Could not get canvas context');
+
+          // Рисуем всё изображение растянутым до новых размеров
+          ctx.drawImage(img, 0, 0, this.resizeWidth, this.resizeHeight);
+
+          return canvas.toDataURL('image/png');
+        },
+      );
+
+      this.uploadState.isUploading = false;
+
+      ToastNotificationComponent.show({
+        type: 'success',
+        message: `Изображение увеличено до ${this.resizeWidth}×${this.resizeHeight}`,
+      });
+
+      // Переинициализируем инструменты
+      this.cleanupCropTool();
+      setTimeout(() => {
+        if (this.activeTab === 'crop') this.initCropTool();
+      }, 100);
+    } catch (error) {
+      this.uploadState.isUploading = false;
+      console.error('Resize failed:', error);
+      ToastNotificationComponent.show({
+        type: 'error',
+        message: 'Ошибка при увеличении изображения',
       });
     }
   }

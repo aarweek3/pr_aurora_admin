@@ -339,13 +339,89 @@
                 (click)="applyTargetSize()"
                 title="Применить размер к рамке обрезки"
               >
-                Применить размер
+                Установить рамку
               </button>
             </div>
           </div>
 
-          <!-- Разделитель между "Свой размер" и "Предустановленные размеры" -->
+          <!-- Разделитель -->
           <hr class="crop-section-divider" *ngIf="cropConfig.hardSizeEnabled" />
+
+          <!-- Блок увеличения изображения (Upscaling) -->
+          <div
+            class="hard-size-section-compact resize-block-bg"
+            style="background: #fff1f2; border: 1px dashed #fda4af; padding: 12px; border-radius: 8px; margin-top: 15px"
+          >
+            <h4
+              style="
+                color: #9f1239;
+                margin-bottom: 10px;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                font-weight: 600;
+              "
+            >
+              🚀 Увеличить размер изображения
+              <span
+                style="
+                  background: #f43f5e;
+                  color: white;
+                  font-size: 10px;
+                  padding: 2px 6px;
+                  border-radius: 4px;
+                  font-weight: 500;
+                "
+                >Beta</span
+              >
+            </h4>
+            <div class="size-input-row-tall">
+              <input
+                type="number"
+                placeholder="Ширина"
+                [(ngModel)]="resizeWidth"
+                (input)="onResizeSizeChange('width')"
+                min="1"
+              />
+              <button
+                class="aurora-btn aurora-btn-ghost aurora-btn-xs aurora-btn-icon"
+                [class.aurora-btn-active]="resizeProportionLocked"
+                (click)="toggleResizeProportionLock()"
+                title="{{ resizeProportionLocked ? 'Разблокировать пропорции' : 'Заблокировать пропорции' }}"
+              >
+                {{ resizeProportionLocked ? '🔒' : '🔓' }}
+              </button>
+              <input
+                type="number"
+                placeholder="Высота"
+                [(ngModel)]="resizeHeight"
+                (input)="onResizeSizeChange('height')"
+                min="1"
+              />
+              <button
+                class="aurora-btn aurora-btn-primary aurora-btn-sm"
+                (click)="resizeImageExplicitly()"
+                style="white-space: nowrap"
+              >
+                Увеличить размер изображения
+              </button>
+            </div>
+            <div style="margin-top: 10px">
+              <label
+                class="checkbox-label"
+                style="font-size: 13px; color: #9f1239; cursor: pointer; display: flex; align-items: center; gap: 6px"
+              >
+                <input type="checkbox" [(ngModel)]="resizeProportionLocked" />
+                <span>Пропорционально</span>
+              </label>
+            </div>
+            <p style="color: #e11d48; margin-top: 8px; font-size: 11px; margin-bottom: 0">
+              ⚠️ Осторожно: увеличение может снизить четкость изображения.
+            </p>
+          </div>
+
+          <!-- Разделитель между "Увеличить" и "Пресеты" -->
+          <hr class="crop-section-divider" />
 
           <!-- Пресеты -->
           <app-crop-presets [(selectedPreset)]="selectedPreset" (presetSelected)="onPresetSelected($event)">
