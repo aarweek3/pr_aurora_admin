@@ -105,6 +105,24 @@
         });
     };
 
+    AvPresetManager.prototype.loadContainerPresets = function () {
+      var self = this;
+      var url = this.baseUrl + '/configs/image-presets-size-container.json?v=' + Date.now();
+      return fetch(url)
+        .then(function (res) {
+          if (!res.ok) throw new Error('Failed to load container presets');
+          return res.json();
+        })
+        .catch(function () {
+          // Fallback defaults
+          return [
+            { label: '600x887', width: 600, height: 887 },
+            { label: '1200x600', width: 1200, height: 600 },
+            { label: '300x150', width: 300, height: 150 },
+          ];
+        });
+    };
+
     /**
      * AvImageTools - Pure canvas transformation logic
      */
@@ -1082,6 +1100,9 @@
         (state.currentSection === 'upload' ? 'active' : '') +
         '" data-sec="upload">Загрузить</div>' +
         '<div class="av-nav-item ' +
+        (state.currentSection === 'library' ? 'active' : '') +
+        '" data-sec="library">Библиотека</div>' +
+        '<div class="av-nav-item ' +
         (state.currentSection === 'edit' ? 'active' : '') +
         '" data-sec="edit">Обработка</div>' +
         '<div class="av-nav-item ' +
@@ -1100,7 +1121,187 @@
         this.renderContent(state, presetsHtml) +
         '</div>' +
         '</div>' +
+        (state.exportState.isOpen ? this.renderExportModal(state) : '') +
         '<div class="av-modal-resizer"></div>'
+      );
+    };
+
+    AvUIManager.prototype.renderExportModal = function (state) {
+      var exp = state.exportState;
+      var formats = [
+        { label: 'JPEG', value: 'image/jpeg' },
+        { label: 'PNG', value: 'image/png' },
+        { label: 'WebP', value: 'image/webp' },
+      ];
+
+      return (
+        '<div class="av-export-overlay">' +
+        '<div class="av-export-modal" style="width: 800px; height: auto; max-width: 95vw; max-height: 95vh; display: flex; flex-direction: column;">' +
+        '<div class="av-export-header">' +
+        '<div class="av-export-title">Экспорт изображения</div>' +
+        '<div class="av-modal-close" id="av-export-cancel">✕</div>' +
+        '</div>' +
+        '<div class="av-export-body" style="padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 20px;">' +
+        // 1. IMAGE PREVIEW (Centered)
+        '<div class="av-export-preview-box" style="width: 100%; height: 250px; background: #f1f5f9; border-radius: 8px; display: flex; align-items: center; justify-content: center; overflow: hidden;">' +
+        '<img src="' +
+        (exp.finalDataUrl || '') +
+        '" style="max-width:100%; max-height:100%; object-fit:contain;">' +
+        '</div>' +
+        // 2. FILE NAME & FORMAT (Row)
+        '<div style="display: flex; gap: 20px; align-items: flex-end;">' +
+        // Name
+        '<div class="av-form-field" style="flex: 1; margin-bottom: 0;">' +
+        '<label>Название файла</label>' +
+        '<input type="text" id="av-exp-name" value="' +
+        exp.fileName +
+        '" class="av-input-text" style="width:100%">' +
+        '</div>' +
+        // Format
+        '<div class="av-form-field" style="margin-bottom: 0;">' +
+        '<label>Формат файла</label>' +
+        '<div style="display:flex; gap:8px;">' +
+        formats
+          .map(function (f) {
+            return (
+              '<div class="av-btn-toggle ' +
+              (exp.format === f.value ? 'active' : '') +
+              '" data-exp-format="' +
+              f.value +
+              '" style="min-width: 90px; justify-content: center;">' +
+              f.label +
+              '</div>'
+            );
+          })
+          .join('') +
+        '</div>' +
+        '</div>' +
+        '</div>' +
+        // 3. QUALITY & INFO (Row)
+        '<div style="display: flex; gap: 20px; align-items: flex-end;">' +
+        // Quality (Only if not PNG)
+        (exp.format !== 'image/png'
+          ? '<div class="av-form-field" style="flex: 1; margin-bottom: 0;">' +
+            '<label>Качество (Compression)</label>' +
+            '<div style="display:flex; align-items:center; gap:12px;">' +
+            '<input type="range" id="av-exp-quality" min="1" max="100" value="' +
+            exp.quality +
+            '" style="flex:1">' +
+            '<input type="number" id="av-exp-quality-input" min="1" max="100" value="' +
+            exp.quality +
+            '" style="width:60px; padding:8px; border:1px solid #cbd5e1; border-radius:6px; text-align:center;">' +
+            '</div>' +
+            '</div>'
+          : '<div style="flex: 1;"></div>') + // Spacer if no quality
+        // Dims & Size
+        '<div style="display: flex; gap: 20px;">' +
+        '<div class="av-export-info-item" style="border: none; padding: 0; background: none;">' +
+        '<div class="av-export-info-label">Размеры (Px)</div>' +
+        '<div class="av-export-info-value" style="font-size: 14px;">' +
+        (exp.finalWidth || state.fileInfo.width) +
+        'x' +
+        (exp.finalHeight || state.fileInfo.height) +
+        '</div>' +
+        '</div>' +
+        '<div class="av-export-info-item" style="border: none; padding: 0; background: none;">' +
+        '<div class="av-export-info-label">Финальный вес</div>' +
+        '<div class="av-export-info-value" id="av-exp-size" style="color:#2563eb; font-size: 14px;">' +
+        exp.estimatedSize +
+        '</div>' +
+        '</div>' +
+        '</div>' +
+        '</div>' +
+        // 4. CONTAINER BLOCK
+        '<div class="av-export-container-block" style="padding-top:10px; border-top:1px solid #e2e8f0;">' +
+        '<div class="av-form-field" style="margin-bottom:10px;">' +
+        '<label class="av-checkbox-label" style="font-weight:600; color:#1e293b;">' +
+        '<input type="checkbox" id="av-cnt-enabled" ' +
+        (exp.containerConfig.enabled ? 'checked' : '') +
+        '> Вставить в контейнер' +
+        '</label>' +
+        '</div>' +
+        '<div id="av-cnt-settings" style="display:' +
+        (exp.containerConfig.enabled ? 'block' : 'none') +
+        '; padding-left:0px;">' +
+        // Custom Size Row
+        '<div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">' +
+        '<label class="av-checkbox-label" style="min-width:100px;">' +
+        '<input type="checkbox" id="av-cnt-custom" ' +
+        (exp.containerConfig.useCustomSize ? 'checked' : '') +
+        '> Свой размер' +
+        '</label>' +
+        '<div style="display:flex; gap:5px; flex:1;">' +
+        '<input type="number" id="av-cnt-width" class="av-input-text" placeholder="Ширина" value="' +
+        exp.containerConfig.width +
+        '" ' +
+        (exp.containerConfig.useCustomSize ? '' : 'disabled') +
+        ' style="width:50%">' +
+        '<input type="number" id="av-cnt-height" class="av-input-text" placeholder="Высота" value="' +
+        exp.containerConfig.height +
+        '" ' +
+        (exp.containerConfig.useCustomSize ? '' : 'disabled') +
+        ' style="width:50%">' +
+        '</div>' +
+        '</div>' +
+        // Presets Row
+        '<div style="margin-bottom:10px;">' +
+        '<label style="font-size:11px; color:#64748b; margin-bottom:4px; display:block;">Предустановленные размеры</label>' +
+        '<div style="display:flex; gap:8px;">' +
+        (state.containerPresets && state.containerPresets.length > 0 ? state.containerPresets : [])
+          .map(function (p) {
+            var w = p.width;
+            var h = p.height;
+            var isActive =
+              !exp.containerConfig.useCustomSize &&
+              exp.containerConfig.width === w &&
+              exp.containerConfig.height === h;
+            var label = p.label || 'ш' + w + '*в' + h;
+            return (
+              '<div class="av-btn-toggle av-cnt-preset ' +
+              (isActive ? 'active' : '') +
+              '" data-w="' +
+              w +
+              '" data-h="' +
+              h +
+              '" style="padding:4px 8px; font-size:11px;">' +
+              label +
+              '</div>'
+            );
+          })
+          .join('') +
+        '</div>' +
+        '</div>' +
+        // Alignment Row
+        '<div>' +
+        '<label style="font-size:11px; color:#64748b; margin-bottom:4px; display:block;">Выравнивание контейнера</label>' +
+        '<div style="display:flex; gap:8px;">' +
+        [
+          { label: 'Лево', value: 'left' },
+          { label: 'Центр', value: 'center' },
+          { label: 'Право', value: 'right' },
+        ]
+          .map(function (a) {
+            return (
+              '<div class="av-btn-toggle av-cnt-align ' +
+              (exp.containerConfig.alignment === a.value ? 'active' : '') +
+              '" data-align="' +
+              a.value +
+              '" style="padding:4px 12px; font-size:11px;">' +
+              a.label +
+              '</div>'
+            );
+          })
+          .join('') +
+        '</div>' +
+        '</div>' + // end settings
+        '</div>' + // end container block
+        '</div>' + // end body
+        '<div class="av-export-footer">' +
+        '<button class="av-btn-secondary" id="av-export-back" style="padding:10px 20px; border:1px solid #cbd5e1; border-radius:6px; background:#fff; cursor:pointer; font-weight:600; color:#475569;">Вернуться к правке</button>' +
+        '<button class="av-btn-main" id="av-export-confirm" style="background:#2563eb; color:#fff; padding:10px 30px; border:1px solid #1d4ed8; border-radius:6px; cursor:pointer; font-weight:bold;">Вставить</button>' +
+        '</div>' +
+        '</div>' +
+        '</div>'
       );
     };
 
@@ -1205,7 +1406,7 @@
         var menuTwo = '';
         if (state.uploadMode === 'file')
           menuTwo =
-            '<div class="av-btn-main" id="av-btn-browse">Выбрать файл</div><input type="file" id="av-input-file" hidden accept="image/*">';
+            '<div class="av-btn-main" id="av-btn-browse">Загрузить картинку</div><input type="file" id="av-input-file" hidden accept="image/*">';
         else if (state.uploadMode === 'url')
           menuTwo =
             '<input type="text" class="av-input-text" id="av-input-url" placeholder="https://example.com/image.jpg"><div class="av-btn-main" id="av-btn-load-url">Загрузить</div>';
@@ -1234,6 +1435,55 @@
           '<textarea class="av-info-textarea" readonly style="flex:1; border:none; padding:10px; font-size:11px; background:#f8fafc;">' +
           state.logs.join('\n') +
           '</textarea>' +
+          '</div>' +
+          '</div>' +
+          infoBlock
+        );
+      }
+
+      if (state.currentSection === 'library') {
+        var libraryContent = '';
+        if (state.libraryLoading) {
+          libraryContent =
+            '<div style="flex:1; display:flex; align-items:center; justify-content:center; flex-direction:column; gap:15px; color:#64748b;">' +
+            '<div class="av-spinner"></div>' +
+            '<span>Загрузка библиотеки...</span>' +
+            '</div>';
+        } else if (state.libraryItems.length === 0) {
+          libraryContent =
+            '<div style="flex:1; display:flex; align-items:center; justify-content:center; color:#94a3b8; font-style:italic;">' +
+            'Библиотека пуста. Загрузите изображения, чтобы они появились здесь.' +
+            '</div>';
+        } else {
+          libraryContent = '<div class="av-library-grid">';
+          state.libraryItems.forEach(function (item) {
+            libraryContent +=
+              '<div class="av-library-item" data-url="' +
+              item.relativePath +
+              '">' +
+              '<img src="' +
+              (state.presetManager.baseUrl + item.relativePath) +
+              '" alt="' +
+              (item.originalName || 'image') +
+              '">' +
+              '<div class="av-library-item-name">' +
+              (item.originalName || 'Без имени') +
+              '</div>' +
+              '</div>';
+          });
+          libraryContent += '</div>';
+        }
+
+        return (
+          '<div class="av-menu-one">' +
+          '<span class="av-subnav-item active">Недавние загрузки</span>' +
+          '</div>' +
+          '<div class="av-menu-two">' +
+          '<button class="av-btn-main" id="av-btn-refresh-library" style="background:#475569;">Обновить список</button>' +
+          '</div>' +
+          '<div class="av-workspace">' +
+          '<div class="av-library-container scroll-custom" style="flex:1; padding:20px; background:#f1f5f9;">' +
+          libraryContent +
           '</div>' +
           '</div>' +
           infoBlock
@@ -1892,7 +2142,25 @@
         '.scroll-custom::-webkit-scrollbar { width: 6px; } ' +
         '.scroll-custom::-webkit-scrollbar-track { background: transparent; } ' +
         '.scroll-custom::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; } ' +
-        '.scroll-custom::-webkit-scrollbar-thumb:hover { background: #94a3b8; } ';
+        '.scroll-custom::-webkit-scrollbar-thumb:hover { background: #94a3b8; } ' +
+        '.av-export-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); display: flex; align-items: center; justify-content: center; z-index: 1000; backdrop-filter: blur(4px); } ' +
+        '.av-export-modal { background: #fff; width: 600px; border-radius: 16px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); display: flex; flex-direction: column; overflow: hidden; border: 1px solid #e2e8f0; } ' +
+        '.av-export-header { border-bottom: 1px solid #e2e8f0; padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; background: #f8fafc; } ' +
+        '.av-export-title { font-size: 18px; font-weight: 700; color: #1e293b; font-family: sans-serif; } ' +
+        '.av-export-body { padding: 24px; display: flex; gap: 24px; } ' +
+        '.av-export-preview-box { width: 180px; height: 180px; background: #f1f5f9; border-radius: 12px; display: flex; align-items: center; justify-content: center; overflow: hidden; border: 1px solid #e2e8f0; flex-shrink: 0; } ' +
+        '.av-export-form { flex: 1; display: flex; flex-direction: column; gap: 16px; } ' +
+        '.av-library-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px; } ' +
+        '.av-library-item { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; position: relative; } ' +
+        '.av-library-item:hover { transform: translateY(-3px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); border-color: #3b82f6; } ' +
+        '.av-library-item img { width: 100%; height: 140px; object-fit: cover; border-bottom: 1px solid #f1f5f9; } ' +
+        '.av-library-item-name { padding: 8px; font-size: 11px; color: #475569; font-family: sans-serif; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } ' +
+        '.av-spinner { width: 30px; height: 30px; border: 3px solid #e2e8f0; border-top: 3px solid #3b82f6; border-radius: 50%; animation: av-spin 1s linear infinite; } ' +
+        '@keyframes av-spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } } ' +
+        '.av-export-info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 8px; padding: 12px; background: #f1f5f9; border-radius: 8px; } ' +
+        '.av-export-info-item { display: flex; flex-direction: column; gap: 2px; } ' +
+        '.av-export-info-label { font-size: 10px; color: #64748b; text-transform: uppercase; font-weight: bold; } ' +
+        '.av-export-info-value { font-size: 12px; color: #1e293b; font-weight: 600; font-family: monospace; } ';
       document.head.appendChild(s);
     };
 
@@ -1987,6 +2255,29 @@
           color: '#000000',
         },
       };
+
+      this.exportState = {
+        isOpen: false,
+        fileName: '',
+        format: 'image/jpeg', // image/jpeg, image/png, image/webp
+        quality: 90,
+        estimatedSize: '0 KB',
+        finalDataUrl: null, // The processed image that will be exported
+        containerConfig: {
+          enabled: false,
+          useCustomSize: false,
+          width: 600,
+          height: 887,
+          alignment: 'center', // left, center, right
+        },
+      };
+
+      // Library State
+      this.libraryItems = [];
+      this.libraryLoading = false;
+
+      // Container Presets
+      this.containerPresets = [];
     }
 
     AvModal.prototype.addLog = function (msg) {
@@ -2002,12 +2293,86 @@
       }
     };
 
+    AvModal.prototype.loadLibrary = function () {
+      var self = this;
+      this.libraryLoading = true;
+      this.addLog('Fetching library data...');
+      this.render();
+
+      fetch(this.presetManager.baseUrl + '/api/simple-image/list', {
+        credentials: 'include',
+      })
+        .then(function (res) {
+          if (!res.ok) throw new Error('Library fetch failed: ' + res.status);
+          return res.json();
+        })
+        .then(function (data) {
+          self.libraryItems = data;
+          self.libraryLoading = false;
+          self.addLog('Library loaded: ' + data.length + ' items');
+          self.render();
+        })
+        .catch(function (err) {
+          self.addLog('Library Error: ' + err.message);
+          self.libraryLoading = false;
+          self.render();
+        });
+    };
+
+    AvModal.prototype.updateExportSize = function () {
+      var self = this;
+      var exp = this.exportState;
+      if (!exp.finalDataUrl) return;
+
+      // Convert DataURL to Blob to get real size
+      fetch(exp.finalDataUrl)
+        .then(function (res) {
+          return res.blob();
+        })
+        .then(function (blob) {
+          // If format is JPEG/WebP and quality is < 100, we might need a canvas cycle
+          // to get the REAL compressed size. But for now, let's use a simpler approach:
+          // re-draw to canvas with the target format and quality.
+          var img = new Image();
+          img.onload = function () {
+            var canvas = document.createElement('canvas');
+            canvas.width = img.width;
+            canvas.height = img.height;
+            var ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0);
+
+            var quality = exp.format === 'image/png' ? undefined : exp.quality / 100;
+            canvas.toBlob(
+              function (finalBlob) {
+                var size = finalBlob.size;
+                var kbs = (size / 1024).toFixed(2) + ' KB';
+                exp.estimatedSize = kbs;
+
+                var sizeEl = self.modal.querySelector('#av-exp-size');
+                if (sizeEl) sizeEl.innerText = kbs;
+              },
+              exp.format,
+              quality,
+            );
+          };
+          img.src = exp.finalDataUrl;
+        });
+    };
+
     AvModal.prototype.loadPresets = function () {
       var self = this;
-      return this.presetManager
-        .load()
-        .then(function (presets) {
-          self.addLog('Loaded ' + presets.length + ' presets from server');
+      return Promise.all([this.presetManager.load(), this.presetManager.loadContainerPresets()])
+        .then(function (results) {
+          var cropPresets = results[0];
+          var containerPresets = results[1];
+          self.containerPresets = containerPresets;
+          self.addLog(
+            'Loaded ' +
+              cropPresets.length +
+              ' crop presets, ' +
+              containerPresets.length +
+              ' container presets',
+          );
         })
         .catch(function (err) {
           self.addLog('Presets load error: ' + err.message);
@@ -2307,6 +2672,37 @@
       this.modal.onclick = function (e) {
         var t = e.target;
 
+        // --- EXPORT CONTAINER EVENTS ---
+        if (t.id === 'av-cnt-enabled') {
+          self.exportState.containerConfig.enabled = t.checked;
+          self.modal.querySelector('.av-export-modal').parentNode.outerHTML =
+            self.ui.renderExportModal(self);
+          return;
+        }
+        if (t.id === 'av-cnt-custom') {
+          self.exportState.containerConfig.useCustomSize = t.checked;
+          self.modal.querySelector('.av-export-modal').parentNode.outerHTML =
+            self.ui.renderExportModal(self);
+          return;
+        }
+        if (t.classList.contains('av-cnt-preset')) {
+          var w = parseInt(t.dataset.w);
+          var h = parseInt(t.dataset.h);
+          self.exportState.containerConfig.useCustomSize = false;
+          self.exportState.containerConfig.width = w;
+          self.exportState.containerConfig.height = h;
+          self.exportState.containerConfig.enabled = true;
+          self.modal.querySelector('.av-export-modal').parentNode.outerHTML =
+            self.ui.renderExportModal(self);
+          return;
+        }
+        if (t.classList.contains('av-cnt-align')) {
+          self.exportState.containerConfig.alignment = t.dataset.align;
+          self.modal.querySelector('.av-export-modal').parentNode.outerHTML =
+            self.ui.renderExportModal(self);
+          return;
+        }
+
         // Close
         if (t.closest('.av-modal-close')) return self.overlay.remove();
 
@@ -2314,6 +2710,9 @@
         var nav = t.closest('.av-nav-item');
         if (nav) {
           self.currentSection = nav.getAttribute('data-sec');
+          if (self.currentSection === 'library') {
+            self.loadLibrary();
+          }
           return self.render();
         }
 
@@ -2358,18 +2757,49 @@
           return;
         }
 
+        // --- REFRESH LIBRARY ---
+        if (t.id === 'av-btn-refresh-library') {
+          return self.loadLibrary();
+        }
+
+        // --- LIBRARY SELECTION ---
+        var libItem = t.closest('.av-library-item');
+        if (libItem) {
+          var relUrl = libItem.getAttribute('data-url');
+          if (relUrl) {
+            // Find item in libraryItems for dimensions
+            var itemData = self.libraryItems.find(function (i) {
+              return i.relativePath === relUrl;
+            });
+
+            self.loader.loadUrl(self.presetManager.baseUrl + relUrl).then(function (data) {
+              self.loadedImage = data.dataUrl;
+              self.fileInfo = data;
+              // If we have actual dims from DB, use them
+              if (itemData && itemData.width > 0) {
+                self.fileInfo.width = itemData.width;
+                self.fileInfo.height = itemData.height;
+              }
+              self.currentSection = 'upload'; // Return to upload view with the loaded image
+              self.addLog('Selected from library: ' + data.name);
+              self.render();
+            });
+          }
+          return;
+        }
+
         // --- INSERT BUTTON HANDLER ---
         if (t.id === 'av-btn-insert') {
           if (!self.loadedImage) return;
 
-          // 1. UI Feedback
-          var btn = t;
-          var originalText = btn.innerText;
-          btn.innerText = 'Загрузка...';
-          btn.style.opacity = '0.7';
-          btn.style.pointerEvents = 'none';
+          // Instead of immediate insert, prepare the Export Modal
+          var parts = self.fileInfo.name.split('.');
+          self.exportState.fileName =
+            parts.length > 1 ? parts.slice(0, -1).join('.') : self.fileInfo.name;
+          if (!self.exportState.fileName) self.exportState.fileName = 'image';
+          self.exportState.isOpen = true;
 
-          // 2. Prepare Canvas for initial processing (Frame, etc.)
+          // Generate the processed preview (Frame + Shadow)
           var canvas = document.createElement('canvas');
           var ctx = canvas.getContext('2d');
           var imgObj = new Image();
@@ -2379,7 +2809,6 @@
             canvas.height = imgObj.naturalHeight;
             ctx.drawImage(imgObj, 0, 0);
 
-            // Apply Frame if enabled
             if (self.frameConfig.enabled && self.frameManager) {
               var fm = new AvFrameManager(
                 {
@@ -2395,137 +2824,194 @@
             }
 
             var baseProcessedUrl = canvas.toDataURL('image/png');
+            self.exportState.finalWidth = canvas.width;
+            self.exportState.finalHeight = canvas.height;
 
-            // 3. Apply Shadow if enabled (Canvas Burning)
-            var finalStep;
             if (self.commonConfig.shadowConfig.enabled) {
-              finalStep = self.imageTools.applyShadow(
-                baseProcessedUrl,
-                self.commonConfig.shadowConfig,
-              );
+              self.imageTools
+                .applyShadow(baseProcessedUrl, self.commonConfig.shadowConfig)
+                .then(function (res) {
+                  self.exportState.finalDataUrl = res.dataUrl;
+                  self.exportState.finalWidth = res.width;
+                  self.exportState.finalHeight = res.height;
+                  self.render();
+                  self.updateExportSize();
+                });
             } else {
-              finalStep = Promise.resolve({ dataUrl: baseProcessedUrl });
+              self.exportState.finalDataUrl = baseProcessedUrl;
+              self.render();
+              self.updateExportSize();
             }
+          };
+          imgObj.src = self.loadedImage;
+          return;
+        }
 
-            finalStep
-              .then(function (finalResult) {
-                return self.uploadImage(finalResult.dataUrl);
-              })
-              .then(function (result) {
-                // 4. Construct HTML with Server URL (Aurora Image Format)
-                var imageUrl = result.imageUrl;
-                var imageId = result.imageId || 'img-' + Date.now();
+        // Export Modal Actions
+        if (t.id === 'av-export-cancel' || t.id === 'av-export-back') {
+          self.exportState.isOpen = false;
+          return self.render();
+        }
 
-                // Convert relative URL to absolute if needed
-                if (imageUrl.startsWith('/')) {
-                  imageUrl = 'https://localhost:7233' + imageUrl;
-                }
+        if (t.getAttribute('data-exp-format')) {
+          self.exportState.format = t.getAttribute('data-exp-format');
+          self.render();
+          self.updateExportSize();
+          return;
+        }
 
-                // Build <img> tag with aurora-image__img class
-                var escapeHtml = function (str) {
-                  return String(str)
-                    .replace(/&/g, '&amp;')
-                    .replace(/</g, '&lt;')
-                    .replace(/>/g, '&gt;')
-                    .replace(/"/g, '&quot;')
-                    .replace(/'/g, '&#039;');
-                };
+        if (t.id === 'av-export-confirm') {
+          // FINAL PROCESS AND UPLOAD
+          var exp = self.exportState;
+          var btn = t;
+          btn.innerText = 'Загрузка...';
+          btn.style.opacity = '0.7';
+          btn.style.pointerEvents = 'none';
 
-                var imgTag =
-                  '<img class="aurora-image__img" src="' +
-                  escapeHtml(imageUrl) +
+          // Final compression
+          var img = new Image();
+          img.onload = function () {
+            var canvas = document.createElement('canvas');
+            canvas.width = img.width;
+            canvas.height = img.height;
+            var ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0);
+
+            var quality = exp.format === 'image/png' ? undefined : exp.quality / 100;
+            var finalDataUrl = canvas.toDataURL(exp.format, quality);
+
+            self.uploadImage(finalDataUrl).then(function (result) {
+              // Construct HTML with Server URL
+              var imageUrl = result.imageUrl;
+              if (imageUrl.startsWith('/')) {
+                imageUrl = 'https://localhost:7233' + imageUrl;
+              }
+
+              var escapeHtml = function (str) {
+                return String(str)
+                  .replace(/&/g, '&amp;')
+                  .replace(/</g, '&lt;')
+                  .replace(/>/g, '&gt;')
+                  .replace(/"/g, '&quot;')
+                  .replace(/'/g, '&#039;');
+              };
+
+              // --- CONTAINER LOGIC ---
+              var useContainer = exp.containerConfig.enabled;
+              var imgStyle = 'max-width: 100%; height: auto; vertical-align: middle;';
+
+              if (useContainer) {
+                // Если контейнер включен, картинка должна вписываться
+                imgStyle =
+                  'max-width: 100%; max-height: 100%; object-fit: contain; vertical-align: middle;';
+              }
+
+              var imgTag =
+                '<img class="aurora-image__img" src="' +
+                escapeHtml(imageUrl) +
+                '"' +
+                (self.commonConfig.alt ? ' alt="' + escapeHtml(self.commonConfig.alt) + '"' : '') +
+                (self.commonConfig.title
+                  ? ' title="' + escapeHtml(self.commonConfig.title) + '"'
+                  : '') +
+                ' style="' +
+                imgStyle +
+                '">';
+
+              var imageContent = imgTag;
+              if (self.commonConfig.link && self.commonConfig.isClickable) {
+                var target = self.commonConfig.openInNewWindow
+                  ? ' target="_blank" rel="noopener noreferrer"'
+                  : '';
+                imageContent =
+                  '<a href="' +
+                  escapeHtml(self.commonConfig.link) +
                   '"' +
-                  (self.commonConfig.alt
-                    ? ' alt="' + escapeHtml(self.commonConfig.alt) + '"'
-                    : '') +
-                  (self.commonConfig.title
-                    ? ' title="' + escapeHtml(self.commonConfig.title) + '"'
-                    : '') +
-                  ' style="max-width: 100%; height: auto; vertical-align: middle;">';
+                  target +
+                  '>' +
+                  imgTag +
+                  '</a>';
+              }
 
-                // Wrap in link if needed
-                var imageContent = imgTag;
-                if (self.commonConfig.link && self.commonConfig.isClickable) {
-                  var target = self.commonConfig.openInNewWindow
-                    ? ' target="_blank" rel="noopener noreferrer"'
-                    : '';
-                  imageContent =
-                    '<a href="' +
-                    escapeHtml(self.commonConfig.link) +
-                    '"' +
-                    target +
-                    '>' +
-                    imgTag +
-                    '</a>';
-                }
+              var captionTag = '';
+              if (self.commonConfig.caption) {
+                captionTag =
+                  '<figcaption class="aurora-image__caption">' +
+                  escapeHtml(self.commonConfig.caption) +
+                  '</figcaption>';
+              }
 
-                // Build <figcaption>
-                var captionTag = '';
-                if (self.commonConfig.caption) {
-                  captionTag =
-                    '<figcaption class="aurora-image__caption">' +
-                    escapeHtml(self.commonConfig.caption) +
-                    '</figcaption>';
-                }
+              var alignment = useContainer
+                ? exp.containerConfig.alignment
+                : self.commonConfig.alignment || 'center';
+              var figureStyles = [];
 
-                // Build <figure> styles and attributes
-                var alignment = self.commonConfig.alignment || 'center';
-                var figureStyles = ['max-width: 100%'];
+              if (useContainer) {
+                // Fixed dimensions for container
+                figureStyles.push('width: ' + exp.containerConfig.width + 'px');
+                figureStyles.push('height: ' + exp.containerConfig.height + 'px');
+                figureStyles.push('overflow: hidden');
+                figureStyles.push('display: flex');
+                figureStyles.push('align-items: center');
+                figureStyles.push('justify-content: center');
 
-                if (alignment === 'left') {
-                  figureStyles.push('float: left', 'margin: 0 16px 8px 0');
-                } else if (alignment === 'right') {
+                // Alignment of the container itself
+                if (alignment === 'left') figureStyles.push('float: left', 'margin: 0 16px 8px 0');
+                else if (alignment === 'right')
                   figureStyles.push('float: right', 'margin: 0 0 8px 16px');
-                } else if (alignment === 'center') {
+                else if (alignment === 'center')
+                  figureStyles.push('margin-left: auto', 'margin-right: auto');
+              } else {
+                // Standard Logic
+                figureStyles.push('max-width: 100%');
+                if (alignment === 'left') figureStyles.push('float: left', 'margin: 0 16px 8px 0');
+                else if (alignment === 'right')
+                  figureStyles.push('float: right', 'margin: 0 0 8px 16px');
+                else if (alignment === 'center')
                   figureStyles.push('margin-left: auto', 'margin-right: auto', 'display: table');
-                }
 
-                // Apply Width
                 var dataWidth = self.commonConfig.width || 'Auto';
                 if (dataWidth === 'Auto') {
                   figureStyles.push('width: auto');
-                  // If centered and auto, display: table is good for shrinking to content
-                  if (alignment === 'center') {
-                    figureStyles.push('display: table');
-                  } else {
-                    figureStyles.push('display: inline-block');
-                  }
+                  if (alignment === 'center') figureStyles.push('display: table');
+                  else figureStyles.push('display: inline-block');
                 } else {
                   figureStyles.push('width: ' + dataWidth);
-                  if (alignment === 'center') {
-                    figureStyles.push('display: table');
-                  } else {
-                    figureStyles.push('display: block');
-                  }
+                  if (alignment === 'center') figureStyles.push('display: table');
+                  else figureStyles.push('display: block');
                 }
+              }
 
-                var imgHtml =
-                  '<figure class="aurora-image" data-image-id="' +
-                  escapeHtml(imageId) +
-                  '" data-align="' +
-                  alignment +
-                  '" data-width="' +
-                  escapeHtml(dataWidth) +
-                  '" style="' +
-                  figureStyles.join('; ') +
-                  '">' +
-                  imageContent +
-                  captionTag +
-                  '</figure>';
+              var finalHtml =
+                '<figure class="aurora-image" data-image-id="' +
+                escapeHtml(result.imageId) +
+                '" data-align="' +
+                escapeHtml(alignment) +
+                '" data-width="' +
+                escapeHtml(
+                  useContainer
+                    ? exp.containerConfig.width + 'px'
+                    : self.commonConfig.width || 'Auto',
+                ) +
+                '" style="' +
+                figureStyles.join('; ') +
+                '">' +
+                imageContent +
+                captionTag +
+                '</figure>';
 
-                // Insert into Editor
-                self.editor.insertContent(imgHtml);
-                self.overlay.remove();
-              })
-              .catch(function (err) {
-                console.error('Final Step Error:', err);
-                alert('Ошибка: ' + (err.message || err));
-                btn.innerText = originalText;
-                btn.style.opacity = '1';
-                btn.style.pointerEvents = 'auto';
-              });
+              self.editor.insertContent(finalHtml);
+              self.overlay.remove();
+
+              if (window.AvShowcaseComponent) {
+                window.AvShowcaseComponent.show({
+                  type: 'success',
+                  message: 'Изображение "' + exp.fileName + '" успешно вставлено!',
+                });
+              }
+            });
           };
-          imgObj.src = self.loadedImage;
+          img.src = exp.finalDataUrl;
           return;
         }
 
@@ -2766,13 +3252,15 @@
         var id = e.target.id;
         var val = parseInt(e.target.value);
 
-        // Skip validation for fields that allow 0 or negative values (watermark, frame, circle)
-        var isSpecial =
-          id.indexOf('av-wm-') === 0 ||
-          id.indexOf('av-frame-') === 0 ||
-          id.indexOf('av-circle-') === 0 ||
-          id.indexOf('av-set-') === 0;
-        if (!isSpecial) {
+        // Numeric validation only for specific numeric fields
+        var isNumericField =
+          id.indexOf('av-crop-') === 0 ||
+          id.indexOf('av-resize-') === 0 ||
+          id === 'av-wm-fontsize' ||
+          id === 'av-set-width-px' ||
+          id.indexOf('-quality') !== -1;
+
+        if (isNumericField) {
           if (isNaN(val) || val < 1) return;
         }
 
@@ -2965,6 +3453,19 @@
             if (self.frameManager) self.frameManager.draw(self.frameConfig);
           }
         }
+        // --- EXPORT INPUTS ---
+        if (id === 'av-exp-name') self.exportState.fileName = e.target.value;
+        if (id === 'av-exp-quality' || id === 'av-exp-quality-input') {
+          var val = parseInt(e.target.value) || 90;
+          if (val < 1) val = 1;
+          if (val > 100) val = 100;
+          self.exportState.quality = val;
+          if (self.modal.querySelector('#av-exp-quality'))
+            self.modal.querySelector('#av-exp-quality').value = val;
+          if (self.modal.querySelector('#av-exp-quality-input'))
+            self.modal.querySelector('#av-exp-quality-input').value = val;
+          self.updateExportSize();
+        }
         // --- SETTINGS INPUTS ---
         if (id === 'av-set-alt') self.commonConfig.alt = e.target.value;
         if (id === 'av-set-title') self.commonConfig.title = e.target.value;
@@ -3087,42 +3588,51 @@
     AvModal.prototype.uploadImage = function (dataUrl) {
       var self = this;
       return new Promise(function (resolve, reject) {
-        var base64Content = dataUrl.split(',')[1];
-        var mimeType = dataUrl.split(',')[0].split(':')[1].split(';')[0];
-        var extension = mimeType.split('/')[1] || 'png';
-        var fileName =
-          (self.fileInfo.name || 'image').split('.')[0] + '-' + Date.now() + '.' + extension;
-
-        var payload = {
-          FileName: fileName,
-          FileFormat: mimeType,
-          Base64Data: base64Content,
-        };
-
-        fetch('https://localhost:7233/api/editor/images/upload', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(payload),
-        })
-          .then(function (response) {
-            if (!response.ok) throw new Error('Upload failed: ' + response.statusText);
-            return response.json();
+        // Convert DataURL to Blob
+        fetch(dataUrl)
+          .then(function (res) {
+            return res.blob();
           })
-          .then(function (data) {
-            if (data.success) {
-              resolve({
-                imageUrl: data.imageUrl,
-                imageId: data.imageId || 'img-' + Date.now(),
+          .then(function (blob) {
+            var mimeType = blob.type;
+            var extension = mimeType.split('/')[1] || 'png';
+            if (extension === 'jpeg') extension = 'jpg';
+
+            var fileName = self.exportState.fileName || 'image';
+            if (fileName.indexOf('.') === -1) fileName += '.' + extension;
+
+            var formData = new FormData();
+            formData.append('image', blob, fileName);
+            formData.append('originalName', fileName);
+
+            console.log(
+              'AvImage: Sending upload request (with credentials) to:',
+              'https://localhost:7233/api/simple-image/upload',
+            );
+
+            fetch('https://localhost:7233/api/simple-image/upload', {
+              method: 'POST',
+              credentials: 'include', // Important for HttpOnly cookies
+              body: formData,
+            })
+              .then(function (response) {
+                if (!response.ok) throw new Error('Upload failed: ' + response.statusText);
+                return response.json();
+              })
+              .then(function (data) {
+                if (data.success) {
+                  resolve({
+                    imageUrl: data.imageUrl,
+                    imageId: data.imageId,
+                  });
+                } else {
+                  reject(data.message || 'Unknown upload error');
+                }
+              })
+              .catch(function (error) {
+                console.error('Upload Error:', error);
+                reject(error.message);
               });
-            } else {
-              reject(data.message || 'Unknown upload error');
-            }
-          })
-          .catch(function (error) {
-            console.error('Upload Error:', error);
-            reject(error.message);
           });
       });
     };
