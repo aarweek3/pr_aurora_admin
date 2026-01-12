@@ -13,7 +13,7 @@ import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { NzTabsModule } from 'ng-zorro-antd/tabs';
 import { firstValueFrom } from 'rxjs';
 
-import { ApiEndpoints } from '../../../../environments/api-endpoints';
+import { ApiEndpoints } from '@environments/api-endpoints';
 
 import { IconGetService } from '@core/services/icon/icon-get.service';
 import { IconLaboratoryService } from '@shared/services/icon-laboratory.service';
@@ -23,6 +23,11 @@ import { IconCategory as DbCategory } from '../../icon-category-manager/models/i
 import { IconCategoryService } from '../../icon-category-manager/services/icon-category.service';
 import { IconMetadata } from '../../ui-demo/old-control/icon-ui/icon-metadata.model';
 import { IconCategory } from '../../ui-demo/old-control/icon-ui/icon-registry';
+
+// Local interface extension to support count from backend
+interface IconCategoryWithCount extends IconCategory {
+  totalCount?: number;
+}
 
 @Component({
   selector: 'av-icon-manager',
@@ -103,7 +108,9 @@ import { IconCategory } from '../../ui-demo/old-control/icon-ui/icon-registry';
               >
                 <av-icon type="av_folder" [size]="18"></av-icon>
                 <span>{{ cat.category }}</span>
-                <span class="count">{{ cat.icons.length }}</span>
+                <span class="count">{{
+                  cat.totalCount !== undefined ? cat.totalCount : cat.icons.length
+                }}</span>
               </div>
               }
             </div>
@@ -1049,15 +1056,61 @@ import { IconCategory } from '../../ui-demo/old-control/icon-ui/icon-registry';
                 (ngModelChange)="uploadCategory.set($event)"
                 style="width: 100%;"
               >
-                > @for (cat of dbCategories(); track cat.id) {
+                @for (cat of dbCategories(); track cat.id) {
                 <nz-option [nzValue]="cat.folderName" [nzLabel]="cat.displayName"></nz-option>
                 }
               </nz-select>
             </div>
+
+            <!-- SVG Input Source Tabs -->
             <div>
-              <label style="display: block; margin-bottom: 8px; font-weight: 600;">Файл SVG</label>
-              <input type="file" (change)="handleFileUpload($event)" accept=".svg" />
+              <label style="display: block; margin-bottom: 8px; font-weight: 600;"
+                >Источник иконки</label
+              >
+              <nz-tabset nzType="card" [nzSelectedIndex]="0">
+                <nz-tab nzTitle="Файл">
+                  <div
+                    style="padding: 16px; border: 1px dashed #cbd5e1; border-radius: 8px; background: #f8fafc; text-align: center;"
+                  >
+                    <input type="file" (change)="handleFileUpload($event)" accept=".svg" />
+                    <p style="margin-top: 8px; margin-bottom: 0; color: #64748b; font-size: 12px;">
+                      Выбор файла автоматически заполнит код для предпросмотра.
+                    </p>
+                  </div>
+                </nz-tab>
+                <nz-tab nzTitle="SVG Код">
+                  <textarea
+                    nz-input
+                    rows="6"
+                    [ngModel]="uploadSvgCode()"
+                    (ngModelChange)="uploadSvgCode.set($event)"
+                    placeholder="<svg...></svg>"
+                    style="font-family: 'Fira Code', monospace; font-size: 11px; color: #334155;"
+                  >
+                  </textarea>
+                </nz-tab>
+              </nz-tabset>
             </div>
+
+            <!-- Live Preview -->
+            @if (uploadSvgCode()) {
+            <div
+              style="margin-top: 0; padding: 16px; background: #f0fdf4; border-radius: 8px; border: 1px solid #bbf7d0; display: flex; align-items: center; gap: 24px;"
+            >
+              <div
+                style="width: 64px; height: 64px; background: white; border-radius: 8px; border: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: center; color: #1e293b;"
+                [innerHTML]="uploadPreview()"
+              ></div>
+              <div>
+                <div
+                  style="font-size: 11px; font-weight: 700; color: #166534; text-transform: uppercase;"
+                >
+                  Предпросмотр
+                </div>
+                <div style="font-size: 13px; color: #14532d;">Иконка готова к загрузке</div>
+              </div>
+            </div>
+            }
           </div>
         </ng-container>
       </nz-modal>
@@ -2789,7 +2842,10 @@ export class IconManagerComponent {
   isUploadModalOpen = signal(false);
   uploadCategory = signal('general');
   uploadName = signal('');
-  uploadFileContent = signal<string | null>(null);
+  uploadSvgCode = signal('');
+  uploadPreview = computed(() =>
+    this.sanitizer.bypassSecurityTrustHtml(this.uploadSvgCode() || ''),
+  );
 
   // Bulk Upload Signals
   isBulkUploadModalOpen = signal(false);
@@ -2852,7 +2908,7 @@ export class IconManagerComponent {
   private loadedCategories = new Set<string>();
 
   // Static/Computed Data
-  categories = signal<IconCategory[]>([]);
+  categories = signal<IconCategoryWithCount[]>([]);
 
   constructor() {
     // this.loadIcons(); // Disabled initial load as per requirement
@@ -2874,9 +2930,10 @@ export class IconManagerComponent {
         this.dbCategories.set(res.data);
 
         // Initialize categories for sidebar with empty icon lists
-        const initialCats: IconCategory[] = res.data.map((c: any) => ({
+        const initialCats: IconCategoryWithCount[] = res.data.map((c: any) => ({
           category: c.displayName || c.folderName || c.name || 'Unnamed',
           icons: [],
+          totalCount: c.iconCount || 0,
         }));
         this.categories.set(initialCats);
         this.isLoading.set(false);
@@ -3453,16 +3510,18 @@ export class IconManagerComponent {
   onUploadClick() {
     this.isUploadModalOpen.set(true);
     this.uploadName.set('');
-    this.uploadFileContent.set(null);
+    this.uploadSvgCode.set('');
   }
 
   handleFileUpload(event: any) {
     const file = event.target.files[0];
     if (file) {
-      this.uploadName.set(file.name.replace('.svg', ''));
+      if (!this.uploadName()) {
+        this.uploadName.set(file.name.replace('.svg', ''));
+      }
       const reader = new FileReader();
       reader.onload = (e: any) => {
-        this.uploadFileContent.set(e.target.result);
+        this.uploadSvgCode.set(e.target.result);
       };
       reader.readAsText(file);
     }
@@ -3471,7 +3530,7 @@ export class IconManagerComponent {
   confirmUpload() {
     const name = this.uploadName();
     const category = this.uploadCategory();
-    const content = this.uploadFileContent();
+    const content = this.uploadSvgCode();
 
     if (!name || !category || !content) {
       this.showToast('⚠️ Заполните все поля и выберите файл');

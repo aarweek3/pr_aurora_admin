@@ -8,6 +8,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { ApiEndpoints } from '@environments/api-endpoints';
 import { NzAvatarModule } from 'ng-zorro-antd/avatar';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
@@ -18,7 +19,6 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzTagModule } from 'ng-zorro-antd/tag';
 import { NzTypographyModule } from 'ng-zorro-antd/typography';
 import { NzUploadFile, NzUploadModule } from 'ng-zorro-antd/upload';
-import { ApiEndpoints } from '../../../../../../environments/api-endpoints';
 import { AuthService } from '../../../../services/auth.service';
 
 @Component({

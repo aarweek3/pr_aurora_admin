@@ -1583,6 +1583,21 @@ export const ICON_REGISTRY: IconCategory[] = [
     "category": "Редактор Aurora",
     "icons": [
       {
+        "name": "av_align_image_right",
+        "type": "Редактор Aurora/av_align_image_right",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_align_image_center",
+        "type": "Редактор Aurora/av_align_image_center",
+        "category": "Редактор Aurora"
+      },
+      {
+        "name": "av_align_image_left",
+        "type": "Редактор Aurora/av_align_image_left",
+        "category": "Редактор Aurora"
+      },
+      {
         "name": "av_e_award",
         "type": "Редактор Aurora/av_e_award",
         "category": "Редактор Aurora"

@@ -55,10 +55,10 @@ export class AvTinymceControlComponent implements OnInit, OnDestroy, ControlValu
   @Input() height: number = 400;
   @Input() placeholder: string = '';
   @Input() plugins: string =
-    'accordion advlist anchor autolink autoresize autosave charmap code codesample directionality emoticons fullscreen help image importcss insertdatetime letterspacing footnotes av-youtube av-image link lists media nonbreaking pagebreak preview quickbars save searchreplace table visualblocks visualchars wordcount';
+    'accordion advlist anchor autolink autoresize autosave charmap code codesample directionality emoticons fullscreen help image importcss insertdatetime letterspacing footnotes av-youtube av-image av-align-image av-image-wrapping av-image-toolbar av-image-seo av-image-link av-image-shadow link lists media nonbreaking pagebreak preview quickbars save searchreplace table visualblocks visualchars wordcount';
   @Input() toolbar: string | string[] = [
     'letterspacing | undo redo code | accordion blocks fontfamily fontsize lineheight | bold italic underline strikethrough | forecolor backcolor',
-    'alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link av-image-text av-image image media table | av-youtube charmap emoticons codesample nonbreaking footnotes | hr blockquote subscript superscript | removeformat',
+    'alignleft aligncenter alignright alignjustify | image-align-left image-align-center image-align-right | bullist numlist outdent indent | link av-image-text av-image av-image-wrapping av-image-shadow image media table | av-youtube charmap emoticons codesample nonbreaking footnotes | hr blockquote subscript superscript | removeformat',
     'searchreplace fullscreen preview | save restoredraft pagebreak anchor insertdatetime | visualblocks visualchars wordcount | ltr rtl | help',
   ];
 
@@ -146,8 +146,16 @@ export class AvTinymceControlComponent implements OnInit, OnDestroy, ControlValu
         footnotes: '/assets/tinymce/plugins/footnotes/plugin.js',
         'av-youtube': '/assets/tinymce/plugins/av-youtube/plugin.js',
         'av-image': '/assets/tinymce/plugins/av-image/plugin.js',
+        'av-align-image': '/assets/tinymce/plugins/av-align-image/plugin.js',
+        'av-image-wrapping': '/assets/tinymce/plugins/av-image-wrapping/plugin.js',
+        'av-image-toolbar': '/assets/tinymce/plugins/av-image-toolbar/plugin.js',
+        'av-image-seo': '/assets/tinymce/plugins/av-image-seo/plugin.js',
+        'av-image-link': '/assets/tinymce/plugins/av-image-link/plugin.js',
+        'av-image-shadow': '/assets/tinymce/plugins/av-image-shadow/plugin.js',
       },
       toolbar: this.toolbar,
+      image_context_toolbar: false,
+      quickbars_image_toolbar: false,
       content_style: 'body { font-family: Arial, sans-serif; font-size: 14px; }',
       setup: (editor: any) => {
         this.editor = editor;

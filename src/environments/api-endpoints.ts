@@ -1,16 +1,12 @@
-// src\environments\api-endpoints.ts
 /**
  * Централизованная конфигурация всех API endpoints
  */
-
 import { environment } from './environment';
 
 export class ApiEndpoints {
-  //private static readonly BASE_URL = environment.apiUrl;
   private static readonly BASE_URL = environment.api.baseUrl;
 
-  // Role
-  // Добавьте в ApiEndpoints класс:
+  // Role endpoints
   static readonly ROLES = {
     BASE: `${this.BASE_URL}/roles`,
     BY_ID: (id: string) => `${this.BASE_URL}/roles/${id}`,
@@ -42,7 +38,7 @@ export class ApiEndpoints {
     REVOKE_SESSION: (id: number) => `${this.BASE_URL}/Auth/sessions/${id}/revoke`,
   };
 
-  // Password endpoints (отдельный контроллер)
+  // Password endpoints
   static readonly PASSWORD = {
     FORGOT: `${this.BASE_URL}/password/forgot-password`,
     RESET: `${this.BASE_URL}/password/reset-password`,
@@ -141,37 +137,50 @@ export class ApiEndpoints {
     STATUS: (id: number) => `${this.BASE_URL}/v1/languages-app/${id}/status`,
   };
 
-  // Images endpoints
+  // Images General
   static readonly IMAGES = {
     UPLOAD_SIMPLE: `${this.BASE_URL}/images/upload-simple`,
     UPLOADS_PATH: `${this.BASE_URL}/uploads`,
     GET_BY_PATH: (relativePath: string) => `${this.BASE_URL}/uploads/${relativePath}`,
   };
 
-  // Images configuration
+  // Image Studio & Processing
+  static readonly IMAGE_STUDIO = {
+    SAVE: `${this.BASE_URL}/av-image-studio/save`,
+    PROXY_IMAGE: `${this.BASE_URL}/av-image-studio/proxy-image`,
+  };
+
+  static readonly ADVANCED_IMAGES = {
+    SAVE: `${this.BASE_URL}/advanced-image/save`,
+    LOAD: (id: string) => `${this.BASE_URL}/advanced-image/load/${id}`,
+    DELETE: (id: string) => `${this.BASE_URL}/advanced-image/delete/${id}`,
+    LIST: `${this.BASE_URL}/advanced-image/list`,
+    PROXY_IMAGE: `${this.BASE_URL}/advanced-image/proxy-image`,
+  };
+
+  static readonly EDITOR_IMAGES = {
+    UPLOAD: `${this.BASE_URL}/editor/images/upload`,
+    VALIDATE: `${this.BASE_URL}/editor/images/validate`,
+    METADATA: `${this.BASE_URL}/editor/images/metadata`,
+    CONFIG: `${this.BASE_URL}/editor/images/config`,
+    SUPPORTED_FORMATS: `${this.BASE_URL}/editor/images/supported-formats`,
+    HEALTH: `${this.BASE_URL}/editor/images/health`,
+    DELETE: (filename: string) => `${this.BASE_URL}/editor/images/${encodeURIComponent(filename)}`,
+    CLEANUP: `${this.BASE_URL}/editor/images/cleanup`,
+  };
+
+  // Common Configs
   static readonly IMAGES_CONFIG = {
-    MAX_FILE_SIZE: 5 * 1024 * 1024, // 5MB
+    MAX_FILE_SIZE: 5 * 1024 * 1024,
     ALLOWED_TYPES: ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'],
     CROP_SIZES: [
       { name: 'Квадрат 300x300', width: 300, height: 300 },
       { name: 'Баннер 800x200', width: 800, height: 200 },
       { name: 'Пост 600x400', width: 600, height: 400 },
       { name: 'Аватар 150x150', width: 150, height: 150 },
-      { name: 'Широкий 1200x300', width: 1200, height: 300 },
-      { name: 'Вертикальный 400x600', width: 400, height: 600 },
-      { name: 'Карточка 320x240', width: 320, height: 240 },
     ],
   };
 
-  // Advanced Images endpoints
-  static readonly ADVANCED_IMAGES = {
-    SAVE: `${this.BASE_URL}/advanced-image/save`,
-    LOAD: (id: string) => `${this.BASE_URL}/advanced-image/load/${id}`,
-    DELETE: (id: string) => `${this.BASE_URL}/advanced-image/delete/${id}`,
-    LIST: `${this.BASE_URL}/advanced-image/list`,
-  };
-
-  // TinyMCE configuration
   static readonly TINYMCE_CONFIG = {
     DEBUG_ENABLED: environment.production ? false : true,
     DEBUG_PREFIX: '[TOTO-PLUGIN]',
@@ -180,16 +189,32 @@ export class ApiEndpoints {
     BRANDING: false,
   };
 
-  // Fallback URLs для TinyMCE (когда глобальная конфигурация недоступна)
-  static readonly TINYMCE_FALLBACK = {
-    UPLOAD_SIMPLE: 'https://localhost:7233/api/images/upload-simple',
-    UPLOADS_PATH: 'https://localhost:7233/uploads',
-    BASE_URL: 'https://localhost:7233',
-  };
-
   /**
-   * Проверяет, является ли URL auth endpoint'ом
+   * Утилитный метод для получения URL изображения
    */
+  static getImageUrl(relativePath: string): string {
+    if (!relativePath) return '';
+    if (relativePath.startsWith('http')) return relativePath;
+
+    // Получаем базовый URL хоста (убираем /api и лишние слеши в конце)
+    const host = this.BASE_URL.split('/api')[0];
+
+    // Убеждаемся, что относительный путь начинается со слеша
+    const cleanPath = relativePath.startsWith('/') ? relativePath : `/${relativePath}`;
+
+    // Если путь уже содержит /uploads/, просто склеиваем
+    if (cleanPath.includes('/uploads/')) {
+      return `${host}${cleanPath}`;
+    }
+
+    // По умолчанию для старого формата (images/...)
+    return `${host}/uploads/images${cleanPath}`;
+  }
+
+  static getFullUrl(path: string): string {
+    return `${this.BASE_URL}${path.startsWith('/') ? '' : '/'}${path}`;
+  }
+
   static isAuthEndpoint(url: string): boolean {
     const lowerUrl = url.toLowerCase();
     return (
@@ -199,66 +224,14 @@ export class ApiEndpoints {
       lowerUrl.includes('/password/')
     );
   }
-
-  /**
-   * Получает полный URL для относительного пути
-   */
-  static getFullUrl(relativePath: string): string {
-    return `${this.BASE_URL}${relativePath}`;
-  }
-
-  /**
-   * Получает fallback URL для TinyMCE конфигурации
-   */
-  static getTinyMCEFallbackUploadUrl(): string {
-    return this.TINYMCE_FALLBACK.UPLOAD_SIMPLE;
-  }
-
-  /**
-   * Получает fallback путь для загруженных файлов TinyMCE
-   */
-  static getTinyMCEFallbackUploadsPath(): string {
-    return this.TINYMCE_FALLBACK.UPLOADS_PATH;
-  }
-
-  /**
-   * Формирует правильный URL изображения в зависимости от структуры relativePath
-   * @param relativePath - путь, который возвращает сервер
-   * @returns полный URL изображения
-   */
-  static getImageUrl(relativePath: string): string {
-    // Если relativePath уже содержит 'images/', используем базовый uploads путь
-    if (relativePath.startsWith('images/')) {
-      return `${this.BASE_URL}/uploads/${relativePath}`;
-    }
-
-    // Если relativePath содержит только имя файла, используем полный путь с images
-    return `${this.BASE_URL}/uploads/images/${relativePath}`;
-  }
-
-  /**
-   * Обновляет fallback URL в зависимости от текущей среды
-   * Полезно для переключения между dev/prod
-   */
-  static updateTinyMCEFallbackUrls(customBaseUrl?: string): void {
-    const baseUrl = customBaseUrl || this.BASE_URL;
-
-    // Обновляем fallback значения
-    (this.TINYMCE_FALLBACK as any).UPLOAD_SIMPLE = `${baseUrl}/api/images/upload-simple`;
-    (this.TINYMCE_FALLBACK as any).UPLOADS_PATH = `${baseUrl}/uploads`;
-    (this.TINYMCE_FALLBACK as any).BASE_URL = baseUrl;
-  }
 }
 
-// // Экспорт констант для хранения токенов
-// Экспорт констант для хранения токенов
 export const STORAGE_KEYS = {
   ACCESS_TOKEN: environment.auth.tokenKey,
   REFRESH_TOKEN: environment.auth.refreshTokenKey,
   USER_DATA: 'user_data',
 };
 
-// Экспорт настроек пагинации
 export const PAGINATION_DEFAULTS = {
   PAGE_NUMBER: 1,
   PAGE_SIZE: 20,

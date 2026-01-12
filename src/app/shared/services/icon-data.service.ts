@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject, signal } from '@angular/core';
+import { ApiEndpoints } from '@environments/api-endpoints';
 import { Observable, of } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
-import { ApiEndpoints } from '../../../environments/api-endpoints';
 import { AvIconCategory } from '../../pages/ui-demo/old-control/icon-ui/icon-metadata.model';
 
 @Injectable({

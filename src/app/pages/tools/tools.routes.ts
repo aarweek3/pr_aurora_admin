@@ -12,11 +12,6 @@ export const TOOLS_ROUTES: Routes = [
       import('./icon-manager/icon-manager.component').then((m) => m.IconManagerComponent),
   },
   {
-    path: 'aurora-editor',
-    loadComponent: () =>
-      import('./editor-demo/editor-demo.component').then((m) => m.EditorDemoComponent),
-  },
-  {
     path: 'rename-all',
     loadComponent: () =>
       import('./rename-all/rename-all.component').then((m) => m.RenameAllComponent),
@@ -59,6 +54,25 @@ export const TOOLS_ROUTES: Routes = [
     loadComponent: () =>
       import('../../../assets/tests/test-tinymce/test-tinymce.component').then(
         (m) => m.TestTinymceComponent,
+      ),
+  },
+  {
+    path: 'test-av-image',
+    loadComponent: () =>
+      import('./test-av-image/test-av-image.component').then((m) => m.TestAvImageComponent),
+  },
+  {
+    path: 'test-layout',
+    loadComponent: () =>
+      import('./test-layout-debug/test-layout-debug.component').then(
+        (m) => m.TestLayoutDebugComponent,
+      ),
+  },
+  {
+    path: 'test-image-studio',
+    loadComponent: () =>
+      import('./test-image-studio/test-image-studio.component').then(
+        (m) => m.TestImageStudioComponent,
       ),
   },
 ];

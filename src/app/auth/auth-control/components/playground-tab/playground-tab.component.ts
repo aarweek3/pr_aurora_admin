@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { ApiEndpoints } from '@environments/api-endpoints';
 import { LoggerConsoleService } from '@shared/logger-console/services/logger-console.service';
 import { NzAlertModule } from 'ng-zorro-antd/alert';
 import { NzButtonModule } from 'ng-zorro-antd/button';
@@ -21,7 +22,6 @@ import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { NzTabsModule } from 'ng-zorro-antd/tabs';
 import { NzTagModule } from 'ng-zorro-antd/tag';
 import { finalize } from 'rxjs/operators';
-import { ApiEndpoints } from '../../../../../environments/api-endpoints';
 
 interface ApiEndpoint {
   label: string;

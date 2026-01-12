@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
+import { ApiEndpoints } from '@environments/api-endpoints';
 import { Observable } from 'rxjs';
-import { ApiEndpoints } from '../../../environments/api-endpoints';
 import { AvIconCategory } from '../../pages/ui-demo/old-control/icon-ui/icon-metadata.model';
 
 @Injectable({

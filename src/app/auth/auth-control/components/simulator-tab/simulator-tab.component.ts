@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component, inject, signal } from '@angular/core';
+import { ApiEndpoints } from '@environments/api-endpoints';
 import { LoggerConsoleService } from '@shared/logger-console/services/logger-console.service';
 import { NzAlertModule } from 'ng-zorro-antd/alert';
 import { NzButtonModule } from 'ng-zorro-antd/button';
@@ -17,7 +18,6 @@ import { NzTimelineModule } from 'ng-zorro-antd/timeline';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 import { forkJoin, of } from 'rxjs';
 import { catchError, finalize, tap } from 'rxjs/operators';
-import { ApiEndpoints } from '../../../../../environments/api-endpoints';
 import { AuthService } from '../../../services/auth.service';
 import { RequestTraceService } from '../../../services/request-trace.service';
 import { TokenService } from '../../../services/token.service';

@@ -2,9 +2,9 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
+import { ApiEndpoints, STORAGE_KEYS } from '@environments/api-endpoints';
 import { LoggerConsoleService } from '@shared/logger-console/services/logger-console.service';
 import { Observable, catchError, of, tap, throwError } from 'rxjs';
-import { ApiEndpoints, STORAGE_KEYS } from '../../../environments/api-endpoints';
 import {
   ApiResponse,
   AuthResponseDto,

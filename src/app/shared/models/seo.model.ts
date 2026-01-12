@@ -1,0 +1,31 @@
+export interface SeoDataDto {
+  id?: number;
+  metaTitle?: string;
+  metaDescription?: string;
+  metaKeywords?: string;
+  urlSlug?: string;
+  canonicalUrl?: string;
+  ogTitle?: string;
+  ogDescription?: string;
+  ogImage?: string;
+  ogType?: string;
+  ogUrl?: string;
+  twitterCard?: string;
+  twitterTitle?: string;
+  twitterDescription?: string;
+  twitterImage?: string;
+  imageUrl?: string;
+  imageAltText?: string;
+  imageCaption?: string;
+  schemaType?: string;
+  schemaJsonLd?: string;
+  authorName?: string;
+  publisherName?: string;
+  publishedDate?: Date | string | null;
+  articleSection?: string;
+  noIndex: boolean;
+  noFollow: boolean;
+  priority?: number;
+  region?: string;
+  optimizationScore?: number;
+}

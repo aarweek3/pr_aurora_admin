@@ -80,15 +80,17 @@ export class TinymceEditorComponent implements AfterViewInit, OnDestroy {
         'wordcount',
         'footnotes',
         'av-youtube',
+        'av-align-image',
       ],
       external_plugins: {
         letterspacing: '/assets/tinymce/plugins/letterspacing/plugin.js',
         footnotes: '/assets/tinymce/plugins/footnotes/plugin.js',
         'av-youtube': '/assets/tinymce/plugins/av-youtube/plugin.js',
+        'av-align-image': '/assets/tinymce/plugins/av-align-image/plugin.js',
       },
       toolbar: [
         'letterspacing | undo redo code | accordion blocks fontfamily fontsize lineheight | bold italic underline strikethrough | forecolor backcolor',
-        'alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media table | av-youtube charmap emoticons codesample nonbreaking footnotes | hr blockquote subscript superscript | removeformat',
+        'alignleft aligncenter alignright alignjustify | image-align-left image-align-center image-align-right | bullist numlist outdent indent | link image media table | av-youtube charmap emoticons codesample nonbreaking footnotes | hr blockquote subscript superscript | removeformat',
         'searchreplace fullscreen preview | save restoredraft pagebreak anchor insertdatetime | visualblocks visualchars wordcount | ltr rtl | help',
       ],
       setup: (editor: any) => {

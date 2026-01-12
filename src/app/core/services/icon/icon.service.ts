@@ -4,7 +4,7 @@ import { Observable, of, throwError } from 'rxjs';
 import { catchError, delay, map, shareReplay, tap } from 'rxjs/operators';
 
 import { HARDCODED_FLAGS } from '@assets/languageApp/config/language-flags.const';
-import { ApiEndpoints } from '../../../../environments/api-endpoints';
+import { ApiEndpoints } from '@environments/api-endpoints';
 
 interface IconCategory {
   category: string;

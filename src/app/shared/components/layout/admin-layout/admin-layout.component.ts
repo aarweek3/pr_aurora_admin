@@ -114,7 +114,7 @@ import { RightPanelComponent } from '../right-panel/right-panel.component';
         overflow-y: auto;
         overflow-x: hidden;
         background: transparent; // Убираем серый фон (#f0f2f5)
-        padding: 0; // Убираем принудительный отступ 24px
+        padding: 24px 24px 24px 32px; // Отступы: сверху, справа, снизу, слева (больше слева от sidebar)
       }
 
       .admin-layout__right-panel {
@@ -160,11 +160,15 @@ import { RightPanelComponent } from '../right-panel/right-panel.component';
           z-index: 200;
           box-shadow: 2px 0 8px rgba(0, 0, 0, 0.15);
         }
+
+        .admin-layout__main {
+          padding: 20px 20px 20px 24px; // Меньшие отступы на планшетах
+        }
       }
 
       @media (max-width: 768px) {
         .admin-layout__main {
-          padding: 16px;
+          padding: 16px; // На мобильных равномерные отступы, так как sidebar скрыт
         }
 
         .admin-layout__right-panel {

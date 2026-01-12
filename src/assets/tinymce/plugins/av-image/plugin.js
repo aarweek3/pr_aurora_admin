@@ -1,3 +1,99 @@
+/**
+ * Aurora Image Editor Plugin for TinyMCE
+ * Advanced image editing capabilities with export functionality
+ *
+ * КЛАССЫ И ОСНОВНЫЕ МЕТОДЫ:
+ *
+ * AvAssets (83-101)
+ *   - getLockSVG(isLocked) - SVG иконка замка (закрытый/открытый)
+ *   - fallbackIcon - путь к иконке по умолчанию
+ *
+ * AvLoader (103-157)
+ *   - loadFile(file) - загрузка файла через FileReader
+ *   - loadUrl(url) - загрузка изображения по URL с CORS
+ *
+ * AvPresetManager (160-199)
+ *   - load() - загрузка пресетов из /configs/image-presets.json
+ *   - loadContainerPresets() - загрузка пресетов контейнеров
+ *
+ * AvExportModal (202-338)
+ *   - render() - создание HTML структуры экспорта
+ *   - refresh() - обновление модального окна экспорта
+ *   - bindEvents() - привязка событий
+ *   - handleClick(target, event) - обработка кликов
+ *
+ * AvImageTools (341-569)
+ *   - resize(dataUrl, w, h) - изменение размера
+ *   - rotate(dataUrl, angle) - поворот изображения
+ *   - flip(dataUrl, direction) - отражение (horizontal/vertical)
+ *   - getRenderedImageRect(imgElement) - получение размеров отрендеренного изображения
+ *   - applyFrame(dataUrl, cfg) - применение рамки
+ *   - drawRoundedRect(ctx, x, y, w, h, radius) - рисование скругленного прямоугольника
+ *   - applyShadow(dataUrl, cfg) - применение тени
+ *
+ * AvWatermarkManager (572-670)
+ *   - draw(config) - отрисовка водяного знака
+ *   - clear() - очистка overlay
+ *
+ * AvCropManager (673-1047)
+ *   - init() - инициализация обрезки
+ *   - draw() - отрисовка области с ручками
+ *   - drawHandle(ctx, x, y) - рисование ручки управления
+ *   - setShowGrid(show) - включение/выключение сетки
+ *   - toggleProportional() - переключение пропорционального режима
+ *   - isProportional() - проверка пропорционального режима
+ *   - getCropDimensions() - получение размеров области обрезки
+ *   - setTargetSize(w, h) - установка целевого размера
+ *   - initInteraction(callback) - инициализация интерактивности
+ *   - getHandleAtPoint(x, y) - определение ручки в точке
+ *   - isPointInside(x, y) - проверка точки внутри области
+ *   - getCroppedImage() - получение обрезанного изображения
+ *   - destroy() - освобождение ресурсов
+ *   - Mouse events: onMouseDown/Move/Up
+ *
+ * AvCircleManager (1050-1294)
+ *   - init() - инициализация круглой обрезки
+ *   - draw() - отрисовка круглой области
+ *   - drawHandle(ctx, x, y) - рисование ручки управления
+ *   - getCroppedImage() - круглое изображение с прозрачностью
+ *   - destroy() - освобождение ресурсов
+ *   - Mouse events: onMouseDown/Move/Up
+ *
+ * AvFrameManager (1222-1294)
+ *   - draw(cfg) - отрисовка декоративной рамки
+ *   - drawRoundedRect(ctx, x, y, w, h, radius) - рисование скругленного прямоугольника
+ *
+ * AvUIManager (1297-2199)
+ *   - renderLayout(state, presets) - основная структура UI
+ *   - renderContent(state, presets) - содержимое табов
+ *   - renderPresetCard(preset, index) - создание карточки пресета
+ *   - injectStyles() - внедрение CSS стилей
+ *
+ * AvModal (2202-3710) - ОСНОВНОЙ КЛАСС
+ *   Создание и управление:
+ *   - create() - создание модального окна
+ *   - render() - отрисовка содержимого
+ *   - addLog(msg) - добавление сообщения в лог
+ *   - loadLibrary() - загрузка внешних библиотек
+ *   - updateExportSize() - обновление размеров экспорта
+ *   - loadPresets() - загрузка пресетов
+ *   - updateIconsUI() - обновление иконок в UI
+ *   - updatePosition() - обновление позиционирования
+ *
+ *   Overlay управление:
+ *   - updateCropOverlay() - overlay для обрезки
+ *   - updateWatermarkOverlay() - overlay для водяных знаков
+ *   - updateCircleOverlay() - overlay для круглой обрезки
+ *   - updateFrameOverlay() - overlay для рамок
+ *
+ *   Обработка файлов:
+ *   - initEvents() - все обработчики событий (1000+ строк)
+ *   - processFile(file, source) - обработка загруженного файла
+ *   - uploadImage(dataUrl) - загрузка на сервер
+ *
+ * РЕГИСТРАЦИЯ: 'av-image-text' кнопка "Вставить изображение"
+ * РАЗМЕР: 3710 строк, полноценный редактор изображений
+ */
 (function () {
   'use strict';
 
@@ -43,7 +139,7 @@
             resolve({
               dataUrl: dataUrl,
               name: file.name,
-              size: (file.size / 1024).toFixed(1) + ' KB',
+              size: file.size,
               width: img.naturalWidth,
               height: img.naturalHeight,
               type: file.type,
@@ -63,21 +159,48 @@
 
     AvLoader.prototype.loadUrl = function (url) {
       return new Promise(function (resolve, reject) {
-        var img = new Image();
-        img.onload = function () {
-          resolve({
-            dataUrl: url,
-            name: url.substring(url.lastIndexOf('/') + 1) || 'Image from URL',
-            size: 'Unknown',
-            width: img.naturalWidth,
-            height: img.naturalHeight,
-            type: 'url',
+        fetch(url)
+          .then(function (res) {
+            if (!res.ok) throw new Error('Fetch failed');
+            return res.blob();
+          })
+          .then(function (blob) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+              var dataUrl = e.target.result;
+              var img = new Image();
+              img.onload = function () {
+                resolve({
+                  dataUrl: dataUrl,
+                  name: url.substring(url.lastIndexOf('/') + 1) || 'Image from URL',
+                  size: blob.size,
+                  width: img.naturalWidth,
+                  height: img.naturalHeight,
+                  type: blob.type,
+                });
+              };
+              img.src = dataUrl;
+            };
+            reader.readAsDataURL(blob);
+          })
+          .catch(function (err) {
+            // Fallback to simple load if fetch fails (CORS etc)
+            var img = new Image();
+            img.onload = function () {
+              resolve({
+                dataUrl: url,
+                name: url.substring(url.lastIndexOf('/') + 1) || 'Image from URL',
+                size: 0,
+                width: img.naturalWidth,
+                height: img.naturalHeight,
+                type: 'url',
+              });
+            };
+            img.onerror = function () {
+              reject('Failed to load image from URL.');
+            };
+            img.src = url;
           });
-        };
-        img.onerror = function () {
-          reject('Failed to load image from URL.');
-        };
-        img.src = url;
       });
     };
 
@@ -121,6 +244,339 @@
             { label: '300x150', width: 300, height: 150 },
           ];
         });
+    };
+
+    /**
+     * AvExportModal - Dedicated class for Export Modal logic
+     */
+    function AvExportModal(core) {
+      this.core = core;
+    }
+
+    AvExportModal.prototype.render = function () {
+      var state = this.core;
+
+      return (
+        '<div class="av-export-modal" style="width: 100%; height: 100%; display: flex; flex-direction: column; background: #fff; position: relative;">' +
+        // Row 1: Header/Drag handle
+        '<div class="av-modal-header" style="height: 40px; background: #f1f5f9; border-bottom: 2px solid #cbd5e1; display: flex; align-items: center; padding: 0 20px; cursor: move; flex-shrink: 0;">' +
+        '<div class="av-modal-title" style="font-size: 16px; font-weight: bold; color: #1e293b;">Настройки изображения (Row 1)</div>' +
+        '<div id="av-export-close" style="margin-left: auto; cursor: pointer; font-size: 20px; padding: 5px;">✕</div>' +
+        '</div>' +
+        // Row 2: Split 1/4 and 3/4
+        '<div style="flex: 1; min-height: 0; display: flex; border-bottom: 2px solid #10b981;">' +
+        '<div style="flex: 1; background: #f8fafc; display: flex; align-items: center; justify-content: center; border-right: 1px solid #10b981; padding: 10px; overflow: hidden;">' +
+        (state.exportState.finalDataUrl
+          ? '<img src="' +
+            state.exportState.finalDataUrl +
+            '" style="max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">'
+          : '<div style="color: #94a3b8; font-size: 12px;">Превью недоступно</div>') +
+        '</div>' +
+        '<div style="flex: 3; background: #ffffff; display: flex; flex-direction: column; padding: 20px 30px; gap: 20px;">' +
+        // Row 2.1: Filename and Format
+        '<div style="display: flex; align-items: flex-end; gap: 30px;">' +
+        '<div class="av-form-field" style="flex: 1;">' +
+        '<label style="color: #64748b; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px;">Название файла</label>' +
+        '<input type="text" id="av-exp-name" value="' +
+        (state.exportState.fileName || '') +
+        '" placeholder="Введите имя..." style="width: 100%; height: 40px; padding: 0 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px;">' +
+        '</div>' +
+        '<div class="av-form-field" style="width: 240px;">' +
+        '<label style="color: #64748b; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px;">Расширение</label>' +
+        '<div style="display: flex; gap: 8px;">' +
+        ['image/jpeg', 'image/png', 'image/webp']
+          .map(function (f) {
+            var label = f.split('/')[1].toUpperCase();
+            if (label === 'JPEG') label = 'JPG';
+            var isActive = state.exportState.format === f;
+            return (
+              '<div class="av-btn-toggle ' +
+              (isActive ? 'active' : '') +
+              '" data-exp-format="' +
+              f +
+              '" style="flex: 1; height: 40px; font-size: 13px;">' +
+              label +
+              '</div>'
+            );
+          })
+          .join('') +
+        '</div>' +
+        '</div>' +
+        '</div>' +
+        // Row 2.2: Combined Row (Quality, Dimensions, Weight)
+        '<div style="display: flex; align-items: flex-end; gap: 40px; margin-top: 5px;">' +
+        // Quality
+        '<div class="av-form-field" style="flex: 1;">' +
+        '<label style="color: #64748b; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px;">Качество (Compression)</label>' +
+        '<div style="display: flex; align-items: center; gap: 15px;">' +
+        '<input type="range" id="av-exp-quality" min="1" max="100" value="' +
+        state.exportState.quality +
+        '" style="flex: 1; height: 32px; cursor: pointer;">' +
+        '<input type="number" id="av-exp-quality-input" min="1" max="100" value="' +
+        state.exportState.quality +
+        '" style="width: 75px; height: 38px; text-align: center; border: 1px solid #cbd5e1; border-radius: 6px; font-weight: bold; font-size: 14px;">' +
+        '</div>' +
+        '</div>' +
+        // Dimensions
+        '<div style="display: flex; flex-direction: column; gap: 4px; padding-bottom: 2px;">' +
+        '<div style="font-size: 10px; color: #94a3b8; font-weight: bold; text-transform: uppercase;">Размеры (PX)</div>' +
+        '<div style="font-size: 18px; font-weight: bold; color: #334155; font-family: sans-serif;">' +
+        state.exportState.finalWidth +
+        '<span style="color: #94a3b8; margin: 0 4px;">x</span>' +
+        state.exportState.finalHeight +
+        '</div>' +
+        '</div>' +
+        // Weight
+        '<div style="display: flex; flex-direction: column; gap: 4px; padding-bottom: 2px;">' +
+        '<div style="font-size: 10px; color: #94a3b8; font-weight: bold; text-transform: uppercase;">Вес (До / После)</div>' +
+        '<div style="font-size: 18px; font-weight: bold; color: #1e40af; font-family: sans-serif;">' +
+        '<span>' +
+        state.exportState.initialExportSize +
+        '</span>' +
+        '<span style="color: #94a3b8; font-weight: normal; margin: 0 6px;">/</span>' +
+        '<span id="av-exp-size-after" style="color: #0284c7;">' +
+        state.exportState.estimatedSize +
+        '</span>' +
+        '<span style="font-size: 12px; color: #0284c7; margin-left: 4px;">KB</span>' +
+        '</div>' +
+        '</div>' +
+        '</div>' +
+        // Row 2.3: Alignment (Placement)
+        '<div class="av-control-card" style="display: flex; align-items: center; gap: 20px; margin-top: 10px; margin-bottom: 0; padding: 10px 16px;">' +
+        '<div class="av-modal-tag" style="margin-bottom: 0;">Расположение</div>' +
+        '<div style="display: flex; gap: 8px;">' +
+        [
+          { id: 'left', icon: '⬅️', label: 'Слева' },
+          { id: 'center', icon: '↕️', label: 'Центр' },
+          { id: 'right', icon: '➡️', label: 'Справа' },
+          { id: 'full', icon: '↔️', label: 'На всю' },
+        ]
+          .map(function (align) {
+            var isActive = state.commonConfig.alignment === align.id;
+            return (
+              '<div class="av-btn-toggle ' +
+              (isActive ? 'active' : '') +
+              '" data-align="' +
+              align.id +
+              '" title="' +
+              align.label +
+              '" style="font-size: 18px; height: 36px; width: 46px;">' +
+              align.icon +
+              '</div>'
+            );
+          })
+          .join('') +
+        '</div>' +
+        '</div>' +
+        '</div>' +
+        '</div>' +
+        // Row 3: Split 50/50
+        '<div style="flex: 1; min-height: 200px; display: flex; border-bottom: 2px solid #3b82f6;">' +
+        // Row 3 Left: SEO and Attributes
+        '<div style="flex: 1; background: #ffffff; padding: 20px; border-right: 1px solid #e2e8f0; display: flex; flex-direction: column;">' +
+        '<div class="av-section-title" style="margin-bottom: 15px; color: #1e293b; font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em;">SEO и атрибуты</div>' +
+        '<div class="av-control-card" style="flex: 1; margin: 0; padding: 15px; display: flex; flex-direction: column; gap: 12px; border: 1px solid #f1f5f9; background: #f8fafc;">' +
+        '<div class="av-form-field">' +
+        '<label style="font-size: 11px; color: #64748b; font-weight: 700;">Alt текст (Описание)</label>' +
+        '<input type="text" id="av-set-alt" value="' +
+        (state.commonConfig.alt || '') +
+        '" placeholder="Описание для поисковиков..." style="width: 100%; height: 36px; padding: 0 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px;">' +
+        '</div>' +
+        '<div class="av-form-field">' +
+        '<label style="font-size: 11px; color: #64748b; font-weight: 700;">Заголовок (Title)</label>' +
+        '<input type="text" id="av-set-title" value="' +
+        (state.commonConfig.title || '') +
+        '" placeholder="Всплывающая подсказка..." style="width: 100%; height: 36px; padding: 0 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px;">' +
+        '</div>' +
+        '<div class="av-form-field" style="flex: 1;">' +
+        '<label style="font-size: 11px; color: #64748b; font-weight: 700;">Подпись под фото (Caption)</label>' +
+        '<textarea id="av-set-caption" style="width: 100%; flex: 1; min-height: 60px; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; font-family: sans-serif; resize: none;">' +
+        (state.commonConfig.caption || '') +
+        '</textarea>' +
+        '</div>' +
+        '</div>' +
+        '</div>' +
+        // Row 3 Right: Link and Behavior
+        '<div style="flex: 1; background: #ffffff; padding: 20px; display: flex; flex-direction: column;">' +
+        '<div class="av-section-title" style="margin-bottom: 15px; color: #1e293b; font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em;">Ссылка и поведение</div>' +
+        '<div class="av-control-card" style="flex: 1; margin: 0; padding: 15px; display: flex; flex-direction: column; gap: 15px; border: 1px solid #f1f5f9; background: #f8fafc;">' +
+        '<div class="av-form-field">' +
+        '<label style="font-size: 11px; color: #64748b; font-weight: 700;">URL ссылки</label>' +
+        '<input type="text" id="av-set-link" value="' +
+        (state.commonConfig.link || '') +
+        '" placeholder="https://..." style="width: 100%; height: 36px; padding: 0 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px;">' +
+        '</div>' +
+        '<div style="display: flex; flex-direction: column; gap: 10px; margin-top: 5px;">' +
+        '<label class="av-checkbox-label" style="font-size: 13px; font-weight: 600; color: #334155; display: flex; align-items: center; gap: 8px; cursor: pointer;">' +
+        '<input type="checkbox" id="av-set-clickable" ' +
+        (state.commonConfig.isClickable ? 'checked' : '') +
+        ' style="width: 16px; height: 16px;"> Кликабельное' +
+        '</label>' +
+        '<label class="av-checkbox-label" style="font-size: 13px; font-weight: 600; color: #334155; display: flex; align-items: center; gap: 8px; cursor: pointer;">' +
+        '<input type="checkbox" id="av-set-new-window" ' +
+        (state.commonConfig.openInNewWindow ? 'checked' : '') +
+        ' style="width: 16px; height: 16px;"> В новом окне' +
+        '</label>' +
+        '</div>' +
+        '</div>' +
+        '</div>' +
+        '</div>' +
+        // Row 3.5: Status Bar
+        '<div style="height: 32px; background: #f0f9ff; border-top: 1px solid #e0f2fe; border-bottom: 1px solid #e0f2fe; display: flex; align-items: center; padding: 0 24px; font-size: 12px; color: #c40404ff; font-family: sans-serif; font-weight: 500; gap: 20px;">' +
+        '<div style="display: flex; gap: 4px;">' +
+        '<span style="color: #0a043dff; text-transform: uppercase; font-weight: 900; font-size: 12px;">Name:</span>' +
+        '<span>' +
+        (state.exportState.fileName || 'noname') +
+        '</span>' +
+        '</div>' +
+        '<div style="display: flex; gap: 4px;">' +
+        '<span style="color: #0a043dff; text-transform: uppercase; font-weight: 900; font-size: 12px;">Format:</span>' +
+        '<span>' +
+        state.exportState.format.split('/')[1].toUpperCase().replace('JPEG', 'JPG') +
+        '</span>' +
+        '</div>' +
+        '<div style="display: flex; gap: 4px;">' +
+        '<span style="color: #0a043dff; text-transform: uppercase; font-weight: 900; font-size: 12px;">Weight:</span>' +
+        '<span>' +
+        state.exportState.estimatedSize +
+        ' KB</span>' +
+        '</div>' +
+        '<div style="display: flex; gap: 4px;">' +
+        '<span style="color: #0a043dff; text-transform: uppercase; font-weight: 900; font-size: 12px;">Align:</span>' +
+        '<span style="text-transform: capitalize;">' +
+        state.commonConfig.alignment +
+        '</span>' +
+        '</div>' +
+        '</div>' +
+        // Row 4: Buttons
+        '<div style="height: 80px; background: #f8fafc; border-top: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: flex-end; padding: 0 24px; gap: 12px; flex-shrink: 0;">' +
+        '<button class="av-btn-secondary" id="av-export-back" style="padding: 10px 20px; border: 1px solid #cbd5e1; border-radius: 6px; cursor: pointer; font-weight: 600; font-family: sans-serif; background: #fff;">Вернуться в редактирование</button>' +
+        '<button class="av-btn-main" id="av-export-confirm" style="padding: 10px 24px; background: #2563eb; color: #fff; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-family: sans-serif;">Вставить картинку в редактор</button>' +
+        '</div>' +
+        // Resizer
+        '<div class="av-modal-resizer" style="position: absolute; right: 0; bottom: 0; width: 20px; height: 20px; cursor: nwse-resize; background: linear-gradient(135deg, transparent 50%, #64748b 50%);"></div>' +
+        '</div>'
+      );
+    };
+
+    AvExportModal.prototype.refresh = function () {
+      this.core.render();
+    };
+
+    AvExportModal.prototype.bindEvents = function () {
+      var self = this.core;
+      var exp = self.exportState;
+      var modal = self.modal;
+      if (!modal) return;
+
+      // Quality (Range & Input)
+      var qRange = modal.querySelector('#av-exp-quality');
+      var qInput = modal.querySelector('#av-exp-quality-input');
+      if (qRange && qInput) {
+        // Function to handle updates
+        var updateQuality = function (val) {
+          var v = parseInt(val);
+          if (v < 1) v = 1;
+          if (v > 100) v = 100;
+          exp.quality = v;
+          qRange.value = v;
+          qInput.value = v;
+          self.updateExportSize();
+        };
+
+        qRange.oninput = function () {
+          updateQuality(this.value);
+        };
+        qInput.onchange = function () {
+          updateQuality(this.value);
+        };
+        qInput.oninput = function () {
+          updateQuality(this.value);
+        };
+      }
+
+      // Container Custom Dims
+      var wIn = modal.querySelector('#av-cnt-width');
+      var hIn = modal.querySelector('#av-cnt-height');
+
+      var updateCntDesc = function () {
+        var w = parseInt(wIn.value) || 0;
+        var h = parseInt(hIn.value) || 0;
+        exp.containerConfig.width = w;
+        exp.containerConfig.height = h;
+      };
+
+      if (wIn) wIn.onchange = updateCntDesc;
+      if (hIn) hIn.onchange = updateCntDesc;
+      if (wIn) wIn.oninput = updateCntDesc;
+      if (hIn) hIn.oninput = updateCntDesc;
+
+      // File Name
+      var fnIn = modal.querySelector('#av-exp-name');
+      if (fnIn) {
+        fnIn.oninput = function () {
+          exp.fileName = this.value;
+        };
+      }
+    };
+
+    AvExportModal.prototype.handleClick = function (t, e) {
+      var self = this.core;
+      var exp = self.exportState;
+      if (!exp.isOpen) return false;
+
+      // --- EXPORT CONTAINER EVENTS ---
+      if (t.id === 'av-cnt-enabled') {
+        exp.containerConfig.enabled = t.checked;
+        this.refresh();
+        return true;
+      }
+      if (t.id === 'av-cnt-custom') {
+        exp.containerConfig.useCustomSize = t.checked;
+        this.refresh();
+        return true;
+      }
+      if (t.classList.contains('av-cnt-preset')) {
+        var w = parseInt(t.dataset.w);
+        var h = parseInt(t.dataset.h);
+        exp.containerConfig.useCustomSize = false;
+        exp.containerConfig.width = w;
+        exp.containerConfig.height = h;
+        exp.containerConfig.enabled = true;
+        this.refresh();
+        return true;
+      }
+      if (t.classList.contains('av-cnt-align')) {
+        exp.containerConfig.alignment = t.dataset.align;
+        this.refresh();
+        return true;
+      }
+
+      // Close / Back
+      if (t.id === 'av-export-cancel' || t.id === 'av-export-back' || t.id === 'av-export-close') {
+        exp.isOpen = false;
+        self.render();
+        return true;
+      }
+
+      // Alignment
+      var alignBtn = t.closest('.av-btn-toggle[data-align]');
+      if (alignBtn) {
+        self.commonConfig.alignment = alignBtn.getAttribute('data-align');
+        self.addLog('Export Alignment set to: ' + self.commonConfig.alignment);
+        this.refresh();
+        return true;
+      }
+
+      // Format
+      if (t.getAttribute('data-exp-format')) {
+        exp.format = t.getAttribute('data-exp-format');
+        this.refresh();
+        self.updateExportSize();
+        return true;
+      }
+
+      return false; // Not handled here
     };
 
     /**
@@ -1121,187 +1577,7 @@
         this.renderContent(state, presetsHtml) +
         '</div>' +
         '</div>' +
-        (state.exportState.isOpen ? this.renderExportModal(state) : '') +
         '<div class="av-modal-resizer"></div>'
-      );
-    };
-
-    AvUIManager.prototype.renderExportModal = function (state) {
-      var exp = state.exportState;
-      var formats = [
-        { label: 'JPEG', value: 'image/jpeg' },
-        { label: 'PNG', value: 'image/png' },
-        { label: 'WebP', value: 'image/webp' },
-      ];
-
-      return (
-        '<div class="av-export-overlay">' +
-        '<div class="av-export-modal" style="width: 800px; height: auto; max-width: 95vw; max-height: 95vh; display: flex; flex-direction: column;">' +
-        '<div class="av-export-header">' +
-        '<div class="av-export-title">Экспорт изображения</div>' +
-        '<div class="av-modal-close" id="av-export-cancel">✕</div>' +
-        '</div>' +
-        '<div class="av-export-body" style="padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 20px;">' +
-        // 1. IMAGE PREVIEW (Centered)
-        '<div class="av-export-preview-box" style="width: 100%; height: 250px; background: #f1f5f9; border-radius: 8px; display: flex; align-items: center; justify-content: center; overflow: hidden;">' +
-        '<img src="' +
-        (exp.finalDataUrl || '') +
-        '" style="max-width:100%; max-height:100%; object-fit:contain;">' +
-        '</div>' +
-        // 2. FILE NAME & FORMAT (Row)
-        '<div style="display: flex; gap: 20px; align-items: flex-end;">' +
-        // Name
-        '<div class="av-form-field" style="flex: 1; margin-bottom: 0;">' +
-        '<label>Название файла</label>' +
-        '<input type="text" id="av-exp-name" value="' +
-        exp.fileName +
-        '" class="av-input-text" style="width:100%">' +
-        '</div>' +
-        // Format
-        '<div class="av-form-field" style="margin-bottom: 0;">' +
-        '<label>Формат файла</label>' +
-        '<div style="display:flex; gap:8px;">' +
-        formats
-          .map(function (f) {
-            return (
-              '<div class="av-btn-toggle ' +
-              (exp.format === f.value ? 'active' : '') +
-              '" data-exp-format="' +
-              f.value +
-              '" style="min-width: 90px; justify-content: center;">' +
-              f.label +
-              '</div>'
-            );
-          })
-          .join('') +
-        '</div>' +
-        '</div>' +
-        '</div>' +
-        // 3. QUALITY & INFO (Row)
-        '<div style="display: flex; gap: 20px; align-items: flex-end;">' +
-        // Quality (Only if not PNG)
-        (exp.format !== 'image/png'
-          ? '<div class="av-form-field" style="flex: 1; margin-bottom: 0;">' +
-            '<label>Качество (Compression)</label>' +
-            '<div style="display:flex; align-items:center; gap:12px;">' +
-            '<input type="range" id="av-exp-quality" min="1" max="100" value="' +
-            exp.quality +
-            '" style="flex:1">' +
-            '<input type="number" id="av-exp-quality-input" min="1" max="100" value="' +
-            exp.quality +
-            '" style="width:60px; padding:8px; border:1px solid #cbd5e1; border-radius:6px; text-align:center;">' +
-            '</div>' +
-            '</div>'
-          : '<div style="flex: 1;"></div>') + // Spacer if no quality
-        // Dims & Size
-        '<div style="display: flex; gap: 20px;">' +
-        '<div class="av-export-info-item" style="border: none; padding: 0; background: none;">' +
-        '<div class="av-export-info-label">Размеры (Px)</div>' +
-        '<div class="av-export-info-value" style="font-size: 14px;">' +
-        (exp.finalWidth || state.fileInfo.width) +
-        'x' +
-        (exp.finalHeight || state.fileInfo.height) +
-        '</div>' +
-        '</div>' +
-        '<div class="av-export-info-item" style="border: none; padding: 0; background: none;">' +
-        '<div class="av-export-info-label">Финальный вес</div>' +
-        '<div class="av-export-info-value" id="av-exp-size" style="color:#2563eb; font-size: 14px;">' +
-        exp.estimatedSize +
-        '</div>' +
-        '</div>' +
-        '</div>' +
-        '</div>' +
-        // 4. CONTAINER BLOCK
-        '<div class="av-export-container-block" style="padding-top:10px; border-top:1px solid #e2e8f0;">' +
-        '<div class="av-form-field" style="margin-bottom:10px;">' +
-        '<label class="av-checkbox-label" style="font-weight:600; color:#1e293b;">' +
-        '<input type="checkbox" id="av-cnt-enabled" ' +
-        (exp.containerConfig.enabled ? 'checked' : '') +
-        '> Вставить в контейнер' +
-        '</label>' +
-        '</div>' +
-        '<div id="av-cnt-settings" style="display:' +
-        (exp.containerConfig.enabled ? 'block' : 'none') +
-        '; padding-left:0px;">' +
-        // Custom Size Row
-        '<div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">' +
-        '<label class="av-checkbox-label" style="min-width:100px;">' +
-        '<input type="checkbox" id="av-cnt-custom" ' +
-        (exp.containerConfig.useCustomSize ? 'checked' : '') +
-        '> Свой размер' +
-        '</label>' +
-        '<div style="display:flex; gap:5px; flex:1;">' +
-        '<input type="number" id="av-cnt-width" class="av-input-text" placeholder="Ширина" value="' +
-        exp.containerConfig.width +
-        '" ' +
-        (exp.containerConfig.useCustomSize ? '' : 'disabled') +
-        ' style="width:50%">' +
-        '<input type="number" id="av-cnt-height" class="av-input-text" placeholder="Высота" value="' +
-        exp.containerConfig.height +
-        '" ' +
-        (exp.containerConfig.useCustomSize ? '' : 'disabled') +
-        ' style="width:50%">' +
-        '</div>' +
-        '</div>' +
-        // Presets Row
-        '<div style="margin-bottom:10px;">' +
-        '<label style="font-size:11px; color:#64748b; margin-bottom:4px; display:block;">Предустановленные размеры</label>' +
-        '<div style="display:flex; gap:8px;">' +
-        (state.containerPresets && state.containerPresets.length > 0 ? state.containerPresets : [])
-          .map(function (p) {
-            var w = p.width;
-            var h = p.height;
-            var isActive =
-              !exp.containerConfig.useCustomSize &&
-              exp.containerConfig.width === w &&
-              exp.containerConfig.height === h;
-            var label = p.label || 'ш' + w + '*в' + h;
-            return (
-              '<div class="av-btn-toggle av-cnt-preset ' +
-              (isActive ? 'active' : '') +
-              '" data-w="' +
-              w +
-              '" data-h="' +
-              h +
-              '" style="padding:4px 8px; font-size:11px;">' +
-              label +
-              '</div>'
-            );
-          })
-          .join('') +
-        '</div>' +
-        '</div>' +
-        // Alignment Row
-        '<div>' +
-        '<label style="font-size:11px; color:#64748b; margin-bottom:4px; display:block;">Выравнивание контейнера</label>' +
-        '<div style="display:flex; gap:8px;">' +
-        [
-          { label: 'Лево', value: 'left' },
-          { label: 'Центр', value: 'center' },
-          { label: 'Право', value: 'right' },
-        ]
-          .map(function (a) {
-            return (
-              '<div class="av-btn-toggle av-cnt-align ' +
-              (exp.containerConfig.alignment === a.value ? 'active' : '') +
-              '" data-align="' +
-              a.value +
-              '" style="padding:4px 12px; font-size:11px;">' +
-              a.label +
-              '</div>'
-            );
-          })
-          .join('') +
-        '</div>' +
-        '</div>' + // end settings
-        '</div>' + // end container block
-        '</div>' + // end body
-        '<div class="av-export-footer">' +
-        '<button class="av-btn-secondary" id="av-export-back" style="padding:10px 20px; border:1px solid #cbd5e1; border-radius:6px; background:#fff; cursor:pointer; font-weight:600; color:#475569;">Вернуться к правке</button>' +
-        '<button class="av-btn-main" id="av-export-confirm" style="background:#2563eb; color:#fff; padding:10px 30px; border:1px solid #1d4ed8; border-radius:6px; cursor:pointer; font-weight:bold;">Вставить</button>' +
-        '</div>' +
-        '</div>' +
-        '</div>'
       );
     };
 
@@ -1314,16 +1590,16 @@
             'x' +
             state.fileInfo.height +
             ', ' +
-            state.fileInfo.size +
-            ')'
+            (state.fileInfo.size / 1024).toFixed(1) +
+            ' KB)'
           : 'Нет данных';
       var processedFileText = state.processedFileInfo
         ? state.processedFileInfo.width +
           'x' +
           state.processedFileInfo.height +
           ' (' +
-          state.processedFileInfo.size +
-          ')'
+          (state.processedFileInfo.size / 1024).toFixed(1) +
+          ' KB)'
         : 'Нет обработанных данных';
 
       var infoBlock =
@@ -2174,6 +2450,7 @@
       this.ui = new AvUIManager();
       this.presetManager = new AvPresetManager('https://localhost:7233');
       this.imageTools = new AvImageTools();
+      this.exportModal = new AvExportModal(this);
 
       // UI Elements
       this.modal = null;
@@ -2197,7 +2474,7 @@
 
       // Image Data
       this.loadedImage = null; // Data URL
-      this.fileInfo = { name: 'Нет данных', size: '0 KB', width: 0, height: 0, type: '' };
+      this.fileInfo = { name: 'Нет данных', size: 0, width: 0, height: 0, type: '' };
       this.processedFileInfo = null;
 
       // Internal State
@@ -2261,7 +2538,8 @@
         fileName: '',
         format: 'image/jpeg', // image/jpeg, image/png, image/webp
         quality: 90,
-        estimatedSize: '0 KB',
+        estimatedSize: '0',
+        initialExportSize: '0',
         finalDataUrl: null, // The processed image that will be exported
         containerConfig: {
           enabled: false,
@@ -2345,10 +2623,10 @@
             canvas.toBlob(
               function (finalBlob) {
                 var size = finalBlob.size;
-                var kbs = (size / 1024).toFixed(2) + ' KB';
+                var kbs = (size / 1024).toFixed(2);
                 exp.estimatedSize = kbs;
 
-                var sizeEl = self.modal.querySelector('#av-exp-size');
+                var sizeEl = self.modal.querySelector('#av-exp-size-after');
                 if (sizeEl) sizeEl.innerText = kbs;
               },
               exp.format,
@@ -2357,6 +2635,22 @@
           };
           img.src = exp.finalDataUrl;
         });
+    };
+
+    AvModal.prototype.open = function (node) {
+      if (node) {
+        var figure =
+          node.nodeName.toLowerCase() === 'figure'
+            ? node
+            : this.editor.dom.getParent(node, 'figure.aurora-image');
+        if (figure) {
+          var img = figure.querySelector('img');
+          if (img) this.loadedImage = img.src;
+          this.commonConfig.alt = figure.getAttribute('data-alt') || (img ? img.alt : '');
+          this.currentSection = 'edit';
+        }
+      }
+      this.create();
     };
 
     AvModal.prototype.loadPresets = function () {
@@ -2427,12 +2721,17 @@
     AvModal.prototype.render = function () {
       if (!this.modal) return;
       var self = this;
-      var presetsHtml = '';
-      this.presetManager.presets.forEach(function (p, idx) {
-        presetsHtml += self.ui.renderPresetCard(p, idx);
-      });
 
-      this.modal.innerHTML = this.ui.renderLayout(this, presetsHtml);
+      if (this.exportState.isOpen) {
+        this.modal.innerHTML = this.exportModal.render();
+        this.exportModal.bindEvents();
+      } else {
+        var presetsHtml = '';
+        this.presetManager.presets.forEach(function (p, idx) {
+          presetsHtml += self.ui.renderPresetCard(p, idx);
+        });
+        this.modal.innerHTML = this.ui.renderLayout(this, presetsHtml);
+      }
       this.initEvents();
     };
 
@@ -2479,25 +2778,27 @@
       }
 
       // Re-attach events (essential if canvas was re-rendered)
-      overlay.onmousedown = function (e) {
-        var r = overlay.getBoundingClientRect();
-        self.cropManager.onMouseDown(e.clientX - r.left, e.clientY - r.top);
-      };
-      overlay.onmousemove = function (e) {
-        var r = overlay.getBoundingClientRect();
-        var x = e.clientX - r.left;
-        var y = e.clientY - r.top;
-        var h = self.cropManager.getHandleAtPoint(x, y);
-        if (h) {
-          overlay.style.cursor = h === 'tl' || h === 'br' ? 'nwse-resize' : 'nesw-resize';
-        } else {
-          overlay.style.cursor = self.cropManager.isPointInside(x, y) ? 'move' : 'default';
-        }
-        self.cropManager.onMouseMove(x, y);
-      };
-      overlay.onmouseup = overlay.onmouseleave = function () {
-        self.cropManager.onMouseUp();
-      };
+      if (overlay) {
+        overlay.onmousedown = function (e) {
+          var r = overlay.getBoundingClientRect();
+          self.cropManager.onMouseDown(e.clientX - r.left, e.clientY - r.top);
+        };
+        overlay.onmousemove = function (e) {
+          var r = overlay.getBoundingClientRect();
+          var x = e.clientX - r.left;
+          var y = e.clientY - r.top;
+          var h = self.cropManager.getHandleAtPoint(x, y);
+          if (h) {
+            overlay.style.cursor = h === 'tl' || h === 'br' ? 'nwse-resize' : 'nesw-resize';
+          } else {
+            overlay.style.cursor = self.cropManager.isPointInside(x, y) ? 'move' : 'default';
+          }
+          self.cropManager.onMouseMove(x, y);
+        };
+        overlay.onmouseup = overlay.onmouseleave = function () {
+          self.cropManager.onMouseUp();
+        };
+      }
 
       if (this.cropManager.active) this.cropManager.draw();
     };
@@ -2569,17 +2870,19 @@
         this.circleManager.ctx = overlay.getContext('2d');
       }
 
-      overlay.onmousedown = function (e) {
-        var r = overlay.getBoundingClientRect();
-        self.circleManager.onMouseDown(e.clientX - r.left, e.clientY - r.top);
-      };
-      overlay.onmousemove = function (e) {
-        var r = overlay.getBoundingClientRect();
-        self.circleManager.onMouseMove(e.clientX - r.left, e.clientY - r.top);
-      };
-      overlay.onmouseup = overlay.onmouseleave = function () {
-        self.circleManager.onMouseUp();
-      };
+      if (overlay) {
+        overlay.onmousedown = function (e) {
+          var r = overlay.getBoundingClientRect();
+          self.circleManager.onMouseDown(e.clientX - r.left, e.clientY - r.top);
+        };
+        overlay.onmousemove = function (e) {
+          var r = overlay.getBoundingClientRect();
+          self.circleManager.onMouseMove(e.clientX - r.left, e.clientY - r.top);
+        };
+        overlay.onmouseup = overlay.onmouseleave = function () {
+          self.circleManager.onMouseUp();
+        };
+      }
 
       if (this.circleManager && this.circleManager.active) this.circleManager.draw();
     };
@@ -2671,37 +2974,10 @@
       // --- 2. CLICK DELEGATION ---
       this.modal.onclick = function (e) {
         var t = e.target;
+        if (self.exportModal.handleClick(t)) return;
 
         // --- EXPORT CONTAINER EVENTS ---
-        if (t.id === 'av-cnt-enabled') {
-          self.exportState.containerConfig.enabled = t.checked;
-          self.modal.querySelector('.av-export-modal').parentNode.outerHTML =
-            self.ui.renderExportModal(self);
-          return;
-        }
-        if (t.id === 'av-cnt-custom') {
-          self.exportState.containerConfig.useCustomSize = t.checked;
-          self.modal.querySelector('.av-export-modal').parentNode.outerHTML =
-            self.ui.renderExportModal(self);
-          return;
-        }
-        if (t.classList.contains('av-cnt-preset')) {
-          var w = parseInt(t.dataset.w);
-          var h = parseInt(t.dataset.h);
-          self.exportState.containerConfig.useCustomSize = false;
-          self.exportState.containerConfig.width = w;
-          self.exportState.containerConfig.height = h;
-          self.exportState.containerConfig.enabled = true;
-          self.modal.querySelector('.av-export-modal').parentNode.outerHTML =
-            self.ui.renderExportModal(self);
-          return;
-        }
-        if (t.classList.contains('av-cnt-align')) {
-          self.exportState.containerConfig.alignment = t.dataset.align;
-          self.modal.querySelector('.av-export-modal').parentNode.outerHTML =
-            self.ui.renderExportModal(self);
-          return;
-        }
+        // Delegated to self.exportModal.handleClick(t)
 
         // Close
         if (t.closest('.av-modal-close')) return self.overlay.remove();
@@ -2834,31 +3110,40 @@
                   self.exportState.finalDataUrl = res.dataUrl;
                   self.exportState.finalWidth = res.width;
                   self.exportState.finalHeight = res.height;
-                  self.render();
-                  self.updateExportSize();
+
+                  // Capture "Before" weight from processed but uncompressed image
+                  fetch(res.dataUrl)
+                    .then(function (r) {
+                      return r.blob();
+                    })
+                    .then(function (blob) {
+                      self.exportState.initialExportSize = (self.fileInfo.size / 1024).toFixed(2);
+                      self.exportState.estimatedSize = self.exportState.initialExportSize;
+                      self.render();
+                      self.updateExportSize();
+                    });
                 });
             } else {
               self.exportState.finalDataUrl = baseProcessedUrl;
-              self.render();
-              self.updateExportSize();
+
+              // Capture "Before" weight from processed but uncompressed image (PNG base)
+              fetch(baseProcessedUrl)
+                .then(function (r) {
+                  return r.blob();
+                })
+                .then(function (blob) {
+                  self.exportState.initialExportSize = (self.fileInfo.size / 1024).toFixed(2);
+                  self.exportState.estimatedSize = self.exportState.initialExportSize;
+                  self.render();
+                  self.updateExportSize();
+                });
             }
           };
           imgObj.src = self.loadedImage;
           return;
         }
 
-        // Export Modal Actions
-        if (t.id === 'av-export-cancel' || t.id === 'av-export-back') {
-          self.exportState.isOpen = false;
-          return self.render();
-        }
-
-        if (t.getAttribute('data-exp-format')) {
-          self.exportState.format = t.getAttribute('data-exp-format');
-          self.render();
-          self.updateExportSize();
-          return;
-        }
+        // Export Modal Actions - Delegated to AvExportModal
 
         if (t.id === 'av-export-confirm') {
           // FINAL PROCESS AND UPLOAD
@@ -2882,10 +3167,10 @@
 
             self.uploadImage(finalDataUrl).then(function (result) {
               // Construct HTML with Server URL
+              // Construct HTML with Server URL
               var imageUrl = result.imageUrl;
-              if (imageUrl.startsWith('/')) {
-                imageUrl = 'https://localhost:7233' + imageUrl;
-              }
+              // Previously hardcoded to localhost:7233, now keeping it relative as per Studio logic
+              // if (imageUrl.startsWith('/')) { ... }
 
               var escapeHtml = function (str) {
                 return String(str)
@@ -2941,9 +3226,7 @@
                   '</figcaption>';
               }
 
-              var alignment = useContainer
-                ? exp.containerConfig.alignment
-                : self.commonConfig.alignment || 'center';
+              var alignment = self.commonConfig.alignment || 'center';
               var figureStyles = [];
 
               if (useContainer) {
@@ -2969,6 +3252,8 @@
                   figureStyles.push('float: right', 'margin: 0 0 8px 16px');
                 else if (alignment === 'center')
                   figureStyles.push('margin-left: auto', 'margin-right: auto', 'display: table');
+                else if (alignment === 'full')
+                  figureStyles.push('width: 100%', 'display: block', 'margin: 0 0 16px 0');
 
                 var dataWidth = self.commonConfig.width || 'Auto';
                 if (dataWidth === 'Auto') {
@@ -3550,29 +3835,51 @@
       }
 
       // --- 6. POSITION & RESIZE ---
-      header.onmousedown = function (e) {
-        if (e.target !== header && e.target.className !== 'av-modal-title') return;
-        self.isDragging = true;
-        self.offsetX = e.clientX - self.x;
-        self.offsetY = e.clientY - self.y;
-      };
+      if (header) {
+        header.onmousedown = function (e) {
+          if (e.target !== header && e.target.className !== 'av-modal-title') return;
+          self.isDragging = true;
+          self.offsetX = e.clientX - self.x;
+          self.offsetY = e.clientY - self.y;
+        };
+      }
 
       var resizer = this.modal.querySelector('.av-modal-resizer');
-      if (resizer)
+      if (resizer) {
         resizer.onmousedown = function (e) {
           self.isResizing = true;
           e.preventDefault();
         };
+      }
 
       window.onmousemove = function (e) {
         if (self.isDragging) {
-          self.x = e.clientX - self.offsetX;
-          self.y = e.clientY - self.offsetY;
+          var newX = e.clientX - self.offsetX;
+          var newY = e.clientY - self.offsetY;
+
+          // Constraints
+          var maxX = window.innerWidth - self.width;
+          var maxY = window.innerHeight - self.height;
+
+          if (newX < 0) newX = 0;
+          if (newX > maxX) newX = maxX;
+          if (newY < 0) newY = 0;
+          if (newY > maxY) newY = maxY;
+
+          self.x = newX;
+          self.y = newY;
           self.updatePosition();
         }
         if (self.isResizing) {
-          self.width = Math.max(800, e.clientX - self.x);
-          self.height = Math.max(600, e.clientY - self.y);
+          var newW = e.clientX - self.x;
+          var newH = e.clientY - self.y;
+
+          // Constraints
+          var maxW = window.innerWidth - self.x;
+          var maxH = window.innerHeight - self.y;
+
+          self.width = Math.max(800, Math.min(newW, maxW));
+          self.height = Math.max(600, Math.min(newH, maxH));
           self.updatePosition();
           if (self.currentSection === 'edit' && self.editTool === 'crop') self.updateCropOverlay();
           if (self.currentSection === 'edit' && self.editTool === 'circle')
@@ -3653,11 +3960,15 @@
         });
     };
 
+    editor.addCommand('avImage', function (ui, node) {
+      var modal = new AvModal(editor);
+      modal.open(node);
+    });
+
     editor.ui.registry.addButton('av-image-text', {
       text: 'Вставить изображение',
       onAction: function () {
-        var modal = new AvModal(editor);
-        modal.create();
+        editor.execCommand('avImage');
       },
     });
   });

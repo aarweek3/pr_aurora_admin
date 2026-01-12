@@ -1,9 +1,9 @@
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { HARDCODED_FLAGS } from '@assets/languageApp/config/language-flags.const';
+import { ApiEndpoints } from '@environments/api-endpoints';
 import { Observable, of, throwError } from 'rxjs';
 import { catchError, map, shareReplay, tap } from 'rxjs/operators';
-import { ApiEndpoints } from '../../../../environments/api-endpoints';
 
 @Injectable({
   providedIn: 'root',

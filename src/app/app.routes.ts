@@ -73,6 +73,18 @@ export const routes: Routes = [
             (m) => m.ICON_CATEGORY_MANAGER_ROUTES,
           ),
       },
+      {
+        path: 'sample-seo',
+        loadChildren: () =>
+          import('./pages/sample-manager-simple-language-seo/sample-main-seo.routes').then(
+            (m) => m.SAMPLE_MAIN_SEO_ROUTES,
+          ),
+      },
+      {
+        path: 'sample-manager-simple-language-seo',
+        redirectTo: 'sample-seo',
+        pathMatch: 'full',
+      },
       // { path: 'reports', loadChildren: () => import('./pages/reports/reports.routes') },
     ],
   },
