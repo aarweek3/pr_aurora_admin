@@ -1,0 +1,72 @@
+<div class="editor-container">
+  <div class="editor-body">
+    <!-- SIDEBAR (Инструменты) -->
+    <div class="editor-sidebar">
+      <div class="sidebar-item active" title="Обрезка">
+        <div class="icon-wrap">✂️</div>
+        <span class="sidebar-label">Кроп</span>
+      </div>
+      <div class="sidebar-item" title="Поворот">
+        <div class="icon-wrap">🔄</div>
+        <span class="sidebar-label">Поворот</span>
+      </div>
+      <div class="sidebar-item" title="Фильтры">
+        <div class="icon-wrap">🎨</div>
+        <span class="sidebar-label">Фильтры</span>
+      </div>
+    </div>
+
+    <!-- CONTROL PANEL (Параметры инструмента) -->
+    <aside class="editor-control-panel">
+      <div class="panel-header">Настройки экспорта</div>
+      <div class="panel-scroll">
+        <section class="control-block">
+          <h4 class="block-title">Формат и качество</h4>
+          <div class="ui-container">
+            <div class="ui-row gap-8">
+              <select class="ui-select flex-1">
+                <option value="image/jpeg">JPEG</option>
+                <option value="image/png">PNG-24</option>
+                <option value="image/webp">WebP</option>
+              </select>
+            </div>
+            <div class="ui-row between" style="margin-top: 8px">
+              <span class="ui-label">Качество:</span>
+              <span class="ui-value">{{ state().export.quality }}%</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Место для будущих контролов -->
+      </div>
+    </aside>
+
+    <!-- MAIN WORKSPACE (Canvas) -->
+    <div class="editor-workspace">
+      @if (state().originalUrl) {
+      <div class="canvas-container">
+        <!-- Сюда вставим будущий компонент editor-canvas -->
+        <img [src]="state().originalUrl" class="preview-img" [style.opacity]="state().transparency / 100" />
+      </div>
+      } @else {
+      <div class="empty-state">Загрузка изображения...</div>
+      }
+    </div>
+  </div>
+
+  <!-- STATUS BAR -->
+  <div class="editor-status-bar">
+    <span>{{ state().export.format.split('/')[1].toUpperCase() }} | {{ state().zoom * 100 }}% масштаб</span>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="editor-footer">
+    <div class="footer-left">
+      {{ state().export.fileName }}
+    </div>
+    <div class="footer-right">
+      <button class="ps-btn" (click)="cancel()">Отмена</button>
+      <button class="ps-btn ps-btn-ready" (click)="finish()">Готово</button>
+    </div>
+  </div>
+</div>

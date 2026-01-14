@@ -96,7 +96,6 @@ import { NzModalRef } from 'ng-zorro-antd/modal';
 
           <!-- Optimization & Alignment Panel -->
           <div class="ps-panel">
-            <div class="ps-panel-title">Оптимизация и Расположение</div>
             <div
               style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px;"
             >

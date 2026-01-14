@@ -1,0 +1,190 @@
+// =============================================================================
+// VS Modal Container - Visual Studio Code Style
+// =============================================================================
+
+:host {
+  display: block;
+}
+
+.vs-modal-window {
+  display: flex;
+  flex-direction: column;
+  background: #1e1e1e;
+  border: 1px solid #454545;
+  border-radius: 0;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+  position: relative;
+  min-width: 400px;
+  min-height: 300px;
+
+  &.resizing {
+    user-select: none;
+  }
+}
+
+// =============================================================================
+// Header (Title Bar)
+// =============================================================================
+.vs-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #323233;
+  height: 35px;
+  padding: 0 8px;
+  border-bottom: 1px solid #454545;
+  cursor: move;
+  user-select: none;
+
+  .vs-modal-title {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex: 1;
+
+    .vs-modal-icon {
+      font-size: 16px;
+      line-height: 1;
+    }
+
+    .vs-modal-title-text {
+      font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 13px;
+      color: #cccccc;
+      font-weight: 400;
+    }
+  }
+
+  .vs-modal-close-btn {
+    width: 28px;
+    height: 28px;
+    border: none;
+    background: transparent;
+    color: #cccccc;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    line-height: 1;
+    transition: background 0.1s ease;
+    border-radius: 2px;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    &:active {
+      background: rgba(255, 255, 255, 0.15);
+    }
+  }
+}
+
+// =============================================================================
+// Body (Content Area)
+// =============================================================================
+.vs-modal-body {
+  flex: 1;
+  overflow: auto;
+  padding: 0;
+  background: #1e1e1e;
+
+  // Кастомный скроллбар в стиле VS Code
+  &::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #1e1e1e;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #424242;
+    border-radius: 0;
+
+    &:hover {
+      background: #4e4e4e;
+    }
+  }
+
+  &::-webkit-scrollbar-corner {
+    background: #1e1e1e;
+  }
+}
+
+// =============================================================================
+// Footer (Status Bar)
+// =============================================================================
+.vs-modal-footer {
+  height: 22px;
+  background: #007acc;
+  display: flex;
+  align-items: center;
+  padding: 0 8px;
+  border-top: 1px solid #005a9e;
+
+  .vs-modal-status {
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 12px;
+    color: #ffffff;
+    font-weight: 400;
+  }
+}
+
+// =============================================================================
+// Resize Handle
+// =============================================================================
+.vs-modal-resize-handle {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 16px;
+  height: 16px;
+  cursor: nwse-resize;
+  z-index: 10;
+
+  // Визуальный индикатор resize
+  &::before {
+    content: '';
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    width: 12px;
+    height: 12px;
+    background: linear-gradient(
+      135deg,
+      transparent 0%,
+      transparent 50%,
+      #007acc 50%,
+      #007acc 100%
+    );
+  }
+
+  &:hover::before {
+    background: linear-gradient(
+      135deg,
+      transparent 0%,
+      transparent 50%,
+      #1e90ff 50%,
+      #1e90ff 100%
+    );
+  }
+}
+
+// =============================================================================
+// CDK Drag Placeholder
+// =============================================================================
+.cdk-drag-preview {
+  opacity: 0.8;
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.7);
+}
+
+.cdk-drag-placeholder {
+  opacity: 0.3;
+}
+
+.cdk-drag-animating {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}

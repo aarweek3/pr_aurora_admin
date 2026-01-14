@@ -1,0 +1,97 @@
+<div class="test-modal-content">
+  <div class="content-header">
+    <h2>Image Settings</h2>
+    <p class="subtitle">Configure your image export settings</p>
+  </div>
+
+  <div class="content-body">
+    <!-- Информация из data -->
+    <div class="info-section" *ngIf="data">
+      <div class="info-item">
+        <span class="label">Message:</span>
+        <span class="value">{{ data.message }}</span>
+      </div>
+      <div class="info-item" *ngIf="data.timestamp">
+        <span class="label">Opened at:</span>
+        <span class="value">{{ data.timestamp | date: 'medium' }}</span>
+      </div>
+      <div class="info-item" *ngIf="data.editorMode">
+        <span class="label">Mode:</span>
+        <span class="value badge">Editor Mode</span>
+      </div>
+    </div>
+
+    <!-- Форма настроек -->
+    <div class="form-section">
+      <div class="form-group">
+        <label for="name">Image Name</label>
+        <input
+          type="text"
+          id="name"
+          [(ngModel)]="formData.name"
+          class="form-control" />
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="width">Width (px)</label>
+          <input
+            type="number"
+            id="width"
+            [(ngModel)]="formData.width"
+            class="form-control" />
+        </div>
+
+        <div class="form-group">
+          <label for="height">Height (px)</label>
+          <input
+            type="number"
+            id="height"
+            [(ngModel)]="formData.height"
+            class="form-control" />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="format">Format</label>
+          <select id="format" [(ngModel)]="formData.format" class="form-control">
+            <option value="PNG">PNG</option>
+            <option value="JPG">JPG</option>
+            <option value="WEBP">WebP</option>
+            <option value="SVG">SVG</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="quality">Quality (%)</label>
+          <input
+            type="number"
+            id="quality"
+            [(ngModel)]="formData.quality"
+            min="0"
+            max="100"
+            class="form-control" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="description">Description</label>
+        <textarea
+          id="description"
+          [(ngModel)]="formData.description"
+          rows="4"
+          class="form-control"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="content-footer">
+    <button type="button" class="btn btn-secondary" (click)="cancel()">
+      Cancel
+    </button>
+    <button type="button" class="btn btn-primary" (click)="save()">
+      Save Changes
+    </button>
+  </div>
+</div>

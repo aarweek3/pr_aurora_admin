@@ -31,7 +31,7 @@ import { AvTinymceControlComponent } from '../../controls/tinymce-control/tinymc
         <h3>Демонстрация</h3>
         <av-tinymce-control
           [(ngModel)]="editorValue"
-          label="Рабочая область"
+          label="Рабочая область test-tinymce.component.ts"
           placeholder="Введите текст здесь..."
           [height]="400"
         >

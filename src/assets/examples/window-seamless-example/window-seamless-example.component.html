@@ -1,0 +1,90 @@
+<div class="vs-window">
+  <!-- TITLE BAR -->
+  <header class="vs-header">
+    <div class="vs-header__left">
+      <div class="vs-icon">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+          <path
+            d="M23.5,17.1L19,21.5L2,4.5L6.5,0.1L23.5,17.1M19,18.7L17.1,16.8L15.2,18.7L17.1,20.6L19,18.7M15.2,14.9L13.3,13L11.4,14.9L13.3,16.8L15.2,14.9M11.4,11.1L9.5,9.2L7.6,11.1L9.5,13L11.4,11.1M7.6,7.3L5.7,5.4L3.8,7.3L5.7,9.2L7.6,7.3Z"
+          />
+        </svg>
+      </div>
+      <span class="vs-title">Visual Studio Code</span>
+    </div>
+
+    <div class="vs-header__tabs">
+      <div class="vs-tab" [class.vs-tab--active]="activeTab === 'index'" (click)="activeTab = 'index'">
+        <span>index.ts</span>
+        <span class="vs-tab-close">×</span>
+      </div>
+      <div class="vs-tab" [class.vs-tab--active]="activeTab === 'styles'" (click)="activeTab = 'styles'">
+        <span>styles.scss</span>
+        <span class="vs-tab-close">×</span>
+      </div>
+    </div>
+
+    <div class="vs-header__controls">
+      <div class="control-btn"><i class="codicon codicon-minimize">_</i></div>
+      <div class="control-btn"><i class="codicon codicon-maximize">▢</i></div>
+      <div class="control-btn control-btn--close"><i class="codicon codicon-close">✕</i></div>
+    </div>
+  </header>
+
+  <!-- SEAMLESS BODY -->
+  <main class="vs-body">
+    <!-- Activity Bar (Sidebar) -->
+    <aside class="vs-body__sidebar">
+      <div class="side-icon side-icon--active">📁</div>
+      <div class="side-icon">🔍</div>
+      <div class="side-icon">🌿</div>
+      <div class="side-icon">🐛</div>
+      <div class="side-icon">📦</div>
+    </aside>
+
+    <!-- Main Content Editor -->
+    <section class="vs-body__main">
+      <div *ngIf="activeTab === 'index'">
+        <h1>Seamless Window Logic</h1>
+        <div class="vs-code-block">
+          <span class="keyword">import</span> &#123; Component, signal &#125; <span class="keyword">from</span>
+          <span class="string">'&#64;angular/core'</span>;<br /><br />
+          <span class="comment">// Visual Studio Style Implementation</span><br />
+          <span class="keyword">export class</span>
+          <span class="class">WindowSeamlessExampleComponent</span> &#123;<br />
+          &nbsp;&nbsp;<span class="keyword">readonly</span> title = signal(<span class="string"
+            >'VS Seamless Window'</span
+          >);<br />
+          &nbsp;&nbsp;<span class="keyword">readonly</span> activeTab = signal(<span class="string">'index'</span
+          >);<br />
+          &#125;
+        </div>
+      </div>
+
+      <div *ngIf="activeTab === 'styles'">
+        <h1>Component Styles</h1>
+        <div class="vs-code-block">
+          <span class="keyword">:host</span> &#123;<br />
+          &nbsp;&nbsp;<span class="keyword">--vs-bg-primary</span>: <span class="string">#1e1e1e</span>;<br />
+          &nbsp;&nbsp;<span class="keyword">--vs-accent</span>: <span class="string">#007acc</span>;<br />
+          &#125;
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- STATUS BAR -->
+  <footer class="vs-footer">
+    <div class="vs-footer__left">
+      <div class="status-item">🌿 main*</div>
+      <div class="status-item">↻ Synchronizing...</div>
+      <div class="status-item opacity-50">0 ⚠ 0 ⓧ</div>
+    </div>
+    <div class="vs-footer__right">
+      <div class="status-item">Ln 14, Col 52</div>
+      <div class="status-item">Spaces: 2</div>
+      <div class="status-item">UTF-8</div>
+      <div class="status-item">TypeScript JSX</div>
+      <div class="status-item">🔔</div>
+    </div>
+  </footer>
+</div>

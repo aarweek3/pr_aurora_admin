@@ -143,8 +143,11 @@ export class LoggerConsoleComponent {
   /** Получение относительного пути из URL для компактности */
   getUrlPath(url: string): string {
     try {
-      const urlObj = new URL(url, window.location.origin);
-      return urlObj.pathname + urlObj.search;
+      if (typeof window !== 'undefined' && window.location) {
+        const urlObj = new URL(url, window.location.origin);
+        return urlObj.pathname + urlObj.search;
+      }
+      return url;
     } catch {
       return url;
     }

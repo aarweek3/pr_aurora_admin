@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { LoggingService } from './logging.service';
 import { ErrorResponse } from '../interceptor/models/error-response.model';
+import { LoggingService } from './logging.service';
 
 type LogMetadata = Record<string, any> | ErrorResponse | Error | null;
 
@@ -63,7 +63,6 @@ export class AuthLoggingService {
       message: this.getAuthActionMessage(action),
       metadata,
       level: this.getAuthActionLevel(action),
-      userAgent: navigator.userAgent,
       ip: 'client', // В реальном проекте получать с сервера
     };
 
@@ -96,7 +95,6 @@ export class AuthLoggingService {
       email,
       reason,
       timestamp: new Date().toISOString(),
-      userAgent: navigator.userAgent,
     };
 
     this.logAuthEvent(action, undefined, metadata);
@@ -140,7 +138,9 @@ export class AuthLoggingService {
     this.logAuthEvent('token_refresh', userId, metadata);
 
     if (!success) {
-      this.loggingService.warn('TokenService', `Token refresh failed for user ${userId}`, { reason });
+      this.loggingService.warn('TokenService', `Token refresh failed for user ${userId}`, {
+        reason,
+      });
     }
   }
 
@@ -198,7 +198,7 @@ export class AuthLoggingService {
         totalLogs: this.authLogs.length,
       },
       null,
-      2
+      2,
     );
   }
 
@@ -246,8 +246,7 @@ export class AuthLoggingService {
   private isAuthError(errorResponse: ErrorResponse): boolean {
     const authUrls = ['/auth/', '/login', '/register', '/logout', '/refresh'];
     return authUrls.some(
-      (url) =>
-        errorResponse.instance?.includes(url) || errorResponse.requestUrl?.includes(url)
+      (url) => errorResponse.instance?.includes(url) || errorResponse.requestUrl?.includes(url),
     );
   }
 
@@ -297,7 +296,11 @@ export class AuthLoggingService {
       'permission_denied',
       'user_blocked',
     ];
-    const warnActions: AuthAction[] = ['token_expired', 'session_expired', 'password_reset_request'];
+    const warnActions: AuthAction[] = [
+      'token_expired',
+      'session_expired',
+      'password_reset_request',
+    ];
     if (errorActions.includes(action)) return 'error';
     if (warnActions.includes(action)) return 'warn';
     return 'info';

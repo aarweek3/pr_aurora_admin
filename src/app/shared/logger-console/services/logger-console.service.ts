@@ -57,14 +57,16 @@ export class LoggerConsoleService {
 
   constructor() {
     // Слушаем изменение размера окна для обновления viewport
-    window.addEventListener('resize', () => this.updateClientInfo());
+    if (typeof window !== 'undefined') {
+      window.addEventListener('resize', () => this.updateClientInfo());
 
-    // Слушаем состояние сети
-    window.addEventListener('online', () => this.updateClientInfo());
-    window.addEventListener('offline', () => this.updateClientInfo());
+      // Слушаем состояние сети
+      window.addEventListener('online', () => this.updateClientInfo());
+      window.addEventListener('offline', () => this.updateClientInfo());
 
-    // Инициализируем трекинг действий пользователя
-    this.setupInteractionTracking();
+      // Инициализируем трекинг действий пользователя
+      this.setupInteractionTracking();
+    }
 
     // Регистрируем встроенные команды
     this.registerDefaultCommands();
@@ -252,21 +254,26 @@ export class LoggerConsoleService {
     else if (ua.includes('Android')) os = 'Android';
     else if (ua.includes('iPhone')) os = 'iOS';
 
-    const width = window.innerWidth;
+    const width = typeof window !== 'undefined' && window.innerWidth ? window.innerWidth : 1920;
     const device = width < 768 ? 'Mobile' : width < 1200 ? 'Tablet' : 'Desktop';
 
     // Определение темы (базируется на стандартных классах Aurora или системных предпочтениях)
     const isDark =
-      document.body.classList.contains('dark-theme') ||
-      document.documentElement.getAttribute('data-theme') === 'dark' ||
-      window.matchMedia('(prefers-color-scheme: dark)').matches;
+      (typeof document !== 'undefined' && document.body && document.body.classList.contains('dark-theme')) ||
+      (typeof document !== 'undefined' && document.documentElement && document.documentElement.getAttribute('data-theme') === 'dark') ||
+      (typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+
+    const screenWidth = typeof window !== 'undefined' && window.screen ? window.screen.width : 1920;
+    const screenHeight = typeof window !== 'undefined' && window.screen ? window.screen.height : 1080;
+    const viewportWidth = typeof window !== 'undefined' && window.innerWidth ? window.innerWidth : 1920;
+    const viewportHeight = typeof window !== 'undefined' && window.innerHeight ? window.innerHeight : 1080;
 
     return {
       browser,
       os,
       device,
-      resolution: `${window.screen.width}x${window.screen.height}`,
-      viewport: `${window.innerWidth}x${window.innerHeight}`,
+      resolution: `${screenWidth}x${screenHeight}`,
+      viewport: `${viewportWidth}x${viewportHeight}`,
       theme: isDark ? 'Dark' : 'Light',
       language: navigator.language,
       isOnline: navigator.onLine,

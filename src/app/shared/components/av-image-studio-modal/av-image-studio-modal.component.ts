@@ -1,5 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, effect, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  OnInit,
+  effect,
+  inject,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
@@ -30,6 +38,7 @@ import { AvImageStudioPersistenceService } from './services/av-image-studio-pers
     NzSpinModule,
     CropCanvasComponent,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <!-- HEADER: Photoshop Title Bar -->
     <div class="debug-container">
@@ -265,7 +274,7 @@ import { AvImageStudioPersistenceService } from './services/av-image-studio-pers
                     class="ps-input"
                     style="width: 100%;"
                     [(ngModel)]="targetWidth"
-                    (ngModelChange)="syncExternalCrop()"
+                    (ngModelChange)="onTargetWidthChange()"
                   />
                 </div>
                 <button
@@ -282,7 +291,7 @@ import { AvImageStudioPersistenceService } from './services/av-image-studio-pers
                     class="ps-input"
                     style="width: 100%;"
                     [(ngModel)]="targetHeight"
-                    (ngModelChange)="syncExternalCrop()"
+                    (ngModelChange)="onTargetHeightChange()"
                   />
                 </div>
               </div>
@@ -332,13 +341,83 @@ import { AvImageStudioPersistenceService } from './services/av-image-studio-pers
               </div>
             </div>
 
+            <!-- Image Resizing Panel (New) -->
+            <div
+              *ngIf="showResizePanel"
+              class="ps-panel"
+              style="margin-top: 8px; border-color: #00d9ff; background: #2a2a2a;"
+            >
+              <div class="ps-panel-title" style="color: #fff; border-bottom: none; margin: 0;">
+                Увеличить размер изображения
+              </div>
+              <div class="ps-label" style="margin-bottom: 8px;">
+                Текущий: {{ targetWidth }} × {{ targetHeight }}
+              </div>
+
+              <div style="display: flex; gap: 8px; align-items: flex-end; margin-bottom: 8px;">
+                <div style="flex: 1;">
+                  <div class="ps-label" style="font-size: 9px;">Новая ширина:</div>
+                  <input
+                    type="number"
+                    class="ps-input"
+                    style="width: 100%; border-color: #555;"
+                    [(ngModel)]="resizeWidth"
+                    (ngModelChange)="onResizeWidthChange()"
+                  />
+                </div>
+                <button
+                  class="ps-btn"
+                  (click)="resizeLocked = !resizeLocked"
+                  style="height: 22px; padding: 0 4px; background: #444;"
+                >
+                  {{ resizeLocked ? '🔒' : '🔓' }}
+                </button>
+                <div style="flex: 1;">
+                  <div class="ps-label" style="font-size: 9px;">Новая высота:</div>
+                  <input
+                    type="number"
+                    class="ps-input"
+                    style="width: 100%; border-color: #555;"
+                    [(ngModel)]="resizeHeight"
+                    (ngModelChange)="onResizeHeightChange()"
+                  />
+                </div>
+              </div>
+
+              <div style="display: flex; gap: 4px;">
+                <button
+                  class="ps-btn ps-btn-primary"
+                  style="flex: 2; height: 26px; font-weight: 700;"
+                  (click)="applyResize()"
+                >
+                  ПРИМЕНИТЬ
+                </button>
+                <button
+                  class="ps-btn"
+                  style="flex: 1; height: 26px;"
+                  (click)="showResizePanel = false"
+                >
+                  ОТМЕНА
+                </button>
+              </div>
+            </div>
+
+            <button
+              class="ps-btn"
+              style="width: 100%; margin-top: 8px; height: 26px; border: 1px dashed #555;"
+              (click)="toggleResizePanel()"
+              *ngIf="!showResizePanel"
+            >
+              Изменить размер изображения...
+            </button>
+
             <button
               class="ps-btn ps-btn-primary"
               style="width: 100%; margin: 8px 0; height: 28px; font-weight: 700;"
               (click)="applyCropPreview()"
               [disabled]="!imageUrl"
             >
-              ✨ ОБРЕЗАТЬ И ПОСМОТРЕТЬ
+              ✨ Обрезать и посмотреть
             </button>
           </div>
 
@@ -405,7 +484,7 @@ import { AvImageStudioPersistenceService } from './services/av-image-studio-pers
       <div class="status-bar">
         <span>
           {{ exportFormat.split('/')[1].toUpperCase() }} {{ quality }}% |
-          {{ (estimatedSize / 1024).toFixed(2) }} KB | 2 сек @ 1Мбит/с | 100% масштаб
+          {{ (estimatedSize / 1024).toFixed(2) }} KB | 2 сек &#64; 1Мбит/с | 100% масштаб
           <span *ngIf="imageUrl"> | Исходник: {{ originalWidth }}×{{ originalHeight }}</span>
         </span>
       </div>
@@ -426,6 +505,11 @@ import { AvImageStudioPersistenceService } from './services/av-image-studio-pers
           Готово
         </button>
       </div>
+
+      <!-- RE-SIZE HANDLE -->
+      <div class="resize-handle" (mousedown)="onResizeStart($event)">
+        <span nz-icon nzType="drag" nzTheme="outline" style="transform: rotate(45deg);"></span>
+      </div>
     </div>
   `,
   styles: [
@@ -434,7 +518,8 @@ import { AvImageStudioPersistenceService } from './services/av-image-studio-pers
         display: flex;
         flex-direction: column;
         width: 100%;
-        height: 880px;
+        height: 100%;
+        min-height: 700px;
         position: relative;
         z-index: 100;
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial,
@@ -442,7 +527,29 @@ import { AvImageStudioPersistenceService } from './services/av-image-studio-pers
         color: #d9d9d9;
         background: #262626;
         overflow: hidden;
+        border-radius: 4px;
         font-size: 11px;
+      }
+
+      .resize-handle {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        width: 20px;
+        height: 20px;
+        cursor: nwse-resize;
+        z-index: 2000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #666;
+        background: linear-gradient(135deg, transparent 50%, rgba(255, 255, 255, 0.05) 50%);
+        transition: color 0.2s, background 0.2s;
+      }
+
+      .resize-handle:hover {
+        color: #00d9ff;
+        background: linear-gradient(135deg, transparent 50%, rgba(0, 217, 255, 0.1) 50%);
       }
 
       .header {
@@ -545,9 +652,11 @@ import { AvImageStudioPersistenceService } from './services/av-image-studio-pers
 
       .preview-image {
         max-width: 100%;
-        max-height: 100%;
+        max-height: calc(100% - 40px); /* Leaving space for the badge below */
+        object-fit: contain;
         display: block;
         border: 1px solid #444;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
       }
 
       .result-preview-container {
@@ -555,7 +664,10 @@ import { AvImageStudioPersistenceService } from './services/av-image-studio-pers
         display: flex;
         flex-direction: column;
         align-items: center;
+        justify-content: center;
         gap: 12px;
+        width: 100%;
+        height: 100%;
       }
 
       .preview-badge {
@@ -840,6 +952,8 @@ export class AvImageStudioModalComponent implements OnInit {
   readonly data = inject(NZ_MODAL_DATA, { optional: true });
   readonly loader = inject(AvImageStudioIngestionService);
   readonly persistence = inject(AvImageStudioPersistenceService);
+  private cdr = inject(ChangeDetectorRef);
+  private el = inject(ElementRef);
 
   // Source (bound to Signal)
   imageUrl: string | null = null;
@@ -892,16 +1006,18 @@ export class AvImageStudioModalComponent implements OnInit {
    * Call this whenever crop shape, lock state, or dimensions change.
    */
   updateAspectRatio() {
+    const oldRatio = this.currentAspectRatio;
     if (this.cropShape === 'circle') {
       this.currentAspectRatio = 1;
-      return;
-    }
-    if (this.targetLocked && this.targetHeight && this.targetHeight > 0) {
+    } else if (this.targetLocked && this.targetHeight && this.targetHeight > 0) {
       // Round to avoid float jitter
       this.currentAspectRatio = Math.round((this.targetWidth / this.targetHeight) * 10000) / 10000;
-      return;
+    } else {
+      this.currentAspectRatio = null;
     }
-    this.currentAspectRatio = null;
+    console.log(
+      `[StudioModal] updateAspectRatio: lock=${this.targetLocked}, old=${oldRatio}, new=${this.currentAspectRatio}`,
+    );
   }
   circleRadius = 100;
   circleX = 150;
@@ -915,6 +1031,60 @@ export class AvImageStudioModalComponent implements OnInit {
   currentCrop: AvRect | null = null;
   externalCrop: AvRect | null = null;
   isCropEnabled = false;
+
+  // Image Resize State
+  showResizePanel = false;
+  resizeWidth = 0;
+  resizeHeight = 0;
+  resizeLocked = true;
+  private resizeRatio = 1;
+
+  toggleResizePanel() {
+    this.showResizePanel = !this.showResizePanel;
+    if (this.showResizePanel) {
+      this.resizeWidth = this.targetWidth;
+      this.resizeHeight = this.targetHeight;
+      this.resizeRatio = this.targetHeight > 0 ? this.targetWidth / this.targetHeight : 1;
+    }
+  }
+
+  onResizeWidthChange() {
+    if (this.resizeLocked && this.resizeRatio > 0) {
+      this.resizeHeight = Math.round(this.resizeWidth / this.resizeRatio);
+    }
+  }
+
+  onResizeHeightChange() {
+    if (this.resizeLocked && this.resizeRatio > 0) {
+      this.resizeWidth = Math.round(this.resizeHeight * this.resizeRatio);
+    }
+  }
+
+  applyResize() {
+    this.targetWidth = this.resizeWidth;
+    this.targetHeight = this.resizeHeight;
+    this.showResizePanel = false;
+    this.updateAspectRatio();
+    this.syncExternalCrop();
+  }
+
+  onTargetWidthChange() {
+    if (this.targetLocked && this.currentAspectRatio) {
+      this.targetHeight = Math.round(this.targetWidth / this.currentAspectRatio);
+    } else {
+      this.updateAspectRatio();
+    }
+    this.syncExternalCrop();
+  }
+
+  onTargetHeightChange() {
+    if (this.targetLocked && this.currentAspectRatio) {
+      this.targetWidth = Math.round(this.targetHeight * this.currentAspectRatio);
+    } else {
+      this.updateAspectRatio();
+    }
+    this.syncExternalCrop();
+  }
 
   onCropToggle(enabled: boolean) {
     this.isCropEnabled = enabled;
@@ -932,15 +1102,14 @@ export class AvImageStudioModalComponent implements OnInit {
   onCropChange(rect: AvRect) {
     this.currentCrop = rect;
     // Синхронизируем размеры в инпутах с рамкой кропа
-    // (По желанию пользователя: если он тянет рамку, цифры в панели тоже меняются)
     this.targetWidth = Math.round(rect.width);
     this.targetHeight = Math.round(rect.height);
+    this.cdr.markForCheck();
   }
 
   // Called when width/height inputs change to update the canvas
   syncExternalCrop() {
     if (this.targetWidth && this.targetHeight) {
-      this.updateAspectRatio(); // <-- Update ratio manually
       // Create a temporary external crop to move the box
       // (Simplified logic: we just pass dimensions, the canvas will center or resize)
       this.externalCrop = {
@@ -989,8 +1158,16 @@ export class AvImageStudioModalComponent implements OnInit {
   }
 
   ngOnInit() {
+    console.log(
+      '%c [StudioModal] COMPONENT INITIALIZED ',
+      'background: #00d9ff; color: #000; font-weight: bold;',
+    );
     if (this.data?.imageUrl) {
       this.loader.loadFromUrl(this.data.imageUrl);
+    }
+    if (this.data?.aspectRatio) {
+      this.currentAspectRatio = this.data.aspectRatio;
+      this.targetLocked = true;
     }
     if (this.data?.metadata) {
       this.seoAlt = this.data.metadata.altText || '';
@@ -1026,13 +1203,69 @@ export class AvImageStudioModalComponent implements OnInit {
   }
 
   setCropShape(shape: 'rectangle' | 'circle'): void {
+    console.log(`[StudioModal] setCropShape: ${shape}`);
     this.cropShape = shape;
     this.updateAspectRatio(); // <-- Update on shape change
   }
 
   toggleTargetLock(): void {
     this.targetLocked = !this.targetLocked;
+    console.warn('!!! LOCK TOGGLED !!! New state:', this.targetLocked);
+    window.alert('Lock toggled to: ' + this.targetLocked);
     this.updateAspectRatio(); // <-- Update on lock toggle
+  }
+
+  testKlkz(): void {
+    console.log(
+      '%c [StudioModal] KLKZ CLICKED ',
+      'background: #ff0000; color: #fff; font-size: 20px;',
+    );
+    window.alert('KLKZ IS WORKING!');
+  }
+
+  // --- MODAL RESIZE LOGIC ---
+  onResizeStart(event: MouseEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    const startX = event.clientX;
+    const startY = event.clientY;
+
+    // Ищем КОРРЕКТНЫЙ контейнер конкретно этого модала (через ближайшего родителя)
+    const modalWrapper = this.el.nativeElement.closest('.ant-modal') as HTMLElement;
+    const modalContent = this.el.nativeElement.closest('.ant-modal-content') as HTMLElement;
+
+    if (!modalWrapper || !modalContent) return;
+
+    const startWidth = modalWrapper.offsetWidth;
+    const startHeight = modalContent.offsetHeight;
+
+    const onMouseMove = (e: MouseEvent) => {
+      requestAnimationFrame(() => {
+        const deltaX = e.clientX - startX;
+        const deltaY = e.clientY - startY;
+
+        const newWidth = Math.max(startWidth + deltaX, 800);
+        const newHeight = Math.max(startHeight + deltaY, 600);
+
+        modalWrapper.style.width = `${newWidth}px`;
+        modalContent.style.height = `${newHeight}px`;
+
+        // Триггерим ресайз для внутренних компонентов (например, канваса)
+        window.dispatchEvent(new Event('resize'));
+        this.cdr.markForCheck();
+      });
+    };
+
+    const onMouseUp = () => {
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
+      // Фиксируем изменения в CDK Overlay если нужно через триггер ресайза
+      window.dispatchEvent(new Event('resize'));
+    };
+
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
   }
 
   applyPreset(preset: any): void {

@@ -38,7 +38,7 @@ import {
 
             <!-- THE PICKER -->
             <div style="height: 200px; margin-bottom: 20px;">
-              <app-av-image-picker [(ngModel)]="pickerUrl"></app-av-image-picker>
+              <av-image-picker [(ngModel)]="pickerUrl"></av-image-picker>
             </div>
 
             <div class="debug-val" *ngIf="pickerUrl">

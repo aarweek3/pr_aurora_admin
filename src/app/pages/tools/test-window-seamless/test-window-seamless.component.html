@@ -1,0 +1,145 @@
+<div class="test-container">
+  <div class="test-header">
+    <h1>🧪 Тестирование модальных окон (VS Style)</h1>
+    <p>Сравнение различных реализаций модальных окон в стиле Visual Studio Code</p>
+  </div>
+
+  <!-- VS COMPROMISE v2.0 (ГЛАВНЫЙ) -->
+  <div class="test-section test-section--gold">
+    <h2>💎 VS Modal Compromise v2.0 (PRODUCTION)</h2>
+    <p>Гибридная версия с лучшими архитектурными решениями и визуальной полировкой</p>
+
+    <div
+      style="
+        display: flex;
+        gap: 15px;
+        align-items: center;
+        margin-bottom: 15px;
+        background: rgba(212, 175, 55, 0.1);
+        padding: 10px;
+        border-radius: 4px;
+      "
+    >
+      <div style="display: flex; flex-direction: column; gap: 4px">
+        <label style="font-size: 11px; color: #858585; text-transform: uppercase">Ширина (px):</label>
+        <input
+          type="number"
+          [(ngModel)]="testWidth"
+          style="
+            width: 80px;
+            background: #252526;
+            border: 1px solid #454545;
+            color: #fff;
+            padding: 4px 8px;
+            border-radius: 2px;
+          "
+        />
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 4px">
+        <label style="font-size: 11px; color: #858585; text-transform: uppercase">Высота (px):</label>
+        <input
+          type="number"
+          [(ngModel)]="testHeight"
+          style="
+            width: 80px;
+            background: #252526;
+            border: 1px solid #454545;
+            color: #fff;
+            padding: 4px 8px;
+            border-radius: 2px;
+          "
+        />
+      </div>
+      <div style="font-size: 12px; color: #d4af37; margin-top: 15px">← Задайте размеры ПЕРЕД открытием</div>
+    </div>
+
+    <div class="test-actions">
+      <button
+        class="av-btn av-btn--primary"
+        style="background: #d4af37; color: #000; font-weight: bold"
+        (click)="openCompromiseModal()"
+      >
+        💎 Запустить Compromise v2.0
+      </button>
+    </div>
+  </div>
+
+  <!-- VS MODAL (ОРИГИНАЛ) -->
+  <div class="test-section">
+    <h2>🟦 VS Modal (Original)</h2>
+    <p>Оригинальная версия с ComponentPortal и Signals для реактивности</p>
+    <div class="test-actions">
+      <button class="av-btn av-btn--primary" style="background: #007acc" (click)="openVSModal()">
+        🟦 VS Modal Original
+      </button>
+    </div>
+  </div>
+
+  <!-- VS MODAL CLAUDE (АЛЬТЕРНАТИВА) -->
+  <div class="test-section">
+    <h2>🟪 VS Modal Claude (Alternative)</h2>
+    <p>Альтернативная реализация с ViewContainerRef и улучшенным resize</p>
+    <div class="test-actions">
+      <button class="av-btn av-btn--primary" style="background: #8b5cf6" (click)="openVSModalClaude()">
+        🟪 VS Modal Claude - Standard
+      </button>
+      <button class="av-btn av-btn--primary" style="background: #7c3aed" (click)="openLargeVSModalClaude()">
+        🟪 VS Modal Claude - Large
+      </button>
+      <button class="av-btn av-btn--secondary" (click)="openNoBackdropClaude()">🟪 Claude - No Backdrop</button>
+    </div>
+  </div>
+
+  <!-- AURORA IMAGE STUDIO -->
+  <div class="test-section">
+    <h2>🖼️ Aurora Image Studio</h2>
+    <p>Компонент загрузки и редактирования изображений с Aurora Image Studio Modal</p>
+    <div class="test-actions">
+      <av-image-picker
+        [value]="testImageUrl()"
+        (valueChange)="onImageChange($event)"
+        [aspectRatio]="16 / 9"
+        placeholder="Кликните для загрузки изображения"
+      >
+      </av-image-picker>
+      <div *ngIf="testImageUrl()" style="margin-top: 10px">
+        <img [src]="testImageUrl()" alt="Test" style="max-width: 200px; border-radius: 4px; border: 1px solid #ddd" />
+      </div>
+    </div>
+  </div>
+
+  <!-- NG-ZORRO MODAL (STANDARD) -->
+  <div class="test-section">
+    <h2>🎯 Ng-Zorro Modal (Standard)</h2>
+    <p>Стандартное модальное окно Ant Design для Angular</p>
+    <div class="test-actions">
+      <button class="av-btn av-btn--primary" style="background: #1890ff" (click)="openVsModalAngular()">
+        🎯 Modal Angular
+      </button>
+    </div>
+  </div>
+
+  <!-- AV-MODAL (LEGACY) -->
+  <div class="test-section test-section--legacy">
+    <h2>⚙️ AV-Modal (Legacy)</h2>
+    <p>Старая реализация модального окна (для сравнения)</p>
+    <div class="test-actions">
+      <button class="av-btn av-btn--secondary" (click)="openWindow()">⚙️ av-modal (legacy)</button>
+    </div>
+  </div>
+
+  <!-- LEGACY MODAL -->
+  <av-modal
+    [isOpen]="isWindowVisible()"
+    (isOpenChange)="isWindowVisible.set($event)"
+    [showCloseButton]="false"
+    [draggable]="true"
+    [resizable]="true"
+    [avWidth]="800"
+    [avHeight]="550"
+  >
+    <div modal-body class="vs-modal-body">
+      <app-window-seamless-example></app-window-seamless-example>
+    </div>
+  </av-modal>
+</div>

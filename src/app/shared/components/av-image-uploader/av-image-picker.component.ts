@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, forwardRef, inject } from '@angular/core';
+import { Component, EventEmitter, forwardRef, inject, Input, Output } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { AvImageStudioModalComponent } from '@shared/components/av-image-studio-modal/av-image-studio-modal.component';
 import { AvImageUploadResult } from '@shared/components/av-image-studio-modal/models/av-image-studio-modal.model';
@@ -9,7 +9,7 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzModalService } from 'ng-zorro-antd/modal';
 
 @Component({
-  selector: 'app-av-image-picker',
+  selector: 'av-image-picker',
   standalone: true,
   imports: [CommonModule, NzButtonModule, NzIconModule],
   providers: [
@@ -23,8 +23,8 @@ import { NzModalService } from 'ng-zorro-antd/modal';
     <div
       class="picker-container"
       [class.has-image]="!!value"
-      [style.width]="fixedSide === 'width' ? size + 'px' : 'auto'"
-      [style.height]="fixedSide === 'height' ? size + 'px' : 'auto'"
+      [style.width]="fixedSide === 'width' ? size + (isNumber(size) ? 'px' : '') : 'auto'"
+      [style.height]="fixedSide === 'height' ? size + (isNumber(size) ? 'px' : '') : 'auto'"
       [style.display]="fixedSide === 'width' ? 'block' : 'inline-block'"
     >
       <!-- 1. EMPTY STATE -->
@@ -32,7 +32,7 @@ import { NzModalService } from 'ng-zorro-antd/modal';
         <div class="upload-icon">
           <span nz-icon nzType="cloud-upload" nzTheme="outline"></span>
         </div>
-        <div class="text">Нажмите для загрузки</div>
+        <div class="text" style="text-align: center; padding: 0 10px;">{{ placeholder }}</div>
       </div>
 
       <!-- 2. IMAGE PREVIEW -->
@@ -159,9 +159,11 @@ import { NzModalService } from 'ng-zorro-antd/modal';
 export class AvImagePickerComponent implements ControlValueAccessor {
   @Input() aspectRatio: number | null = null; // Передаем в редактор
   @Input() fixedSide: 'width' | 'height' = 'width';
-  @Input() size = 300;
+  @Input() size: string | number = 300;
+  @Input() placeholder = 'Нажмите для загрузки';
 
-  value: string | null = null;
+  @Input() value: string | null = null;
+  @Output() readonly valueChange = new EventEmitter<string | null>();
   isDisabled = false;
 
   onChange: (value: string | null) => void = () => {};
@@ -190,17 +192,19 @@ export class AvImagePickerComponent implements ControlValueAccessor {
     // Если у нас уже есть url, передаем его в студию для редактирования
     // Примечание: Studio должна уметь принимать imageUrl во входных данных (nzData)
     const modalRef = this.#modal.create({
-      nzTitle: 'Aurora Image Studio',
       nzContent: AvImageStudioModalComponent,
       nzData: {
-        imageUrl: this.value, // Передаем текущее значение
-        // aspectRatio: this.aspectRatio // TODO: Если студия поддерживает предустановку aspect ratio через входные данные
+        imageUrl: this.value,
+        aspectRatio: this.aspectRatio,
       },
-      nzWidth: 1200,
+      nzTitle: 'Aurora Image Studio',
+      nzWidth: 1240,
       nzFooter: null,
+      nzDraggable: true,
       nzClosable: true,
       nzMaskClosable: false,
-      nzStyle: { top: '20px' },
+      nzStyle: { top: '40px' },
+      nzBodyStyle: { padding: '0' },
     });
 
     modalRef.afterClose.subscribe((result: AvImageUploadResult | undefined) => {
@@ -217,6 +221,7 @@ export class AvImagePickerComponent implements ControlValueAccessor {
     // Студия уже загрузила картинку на сервер и вернула относительный путь (dataUrl)
     this.value = result.dataUrl;
     this.onChange(this.value);
+    this.valueChange.emit(this.value);
     this.onTouched();
 
     // Опционально: можно использовать result.metadata для сохранения alt/title,
@@ -229,6 +234,11 @@ export class AvImagePickerComponent implements ControlValueAccessor {
   clear() {
     this.value = null;
     this.onChange(null);
+    this.valueChange.emit(null);
     this.onTouched();
+  }
+
+  isNumber(val: any): boolean {
+    return typeof val === 'number';
   }
 }

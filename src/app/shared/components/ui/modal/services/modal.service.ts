@@ -327,6 +327,7 @@ export class ModalService {
     if (
       config.mobileFullscreen &&
       typeof window !== 'undefined' &&
+      window.innerWidth != null &&
       window.innerWidth < (config.mobileBreakpoint || 768)
     ) {
       return '100vw';

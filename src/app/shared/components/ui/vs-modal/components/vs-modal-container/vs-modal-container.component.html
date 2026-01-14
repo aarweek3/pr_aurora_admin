@@ -1,0 +1,34 @@
+<div
+  class="vs-modal-shell"
+  [style.width]="config.width | vsSafeDimension"
+  [style.height]="config.height | vsSafeDimension"
+  cdkDrag
+  [cdkDragDisabled]="!config.draggable"
+  [cdkDragBoundary]="'.cdk-overlay-container'"
+>
+  <!-- HEADER -->
+  <header class="vs-modal-header" cdkDragHandle>
+    <div class="vs-modal-header__title">
+      {{ modalRef.title() }}
+    </div>
+
+    <div class="vs-modal-header__actions">
+      <button class="action-btn" (click)="minimize($event)">–</button>
+      <button class="action-btn" (click)="maximize($event)">▢</button>
+      <button class="action-btn action-btn--close" (click)="close()">✕</button>
+    </div>
+  </header>
+
+  <!-- BODY (CONTENT ZONE) -->
+  <main class="vs-modal-body">
+    <ng-template [cdkPortalOutlet]="portal"></ng-template>
+  </main>
+
+  <!-- FOOTER (STATUS BAR) -->
+  <footer class="vs-modal-footer" *ngIf="modalRef.statusText()">
+    <span>{{ modalRef.statusText() }}</span>
+  </footer>
+
+  <!-- RESIZE HANDLE -->
+  <div class="vs-resize-handle" *ngIf="config.resizable" (mousedown)="onResizeStart($event)"></div>
+</div>

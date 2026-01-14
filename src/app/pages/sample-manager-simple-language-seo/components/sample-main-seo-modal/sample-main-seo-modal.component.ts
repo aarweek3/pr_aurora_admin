@@ -29,7 +29,9 @@ import { SampleMainSeoFormComponent } from '../sample-main-seo-form/sample-main-
       </ng-container>
 
       <ng-template #modalTitle>
-        <span *ngIf="mode === 'add'"><i nz-icon nzType="plus"></i> Новая запись</span>
+        <span *ngIf="mode === 'add'"
+          ><i nz-icon nzType="plus"></i> Новая запись sample-main-seo-modal.component.ts</span
+        >
         <span *ngIf="mode === 'edit'"><i nz-icon nzType="edit"></i> Редактирование записи</span>
       </ng-template>
 

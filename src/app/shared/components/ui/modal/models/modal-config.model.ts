@@ -81,6 +81,12 @@ export interface ModalConfig<TData = any> {
 
   /** Центрировать содержимое (для диалогов с иконками) */
   centered?: boolean;
+
+  /** Разрешить перетаскивание за хедер */
+  draggable?: boolean;
+
+  /** Разрешить изменение размера */
+  resizable?: boolean;
 }
 
 /**

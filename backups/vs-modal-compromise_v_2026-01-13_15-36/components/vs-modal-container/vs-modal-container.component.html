@@ -1,0 +1,84 @@
+<div
+  class="vs-modal-shell"
+  [style.width]="config.width | vsSafeDimension"
+  [style.height]="config.height | vsSafeDimension"
+  [class.resizing]="modalRef.isResizing()"
+  cdkDrag
+  [cdkDragDisabled]="!config.draggable || isDragDisabled()"
+  [cdkDragBoundary]="'.cdk-overlay-container'"
+  (cdkDragMoved)="onDragMoved($event)"
+  (cdkDragEnded)="onDragEnded($event)"
+>
+  <!-- Header (Title Bar) -->
+  <header class="vs-modal-header" cdkDragHandle>
+    <div class="vs-modal-header__title">
+      <span class="vs-modal-icon">⚡</span>
+      <span class="vs-modal-title-text">{{ modalRef.title() }}</span>
+    </div>
+
+    <div class="vs-modal-header__actions">
+      <button class="vs-action-btn" type="button" (click)="toggleDebug()" title="Toggle Debug Panel">🔍</button>
+      <button class="vs-action-btn" type="button" (click)="onMinimize()">—</button>
+      <button class="vs-action-btn" type="button" (click)="onMaximize()">▢</button>
+      <button class="vs-action-btn vs-action-btn--close" type="button" (click)="modalRef.close()">✕</button>
+    </div>
+  </header>
+
+  <!-- Body (Content area) -->
+  <main class="vs-modal-body">
+    <ng-template [cdkPortalOutlet]="portal"></ng-template>
+  </main>
+
+  <!-- Footer (Status Bar) -->
+  <footer class="vs-modal-footer">
+    <span class="vs-modal-status">{{ modalRef.statusText() }}</span>
+  </footer>
+
+  <!-- Debug Panel -->
+  @if (showDebug() && modalRef.debugInfo()) {
+    <div class="vs-debug-panel">
+      <div class="vs-debug-title">📊 Debug Info (History: {{ modalRef.debugHistory().length }})</div>
+      <div class="vs-debug-row">
+        <span class="vs-debug-label">Position:</span>
+        <span class="vs-debug-value">top: {{ modalRef.debugInfo()!.top }}px, left: {{ modalRef.debugInfo()!.left }}px</span>
+      </div>
+      <div class="vs-debug-row">
+        <span class="vs-debug-label">Size:</span>
+        <span class="vs-debug-value">{{ modalRef.debugInfo()!.width }}×{{ modalRef.debugInfo()!.height }}px</span>
+      </div>
+      <div class="vs-debug-row">
+        <span class="vs-debug-label">Bounds:</span>
+        <span class="vs-debug-value">right: {{ modalRef.debugInfo()!.right }}px, bottom: {{ modalRef.debugInfo()!.bottom }}px</span>
+      </div>
+      <div class="vs-debug-row">
+        <span class="vs-debug-label">Viewport:</span>
+        <span class="vs-debug-value">{{ window.innerWidth }}×{{ window.innerHeight }}px</span>
+      </div>
+      <div class="vs-debug-separator"></div>
+      <div class="vs-debug-row" [class.vs-debug-row--error]="modalRef.debugInfo()!.top < 0">
+        <span class="vs-debug-label">Top overflow:</span>
+        <span class="vs-debug-value">{{ modalRef.debugInfo()!.top < 0 ? '⚠️ YES (' + modalRef.debugInfo()!.top + 'px)' : '✅ NO' }}</span>
+      </div>
+      <div class="vs-debug-row" [class.vs-debug-row--error]="modalRef.debugInfo()!.left < 0">
+        <span class="vs-debug-label">Left overflow:</span>
+        <span class="vs-debug-value">{{ modalRef.debugInfo()!.left < 0 ? '⚠️ YES (' + modalRef.debugInfo()!.left + 'px)' : '✅ NO' }}</span>
+      </div>
+      <div class="vs-debug-row" [class.vs-debug-row--error]="modalRef.debugInfo()!.right > window.innerWidth">
+        <span class="vs-debug-label">Right overflow:</span>
+        <span class="vs-debug-value">{{ modalRef.debugInfo()!.right > window.innerWidth ? '⚠️ YES (by ' + (modalRef.debugInfo()!.right - window.innerWidth) + 'px)' : '✅ NO' }}</span>
+      </div>
+      <div class="vs-debug-row" [class.vs-debug-row--error]="modalRef.debugInfo()!.bottom > window.innerHeight">
+        <span class="vs-debug-label">Bottom overflow:</span>
+        <span class="vs-debug-value">{{ modalRef.debugInfo()!.bottom > window.innerHeight ? '⚠️ YES (by ' + (modalRef.debugInfo()!.bottom - window.innerHeight) + 'px)' : '✅ NO' }}</span>
+      </div>
+      <div class="vs-debug-actions">
+        <button class="vs-debug-btn vs-debug-btn--primary" (click)="copyDebugInfo()">📋 Copy Current</button>
+        <button class="vs-debug-btn vs-debug-btn--success" (click)="exportDebugHistory()">💾 Export History</button>
+        <button class="vs-debug-btn vs-debug-btn--danger" (click)="clearDebugHistory()">🗑️ Clear</button>
+      </div>
+    </div>
+  }
+
+  <!-- Resize Handle (Corner only) -->
+  <div *ngIf="config.resizable" class="vs-resize-handle" (mousedown)="onResizeStart($event)"></div>
+</div>

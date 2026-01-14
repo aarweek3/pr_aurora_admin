@@ -9,6 +9,7 @@ import {
   HostListener,
   inject,
   Input,
+  NgZone,
   OnDestroy,
   OnInit,
   Output,
@@ -55,6 +56,7 @@ import { MODAL_DATA } from '../../tokens/modal-tokens';
 })
 export class ModalComponent implements OnInit, OnDestroy {
   private cdr = inject(ChangeDetectorRef);
+  private ngZone = inject(NgZone);
 
   @ViewChild('modalContainer') modalContainer?: ElementRef;
 
@@ -158,6 +160,7 @@ export class ModalComponent implements OnInit, OnDestroy {
     if (
       this.mobileFullscreen &&
       typeof window !== 'undefined' &&
+      window.innerWidth != null &&
       window.innerWidth < this.mobileBreakpoint
     ) {
       return 'fullscreen';
@@ -251,7 +254,7 @@ export class ModalComponent implements OnInit, OnDestroy {
 
     // Лимиты экрана на лету
     const screenLimit =
-      typeof window !== 'undefined'
+      typeof window !== 'undefined' && window.innerWidth != null && window.innerHeight != null
         ? (type === 'width' ? window.innerWidth : window.innerHeight) * 0.98
         : 2000;
 
@@ -360,21 +363,29 @@ export class ModalComponent implements OnInit, OnDestroy {
     const startHeight = rect.height;
 
     const onMouseMove = (e: MouseEvent) => {
-      const screenWidth = window.innerWidth;
-      const screenHeight = window.innerHeight;
+      this.ngZone.runOutsideAngular(() => {
+        requestAnimationFrame(() => {
+          if (!this.resizable) return;
 
-      // Максимально допустимые размеры (98% экрана, чтобы окно не исчезало)
-      const maxW = screenWidth * 0.98;
-      const maxH = screenHeight * 0.98;
+          const screenWidth =
+            typeof window !== 'undefined' && window.innerWidth ? window.innerWidth : 1920;
+          const screenHeight =
+            typeof window !== 'undefined' && window.innerHeight ? window.innerHeight : 1080;
 
-      let newWidth = startWidth + (e.clientX - startX);
-      let newHeight = startHeight + (e.clientY - startY);
+          const maxW = screenWidth * 0.98;
+          const maxH = screenHeight * 0.98;
 
-      // Ограничиваем Min (100x50) и Max (98% экрана)
-      this.avWidth = Math.min(Math.max(newWidth, 100), maxW);
-      this.avHeight = Math.min(Math.max(newHeight, 50), maxH);
+          let newWidth = startWidth + (e.clientX - startX);
+          let newHeight = startHeight + (e.clientY - startY);
 
-      this.cdr.detectChanges();
+          this.avWidth = Math.min(Math.max(newWidth, 100), maxW);
+          this.avHeight = Math.min(Math.max(newHeight, 50), maxH);
+
+          this.ngZone.run(() => {
+            this.cdr.detectChanges();
+          });
+        });
+      });
     };
 
     const onMouseUp = () => {
@@ -382,8 +393,10 @@ export class ModalComponent implements OnInit, OnDestroy {
       document.removeEventListener('mouseup', onMouseUp);
     };
 
-    document.addEventListener('mousemove', onMouseMove);
-    document.addEventListener('mouseup', onMouseUp);
+    this.ngZone.runOutsideAngular(() => {
+      document.addEventListener('mousemove', onMouseMove);
+      document.addEventListener('mouseup', onMouseUp);
+    });
   }
 }
 

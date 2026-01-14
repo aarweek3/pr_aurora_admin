@@ -75,4 +75,25 @@ export const TOOLS_ROUTES: Routes = [
         (m) => m.TestImageStudioComponent,
       ),
   },
+  {
+    path: 'test-image-studio-v2',
+    loadComponent: () =>
+      import('./test-image-studio-v2/test-image-studio-v2.component').then(
+        (m) => m.TestImageStudioV2Component,
+      ),
+  },
+  {
+    path: 'test-window-seamless',
+    loadComponent: () =>
+      import('./test-window-seamless/test-window-seamless.component').then(
+        (m) => m.TestWindowSeamlessComponent,
+      ),
+  },
+  {
+    path: 'test-image-editor-vs',
+    loadComponent: () =>
+      import('./test-image-editor-vs/test-image-editor-vs.component').then(
+        (m) => m.TestImageEditorVsComponent,
+      ),
+  },
 ];

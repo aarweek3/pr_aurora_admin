@@ -1,0 +1,350 @@
+<div
+  class="studio-container"
+  cdkDrag
+  cdkDragRootElement=".cdk-overlay-pane"
+  cdkDragBoundary=".cdk-global-overlay-wrapper"
+>
+  <!-- 1. COMPACT HEADER -->
+  <div class="ps-header" cdkDragHandle style="cursor: move">
+    <div class="ps-header-left">
+      <span class="ps-label-small">Файл !!!!:</span>
+      <span class="ps-file-name">{{ fileName }}</span>
+    </div>
+    <div class="ps-header-center">
+      <span class="ps-label-small">URL:</span>
+      <input
+        class="ps-input-dark"
+        #urlInput
+        placeholder="Вставьте ссылку..."
+        (keyup.enter)="loader.loadFromUrl(urlInput.value)"
+      />
+      <button class="ps-btn-dark" (click)="loader.loadFromUrl(urlInput.value)">Загрузить</button>
+    </div>
+    <div class="ps-header-right">
+      <input type="file" #fileInput style="display: none" (change)="onFileChange($event)" />
+      <button class="ps-btn-dark" style="background: var(--ps-accent-blue); border: none" (click)="fileInput.click()">
+        Обзор...
+      </button>
+      <button class="ps-btn-icon" (click)="cancel()" style="margin-left: 8px">
+        <span nz-icon nzType="close"></span>
+      </button>
+    </div>
+  </div>
+
+  <!-- 2. MAIN AREA -->
+  <div class="studio-main">
+    <!-- LEFT: PREVIEW -->
+    <div class="col-left" [class.dragging]="isDragging" (dragover)="onDragOver($event)" (drop)="onDrop($event)">
+      <div class="checkerboard"></div>
+
+      <div class="preview-wrap" *ngIf="imageUrl">
+        <app-crop-canvas
+          *ngIf="isCropEnabled"
+          [imageSrc]="imageUrl"
+          [aspectRatio]="targetLocked ? targetWidth / targetHeight : null"
+          [isCircle]="cropShape === 'circle'"
+          [externalCrop]="externalCrop"
+          (cropChange)="onCropChange($event)"
+          (ready)="onCanvasReady()"
+        ></app-crop-canvas>
+
+        <div *ngIf="!isCropEnabled" class="preview-image-simple-container">
+          <img [src]="imageUrl" class="preview-image-simple" />
+        </div>
+      </div>
+
+      <div class="preview-mock" *ngIf="!imageUrl && !loader.isLoading()">
+        <span nz-icon nzType="picture" style="font-size: 64px; color: #333"></span>
+        <p>Перетащите изображение</p>
+      </div>
+
+      <!-- Bottom Toggle in Preview -->
+      <div class="preview-tabs" *ngIf="imageUrl">
+        <button class="p-tab active">Редактор</button>
+        <button class="p-tab">Результат</button>
+      </div>
+
+      <av-spinner
+        [visible]="loader.isLoading() || (!!imageUrl && isCropEnabled && !isCanvasReady)"
+        [overlay]="true"
+      ></av-spinner>
+    </div>
+
+    <!-- RIGHT: SIDEBAR -->
+    <div class="col-right">
+      <!-- Section: Format -->
+      <div class="ps-section">
+        <div class="ps-row" style="align-items: center; margin-bottom: 6px">
+          <div class="ps-section-title" style="margin-bottom: 0; margin-right: 10px; flex-shrink: 0">ФОРМАТ</div>
+          <select class="ps-select-dark" style="flex: 1; height: 22px" [(ngModel)]="exportFormat">
+            <option value="image/jpeg">JPEG</option>
+            <option value="image/png">PNG</option>
+            <option value="image/webp">WebP</option>
+          </select>
+          <select class="ps-select-dark" style="flex: 1; height: 22px">
+            <option>Максимум</option>
+            <option>Высокое</option>
+            <option>Среднее</option>
+          </select>
+        </div>
+        <div class="ps-row" style="align-items: center; margin-top: 10px; gap: 10px">
+          <span class="ps-label-small" style="flex-shrink: 0">Качество:</span>
+          <nz-slider [(ngModel)]="quality" [nzMin]="1" [nzMax]="100" style="flex: 1; margin: 0 4px"></nz-slider>
+          <input
+            type="number"
+            class="ps-input-dark"
+            style="width: 45px; height: 22px; text-align: center; padding: 0"
+            [(ngModel)]="quality"
+          />
+        </div>
+      </div>
+
+      <!-- Section: Optimization -->
+      <div class="ps-section">
+        <div class="ps-row" style="gap: 20px">
+          <label nz-checkbox [ngModel]="true" class="ps-checkbox">Прогрессивный</label>
+          <label nz-checkbox [ngModel]="true" class="ps-checkbox">Оптимизировать</label>
+        </div>
+        <div class="ps-label-row" style="margin-top: 10px">
+          <span>Выравнивание:</span>
+          <div class="ps-align-group">
+            <button class="ps-align-btn" [class.active]="align === 'left'" (click)="align = 'left'">
+              <span nz-icon nzType="align-left"></span>
+            </button>
+            <button class="ps-align-btn" [class.active]="align === 'center'" (click)="align = 'center'">
+              <span nz-icon nzType="align-center"></span>
+            </button>
+            <button class="ps-align-btn" [class.active]="align === 'right'" (click)="align = 'right'">
+              <span nz-icon nzType="align-right"></span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Image Size & Crop Panel -->
+      <div class="ps-panel">
+        <div class="ps-panel-title">
+          Размер и Обрезка
+          <div style="margin-left: auto; display: flex; align-items: center; gap: 6px">
+            <label class="ps-checkbox-label" style="text-transform: none; margin: 0">
+              <input type="checkbox" [ngModel]="isCropEnabled" (ngModelChange)="toggleCrop($event)" />
+              Рамка
+            </label>
+            <!-- Mini tabs for shape -->
+            <div class="ps-tab-mini" *ngIf="isCropEnabled">
+              <button [class.active]="cropShape === 'rectangle'" (click)="setCropShape('rectangle')">■</button>
+              <button [class.active]="cropShape === 'circle'" (click)="setCropShape('circle')">●</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Rectangle Settings (Only if Enabled) -->
+        <div *ngIf="cropShape === 'rectangle' && isCropEnabled">
+          <div style="display: flex; gap: 8px; align-items: flex-end; margin-bottom: 12px">
+            <div style="flex: 1">
+              <div class="ps-label" style="font-size: 9px">Ширина:</div>
+              <input
+                type="number"
+                class="ps-input"
+                style="width: 100%"
+                [ngModel]="targetWidth"
+                (ngModelChange)="updateTargetSize('width', $event)"
+              />
+            </div>
+            <button class="ps-btn" (click)="toggleTargetLock()" style="height: 22px; padding: 0 4px">
+              {{ targetLocked ? '🔒' : '🔓' }}
+            </button>
+            <div style="flex: 1">
+              <div class="ps-label" style="font-size: 9px">Высота:</div>
+              <input
+                type="number"
+                class="ps-input"
+                style="width: 100%"
+                [ngModel]="targetHeight"
+                (ngModelChange)="updateTargetSize('height', $event)"
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- Circle Settings -->
+        <div *ngIf="cropShape === 'circle'">
+          <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 4px; margin-bottom: 12px">
+            <div>
+              <div class="ps-label" style="font-size: 9px">Радиус:</div>
+              <input
+                type="number"
+                class="ps-input"
+                style="width: 100%"
+                [(ngModel)]="circleRadius"
+                (ngModelChange)="updateCircleCrop()"
+              />
+            </div>
+            <div>
+              <div class="ps-label" style="font-size: 9px">X:</div>
+              <input
+                type="number"
+                class="ps-input"
+                style="width: 100%"
+                [(ngModel)]="circleX"
+                (ngModelChange)="updateCircleCrop()"
+              />
+            </div>
+            <div>
+              <div class="ps-label" style="font-size: 9px">Y:</div>
+              <input
+                type="number"
+                class="ps-input"
+                style="width: 100%"
+                [(ngModel)]="circleY"
+                (ngModelChange)="updateCircleCrop()"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div class="ps-label" style="margin-bottom: 6px">Пресеты:</div>
+        <div class="presets-grid">
+          <div class="preset-item" *ngFor="let preset of presets" (click)="applyPreset(preset)">
+            <div class="preset-icon">{{ preset.icon }}</div>
+            <div class="preset-label">{{ preset.label.split(' ')[0] }}</div>
+            <div class="preset-size">{{ preset.size.split(' ')[0] }}</div>
+          </div>
+        </div>
+        <!-- Image Resizing Panel (New) -->
+        <div
+          *ngIf="showResizePanel"
+          class="ps-panel"
+          style="margin-top: 8px; border-color: #00d9ff; background: #2a2a2a"
+        >
+          <div class="ps-panel-title" style="color: #fff; border-bottom: none; margin: 0">
+            Увеличить размер изображения
+          </div>
+          <div class="ps-label" style="margin-bottom: 8px">Текущий: {{ targetWidth }} × {{ targetHeight }}</div>
+
+          <div style="display: flex; gap: 8px; align-items: flex-end; margin-bottom: 8px">
+            <div style="flex: 1">
+              <div class="ps-label" style="font-size: 9px">Новая ширина:</div>
+              <input
+                type="number"
+                class="ps-input"
+                style="width: 100%; border-color: #555"
+                [(ngModel)]="resizeWidth"
+                (ngModelChange)="onResizeWidthChange()"
+              />
+            </div>
+            <button
+              class="ps-btn"
+              (click)="resizeLocked = !resizeLocked"
+              style="height: 22px; padding: 0 4px; background: #444"
+            >
+              {{ resizeLocked ? '🔒' : '🔓' }}
+            </button>
+            <div style="flex: 1">
+              <div class="ps-label" style="font-size: 9px">Новая высота:</div>
+              <input
+                type="number"
+                class="ps-input"
+                style="width: 100%; border-color: #555"
+                [(ngModel)]="resizeHeight"
+                (ngModelChange)="onResizeHeightChange()"
+              />
+            </div>
+          </div>
+
+          <div style="display: flex; gap: 4px">
+            <button
+              class="ps-btn ps-btn-primary"
+              style="flex: 2; height: 26px; font-weight: 700"
+              (click)="applyResize()"
+            >
+              ПРИМЕНИТЬ
+            </button>
+            <button class="ps-btn" style="flex: 1; height: 26px" (click)="showResizePanel = false">ОТМЕНА</button>
+          </div>
+        </div>
+
+        <button
+          class="ps-btn"
+          style="width: 100%; margin-top: 8px; height: 26px; border: 1px dashed #555"
+          (click)="toggleResizePanel()"
+          *ngIf="!showResizePanel"
+        >
+          Изменить размер изображения...
+        </button>
+
+        <button class="ps-action-btn" (click)="isCropEnabled = true">✨ ОБРЕЗАТЬ И ПОСМОТРЕТЬ</button>
+      </div>
+
+      <!-- Section: SEO -->
+      <div class="ps-section">
+        <div class="ps-section-title">АТРИБУТЫ И SEO</div>
+
+        <div style="display: flex; flex-direction: column; gap: 4px">
+          <!-- Alt -->
+          <div style="display: flex; align-items: center; gap: 6px">
+            <div class="ps-label" style="width: 70px; margin: 0; flex-shrink: 0; text-align: right">Alt текст:</div>
+            <input class="ps-input-dark" style="flex: 1" [(ngModel)]="seoAlt" placeholder="Текст..." />
+          </div>
+
+          <!-- Title -->
+          <div style="display: flex; align-items: center; gap: 6px">
+            <div class="ps-label" style="width: 70px; margin: 0; flex-shrink: 0; text-align: right">Заголовок:</div>
+            <input class="ps-input-dark" style="flex: 1" [(ngModel)]="seoTitle" />
+          </div>
+
+          <!-- Description -->
+          <div style="display: flex; align-items: center; gap: 6px">
+            <div class="ps-label" style="width: 70px; margin: 0; flex-shrink: 0; text-align: right">Описание:</div>
+            <input class="ps-input-dark" style="flex: 1" [(ngModel)]="seoDescription" />
+          </div>
+
+          <!-- Caption -->
+          <div style="display: flex; align-items: center; gap: 6px">
+            <div class="ps-label" style="width: 70px; margin: 0; flex-shrink: 0; text-align: right">Подпись:</div>
+            <input class="ps-input-dark" style="flex: 1" [(ngModel)]="seoCaption" />
+          </div>
+
+          <div style="margin-top: 4px; display: flex; align-items: center; gap: 10px; padding-left: 76px">
+            <label nz-checkbox class="ps-checkbox" [(ngModel)]="linkClickable" style="font-size: 10px"
+              >Кликабельная ссылка</label
+            >
+          </div>
+
+          <!-- Link Details -->
+          <div
+            *ngIf="linkClickable"
+            style="margin-top: 2px; padding: 6px; background: rgba(255, 255, 255, 0.03); border-radius: 2px"
+          >
+            <div style="display: flex; align-items: center; gap: 6px">
+              <div class="ps-label" style="width: 30px; margin: 0; flex-shrink: 0">URL:</div>
+              <input class="ps-input-dark" style="flex: 1" [(ngModel)]="linkUrl" placeholder="https://..." />
+            </div>
+            <div style="margin-top: 4px">
+              <label nz-checkbox class="ps-checkbox" [(ngModel)]="linkInNewWindow" style="font-size: 10px"
+                >Открывать в новом окне</label
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. STATUS BAR -->
+  <div class="ps-status-bar">
+    <span
+      >JPEG {{ quality }}% | {{ (estimatedSize / 1024).toFixed(2) }} KB | 2 сек &#64; 1Мбит/с | 100% масштаб | Исходник:
+      {{ originalWidth }}×{{ originalHeight }}</span
+    >
+  </div>
+
+  <!-- 4. FOOTER -->
+  <div class="ps-footer">
+    <div class="ps-footer-left">Сохранить для Web - {{ fileName }}</div>
+    <div class="ps-footer-right">
+      <button class="ps-btn-cancel" (click)="cancel()">Отмена</button>
+      <button class="ps-btn-ready" (click)="save()" [disabled]="!imageUrl">Готово</button>
+    </div>
+  </div>
+</div>

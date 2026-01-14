@@ -1,59 +1,29 @@
 import { CommonModule } from '@angular/common';
 import {
+  ChangeDetectionStrategy,
   Component,
   ElementRef,
   EventEmitter,
   Input,
   OnChanges,
   OnDestroy,
-  OnInit,
   Output,
   SimpleChanges,
   ViewChild,
-  signal,
 } from '@angular/core';
-import {
-  AvPoint,
-  AvRect,
-} from '@shared/components/av-image-studio-modal/models/av-image-studio-modal.model';
+import { AvRect } from '@shared/components/av-image-studio-modal/models/av-image-studio-modal.model';
 
 @Component({
   selector: 'app-crop-canvas',
   standalone: true,
   imports: [CommonModule],
   template: `
-    <div class="crop-container" #container (mousedown)="onContainerMouseDown($event)">
-      <!-- 1. Изображение (нижний слой) -->
-      <img
-        #imageElement
-        [src]="imageSrc"
-        class="source-image"
-        (load)="onImageLoad()"
-        [style.transform]="activeTransform"
-      />
+    <div class="crop-container" #container>
+      <!-- 1. Изображение -->
+      <img #imageElement [src]="imageSrc" class="source-image" (load)="onImageLoad()" />
 
-      <!-- 2. Оверлей (затемнение) -->
-      <div class="overlay" *ngIf="isImageLoaded()"></div>
-
-      <!-- 3. Кроп-рамка -->
-      <div
-        class="crop-box"
-        [class.circle]="isCircle"
-        [style.left.px]="uiRect().x"
-        [style.top.px]="uiRect().y"
-        [style.width.px]="uiRect().width"
-        [style.height.px]="uiRect().height"
-        (mousedown)="onBoxMouseDown($event)"
-      >
-        <!-- Сетка (Grid) -->
-        <div class="grid-lines"></div>
-
-        <!-- Ручки (Handles) -->
-        <div class="handle nw" (mousedown)="onHandleDown($event, 'nw')"></div>
-        <div class="handle ne" (mousedown)="onHandleDown($event, 'ne')"></div>
-        <div class="handle sw" (mousedown)="onHandleDown($event, 'sw')"></div>
-        <div class="handle se" (mousedown)="onHandleDown($event, 'se')"></div>
-      </div>
+      <!-- 2. Оверлей Canvas для отрисовки рамки -->
+      <canvas #overlayCanvas class="overlay-canvas" (mousedown)="onMouseDown($event)"></canvas>
     </div>
   `,
   styles: [
@@ -71,365 +41,481 @@ import {
       }
 
       .source-image {
-        /* Важно: ограничиваем картинку, но сохраняем её натуральные пропорции при отображении */
         max-width: 100%;
         max-height: 100%;
         width: auto;
         height: auto;
         display: block;
         box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-        pointer-events: none;
-        /* Если картинка огромная, она не должна растягивать контейнер */
+        pointer-events: none; /* События обрабатывает канвас сверху */
         object-fit: contain;
       }
 
-      .overlay {
+      .overlay-canvas {
         position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: rgba(0, 0, 0, 0.5);
-        pointer-events: none;
-      }
-
-      .crop-box {
-        position: absolute;
-        box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.5);
-        outline: 1px solid rgba(255, 255, 255, 0.9);
-        z-index: 10;
-        cursor: move;
-      }
-      .crop-box.circle {
-        border-radius: 50%;
-      }
-
-      .grid-lines {
-        width: 100%;
-        height: 100%;
-        position: absolute;
-        pointer-events: none;
-        opacity: 0.4;
-        background-image: linear-gradient(to right, rgba(255, 255, 255, 0.5) 1px, transparent 1px),
-          linear-gradient(to bottom, rgba(255, 255, 255, 0.5) 1px, transparent 1px);
-        background-size: 33.3% 33.3%;
-      }
-
-      .handle {
-        position: absolute;
-        width: 10px;
-        height: 10px;
-        background: #fff;
-        border: 1px solid #000;
-        border-radius: 50%;
-        z-index: 20;
-      }
-      .nw {
-        top: -5px;
-        left: -5px;
-        cursor: nw-resize;
-      }
-      .ne {
-        top: -5px;
-        right: -5px;
-        cursor: ne-resize;
-      }
-      .sw {
-        bottom: -5px;
-        left: -5px;
-        cursor: sw-resize;
-      }
-      .se {
-        bottom: -5px;
-        right: -5px;
-        cursor: se-resize;
-      }
-
-      .handle::after {
-        content: '';
-        position: absolute;
-        top: -10px;
-        left: -10px;
-        right: -10px;
-        bottom: -10px;
+        /* Canvas будет позиционироваться JS-ом поверх картинки,
+           но пока можно задать начальные стили */
+        pointer-events: auto;
+        touch-action: none;
       }
     `,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CropCanvasComponent implements OnInit, OnDestroy, OnChanges {
+export class CropCanvasComponent implements OnChanges, OnDestroy {
   @Input() imageSrc: string | null = null;
-  @Input() aspectRatio: number | null = null; // null = Free
-  @Input() isCircle: boolean = false;
+  @Input() aspectRatio: number | null = null; // null = free
+  @Input() isCircle = false;
 
-  // Вход для управления размерами извне (например, из инпутов)
-  @Input() set externalCrop(rect: AvRect | null) {
-    this._externalCrop = rect;
-    if (rect && this.isImageLoaded()) {
-      this.applyExternalCrop(rect);
+  // Внешний кроп (например, переданный из родителя)
+  private _externalCrop: AvRect | null = null;
+  @Input() set externalCrop(val: AvRect | null) {
+    this._externalCrop = val;
+    // Если картинка уже загружена, применяем сразу
+    if (this.isReady && val) {
+      this.applyExternalCrop(val);
     }
   }
-  private _externalCrop: AvRect | null = null;
+  get externalCrop() {
+    return this._externalCrop;
+  }
 
   @Output() cropChange = new EventEmitter<AvRect>();
+  @Output() ready = new EventEmitter<void>();
 
   @ViewChild('container') containerRef!: ElementRef<HTMLDivElement>;
   @ViewChild('imageElement') imageRef!: ElementRef<HTMLImageElement>;
+  @ViewChild('overlayCanvas') canvasRef!: ElementRef<HTMLCanvasElement>;
 
-  uiRect = signal<AvRect>({ x: 0, y: 0, width: 0, height: 0 });
-  isImageLoaded = signal(false);
+  private ctx!: CanvasRenderingContext2D;
+  private isReady = false;
 
-  protected activeTransform = '';
+  // Геометрия
+  private cropRect: AvRect = { x: 0, y: 0, width: 0, height: 0 };
+  private imageRect: AvRect = { x: 0, y: 0, width: 0, height: 0 }; // Размеры отображаемой картинки
+  private naturalSize = { width: 0, height: 0 };
+
+  // Dragging
+  private isDragging = false;
   private dragMode: 'move' | 'nw' | 'ne' | 'sw' | 'se' | null = null;
-  private startPoint: AvPoint = { x: 0, y: 0 };
-  private startRect: AvRect = { x: 0, y: 0, width: 0, height: 0 };
-  private imageRect: AvRect = { x: 0, y: 0, width: 0, height: 0 };
+  private dragStart = { x: 0, y: 0 };
+  private startCropRect: AvRect = { x: 0, y: 0, width: 0, height: 0 };
 
+  // Слушатели событий (для удаления)
   private mouseMoveListener: any;
   private mouseUpListener: any;
 
-  constructor() {}
-
-  ngOnInit(): void {
+  constructor() {
     this.mouseMoveListener = this.onMouseMove.bind(this);
     this.mouseUpListener = this.onMouseUp.bind(this);
-    window.addEventListener('mousemove', this.mouseMoveListener, {
-      passive: false,
-    });
-    window.addEventListener('mouseup', this.mouseUpListener);
-    window.addEventListener('resize', () => this.updateImageMetrics());
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['aspectRatio']) {
+      console.log(
+        `[CropCanvas] aspectRatio changed: ${changes['aspectRatio'].previousValue} -> ${changes['aspectRatio'].currentValue} (isFirst: ${changes['aspectRatio'].firstChange})`,
+      );
+      if (!changes['aspectRatio'].firstChange && this.isReady) {
+        // Если включили аспект, подгоняем текущий кроп
+        if (this.aspectRatio) {
+          this.forceAspectRatio();
+          this.draw();
+          this.emitCropChange();
+        }
+      }
+    }
+    if (changes['isCircle'] && !changes['isCircle'].firstChange) {
+      if (this.isReady) this.draw();
+    }
   }
 
   ngOnDestroy(): void {
     window.removeEventListener('mousemove', this.mouseMoveListener);
     window.removeEventListener('mouseup', this.mouseUpListener);
-    window.removeEventListener('resize', () => this.updateImageMetrics());
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if (
-      (changes['aspectRatio'] && !changes['aspectRatio'].firstChange) ||
-      (changes['isCircle'] && !changes['isCircle'].firstChange)
-    ) {
-      this.resetCropToCenter();
-    }
   }
 
   onImageLoad() {
-    this.isImageLoaded.set(true);
-    setTimeout(() => {
-      this.updateImageMetrics();
-      if (this._externalCrop) {
-        this.applyExternalCrop(this._externalCrop);
-      } else {
-        this.resetCropToCenter();
-      }
-    }, 50);
+    this.isReady = true;
+    const imgKey = this.imageRef.nativeElement;
+    this.naturalSize = { width: imgKey.naturalWidth, height: imgKey.naturalHeight };
+
+    // Инициализируем метрики
+    // Ждем тик, чтобы layout устаканился, используем Double RAF как раньше
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        this.updateMetrics();
+
+        // Если был передан externalCrop, применяем его, иначе центр
+        if (this.externalCrop) {
+          this.applyExternalCrop(this.externalCrop);
+        } else {
+          this.resetCropToCenter();
+        }
+
+        this.ready.emit();
+
+        // Глобальные слушатели
+        window.addEventListener('mousemove', this.mouseMoveListener);
+        window.addEventListener('mouseup', this.mouseUpListener);
+      });
+    });
   }
 
-  private updateImageMetrics() {
-    if (!this.imageRef || !this.containerRef) return;
+  private updateMetrics() {
     const img = this.imageRef.nativeElement;
+    const canvas = this.canvasRef.nativeElement;
 
+    // Картинка внутри flex контейнера с max-width/height.
+    // Ее реальные (отображаемые) размеры:
     this.imageRect = {
       x: img.offsetLeft,
       y: img.offsetTop,
       width: img.offsetWidth,
       height: img.offsetHeight,
     };
+
+    // Канвас позиционируем ровно поверх картинки
+    canvas.width = this.imageRect.width;
+    canvas.height = this.imageRect.height;
+    canvas.style.left = this.imageRect.x + 'px';
+    canvas.style.top = this.imageRect.y + 'px';
+    // Важно: canvas.width/height - это буфер, style.width/height - стиль.
+    // Если они совпадают, масштабирования нет.
+
+    this.ctx = canvas.getContext('2d')!;
   }
 
   private resetCropToCenter() {
-    if (!this.isImageLoaded()) return;
+    const w = this.imageRect.width;
+    const h = this.imageRect.height;
 
-    const ir = this.imageRect;
-    let w = ir.width;
-    let h = ir.height;
+    // По умолчанию 80%
+    const cropW = w * 0.8;
+    const cropH = h * 0.8;
 
-    // Default to 90% if no aspectRatio to leave a small margin,
-    // but the user wants it to match their dimensions usually.
-    // Let's use 100% as starting point if no aspect ratio.
-    if (!this.aspectRatio) {
-      w = ir.width;
-      h = ir.height;
-    } else {
-      w = ir.width * 0.9;
-      h = ir.height * 0.9;
-    }
+    // Если есть aspectRatio, учитываем его сразу
+    let finalW = cropW;
+    let finalH = cropH;
 
     if (this.aspectRatio) {
-      if (w / h > this.aspectRatio) {
-        w = h * this.aspectRatio;
+      if (cropW / cropH > this.aspectRatio) {
+        finalW = cropH * this.aspectRatio;
       } else {
-        h = w / this.aspectRatio;
+        finalH = cropW / this.aspectRatio;
       }
     }
 
-    const x = ir.x + (ir.width - w) / 2;
-    const y = ir.y + (ir.height - h) / 2;
-
-    this.updateUiRect({ x, y, width: w, height: h });
-    this.emitCropChange();
-  }
-
-  private applyExternalCrop(realRect: AvRect) {
-    if (!this.imageRef) return;
-    this.updateImageMetrics();
-    const img = this.imageRef.nativeElement;
-
-    // Protect against division by zero if img not loaded yet
-    if (img.naturalWidth === 0 || this.imageRect.width === 0) return;
-
-    const scaleX = this.imageRect.width / img.naturalWidth;
-    const scaleY = this.imageRect.height / img.naturalHeight;
-
-    const uiRect: AvRect = {
-      x: this.imageRect.x + realRect.x * scaleX,
-      y: this.imageRect.y + realRect.y * scaleY,
-      width: realRect.width * scaleX,
-      height: realRect.height * scaleY,
+    this.cropRect = {
+      x: (w - finalW) / 2,
+      y: (h - finalH) / 2,
+      width: finalW,
+      height: finalH,
     };
 
-    this.constrainRect(uiRect);
-    this.updateUiRect(uiRect);
+    this.draw();
     this.emitCropChange();
   }
 
-  // --- MOUSE EVENTS ---
+  // --- Drawing Logic (AvCropManager Inspired) ---
 
-  onContainerMouseDown(e: MouseEvent) {
-    // Optional
+  private draw() {
+    if (!this.ctx) return;
+    const ctx = this.ctx;
+    const cvs = this.canvasRef.nativeElement;
+    const rect = this.cropRect;
+
+    // 1. Clear
+    ctx.clearRect(0, 0, cvs.width, cvs.height);
+
+    // 2. Dimmed background
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+    ctx.fillRect(0, 0, cvs.width, cvs.height);
+
+    // 3. Clear selection ("hole")
+    // Используем 'destination-out' или просто clearRect внутри
+    ctx.clearRect(rect.x, rect.y, rect.width, rect.height);
+
+    // В случае с кругом можно использовать composite operation, но пока прямоугольник
+    // Если нужен круг (визуально):
+    if (this.isCircle) {
+      // Заливаем дыру обратно полупрозрачным (костыль), или используем clip
+      // Проще нарисовать "бублик".
+      // Но следуя логике плагина (там rect), оставим rect.
+      // Плагин имеет отдельный класс AvCircleManager. Здесь мы пока в Rect mode.
+    }
+
+    // 4. Border
+    ctx.strokeStyle = '#fff';
+    ctx.lineWidth = 1; // Тонкая рамка
+    ctx.strokeRect(rect.x, rect.y, rect.width, rect.height);
+
+    // 5. Grid (Rule of Thirds)
+    this.drawGrid(ctx, rect);
+
+    // 6. Handles
+    this.drawHandles(ctx, rect);
   }
 
-  onBoxMouseDown(e: MouseEvent) {
-    if (e.target !== e.currentTarget) return;
+  private drawGrid(ctx: CanvasRenderingContext2D, rect: AvRect) {
+    ctx.beginPath();
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+    ctx.lineWidth = 1;
+
+    const dw = rect.width / 3;
+    const dh = rect.height / 3;
+
+    // Vertical
+    for (let i = 1; i < 3; i++) {
+      ctx.moveTo(rect.x + dw * i, rect.y);
+      ctx.lineTo(rect.x + dw * i, rect.y + rect.height);
+    }
+    // Horizontal
+    for (let j = 1; j < 3; j++) {
+      ctx.moveTo(rect.x, rect.y + dh * j);
+      ctx.lineTo(rect.x + rect.width, rect.y + dh * j);
+    }
+    ctx.stroke();
+  }
+
+  private drawHandles(ctx: CanvasRenderingContext2D, rect: AvRect) {
+    const size = 8;
+    // Corners
+    this.drawHandleRect(ctx, rect.x, rect.y, size); // NW
+    this.drawHandleRect(ctx, rect.x + rect.width, rect.y, size); // NE
+    this.drawHandleRect(ctx, rect.x, rect.y + rect.height, size); // SW
+    this.drawHandleRect(ctx, rect.x + rect.width, rect.y + rect.height, size); // SE
+  }
+
+  private drawHandleRect(ctx: CanvasRenderingContext2D, x: number, y: number, size: number) {
+    ctx.fillStyle = '#fff';
+    ctx.strokeStyle = '#000';
+    ctx.lineWidth = 1;
+
+    const h = size / 2;
+    ctx.fillRect(x - h, y - h, size, size);
+    ctx.strokeRect(x - h, y - h, size, size);
+  }
+
+  // --- Interaction ---
+
+  onMouseDown(e: MouseEvent) {
     e.preventDefault();
-    this.startDrag(e, 'move');
+    const { x, y } = this.getMousePos(e);
+
+    // Check handles first
+    const handle = this.getHandleAt(x, y);
+    if (handle) {
+      this.dragMode = handle;
+    } else if (this.isPointInsideCrop(x, y)) {
+      this.dragMode = 'move';
+    } else {
+      return; // Clicked outside
+    }
+
+    this.isDragging = true;
+    this.dragStart = { x, y };
+    this.startCropRect = { ...this.cropRect };
   }
 
-  onHandleDown(e: MouseEvent, mode: 'nw' | 'ne' | 'sw' | 'se') {
+  onMouseMove(e: MouseEvent) {
+    if (!this.isDragging || !this.dragMode) return;
     e.preventDefault();
-    e.stopPropagation();
-    this.startDrag(e, mode);
-  }
 
-  private startDrag(e: MouseEvent, mode: any) {
-    this.updateImageMetrics();
-    this.dragMode = mode;
-    this.startPoint = { x: e.clientX, y: e.clientY };
-    this.startRect = { ...this.uiRect() };
-  }
+    const { x, y } = this.getMousePos(e);
+    const dx = x - this.dragStart.x;
+    const dy = y - this.dragStart.y;
 
-  private onMouseMove(e: MouseEvent) {
-    if (!this.dragMode) return;
-
-    e.preventDefault();
-    const dx = e.clientX - this.startPoint.x;
-    const dy = e.clientY - this.startPoint.y;
-    let newRect = { ...this.startRect };
+    const newRect = { ...this.startCropRect };
 
     if (this.dragMode === 'move') {
       newRect.x += dx;
       newRect.y += dy;
-      this.constrainRect(newRect);
+      // Clamp position
+      newRect.x = Math.max(0, Math.min(newRect.x, this.imageRect.width - newRect.width));
+      newRect.y = Math.max(0, Math.min(newRect.y, this.imageRect.height - newRect.height));
     } else {
-      if (this.dragMode.includes('e')) newRect.width = Math.max(20, this.startRect.width + dx);
-      if (this.dragMode.includes('s')) newRect.height = Math.max(20, this.startRect.height + dy);
-      if (this.dragMode.includes('w')) {
-        const w = Math.max(20, this.startRect.width - dx);
-        newRect.x = this.startRect.x + (this.startRect.width - w);
+      // Resize logic
+      const isEast = this.dragMode.includes('e');
+      const isWest = this.dragMode.includes('w');
+      const isSouth = this.dragMode.includes('s');
+      const isNorth = this.dragMode.includes('n');
+
+      if (isEast) newRect.width = Math.max(20, this.startCropRect.width + dx);
+      if (isSouth) newRect.height = Math.max(20, this.startCropRect.height + dy);
+      if (isWest) {
+        const w = Math.max(20, this.startCropRect.width - dx);
+        newRect.x = this.startCropRect.x + (this.startCropRect.width - w);
         newRect.width = w;
       }
-      if (this.dragMode.includes('n')) {
-        const h = Math.max(20, this.startRect.height - dy);
-        newRect.y = this.startRect.y + (this.startRect.height - h);
+      if (isNorth) {
+        const h = Math.max(20, this.startCropRect.height - dy);
+        newRect.y = this.startCropRect.y + (this.startCropRect.height - h);
         newRect.height = h;
       }
 
+      // Aspect Ratio constraint
       if (this.aspectRatio) {
-        if (this.dragMode === 'se' || this.dragMode === 'sw') {
+        // If we are dragging vertically (N/S) but NOT horizontally, height should drive width.
+        // If we are dragging horizontally (E/W) or corners, width drives height.
+        const isDraggingVerticalOnly = (isNorth || isSouth) && !isEast && !isWest;
+
+        if (isDraggingVerticalOnly) {
+          // Height drives width
+          const oldWidth = newRect.width;
+          newRect.width = newRect.height * this.aspectRatio;
+          if (isWest) newRect.x -= newRect.width - oldWidth; // Adjust x for west resize
+          console.log(
+            `[CropCanvas] Ratio Lock (Height driven): ${newRect.width} x ${newRect.height}`,
+          );
+        } else {
+          // Width drives height
+          const oldHeight = newRect.height;
           newRect.height = newRect.width / this.aspectRatio;
+          if (isNorth) newRect.y -= newRect.height - oldHeight; // Adjust y for north resize
+          console.log(
+            `[CropCanvas] Ratio Lock (Width driven): ${newRect.width} x ${newRect.height}`,
+          );
+        }
+      } else {
+        console.log('[CropCanvas] FREE DRAG (no ratio)');
+      }
+
+      // Clamp Size/Pos
+      if (newRect.x < 0) {
+        if (this.aspectRatio) {
+          const diff = -newRect.x;
+          newRect.x = 0;
+          newRect.width -= diff;
+          newRect.height = newRect.width / this.aspectRatio;
+          if (isNorth)
+            newRect.y = this.startCropRect.y + this.startCropRect.height - newRect.height;
+        } else {
+          newRect.width += newRect.x;
+          newRect.x = 0;
         }
       }
-      this.constrainRect(newRect);
+      if (newRect.y < 0) {
+        if (this.aspectRatio) {
+          const diff = -newRect.y;
+          newRect.y = 0;
+          newRect.height -= diff;
+          newRect.width = newRect.height * this.aspectRatio;
+          if (isWest) newRect.x = this.startCropRect.x + this.startCropRect.width - newRect.width;
+        } else {
+          newRect.height += newRect.y;
+          newRect.y = 0;
+        }
+      }
+
+      if (newRect.x + newRect.width > this.imageRect.width) {
+        newRect.width = this.imageRect.width - newRect.x;
+        if (this.aspectRatio) {
+          newRect.height = newRect.width / this.aspectRatio;
+          if (isNorth)
+            newRect.y = this.startCropRect.y + this.startCropRect.height - newRect.height;
+        }
+      }
+      if (newRect.y + newRect.height > this.imageRect.height) {
+        newRect.height = this.imageRect.height - newRect.y;
+        if (this.aspectRatio) {
+          newRect.width = newRect.height * this.aspectRatio;
+          if (isWest) newRect.x = this.startCropRect.x + this.startCropRect.width - newRect.width;
+        }
+      }
     }
 
-    this.updateUiRect(newRect);
+    this.cropRect = newRect;
+    this.draw();
+    // Throttle emit if needed, but for now emit always
     this.emitCropChange();
   }
 
-  private onMouseUp() {
-    if (this.dragMode) {
-      this.emitCropChange();
-      this.dragMode = null;
-    }
+  onMouseUp() {
+    this.isDragging = false;
+    this.dragMode = null;
   }
 
-  private constrainRect(rect: AvRect) {
-    const bounds = this.imageRect;
+  // --- Helpers ---
 
-    // 1. Constrain size first
-    if (rect.width > bounds.width) rect.width = bounds.width;
-    if (rect.height > bounds.height) rect.height = bounds.height;
-
-    // 2. Constrain position
-    if (rect.x < bounds.x) rect.x = bounds.x;
-    if (rect.y < bounds.y) rect.y = bounds.y;
-
-    if (rect.x + rect.width > bounds.x + bounds.width) {
-      if (this.dragMode === 'move') {
-        rect.x = bounds.x + bounds.width - rect.width;
-      } else {
-        rect.width = bounds.x + bounds.width - rect.x;
-      }
-    }
-
-    if (rect.y + rect.height > bounds.y + bounds.height) {
-      if (this.dragMode === 'move') {
-        rect.y = bounds.y + bounds.height - rect.height;
-      } else {
-        rect.height = bounds.y + bounds.height - rect.y;
-      }
-    }
-
-    // 3. Re-apply aspect ratio if needed after width/height constraint
-    if (this.aspectRatio && this.dragMode !== 'move') {
-      if (rect.width / rect.height !== this.aspectRatio) {
-        // This is a bit simplified, but usually we prefer width
-        rect.height = rect.width / this.aspectRatio;
-        // Check if height now exceeds bounds
-        if (rect.y + rect.height > bounds.y + bounds.height) {
-          rect.height = bounds.y + bounds.height - rect.y;
-          rect.width = rect.height * this.aspectRatio;
-        }
-      }
-    }
+  private getMousePos(e: MouseEvent) {
+    const rect = this.canvasRef.nativeElement.getBoundingClientRect();
+    return {
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top,
+    };
   }
 
-  private updateUiRect(rect: AvRect) {
-    this.uiRect.set(rect);
+  private getHandleAt(x: number, y: number): 'nw' | 'ne' | 'sw' | 'se' | null {
+    const r = this.cropRect;
+    const s = 10; // hit size
+    // Check corners
+    if (this.hitTest(x, y, r.x, r.y, s)) return 'nw';
+    if (this.hitTest(x, y, r.x + r.width, r.y, s)) return 'ne';
+    if (this.hitTest(x, y, r.x, r.y + r.height, s)) return 'sw';
+    if (this.hitTest(x, y, r.x + r.width, r.y + r.height, s)) return 'se';
+    return null;
+  }
+
+  private hitTest(mx: number, my: number, x: number, y: number, size: number) {
+    return mx >= x - size && mx <= x + size && my >= y - size && my <= y + size;
+  }
+
+  private isPointInsideCrop(x: number, y: number) {
+    const r = this.cropRect;
+    return x >= r.x && x <= r.x + r.width && y >= r.y && y <= r.y + r.height;
+  }
+
+  private applyExternalCrop(ext: AvRect) {
+    // ext - это координаты в Natural Size. Нужно перевести в UI
+    const scaleX = this.imageRect.width / this.naturalSize.width;
+    const scaleY = this.imageRect.height / this.naturalSize.height;
+
+    this.cropRect = {
+      x: ext.x * scaleX,
+      y: ext.y * scaleY,
+      width: ext.width * scaleX,
+      height: ext.height * scaleY,
+    };
+    this.draw();
   }
 
   private emitCropChange() {
-    if (!this.imageRef) return;
-    const img = this.imageRef.nativeElement;
+    // Переводим UI -> Natural
+    if (this.imageRect.width === 0) return;
 
-    if (this.imageRect.width === 0 || this.imageRect.height === 0) return;
+    const scaleX = this.naturalSize.width / this.imageRect.width;
+    const scaleY = this.naturalSize.height / this.imageRect.height;
 
-    const scaleX = img.naturalWidth / this.imageRect.width;
-    const scaleY = img.naturalHeight / this.imageRect.height;
-
-    const realCrop: AvRect = {
-      x: (this.uiRect().x - this.imageRect.x) * scaleX,
-      y: (this.uiRect().y - this.imageRect.y) * scaleY,
-      width: this.uiRect().width * scaleX,
-      height: this.uiRect().height * scaleY,
+    const real: AvRect = {
+      x: Math.round(this.cropRect.x * scaleX),
+      y: Math.round(this.cropRect.y * scaleY),
+      width: Math.round(this.cropRect.width * scaleX),
+      height: Math.round(this.cropRect.height * scaleY),
     };
 
-    realCrop.x = Math.max(0, Math.round(realCrop.x));
-    realCrop.y = Math.max(0, Math.round(realCrop.y));
-    realCrop.width = Math.round(realCrop.width);
-    realCrop.height = Math.round(realCrop.height);
+    this.cropChange.emit(real);
+  }
 
-    this.cropChange.emit(realCrop);
+  private forceAspectRatio() {
+    if (!this.aspectRatio) return;
+    // Сохраняем центр
+    const cx = this.cropRect.x + this.cropRect.width / 2;
+    const cy = this.cropRect.y + this.cropRect.height / 2;
+
+    // Меняем высоту под ширину
+    let w = this.cropRect.width;
+    let h = w / this.aspectRatio;
+
+    if (h > this.imageRect.height) {
+      h = this.imageRect.height;
+      w = h * this.aspectRatio;
+    }
+
+    this.cropRect = {
+      x: cx - w / 2,
+      y: cy - h / 2,
+      width: w,
+      height: h,
+    };
   }
 }

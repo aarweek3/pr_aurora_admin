@@ -1,0 +1,210 @@
+// =============================================================================
+// Test Modal Content - VS Code Style
+// =============================================================================
+
+:host {
+  display: block;
+  height: 100%;
+}
+
+.test-modal-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: #1e1e1e;
+  color: #cccccc;
+  font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+// =============================================================================
+// Header
+// =============================================================================
+.content-header {
+  padding: 24px 24px 16px;
+  border-bottom: 1px solid #454545;
+
+  h2 {
+    margin: 0 0 8px;
+    font-size: 20px;
+    font-weight: 600;
+    color: #ffffff;
+  }
+
+  .subtitle {
+    margin: 0;
+    font-size: 13px;
+    color: #999999;
+  }
+}
+
+// =============================================================================
+// Body
+// =============================================================================
+.content-body {
+  flex: 1;
+  padding: 24px;
+  overflow-y: auto;
+
+  // VS Code scrollbar
+  &::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #1e1e1e;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #424242;
+
+    &:hover {
+      background: #4e4e4e;
+    }
+  }
+}
+
+// =============================================================================
+// Info Section
+// =============================================================================
+.info-section {
+  margin-bottom: 24px;
+  padding: 16px;
+  background: #252526;
+  border: 1px solid #3e3e42;
+  border-radius: 4px;
+
+  .info-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    .label {
+      font-size: 13px;
+      color: #999999;
+      min-width: 100px;
+    }
+
+    .value {
+      font-size: 13px;
+      color: #cccccc;
+
+      &.badge {
+        background: #007acc;
+        color: #ffffff;
+        padding: 2px 8px;
+        border-radius: 3px;
+        font-size: 12px;
+      }
+    }
+  }
+}
+
+// =============================================================================
+// Form
+// =============================================================================
+.form-section {
+  .form-group {
+    margin-bottom: 16px;
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 13px;
+      color: #cccccc;
+      font-weight: 500;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 8px 12px;
+      background: #3c3c3c;
+      border: 1px solid #454545;
+      border-radius: 2px;
+      color: #cccccc;
+      font-size: 13px;
+      font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+      outline: none;
+      transition: all 0.15s ease;
+
+      &:focus {
+        background: #404040;
+        border-color: #007acc;
+        box-shadow: 0 0 0 1px #007acc;
+      }
+
+      &:hover:not(:focus) {
+        background: #404040;
+        border-color: #555555;
+      }
+    }
+
+    textarea.form-control {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    select.form-control {
+      cursor: pointer;
+    }
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+}
+
+// =============================================================================
+// Footer
+// =============================================================================
+.content-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 16px 24px;
+  border-top: 1px solid #454545;
+  background: #252526;
+
+  .btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 2px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+
+    &.btn-secondary {
+      background: #3c3c3c;
+      color: #cccccc;
+
+      &:hover {
+        background: #464646;
+      }
+
+      &:active {
+        background: #505050;
+      }
+    }
+
+    &.btn-primary {
+      background: #007acc;
+      color: #ffffff;
+
+      &:hover {
+        background: #0098ff;
+      }
+
+      &:active {
+        background: #005a9e;
+      }
+    }
+  }
+}

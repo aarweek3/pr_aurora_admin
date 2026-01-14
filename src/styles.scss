@@ -80,3 +80,40 @@
 // body {
 //   outline: 1px solid red;
 // }
+
+// =============================================================================
+// 9. VS MODAL (VS Code Style Modal Windows)
+// =============================================================================
+.vs-modal-backdrop {
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(2px);
+}
+
+.vs-modal-panel {
+  pointer-events: auto;
+}
+
+// =============================================================================
+// 10. IMAGE STUDIO MODAL CUSTOMIZATION (BORDERLESS)
+// =============================================================================
+.av-studio-modal-panel {
+  max-width: 95vw !important;
+  max-height: 95vh !important;
+
+  /* Make the CDK Overlay Pane transparent and allow it to shrink-wrap or be sized content-first */
+  background: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+  border-radius: 4px !important;
+  pointer-events: auto !important; /* Ensure interactions work */
+
+  /* Reset padding normally added to modal-panel if any */
+  padding: 0 !important;
+  overflow: hidden !important;
+
+  .modal-container {
+    background: transparent !important;
+    box-shadow: none !important;
+    border: none !important;
+  }
+}

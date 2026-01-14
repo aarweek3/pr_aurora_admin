@@ -1,0 +1,34 @@
+# Игнорируем папки сборки
+dist/
+build/
+out-tsc/
+tmp/
+
+# Игнорируем зависимости
+node_modules/
+
+# Логи и кэш
+*.log
+.cache/
+.angular/
+
+# Файлы окружения
+.env
+.env.*.local
+
+# Локальные настройки IDE
+.vscode/
+.idea/
+
+# Angular специфичное
+coverage/
+*.ngfactory.ts
+*.ngsummary.json
+
+# Файлы, которые не должны форматироваться
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Сгенерированные файлы
+CHANGELOG.md

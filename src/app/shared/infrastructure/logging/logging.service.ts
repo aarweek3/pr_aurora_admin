@@ -1,5 +1,6 @@
-import { Injectable, isDevMode } from '@angular/core';
+import { inject, Injectable, isDevMode } from '@angular/core';
 import { environment } from '@environments/environment';
+import { EnvironmentService } from '../environment/environment.service';
 import { ErrorResponse } from '../interceptor/models/error-response.model';
 
 type LogMetadata = Record<string, any> | ErrorResponse | Error | null;
@@ -11,11 +12,13 @@ type LogMetadata = Record<string, any> | ErrorResponse | Error | null;
   providedIn: 'root',
 })
 export class LoggingService {
+  private env = inject(EnvironmentService);
   private sessionId: string;
+  private readonly sessionUserAgent: string;
 
   constructor() {
     this.sessionId = this.generateSessionId();
-    this.logSessionStart();
+    this.sessionUserAgent = this.env.userAgent;
   }
 
   /**
@@ -75,11 +78,7 @@ export class LoggingService {
    */
   logErrorResponse(errorResponse: ErrorResponse): void {
     const logData = errorResponse.toLogObject();
-    this.error(
-      'ErrorResponse',
-      errorResponse.detail || errorResponse.title,
-      logData
-    );
+    this.error('ErrorResponse', errorResponse.detail || errorResponse.title, logData);
   }
 
   /**
@@ -93,9 +92,8 @@ export class LoggingService {
       userId,
       action,
       details,
-      url: window.location.href,
       timestamp: new Date().toISOString(),
-      userAgent: navigator.userAgent,
+      userAgent: this.sessionUserAgent,
     };
 
     this.info('UserAction', `User ${userId} performed: ${action}`, metadata);
@@ -112,8 +110,8 @@ export class LoggingService {
       ...metadata,
       timestamp: new Date().toISOString(),
       sessionId: this.sessionId,
-      userAgent: navigator.userAgent,
-      url: window.location.href,
+      userAgent: this.sessionUserAgent,
+      url: this.env.getCurrentUrl(),
     };
 
     this.warn('Security', `Security event: ${event}`, securityMetadata);
@@ -131,17 +129,6 @@ export class LoggingService {
    */
   private generateSessionId(): string {
     return `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-  }
-
-  /**
-   * Логирует старт сессии.
-   */
-  private logSessionStart(): void {
-    this.info('LoggingService', `Session started: ${this.sessionId}`, {
-      timestamp: new Date().toISOString(),
-      userAgent: navigator.userAgent,
-      url: window.location.href,
-    });
   }
 
   /**

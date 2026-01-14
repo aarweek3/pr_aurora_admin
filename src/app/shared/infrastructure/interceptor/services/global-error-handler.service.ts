@@ -30,6 +30,13 @@ export class GlobalErrorHandler implements ErrorHandler {
       if (this.isAlreadyProcessedError(error)) {
         return;
       }
+      if (this.isKnownLibraryError(error)) {
+        console.warn(
+          '[GlobalErrorHandler] Known library error suppressed:',
+          error?.message || error,
+        );
+        return;
+      }
       if (error instanceof Error) {
         this.loggerConsole.error(error.message, { stack: error.stack, name: error.name });
         this.logger.error(this.context, 'JavaScript Error', {
@@ -75,5 +82,23 @@ export class GlobalErrorHandler implements ErrorHandler {
       return true;
     }
     return false;
+  }
+
+  private isKnownLibraryError(error: any): boolean {
+    const errorMessage = error?.message || error?.toString?.() || '';
+    const errorStack = error?.stack || '';
+
+    const knownErrors = [
+      "Cannot read properties of undefined (reading 'isEmpty')",
+      "Cannot read properties of null (reading 'innerWidth')",
+      "Cannot read properties of null (reading 'innerHeight')",
+      'tabSwitchMotion',
+      'ResizeObserver loop limit exceeded',
+    ];
+
+    const isKnown = knownErrors.some((ke) => errorMessage.includes(ke));
+    const isLibChunk = errorStack.includes('chunk-') || errorStack.includes('node_modules');
+
+    return isKnown && isLibChunk;
   }
 }

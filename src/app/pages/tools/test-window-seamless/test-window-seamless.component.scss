@@ -1,0 +1,143 @@
+.test-container {
+  padding: 40px;
+  min-height: 100vh;
+  background-color: #f5f7fa;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.test-header {
+  text-align: center;
+  margin-bottom: 30px;
+
+  h1 {
+    font-size: 28px;
+    color: #2c3e50;
+    margin-bottom: 10px;
+  }
+
+  p {
+    color: #7f8c8d;
+    font-size: 16px;
+  }
+}
+
+.test-actions {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.test-section {
+  margin-top: 20px;
+  padding: 30px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 1000px;
+  border-left: 4px solid #007acc;
+
+  h2 {
+    font-size: 20px;
+    color: #2c3e50;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  p {
+    color: #7f8c8d;
+    font-size: 13px;
+    margin-bottom: 20px;
+  }
+
+  // Золотая секция для Compromise
+  &--gold {
+    border-left-color: #d4af37;
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.03) 0%, white 100%);
+
+    h2 {
+      color: #d4af37;
+      font-weight: 700;
+    }
+  }
+
+  // Legacy секция
+  &--legacy {
+    border-left-color: #6c757d;
+    background: linear-gradient(135deg, rgba(108, 117, 125, 0.03) 0%, white 100%);
+
+    h2 {
+      color: #6c757d;
+    }
+  }
+}
+
+.av-btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 12px 24px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+  font-size: 16px;
+
+  &--primary {
+    background: linear-gradient(135deg, #007acc 0%, #005a9e 100%);
+    color: white;
+    box-shadow: 0 4px 15px rgba(0, 122, 204, 0.3);
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 122, 204, 0.4);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+  }
+
+  &--secondary {
+    background: #6c757d;
+    color: white;
+    box-shadow: 0 4px 15px rgba(108, 117, 125, 0.3);
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(108, 117, 125, 0.4);
+      background: #5a6268;
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+  }
+}
+
+// Стилизация для бесшовного отображения внутри модала
+.vs-modal-body {
+  padding: 0 !important;
+  background-color: #1e1e1e;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  overflow: hidden;
+
+  app-window-seamless-example {
+    width: 100%;
+    height: 100%;
+
+    ::ng-deep .vs-window {
+      width: 100% !important;
+      height: 100% !important;
+      box-shadow: none !important;
+      border: none !important;
+      border-radius: 0 !important; // Модал сам имеет скругления
+    }
+  }
+}

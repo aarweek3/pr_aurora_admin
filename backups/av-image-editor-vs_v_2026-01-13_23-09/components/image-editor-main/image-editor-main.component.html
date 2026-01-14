@@ -1,0 +1,485 @@
+<div class="editor-container">
+  <div class="editor-body">
+    <!-- SIDEBAR (Инструменты) -->
+    <div class="editor-sidebar">
+      <div
+        class="sidebar-item"
+        [class.active]="state().activeTool === 'open'"
+        (click)="setTool('open')"
+        title="Открыть"
+      >
+        <div class="icon-wrap">📁</div>
+        <span class="sidebar-label">Открыть</span>
+      </div>
+      <div
+        class="sidebar-item"
+        [class.active]="state().activeTool === 'crop'"
+        (click)="setTool('crop')"
+        title="Обрезка"
+      >
+        <div class="icon-wrap">✂️</div>
+        <span class="sidebar-label">Кроп</span>
+      </div>
+      <div
+        class="sidebar-item"
+        [class.active]="state().activeTool === 'export'"
+        (click)="setTool('export')"
+        title="Настройки экспорта"
+      >
+        <div class="icon-wrap">💾</div>
+        <span class="sidebar-label">Экспорт</span>
+      </div>
+      <div
+        class="sidebar-item"
+        [class.active]="state().activeTool === 'rotate'"
+        (click)="setTool('rotate')"
+        title="Поворот"
+      >
+        <div class="icon-wrap">🔄</div>
+        <span class="sidebar-label">Поворот</span>
+      </div>
+      <div
+        class="sidebar-item"
+        [class.active]="state().activeTool === 'filters'"
+        (click)="setTool('filters')"
+        title="Фильтры"
+      >
+        <div class="icon-wrap">🎨</div>
+        <span class="sidebar-label">Фильтры</span>
+      </div>
+    </div>
+
+    <!-- CONTROL PANEL (Параметры инструмента) -->
+    <aside class="editor-control-panel">
+      <!-- Вкладка ОТКРЫТЬ -->
+      @if (state().activeTool === 'open') {
+      <div class="panel-header">Загрузка изображения</div>
+      <div class="panel-scroll">
+        <section class="control-block">
+          <h4 class="block-title">Источник: Файл</h4>
+          <button class="ps-btn w-full" (click)="triggerFileInput()">
+            📂 Выбрать на компьютере
+          </button>
+          <input
+            type="file"
+            #fileInput
+            (change)="onFileSelected($event)"
+            accept="image/*"
+            style="display: none"
+          />
+        </section>
+
+        <section class="control-block">
+          <h4 class="block-title">Источник: URL</h4>
+          <div class="ui-container">
+            <input
+              type="text"
+              class="ui-input w-full"
+              [(ngModel)]="urlInput"
+              placeholder="https://example.com/image.jpg"
+            />
+            <button
+              class="ps-btn w-full ps-btn-ready"
+              [disabled]="!urlInput()"
+              (click)="loadFromUrl()"
+              style="margin-top: 8px"
+            >
+              ⬇️ Загрузить по ссылке
+            </button>
+          </div>
+        </section>
+
+        <section class="control-block">
+          <h4 class="block-title">Перетаскивание</h4>
+          <div
+            class="drop-zone"
+            [class.dragging]="isDragging()"
+            (dragover)="onDragOver($event)"
+            (dragleave)="onDragLeave()"
+            (drop)="onDrop($event)"
+          >
+            <div class="drop-icon">📥</div>
+            <div class="drop-text">Перетяните файл сюда</div>
+          </div>
+        </section>
+      </div>
+      }
+
+      <!-- Вкладка КРОП -->
+      @if (state().activeTool === 'crop') {
+      <div class="panel-header">Размер и Обрезка</div>
+      <div class="panel-scroll">
+        <div class="ps-panel">
+          <div class="ps-panel-title">
+            Параметры
+            <div class="ps-tab-mini">
+              <button
+                [class.active]="state().crop.shape === 'rectangle'"
+                (click)="setCropShape('rectangle')"
+              >
+                ■
+              </button>
+              <button
+                [class.active]="state().crop.shape === 'circle'"
+                (click)="setCropShape('circle')"
+              >
+                ●
+              </button>
+            </div>
+          </div>
+
+          <!-- Rectangle Inputs -->
+          @if (state().crop.shape === 'rectangle') {
+          <div
+            style="
+              display: flex;
+              gap: 8px;
+              align-items: flex-end;
+              margin-bottom: 12px;
+            "
+          >
+            <div style="flex: 1">
+              <div class="ps-label">Ширина:</div>
+              <input
+                type="number"
+                class="ps-input"
+                style="width: 100%"
+                [ngModel]="state().crop.width || state().metadata.originalWidth"
+                (ngModelChange)="onCropWidthChange($event)"
+              />
+            </div>
+            <button
+              class="ps-btn"
+              (click)="toggleCropLock()"
+              style="height: 26px; padding: 0 6px; margin-bottom: 0"
+            >
+              {{ state().crop.lock ? "🔒" : "🔓" }}
+            </button>
+            <div style="flex: 1">
+              <div class="ps-label">Высота:</div>
+              <input
+                type="number"
+                class="ps-input"
+                style="width: 100%"
+                [ngModel]="
+                  state().crop.height || state().metadata.originalHeight
+                "
+                (ngModelChange)="onCropHeightChange($event)"
+              />
+            </div>
+          </div>
+          }
+
+          <!-- Circle Inputs (Simplified) -->
+          @if (state().crop.shape === 'circle') {
+          <div
+            style="
+              display: flex;
+              gap: 8px;
+              align-items: flex-end;
+              margin-bottom: 12px;
+            "
+          >
+            <div style="flex: 1">
+              <div class="ps-label">Диаметр:</div>
+              <input
+                type="number"
+                class="ps-input"
+                style="width: 100%"
+                [ngModel]="state().crop.width || 100"
+                (ngModelChange)="
+                  stateService.updateCrop({ width: $event, height: $event })
+                "
+              />
+            </div>
+          </div>
+          }
+
+          <div class="ps-label" style="margin-bottom: 6px">Пресеты:</div>
+          <div class="presets-grid">
+            <div
+              class="preset-item"
+              *ngFor="let preset of presets"
+              (click)="applyPreset(preset)"
+            >
+              <div class="preset-icon">{{ preset.icon }}</div>
+              <div class="preset-label">{{ preset.label.split(" ")[0] }}</div>
+              <div class="preset-size">{{ preset.size.split(" ")[0] }}</div>
+            </div>
+          </div>
+
+          <!-- Resize Panel -->
+          @if (state().crop.resizePanelEnabled) {
+          <div
+            class="ps-panel"
+            style="margin-top: 8px; border-color: #3b82f6; background: #1e293b"
+          >
+            <div
+              class="ps-panel-title"
+              style="color: #fff; border-bottom: none; margin: 0"
+            >
+              Увеличить размер
+            </div>
+            <div class="ps-label" style="margin-bottom: 8px">
+              Текущий:
+              {{ state().crop.width || state().metadata.originalWidth }} ×
+              {{ state().crop.height || state().metadata.originalHeight }}
+            </div>
+            <div
+              style="
+                display: flex;
+                gap: 8px;
+                align-items: flex-end;
+                margin-bottom: 8px;
+              "
+            >
+              <div style="flex: 1">
+                <div class="ps-label">Новая ширина:</div>
+                <input
+                  type="number"
+                  class="ps-input"
+                  style="width: 100%"
+                  [ngModel]="state().crop.resizeWidth"
+                  (ngModelChange)="
+                    stateService.updateCrop({ resizeWidth: $event })
+                  "
+                />
+              </div>
+              <button
+                class="ps-btn"
+                (click)="
+                  stateService.updateCrop({
+                    resizeLocked: !state().crop.resizeLocked
+                  })
+                "
+                style="height: 26px; padding: 0 4px; margin-bottom: 0"
+              >
+                {{ state().crop.resizeLocked ? "🔒" : "🔓" }}
+              </button>
+              <div style="flex: 1">
+                <div class="ps-label">Новая высота:</div>
+                <input
+                  type="number"
+                  class="ps-input"
+                  style="width: 100%"
+                  [ngModel]="state().crop.resizeHeight"
+                  (ngModelChange)="
+                    stateService.updateCrop({ resizeHeight: $event })
+                  "
+                />
+              </div>
+            </div>
+            <div style="display: flex; gap: 4px">
+              <button
+                class="ps-btn ps-btn-primary"
+                style="flex: 2"
+                (click)="applyResize()"
+              >
+                ПРИМЕНИТЬ
+              </button>
+              <button
+                class="ps-btn"
+                style="flex: 1"
+                (click)="toggleResizePanel()"
+              >
+                ОТМЕНА
+              </button>
+            </div>
+          </div>
+          }
+
+          <!-- Resize Toggle Button -->
+          @if (!state().crop.resizePanelEnabled) {
+          <button
+            class="ps-btn"
+            style="
+              width: 100%;
+              margin-top: 8px;
+              border: 1px dashed #334155;
+              justify-content: center;
+            "
+            (click)="toggleResizePanel()"
+          >
+            Изменить размер изображения...
+          </button>
+          }
+
+          <button
+            class="ps-btn ps-btn-primary"
+            style="
+              width: 100%;
+              margin-top: 12px;
+              height: 32px;
+              font-weight: 700;
+              justify-content: center;
+            "
+            (click)="applyCropAction()"
+          >
+            ✨ Обрезать и посмотреть
+          </button>
+        </div>
+      </div>
+      }
+
+      <!-- Вкладка ЭКСПОРТ -->
+      @if (state().activeTool === 'export') {
+      <div class="panel-header">Настройки экспорта</div>
+      <div class="panel-scroll">
+        <section class="control-block">
+          <h4 class="block-title">Формат и качество</h4>
+          <div class="ui-container">
+            <div class="ui-row gap-8">
+              <select
+                class="ui-select flex-1"
+                [ngModel]="state().export.format"
+                (ngModelChange)="stateService.updateExport({ format: $event })"
+              >
+                <option value="image/jpeg">JPEG</option>
+                <option value="image/png">PNG-24</option>
+                <option value="image/webp">WebP</option>
+              </select>
+            </div>
+            <div class="ui-row between" style="margin-top: 12px">
+              <span class="ui-label">Качество:</span>
+              <input
+                type="number"
+                class="ui-input-number"
+                [ngModel]="state().export.quality"
+                (ngModelChange)="stateService.updateExport({ quality: $event })"
+                min="1"
+                max="100"
+              />
+            </div>
+            <div class="ps-slider-container">
+              <div
+                class="ps-slider"
+                #qualitySlider
+                (mousedown)="onQualitySliderMouseDown($event)"
+              >
+                <div
+                  class="ps-slider-fill"
+                  [style.width.%]="state().export.quality"
+                ></div>
+                <div
+                  class="ps-slider-thumb"
+                  [style.left.%]="state().export.quality"
+                ></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="control-block">
+          <h4 class="block-title">Имя файла для сохранения</h4>
+          <div class="ui-container">
+            <input
+              type="text"
+              class="ui-input w-full"
+              [ngModel]="state().export.fileName"
+              (ngModelChange)="stateService.updateExport({ fileName: $event })"
+              placeholder="Имя файла"
+            />
+          </div>
+        </section>
+      </div>
+      }
+    </aside>
+
+    <!-- MAIN WORKSPACE (Canvas) -->
+    <div class="editor-workspace">
+      @if (state().originalUrl) {
+      <div class="canvas-container">
+        <!-- CANVAS AREA -->
+        <div class="av-canvas-zone">
+          @if (state().activeTool === 'crop') {
+          <av-crop-canvas
+            [imageSrc]="state().originalUrl"
+            [aspectRatio]="state().crop.lock ? state().crop.aspectRatio : null"
+            [externalCrop]="
+              state().crop.width && state().crop.height
+                ? {
+                    x: state().crop.x,
+                    y: state().crop.y,
+                    width: state().crop.width!,
+                    height: state().crop.height!
+                  }
+                : null
+            "
+            (cropChange)="onCropFromCanvas($event)"
+          ></av-crop-canvas>
+          } @else {
+          <av-editor-canvas></av-editor-canvas>
+          }
+        </div>
+      </div>
+      } @else {
+      <div class="empty-state-welcome">
+        <div class="welcome-icon">🖼️</div>
+        <h2>Aurora Studio</h2>
+        <p>Выберите изображение в меню слева или перетащите файл прямо сюда</p>
+        <button class="ps-btn ps-btn-ready" (click)="setTool('open')">
+          Открыть изображение
+        </button>
+      </div>
+      }
+    </div>
+  </div>
+
+  <!-- STATUS BAR -->
+  <div class="editor-status-bar">
+    @if (state().originalUrl) {
+    <div style="display: flex; gap: 12px; align-items: center">
+      <span>{{
+        state().export.format.split("/")[1].toUpperCase().replace("JPEG", "JPG")
+      }}</span>
+      <span style="opacity: 0.5">|</span>
+      <span>{{ (state().zoom * 100).toFixed(0) }}% масштаб</span>
+      <span style="opacity: 0.5">|</span>
+      <span title="Исходный размер">
+        Src: {{ state().metadata.originalWidth }}x{{
+          state().metadata.originalHeight
+        }}
+        @if (state().metadata.originalSize) { ({{
+          ((state().metadata.originalSize || 0) / 1024).toFixed(1)
+        }}
+        KB) }
+      </span>
+      <span style="opacity: 0.5">|</span>
+      <span
+        title="Результат обработки"
+        style="color: #61afef; font-weight: bold"
+      >
+        Out:
+        {{
+          state().metadata.processedWidth || state().metadata.originalWidth
+        }}x{{
+          state().metadata.processedHeight || state().metadata.originalHeight
+        }}
+        @if (state().metadata.estimatedSize) { ({{
+          ((state().metadata.estimatedSize || 0) / 1024).toFixed(1)
+        }}
+        KB) }
+      </span>
+    </div>
+    } @else {
+    <span>Ожидание загрузки...</span>
+    }
+  </div>
+
+  <!-- FOOTER -->
+  <div class="editor-footer">
+    <div class="footer-left">
+      {{ state().export.fileName }}
+    </div>
+    <div class="footer-right">
+      <button class="ps-btn" (click)="cancel()">Отмена</button>
+      <button
+        class="ps-btn ps-btn-ready"
+        [disabled]="!state().originalUrl"
+        (click)="finish()"
+      >
+        Готово
+      </button>
+    </div>
+  </div>
+</div>

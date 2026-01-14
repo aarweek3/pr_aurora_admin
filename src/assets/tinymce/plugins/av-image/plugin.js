@@ -123,7 +123,9 @@
     /**
      * AvLoader - Handles image loading logic (File or URL)
      */
-    function AvLoader() {}
+    function AvLoader(proxyBaseUrl) {
+      this.proxyBaseUrl = proxyBaseUrl;
+    }
 
     AvLoader.prototype.loadFile = function (file) {
       return new Promise(function (resolve, reject) {
@@ -158,8 +160,15 @@
     };
 
     AvLoader.prototype.loadUrl = function (url) {
+      var self = this;
       return new Promise(function (resolve, reject) {
-        fetch(url)
+        var isRemote = url.indexOf('http') === 0 && url.indexOf(window.location.host) === -1;
+        var proxyBase = self.proxyBaseUrl || 'https://localhost:7233/api';
+        var finalUrl = isRemote
+          ? proxyBase + '/av-image-studio/proxy-image?url=' + encodeURIComponent(url)
+          : url;
+
+        fetch(finalUrl)
           .then(function (res) {
             if (!res.ok) throw new Error('Fetch failed');
             return res.blob();
@@ -184,8 +193,10 @@
             reader.readAsDataURL(blob);
           })
           .catch(function (err) {
+            console.warn('[AvLoader] Proxy failed, trying direct fallback:', err);
             // Fallback to simple load if fetch fails (CORS etc)
             var img = new Image();
+            img.crossOrigin = 'anonymous'; // Try with CORS first
             img.onload = function () {
               resolve({
                 dataUrl: url,
@@ -197,7 +208,22 @@
               });
             };
             img.onerror = function () {
-              reject('Failed to load image from URL.');
+              // Last resort: without crossOrigin
+              var imgPlain = new Image();
+              imgPlain.onload = function () {
+                resolve({
+                  dataUrl: url,
+                  name: url.substring(url.lastIndexOf('/') + 1) || 'Image from URL',
+                  size: 0,
+                  width: imgPlain.naturalWidth,
+                  height: imgPlain.naturalHeight,
+                  type: 'url',
+                });
+              };
+              imgPlain.onerror = function () {
+                reject('Failed to load image from URL.');
+              };
+              imgPlain.src = url;
             };
             img.src = url;
           });
@@ -2446,7 +2472,7 @@
     function AvModal(editor) {
       this.editor = editor;
       // Services
-      this.loader = new AvLoader();
+      this.loader = new AvLoader('https://localhost:7233/api');
       this.ui = new AvUIManager();
       this.presetManager = new AvPresetManager('https://localhost:7233');
       this.imageTools = new AvImageTools();

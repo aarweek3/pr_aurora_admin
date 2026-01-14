@@ -1,0 +1,33 @@
+<div
+  class="vs-modal-window"
+  [cdkDragDisabled]="!config.draggable"
+  cdkDrag
+  [ngStyle]="getWindowStyles()"
+  [class.resizing]="isResizing()">
+  <!-- Header (Title Bar) -->
+  <div class="vs-modal-header" cdkDragHandle>
+    <div class="vs-modal-title">
+      <span class="vs-modal-icon">⚡</span>
+      <span class="vs-modal-title-text">{{ config.title }}</span>
+    </div>
+    <button class="vs-modal-close-btn" (click)="close()" type="button">
+      <span>✕</span>
+    </button>
+  </div>
+
+  <!-- Body (Content Area) -->
+  <div class="vs-modal-body">
+    <ng-container #contentHost></ng-container>
+  </div>
+
+  <!-- Footer (Status Bar) -->
+  <div class="vs-modal-footer">
+    <span class="vs-modal-status">{{ config.statusText || 'Ready' }}</span>
+  </div>
+
+  <!-- Resize Handle (Corner) -->
+  <div
+    *ngIf="config.resizable"
+    class="vs-modal-resize-handle"
+    (mousedown)="onResizeStart($event)"></div>
+</div>

@@ -224,7 +224,7 @@ export class ErrorResponse implements IExtendedErrorResponse {
       title: 'Произошла неизвестная ошибка',
       status: toErrorStatus(0),
       detail: error?.message || 'Произошла неизвестная ошибка',
-      instance: url || window.location.href,
+      instance: url || (typeof window !== 'undefined' ? window.location.href : 'unknown'),
       userMessage: 'Произошла ошибка в приложении',
     });
   }
