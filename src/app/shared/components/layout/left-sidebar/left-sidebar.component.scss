@@ -108,6 +108,33 @@
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+    transition: color 0.3s;
+
+    &.is-active {
+      color: #72f507; // Ярко-зеленый
+      text-shadow: 0 0 8px rgba(114, 245, 7, 0.4);
+    }
+  }
+
+  // Выделенная группа (например, "Бизнес")
+  &--highlight {
+    .menu-group__title {
+      color: #ff4d4f; // Ярко-красный цвет
+      font-weight: 700;
+      text-shadow: 0 0 8px rgba(255, 77, 79, 0.6);
+      animation: pulse-red 2s ease-in-out infinite;
+    }
+  }
+}
+
+// Анимация пульсации для выделенной группы
+@keyframes pulse-red {
+  0%,
+  100% {
+    text-shadow: 0 0 8px rgba(255, 77, 79, 0.6);
+  }
+  50% {
+    text-shadow: 0 0 16px rgba(255, 77, 79, 0.9);
   }
 }
 
@@ -255,6 +282,30 @@
     pointer-events: none;
   }
 
+  &--toggle {
+    display: flex;
+    justify-content: space-between;
+
+    .submenu-item__arrow {
+      font-size: 10px;
+      opacity: 0.6;
+    }
+  }
+
+  &--level-2 {
+    padding-left: 32px;
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.6);
+
+    &:hover {
+      color: #fff;
+    }
+
+    &.is-active {
+      color: #1890ff;
+    }
+  }
+
   &__icon {
     font-size: 14px;
     flex-shrink: 0;
@@ -265,6 +316,12 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+  }
+
+  &__arrow {
+    font-size: 12px;
+    flex-shrink: 0;
+    transition: transform 0.3s;
   }
 
   &__badge {
@@ -300,6 +357,12 @@
       color: #fff;
     }
   }
+}
+
+// Sub-submenu container
+.sub-submenu {
+  background: rgba(0, 0, 0, 0.1);
+  padding-bottom: 4px;
 }
 
 // Responsive

@@ -12,6 +12,9 @@ export * from './form-field/form-field.component';
 export * from './icon';
 export * from './input';
 export * from './modal';
+export * from './monitor-modal/models/monitor-modal.model';
+export * from './monitor-modal/monitor-modal.component';
+export * from './monitor-modal/services/monitor.service';
 export * from './pagination';
 export * from './password-input/password-input.component';
 export * from './phone-input';
@@ -49,6 +52,7 @@ import { FormFieldComponent } from './form-field/form-field.component';
 import { CodeBlockComponent } from './code-block/code-block.component';
 import { HelpCopyContainerComponent } from './container-help-copy-ui';
 import { ModalCloseDirective, ModalComponent } from './modal';
+import { AvMonitorModalComponent } from './monitor-modal/monitor-modal.component';
 import { PaginationComponent } from './pagination';
 import { WrapperUiComponent } from './wrapper-ui/wrapper-ui.component';
 
@@ -88,6 +92,7 @@ export const AV_UTILITY_UI = [
   HelpCopyContainerComponent,
   CodeBlockComponent,
   WrapperUiComponent,
+  AvMonitorModalComponent,
 ] as const;
 
 /**

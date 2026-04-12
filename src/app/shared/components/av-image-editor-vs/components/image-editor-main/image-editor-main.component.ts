@@ -3,18 +3,29 @@ import { Component, effect, ElementRef, inject, OnInit, signal, ViewChild } from
 import { FormsModule } from '@angular/forms';
 
 import { VS_MODAL_DATA, VSModalRef } from '@shared/components/ui/vs-modal-compromise';
+import { NzModalService } from 'ng-zorro-antd/modal';
 import { ImageEditorConfig } from '../../models/editor-config.model';
 import { ImageCanvasService } from '../../services/image-canvas.service';
 import { ImageEditorStateService } from '../../services/image-editor-state.service';
 import { ImageExportService } from '../../services/image-export.service';
 import { AvCropCanvasComponent, AvRect } from '../crop-canvas/crop-canvas.component';
 import { EditorCanvasComponent } from '../editor-canvas/editor-canvas.component';
+import { AvImageExportModalComponent } from '../image-export-modal/image-export-modal.component';
+
+import { AvImageMetadataService } from '../../services/av-image-metadata.service';
+import { AvImagePersistenceService } from '../../services/av-image-persistence.service';
 
 @Component({
   selector: 'av-image-editor-main',
   standalone: true,
   imports: [CommonModule, FormsModule, EditorCanvasComponent, AvCropCanvasComponent],
-  providers: [ImageEditorStateService, ImageCanvasService, ImageExportService],
+  providers: [
+    ImageEditorStateService,
+    ImageCanvasService,
+    ImageExportService,
+    AvImageMetadataService, // Добавлено
+    AvImagePersistenceService,
+  ],
   templateUrl: './image-editor-main.component.html',
   styleUrl: './image-editor-main.component.scss',
 })
@@ -24,6 +35,8 @@ export class ImageEditorMainComponent implements OnInit {
   protected readonly stateService = inject(ImageEditorStateService);
   protected readonly canvasService = inject(ImageCanvasService);
   protected readonly exportService = inject(ImageExportService);
+  protected readonly metadataService = inject(AvImageMetadataService);
+  private readonly nzModal = inject(NzModalService);
 
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
 
@@ -38,6 +51,9 @@ export class ImageEditorMainComponent implements OnInit {
 
   // Crop presets
   readonly presets = [
+    { icon: '📐', label: 'Custom Vertical', size: '600×887', width: 600, height: 887 },
+    { icon: '📐', label: 'Custom Wide', size: '1200×600', width: 1200, height: 600 },
+    { icon: '📐', label: 'Custom Small', size: '300×150', width: 300, height: 150 },
     { icon: '📱', label: 'Instagram Post', size: '1080×1080', width: 1080, height: 1080 },
     { icon: '📺', label: 'Instagram Story', size: '1080×1920', width: 1080, height: 1920 },
     { icon: '🎬', label: 'TikTok', size: '1080×1920', width: 1080, height: 1920 },
@@ -57,33 +73,38 @@ export class ImageEditorMainComponent implements OnInit {
       const url = this.state().originalUrl;
       const isResizeTool = this.state().activeTool === 'resize';
 
-      // Исходные размеры для расчета (либо кроп, либо оригинал)
-      const srcW = this.state().crop.width || this.state().metadata.originalWidth;
-      const srcH = this.state().crop.height || this.state().metadata.originalHeight;
+      const img = this.canvasService.getImage();
+      if (!img || !url) return;
 
-      // Целевые размеры (если мы в режиме ресайза, берем resizeWidth, иначе просто область кропа)
-      const targetW = isResizeTool ? this.state().crop.resizeWidth || srcW : srcW;
+      // 1. Учитываем поворот для базовых размеров (Src)
+      const isRotated90 = (rot + 3600) % 180 !== 0; // 90, 270, etc.
+      const srcW = isRotated90 ? img.naturalHeight : img.naturalWidth;
+      const srcH = isRotated90 ? img.naturalWidth : img.naturalHeight;
 
-      const targetH = isResizeTool ? this.state().crop.resizeHeight || srcH : srcH;
+      // 2. Базовый размер для расчета Out
+      const baseW = this.state().crop.width || srcW;
+      const baseH = this.state().crop.height || srcH;
 
-      if (!url || !targetW || !targetH) return;
+      // 3. Целевой размер (Out)
+      let targetW = isResizeTool ? this.state().crop.resizeWidth || srcW : baseW;
+      let targetH = isResizeTool ? this.state().crop.resizeHeight || srcH : baseH;
+
+      // Если включен пресет ресайза — Out всегда фиксирован
+      const cropState = this.state().crop;
+      if (cropState.resizePresetEnabled && cropState.presetWidth && cropState.presetHeight) {
+        targetW = cropState.presetWidth;
+        targetH = cropState.presetHeight;
+      }
 
       const timer = setTimeout(() => {
         this.exportService
-          .estimateFileSize(
-            this.canvasService.getImage(),
-            format,
-            quality,
-            rot,
-            fh,
-            fv,
-            targetW,
-            targetH,
-          )
+          .estimateFileSize(img, format, quality, rot, fh, fv, targetW, targetH)
           .then((res) => {
             this.stateService.updateState({
               metadata: {
                 ...this.state().metadata,
+                originalWidth: srcW, // Обновляем Src размеры с учетом поворота
+                originalHeight: srcH,
                 processedWidth: res.width,
                 processedHeight: res.height,
                 estimatedSize: res.size,
@@ -119,61 +140,58 @@ export class ImageEditorMainComponent implements OnInit {
 
   // --- ACTIONS ---
 
-  private async doLoad(url: string) {
+  private async doLoad(url: string, fileName: string = 'image.png') {
     try {
       const img = await this.canvasService.loadImage(url);
+      const currentMetadata = this.state().metadata;
+
+      // Генерируем SEO данные
+      const cleanName = this.metadataService.slugify(fileName);
+      const autoAlt = this.metadataService.generateAltFromFile(fileName);
 
       this.stateService.updateState({
         originalUrl: url,
         metadata: {
+          ...currentMetadata,
+          initialWidth: currentMetadata.initialWidth || img.naturalWidth,
+          initialHeight: currentMetadata.initialHeight || img.naturalHeight,
           originalWidth: img.naturalWidth,
           originalHeight: img.naturalHeight,
           processedWidth: img.naturalWidth,
           processedHeight: img.naturalHeight,
           estimatedSize: 0,
         },
+        // Обновляем настройки экспорта и SEO
+        export: {
+          ...this.state().export,
+          fileName: cleanName,
+        },
+        seo: {
+          ...this.state().seo,
+          altText: this.state().seo.altText || autoAlt,
+          title: this.state().seo.title || autoAlt, // Часто title = alt
+        },
       });
     } catch (err) {
       console.error('Failed to load image', err);
-      throw err; // Пробрасываем ошибку для UI
+      throw err;
     }
   }
 
   /**
    * Смена инструмента
    */
-  setTool(tool: 'open' | 'crop' | 'rotate' | 'resize' | 'filters' | 'export'): void {
+  setTool(tool: 'open' | 'crop' | 'rotate' | 'resize' | 'filters' | 'seo' | 'export'): void {
     this.stateService.updateState({ activeTool: tool, systemMessage: null, isPreviewMode: false });
 
-    // Инициализация кропа
-    if (tool === 'crop') {
-      const state = this.stateService.state();
-      if (!state.crop.width && state.metadata.originalWidth > 0) {
-        const w = state.metadata.originalWidth;
-        const h = state.metadata.originalHeight;
-        const cropW = Math.round(w * 0.8);
-        const cropH = Math.round(h * 0.8);
-        const cropX = Math.round((w - cropW) / 2);
-        const cropY = Math.round((h - cropH) / 2);
+    // Crop инициализируется внутри crop-canvas компонента
+    // (убрали инициализацию здесь, чтобы избежать конфликта координат)
 
-        this.stateService.updateCrop({
-          width: cropW,
-          height: cropH,
-          x: cropX,
-          y: cropY,
-          enabled: true,
-        });
-      }
-    }
-
-    // Инициализация ресайза (берем текущие размеры)
+    // Инициализация ресайза (всегда берем текущий "Src" размер картинки)
     if (tool === 'resize') {
       const s = this.state();
-      // Если у нас уже был какой-то кроп — используем его как базу для ресайза.
-      // Но если мы просто хотим поменять масштаб всей картинки, а crop.width был забит мусором —
-      // нам нужно быть осторожнее.
-      const baseW = s.crop.width || s.metadata.originalWidth;
-      const baseH = s.crop.height || s.metadata.originalHeight;
+      const baseW = s.metadata.originalWidth;
+      const baseH = s.metadata.originalHeight;
       this.stateService.updateCrop({
         resizeWidth: baseW,
         resizeHeight: baseH,
@@ -239,7 +257,8 @@ export class ImageEditorMainComponent implements OnInit {
     const reader = new FileReader();
     reader.onload = (e) => {
       const result = e.target?.result as string;
-      this.doLoad(result);
+      // Передаем также имя файла для генерации метаданных
+      this.doLoad(result, file.name);
     };
     reader.readAsDataURL(file);
   }
@@ -266,10 +285,66 @@ export class ImageEditorMainComponent implements OnInit {
     this.modalRef.close();
   }
 
-  save(): void {
-    // TODO: Implement export
-    console.log('Save triggered', this.state());
-    this.modalRef.close(this.state());
+  async save(): Promise<void> {
+    const s = this.state();
+    if (!s.originalUrl) return;
+
+    try {
+      this.showSystemMessage('Подготовка изображения...');
+      // Вызываем генерацию через сервис Canvas
+      const dataUrl = await this.canvasService.generateProcessedImage(s);
+
+      // Создаем File объект
+      const blob = await (await fetch(dataUrl)).blob();
+      const file = new File([blob], s.export.fileName, { type: s.export.format });
+
+      const result = {
+        file: file,
+        dataUrl: dataUrl,
+        name: s.export.fileName,
+        width: s.metadata.processedWidth,
+        height: s.metadata.processedHeight,
+        size: file.size,
+        metadata: {
+          fileName: s.export.fileName,
+          altText: s.seo.altText,
+          titleText: s.seo.title,
+          caption: s.seo.caption,
+          description: s.seo.description,
+          linkUrl: s.seo.linkUrl,
+          isClickable: s.seo.isClickable,
+          isOpenNewWindow: s.seo.isOpenNewWindow,
+          align: s.seo.align,
+        },
+      };
+
+      console.log('[VS] Opening Export Modal...', result);
+
+      const exportModal = this.nzModal.create({
+        nzTitle: 'Настройки изображения (Готовность к экспорту)',
+        nzContent: AvImageExportModalComponent,
+        nzData: result,
+        nzFooter: null,
+        nzWidth: 960,
+        nzCentered: true,
+        nzDraggable: true,
+        nzMaskClosable: false,
+        nzClosable: true,
+        nzStyle: { top: '60px' },
+        nzBodyStyle: { padding: '0' },
+      });
+
+      exportModal.afterClose.subscribe((finalResult) => {
+        if (finalResult && finalResult.isConfirmed) {
+          console.log('[VS] Export confirmed:', finalResult);
+          this.modalRef.close(finalResult);
+        }
+        this.showSystemMessage(null);
+      });
+    } catch (err) {
+      console.error('[VS] Save failed:', err);
+      this.showSystemMessage('Ошибка при сохранении');
+    }
   }
 
   // --- CROP HANDLERS ---
@@ -353,8 +428,8 @@ export class ImageEditorMainComponent implements OnInit {
   onResizeWidthChange(newWidth: number): void {
     const s = this.state().crop;
     if (s.resizeLocked) {
-      const currentW = this.state().crop.width || this.state().metadata.originalWidth;
-      const currentH = this.state().crop.height || this.state().metadata.originalHeight;
+      const currentW = this.state().metadata.originalWidth;
+      const currentH = this.state().metadata.originalHeight;
       const ratio = currentW / currentH;
       const newHeight = Math.round(newWidth / ratio);
       this.stateService.updateCrop({ resizeWidth: newWidth, resizeHeight: newHeight });
@@ -366,13 +441,43 @@ export class ImageEditorMainComponent implements OnInit {
   onResizeHeightChange(newHeight: number): void {
     const s = this.state().crop;
     if (s.resizeLocked) {
-      const currentW = this.state().crop.width || this.state().metadata.originalWidth;
-      const currentH = this.state().crop.height || this.state().metadata.originalHeight;
+      const currentW = this.state().metadata.originalWidth;
+      const currentH = this.state().metadata.originalHeight;
       const ratio = currentW / currentH;
       const newWidth = Math.round(newHeight * ratio);
       this.stateService.updateCrop({ resizeWidth: newWidth, resizeHeight: newHeight });
     } else {
       this.stateService.updateCrop({ resizeHeight: newHeight });
+    }
+  }
+
+  toggleResizePreset(): void {
+    const s = this.state().crop;
+    const newState = !s.resizePresetEnabled;
+    this.stateService.updateCrop({ resizePresetEnabled: newState });
+
+    if (newState && s.presetWidth && s.presetHeight) {
+      // При включении принудительно ставим пропорции кропа под пресет
+      this.stateService.updateCrop({
+        lock: true,
+        aspectRatio: s.presetWidth / s.presetHeight,
+      });
+      this.showSystemMessage(`Пропорции кропа привязаны к ${s.presetWidth}x${s.presetHeight}`);
+    }
+  }
+
+  onPresetDimensionChange(type: 'w' | 'h', value: number): void {
+    const s = this.state().crop;
+    if (type === 'w') {
+      this.stateService.updateCrop({ presetWidth: value });
+      if (s.resizePresetEnabled && value && s.presetHeight) {
+        this.stateService.updateCrop({ lock: true, aspectRatio: value / s.presetHeight });
+      }
+    } else {
+      this.stateService.updateCrop({ presetHeight: value });
+      if (s.resizePresetEnabled && value && s.presetWidth) {
+        this.stateService.updateCrop({ lock: true, aspectRatio: s.presetWidth / value });
+      }
     }
   }
 
@@ -386,7 +491,7 @@ export class ImageEditorMainComponent implements OnInit {
     // Генерируем масштабированное изображение (запекаем текущие повороты/отражения)
     try {
       this.stateService.updateState({ isPreviewMode: false }); // Выходим из превью если были в нем
-      const processedDataUrl = await this.generateProcessedImage();
+      const processedDataUrl = await this.canvasService.generateProcessedImage(this.state());
 
       // Загружаем результат как НОВЫЙ оригинал
       await this.doLoad(processedDataUrl);
@@ -410,7 +515,7 @@ export class ImageEditorMainComponent implements OnInit {
     }
   }
 
-  private showSystemMessage(msg: string): void {
+  private showSystemMessage(msg: string | null): void {
     this.stateService.updateState({ systemMessage: msg });
     setTimeout(() => {
       if (this.state().systemMessage === msg) {
@@ -426,7 +531,7 @@ export class ImageEditorMainComponent implements OnInit {
     } else {
       this.stateService.updateState({ metadata: { ...s.metadata, estimatedSize: 0 } }); // Optional loader state
       try {
-        const previewUrl = await this.generateProcessedImage();
+        const previewUrl = await this.canvasService.generateProcessedImage(s);
         this.stateService.updateState({
           isPreviewMode: true,
           processedUrl: previewUrl,
@@ -436,72 +541,6 @@ export class ImageEditorMainComponent implements OnInit {
         this.showSystemMessage('Ошибка генерации превью');
       }
     }
-  }
-
-  private generateProcessedImage(): Promise<string> {
-    return new Promise((resolve, reject) => {
-      const img = this.canvasService.getImage();
-      if (!img) return reject('No image');
-
-      const s = this.state();
-      const rot = this.canvasService.rotation();
-      const fh = this.canvasService.flipH();
-      const fv = this.canvasService.flipV();
-
-      // 1. Calculate intermediate canvas size (after rotation)
-      const angle = (rot + 3600) % 360;
-      const isRotated90 = angle === 90 || angle === 270;
-      const fullW = isRotated90 ? img.naturalHeight : img.naturalWidth;
-      const fullH = isRotated90 ? img.naturalWidth : img.naturalHeight;
-
-      const tempCanvas = document.createElement('canvas');
-      tempCanvas.width = fullW;
-      tempCanvas.height = fullH;
-      const tempCtx = tempCanvas.getContext('2d');
-      if (!tempCtx) return reject('Canvas error');
-
-      tempCtx.save();
-      tempCtx.translate(fullW / 2, fullH / 2);
-      tempCtx.rotate((rot * Math.PI) / 180);
-      tempCtx.scale(fh ? -1 : 1, fv ? -1 : 1);
-      tempCtx.drawImage(img, -img.naturalWidth / 2, -img.naturalHeight / 2);
-      tempCtx.restore();
-
-      // 2. Source: область на оригинале (учитываем кроп)
-      const srcX = s.crop.x || 0;
-      const srcY = s.crop.y || 0;
-      const srcW = s.crop.width || fullW;
-      const srcH = s.crop.height || fullH;
-
-      // 3. Target: конечный размер (ресайз)
-      const isResizeTool = s.activeTool === 'resize';
-      const targetW = isResizeTool ? s.crop.resizeWidth || srcW : s.metadata.processedWidth || srcW;
-      const targetH = isResizeTool
-        ? s.crop.resizeHeight || srcH
-        : s.metadata.processedHeight || srcH;
-
-      const finalCanvas = document.createElement('canvas');
-      finalCanvas.width = targetW;
-      finalCanvas.height = targetH;
-      const ctx = finalCanvas.getContext('2d');
-      if (!ctx) return reject('Canvas error');
-
-      if (s.crop.shape === 'circle') {
-        ctx.beginPath();
-        ctx.arc(targetW / 2, targetH / 2, Math.min(targetW, targetH) / 2, 0, Math.PI * 2);
-        ctx.clip();
-      }
-
-      ctx.drawImage(tempCanvas, srcX, srcY, srcW, srcH, 0, 0, targetW, targetH);
-
-      let format = s.export.format;
-      if (s.crop.shape === 'circle' && format === 'image/jpeg') {
-        format = 'image/webp';
-      }
-
-      const dataUrl = finalCanvas.toDataURL(format, s.export.quality / 100);
-      resolve(dataUrl);
-    });
   }
 
   applyCropAction(): void {
@@ -585,6 +624,15 @@ export class ImageEditorMainComponent implements OnInit {
 
     const croppedDataUrl = finalCanvas.toDataURL(format, state.export.quality / 100);
 
+    // Сбрасываем кроп в стейте ДО загрузки новой картинки,
+    // чтобы компоненты не пытались наложить старые координаты на новую картинку.
+    this.stateService.updateCrop({
+      width: null,
+      height: null,
+      x: 0,
+      y: 0,
+    });
+
     this.doLoad(croppedDataUrl)
       .then(() => {
         console.warn('[VS] Crop applied successfully');
@@ -595,10 +643,6 @@ export class ImageEditorMainComponent implements OnInit {
         this.canvasService.flipV.set(false);
 
         this.stateService.updateCrop({
-          width: null,
-          height: null,
-          x: 0,
-          y: 0,
           enabled: false,
         });
 

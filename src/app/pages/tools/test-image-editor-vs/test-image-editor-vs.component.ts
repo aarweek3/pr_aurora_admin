@@ -1,7 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ImageEditorMainComponent } from '@shared/components/av-image-editor-vs/components/image-editor-main/image-editor-main.component';
 import { ImageEditorConfig } from '@shared/components/av-image-editor-vs/models/editor-config.model';
+import { AvImageEditorOutput } from '@shared/components/av-image-editor-vs/models/image-result.model';
+import { AvMonitorService } from '@shared/components/ui';
 import { VSModalService } from '@shared/components/ui/vs-modal-compromise';
 
 @Component({
@@ -13,6 +16,8 @@ import { VSModalService } from '@shared/components/ui/vs-modal-compromise';
       <header class="test-header">
         <h1>🛠️ Стенд отладки: Image Editor VS</h1>
         <p>Тестирование автономного редактора на базе движка Compromise</p>
+        <p>файл теста test-image-editor-vs.component.ts</p>
+        <p>файл компонента загрузки картинки src/app/shared/components/av-image-editor-vs</p>
       </header>
 
       <main class="test-content">
@@ -73,8 +78,20 @@ import { VSModalService } from '@shared/components/ui/vs-modal-compromise';
           </div>
 
           <div class="result-card" *ngIf="lastResult">
-            <div class="result-preview">
-              <img [src]="lastResult.dataUrl" alt="Result" />
+            <div class="result-preview-group">
+              <div class="preview-item">
+                <label>Raw (img):</label>
+                <div class="preview-box">
+                  <img [src]="lastResult.url" alt="Result" />
+                </div>
+              </div>
+              <div class="preview-item">
+                <label>Real World (figure):</label>
+                <div
+                  class="preview-box figure-render"
+                  [innerHTML]="safeHtml || lastResult.htmlSnippet"
+                ></div>
+              </div>
             </div>
             <div class="result-info">
               <div class="info-row">
@@ -83,17 +100,43 @@ import { VSModalService } from '@shared/components/ui/vs-modal-compromise';
               </div>
               <div class="info-row">
                 <span class="info-label">Размеры:</span>
-                <span class="info-value">1200 × 800</span>
+                <span class="info-value">{{ lastResult.width }} × {{ lastResult.height }}</span>
               </div>
               <div class="info-row">
-                <span class="info-label">Вес:</span>
-                <span class="info-value">145 KB</span>
+                <span class="info-label">Формат / Вес:</span>
+                <span class="info-value"
+                  >{{ lastResult.format }} / {{ (lastResult.size / 1024).toFixed(1) }} KB</span
+                >
               </div>
+              <div class="info-row">
+                <span class="info-label">Alt:</span>
+                <span class="info-value">{{ lastResult.alt }}</span>
+              </div>
+
+              <div class="snippet-box" *ngIf="lastResult.htmlSnippet">
+                <label>HTML Snippet:</label>
+                <code>{{ lastResult.htmlSnippet }}</code>
+              </div>
+
+              <div class="actions-row">
+                <button class="monitor-btn" (click)="showMonitor()">🖥️ Monitor Data</button>
+              </div>
+
               <pre class="debug-json">{{ lastResultJson }}</pre>
             </div>
           </div>
         </section>
       </main>
+
+      <!-- НОВЫЙ БЛОК: ОТОБРАЖЕНИЕ В ПОЛНЫЙ РАЗМЕР (Actual Render) -->
+      <section class="actual-render-stand" *ngIf="lastResult">
+        <h3 class="section-title">Actual Render Stage (1:1)</h3>
+        <div class="render-backdrop">
+          <div class="article-emulator">
+            <div class="canvas-1-to-1" [innerHTML]="safeHtml || lastResult.htmlSnippet"></div>
+          </div>
+        </div>
+      </section>
     </div>
   `,
   styles: [
@@ -101,7 +144,11 @@ import { VSModalService } from '@shared/components/ui/vs-modal-compromise';
       .test-stand {
         padding: 0;
         color: #e0e0e0;
-        font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        font-family:
+          'Segoe UI',
+          system-ui,
+          -apple-system,
+          sans-serif;
       }
 
       .test-header {
@@ -206,14 +253,40 @@ import { VSModalService } from '@shared/components/ui/vs-modal-compromise';
         gap: 24px;
       }
 
-      .result-preview {
-        background: #111;
-        padding: 10px;
-        border-radius: 8px;
-        img {
-          max-width: 100%;
-          border-radius: 4px;
-          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      .result-preview-group {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        .preview-item {
+          label {
+            font-size: 10px;
+            color: #666;
+            margin-bottom: 4px;
+            display: block;
+            text-transform: uppercase;
+          }
+          .preview-box {
+            background: #111;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #333;
+            img {
+              max-width: 100%;
+              border-radius: 4px;
+              box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            }
+          }
+          .figure-render {
+            background: #fff;
+            color: #000;
+            ::ng-deep figure {
+              margin: 0;
+              img {
+                max-width: 100%;
+                height: auto;
+              }
+            }
+          }
         }
       }
 
@@ -244,15 +317,100 @@ import { VSModalService } from '@shared/components/ui/vs-modal-compromise';
         color: #a9d1ff;
         margin-top: 16px;
         overflow-x: auto;
+        max-height: 200px;
+      }
+
+      .snippet-box {
+        margin-top: 16px;
+        background: #111;
+        padding: 10px;
+        border-radius: 4px;
+        border: 1px solid #333;
+        label {
+          display: block;
+          font-size: 10px;
+          color: #666;
+          text-transform: uppercase;
+          margin-bottom: 4px;
+        }
+        code {
+          font-family: 'Consolas', monospace;
+          color: #ce9178;
+          font-size: 12px;
+          word-break: break-all;
+        }
+      }
+
+      .actions-row {
+        margin-top: 16px;
+      }
+
+      .monitor-btn {
+        background: #007acc;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 12px;
+        &:hover {
+          background: #005f99;
+        }
+      }
+
+      .actual-render-stand {
+        margin-top: 48px;
+        padding-top: 32px;
+        border-top: 1px solid #333;
+
+        .render-backdrop {
+          background: #111;
+          padding: 60px 20px;
+          border-radius: 12px;
+          border: 1px solid #333;
+          overflow-x: auto;
+          display: flex;
+          justify-content: center;
+        }
+
+        .article-emulator {
+          background: #fff;
+          width: 800px;
+          padding: 40px;
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+          position: relative;
+          min-height: 200px;
+          flex-shrink: 0;
+
+          &::before {
+            content: 'Article Content Preview (800px)';
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-size: 10px;
+            color: #bfbfbf;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+          }
+
+          .canvas-1-to-1 {
+            ::ng-deep figure {
+              margin: 0;
+            }
+          }
+        }
       }
     `,
   ],
 })
 export class TestImageEditorVsComponent {
   private readonly vsModal = inject(VSModalService);
+  private readonly monitor = inject(AvMonitorService);
+  private readonly sanitizer = inject(DomSanitizer);
 
-  lastResult: any = null;
+  lastResult: AvImageEditorOutput | null = null;
   lastResultJson: string = '';
+  safeHtml: SafeHtml | null = null;
 
   openEditor(imageUrl: string): void {
     const config: ImageEditorConfig = {
@@ -266,21 +424,44 @@ export class TestImageEditorVsComponent {
 
     const ref = this.vsModal.open(ImageEditorMainComponent, {
       title: 'Aurora Studio VS - Debug Stand',
-      width: '95vw',
+      width: '75vw',
       height: '90vh',
       data: config,
       resizable: true,
       draggable: true,
     });
 
-    ref.afterClosed().subscribe((result) => {
+    ref.afterClosed().subscribe((result: AvImageEditorOutput) => {
       if (result) {
         console.log('💎 Editor returned result:', result);
-        this.lastResult = {
-          dataUrl: imageUrl, // Временно используем оригинал для теста верстки
-        };
+        this.lastResult = result;
         this.lastResultJson = JSON.stringify(result, null, 2);
+        this.safeHtml = this.sanitizer.bypassSecurityTrustHtml(result.htmlSnippet);
       }
+    });
+  }
+
+  showMonitor(): void {
+    if (!this.lastResult) return;
+
+    this.monitor.show({
+      title: 'Data Monitoring',
+      imageUrl: this.lastResult.url,
+      imageHtml: this.lastResult.htmlSnippet,
+      imageJson: this.lastResult,
+      data: [
+        {
+          name: 'File',
+          value: 'src/app/pages/tools/test-image-editor-vs/test-image-editor-vs.component.ts',
+        },
+
+        { name: 'File Name', value: this.lastResult.name },
+        { name: 'Dimensions', value: `${this.lastResult.width}x${this.lastResult.height}` },
+        { name: 'Format', value: this.lastResult.format },
+        { name: 'Alt Text', value: this.lastResult.alt },
+        { name: 'Align', value: this.lastResult.align },
+        { name: 'HTML Snippet', value: this.lastResult.htmlSnippet },
+      ],
     });
   }
 }

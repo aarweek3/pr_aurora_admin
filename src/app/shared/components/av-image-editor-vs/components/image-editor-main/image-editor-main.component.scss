@@ -196,9 +196,6 @@
 .editor-workspace {
   flex: 1;
   background: #121212;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   position: relative;
   overflow: hidden;
 }
@@ -206,16 +203,11 @@
 .canvas-container {
   width: 100%;
   height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 .av-canvas-zone {
-  width: 90%;
-  height: 90%;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
-  border: 1px solid #333;
+  width: 100%;
+  height: 100%;
   background: #1e1e1e;
   overflow: hidden;
 }
@@ -255,6 +247,35 @@
   }
 }
 
+// Canvas Stack (для наложения crop поверх editor)
+.canvas-stack {
+  position: relative;
+  width: 100%;
+  height: 100%;
+
+  av-editor-canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.crop-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: auto;
+  z-index: 10;
+}
+
+.canvas-viewport {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
 // --- BUTTONS ---
 .ps-btn {
   height: 28px;
@@ -286,6 +307,20 @@
     opacity: 0.5;
     cursor: not-allowed;
   }
+}
+
+.ps-text-condensed {
+  display: inline-block;
+  font-family: var(--av-font-condensed, "Segoe UI Historic", "Arial Narrow", sans-serif);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: -0.2px;
+  white-space: nowrap;
+  text-transform: uppercase;
+}
+
+.ps-btn-compact {
+  padding: 0 4px !important;
 }
 
 .ps-btn-primary {
@@ -375,6 +410,50 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.ps-toggle-btn {
+  width: 100%;
+  height: 32px;
+  border-radius: 4px;
+  border: 1px solid #334155;
+  background: #2d3748;
+  color: #94a3b8;
+  font-size: 10.5px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-transform: uppercase;
+  margin-top: 8px;
+
+  &:hover {
+    border-color: #4a5568;
+    background: #3a4453;
+  }
+
+  &.active {
+    background: #2563eb;
+    border-color: #1d4ed8;
+    color: #fff;
+    box-shadow: 0 0 12px rgba(37, 99, 235, 0.4);
+  }
+
+  .status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #475569;
+    transition: all 0.2s;
+  }
+
+  &.active .status-dot {
+    background: #fff;
+    box-shadow: 0 0 6px #fff;
+  }
 }
 
 .ps-label {
@@ -743,4 +822,29 @@
     color: #ffffff;
     box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
   }
+}
+
+.debug-log-entry {
+  font-family: monospace;
+  font-size: 10px;
+  padding: 2px 4px;
+  border-bottom: 1px solid #111;
+  display: flex;
+  gap: 6px;
+  line-height: 1.2;
+
+  &:hover {
+    background: #111;
+  }
+}
+
+.debug-time {
+  color: #569cd6;
+  font-weight: bold;
+  flex-shrink: 0;
+}
+
+.debug-msg {
+  color: #ce9178;
+  word-break: break-all;
 }

@@ -1,0 +1,260 @@
+.monitor-container {
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border-radius: 8px;
+  max-height: 85vh;
+  min-width: 1200px;
+  overflow: hidden;
+
+  &.fullscreen {
+    height: 100vh;
+    max-height: 100vh;
+    width: 100vw;
+    border-radius: 0;
+  }
+}
+
+.monitor-action-bar {
+  padding-bottom: 12px;
+  border-bottom: 1px solid #f0f0f0;
+  margin-bottom: 8px;
+
+  .action-btns {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+}
+
+.monitor-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.block-label {
+  display: block;
+  font-size: 12px;
+  color: #8c8c8c;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 500;
+}
+
+// Блок с картинкой
+.image-monitor-block {
+  display: flex;
+  gap: 16px;
+  background: #fdfdfd;
+  padding: 12px;
+  border: 1px solid #f0f0f0;
+  border-radius: 4px;
+
+  .image-viewport {
+    flex: 0 0 250px;
+
+    .image-wrapper {
+      width: 250px;
+      height: 250px;
+      background: #eee
+        url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAMUlEQVQ4T2NVVFR0ZGBgYFhZWemP52Grqqq6Ax0j1AByMAsDA8Pt27d/DAfD3AByAAuA7hSctvX8YAAAAABJRU5ErkJggg=="); // Шахматка
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid #d9d9d9;
+      border-radius: 2px;
+      overflow: hidden;
+
+      img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+      }
+
+      &.figure-preview {
+        background: #fff;
+        display: block;
+        padding: 10px;
+        overflow: auto;
+
+        ::ng-deep figure {
+          margin: 0;
+          max-width: 100% !important;
+          height: auto !important;
+          img {
+            max-width: 100%;
+            height: auto;
+          }
+        }
+      }
+    }
+  }
+
+  .image-meta {
+    flex: 1;
+    min-width: 0;
+
+    .code-box {
+      margin: 0;
+      height: 250px;
+      font-size: 12px;
+      background: #1e1e1e;
+      color: #d4d4d4;
+      padding: 12px;
+      border-radius: 4px;
+      overflow: auto;
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    }
+  }
+}
+
+// Список данных
+.data-list {
+  .entry-rows {
+    border: 1px solid #f0f0f0;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .entry-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    background: #fff;
+    border-bottom: 1px solid #f0f0f0;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    &:hover {
+      background: #fafafa;
+    }
+
+    .entry-info {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: baseline;
+    }
+
+    .entry-name {
+      font-weight: 500;
+      color: #262626;
+      min-width: 120px;
+    }
+
+    .entry-value {
+      color: #1890ff;
+      word-break: break-all;
+    }
+
+    .entry-desc {
+      font-size: 12px;
+      color: #bfbfbf;
+    }
+  }
+}
+
+// Полноразмерный рендеринг (Stage)
+.actual-render-section {
+  margin-top: 20px;
+
+  .render-backdrop {
+    background: #e8e8e8; // Серые "края"
+    padding: 30px 15px;
+    border-radius: 4px;
+    border: 1px solid #dcdcdc;
+    overflow-x: auto;
+  }
+
+  .article-emulator {
+    background: #fff;
+    width: 800px;
+    margin: 0 auto;
+    padding: 40px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    min-height: 200px;
+    position: relative;
+
+    .canvas-1-to-1 {
+      ::ng-deep figure {
+        margin: 0;
+      }
+    }
+
+    &::before {
+      content: "Article Content Preview Area (800px)";
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      font-size: 10px;
+      color: #bfbfbf;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+  }
+}
+
+// Полный JSON
+.json-full-block {
+  .code-box {
+    margin: 0;
+    max-height: 300px;
+    font-size: 12px;
+    background: #f5f5f5;
+    color: #434343;
+    padding: 12px;
+    border: 1px solid #d9d9d9;
+    border-radius: 4px;
+    overflow: auto;
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  }
+}
+
+.no-data {
+  padding: 20px;
+  text-align: center;
+  color: #bfbfbf;
+  font-style: italic;
+  border: 1px dashed #d9d9d9;
+  border-radius: 4px;
+}
+
+.monitor-footer {
+  padding: 8px 16px;
+  border-top: 1px solid #f0f0f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #fafafa;
+
+  .timestamp {
+    font-size: 12px;
+    color: #bfbfbf;
+  }
+}
+
+:host ::ng-deep {
+  .av-monitor-fullscreen-wrap {
+    .ant-modal {
+      padding: 0;
+      max-width: 100vw;
+      top: 0 !important;
+    }
+    .ant-modal-content {
+      border-radius: 0;
+      height: 100vh;
+    }
+    .ant-modal-body {
+      padding: 0;
+      height: 100%;
+    }
+  }
+}

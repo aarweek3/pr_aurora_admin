@@ -2,7 +2,7 @@
  * Состояние редактора изображений
  */
 export interface ImageEditorState {
-  activeTool: 'open' | 'crop' | 'rotate' | 'resize' | 'filters' | 'export';
+  activeTool: 'open' | 'crop' | 'rotate' | 'resize' | 'filters' | 'seo' | 'export';
   /** Исходный URL или Base64 */
   originalUrl: string | null;
   /** Текущий масштаб (100% = 1) */
@@ -25,6 +25,18 @@ export interface ImageEditorState {
     fileName: string;
   };
 
+  /** Настройки SEO */
+  seo: {
+    altText: string;
+    title: string;
+    description: string;
+    caption: string;
+    linkUrl: string;
+    isClickable: boolean;
+    isOpenNewWindow: boolean;
+    align: 'left' | 'center' | 'right' | 'full';
+  };
+
   /** Состояние кропа (обрезки) */
   crop: {
     enabled: boolean;
@@ -41,11 +53,19 @@ export interface ImageEditorState {
     resizeWidth: number;
     resizeHeight: number;
     resizeLocked: boolean;
+
+    // Режим пресета ресайза (когда кроп тянется по пропорциям, но на выход идет фиксированный размер)
+    resizePresetEnabled: boolean;
+    presetWidth: number | null;
+    presetHeight: number | null;
   };
 
   /** Метаданные изображения */
-  /** Метаданные изображения */
   metadata: {
+    /** Ширина самого первого загруженного файла (не меняется при кропе) */
+    initialWidth: number;
+    /** Высота самого первого загруженного файла (не меняется при кропе) */
+    initialHeight: number;
     originalWidth: number;
     originalHeight: number;
     /** Размер исходного файла в байтах */
@@ -54,7 +74,8 @@ export interface ImageEditorState {
     processedWidth?: number;
     /** Высота после обработки */
     processedHeight?: number;
-    /** Примерный размер после сжатия (bytes) */
+    /** Итоговый размер после сжатия (bytes) */
     estimatedSize?: number;
   };
+  logHistory: string[];
 }

@@ -1,5 +1,6 @@
 import { computed, Injectable, signal } from '@angular/core';
 import { ApiEndpoints } from '@environments/api-endpoints';
+import { ImageEditorState } from '../models/editor-state.model';
 
 export interface CanvasDimensions {
   width: number;
@@ -21,10 +22,12 @@ export class ImageCanvasService {
 
   /** Состояние трансформации */
   readonly zoom = signal<number>(1);
-  readonly offset = signal<ImagePointer>({ x: 0, y: 0 });
   readonly rotation = signal<number>(0);
   readonly flipH = signal<boolean>(false);
   readonly flipV = signal<boolean>(false);
+
+  /** Версия изображения (инкрементируется при загрузке нового) */
+  readonly imageVersion = signal<number>(0);
 
   /** Вычисляемые размеры отображаемого изображения */
   readonly displaySize = computed(() => {
@@ -52,6 +55,7 @@ export class ImageCanvasService {
       img.onload = () => {
         this.imageElement = img;
         this.resetView();
+        this.imageVersion.update((v) => v + 1);
         resolve(img);
       };
 
@@ -62,6 +66,7 @@ export class ImageCanvasService {
         fallbackImg.onload = () => {
           this.imageElement = fallbackImg;
           this.resetView();
+          this.imageVersion.update((v) => v + 1);
           resolve(fallbackImg);
         };
         fallbackImg.onerror = (err) => {
@@ -76,13 +81,79 @@ export class ImageCanvasService {
   }
 
   /**
-   * Смещение изображения (панорамирование)
+   * Генерация финального изображения с учетом кропа, поворота и ресайза.
+   * Вынесено из ImageEditorMainComponent.
    */
-  pan(dx: number, dy: number): void {
-    const current = this.offset();
-    this.offset.set({
-      x: current.x + dx,
-      y: current.y + dy,
+  async generateProcessedImage(state: ImageEditorState): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const img = this.imageElement;
+      if (!img) return reject('No image');
+
+      const s = state;
+      const rot = this.rotation();
+      const fh = this.flipH();
+      const fv = this.flipV();
+
+      // 1. Calculate intermediate canvas size (after rotation)
+      const angle = (rot + 3600) % 360;
+      const isRotated90 = angle === 90 || angle === 270;
+      const fullW = isRotated90 ? img.naturalHeight : img.naturalWidth;
+      const fullH = isRotated90 ? img.naturalWidth : img.naturalHeight;
+
+      const tempCanvas = document.createElement('canvas');
+      tempCanvas.width = fullW;
+      tempCanvas.height = fullH;
+      const tempCtx = tempCanvas.getContext('2d');
+      if (!tempCtx) return reject('Canvas error');
+
+      tempCtx.save();
+      tempCtx.translate(fullW / 2, fullH / 2);
+      tempCtx.rotate((rot * Math.PI) / 180);
+      tempCtx.scale(fh ? -1 : 1, fv ? -1 : 1);
+      tempCtx.drawImage(img, -img.naturalWidth / 2, -img.naturalHeight / 2);
+      tempCtx.restore();
+
+      // 2. Source: область на оригинале (учитываем кроп)
+      const srcX = s.crop.x || 0;
+      const srcY = s.crop.y || 0;
+      const srcW = s.crop.width || fullW;
+      const srcH = s.crop.height || fullH;
+
+      // 3. Target: конечный размер (ресайз)
+      const isResizeTool = s.activeTool === 'resize';
+      let targetW = isResizeTool ? s.crop.resizeWidth || fullW : srcW;
+      let targetH = isResizeTool ? s.crop.resizeHeight || fullH : srcH;
+
+      // Приоритет пресета ресайза (если включен)
+      if (s.crop.resizePresetEnabled && s.crop.presetWidth && s.crop.presetHeight) {
+        targetW = s.crop.presetWidth;
+        targetH = s.crop.presetHeight;
+      }
+
+      const finalCanvas = document.createElement('canvas');
+      finalCanvas.width = targetW;
+      finalCanvas.height = targetH;
+      const ctx = finalCanvas.getContext('2d');
+      if (!ctx) return reject('Canvas error');
+
+      // 4. Маска (если выбрана)
+      if (s.crop.shape === 'circle') {
+        ctx.beginPath();
+        ctx.arc(targetW / 2, targetH / 2, Math.min(targetW, targetH) / 2, 0, Math.PI * 2);
+        ctx.clip();
+      }
+
+      ctx.drawImage(tempCanvas, srcX, srcY, srcW, srcH, 0, 0, targetW, targetH);
+
+      // 5. Формат и качество
+      let format = s.export.format;
+      if (s.crop.shape === 'circle' && format === 'image/jpeg') {
+        // JPEG не поддерживает прозрачность для кругов
+        format = 'image/webp';
+      }
+
+      const dataUrl = finalCanvas.toDataURL(format, s.export.quality / 100);
+      resolve(dataUrl);
     });
   }
 
@@ -102,33 +173,40 @@ export class ImageCanvasService {
   }
 
   /**
-   * Сброс вида (центрирование и вписывание)
+   * Зум
    */
+  zoomIn(factor: number = 0.1): void {
+    this.zoom.update((z) => Math.min(z + factor, 5));
+  }
+  zoomOut(factor: number = 0.1): void {
+    this.zoom.update((z) => Math.max(z - factor, 0.1));
+  }
+
+  resetTransforms(): void {
+    this.rotation.set(0);
+    this.flipH.set(false);
+    this.flipV.set(false);
+    this.zoom.set(1);
+  }
+
   resetView(): void {
     if (!this.imageElement) return;
 
-    const canvas = this.canvasSize();
-    const imgW = this.imageElement.naturalWidth;
-    const imgH = this.imageElement.naturalHeight;
+    const img = this.imageElement;
+    const canSize = this.canvasSize();
 
-    if (canvas.width === 0 || canvas.height === 0) {
-      this.zoom.set(1);
-      this.offset.set({ x: 0, y: 0 });
-      return;
-    }
+    if (img.naturalWidth === 0 || canSize.width === 0) return;
 
-    // Рассчитываем zoom, чтобы вписать картинку (Contain) с небольшим отступом (80%)
-    const padding = 0.8;
-    const scaleX = (canvas.width * padding) / imgW;
-    const scaleY = (canvas.height * padding) / imgH;
-    const newZoom = Math.min(scaleX, scaleY, 1); // Не растягиваем выше 100% при инициализации
+    // Авто-фит в размеры контейнера с небольшим отступом (считаем от натурального размера)
+    const scaleX = (canSize.width * 0.9) / img.naturalWidth;
+    const scaleY = (canSize.height * 0.9) / img.naturalHeight;
+    const fitScale = Math.min(scaleX, scaleY, 1);
 
-    this.zoom.set(newZoom);
+    this.zoom.set(fitScale || 1);
+  }
 
-    // Центрирование
-    const offX = (canvas.width - imgW * newZoom) / 2;
-    const offY = (canvas.height - imgH * newZoom) / 2;
-    this.offset.set({ x: offX, y: offY });
+  getImage() {
+    return this.imageElement;
   }
 
   /**
@@ -145,13 +223,6 @@ export class ImageCanvasService {
   }
 
   /**
-   * Получить текущее изображение
-   */
-  getImage(): HTMLImageElement | null {
-    return this.imageElement;
-  }
-
-  /**
    * Отрисовка на холсте
    */
   draw(ctx: CanvasRenderingContext2D): void {
@@ -160,7 +231,6 @@ export class ImageCanvasService {
     const img = this.imageElement;
     const { width, height } = this.canvasSize();
     const z = this.zoom();
-    const { x, y } = this.offset();
 
     // Очистка полного холста
     ctx.clearRect(0, 0, width, height);
@@ -171,8 +241,10 @@ export class ImageCanvasService {
     // Рисуем изображение
     ctx.save();
 
-    // Применяем трансформации
-    ctx.translate(x + (img.naturalWidth * z) / 2, y + (img.naturalHeight * z) / 2);
+    // Применяем трансформации (всегда по центру canvas)
+    const centerX = width / 2;
+    const centerY = height / 2;
+    ctx.translate(centerX, centerY);
     ctx.rotate((this.rotation() * Math.PI) / 180);
     ctx.scale(this.flipH() ? -1 : 1, this.flipV() ? -1 : 1);
 
@@ -191,10 +263,10 @@ export class ImageCanvasService {
    * Рисует шахматный фон
    */
   private drawCheckerboard(ctx: CanvasRenderingContext2D, w: number, h: number): void {
-    const size = 10;
-    ctx.fillStyle = '#333';
+    const size = 12;
+    ctx.fillStyle = '#181818';
     ctx.fillRect(0, 0, w, h);
-    ctx.fillStyle = '#3a3a3a';
+    ctx.fillStyle = '#222222';
     for (let i = 0; i < w; i += size * 2) {
       for (let j = 0; j < h; j += size * 2) {
         ctx.fillRect(i, j, size, size);

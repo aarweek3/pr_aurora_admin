@@ -283,7 +283,7 @@ export class TestImageStudioComponent {
         imageUrl: this.testImageUrl,
         metadata: { altText: 'Sample Alt', titleText: 'Sample Title' },
       },
-      nzWidth: 1200,
+      nzWidth: 900,
       nzFooter: null,
       nzMaskClosable: false,
       nzClosable: true,

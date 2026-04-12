@@ -34,6 +34,7 @@ export interface MenuGroup {
   id: string;
   title?: string; // Заголовок группы (опционально)
   items: MenuItem[];
+  highlight?: boolean; // Флаг для выделения группы (например, красным цветом)
 }
 
 /**
@@ -72,11 +73,13 @@ export interface MenuItem {
 export interface SubMenuItem {
   id: string;
   label: string;
-  route: string;
+  type?: 'link' | 'submenu'; // Опциональный тип, по умолчанию 'link'
+  route?: string; // Стало опциональным для поддержки вложенных меню
   icon?: string;
   disabled?: boolean;
   visible?: boolean;
   badge?: MenuBadge;
+  submenu?: SubMenuItem[]; // Список вложенных пунктов
 }
 
 /**
@@ -100,4 +103,8 @@ export interface SidebarEvents {
 /**
  * Тип события навигации для Event Bus
  */
-export type SidebarEventType = 'navigationStarted' | 'submenuOpened' | 'submenuClosed' | 'sidebarToggled';
+export type SidebarEventType =
+  | 'navigationStarted'
+  | 'submenuOpened'
+  | 'submenuClosed'
+  | 'sidebarToggled';

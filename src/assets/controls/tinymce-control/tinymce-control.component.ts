@@ -1,3 +1,4 @@
+// контрол tinymce
 import {
   AfterViewInit,
   Component,
@@ -12,6 +13,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { TinymceBridgeService } from '@shared/services/tinymce-bridge.service';
 
 declare let tinymce: any;
 
@@ -22,7 +24,7 @@ declare let tinymce: any;
   template: `
     <div class="av-tinymce-wrapper">
       @if (label) {
-      <label class="av-tinymce-label">{{ label }}</label>
+        <label class="av-tinymce-label">{{ label }}</label>
       }
       <textarea #editorArea></textarea>
     </div>
@@ -62,15 +64,17 @@ export class AvTinymceControlComponent
   @Input() plugins: string =
     'accordion advlist anchor autolink autoresize autosave charmap code codesample directionality emoticons fullscreen image importcss insertdatetime letterspacing footnotes av-youtube av-image av-align-image av-image-wrapping av-image-toolbar av-image-seo av-image-link av-image-shadow link lists media nonbreaking pagebreak preview quickbars save searchreplace table visualblocks visualchars wordcount';
   @Input() toolbar: string | string[] = [
-    'letterspacing | undo redo code | accordion blocks fontfamily fontsize lineheight | bold italic underline strikethrough | forecolor backcolor',
-    'alignleft aligncenter alignright alignjustify | image-align-left image-align-center image-align-right | bullist numlist outdent indent | link av-image-text av-image av-image-wrapping av-image-shadow image media table | av-youtube charmap emoticons codesample nonbreaking footnotes | hr blockquote subscript superscript | removeformat',
-    'searchreplace fullscreen preview | save restoredraft pagebreak anchor insertdatetime | visualblocks visualchars wordcount | ltr rtl',
+    'bold italic underline strikethrough removeformat | fontfamily fontsize  blocks | forecolor backcolor | alignleft aligncenter alignright alignjustify letterspacing table save code',
+    'searchreplace | undo redo | fullscreen preview |  link anchor | accordion lineheight | bullist numlist outdent indent | visualblocks visualchars | ltr rtl charmap emoticons codesample subscript superscript',
+    'av-image-studio | image-align-left image-align-center image-align-right | image media av-youtube | nonbreaking footnotes | hr blockquote | restoredraft pagebreak  insertdatetime | wordcount',
+    '',
   ];
 
   private editor: any;
   private value: string = '';
   private isDisabled: boolean = false;
   private ngZone = inject(NgZone);
+  private bridgeService = inject(TinymceBridgeService);
 
   // ControlValueAccessor callbacks
   private onChange: (value: string) => void = () => {};
@@ -181,6 +185,36 @@ export class AvTinymceControlComponent
         content_style: 'body { font-family: Arial, sans-serif; font-size: 14px; }',
         setup: (editor: any) => {
           this.editor = editor;
+
+          // Регистрация брендированной кнопки Aurora Image Studio (+)
+          editor.ui.registry.addIcon(
+            'av-studio-icon',
+            '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" fill="currentColor"/></svg>',
+          );
+
+          // КРАСНАЯ ИКОНКА YOUTUBE (теперь с уникальным именем для плагина av-youtube)
+          editor.ui.registry.addIcon(
+            'av-youtube-red',
+            '<svg width="24" height="24" viewBox="0 0 24 24"><path d="M21.58 7.19c-.23-.86-.91-1.54-1.77-1.77C18.25 5 12 5 12 5s-6.25 0-7.81.42c-.86.23-1.54.91-1.77 1.77C2 8.75 2 12 2 12s0 3.25.42 4.81c.23.86.91 1.54 1.77 1.77C5.75 19 12 19 12 19s6.25 0 7.81-.42c.86-.23 1.54-.91 1.77-1.77.42-1.56.42-4.81.42-4.81s0-3.25-.42-4.81zM10 15V9l5.2 3-5.2 3z" fill="#FF0000"/></svg>',
+          );
+
+          // НОВАЯ ИКОНКА ДЛЯ МУЛЬТИМЕДИА (Compact Disc)
+          // Переопределяем и 'embed', и 'media'
+          const cdSvg =
+            '<svg width="24" height="24" viewBox="0 0 100 100"><path d="M50,10C27.909,10,10,27.909,10,50C10,72.091,27.909,90,50,90S90,72.091,90,50C90,27.909,72.091,10,50,10ZM50,65C41.716,65,35,58.284,35,50C35,41.716,41.716,35,50,35S65,41.716,65,50C65,58.284,58.284,65,50,65Z" fill="#28a745"/><path d="M50,40C44.486,40,40,44.486,40,50S44.486,60,50,60C55.514,60,60,55.514,60,50S55.514,40,50,40ZM50,55C47.243,55,45,52.757,45,50S47.243,45,50,45C52.757,45,55,47.243,55,50S52.757,55,50,55Z" fill="#28a745"/></svg>';
+
+          editor.ui.registry.addIcon('embed', cdSvg);
+          editor.ui.registry.addIcon('media', cdSvg);
+
+          editor.ui.registry.addButton('av-image-studio', {
+            icon: 'av-studio-icon',
+            text: 'Aurora Studio',
+            tooltip: 'Aurora Image Studio (VS)',
+            onAction: () => {
+              this.bridgeService.openImageStudio(editor);
+            },
+          });
+
           editor.on('Change KeyUp Undo Redo', () => {
             const content = editor.getContent();
             this.ngZone.run(() => {

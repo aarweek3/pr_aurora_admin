@@ -808,6 +808,11 @@ export const ICON_REGISTRY: IconCategory[] = [
         "category": "general"
       },
       {
+        "name": "compact-disc",
+        "type": "general/compact-disc",
+        "category": "general"
+      },
+      {
         "name": "av_home-2490",
         "type": "general/av_home-2490",
         "category": "general"

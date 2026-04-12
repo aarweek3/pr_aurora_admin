@@ -468,14 +468,20 @@
       <span style="opacity: 0.5">|</span>
       <span>{{ (state().zoom * 100).toFixed(0) }}% масштаб</span>
       <span style="opacity: 0.5">|</span>
-      <span title="Исходный размер">
+      <span title="Истинный размер загруженного файла" style="color: #abb2bf">
+        True: {{ state().metadata.initialWidth }}x{{
+          state().metadata.initialHeight
+        }}
+      </span>
+      <span style="opacity: 0.5">|</span>
+      <span title="Текущий размер изображения в редакторе (до трансформаций)">
         Src: {{ state().metadata.originalWidth }}x{{
           state().metadata.originalHeight
         }}
       </span>
       <span style="opacity: 0.5">|</span>
       <span
-        title="Результат обработки"
+        title="Итоговый размер после обрезки и масштабирования"
         style="color: #61afef; font-weight: bold"
       >
         Out:

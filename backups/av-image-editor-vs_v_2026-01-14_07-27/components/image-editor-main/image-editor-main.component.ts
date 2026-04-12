@@ -112,20 +112,21 @@ export class ImageEditorMainComponent implements OnInit {
       const url = this.state().originalUrl;
       const isResizeTool = this.state().activeTool === 'resize';
 
-      // Исходные размеры для расчета (либо кроп, либо оригинал)
-      const srcW =
+      // Базовый размер для расчета Out - это либо выделенная область кропа, либо вся картинка (Src)
+      const baseW =
         this.state().crop.width || this.state().metadata.originalWidth;
-      const srcH =
+      const baseH =
         this.state().crop.height || this.state().metadata.originalHeight;
 
-      // Целевые размеры (если мы в режиме ресайза, берем resizeWidth, иначе просто область кропа)
+      // Если мы в инструменте Ресайз — Out показывает результат масштабирования ВСЕЙ картинки (Src)
+      // Если в другом инструменте — Out показывает размер текущей рамки кропа (если она есть) или Src
       const targetW = isResizeTool
-        ? this.state().crop.resizeWidth || srcW
-        : srcW;
+        ? this.state().crop.resizeWidth || this.state().metadata.originalWidth
+        : baseW;
 
       const targetH = isResizeTool
-        ? this.state().crop.resizeHeight || srcH
-        : srcH;
+        ? this.state().crop.resizeHeight || this.state().metadata.originalHeight
+        : baseH;
 
       if (!url || !targetW || !targetH) return;
 
@@ -183,10 +184,14 @@ export class ImageEditorMainComponent implements OnInit {
   private async doLoad(url: string) {
     try {
       const img = await this.canvasService.loadImage(url);
+      const currentMetadata = this.state().metadata;
 
       this.stateService.updateState({
         originalUrl: url,
         metadata: {
+          ...currentMetadata,
+          initialWidth: currentMetadata.initialWidth || img.naturalWidth,
+          initialHeight: currentMetadata.initialHeight || img.naturalHeight,
           originalWidth: img.naturalWidth,
           originalHeight: img.naturalHeight,
           processedWidth: img.naturalWidth,
@@ -233,14 +238,11 @@ export class ImageEditorMainComponent implements OnInit {
       }
     }
 
-    // Инициализация ресайза (берем текущие размеры)
+    // Инициализация ресайза (всегда берем текущий "Src" размер картинки)
     if (tool === 'resize') {
       const s = this.state();
-      // Если у нас уже был какой-то кроп — используем его как базу для ресайза.
-      // Но если мы просто хотим поменять масштаб всей картинки, а crop.width был забит мусором —
-      // нам нужно быть осторожнее.
-      const baseW = s.crop.width || s.metadata.originalWidth;
-      const baseH = s.crop.height || s.metadata.originalHeight;
+      const baseW = s.metadata.originalWidth;
+      const baseH = s.metadata.originalHeight;
       this.stateService.updateCrop({
         resizeWidth: baseW,
         resizeHeight: baseH,
@@ -424,10 +426,8 @@ export class ImageEditorMainComponent implements OnInit {
   onResizeWidthChange(newWidth: number): void {
     const s = this.state().crop;
     if (s.resizeLocked) {
-      const currentW =
-        this.state().crop.width || this.state().metadata.originalWidth;
-      const currentH =
-        this.state().crop.height || this.state().metadata.originalHeight;
+      const currentW = this.state().metadata.originalWidth;
+      const currentH = this.state().metadata.originalHeight;
       const ratio = currentW / currentH;
       const newHeight = Math.round(newWidth / ratio);
       this.stateService.updateCrop({
@@ -442,10 +442,8 @@ export class ImageEditorMainComponent implements OnInit {
   onResizeHeightChange(newHeight: number): void {
     const s = this.state().crop;
     if (s.resizeLocked) {
-      const currentW =
-        this.state().crop.width || this.state().metadata.originalWidth;
-      const currentH =
-        this.state().crop.height || this.state().metadata.originalHeight;
+      const currentW = this.state().metadata.originalWidth;
+      const currentH = this.state().metadata.originalHeight;
       const ratio = currentW / currentH;
       const newWidth = Math.round(newHeight * ratio);
       this.stateService.updateCrop({
@@ -561,11 +559,11 @@ export class ImageEditorMainComponent implements OnInit {
       // 3. Target: конечный размер (ресайз)
       const isResizeTool = s.activeTool === 'resize';
       const targetW = isResizeTool
-        ? s.crop.resizeWidth || srcW
-        : s.metadata.processedWidth || srcW;
+        ? s.crop.resizeWidth || s.metadata.originalWidth
+        : s.crop.width || s.metadata.originalWidth;
       const targetH = isResizeTool
-        ? s.crop.resizeHeight || srcH
-        : s.metadata.processedHeight || srcH;
+        ? s.crop.resizeHeight || s.metadata.originalHeight
+        : s.crop.height || s.metadata.originalHeight;
 
       const finalCanvas = document.createElement('canvas');
       finalCanvas.width = targetW;

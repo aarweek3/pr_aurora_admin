@@ -20,6 +20,16 @@ export class ImageEditorStateService {
       quality: 90,
       fileName: 'image_edited',
     },
+    seo: {
+      altText: '',
+      title: '',
+      description: '',
+      caption: '',
+      linkUrl: '',
+      isClickable: false,
+      isOpenNewWindow: false,
+      align: 'center',
+    },
     crop: {
       enabled: false,
       shape: 'rectangle',
@@ -33,8 +43,13 @@ export class ImageEditorStateService {
       resizeWidth: 0,
       resizeHeight: 0,
       resizeLocked: true,
+      resizePresetEnabled: false,
+      presetWidth: null,
+      presetHeight: null,
     },
     metadata: {
+      initialWidth: 0,
+      initialHeight: 0,
       originalWidth: 0,
       originalHeight: 0,
       originalSize: 0,
@@ -42,6 +57,7 @@ export class ImageEditorStateService {
       processedHeight: 0,
       estimatedSize: 0,
     },
+    logHistory: [],
   });
 
   /**
@@ -62,6 +78,16 @@ export class ImageEditorStateService {
   }
 
   /**
+   * Обновить настройки SEO
+   */
+  updateSeo(patch: Partial<ImageEditorState['seo']>): void {
+    this.state.update((s) => ({
+      ...s,
+      seo: { ...s.seo, ...patch },
+    }));
+  }
+
+  /**
    * Обновить настройки кропа
    */
   updateCrop(patch: Partial<ImageEditorState['crop']>): void {
@@ -76,5 +102,15 @@ export class ImageEditorStateService {
    */
   resetZoom(): void {
     this.updateState({ zoom: 1 });
+  }
+
+  /**
+   * Добавить запись в историю логов
+   */
+  addLogToHistory(msg: string): void {
+    this.state.update((s) => {
+      const newHistory = [msg, ...s.logHistory].slice(0, 50); // Храним последние 50
+      return { ...s, logHistory: newHistory };
+    });
   }
 }

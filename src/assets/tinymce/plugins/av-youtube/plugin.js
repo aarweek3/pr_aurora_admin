@@ -91,7 +91,7 @@
     }
 
     editor.ui.registry.addButton('av-youtube', {
-      icon: 'embed',
+      icon: 'av-youtube-red',
       tooltip: 'Вставить YouTube видео',
       onAction: function () {
         editor.windowManager.open({

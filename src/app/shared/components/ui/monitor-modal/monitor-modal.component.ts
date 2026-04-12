@@ -1,0 +1,132 @@
+import { Clipboard, ClipboardModule } from '@angular/cdk/clipboard';
+import { CommonModule } from '@angular/common';
+import { Component, inject, OnInit } from '@angular/core';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzMessageService } from 'ng-zorro-antd/message';
+import { NZ_MODAL_DATA, NzModalModule, NzModalRef } from 'ng-zorro-antd/modal';
+import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
+import { AvMonitorConfig, AvMonitorEntry } from './models/monitor-modal.model';
+
+@Component({
+  selector: 'av-monitor-modal',
+  standalone: true,
+  imports: [
+    CommonModule,
+    NzModalModule,
+    NzButtonModule,
+    NzIconModule,
+    NzToolTipModule,
+    ClipboardModule,
+  ],
+  templateUrl: './monitor-modal.component.html',
+  styleUrls: ['./monitor-modal.component.scss'],
+})
+export class AvMonitorModalComponent implements OnInit {
+  /** Данные, переданные в модальное окно */
+  readonly data: AvMonitorConfig = inject(NZ_MODAL_DATA);
+  private readonly modalRef = inject(NzModalRef);
+  private readonly clipboard = inject(Clipboard);
+  private readonly message = inject(NzMessageService);
+  private readonly sanitizer = inject(DomSanitizer);
+
+  /** Текущая дата для футера */
+  today = new Date();
+
+  /** Состояние полноэкранного режима */
+  isFullscreen = false;
+
+  /** Форматированный JSON для изображения */
+  formattedImageJson = '';
+  /** Форматированный общий JSON */
+  formattedJsonData = '';
+  /** Санированный HTML для рендеринга figure */
+  safeImageHtml?: SafeHtml;
+
+  ngOnInit(): void {
+    if (this.data.imageJson) {
+      this.formattedImageJson = JSON.stringify(this.data.imageJson, null, 2);
+    }
+    if (this.data.jsonData) {
+      this.formattedJsonData = JSON.stringify(this.data.jsonData, null, 2);
+    }
+    if (this.data.imageHtml) {
+      this.safeImageHtml = this.sanitizer.bypassSecurityTrustHtml(this.data.imageHtml);
+    }
+  }
+
+  /**
+   * Копировать все данные мониторинга
+   */
+  copyAll(): void {
+    let text = `Monitor: ${this.data.title || 'Untitled'}\n\n`;
+
+    if (this.data.data && this.data.data.length > 0) {
+      text += '--- Entries ---\n';
+      this.data.data.forEach((item) => {
+        text += `${item.name}: ${this.formatValue(item.value)}\n`;
+      });
+      text += '\n';
+    }
+
+    if (this.data.imageJson) {
+      text += '--- Image Metadata ---\n';
+      text += this.formattedImageJson + '\n\n';
+    }
+
+    if (this.data.jsonData) {
+      text += '--- Full JSON Data ---\n';
+      text += this.formattedJsonData + '\n';
+    }
+
+    this.clipboard.copy(text);
+    this.message.success('Все данные скопированы в буфер обмена');
+  }
+
+  /**
+   * Копировать одну строку
+   */
+  copyEntry(item: AvMonitorEntry): void {
+    const text = `${item.name}: ${this.formatValue(item.value)}`;
+    this.clipboard.copy(text);
+    this.message.success(`Скопировано: ${item.name}`);
+  }
+
+  /**
+   * Переключить полноэкранный режим
+   */
+  toggleFullscreen(): void {
+    this.isFullscreen = !this.isFullscreen;
+    if (this.isFullscreen) {
+      this.modalRef.updateConfig({
+        nzStyle: { top: '0', padding: '0' },
+        nzWidth: '100vw',
+        nzWrapClassName: 'av-monitor-fullscreen-wrap',
+      });
+    } else {
+      this.modalRef.updateConfig({
+        nzStyle: { top: '100px' },
+        nzWidth: this.data.width || '800px',
+        nzWrapClassName: '',
+      });
+    }
+  }
+
+  /**
+   * Закрыть окно
+   */
+  close(): void {
+    this.modalRef.destroy();
+  }
+
+  /**
+   * Форматирование значения для вывода
+   */
+  private formatValue(value: any): string {
+    if (typeof value === 'object') {
+      return JSON.stringify(value);
+    }
+    return String(value);
+  }
+}

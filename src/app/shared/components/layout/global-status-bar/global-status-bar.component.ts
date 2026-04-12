@@ -1,13 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit, signal } from '@angular/core';
+import { HealthIndicatorComponent } from '@shared/components/health/components/health-indicator/health-indicator.component';
+import { HealthPanelDetailsComponent } from '@shared/components/health/components/health-panel-details/health-panel-details.component';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzPopoverModule } from 'ng-zorro-antd/popover';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 import { ContextService } from '../../../../core/services/context/context.service';
 import { ErrorRegistryService } from '../../../../core/services/error-registry/error-registry.service';
 import { EventBusService } from '../../../../core/services/event-bus/event-bus.service';
-import { HealthIndicatorComponent } from '../../../health/components/health-indicator/health-indicator.component';
-import { HealthPanelDetailsComponent } from '../../../health/components/health-panel-details/health-panel-details.component';
 
 /**
  * Status Indicator Interface
@@ -51,31 +51,36 @@ export interface StatusIndicator {
     <div class="global-status-bar">
       <div class="global-status-bar__indicators">
         @for (indicator of indicators(); track indicator.id) {
-        <div
-          class="status-indicator"
-          [class]="'status-indicator--' + indicator.status"
-          nz-tooltip
-          [nzTooltipTitle]="indicator.message"
-          nzTooltipPlacement="top"
-        >
-          <span nz-icon [nzType]="indicator.icon" [nzSpin]="indicator.status === 'loading'"></span>
-          <span class="status-indicator__label">{{ indicator.label }}</span>
-        </div>
+          <div
+            class="status-indicator"
+            [class]="'status-indicator--' + indicator.status"
+            nz-tooltip
+            [nzTooltipTitle]="indicator.message"
+            nzTooltipPlacement="top"
+          >
+            <span
+              nz-icon
+              [nzType]="indicator.icon"
+              [nzSpin]="indicator.status === 'loading'"
+            ></span>
+            <span class="status-indicator__label">{{ indicator.label }}</span>
+          </div>
         }
       </div>
 
       <!-- Дополнительная информация -->
       <div class="global-status-bar__info">
         @if (hasActiveLocks()) {
-        <div class="status-info-item status-info-item--warning">
-          <span nz-icon nzType="lock"></span>
-          <span>Заблокировано: {{ activeLocks() }}</span>
-        </div>
-        } @if (backgroundTasks() > 0) {
-        <div class="status-info-item">
-          <span nz-icon nzType="loading" nzSpin></span>
-          <span>Задач в фоне: {{ backgroundTasks() }}</span>
-        </div>
+          <div class="status-info-item status-info-item--warning">
+            <span nz-icon nzType="lock"></span>
+            <span>Заблокировано: {{ activeLocks() }}</span>
+          </div>
+        }
+        @if (backgroundTasks() > 0) {
+          <div class="status-info-item">
+            <span nz-icon nzType="loading" nzSpin></span>
+            <span>Задач в фоне: {{ backgroundTasks() }}</span>
+          </div>
         }
 
         <!-- Мониторинг здоровья -->

@@ -198,7 +198,7 @@ export class AvImagePickerComponent implements ControlValueAccessor {
         aspectRatio: this.aspectRatio,
       },
       nzTitle: 'Aurora Image Studio',
-      nzWidth: 1240,
+      nzWidth: 900,
       nzFooter: null,
       nzDraggable: true,
       nzClosable: true,

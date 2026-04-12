@@ -1,0 +1,114 @@
+<div class="monitor-container" [class.fullscreen]="isFullscreen">
+  <div class="monitor-body">
+    <div class="monitor-header">
+      <p>Не удалять!!! Название компонента - monitor-modal.component{{ data.title }}</p>
+    </div>
+    <!-- Панель инструментов (взамен старого хедера) -->
+    <div class="monitor-action-bar">
+      <div class="action-btns">
+        <button
+          nz-button
+          nzType="primary"
+          nzSize="small"
+          (click)="copyAll()"
+          nz-tooltip
+          nzTooltipTitle="Копировать всё"
+        >
+          <span nz-icon nzType="copy"></span>
+          Копировать всё
+        </button>
+
+        <button
+          nz-button
+          nzType="default"
+          nzSize="small"
+          (click)="toggleFullscreen()"
+          nz-tooltip
+          [nzTooltipTitle]="isFullscreen ? 'Свернуть' : 'Во весь экран'"
+        >
+          <span nz-icon [nzType]="isFullscreen ? 'fullscreen-exit' : 'fullscreen'"></span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Блок мониторинга изображения -->
+    @if (data.imageUrl) {
+      <div class="image-monitor-block">
+        <div class="image-viewport">
+          <label class="block-label">Raw Preview (img):</label>
+          <div class="image-wrapper">
+            <img [src]="data.imageUrl" alt="Monitor preview" />
+          </div>
+        </div>
+        @if (safeImageHtml) {
+          <div class="image-viewport">
+            <label class="block-label">Figure Rendering (Real World):</label>
+            <div class="image-wrapper figure-preview" [innerHTML]="safeImageHtml"></div>
+          </div>
+        }
+        <div class="image-meta">
+          <label class="block-label">JSON изображения:</label>
+          <pre class="code-box">{{ formattedImageJson || 'Нет данных' }}</pre>
+        </div>
+      </div>
+
+      @if (safeImageHtml) {
+        <div class="actual-render-section">
+          <label class="block-label">Actual Render (Stage 1:1):</label>
+          <div class="render-backdrop">
+            <div class="article-emulator">
+              <!-- Здесь HTML рендерится "как есть", без масштабирования -->
+              <div class="canvas-1-to-1" [innerHTML]="safeImageHtml"></div>
+            </div>
+          </div>
+        </div>
+      }
+    }
+
+    <!-- Построчный вывод данных -->
+    <div class="data-list">
+      <label class="block-label">Параметры:</label>
+      @if (data.data && data.data.length > 0) {
+        <div class="entry-rows">
+          @for (item of data.data; track item.name) {
+            <div class="entry-row">
+              <div class="entry-info">
+                <span class="entry-name">{{ item.name }}:</span>
+                <span class="entry-value">{{ item.value }}</span>
+                @if (item.description) {
+                  <span class="entry-desc">({{ item.description }})</span>
+                }
+              </div>
+              <button
+                nz-button
+                nzType="text"
+                nzSize="small"
+                (click)="copyEntry(item)"
+                nz-tooltip
+                nzTooltipTitle="Копировать строку"
+              >
+                <span nz-icon nzType="copy"></span>
+              </button>
+            </div>
+          }
+        </div>
+      } @else {
+        <div class="no-data">Список параметров пуст</div>
+      }
+    </div>
+
+    <!-- Общий JSON -->
+    @if (data.jsonData) {
+      <div class="json-full-block">
+        <label class="block-label">Полные данные (JSON):</label>
+        <pre class="code-box">{{ formattedJsonData }}</pre>
+      </div>
+    }
+  </div>
+
+  <!-- Футер (опционально) -->
+  <div class="monitor-footer">
+    <span class="timestamp">Time: {{ today | date: 'HH:mm:ss' }}</span>
+    <button nz-button nzType="default" (click)="close()">Закрыть</button>
+  </div>
+</div>

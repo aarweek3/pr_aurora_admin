@@ -46,6 +46,8 @@ export interface ImageEditorState {
   /** Метаданные изображения */
   /** Метаданные изображения */
   metadata: {
+    initialWidth: number;
+    initialHeight: number;
     originalWidth: number;
     originalHeight: number;
     /** Размер исходного файла в байтах */

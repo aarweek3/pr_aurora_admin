@@ -77,6 +77,7 @@ export interface AvImageMetadata {
   fileName: string;
   altText?: string;
   titleText?: string;
+  description?: string;
   caption?: string;
   align?: 'left' | 'center' | 'right' | 'justify'; // Расположение
   linkUrl?: string; // Ссылка при клике
