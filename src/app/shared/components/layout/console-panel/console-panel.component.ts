@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { EventBusService } from '../../../../core/services/event-bus/event-bus.service';
+import { LoggerConsoleService } from '../../../logger-console/services/logger-console.service';
 import { LoggerConsoleComponent } from '../../../logger-console/components/logger-console/logger-console.component';
 
 /**
@@ -15,7 +16,12 @@ import { LoggerConsoleComponent } from '../../../logger-console/components/logge
   standalone: true,
   imports: [CommonModule, NzIconModule, LoggerConsoleComponent],
   template: `
-    <aside class="console-panel" [class.is-open]="isOpen()">
+    <aside class="console-panel" 
+      [class.is-open]="isOpen()" 
+      [class.is-collapsed]="loggerService.isCollapsed()"
+      [class.is-fullscreen]="loggerService.isFullScreen()"
+      [style.width]="loggerService.isFullScreen() ? '100vw' : loggerService.isCollapsed() ? '48px' : (isOpen() ? loggerService.loggerWidth() + 'px' : '0')"
+    >
       <div class="console-panel__header">
         <h3 class="title">System Console</h3>
         <button class="close-btn" (click)="close()">
@@ -39,7 +45,7 @@ import { LoggerConsoleComponent } from '../../../logger-console/components/logge
         background: #1e1e1e; // Темный фон для консоли
         box-shadow: -4px 0 15px rgba(0, 0, 0, 0.3);
         z-index: 9999;
-        overflow: hidden;
+        overflow: visible;
         transition: width 0.3s cubic-bezier(0.7, 0, 0.3, 1);
         border-left: 1px solid #333;
         display: flex;
@@ -47,7 +53,19 @@ import { LoggerConsoleComponent } from '../../../logger-console/components/logge
       }
 
       .console-panel.is-open {
-        width: 35vw; // Немного увеличим для удобства
+        // Ширина теперь берется динамически из [style.width]
+      }
+
+      .console-panel.is-fullscreen {
+        top: 0;
+        bottom: 0;
+        z-index: 10000;
+      }
+
+      .console-panel.is-collapsed {
+        .console-panel__header {
+          display: none;
+        }
       }
 
       .console-panel__header {
@@ -93,6 +111,7 @@ import { LoggerConsoleComponent } from '../../../logger-console/components/logge
 })
 export class ConsolePanelComponent implements OnInit {
   private readonly eventBus = inject(EventBusService);
+  public readonly loggerService = inject(LoggerConsoleService);
   isOpen = signal(false);
 
   ngOnInit() {

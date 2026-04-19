@@ -1,0 +1,133 @@
+<div class="tinymce-doc">
+    <h1 style="color: #1890ff; border-bottom: 2px solid #1890ff; padding-bottom: 10px;">Образцовая модель: Многоязычность + SEO</h1>
+
+    <p class="lead">Этот модуль является <strong>эталонным примером</strong> реализации универсального компонента в Aurora Admin. Он демонстрирует, как одна и та же форма может использоваться в разных режимах и поддерживать сложную вложенную структуру данных (SEO + Переводы).</p>
+
+    <h2 style="color: #52c41a;">1. Три режима хостинга формы</h2>
+    <p>Архитектура компонента позволяет переключать режим отображения без изменения бизнес-логики:</p>
+    <ul>
+        <li><strong>Модальное окно (Modal)</strong>: Быстрое редактирование "поверх" списка. Идеально для небольших правок.</li>
+        <li><strong>Встроенная панель (Inline)</strong>: Сплит-режим (список слева, форма справа). Удобно для последовательной обработки множества записей.</li>
+        <li><strong>Отдельная страница (Page)</strong>: Полноэкранный режим с собственным URL. Подходит для сложных записей с большим объемом контента.</li>
+    </ul>
+
+    <h2 style="color: #faad14;">2. Структура многоязычных данных</h2>
+    <p>Для каждого поддерживаемого языка в системе генерируется отдельная вкладка. Внутри вкладки данные разделены на две группы:</p>
+    <ol>
+        <li><strong>Контентные поля</strong>: Локализованное название, описание и HTML-текст.</li>
+        <li><strong>SEO-панель</strong>: Скрываемая секция, содержащая все необходимые для продвижения метаданные.</li>
+    </ol>
+
+    <h2 style="color: #eb2f96;">3. SEO Метаданные (на каждый язык)</h2>
+    <div style="background: #f9f0ff; padding: 15px; border-radius: 4px; border: 1px solid #d3adf7; margin-bottom: 20px;">
+        <strong>Доступные поля оптимизации:</strong>
+        <ul style="margin-bottom: 0;">
+            <li><code>Meta Title</code> и <code>Meta Description</code></li>
+            <li><code>Open Graph (OG)</code>: Заголовки и изображения для социальных сетей.</li>
+            <li><code>Canonical URL</code></li>
+            <li><code>Schema.org</code>: Структурированные данные в формате JSON-LD.</li>
+        </ul>
+    </div>
+
+    <h2 style="color: #1890ff;">4. Техническая реализация</h2>
+    <ul>
+        <li><strong>State Management</strong>: <code>SampleMainSeoStateService</code> управляет всеми операциями (Loading, Saving, Resetting).</li>
+        <li><strong>API Integration</strong>: <code>SampleMainSeoApiService</code> обеспечивает связь с контроллером бэкенда.</li>
+        <li><strong>Shared Form</strong>: <code>SampleMainSeoFormComponent</code> — это "чистый" компонент формы, который ничего не знает о том, где он находится (в моделе или на странице).</li>
+    </ul>
+
+    <div style="margin-top: 30px; padding: 15px; background: #fff1f0; border: 1px solid #ffa39e; border-radius: 4px;">
+        <p style="margin: 0; font-weight: bold; color: #cf1322;">⚠️ Критическое требование</p>
+        <p style="margin: 5px 0 0 0;">Перед началом работы убедитесь, что в системе **инициализированы языки**. Если список языков пуст, вкладки формы не будут созданы, что приведет к ошибкам при сохранении.</p>
+    </div>
+
+    <h2 style="color: #08979c;">5. Сравнение с Test Sample Multi-Lang</h2>
+    <p>В системе присутствуют две образцовые реализации многоязычности. Выбор между ними зависит от бизнес-задач сущности:</p>
+
+    <table style="width: 100%; border-collapse: collapse; margin-bottom: 24px; font-size: 13px;">
+        <tr style="background: #fafafa; border-bottom: 2px solid #f0f0f0;">
+            <th style="padding: 12px; text-align: left; width: 25%;">Характеристика</th>
+            <th style="padding: 12px; text-align: left; width: 35%;">Test Sample Multi-Lang</th>
+            <th style="padding: 12px; text-align: left; width: 40%;">Образцовая модель (SEO)</th>
+        </tr>
+        <tr style="border-bottom: 1px solid #f0f0f0;">
+            <td style="padding: 12px; font-weight: bold;">Назначение</td>
+            <td style="padding: 12px;">Простые справочники, внутренние данные.</td>
+            <td style="padding: 12px;">Контент для сайта, категории, статьи, товары.</td>
+        </tr>
+        <tr style="border-bottom: 1px solid #f0f0f0;">
+            <td style="padding: 12px; font-weight: bold;">SEO-панель</td>
+            <td style="padding: 12px;">Отсутствует.</td>
+            <td style="padding: 12px;">Полный набор (Meta, OG, Schema, Canonical).</td>
+        </tr>
+        <tr style="border-bottom: 1px solid #f0f0f0;">
+            <td style="padding: 12px; font-weight: bold;">Режимы формы</td>
+            <td style="padding: 12px;">Только модальное окно.</td>
+            <td style="padding: 12px;">3 режима: Модалка, Встроенная, Страница.</td>
+        </tr>
+        <tr style="border-bottom: 1px solid #f0f0f0;">
+            <td style="padding: 12px; font-weight: bold;">Сложность кода</td>
+            <td style="padding: 12px;">Низкая (базовый CRUD).</td>
+            <td style="padding: 12px;">Средняя (сложное состояние, вложенные формы).</td>
+        </tr>
+    </table>
+
+    <div style="background: #f6ffed; padding: 15px; border-radius: 4px; border: 1px solid #b7eb8f; margin-bottom: 20px;">
+        <h3 style="margin-top: 0; color: #389e0d;">💡 Рекомендации Antigravity:</h3>
+        <ul style="margin-bottom: 0;">
+            <li><strong>Используйте Test Sample Multi-Lang</strong>, если создаете служебный справочник (например, "Типы доставки" или "Статусы заказов"), где пользователю не нужно думать о продвижении в Google.</li>
+            <li><strong>Используйте Образцовую модель (SEO)</strong> для любых сущностей, которые будут иметь свою страницу на публичном сайте. Это гарантирует, что контент-менеджер не забудет заполнить мета-теги, и страница будет выглядеть привлекательно в социальных сетях.</li>
+        </ul>
+    </div>
+
+    <h2 style="color: #722ed1;">6. Технические детали (для разработчиков)</h2>
+    <div style="background: #f0f5ff; padding: 15px; border-radius: 4px; border: 1px solid #adc6ff; margin-bottom: 20px;">
+        <strong>Структура DTO (Data Transfer Object):</strong>
+        <pre style="font-size: 12px; margin-top: 10px;"><code>{
+  "id": 0,
+  "name": "Project Name",
+  "systemCode": "project-code",
+  "urlPictureMain": "path/to/img.jpg",
+  "isActive": true,
+  "localizations": [
+    {
+      "languageId": 1,
+      "title": "Заголовок на русском",
+      "seo": {
+        "metaTitle": "SEO Title",
+        "ogTitle": "Social Title",
+        "schema": "{ ... }"
+      }
+    }
+  ]
+}</code></pre>
+    </div>
+
+    <h3>Валидация и проверки</h3>
+    <ul>
+        <li><strong>Уникальность SystemCode</strong>: Проверяется на лету через асинхронный валидатор (Backend API).</li>
+        <li><strong>Обязательные переводы</strong>: Система требует заполнения данных хотя бы для одного основного языка (обычно ID=1).</li>
+        <li><strong>Оптимизация изображений</strong>: Рекомендуется использовать относительные пути, которые корректно обрабатываются API загрузки.</li>
+    </ul>
+
+    <h2 style="color: #000000; border-top: 1px solid #eee; padding-top: 15px; margin-top: 30px;">📂 Пути к исходному коду</h2>
+    <div style="display: flex; gap: 20px;">
+        <div style="flex: 1;">
+            <h4 style="margin-bottom: 5px;">Frontend (Angular)</h4>
+            <ul style="list-style: none; padding-left: 0; font-size: 13px;">
+                <li><strong>Manager:</strong> <code>src/app/.../sample-main-seo-manager.component.ts</code></li>
+                <li><strong>Form:</strong> <code>src/app/.../components/sample-main-seo-form/sample-main-seo-form.component.ts</code></li>
+                <li><strong>State:</strong> <code>src/app/.../services/sample-main-seo-state.service.ts</code></li>
+                <li><strong>API JS:</strong> <code>src/app/.../services/sample-main-seo-api.service.ts</code></li>
+            </ul>
+        </div>
+        <div style="flex: 1;">
+            <h4 style="margin-bottom: 5px;">Backend (.NET)</h4>
+            <ul style="list-style: none; padding-left: 0; font-size: 13px;">
+                <li><strong>Controller:</strong> <code>pr_srv_names/.../SampleMainSeoController.cs</code></li>
+                <li><strong>Service:</strong> <code>pr_srv_names/.../Services/SampleMainSeoService.cs</code></li>
+                <li><strong>Profile (Mapping):</strong> <code>pr_srv_names/.../SampleMainSeoProfile.cs</code></li>
+            </ul>
+        </div>
+    </div>
+</div>

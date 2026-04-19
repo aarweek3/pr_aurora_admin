@@ -241,6 +241,20 @@
     flex-shrink: 0;
     transition: transform 0.3s;
   }
+
+  // Intent: orange
+  &.is-intent-orange {
+    color: #ffa940;
+    .menu-item__icon {
+      color: #ffa940;
+    }
+    &:hover {
+      color: #ff9c6e;
+      .menu-item__icon {
+        color: #ff9c6e;
+      }
+    }
+  }
 }
 
 // Submenu
@@ -355,6 +369,20 @@
     &--success {
       background: #52c41a;
       color: #fff;
+    }
+  }
+
+  // Intent: orange
+  &.is-intent-orange {
+    color: #ffa940;
+    .submenu-item__icon {
+      color: #ffa940;
+    }
+    &:hover {
+      color: #ff9c6e;
+      .submenu-item__icon {
+        color: #ff9c6e;
+      }
     }
   }
 }

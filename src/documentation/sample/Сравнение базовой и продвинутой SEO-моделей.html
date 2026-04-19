@@ -1,0 +1,798 @@
+<div class="tinymce-doc">
+  <h1 style="color: #1890ff; border-bottom: 2px solid #1890ff; padding-bottom: 10px">
+    Сравнение моделей: Simple vs Basic vs SEO
+  </h1>
+
+  <p class="lead">
+    В архитектуре Aurora Admin предусмотрено <strong>три основных шаблона</strong> для работы с данными разной
+    сложности. От простых справочников до SEO-оптимизированного контента. Это ruководство поможет вам выбрать
+    оптимальную структуру для новой сущности.
+  </p>
+
+  <h2 style="color: #08979c">1. Сводная таблица сравнения всех трех моделей</h2>
+  <table style="width: 100%; border-collapse: collapse; margin-bottom: 24px; font-size: 13px">
+    <thead>
+      <tr style="background: #fafafa; border-bottom: 2px solid #f0f0f0">
+        <th style="padding: 12px; text-align: left; width: 20%">Характеристика</th>
+        <th style="padding: 12px; text-align: left; width: 26%; background: #f0f9ff; color: #0050b3">
+          📦 Sample Simple
+        </th>
+        <th style="padding: 12px; text-align: left; width: 27%; background: #f6ffed; color: #274e0b">
+          🌐 Sample Языки (Basic)
+        </th>
+        <th style="padding: 12px; text-align: left; width: 27%; background: #fff1f0; color: #820014">
+          🚀 Sample + Языки + SEO
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="border-bottom: 1px solid #f0f0f0">
+        <td style="padding: 12px; font-weight: bold">Назначение</td>
+        <td style="padding: 12px">Простые справочники без многоязычности</td>
+        <td style="padding: 12px">Служебные справочники с поддержкой языков</td>
+        <td style="padding: 12px">Публичный контент (статьи, категории, товары)</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #f0f0f0">
+        <td style="padding: 12px; font-weight: bold">Многоязычность</td>
+        <td style="padding: 12px; color: #8c8c8c">❌ Не поддерживается</td>
+        <td style="padding: 12px">✅ Полная поддержка (selector + языковые данные)</td>
+        <td style="padding: 12px">✅ Вкладки по языкам в форме</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #f0f0f0">
+        <td style="padding: 12px; font-weight: bold">SEO-инструменты</td>
+        <td style="padding: 12px; color: #8c8c8c">❌ Отсутствуют</td>
+        <td style="padding: 12px; color: #8c8c8c">❌ Отсутствуют</td>
+        <td style="padding: 12px">✅ Полный набор (Meta, OG, Schema.org)</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #f0f0f0">
+        <td style="padding: 12px; font-weight: bold">Интерфейс формы</td>
+        <td style="padding: 12px">Простое модальное окно</td>
+        <td style="padding: 12px">Модальное окно (выбор языка за сеанс)</td>
+        <td style="padding: 12px">Единая форма с вкладками всех языков</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #f0f0f0">
+        <td style="padding: 12px; font-weight: bold">Режимы хостинга</td>
+        <td style="padding: 12px">Modal</td>
+        <td style="padding: 12px">Modal</td>
+        <td style="padding: 12px">Modal, Inline (Split), Full Page</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #f0f0f0">
+        <td style="padding: 12px; font-weight: bold">Медиа-данные</td>
+        <td style="padding: 12px">❌ Только текст</td>
+        <td style="padding: 12px">❌ Только текст</td>
+        <td style="padding: 12px">✅ Изображения, флаги, локализованные медиа</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #f0f0f0">
+        <td style="padding: 12px; font-weight: bold">Количество компонентов</td>
+        <td style="padding: 12px">5 (Manager, Table, Modal + 2 сервиса)</td>
+        <td style="padding: 12px">6 (Manager, Table, Modal + 2 сервиса + подбор языков)</td>
+        <td style="padding: 12px">8-10 (+ SEO-форма, + вкладки, + медиа)</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #f0f0f0">
+        <td style="padding: 12px; font-weight: bold">Сложность</td>
+        <td style="padding: 12px">⭐ Самая простая</td>
+        <td style="padding: 12px">⭐⭐ Средняя</td>
+        <td style="padding: 12px">⭐⭐⭐ Сложная</td>
+      </tr>
+      <tr>
+        <td style="padding: 12px; font-weight: bold">Время разработки</td>
+        <td style="padding: 12px">1-2 дня</td>
+        <td style="padding: 12px">2-3 дня</td>
+        <td style="padding: 12px">5-7 дней</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2 style="color: #389e0d">2. Рекомендации по выбору</h2>
+
+  <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 30px">
+    <div style="padding: 20px; background: #e6f7ff; border: 1px solid #91d5ff; border-radius: 8px">
+      <h3 style="color: #096dd9; margin-top: 0">📦 Выбирайте Sample Simple для:</h3>
+      <ul style="padding-left: 20px; margin: 0">
+        <li>Общих справочников в админ-панели</li>
+        <li>Внутренних данных без публичного отображения</li>
+        <li>Простых CRUD операций</li>
+        <li>Когда не нужна многоязычность</li>
+        <li>Быстрого прототипирования</li>
+      </ul>
+      <div
+        style="background: #fff; padding: 12px; border-radius: 4px; margin-top: 12px; font-size: 12px; color: #0050b3"
+      >
+        <strong>Примеры:</strong> Должности, Регионы, Типы
+      </div>
+    </div>
+
+    <div style="padding: 20px; background: #f6ffed; border: 1px solid #b7eb8f; border-radius: 8px">
+      <h3 style="color: #389e0d; margin-top: 0">🌐 Выбирайте Sample Языки для:</h3>
+      <ul style="padding-left: 20px; margin: 0">
+        <li>Справочников с поддержкой языков</li>
+        <li>Многоязычного контента</li>
+        <li>Служебных данных (не для публики)</li>
+        <li>Когда нужна локализация</li>
+        <li>Отсутствуют SEO требования</li>
+      </ul>
+      <div
+        style="background: #fff; padding: 12px; border-radius: 4px; margin-top: 12px; font-size: 12px; color: #274e0b"
+      >
+        <strong>Примеры:</strong> Теги (тегированные на разных языках), Системные константы
+      </div>
+    </div>
+
+    <div style="padding: 20px; background: #fff1f0; border: 1px solid #ffccc7; border-radius: 8px">
+      <h3 style="color: #820014; margin-top: 0">🚀 Выбирайте Sample + SEO для:</h3>
+      <ul style="padding-left: 20px; margin: 0">
+        <li>Публичного контента</li>
+        <li>SEO-оптимизированного контента</li>
+        <li>Индексирования поисковиками</li>
+        <li>Многоязычного контента с SEO</li>
+        <li>Привлечения органического трафика</li>
+      </ul>
+      <div
+        style="background: #fff; padding: 12px; border-radius: 4px; margin-top: 12px; font-size: 12px; color: #820014"
+      >
+        <strong>Примеры:</strong> Статьи, Категории товаров, Лендинги, Бренды
+      </div>
+    </div>
+  </div>
+
+  <h2 style="color: #1890ff">3. Как это реализовано в Справке</h2>
+  <p>
+    Каждая страница имеет кнопку <strong>Помощь (?)</strong> в правом верхнем углу, которая ведет на данный
+    сравнительный анализ.
+  </p>
+
+  <h2 style="color: #096dd9">4. Архитектура Sample Simple (📦 Простая модель)</h2>
+  <p>Самая базовая архитектура, состоит из 5 элементов без поддержки многоязычности:</p>
+  <table style="width: 100%; border-collapse: collapse; margin-bottom: 24px; font-size: 13px">
+    <thead>
+      <tr style="background: #e6f7ff; border-bottom: 2px solid #91d5ff">
+        <th style="padding: 12px; text-align: left; width: 20%">Компонент / Сервис</th>
+        <th style="padding: 12px; text-align: left; width: 80%">Описание</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="border-bottom: 1px solid #f0f0f0">
+        <td style="padding: 12px"><strong>SimpleManagerComponent</strong></td>
+        <td style="padding: 12px">Контейнер с поиском, пагинацией, кнопкой добавления. Управляет жизненным циклом.</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #f0f0f0">
+        <td style="padding: 12px"><strong>SimpleTableComponent</strong></td>
+        <td style="padding: 12px">
+          Таблица отображения (view mode). Получает @Input данные, генерирует @Output события.
+        </td>
+      </tr>
+      <tr style="border-bottom: 1px solid #f0f0f0">
+        <td style="padding: 12px"><strong>SimpleModalComponent</strong></td>
+        <td style="padding: 12px">Форма в модальном окне. Режимы: ADD, EDIT, VIEW. Реактивные формы.</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #f0f0f0">
+        <td style="padding: 12px"><strong>SampleSimpleService</strong></td>
+        <td style="padding: 12px">
+          BehaviorSubject для управления состоянием. Методы: search(), changePage(), openAdd(), save().
+        </td>
+      </tr>
+      <tr>
+        <td style="padding: 12px"><strong>SampleSimpleApiService</strong></td>
+        <td style="padding: 12px">
+          HTTP запросы к API. Методы: getSamples(), getById(), create(), update(), delete().
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2 style="color: #389e0d">5. Архитектура Sample Языки (🌐 Basic Model)</h2>
+  <p>Расширение Simple с поддержкой многоязычности и языковыми селекторами:</p>
+  <table style="width: 100%; border-collapse: collapse; margin-bottom: 24px; font-size: 13px">
+    <thead>
+      <tr style="background: #f6ffed; border-bottom: 2px solid #b7eb8f">
+        <th style="padding: 12px; text-align: left; width: 25%">Компонент / Сервис</th>
+        <th style="padding: 12px; text-align: left; width: 75%">Описание</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="border-bottom: 1px solid #f0f0f0">
+        <td style="padding: 12px"><strong>SimpleMainManagerComponent</strong></td>
+        <td style="padding: 12px">
+          <strong>+ Селектор языков</strong>. Фильтрация списка по выбранному языку. Управление состоянием.
+        </td>
+      </tr>
+      <tr style="border-bottom: 1px solid #f0f0f0">
+        <td style="padding: 12px"><strong>SimpleMainTableComponent</strong></td>
+        <td style="padding: 12px">Таблица с колонкой "Локализованное имя". Отображает данные выбранного языка.</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #f0f0f0">
+        <td style="padding: 12px"><strong>SimpleMainModalComponent</strong></td>
+        <td style="padding: 12px">
+          Форма с <strong>language selector</strong>. Редактирование для одного языка за раз.
+        </td>
+      </tr>
+      <tr style="border-bottom: 1px solid #f0f0f0">
+        <td style="padding: 12px"><strong>SampleMainStateService</strong></td>
+        <td style="padding: 12px">+ setLanguage(). State: {items, languageId, searchTerm, pageNumber, ...}</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #f0f0f0">
+        <td style="padding: 12px"><strong>SampleMainApiService</strong></td>
+        <td style="padding: 12px">+ параметр languageId в getPaged(). + методы для многоязычных данных.</td>
+      </tr>
+      <tr>
+        <td style="padding: 12px"><strong>LanguageService (фреймворк)</strong></td>
+        <td style="padding: 12px">Услуга из Aurora фреймворка для получения списка доступных языков.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2 style="color: #820014">6. Архитектура Sample + SEO (🚀 Продвинутая модель)</h2>
+  <p>Полная SEO-оптимизация с многоязычностью, вкладками и медиа-поддержкой:</p>
+  <table style="width: 100%; border-collapse: collapse; margin-bottom: 24px; font-size: 13px">
+    <thead>
+      <tr style="background: #fff1f0; border-bottom: 2px solid #ffccc7">
+        <th style="padding: 12px; text-align: left; width: 25%">Компонент / Сервис</th>
+        <th style="padding: 12px; text-align: left; width: 75%">Описание</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="border-bottom: 1px solid #f0f0f0">
+        <td style="padding: 12px"><strong>SampleMainSeoManagerComponent</strong></td>
+        <td style="padding: 12px">
+          Расширенный контейнер. Может работать в 3 режимах: Modal, Inline (Split), Full Page.
+        </td>
+      </tr>
+      <tr style="border-bottom: 1px solid #f0f0f0">
+        <td style="padding: 12px"><strong>SampleMainSeoTableComponent</strong></td>
+        <td style="padding: 12px">Таблица с доп. информацией: Meta Title preview, Status flags.</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #f0f0f0">
+        <td style="padding: 12px"><strong>SampleMainSeoFormComponent</strong></td>
+        <td style="padding: 12px">
+          <strong>Вкладки по языкам</strong>. Все языки редактируются одновременно. Включает SEO-поля.
+        </td>
+      </tr>
+      <tr style="border-bottom: 1px solid #f0f0f0">
+        <td style="padding: 12px"><strong>SeoFormComponent (shared)</strong></td>
+        <td style="padding: 12px">Переиспользуемый компонент для SEO-полей (Meta Title, Meta Desc, OG, Schema.org).</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #f0f0f0">
+        <td style="padding: 12px"><strong>SampleMainSeoStateService</strong></td>
+        <td style="padding: 12px">Расширенное управление состоянием. Поддержка draft/published статусов.</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #f0f0f0">
+        <td style="padding: 12px"><strong>SampleMainSeoApiService</strong></td>
+        <td style="padding: 12px">Запросы к другому endpoint: /api/sample-main-seo/paged. + методы для медиа.</td>
+      </tr>
+      <tr>
+        <td style="padding: 12px"><strong>MediaUploadService</strong></td>
+        <td style="padding: 12px">Загрузка и управление локализованными изображениями и флагами.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2 style="color: #096dd9">7. Поток данных (Data Flow) для каждой модели</h2>
+
+  <h3 style="color: #0050b3; font-size: 15px; margin-top: 20px">7.1 Sample Simple: Простой поиск</h3>
+  <div
+    style="
+      background: #f0f9ff;
+      border-left: 4px solid #0050b3;
+      padding: 12px;
+      margin-bottom: 16px;
+      font-family: monospace;
+      font-size: 12px;
+    "
+  >
+    input → SimpleManagerComponent.onSearch() → SampleSimpleService.search()<br />
+    → SampleSimpleApiService.getSamples() → SimpleTableComponent (через async pipe)
+  </div>
+
+  <h3 style="color: #274e0b; font-size: 15px; margin-top: 20px">7.2 Sample Языки: Поиск с фильтром по языку</h3>
+  <div
+    style="
+      background: #f6fff3;
+      border-left: 4px solid #274e0b;
+      padding: 12px;
+      margin-bottom: 16px;
+      font-family: monospace;
+      font-size: 12px;
+    "
+  >
+    Селектор языка → SimpleMainManager.onLanguageChange() → SampleMainStateService.setLanguage(langId)<br />
+    → updateState({languageId}) → API getPaged({languageId}) → Таблица отображает локализованные данные
+  </div>
+
+  <h3 style="color: #820014; font-size: 15px; margin-top: 20px">
+    7.3 Sample + SEO: Редактирование всех языков одновременно
+  </h3>
+  <div
+    style="
+      background: #fff7f6;
+      border-left: 4px solid #820014;
+      padding: 12px;
+      margin-bottom: 16px;
+      font-family: monospace;
+      font-size: 12px;
+    "
+  >
+    Редактировать (кнопка) → SampleMainSeoManagerComponent.openEdit(id)<br />
+    → SampleMainSeoFormComponent открывается с 3+ вкладками (один язык = одна вкладка)<br />
+    → Все SEO-поля видны одновременно для всех языков<br />
+    → Сохранение отправляет multipart request на API с данными всех языков
+  </div>
+
+  <h2 style="color: #389e0d">8. Особенности и отличия трех моделей</h2>
+
+  <h3 style="color: #0050b3; font-size: 15px; margin-top: 16px">📦 Sample Simple — Минимализм</h3>
+  <div style="background: #f0f9ff; border: 1px solid #91d5ff; border-radius: 6px; padding: 12px">
+    <ul style="margin: 0; padding-left: 20px">
+      <li>✅ Самая быстрая в разработке (1-2 дня)</li>
+      <li>✅ Минимум компонентов (5)</li>
+      <li>✅ Простее дебажить</li>
+      <li>✅ Подходит для внутренних справочников</li>
+      <li>❌ Нет многоязычности</li>
+      <li>❌ Нет SEO</li>
+      <li>❌ Не подходит для публичного контента</li>
+    </ul>
+  </div>
+
+  <h3 style="color: #274e0b; font-size: 15px; margin-top: 16px">🌐 Sample Языки (Basic) — Универсал</h3>
+  <div style="background: #f6fff3; border: 1px solid #b7eb8f; border-radius: 6px; padding: 12px">
+    <ul style="margin: 0; padding-left: 20px">
+      <li>✅ Поддержка многоязычности</li>
+      <li>✅ Хороший баланс с Simple (шаблон можно переиспользовать)</li>
+      <li>✅ Подходит для служебных справочников на разных языках</li>
+      <li>✅ Гибкий API с languageId фильтром</li>
+      <li>⚠️ Одновременно можно редактировать только один язык</li>
+      <li>❌ Нет SEO-полей</li>
+      <li>❌ Нет поддержки локализованных медиа</li>
+    </ul>
+  </div>
+
+  <h3 style="color: #820014; font-size: 15px; margin-top: 16px">🚀 Sample + SEO (Продвинутая) — Мощь</h3>
+  <div style="background: #fff7f6; border: 1px solid #ffccc7; border-radius: 6px; padding: 12px">
+    <ul style="margin: 0; padding-left: 20px">
+      <li>✅ Полный набор SEO-инструментов</li>
+      <li>✅ Редактирование всех языков одновременно</li>
+      <li>✅ Поддержка локализованных изображений</li>
+      <li>✅ 3 режима: Modal, Inline, Full Page</li>
+      <li>✅ Публикация статусов (Draft/Published)</li>
+      <li>✅ Meta Title preview в таблице</li>
+      <li>⚠️ Сложнее разработка (5-7 дней)</li>
+      <li>⚠️ Требует опыта работы с RxJS и Reactive Forms</li>
+    </ul>
+  </div>
+
+  <h2 style="color: #096dd9">7. Примеры кода</h2>
+
+  <h3 style="font-size: 16px; color: #389e0d; margin-top: 20px">7.1 Вызов поиска в Manager Component</h3>
+  <div
+    style="
+      background: #f5f5f5;
+      border: 1px solid #d9d9d9;
+      border-radius: 4px;
+      padding: 12px;
+      margin-bottom: 16px;
+      overflow-x: auto;
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+    "
+  >
+    <span style="color: #8c8c8c">// SimpleMainManagerComponent</span><br />
+    <span style="color: #1890ff">onSearch</span>(event: Event): <span style="color: #faad14">void</span> {<br />
+    &nbsp;&nbsp;<span style="color: #faad14">const</span> term = (event.target
+    <span style="color: #faad14">as</span> HTMLInputElement).value;<br />
+    &nbsp;&nbsp;<span style="color: #faad14">this</span>.service.<span style="color: #1890ff">search</span>(term);<br />
+    }
+  </div>
+
+  <h3 style="font-size: 16px; color: #389e0d; margin-top: 20px">7.2 State Service управляет состоянием</h3>
+  <div
+    style="
+      background: #f5f5f5;
+      border: 1px solid #d9d9d9;
+      border-radius: 4px;
+      padding: 12px;
+      margin-bottom: 16px;
+      overflow-x: auto;
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+    "
+  >
+    <span style="color: #8c8c8c">// SampleMainStateService</span><br />
+    <span style="color: #faad14">private</span> state$ = <span style="color: #faad14">new</span>
+    <span style="color: #1890ff">BehaviorSubject</span>&lt;SampleMainState&gt;(INITIAL_STATE);<br /><br />
+    <span style="color: #1890ff">getState</span>():
+    <span style="color: #faad14">Observable</span>&lt;SampleMainState&gt; {<br />
+    &nbsp;&nbsp;<span style="color: #faad14">return</span>
+    <span style="color: #faad14">this</span>.state$.asObservable();<br />
+    }<br /><br />
+    <span style="color: #1890ff">search</span>(term: <span style="color: #faad14">string</span>):
+    <span style="color: #faad14">void</span> {<br />
+    &nbsp;&nbsp;<span style="color: #faad14">this</span>.<span style="color: #1890ff">updateState</span>({ searchTerm:
+    term, pageNumber: 1 });<br />
+    &nbsp;&nbsp;<span style="color: #faad14">this</span>.<span style="color: #1890ff">loadItems</span>();<br />
+    }
+  </div>
+
+  <h3 style="font-size: 16px; color: #389e0d; margin-top: 20px">7.3 Подписка на состояние в компоненте</h3>
+  <div
+    style="
+      background: #f5f5f5;
+      border: 1px solid #d9d9d9;
+      border-radius: 4px;
+      padding: 12px;
+      margin-bottom: 16px;
+      overflow-x: auto;
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+    "
+  >
+    <span style="color: #8c8c8c">// В SimpleMainManagerComponent</span><br />
+    context: { service: SampleMainStateService } = inject(...);<br />
+    state$ = <span style="color: #faad14">this</span>.service.<span style="color: #1890ff">getState</span
+    >();<br /><br />
+    <span style="color: #8c8c8c">// В template</span><br />
+    &lt;app-sample-main-table<br />
+    &nbsp;&nbsp;[items]=<span style="color: #faad14">"(state$ | async)?.items || []"</span><br />
+    &nbsp;&nbsp;[loading]=<span style="color: #faad14">"(state$ | async)?.loading || false"</span><br />
+    &gt;&lt;/app-sample-main-table&gt;
+  </div>
+
+  <h3 style="font-size: 16px; color: #389e0d; margin-top: 20px">7.4 API Service вызывает backend</h3>
+  <div
+    style="
+      background: #f5f5f5;
+      border: 1px solid #d9d9d9;
+      border-radius: 4px;
+      padding: 12px;
+      margin-bottom: 16px;
+      overflow-x: auto;
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+    "
+  >
+    <span style="color: #8c8c8c">// SampleMainApiService</span><br />
+    <span style="color: #1890ff">getPaged</span>(params: <span style="color: #faad14">any</span>):
+    <span style="color: #faad14">Observable</span>&lt;{items, total}&gt; {<br />
+    &nbsp;&nbsp;<span style="color: #faad14">return</span> <span style="color: #faad14">this</span>.http.<span
+      style="color: #1890ff"
+      >get</span
+    >('/api/sample-main/paged', { params });<br />
+    }<br /><br />
+    <span style="color: #1890ff">getById</span>(id: <span style="color: #faad14">number</span>):
+    <span style="color: #faad14">Observable</span>&lt;SampleMainDetailDto&gt; {<br />
+    &nbsp;&nbsp;<span style="color: #faad14">return</span> <span style="color: #faad14">this</span>.http.<span
+      style="color: #1890ff"
+      >get</span
+    >(`/api/sample-main/{id}`);<br />
+    }
+  </div>
+
+  <h2 style="color: #096dd9">9. Примеры кода трех моделей</h2>
+
+  <h3 style="font-size: 15px; color: #0050b3; margin-top: 16px">9.1 Sample Simple: Поиск без многоязычности</h3>
+  <div
+    style="
+      background: #f0f9ff;
+      border: 1px solid #91d5ff;
+      border-radius: 4px;
+      padding: 12px;
+      margin-bottom: 16px;
+      overflow-x: auto;
+      font-family: 'Courier New', monospace;
+      font-size: 11px;
+    "
+  >
+    <span style="color: #8c8c8c">// Без languageId - просто поиск по названию</span><br />
+    this.api.getSamples({<br />
+    &nbsp;&nbsp;pageNumber: 1,<br />
+    &nbsp;&nbsp;pageSize: 10,<br />
+    &nbsp;&nbsp;searchTerm: 'test',<br />
+    &nbsp;&nbsp;// languageId отсутствует!<br />
+    });
+  </div>
+
+  <h3 style="font-size: 15px; color: #274e0b; margin-top: 16px">9.2 Sample Языки: Поиск с languageId</h3>
+  <div
+    style="
+      background: #f6fff3;
+      border: 1px solid #b7eb8f;
+      border-radius: 4px;
+      padding: 12px;
+      margin-bottom: 16px;
+      overflow-x: auto;
+      font-family: 'Courier New', monospace;
+      font-size: 11px;
+    "
+  >
+    <span style="color: #8c8c8c">// С languageId - фильтрация по языку</span><br />
+    this.api.getPaged({<br />
+    &nbsp;&nbsp;pageNumber: 1,<br />
+    &nbsp;&nbsp;pageSize: 10,<br />
+    &nbsp;&nbsp;searchTerm: 'test',<br />
+    &nbsp;&nbsp;languageId: 2, // Русский<br />
+    &nbsp;&nbsp;sortBy: 'Id',<br />
+    });
+  </div>
+
+  <h3 style="font-size: 15px; color: #820014; margin-top: 16px">9.3 Sample + SEO: Multi-Language Form</h3>
+  <div
+    style="
+      background: #fff7f6;
+      border: 1px solid #ffccc7;
+      border-radius: 4px;
+      padding: 12px;
+      margin-bottom: 16px;
+      overflow-x: auto;
+      font-family: 'Courier New', monospace;
+      font-size: 11px;
+    "
+  >
+    <span style="color: #8c8c8c">// Form с вкладками для всех языков</span><br />
+    &lt;nz-tabset&gt;<br />
+    &nbsp;&nbsp;&lt;nz-tab *ngFor=<span style="color: #faad14">"let lang of languages"</span> [nzTitle]=<span
+      style="color: #faad14"
+      >"lang.title"</span
+    >&gt;<br />
+    &nbsp;&nbsp;&nbsp;&nbsp;&lt;app-seo-form<br />
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[formGroup]=<span style="color: #faad14">"getLanguageForm(lang.id)"</span><br />
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[languageId]=<span style="color: #faad14">"lang.id"</span><br />
+    &nbsp;&nbsp;&nbsp;&nbsp;&gt;&lt;/app-seo-form&gt;<br />
+    &nbsp;&nbsp;&lt;/nz-tab&gt;<br />
+    &lt;/nz-tabset&gt;
+  </div>
+
+  <h2 style="color: #096dd9">10. Сравнение: Simple vs Basic vs SEO на практике</h2>
+  <table style="width: 100%; border-collapse: collapse; margin-bottom: 24px; font-size: 13px">
+    <thead>
+      <tr style="background: #f0f5ff; border-bottom: 2px solid #1890ff">
+        <th style="padding: 12px; text-align: left; width: 25%">Параметр</th>
+        <th style="padding: 12px; text-align: left; width: 35%">Basic Model</th>
+        <th style="padding: 12px; text-align: left; width: 40%">SEO Model</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="border-bottom: 1px solid #f0f0f0">
+        <td style="padding: 12px"><strong>Количество компонентов</strong></td>
+        <td style="padding: 12px">5 (Manager, Table, Modal, 2 сервиса)</td>
+        <td style="padding: 12px">8-10 (добавляются SEO-компоненты, вкладки языков)</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #f0f0f0">
+        <td style="padding: 12px"><strong>Управление состоянием</strong></td>
+        <td style="padding: 12px">BehaviorSubject + методы StateService</td>
+        <td style="padding: 12px">RxJS Observable с более сложной логикой</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #f0f0f0">
+        <td style="padding: 12px"><strong>Форма редактирования</strong></td>
+        <td style="padding: 12px">1 язык за раз в модальном окне</td>
+        <td style="padding: 12px">Все языки одновременно через вкладки</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #f0f0f0">
+        <td style="padding: 12px"><strong>SEO поля</strong></td>
+        <td style="padding: 12px">❌ Не поддерживаются</td>
+        <td style="padding: 12px">✅ Meta Title, Meta Desc, OG, Schema.org</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #f0f0f0">
+        <td style="padding: 12px"><strong>Медиа-поддержка</strong></td>
+        <td style="padding: 12px">❌ Только текстовые поля</td>
+        <td style="padding: 12px">✅ Изображения, флаги для локализации</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #f0f0f0">
+        <td style="padding: 12px"><strong>API Endpoints</strong></td>
+        <td style="padding: 12px"><code>/api/sample-main/paged</code></td>
+        <td style="padding: 12px"><code>/api/sample-main-seo/paged</code></td>
+      </tr>
+      <tr style="border-bottom: 1px solid #f0f0f0">
+        <td style="padding: 12px"><strong>Сложность</strong></td>
+        <td style="padding: 12px">⭐ Низкая (легко новичку)</td>
+        <td style="padding: 12px">⭐⭐⭐ Высокая (требует опыта)</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #f0f0f0">
+        <td style="padding: 12px"><strong>Время разработки</strong></td>
+        <td style="padding: 12px">2-3 дня</td>
+        <td style="padding: 12px">5-7 дней</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2 style="color: #096dd9">10. Сравнение: Simple vs Basic vs SEO на практике</h2>
+  <table style="width: 100%; border-collapse: collapse; margin-bottom: 24px; font-size: 12px">
+    <thead>
+      <tr style="background: #fafafa; border-bottom: 2px solid #f0f0f0">
+        <th style="padding: 10px; text-align: left; width: 20%">Параметр</th>
+        <th style="padding: 10px; text-align: left; width: 26%; background: #f0f9ff; color: #0050b3">📦 Simple</th>
+        <th style="padding: 10px; text-align: left; width: 27%; background: #f6fff3; color: #274e0b">🌐 Basic</th>
+        <th style="padding: 10px; text-align: left; width: 27%; background: #fff7f6; color: #820014">🚀 SEO</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="border-bottom: 1px solid #f0f0f0">
+        <td style="padding: 10px"><strong>API Endpoint</strong></td>
+        <td style="padding: 10px">/api/sample/getSamples</td>
+        <td style="padding: 10px">/api/sample-main/paged</td>
+        <td style="padding: 10px">/api/sample-main-seo/paged</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #f0f0f0">
+        <td style="padding: 10px"><strong>Параметр languageId</strong></td>
+        <td style="padding: 10px">❌ Нет</td>
+        <td style="padding: 10px">✅ Есть (обязателен)</td>
+        <td style="padding: 10px">✅ Есть (обязателен)</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #f0f0f0">
+        <td style="padding: 10px"><strong>State Shape</strong></td>
+        <td style="padding: 10px">items, total, searchTerm</td>
+        <td style="padding: 12px">+ languageId, editingItem.localizedName</td>
+        <td style="padding: 10px">+ seoData, mediaFiles, publicationStatus</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #f0f0f0">
+        <td style="padding: 10px"><strong>Form Mode</strong></td>
+        <td style="padding: 10px">Один язык (N/A)</td>
+        <td style="padding: 10px">Один язык за раз</td>
+        <td style="padding: 10px">Все языки одновременно</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #f0f0f0">
+        <td style="padding: 10px"><strong>SEO Fields</strong></td>
+        <td style="padding: 10px">❌ Нет</td>
+        <td style="padding: 10px">❌ Нет</td>
+        <td style="padding: 10px">✅ Meta, OG, Schema</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #f0f0f0">
+        <td style="padding: 10px"><strong>Components</strong></td>
+        <td style="padding: 10px">5</td>
+        <td style="padding: 10px">6</td>
+        <td style="padding: 10px">8-10</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #f0f0f0">
+        <td style="padding: 10px"><strong>Сложность</strong></td>
+        <td style="padding: 10px">⭐ Низкая</td>
+        <td style="padding: 10px">⭐⭐ Средняя</td>
+        <td style="padding: 10px">⭐⭐⭐ Высокая</td>
+      </tr>
+      <tr>
+        <td style="padding: 10px"><strong>Время разработки</strong></td>
+        <td style="padding: 10px">1-2 дня</td>
+        <td style="padding: 10px">2-3 дня</td>
+        <td style="padding: 10px">5-7 дней</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2 style="color: #eb2f96">11. ✅ Чек-лист разработчика по выбору модели</h2>
+  <div style="background: #fef5e7; border: 1px solid #f8d686; border-radius: 4px; padding: 16px">
+    <h3 style="color: #eb2f96; margin-top: 0">Вопросы для определения нужной модели:</h3>
+    <div style="display: flex; margin-bottom: 12px">
+      <input type="checkbox" style="margin-right: 10px; margin-top: 2px; cursor: pointer" />
+      <span><strong>Вопрос 1:</strong> Нужна ли многоязычность (поддержка 2+ языков)?</span>
+    </div>
+    <div
+      style="
+        margin-left: 30px;
+        margin-bottom: 16px;
+        padding: 10px;
+        background: #fff;
+        border-radius: 4px;
+        font-size: 12px;
+      "
+    >
+      ✓ ДА → идите на Basic или SEO<br />
+      ✗ НЕТ → Sample Simple (конец)
+    </div>
+
+    <div style="display: flex; margin-bottom: 12px">
+      <input type="checkbox" style="margin-right: 10px; margin-top: 2px; cursor: pointer" />
+      <span><strong>Вопрос 2:</strong> Будет ли контент публичным и нужна ли SEO?</span>
+    </div>
+    <div
+      style="
+        margin-left: 30px;
+        margin-bottom: 16px;
+        padding: 10px;
+        background: #fff;
+        border-radius: 4px;
+        font-size: 12px;
+      "
+    >
+      ✓ ДА → Sample + SEO (продвинутая)<br />
+      ✗ НЕТ → Sample Языки (Basic)
+    </div>
+
+    <div style="display: flex; margin-bottom: 12px">
+      <input type="checkbox" style="margin-right: 10px; margin-top: 2px; cursor: pointer" />
+      <span><strong>Вопрос 3:</strong> Нужна ли поддержка медиа (изображения, флаги)?</span>
+    </div>
+    <div style="margin-left: 30px; padding: 10px; background: #fff; border-radius: 4px; font-size: 12px">
+      ✓ ДА → Sample + SEO (обязательно)<br />
+      ✗ НЕТ → Может быть Basic, может быть SEO (по вкусу)
+    </div>
+
+    <h3 style="color: #eb2f96; margin-top: 20px">Результат:</h3>
+    <ul style="padding-left: 20px">
+      <li><strong>Sample Simple:</strong> Внутренние справочники без локализации (должности, регионы, типы)</li>
+      <li><strong>Sample Языки:</strong> Служебные справочники с локализацией (теги, системные константы)</li>
+      <li><strong>Sample + SEO:</strong> Публичный контент (статьи, категории товаров, лендинги, бренды)</li>
+    </ul>
+  </div>
+  <div style="background: #fef5e7; border: 1px solid #f8d686; border-radius: 4px; padding: 16px">
+    <div style="display: flex; margin-bottom: 10px">
+      <input type="checkbox" style="margin-right: 10px; cursor: pointer" />
+      <span>Создать папку структуру: <code>components/</code>, <code>services/</code>, <code>models/</code></span>
+    </div>
+    <div style="display: flex; margin-bottom: 10px">
+      <input type="checkbox" style="margin-right: 10px; cursor: pointer" />
+      <span>Создать <strong>StateService</strong> с <code>BehaviorSubject</code> для управления состоянием</span>
+    </div>
+    <div style="display: flex; margin-bottom: 10px">
+      <input type="checkbox" style="margin-right: 10px; cursor: pointer" />
+      <span>Создать <strong>ApiService</strong> для HTTP запросов (getPaged, getById, create, update, delete)</span>
+    </div>
+    <div style="display: flex; margin-bottom: 10px">
+      <input type="checkbox" style="margin-right: 10px; cursor: pointer" />
+      <span>Создать <strong>ManagerComponent</strong> (контейнер) с поиском и пагинацией</span>
+    </div>
+    <div style="display: flex; margin-bottom: 10px">
+      <input type="checkbox" style="margin-right: 10px; cursor: pointer" />
+      <span>Создать <strong>TableComponent</strong> для отображения списка с действиями (view, edit, delete)</span>
+    </div>
+    <div style="display: flex; margin-bottom: 10px">
+      <input type="checkbox" style="margin-right: 10px; cursor: pointer" />
+      <span>Создать <strong>ModalComponent</strong> для редактирования (режимы: ADD, EDIT, VIEW)</span>
+    </div>
+    <div style="display: flex; margin-bottom: 10px">
+      <input type="checkbox" style="margin-right: 10px; cursor: pointer" />
+      <span>Добавить фильтр по языкам через <strong>LanguageService</strong></span>
+    </div>
+    <div style="display: flex; margin-bottom: 10px">
+      <input type="checkbox" style="margin-right: 10px; cursor: pointer" />
+      <span>Добавить обработку ошибок через <strong>ErrorHandlingService</strong> и логирование</span>
+    </div>
+    <div style="display: flex; margin-bottom: 10px">
+      <input type="checkbox" style="margin-right: 10px; cursor: pointer" />
+      <span>Добавить кнопку "Помощь (?)" с ссылкой на этот документ</span>
+    </div>
+    <div style="display: flex; margin-bottom: 10px">
+      <input type="checkbox" style="margin-right: 10px; cursor: pointer" />
+      <span>Создать Controller и Repository в backend (базировать на <code>SampleMainController.cs</code>)</span>
+    </div>
+    <div style="display: flex; margin-bottom: 10px">
+      <input type="checkbox" style="margin-right: 10px; cursor: pointer" />
+      <span>Добавить Unit Tests для Service и API методов</span>
+    </div>
+    <div style="display: flex">
+      <input type="checkbox" style="margin-right: 10px; cursor: pointer" />
+      <span>Протестировать в браузере: поиск, фильтр, пагинацию, CRUD операции</span>
+    </div>
+  </div>
+
+  <h2 style="color: #000000; border-top: 1px solid #eee; padding-top: 15px; margin-top: 30px">
+    📂 Пути к исходному коду (все три модели)
+  </h2>
+  <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px">
+    <div style="border: 1px solid #91d5ff; border-radius: 6px; padding: 12px; background: #f0f9ff">
+      <h4 style="margin-top: 0; color: #0050b3">📦 Sample Simple</h4>
+      <p style="font-size: 12px; margin: 0">Простая модель без языков</p>
+      <ul style="list-style: none; padding-left: 0; font-size: 12px; margin-top: 10px">
+        <li><strong>Frontend:</strong></li>
+        <li>src/app/pages/<br />sample-manager-simple/</li>
+        <li><strong>Backend:</strong></li>
+        <li>Controllers: SampleController</li>
+      </ul>
+    </div>
+    <div style="border: 1px solid #b7eb8f; border-radius: 6px; padding: 12px; background: #f6fff3">
+      <h4 style="margin-top: 0; color: #274e0b">🌐 Sample Языки</h4>
+      <p style="font-size: 12px; margin: 0">Basic Model с поддержкой языков</p>
+      <ul style="list-style: none; padding-left: 0; font-size: 12px; margin-top: 10px">
+        <li><strong>Frontend:</strong></li>
+        <li>src/app/pages/<br />sample-manager-simple-language/</li>
+        <li><strong>Backend:</strong></li>
+        <li>Controllers: SampleMainController</li>
+      </ul>
+    </div>
+    <div style="border: 1px solid #ffccc7; border-radius: 6px; padding: 12px; background: #fff7f6">
+      <h4 style="margin-top: 0; color: #820014">🚀 Sample + SEO</h4>
+      <p style="font-size: 12px; margin: 0">Продвинутая модель с SEO</p>
+      <ul style="list-style: none; padding-left: 0; font-size: 12px; margin-top: 10px">
+        <li><strong>Frontend:</strong></li>
+        <li>src/app/pages/<br />sample-manager-simple-language-seo/</li>
+        <li><strong>Backend:</strong></li>
+        <li>Controllers: SampleMainSeoController</li>
+      </ul>
+    </div>
+  </div>
+</div>

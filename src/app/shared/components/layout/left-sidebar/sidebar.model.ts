@@ -65,6 +65,9 @@ export interface MenuItem {
 
   // Badge (опционально)
   badge?: MenuBadge;
+
+  // Семантический цвет (опционально)
+  intent?: 'default' | 'info' | 'warning' | 'error' | 'success' | 'primary' | 'orange';
 }
 
 /**
@@ -80,6 +83,7 @@ export interface SubMenuItem {
   visible?: boolean;
   badge?: MenuBadge;
   submenu?: SubMenuItem[]; // Список вложенных пунктов
+  intent?: 'default' | 'info' | 'warning' | 'error' | 'success' | 'primary' | 'orange'; // Семантический цвет
 }
 
 /**

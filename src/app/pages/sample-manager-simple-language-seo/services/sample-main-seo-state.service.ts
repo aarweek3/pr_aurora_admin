@@ -2,6 +2,7 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { LanguageService } from '@assets/languageApp/services/language.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { NzModalService } from 'ng-zorro-antd/modal';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { distinctUntilChanged, finalize, map, shareReplay, takeUntil } from 'rxjs/operators';
 import { ErrorResponse } from '../../../shared/infrastructure/interceptor/models/error-response.model';
@@ -72,7 +73,14 @@ export class SampleMainSeoStateService implements OnDestroy {
     private message: NzMessageService,
     private langService: LanguageService,
     private errorHandling: ErrorHandlingService,
+    private modal: NzModalService,
   ) {}
+
+  private checkLanguagesAvailable(): boolean {
+    const langs = this.langService.availableLanguages();
+    console.log('[StateService] checkLanguagesAvailable - доступно языков:', langs?.length);
+    return langs && langs.length > 0;
+  }
 
   // ---------- HELPERS ----------
 
@@ -147,11 +155,50 @@ export class SampleMainSeoStateService implements OnDestroy {
   }
 
   openAddModal(): void {
+    console.log('[StateService] openAddModal - открытие модалки для добавления');
+
+    // Проверяем наличие языков
+    if (!this.checkLanguagesAvailable()) {
+      console.error('[StateService] Нет доступных языков! Открываем модалку с ошибкой');
+
+      this.modal.error({
+        nzTitle: 'Нет доступных языков!',
+        nzContent: `
+          <div style="line-height: 1.6;">
+            <p style="margin-bottom: 12px;">Для создания многоязычных записей необходимо инициализировать языки системы.</p>
+            <p style="margin-bottom: 12px;"><strong>Инструкция:</strong></p>
+            <ol style="padding-left: 20px; margin: 0;">
+              <li>Перейдите в меню <strong>"Управление языками"</strong></li>
+              <li>Нажмите кнопку <strong>"Инициализировать языки"</strong></li>
+              <li>После успешной инициализации обновите страницу</li>
+            </ol>
+          </div>
+        `,
+        nzWidth: 600,
+        nzOkText: 'Понятно',
+      });
+
+      return; // Не открываем форму!
+    }
+
+    console.log('[StateService] Текущее состояние ПЕРЕД обновлением:', {
+      modalVisible: this.state$.value.modalVisible,
+      modalLoading: this.state$.value.modalLoading,
+      modalMode: this.state$.value.modalMode,
+    });
+
     this.updateState({
       modalVisible: true,
       modalMode: 'add',
       editingItem: null,
+      modalLoading: false,
       error: null,
+    });
+
+    console.log('[StateService] Состояние ПОСЛЕ обновления:', {
+      modalVisible: this.state$.value.modalVisible,
+      modalLoading: this.state$.value.modalLoading,
+      modalMode: this.state$.value.modalMode,
     });
   }
 
@@ -172,7 +219,9 @@ export class SampleMainSeoStateService implements OnDestroy {
   closeModal(): void {
     this.updateState({
       modalVisible: false,
+      modalMode: 'add',
       editingItem: null,
+      modalLoading: false,
       error: null,
     });
   }

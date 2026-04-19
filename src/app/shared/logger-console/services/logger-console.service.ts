@@ -40,6 +40,18 @@ export class LoggerConsoleService {
   /** Основное хранилище логов (реактивное) */
   private logsSignal: WritableSignal<LogEntry[]> = signal([]);
 
+  /** Состояние полноэкранного режима */
+  public isFullScreen = signal(false);
+
+  /** Состояние свернутого режима */
+  public isCollapsed = signal(false);
+
+  /** Ширина консоли (px) */
+  public loggerWidth = signal(750);
+
+  /** Размер шрифта (px) */
+  public loggerFontSize = signal(13);
+
   /** Информация о клиенте */
   private clientInfoSignal = signal<ClientInfo>(this.detectClientInfo());
   private injector = inject(Injector);
@@ -353,6 +365,30 @@ export class LoggerConsoleService {
       this.pushEntry(entry);
       lastValue = newValue;
     });
+  }
+
+  /** Установка конкретной ширины */
+  public setWidth(width: number): void {
+    this.loggerWidth.set(width);
+  }
+
+  /** Установка размера шрифта */
+  public setFontSize(size: number): void {
+    this.loggerFontSize.set(size);
+  }
+
+  /** Переключение полноэкранного режима */
+  public toggleFullScreen(): void {
+    const newVal = !this.isFullScreen();
+    this.isFullScreen.set(newVal);
+    if (newVal) this.isCollapsed.set(false);
+  }
+
+  /** Переключение свернутого режима */
+  public toggleCollapsed(): void {
+    const newVal = !this.isCollapsed();
+    this.isCollapsed.set(newVal);
+    if (newVal) this.isFullScreen.set(false);
   }
 }
 

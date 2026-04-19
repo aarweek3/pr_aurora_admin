@@ -1,0 +1,136 @@
+.page-card {
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  
+  :ng-deep .ant-card-body {
+    padding: 20px;
+  }
+}
+
+.table-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  gap: 16px;
+  align-items: center;
+}
+
+.left-actions {
+  display: flex;
+  gap: 16px;
+  flex: 1;
+  align-items: center;
+}
+
+.search-box {
+  flex: 1;
+  max-width: 450px;
+}
+
+.trash-toggle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 16px;
+  border-radius: 99px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  transition: all 0.3s;
+  
+  &.active {
+    background: #fef2f2;
+    color: #ef4444;
+    border-color: #fee2e2;
+    box-shadow: 0 2px 4px rgba(239, 68, 68, 0.1);
+  }
+  
+  .label {
+    font-size: 11px;
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+  }
+}
+
+.platform-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.platform-icon {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  border-radius: 6px;
+  background: #fff;
+  padding: 2px;
+  border: 1px solid #f1f5f9;
+}
+
+.tech-name {
+  font-weight: 600;
+  color: #1e293b;
+  font-size: 14px;
+}
+
+.actions {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.edit-icon { color: #3b82f6; }
+.view-icon { color: #8b5cf6; }
+.page-icon { color: #ec4899; }
+.delete-icon { color: #ef4444; }
+.hard-delete-icon { color: #10b981; }
+.restore-icon { color: #3b82f6; font-size: 18px; }
+
+.error-container {
+  margin-bottom: 24px;
+}
+
+.trash-alert {
+  margin-bottom: 20px;
+  
+  :ng-deep .ant-alert {
+    border-radius: 12px;
+  }
+}
+
+.deleted-row {
+  background-color: #f8fafc;
+  
+  td {
+    color: #94a3b8;
+    text-decoration: line-through;
+  }
+}
+
+.pagination-footer {
+  margin-top: 24px;
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 16px;
+  border-top: 1px solid #f1f5f9;
+}
+
+:ng-deep {
+  .ant-table-thead > tr > th {
+    background: #f8fafc;
+    color: #64748b;
+    font-size: 11px;
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    border-bottom: 1px solid #f1f5f9;
+  }
+  
+  .ant-table-tbody > tr > td {
+    border-bottom: 1px solid #f1f5f9;
+    padding: 16px;
+  }
+}

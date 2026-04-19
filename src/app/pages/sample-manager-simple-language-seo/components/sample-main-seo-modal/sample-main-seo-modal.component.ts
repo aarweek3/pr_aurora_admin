@@ -55,10 +55,25 @@ export class SampleMainSeoModalComponent implements OnInit {
   constructor(private state: SampleMainSeoStateService) {}
 
   ngOnInit(): void {
-    this.state.modalVisible$.subscribe((v) => (this.isVisible = v));
-    this.state.modalMode$.subscribe((m) => (this.mode = m));
-    this.state.modalLoading$.subscribe((l) => (this.isLoading = l));
+    console.log('[ModalComponent] ngOnInit - инициализация');
+
+    this.state.modalVisible$.subscribe((v) => {
+      console.log('[ModalComponent] modalVisible изменено:', v);
+      this.isVisible = v;
+    });
+
+    this.state.modalMode$.subscribe((m) => {
+      console.log('[ModalComponent] modalMode изменено:', m);
+      this.mode = m;
+    });
+
+    this.state.modalLoading$.subscribe((l) => {
+      console.log('[ModalComponent] modalLoading изменено:', l);
+      this.isLoading = l;
+    });
+
     this.state.editingItem$.subscribe((item) => {
+      console.log('[ModalComponent] editingItem изменено:', item);
       this.editingItem = item;
     });
   }

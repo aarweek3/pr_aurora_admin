@@ -11,7 +11,7 @@ import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzTabsModule } from 'ng-zorro-antd/tabs';
 
 import { ControlDocumentationComponent } from '@shared/components/ui/control-documentation';
-import { SearchInputComponent } from '@shared/components/ui/search';
+import { AvSearchComponent } from '@shared/components/ui/search';
 import {
   ShowcaseComponent,
   ShowcaseConfig,
@@ -26,7 +26,7 @@ import { DOCUMENTATION } from './search-control-aurora.config';
     FormsModule,
     ShowcaseComponent,
     ControlDocumentationComponent,
-    SearchInputComponent,
+    AvSearchComponent,
     NzTabsModule,
     NzTableModule,
     NzGridModule,
@@ -59,7 +59,7 @@ export class SearchControlAuroraComponent implements OnInit {
       componentPath:
         'src/app/pages/ui-demo/search-control-aurora/search-control-aurora.component.ts',
       controlComponent: {
-        name: 'SearchInputComponent',
+        name: 'AvSearchComponent',
         path: 'src/app/shared/components/ui/search/search.component.ts',
       },
       docsPath: 'src/app/pages/ui-demo/search-control-aurora/search-control-aurora.config.ts',

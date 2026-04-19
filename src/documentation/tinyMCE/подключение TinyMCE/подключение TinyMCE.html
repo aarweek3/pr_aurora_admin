@@ -1,0 +1,61 @@
+<div class="tinymce-doc">
+    <h1 style="color: #1890ff; border-bottom: 2px solid #1890ff; padding-bottom: 10px;">Интеграция TinyMCE в Aurora Admin</h1>
+
+    <p class="lead">В проекте Aurora используется кастомная интеграция <strong>TinyMCE 8.3.1</strong>, развернутая как локальный статичный ресурс. Это позволяет полностью контролировать плагины, локализацию и стили без зависимости от внешних CDN.</p>
+
+    <h2 style="color: #52c41a;">1. Архитектура подключения</h2>
+    <p>Реализация разделена на три уровня:</p>
+    <ul>
+        <li><strong>Static Assets</strong>: Ядро редактора находится в <code>src/assets/tinymce/</code>.</li>
+        <li><strong>Angular Control</strong>: Компонент-обертка <code>AvTinymceControlComponent</code> (расположен в <code>src/assets/controls/tinymce-control/tinymce-control.component.ts</code>).</li>
+        <li><strong>Bridge Service</strong>: Сервис <code>TinymceBridgeService</code>, обеспечивающий связь между TinyMCE и Angular (расположен в <code>src/app/shared/services/tinymce-bridge.service.ts</code>).</li>
+    </ul>
+
+    <h2 style="color: #faad14;">2. Конфигурация компонента (Control)</h2>
+    <p>Компонент <code>AvTinymceControlComponent</code> реализует <code>ControlValueAccessor</code>, что позволяет использовать его в Angular Reactive Forms и через <code>[(ngModel)]</code>.</p>
+    
+    <div style="background: #f0f2f5; padding: 15px; border-radius: 4px; border-left: 5px solid #1890ff; margin-bottom: 20px;">
+        <strong>Ключевые настройки инициализации:</strong>
+        <pre><code>tinymce.init({
+  base_url: '/assets/tinymce', // Путь к статике
+  suffix: '.min',
+  license_key: 'gpl',          // Используется GPL версия
+  language: 'ru',              // Локализация из src/assets/tinymce/langs/ru.js
+  plugins: this.plugins,       // Список стандартных и кастомных плагинов
+  external_plugins: {          // Подключение внешних скриптов плагинов
+    'av-image': '/assets/tinymce/plugins/av-image/plugin.js',
+    ...
+  }
+});</code></pre>
+    </div>
+
+    <h2 style="color: #eb2f96;">3. Кастомное брендирование и UI</h2>
+    <p>Для создания единого стиля "Aurora" переопределены стандартные иконки TinyMCE и добавлены брендированные элементы:</p>
+    <ul>
+        <li><strong>Иконка Aurora</strong>: Зарегистрирована под именем <code>av_image_aurora</code>.</li>
+        <li><strong>Кнопка Studio</strong>: Добавлена кнопка <code>av-image-studio</code> на панель инструментов, которая через Bridge открывает Angular-редактор.</li>
+        <li><strong>Переопределение Media</strong>: Иконки <code>embed</code> и <code>media</code> заменены на кастомные зеленые SVG в стиле Aurora.</li>
+    </ul>
+
+    <h2 style="color: #722ed1;">4. Механизм Bridge (Мост)</h2>
+    <p>Поскольку TinyMCE работает вне зоны (NgZone) Angular, для вызова Angular-сервисов и открытия компонентов используется <code>TinymceBridgeService</code>.</p>
+    <p>При нажатии на кнопку в TinyMCE:</p>
+    <ol>
+        <li>Вызывается метод <code>bridgeService.openImageStudio(editor)</code>.</li>
+        <li>Сервис принудительно входит в <code>ngZone.run()</code>.</li>
+        <li>Открывается модальное окно через <code>VSModalService</code>.</li>
+        <li>После закрытия окна результат (например, HTML-код изображения) вставляется обратно в редактор командой <code>editor.insertContent()</code>.</li>
+    </ol>
+
+    <h2 style="color: #f5222d;">5. Безопасность и валидация</h2>
+    <p>Для корректной работы сложной разметки (фигуры, подписи, обертки) в настройках расширены правила валидации HTML:</p>
+    <pre style="background: #fff0f0; padding: 10px; border: 1px solid #ffccc7;"><code>extended_valid_elements: 'figure[*],figcaption[*],img[*],a[*]',
+valid_children: '+figure[figcaption|img|a],+a[figure|img]'</code></pre>
+
+    <h2 style="color: #000000; border-top: 1px solid #eee; padding-top: 15px; margin-top: 30px;">📂 Пути к исходному коду</h2>
+    <ul style="list-style: none; padding-left: 0;">
+        <li><strong>Контрол (Angular):</strong> <code>src/assets/controls/tinymce-control/tinymce-control.component.ts</code></li>
+        <li><strong>Сервис моста (Bridge):</strong> <code>src/app/shared/services/tinymce-bridge.service.ts</code></li>
+        <li><strong>Статические ресурсы:</strong> <code>src/assets/tinymce/</code></li>
+    </ul>
+</div>

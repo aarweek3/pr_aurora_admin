@@ -96,4 +96,9 @@ export const TOOLS_ROUTES: Routes = [
         (m) => m.TestImageEditorVsComponent,
       ),
   },
+  {
+    path: 'icon-sync',
+    loadComponent: () =>
+      import('./icon-sync/icon-sync.component').then((m) => m.IconSyncComponent),
+  },
 ];

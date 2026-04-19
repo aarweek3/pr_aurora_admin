@@ -101,17 +101,17 @@ interface IconCategoryWithCount extends IconCategory {
                 </button>
               </div>
               @for (cat of categories(); track cat.category) {
-              <div
-                class="nav-item folder"
-                [class.active]="selectedCategory() === cat.category"
-                (click)="selectedCategory.set(cat.category)"
-              >
-                <av-icon type="av_folder" [size]="18"></av-icon>
-                <span>{{ cat.category }}</span>
-                <span class="count">{{
-                  cat.totalCount !== undefined ? cat.totalCount : cat.icons.length
-                }}</span>
-              </div>
+                <div
+                  class="nav-item folder"
+                  [class.active]="selectedCategory() === cat.category"
+                  (click)="selectedCategory.set(cat.category)"
+                >
+                  <av-icon type="av_folder" [size]="18"></av-icon>
+                  <span>{{ cat.category }}</span>
+                  <span class="count">{{
+                    cat.totalCount !== undefined ? cat.totalCount : cat.icons.length
+                  }}</span>
+                </div>
               }
             </div>
           </div>
@@ -142,9 +142,9 @@ interface IconCategoryWithCount extends IconCategory {
                 placeholder="Поиск по {{ totalIcons() }} иконкам..."
               />
               @if (searchQuery()) {
-              <button class="clear-btn" (click)="searchQuery.set('')">
-                <av-icon type="actions/av_close" [size]="14"></av-icon>
-              </button>
+                <button class="clear-btn" (click)="searchQuery.set('')">
+                  <av-icon type="actions/av_close" [size]="14"></av-icon>
+                </button>
               }
               <kbd>/</kbd>
             </div>
@@ -169,10 +169,12 @@ interface IconCategoryWithCount extends IconCategory {
                 title="Синхронизировать бэкенд с локальным файлом"
               >
                 @if (isSyncing()) {
-                <div class="small-spinner"></div>
-                Синхронизация... } @else {
-                <av-icon type="actions/av_save" [size]="16"></av-icon>
-                Синхронизировать }
+                  <div class="small-spinner"></div>
+                  Синхронизация...
+                } @else {
+                  <av-icon type="actions/av_save" [size]="16"></av-icon>
+                  Синхронизировать
+                }
               </button>
               <button class="btn-outline" (click)="onBulkUploadClick()">
                 <av-icon type="actions/av_upload" [size]="16"></av-icon>
@@ -215,62 +217,62 @@ interface IconCategoryWithCount extends IconCategory {
             </div>
 
             @if (isLoading()) {
-            <div class="loading-state">
-              <div class="spinner"></div>
-              <p>Загрузка библиотеки иконок...</p>
-            </div>
-            } @else if (filteredIcons().length === 0) {
-            <div class="empty-state">
-              <av-icon type="system/av_info" [size]="48"></av-icon>
-              <h3>Иконки не найдены</h3>
-              <p>Попробуйте изменить параметры поиска или категорию</p>
-            </div>
-            } @else {
-            <div class="icon-grid">
-              @for (icon of filteredIcons(); track icon.type) {
-              <div class="icon-card shadow-sm" (click)="openEditor(icon)">
-                <div class="card-preview">
-                  <div class="preview-inner">
-                    <av-icon [type]="icon.type" [size]="32"></av-icon>
-                  </div>
-                  <div class="card-overlay">
-                    <button
-                      class="overlay-btn"
-                      title="Копировать Angular компонент"
-                      (click)="$event.stopPropagation(); copyCode(icon.type)"
-                    >
-                      <av-icon type="actions/av_copy" [size]="16"></av-icon>
-                    </button>
-                    <button
-                      class="overlay-btn"
-                      title="Копировать чистый SVG код"
-                      (click)="$event.stopPropagation(); copySvg(icon.type)"
-                    >
-                      <av-icon type="media/av_image" [size]="16"></av-icon>
-                    </button>
-                    <button
-                      class="overlay-btn"
-                      title="Технический инспектор"
-                      (click)="$event.stopPropagation(); openEditor(icon)"
-                    >
-                      <av-icon type="system/av_cog" [size]="16"></av-icon>
-                    </button>
-                    <button
-                      class="overlay-btn"
-                      title="Переместить в другую папку"
-                      (click)="$event.stopPropagation(); openMoveModal(icon)"
-                    >
-                      <av-icon type="actions/av_share" [size]="16"></av-icon>
-                    </button>
-                  </div>
-                </div>
-                <div class="card-info">
-                  <span class="name">{{ icon.name }}</span>
-                  <span class="meta">{{ icon.category }} • SVG</span>
-                </div>
+              <div class="loading-state">
+                <div class="spinner"></div>
+                <p>Загрузка библиотеки иконок...</p>
               </div>
-              }
-            </div>
+            } @else if (filteredIcons().length === 0) {
+              <div class="empty-state">
+                <av-icon type="system/av_info" [size]="48"></av-icon>
+                <h3>Иконки не найдены</h3>
+                <p>Попробуйте изменить параметры поиска или категорию</p>
+              </div>
+            } @else {
+              <div class="icon-grid">
+                @for (icon of filteredIcons(); track icon.type) {
+                  <div class="icon-card shadow-sm" (click)="openEditor(icon)">
+                    <div class="card-preview">
+                      <div class="preview-inner">
+                        <av-icon [type]="icon.type" [size]="32"></av-icon>
+                      </div>
+                      <div class="card-overlay">
+                        <button
+                          class="overlay-btn"
+                          title="Копировать Angular компонент"
+                          (click)="$event.stopPropagation(); copyCode(icon.type)"
+                        >
+                          <av-icon type="actions/av_copy" [size]="16"></av-icon>
+                        </button>
+                        <button
+                          class="overlay-btn"
+                          title="Копировать чистый SVG код"
+                          (click)="$event.stopPropagation(); copySvg(icon.type)"
+                        >
+                          <av-icon type="media/av_image" [size]="16"></av-icon>
+                        </button>
+                        <button
+                          class="overlay-btn"
+                          title="Технический инспектор"
+                          (click)="$event.stopPropagation(); openEditor(icon)"
+                        >
+                          <av-icon type="system/av_cog" [size]="16"></av-icon>
+                        </button>
+                        <button
+                          class="overlay-btn"
+                          title="Переместить в другую папку"
+                          (click)="$event.stopPropagation(); openMoveModal(icon)"
+                        >
+                          <av-icon type="actions/av_share" [size]="16"></av-icon>
+                        </button>
+                      </div>
+                    </div>
+                    <div class="card-info">
+                      <span class="name">{{ icon.name }}</span>
+                      <span class="meta">{{ icon.category }} • SVG</span>
+                    </div>
+                  </div>
+                }
+              </div>
             }
           </div>
         </div>
@@ -285,319 +287,322 @@ interface IconCategoryWithCount extends IconCategory {
       >
         <ng-container *nzDrawerContent>
           @if (selectedIcon(); as icon) {
-          <div class="editor-container">
-            <!-- Top Preview Area -->
-            <div class="preview-section">
-              <div class="preview-box raw">
-                <label>Оригинал</label>
-                <div class="icon-wrapper">
-                  <av-icon [type]="icon.type" [size]="64"></av-icon>
+            <div class="editor-container">
+              <!-- Top Preview Area -->
+              <div class="preview-section">
+                <div class="preview-box raw">
+                  <label>Оригинал</label>
+                  <div class="icon-wrapper">
+                    <av-icon [type]="icon.type" [size]="64"></av-icon>
+                  </div>
+                </div>
+                <div class="preview-box optimized" [class.active]="cleanedSvgCode()">
+                  <label>Результат (Live)</label>
+                  <div class="icon-wrapper" [innerHTML]="safeCleanedSvg()"></div>
+                  @if (!cleanedSvgCode()) {
+                    <div class="placeholder">Нажмите "Оптимизировать" для предпросмотра</div>
+                  }
                 </div>
               </div>
-              <div class="preview-box optimized" [class.active]="cleanedSvgCode()">
-                <label>Результат (Live)</label>
-                <div class="icon-wrapper" [innerHTML]="safeCleanedSvg()"></div>
-                @if (!cleanedSvgCode()) {
-                <div class="placeholder">Нажмите "Оптимизировать" для предпросмотра</div>
-                }
-              </div>
-            </div>
 
-            <!-- Stats & Meta -->
-            <div class="meta-section">
-              <!-- НАЗВАНИЕ (с inline редактированием) -->
-              <div class="meta-item">
-                <div class="meta-header">
-                  <span class="label">НАЗВАНИЕ</span>
-                  @if (!isEditingName()) {
-                  <button class="icon-btn-small" (click)="startEditName()" title="Переименовать">
-                    <av-icon type="actions/av_edit" [size]="14"></av-icon>
-                  </button>
+              <!-- Stats & Meta -->
+              <div class="meta-section">
+                <!-- НАЗВАНИЕ (с inline редактированием) -->
+                <div class="meta-item">
+                  <div class="meta-header">
+                    <span class="label">НАЗВАНИЕ</span>
+                    @if (!isEditingName()) {
+                      <button
+                        class="icon-btn-small"
+                        (click)="startEditName()"
+                        title="Переименовать"
+                      >
+                        <av-icon type="actions/av_edit" [size]="14"></av-icon>
+                      </button>
+                    }
+                  </div>
+
+                  @if (isEditingName()) {
+                    <!-- Режим редактирования -->
+                    <div class="edit-mode">
+                      <input
+                        type="text"
+                        class="name-input"
+                        [ngModel]="editedName()"
+                        (ngModelChange)="editedName.set($event)"
+                        (keydown)="onNameKeyDown($event)"
+                        [disabled]="isRenamingInProgress()"
+                        autofocus
+                        placeholder="Введите новое имя"
+                      />
+                      <div class="edit-actions">
+                        <button
+                          class="save-btn"
+                          (click)="saveNewName()"
+                          [disabled]="isRenamingInProgress()"
+                          title="Сохранить"
+                        >
+                          @if (isRenamingInProgress()) {
+                            <div class="small-spinner"></div>
+                          } @else {
+                            <av-icon type="actions/av_check_mark" [size]="14"></av-icon>
+                          }
+                        </button>
+                        <button
+                          class="cancel-btn"
+                          (click)="cancelEditName()"
+                          [disabled]="isRenamingInProgress()"
+                          title="Отмена"
+                        >
+                          <av-icon type="actions/av_close" [size]="14"></av-icon>
+                        </button>
+                      </div>
+                    </div>
+
+                    @if (nameError()) {
+                      <div class="error-message">⚠️ {{ nameError() }}</div>
+                    }
+
+                    <div class="hint-message">💡 Enter - сохранить, Escape - отмена</div>
+                  } @else {
+                    <!-- Режим просмотра -->
+                    <span
+                      class="value editable"
+                      (dblclick)="onNameDoubleClick()"
+                      title="Двойной клик для редактирования"
+                    >
+                      {{ icon.name }}
+                    </span>
                   }
                 </div>
 
-                @if (isEditingName()) {
-                <!-- Режим редактирования -->
-                <div class="edit-mode">
-                  <input
-                    type="text"
-                    class="name-input"
-                    [ngModel]="editedName()"
-                    (ngModelChange)="editedName.set($event)"
-                    (keydown)="onNameKeyDown($event)"
-                    [disabled]="isRenamingInProgress()"
-                    autofocus
-                    placeholder="Введите новое имя"
-                  />
-                  <div class="edit-actions">
+                <!-- КАТЕГОРИЯ (с кнопкой смены) -->
+                <div class="meta-item">
+                  <div class="meta-header">
+                    <span class="label">КАТЕГОРИЯ</span>
                     <button
-                      class="save-btn"
-                      (click)="saveNewName()"
-                      [disabled]="isRenamingInProgress()"
-                      title="Сохранить"
+                      class="icon-btn-small"
+                      (click)="openMoveModal(icon)"
+                      title="Сменить категорию"
                     >
-                      @if (isRenamingInProgress()) {
-                      <div class="small-spinner"></div>
-                      } @else {
-                      <av-icon type="actions/av_check_mark" [size]="14"></av-icon>
-                      }
-                    </button>
-                    <button
-                      class="cancel-btn"
-                      (click)="cancelEditName()"
-                      [disabled]="isRenamingInProgress()"
-                      title="Отмена"
-                    >
-                      <av-icon type="actions/av_close" [size]="14"></av-icon>
+                      <av-icon type="av_folder" [size]="14"></av-icon>
                     </button>
                   </div>
+                  <span class="value">{{ icon.category }}</span>
                 </div>
 
-                @if (nameError()) {
-                <div class="error-message">⚠️ {{ nameError() }}</div>
-                }
-
-                <div class="hint-message">💡 Enter - сохранить, Escape - отмена</div>
-                } @else {
-                <!-- Режим просмотра -->
-                <span
-                  class="value editable"
-                  (dblclick)="onNameDoubleClick()"
-                  title="Двойной клик для редактирования"
-                >
-                  {{ icon.name }}
-                </span>
-                }
+                <!-- ФОРМАТ -->
+                <div class="meta-item">
+                  <span class="label">ФОРМАТ</span>
+                  <span class="value">SVG</span>
+                </div>
               </div>
 
-              <!-- КАТЕГОРИЯ (с кнопкой смены) -->
-              <div class="meta-item">
-                <div class="meta-header">
-                  <span class="label">КАТЕГОРИЯ</span>
-                  <button
-                    class="icon-btn-small"
-                    (click)="openMoveModal(icon)"
-                    title="Сменить категорию"
-                  >
-                    <av-icon type="av_folder" [size]="14"></av-icon>
-                  </button>
-                </div>
-                <span class="value">{{ icon.category }}</span>
-              </div>
-
-              <!-- ФОРМАТ -->
-              <div class="meta-item">
-                <span class="label">ФОРМАТ</span>
-                <span class="value">SVG</span>
-              </div>
-            </div>
-
-            <!-- Technical Passport -->
-            @if (iconPassport(); as passport) {
-            <div class="passport-card" [class.standard]="passport.isStandard">
-              <div class="passport-header">
-                <div class="passport-title">
-                  <av-icon type="system/av_info" [size]="14"></av-icon>
-                  <span>Технический паспорт</span>
-                </div>
-                <div class="passport-actions">
-                  @if (!passport.isStandard) {
-                  <button class="fix-btn" (click)="normalizeToStandard()">
-                    <av-icon type="actions/av_hammer" [size]="12"></av-icon>
-                    Исправить на 24x24
-                  </button>
-                  }
-                  <button
-                    class="fix-btn danger"
-                    nz-tooltip
-                    nzTooltipTitle="Удалить иконку отовсюду"
-                    (click)="deleteCurrentIcon()"
-                  >
-                    <av-icon type="actions/av_trash" [size]="12"></av-icon>
-                    Удалить
-                  </button>
-                  <div class="status-badge" [class.ok]="passport.isStandard">
-                    {{ passport.isStandard ? 'Standard 24x24' : 'Non-Standard' }}
-                  </div>
-                </div>
-              </div>
-              <div class="passport-grid">
-                <div class="p-item">
-                  <label>Исходный размер</label>
-                  <span>{{ passport.originalWidth }} × {{ passport.originalHeight }}</span>
-                </div>
-                <div class="p-item">
-                  <label>ViewBox</label>
-                  <code>{{ passport.viewBox }}</code>
-                </div>
-                <div class="p-item">
-                  <label>Элементы</label>
-                  <span>{{ passport.pathCount }} путей</span>
-                </div>
-                <div class="p-item">
-                  <label>Стиль</label>
-                  <span [class.text-success]="passport.hasCurrentColor">
-                    {{ passport.hasCurrentColor ? 'CurrentColor OK' : 'Жесткие цвета' }}
-                  </span>
-                </div>
-              </div>
-            </div>
-            }
-
-            <!-- Code Tabs -->
-            <nz-tabset
-              [nzSelectedIndex]="activeEditorTab()"
-              (nzSelectedIndexChange)="activeEditorTab.set($event)"
-            >
-              <nz-tab nzTitle="Исходный код">
-                <div class="code-editor-wrapper">
-                  <div class="code-label">Original</div>
-                  <textarea readonly>{{ rawSvgCode() }}</textarea>
-
-                  @if (cleanedSvgCode() || isManualEdit()) {
-                  <div class="code-connector">
-                    <av-icon type="arrows/av_arrow_down" [size]="20"></av-icon>
-                    <div style="display: flex; align-items: center; gap: 8px; width: 100%;">
-                      <span>Optimized Output</span>
-                      <button
-                        class="btn-outline"
-                        style="height: 24px; padding: 0 8px; font-size: 11px; border-radius: 4px;"
-                        [class.active-edit]="isManualEdit()"
-                        (click)="toggleManualEdit()"
-                      >
-                        <av-icon
-                          [type]="isManualEdit() ? 'actions/av_check_mark' : 'actions/av_edit'"
-                          [size]="12"
-                        ></av-icon>
-                        {{ isManualEdit() ? 'Применить' : 'Редактировать' }}
-                      </button>
-                      @if (isManualEdit()) {
-                      <button
-                        class="btn-outline refresh-animate"
-                        style="height: 24px; padding: 0 8px; font-size: 11px; border-radius: 4px; border-color: #6366f1; color: #6366f1;"
-                        (click)="refreshPreview()"
-                      >
-                        <av-icon
-                          type="general/av_refresh-cw"
-                          [size]="12"
-                          style="margin-right: 4px;"
-                        ></av-icon>
-                        Рефреш (Live)
-                      </button>
+              <!-- Technical Passport -->
+              @if (iconPassport(); as passport) {
+                <div class="passport-card" [class.standard]="passport.isStandard">
+                  <div class="passport-header">
+                    <div class="passport-title">
+                      <av-icon type="system/av_info" [size]="14"></av-icon>
+                      <span>Технический паспорт</span>
+                    </div>
+                    <div class="passport-actions">
+                      @if (!passport.isStandard) {
+                        <button class="fix-btn" (click)="normalizeToStandard()">
+                          <av-icon type="actions/av_hammer" [size]="12"></av-icon>
+                          Исправить на 24x24
+                        </button>
                       }
+                      <button
+                        class="fix-btn danger"
+                        nz-tooltip
+                        nzTooltipTitle="Удалить иконку отовсюду"
+                        (click)="deleteCurrentIcon()"
+                      >
+                        <av-icon type="actions/av_trash" [size]="12"></av-icon>
+                        Удалить
+                      </button>
+                      <div class="status-badge" [class.ok]="passport.isStandard">
+                        {{ passport.isStandard ? 'Standard 24x24' : 'Non-Standard' }}
+                      </div>
                     </div>
                   </div>
-                  <textarea
-                    class="optimized"
-                    [readonly]="!isManualEdit()"
-                    [ngModel]="isManualEdit() ? manualEditedCode() : cleanedSvgCode()"
-                    (ngModelChange)="onManualCodeChange($event)"
-                    placeholder="Здесь появится оптимизированный код или введите свой..."
-                  ></textarea>
-                  }
-                </div>
-
-                @if (activeEditorTab() === 0) {
-                <!-- Actions for Source Code Tab -->
-                <div
-                  class="editor-footer"
-                  style="margin-top: 24px; padding-top: 24px; border-top: 1px solid #f1f5f9;"
-                >
-                  <button nz-button nzType="default" (click)="optimizeSvg()">
-                    <av-icon type="system/av_cog" [size]="16"></av-icon>
-                    Оптимизировать
-                  </button>
-                  <div class="spacer"></div>
-                  <button
-                    nz-button
-                    nzType="primary"
-                    [disabled]="!cleanedSvgCode()"
-                    (click)="granularSync(true, true)"
-                  >
-                    <av-icon type="actions/av_check_mark" [size]="16"></av-icon>
-                    Сохранить везде
-                  </button>
-                </div>
-                }
-              </nz-tab>
-              <nz-tab nzTitle="Просмотр">
-                <div class="code-editor-wrapper">
-                  <div class="code-label">Код для просмотра</div>
-                  <textarea
-                    style="height: 400px;"
-                    [ngModel]="(viewCodeSignal() ?? cleanedSvgCode()) || rawSvgCode()"
-                    (ngModelChange)="viewCodeSignal.set($event)"
-                    placeholder="Здесь появится код для просмотра..."
-                  ></textarea>
-                </div>
-
-                @if (activeEditorTab() === 1) {
-                <div
-                  class="editor-footer"
-                  style="margin-top: 24px; padding-top: 24px; border-top: 1px solid #f1f5f9;"
-                >
-                  <button nz-button nzType="default" (click)="onPreviewClick()">
-                    <av-icon type="actions/av_eye" [size]="16"></av-icon>
-                    Превью
-                  </button>
-                  <div class="spacer"></div>
-                  <button nz-button nzType="default" (click)="onSaveToDiskClick()">
-                    <av-icon type="general/av_download" [size]="16"></av-icon>
-                    Сохранить на диск
-                  </button>
-                </div>
-                }
-              </nz-tab>
-              <nz-tab nzTitle="Метаданные">
-                <div class="enrich-form">
-                  <div class="form-group">
-                    <label>Accessibility Title</label>
-                    <input
-                      nz-input
-                      [(ngModel)]="metaTitle"
-                      placeholder="Напр. Галочка подтверждения"
-                    />
+                  <div class="passport-grid">
+                    <div class="p-item">
+                      <label>Исходный размер</label>
+                      <span>{{ passport.originalWidth }} × {{ passport.originalHeight }}</span>
+                    </div>
+                    <div class="p-item">
+                      <label>ViewBox</label>
+                      <code>{{ passport.viewBox }}</code>
+                    </div>
+                    <div class="p-item">
+                      <label>Элементы</label>
+                      <span>{{ passport.pathCount }} путей</span>
+                    </div>
+                    <div class="p-item">
+                      <label>Стиль</label>
+                      <span [class.text-success]="passport.hasCurrentColor">
+                        {{ passport.hasCurrentColor ? 'CurrentColor OK' : 'Жесткие цвета' }}
+                      </span>
+                    </div>
                   </div>
-                  <div class="form-group">
-                    <label>Описание (Контекст)</label>
+                </div>
+              }
+
+              <!-- Code Tabs -->
+              <nz-tabset
+                [nzSelectedIndex]="activeEditorTab()"
+                (nzSelectedIndexChange)="activeEditorTab.set($event)"
+              >
+                <nz-tab nzTitle="Исходный код">
+                  <div class="code-editor-wrapper">
+                    <div class="code-label">Original</div>
+                    <textarea readonly>{{ rawSvgCode() }}</textarea>
+
+                    @if (cleanedSvgCode() || isManualEdit()) {
+                      <div class="code-connector">
+                        <av-icon type="arrows/av_arrow_down" [size]="20"></av-icon>
+                        <div style="display: flex; align-items: center; gap: 8px; width: 100%;">
+                          <span>Optimized Output</span>
+                          <button
+                            class="btn-outline"
+                            style="height: 24px; padding: 0 8px; font-size: 11px; border-radius: 4px;"
+                            [class.active-edit]="isManualEdit()"
+                            (click)="toggleManualEdit()"
+                          >
+                            <av-icon
+                              [type]="isManualEdit() ? 'actions/av_check_mark' : 'actions/av_edit'"
+                              [size]="12"
+                            ></av-icon>
+                            {{ isManualEdit() ? 'Применить' : 'Редактировать' }}
+                          </button>
+                          @if (isManualEdit()) {
+                            <button
+                              class="btn-outline refresh-animate"
+                              style="height: 24px; padding: 0 8px; font-size: 11px; border-radius: 4px; border-color: #6366f1; color: #6366f1;"
+                              (click)="refreshPreview()"
+                            >
+                              <av-icon
+                                type="general/av_refresh-cw"
+                                [size]="12"
+                                style="margin-right: 4px;"
+                              ></av-icon>
+                              Рефреш (Live)
+                            </button>
+                          }
+                        </div>
+                      </div>
+                      <textarea
+                        class="optimized"
+                        [readonly]="!isManualEdit()"
+                        [ngModel]="isManualEdit() ? manualEditedCode() : cleanedSvgCode()"
+                        (ngModelChange)="onManualCodeChange($event)"
+                        placeholder="Здесь появится оптимизированный код или введите свой..."
+                      ></textarea>
+                    }
+                  </div>
+
+                  @if (activeEditorTab() === 0) {
+                    <!-- Actions for Source Code Tab -->
+                    <div
+                      class="editor-footer"
+                      style="margin-top: 24px; padding-top: 24px; border-top: 1px solid #f1f5f9;"
+                    >
+                      <button nz-button nzType="default" (click)="optimizeSvg()">
+                        <av-icon type="system/av_cog" [size]="16"></av-icon>
+                        Оптимизировать
+                      </button>
+                      <div class="spacer"></div>
+                      <button
+                        nz-button
+                        nzType="primary"
+                        [disabled]="!cleanedSvgCode()"
+                        (click)="granularSync(true, true)"
+                      >
+                        <av-icon type="actions/av_check_mark" [size]="16"></av-icon>
+                        Сохранить везде
+                      </button>
+                    </div>
+                  }
+                </nz-tab>
+                <nz-tab nzTitle="Просмотр">
+                  <div class="code-editor-wrapper">
+                    <div class="code-label">Код для просмотра</div>
                     <textarea
-                      nz-input
-                      [(ngModel)]="metaDesc"
-                      rows="3"
-                      placeholder="Опишите использование иконки..."
+                      style="height: 400px;"
+                      [ngModel]="(viewCodeSignal() ?? cleanedSvgCode()) || rawSvgCode()"
+                      (ngModelChange)="viewCodeSignal.set($event)"
+                      placeholder="Здесь появится код для просмотра..."
                     ></textarea>
                   </div>
-                  <div class="form-group">
-                    <label>Корпоративный автор</label>
-                    <input
-                      nz-input
-                      [(ngModel)]="metaAuthor"
-                      placeholder="Напр. Aurora Design System"
-                    />
-                  </div>
-                  <div class="form-row">
-                    <div class="form-group">
-                      <label>Ключ атрибута данных</label>
-                      <input nz-input [(ngModel)]="metaDataKey" placeholder="Напр. data-test" />
+
+                  @if (activeEditorTab() === 1) {
+                    <div
+                      class="editor-footer"
+                      style="margin-top: 24px; padding-top: 24px; border-top: 1px solid #f1f5f9;"
+                    >
+                      <button nz-button nzType="default" (click)="onPreviewClick()">
+                        <av-icon type="actions/av_eye" [size]="16"></av-icon>
+                        Превью
+                      </button>
+                      <div class="spacer"></div>
+                      <button nz-button nzType="default" (click)="onSaveToDiskClick()">
+                        <av-icon type="general/av_download" [size]="16"></av-icon>
+                        Сохранить на диск
+                      </button>
                     </div>
+                  }
+                </nz-tab>
+                <nz-tab nzTitle="Метаданные">
+                  <div class="enrich-form">
                     <div class="form-group">
-                      <label>Значение атрибута</label>
+                      <label>Accessibility Title</label>
                       <input
                         nz-input
-                        [(ngModel)]="metaDataValue"
-                        placeholder="Напр. icon-confirm"
+                        [(ngModel)]="metaTitle"
+                        placeholder="Напр. Галочка подтверждения"
                       />
                     </div>
+                    <div class="form-group">
+                      <label>Описание (Контекст)</label>
+                      <textarea
+                        nz-input
+                        [(ngModel)]="metaDesc"
+                        rows="3"
+                        placeholder="Опишите использование иконки..."
+                      ></textarea>
+                    </div>
+                    <div class="form-group">
+                      <label>Корпоративный автор</label>
+                      <input
+                        nz-input
+                        [(ngModel)]="metaAuthor"
+                        placeholder="Напр. Aurora Design System"
+                      />
+                    </div>
+                    <div class="form-row">
+                      <div class="form-group">
+                        <label>Ключ атрибута данных</label>
+                        <input nz-input [(ngModel)]="metaDataKey" placeholder="Напр. data-test" />
+                      </div>
+                      <div class="form-group">
+                        <label>Значение атрибута</label>
+                        <input
+                          nz-input
+                          [(ngModel)]="metaDataValue"
+                          placeholder="Напр. icon-confirm"
+                        />
+                      </div>
+                    </div>
+                    <button nz-button nzType="dashed" nzBlock (click)="applyMetadata()">
+                      <av-icon type="actions/av_add" [size]="14"></av-icon>
+                      Внедрить метаданные в код
+                    </button>
                   </div>
-                  <button nz-button nzType="dashed" nzBlock (click)="applyMetadata()">
-                    <av-icon type="actions/av_add" [size]="14"></av-icon>
-                    Внедрить метаданные в код
-                  </button>
-                </div>
-              </nz-tab>
-            </nz-tabset>
-          </div>
-
+                </nz-tab>
+              </nz-tabset>
+            </div>
           }
         </ng-container>
       </nz-drawer>
@@ -649,23 +654,23 @@ interface IconCategoryWithCount extends IconCategory {
                 </div>
 
                 @if (batchMode() === 'category') {
-                <div
-                  style="display: flex; gap: 12px; align-items: center; animation: slideDown 0.3s ease-out;"
-                >
-                  <label style="font-size: 13px; font-weight: 600; min-width: 140px;"
-                    >Выберите категорию:</label
+                  <div
+                    style="display: flex; gap: 12px; align-items: center; animation: slideDown 0.3s ease-out;"
                   >
-                  <nz-select
-                    [ngModel]="batchCategoryId()"
-                    (ngModelChange)="onBatchCategoryChange($event)"
-                    style="width: 100%; max-width: 300px;"
-                    nzPlaceHolder="Выберите категорию для обработки"
-                  >
-                    @for (cat of dbCategories(); track cat.id) {
-                    <nz-option [nzValue]="cat.id" [nzLabel]="cat.displayName"></nz-option>
-                    }
-                  </nz-select>
-                </div>
+                    <label style="font-size: 13px; font-weight: 600; min-width: 140px;"
+                      >Выберите категорию:</label
+                    >
+                    <nz-select
+                      [ngModel]="batchCategoryId()"
+                      (ngModelChange)="onBatchCategoryChange($event)"
+                      style="width: 100%; max-width: 300px;"
+                      nzPlaceHolder="Выберите категорию для обработки"
+                    >
+                      @for (cat of dbCategories(); track cat.id) {
+                        <nz-option [nzValue]="cat.id" [nzLabel]="cat.displayName"></nz-option>
+                      }
+                    </nz-select>
+                  </div>
                 }
 
                 <div
@@ -810,94 +815,95 @@ interface IconCategoryWithCount extends IconCategory {
                   Лог сессии
                 </div>
                 @if (batchLog().length > 0) {
-                <div style="display: flex; gap: 8px;">
-                  <button
-                    class="btn-outline"
-                    [style.height]="'24px'"
-                    [style.padding]="'0 8px'"
-                    [style.font-size]="'10px'"
-                    [style.border-radius]="'6px'"
-                    (click)="copyBatchLog()"
-                  >
-                    <av-icon
-                      type="actions/av_save"
-                      [size]="10"
-                      style="margin-right: 4px;"
-                    ></av-icon>
-                    Копировать лог
-                  </button>
-                  <button
-                    class="btn-outline"
-                    [style.height]="'24px'"
-                    [style.padding]="'0 8px'"
-                    [style.font-size]="'10px'"
-                    [style.border-radius]="'6px'"
-                    [style.color]="'#f43f5e'"
-                    [style.border-color]="'rgba(244, 63, 94, 0.2)'"
-                    (click)="clearBatchLog()"
-                  >
-                    <av-icon
-                      type="actions/av_eraser"
-                      [size]="10"
-                      style="margin-right: 4px;"
-                    ></av-icon>
-                    Очистить
-                  </button>
-                </div>
+                  <div style="display: flex; gap: 8px;">
+                    <button
+                      class="btn-outline"
+                      [style.height]="'24px'"
+                      [style.padding]="'0 8px'"
+                      [style.font-size]="'10px'"
+                      [style.border-radius]="'6px'"
+                      (click)="copyBatchLog()"
+                    >
+                      <av-icon
+                        type="actions/av_save"
+                        [size]="10"
+                        style="margin-right: 4px;"
+                      ></av-icon>
+                      Копировать лог
+                    </button>
+                    <button
+                      class="btn-outline"
+                      [style.height]="'24px'"
+                      [style.padding]="'0 8px'"
+                      [style.font-size]="'10px'"
+                      [style.border-radius]="'6px'"
+                      [style.color]="'#f43f5e'"
+                      [style.border-color]="'rgba(244, 63, 94, 0.2)'"
+                      (click)="clearBatchLog()"
+                    >
+                      <av-icon
+                        type="actions/av_eraser"
+                        [size]="10"
+                        style="margin-right: 4px;"
+                      ></av-icon>
+                      Очистить
+                    </button>
+                  </div>
                 }
               </div>
               <div class="log-scroll">
                 @for (line of batchLog(); track $index) {
-                <div
-                  class="log-entry"
-                  [class.success]="line.includes('✅')"
-                  [class.error]="line.includes('❌')"
-                >
-                  {{ line }}
-                </div>
-                } @if (batchLog().length === 0) {
-                <div style="color: #64748b; font-style: italic;">
-                  Выберите действие для начала...
-                </div>
+                  <div
+                    class="log-entry"
+                    [class.success]="line.includes('✅')"
+                    [class.error]="line.includes('❌')"
+                  >
+                    {{ line }}
+                  </div>
+                }
+                @if (batchLog().length === 0) {
+                  <div style="color: #64748b; font-style: italic;">
+                    Выберите действие для начала...
+                  </div>
                 }
               </div>
             </div>
 
             @if (isBatchProcessing()) {
-            <div class="progress-overlay">
-              <div style="margin-bottom: 24px;">
-                <av-icon
-                  type="system/av_cog"
-                  [size]="48"
-                  style="animation: spin 2s linear infinite;"
-                ></av-icon>
-                <style>
-                  @keyframes spin {
-                    from {
-                      transform: rotate(0deg);
+              <div class="progress-overlay">
+                <div style="margin-bottom: 24px;">
+                  <av-icon
+                    type="system/av_cog"
+                    [size]="48"
+                    style="animation: spin 2s linear infinite;"
+                  ></av-icon>
+                  <style>
+                    @keyframes spin {
+                      from {
+                        transform: rotate(0deg);
+                      }
+                      to {
+                        transform: rotate(360deg);
+                      }
                     }
-                    to {
-                      transform: rotate(360deg);
-                    }
-                  }
-                </style>
+                  </style>
+                </div>
+                <h2 style="margin-bottom: 8px;">Выполняется обработка...</h2>
+                <div class="custom-progress-bar">
+                  <div class="fill" [style.width.%]="batchProgress()"></div>
+                </div>
+                <div style="font-weight: 700; color: #6366f1;">
+                  {{ batchCurrent() }} / {{ batchTotal() }} ({{ batchProgress() }}%)
+                </div>
+                <div
+                  style="margin-top: 8px; font-size: 14px; font-weight: 600; color: #1e293b; background: #f1f5f9; padding: 4px 12px; border-radius: 8px;"
+                >
+                  Обработка: {{ batchCurrentName() }}
+                </div>
+                <p style="margin-top: 16px; color: #64748b;">
+                  Пожалуйста, не закрывайте страницу до завершения.
+                </p>
               </div>
-              <h2 style="margin-bottom: 8px;">Выполняется обработка...</h2>
-              <div class="custom-progress-bar">
-                <div class="fill" [style.width.%]="batchProgress()"></div>
-              </div>
-              <div style="font-weight: 700; color: #6366f1;">
-                {{ batchCurrent() }} / {{ batchTotal() }} ({{ batchProgress() }}%)
-              </div>
-              <div
-                style="margin-top: 8px; font-size: 14px; font-weight: 600; color: #1e293b; background: #f1f5f9; padding: 4px 12px; border-radius: 8px;"
-              >
-                Обработка: {{ batchCurrentName() }}
-              </div>
-              <p style="margin-top: 16px; color: #64748b;">
-                Пожалуйста, не закрывайте страницу до завершения.
-              </p>
-            </div>
             }
           </div>
         </ng-container>
@@ -1057,7 +1063,7 @@ interface IconCategoryWithCount extends IconCategory {
                 style="width: 100%;"
               >
                 @for (cat of dbCategories(); track cat.id) {
-                <nz-option [nzValue]="cat.folderName" [nzLabel]="cat.displayName"></nz-option>
+                  <nz-option [nzValue]="cat.folderName" [nzLabel]="cat.displayName"></nz-option>
                 }
               </nz-select>
             </div>
@@ -1094,22 +1100,22 @@ interface IconCategoryWithCount extends IconCategory {
 
             <!-- Live Preview -->
             @if (uploadSvgCode()) {
-            <div
-              style="margin-top: 0; padding: 16px; background: #f0fdf4; border-radius: 8px; border: 1px solid #bbf7d0; display: flex; align-items: center; gap: 24px;"
-            >
               <div
-                style="width: 64px; height: 64px; background: white; border-radius: 8px; border: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: center; color: #1e293b;"
-                [innerHTML]="uploadPreview()"
-              ></div>
-              <div>
+                style="margin-top: 0; padding: 16px; background: #f0fdf4; border-radius: 8px; border: 1px solid #bbf7d0; display: flex; align-items: center; gap: 24px;"
+              >
                 <div
-                  style="font-size: 11px; font-weight: 700; color: #166534; text-transform: uppercase;"
-                >
-                  Предпросмотр
+                  style="width: 64px; height: 64px; background: white; border-radius: 8px; border: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: center; color: #1e293b;"
+                  [innerHTML]="uploadPreview()"
+                ></div>
+                <div>
+                  <div
+                    style="font-size: 11px; font-weight: 700; color: #166534; text-transform: uppercase;"
+                  >
+                    Предпросмотр
+                  </div>
+                  <div style="font-size: 13px; color: #14532d;">Иконка готова к загрузке</div>
                 </div>
-                <div style="font-size: 13px; color: #14532d;">Иконка готова к загрузке</div>
               </div>
-            </div>
             }
           </div>
         </ng-container>
@@ -1145,8 +1151,9 @@ interface IconCategoryWithCount extends IconCategory {
                 (ngModelChange)="bulkUploadCategory.set($event)"
                 style="width: 100%;"
               >
-                > @for (cat of dbCategories(); track cat.id) {
-                <nz-option [nzValue]="cat.folderName" [nzLabel]="cat.displayName"></nz-option>
+                >
+                @for (cat of dbCategories(); track cat.id) {
+                  <nz-option [nzValue]="cat.folderName" [nzLabel]="cat.displayName"></nz-option>
                 }
               </nz-select>
             </div>
@@ -1165,49 +1172,50 @@ interface IconCategoryWithCount extends IconCategory {
             </div>
 
             @if (bulkUploadFiles().length > 0) {
-            <div
-              class="file-list"
-              style="max-height: 200px; overflow-y: auto; background: #f8fafc; border-radius: 12px; padding: 12px; border: 1px solid #e2e8f0;"
-            >
               <div
-                style="font-size: 11px; font-weight: 700; color: #94a3b8; text-transform: uppercase; margin-bottom: 8px;"
-              >
-                Список файлов ({{ bulkUploadFiles().length }})
-              </div>
-              @for (file of bulkUploadFiles(); track file.name) {
-              <div
-                style="display: flex; align-items: center; gap: 8px; padding: 4px 0; font-size: 13px; color: #475569;"
-              >
-                <av-icon type="media/av_image" [size]="14"></av-icon>
-                <span
-                  style="flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"
-                  >{{ file.name }}</span
-                >
-                <span style="font-size: 11px; color: #94a3b8;"
-                  >{{ (file.size / 1024).toFixed(1) }} KB</span
-                >
-              </div>
-              }
-            </div>
-            } @if (isBulkUploading()) {
-            <div style="margin-top: 8px;">
-              <div
-                style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px;"
-              >
-                <span>Загрузка...</span>
-                <span>{{ bulkUploadProgress() }}%</span>
-              </div>
-              <div
-                class="progress-bar"
-                style="height: 8px; background: #f1f5f9; border-radius: 4px; overflow: hidden;"
+                class="file-list"
+                style="max-height: 200px; overflow-y: auto; background: #f8fafc; border-radius: 12px; padding: 12px; border: 1px solid #e2e8f0;"
               >
                 <div
-                  class="progress-fill"
-                  [style.width.%]="bulkUploadProgress()"
-                  style="height: 100%; background: #6366f1; transition: width 0.3s;"
-                ></div>
+                  style="font-size: 11px; font-weight: 700; color: #94a3b8; text-transform: uppercase; margin-bottom: 8px;"
+                >
+                  Список файлов ({{ bulkUploadFiles().length }})
+                </div>
+                @for (file of bulkUploadFiles(); track file.name) {
+                  <div
+                    style="display: flex; align-items: center; gap: 8px; padding: 4px 0; font-size: 13px; color: #475569;"
+                  >
+                    <av-icon type="media/av_image" [size]="14"></av-icon>
+                    <span
+                      style="flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"
+                      >{{ file.name }}</span
+                    >
+                    <span style="font-size: 11px; color: #94a3b8;"
+                      >{{ (file.size / 1024).toFixed(1) }} KB</span
+                    >
+                  </div>
+                }
               </div>
-            </div>
+            }
+            @if (isBulkUploading()) {
+              <div style="margin-top: 8px;">
+                <div
+                  style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px;"
+                >
+                  <span>Загрузка...</span>
+                  <span>{{ bulkUploadProgress() }}%</span>
+                </div>
+                <div
+                  class="progress-bar"
+                  style="height: 8px; background: #f1f5f9; border-radius: 4px; overflow: hidden;"
+                >
+                  <div
+                    class="progress-fill"
+                    [style.width.%]="bulkUploadProgress()"
+                    style="height: 100%; background: #6366f1; transition: width 0.3s;"
+                  ></div>
+                </div>
+              </div>
             }
           </div>
         </ng-container>
@@ -1254,7 +1262,7 @@ interface IconCategoryWithCount extends IconCategory {
               nzShowSearch
             >
               @for (dbCat of dbCategories(); track dbCat.id) {
-              <nz-option [nzValue]="dbCat.id" [nzLabel]="dbCat.displayName"></nz-option>
+                <nz-option [nzValue]="dbCat.id" [nzLabel]="dbCat.displayName"></nz-option>
               }
             </nz-select>
 
@@ -1270,9 +1278,9 @@ interface IconCategoryWithCount extends IconCategory {
 
       <!-- Toast -->
       @if (toastMessage()) {
-      <div class="toast-notification ripple-in">
-        {{ toastMessage() }}
-      </div>
+        <div class="toast-notification ripple-in">
+          {{ toastMessage() }}
+        </div>
       }
 
       <!-- Save to Disk Modal -->
@@ -1364,31 +1372,31 @@ interface IconCategoryWithCount extends IconCategory {
             </div>
 
             @if (isCreatingFolder()) {
-            <div
-              class="create-folder-bar"
-              style="margin-bottom: 16px; padding: 12px; background: #eff6ff; border-radius: 8px; display: flex; gap: 8px; align-items: center; border: 1px solid #bfdbfe; animation: slideDown 0.2s ease-out;"
-            >
-              <av-icon type="av_folder" [size]="20" style="color: #3b82f6;"></av-icon>
-              <input
-                nz-input
-                placeholder="Имя новой папки..."
-                [ngModel]="newFolderName()"
-                (ngModelChange)="newFolderName.set($event)"
-                (keyup.enter)="createNewFolderInBrowser()"
-                style="flex: 1;"
-                #newFolderInput
-              />
-              <button nz-button nzType="primary" (click)="createNewFolderInBrowser()">
-                Создать
-              </button>
-              <button
-                nz-button
-                nzType="default"
-                (click)="isCreatingFolder.set(false); newFolderName.set('')"
+              <div
+                class="create-folder-bar"
+                style="margin-bottom: 16px; padding: 12px; background: #eff6ff; border-radius: 8px; display: flex; gap: 8px; align-items: center; border: 1px solid #bfdbfe; animation: slideDown 0.2s ease-out;"
               >
-                X
-              </button>
-            </div>
+                <av-icon type="av_folder" [size]="20" style="color: #3b82f6;"></av-icon>
+                <input
+                  nz-input
+                  placeholder="Имя новой папки..."
+                  [ngModel]="newFolderName()"
+                  (ngModelChange)="newFolderName.set($event)"
+                  (keyup.enter)="createNewFolderInBrowser()"
+                  style="flex: 1;"
+                  #newFolderInput
+                />
+                <button nz-button nzType="primary" (click)="createNewFolderInBrowser()">
+                  Создать
+                </button>
+                <button
+                  nz-button
+                  nzType="default"
+                  (click)="isCreatingFolder.set(false); newFolderName.set('')"
+                >
+                  X
+                </button>
+              </div>
             }
 
             <div
@@ -1396,57 +1404,57 @@ interface IconCategoryWithCount extends IconCategory {
               style="height: 400px; overflow-y: auto; border: 1px solid #e2e8f0; border-radius: 8px;"
             >
               @if (isBrowserLoading()) {
-              <div
-                style="display: flex; justify-content: center; align-items: center; height: 100%;"
-              >
-                <nz-spin nzSimple></nz-spin>
-              </div>
-              } @else {
-              <div class="items-grid">
-                @for (item of browserItems(); track item.path) {
                 <div
-                  class="browser-item"
-                  (click)="
-                    item.type === 'folder' || item.type === 'drive'
-                      ? navigateToPath(item.path)
-                      : null
-                  "
-                  style="display: flex; align-items: center; padding: 10px 16px; cursor: pointer; border-bottom: 1px solid #f1f5f9; hover: background: #f8fafc;"
-                  [style.background]="
-                    item.type === 'folder' || item.type === 'drive' ? 'transparent' : '#f8fafc'
-                  "
+                  style="display: flex; justify-content: center; align-items: center; height: 100%;"
                 >
-                  <av-icon
-                    [type]="
-                      item.type === 'drive'
-                        ? 'av_e_hard-drive'
-                        : item.type === 'folder'
-                        ? 'av_folder'
-                        : 'av_file'
-                    "
-                    [size]="20"
-                    [style.color]="
-                      item.type === 'drive'
-                        ? '#6366f1'
-                        : item.type === 'folder'
-                        ? '#3b82f6'
-                        : '#94a3b8'
-                    "
-                    style="margin-right: 12px;"
-                  ></av-icon>
-                  <span style="flex: 1; font-size: 14px; color: #1e293b;">{{ item.name }}</span>
-                  @if (item.type === 'folder' || item.type === 'drive') {
-                  <button
-                    nz-button
-                    nzType="link"
-                    (click)="$event.stopPropagation(); selectInBrowser(item.path)"
-                  >
-                    Выбрать
-                  </button>
+                  <nz-spin nzSimple></nz-spin>
+                </div>
+              } @else {
+                <div class="items-grid">
+                  @for (item of browserItems(); track item.path) {
+                    <div
+                      class="browser-item"
+                      (click)="
+                        item.type === 'folder' || item.type === 'drive'
+                          ? navigateToPath(item.path)
+                          : null
+                      "
+                      style="display: flex; align-items: center; padding: 10px 16px; cursor: pointer; border-bottom: 1px solid #f1f5f9; hover: background: #f8fafc;"
+                      [style.background]="
+                        item.type === 'folder' || item.type === 'drive' ? 'transparent' : '#f8fafc'
+                      "
+                    >
+                      <av-icon
+                        [type]="
+                          item.type === 'drive'
+                            ? 'av_e_hard-drive'
+                            : item.type === 'folder'
+                              ? 'av_folder'
+                              : 'av_file'
+                        "
+                        [size]="20"
+                        [style.color]="
+                          item.type === 'drive'
+                            ? '#6366f1'
+                            : item.type === 'folder'
+                              ? '#3b82f6'
+                              : '#94a3b8'
+                        "
+                        style="margin-right: 12px;"
+                      ></av-icon>
+                      <span style="flex: 1; font-size: 14px; color: #1e293b;">{{ item.name }}</span>
+                      @if (item.type === 'folder' || item.type === 'drive') {
+                        <button
+                          nz-button
+                          nzType="link"
+                          (click)="$event.stopPropagation(); selectInBrowser(item.path)"
+                        >
+                          Выбрать
+                        </button>
+                      }
+                    </div>
                   }
                 </div>
-                }
-              </div>
               }
             </div>
           </div>
@@ -2914,6 +2922,15 @@ export class IconManagerComponent {
     // this.loadIcons(); // Disabled initial load as per requirement
     this.loadDbCategories();
 
+    // Debug: Monitor upload state
+    effect(() => {
+      console.log('[IconManager] 🔍 Upload state changed:', {
+        name: this.uploadName(),
+        category: this.uploadCategory(),
+        codeLength: this.uploadSvgCode()?.length,
+      });
+    });
+
     // Lazy load content when category changes
     effect(() => {
       const catName = this.selectedCategory();
@@ -2927,6 +2944,7 @@ export class IconManagerComponent {
     this.dataSource.set('backend');
     this.dbCategoryService.getAll().subscribe({
       next: (res) => {
+        console.log('[IconManager] 📂 Categories loaded from backend:', res.data);
         this.dbCategories.set(res.data);
 
         // Initialize categories for sidebar with empty icon lists
@@ -3482,8 +3500,8 @@ export class IconManagerComponent {
       toBackend && toFrontend
         ? 'на сервер и клиент'
         : toBackend
-        ? 'только на сервер'
-        : 'только на клиент';
+          ? 'только на сервер'
+          : 'только на клиент';
     this.showToast(`📡 Запуск синхронизации ${typeStr}...`);
 
     this.http
@@ -3532,8 +3550,28 @@ export class IconManagerComponent {
     const category = this.uploadCategory();
     const content = this.uploadSvgCode();
 
+    console.log('[IconManager] 🚀 Attempting upload:', {
+      name,
+      category,
+      contentLength: content?.length,
+      hasContent: !!content,
+    });
+
     if (!name || !category || !content) {
-      this.showToast('⚠️ Заполните все поля и выберите файл');
+      const missing = [];
+      if (!name) missing.push('Название');
+      if (!category) missing.push('Категория');
+      if (!content) missing.push('SVG Код');
+
+      console.warn('[IconManager] ⚠️ Validation failed:', {
+        missing,
+        name,
+        category,
+        contentLength: content?.length,
+        hasContent: !!content,
+      });
+
+      this.showToast(`⚠️ Заполните: ${missing.join(', ')}`);
       return;
     }
 

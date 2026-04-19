@@ -20,78 +20,95 @@
       '<svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M14 4h6v6h-6zM4 4h8v2H4zm0 4h8v2H4zM4 14h16v2H4zM4 18h16v2H4z" fill="currentColor"/></svg>',
     );
 
-    // Вспомогательная функция: Найти figure.aurora-image
+    // Вспомогательная функция: Найти figure
     var getSelectedFigure = function () {
       var node = editor.selection.getNode();
-      return editor.dom.getParent(node, 'figure.aurora-image');
+      // Проверяем сам узел
+      if (
+        node &&
+        node.nodeName.toLowerCase() === 'figure' &&
+        (editor.dom.hasClass(node, 'av-image') || editor.dom.hasClass(node, 'aurora-image'))
+      ) {
+        return node;
+      }
+      return editor.dom.getParent(node, 'figure.av-image, figure.aurora-image');
     };
 
     // Вспомогательная функция: Применить выравнивание
     var alignImage = function (alignType) {
       var figure = getSelectedFigure();
       if (!figure) {
-        console.warn('No figure.aurora-image selected');
         return;
       }
 
-      // Сброс всех стилей выравнивания перед применением новых
-      editor.dom.setStyle(figure, 'float', null);
-      editor.dom.setStyle(figure, 'margin-left', null);
-      editor.dom.setStyle(figure, 'margin-right', null);
-      editor.dom.setStyle(figure, 'display', null); // Сбрасываем, чтобы переопределить
+      editor.undoManager.transact(function () {
+        // Сбрасываем старые классы выравнивания
+        var classesToRemove = [
+          'av-image--align-left',
+          'av-image--align-center',
+          'av-image--align-right',
+          'av-image--align-full',
+        ];
+        classesToRemove.forEach(function (cls) {
+          editor.dom.removeClass(figure, cls);
+        });
 
-      // Обновляем data-атрибут
-      editor.dom.setAttrib(figure, 'data-align', alignType);
+        // Добавляем новый класс
+        editor.dom.addClass(figure, 'av-image--align-' + alignType);
 
-      if (alignType === 'left') {
-        editor.dom.setStyles(figure, {
-          float: 'left',
-          'margin-right': '15px',
-          'margin-left': '0',
-          display: 'table', // Для сохранения контейнерности
-        });
-      } else if (alignType === 'center') {
-        editor.dom.setStyles(figure, {
-          float: 'none',
-          'margin-left': 'auto',
-          'margin-right': 'auto',
-          display: 'table',
-        });
-      } else if (alignType === 'right') {
-        editor.dom.setStyles(figure, {
-          float: 'right',
-          'margin-left': '15px',
-          'margin-right': '0',
-          display: 'table',
-        });
-      }
+        // Очищаем инлайновые стили, мешающие классам
+        // Очищаем инлайновые стили
+        var stylesToClear = {
+          float: null,
+          'margin-left': null,
+          'margin-right': null,
+          display: null,
+        };
+        if (alignType === 'full') {
+          stylesToClear.width = null;
+        }
+
+        editor.dom.setStyles(figure, stylesToClear);
+      });
 
       // Обновляем состояние редактора (undo/redo)
       editor.fire('Change');
     };
 
-    // ===== КНОПКА: ВЫРОВНЯТЬ ИЗОБРАЖЕНИЕ ВЛЕВО =====
+    // ===== КОМАНДЫ (для вызова из других плагинов) =====
+    editor.addCommand('image-align-left', function () {
+      alignImage('left');
+    });
+    editor.addCommand('image-align-center', function () {
+      alignImage('center');
+    });
+    editor.addCommand('image-align-right', function () {
+      alignImage('right');
+    });
+    editor.addCommand('image-align-full', function () {
+      alignImage('full');
+    });
+
+    // ===== КНОПКИ ДЛЯ ТУЛБАРА =====
     editor.ui.registry.addButton('image-align-left', {
       icon: 'av-image-align-left',
-      tooltip: 'Выровнять изображение влево',
+      tooltip: 'Выровнять влево',
       onAction: function () {
         alignImage('left');
       },
     });
 
-    // ===== КНОПКА: ВЫРОВНЯТЬ ИЗОБРАЖЕНИЕ ПО ЦЕНТРУ =====
     editor.ui.registry.addButton('image-align-center', {
       icon: 'av-image-align-center',
-      tooltip: 'Выровнять изображение по центру',
+      tooltip: 'Выровнять по центру',
       onAction: function () {
         alignImage('center');
       },
     });
 
-    // ===== КНОПКА: ВЫРОВНЯТЬ ИЗОБРАЖЕНИЕ ВПРАВО =====
     editor.ui.registry.addButton('image-align-right', {
       icon: 'av-image-align-right',
-      tooltip: 'Выровнять изображение вправо',
+      tooltip: 'Выровнять вправо',
       onAction: function () {
         alignImage('right');
       },

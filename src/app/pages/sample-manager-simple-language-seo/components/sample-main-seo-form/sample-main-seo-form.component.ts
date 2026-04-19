@@ -545,6 +545,8 @@ export class SampleMainSeoFormComponent implements OnInit {
     private cdr: ChangeDetectorRef,
     private vsModal: VSModalService,
   ) {
+    console.log('[FormComponent] Конструктор вызван');
+
     this.form = this.fb.group({
       id: [0],
       name: ['', Validators.required],
@@ -553,21 +555,39 @@ export class SampleMainSeoFormComponent implements OnInit {
       isActive: [true],
       descriptions: this.fb.array([]),
     });
+    console.log('[FormComponent] Форма создана');
 
     const availableLangs$ = toObservable(this.langService.availableLanguages);
     availableLangs$.subscribe((langs) => {
+      console.log('[FormComponent] Языки получены:', langs);
       if (langs && langs.length > 0) {
         this.languages = langs;
+        console.log('[FormComponent] Инициализация табов для', langs.length, 'языков');
         this.initDescriptionTabs();
+      } else {
+        console.warn('[FormComponent] Нет доступных языков!');
       }
     });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    console.log('[FormComponent] ngOnInit - компонент инициализирован');
+    console.log('[FormComponent] Текущее состояние:', {
+      loading: this.loading,
+      languages: this.languages.length,
+      formValid: this.form?.valid,
+    });
+  }
 
   private initDescriptionTabs(): void {
+    console.log('[FormComponent] initDescriptionTabs - начало');
     const descs = this.form.get('descriptions') as FormArray;
     descs.clear();
+    console.log(
+      '[FormComponent] Создание табов для языков:',
+      this.languages.map((l) => l.code),
+    );
+
     this.languages.forEach((lang) => {
       descs.push(
         this.fb.group({
@@ -580,7 +600,10 @@ export class SampleMainSeoFormComponent implements OnInit {
         }),
       );
     });
+
+    console.log('[FormComponent] Табы созданы, количество:', descs.length);
     this.cdr.markForCheck();
+    console.log('[FormComponent] ChangeDetection отмечен');
   }
 
   get descriptionsArray(): FormArray {

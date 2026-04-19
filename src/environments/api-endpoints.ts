@@ -123,7 +123,8 @@ export class ApiEndpoints {
     CATEGORY_CONTENT: (id: number) => `${this.BASE_URL}/Icons/category/${id}/content`,
     BATCH_CONTENT: `${this.BASE_URL}/Icons/batch-content`,
     SAVE_TO_DISK: `${this.BASE_URL}/Icons/save-to-disk`,
-    CREATE_DIRECTORY: (path: string) => `${this.BASE_URL}/Icons/create-directory?path=${path}`,
+    CREATE_DIRECTORY: (path: string) => `${this.BASE_URL}/Icons/create-directory?path=${encodeURIComponent(path)}`,
+    OPEN_FILE: (path: string) => `${this.BASE_URL}/Icons/open-file?path=${encodeURIComponent(path)}`,
     DELETE: (type: string, b: boolean, f: boolean) =>
       `${this.BASE_URL}/Icons/delete?iconType=${type}&fromBackend=${b}&fromFrontend=${f}`,
   };
@@ -135,6 +136,19 @@ export class ApiEndpoints {
     BY_ID: (id: number) => `${this.BASE_URL}/v1/languages-app/${id}`,
     DEFAULT: (id: number) => `${this.BASE_URL}/v1/languages-app/${id}/default`,
     STATUS: (id: number) => `${this.BASE_URL}/v1/languages-app/${id}/status`,
+    HARD_RESET: `${this.BASE_URL}/v1/languages-app/hard-reset`,
+    INITIALIZE: `${this.BASE_URL}/v1/languages-app/initialize`,
+  };
+
+  // Aggregator Languages endpoints
+  static readonly AGGREGATOR_LANGUAGES = {
+    BASE: `${this.BASE_URL}/v1/aggregator/languages`,
+    AVAILABLE: `${this.BASE_URL}/v1/aggregator/languages/available`,
+    BY_ID: (id: number) => `${this.BASE_URL}/v1/aggregator/languages/${id}`,
+    DEFAULT: (id: number) => `${this.BASE_URL}/v1/aggregator/languages/${id}/default`,
+    STATUS: (id: number) => `${this.BASE_URL}/v1/aggregator/languages/${id}/status`,
+    HARD_RESET: `${this.BASE_URL}/v1/aggregator/languages/hard-reset`,
+    INITIALIZE: `${this.BASE_URL}/v1/aggregator/languages/initialize`,
   };
 
   // Images General

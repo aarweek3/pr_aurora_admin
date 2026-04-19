@@ -36,8 +36,8 @@ import { NzSwitchModule } from 'ng-zorro-antd/switch';
 import { NzTabsModule } from 'ng-zorro-antd/tabs';
 
 import { environment } from '@environments/environment';
-import { AvImagePickerComponent } from '../../../../shared/components/av-image-uploader/av-image-picker.component'; // Keep for other parts if needed, or remove if fully replaced
-import { SeoFormComponent } from '../../../../shared/components/ui/seo-form/seo-form.component';
+import { AvImagePickerComponent } from '@shared/components/av-image-uploader/av-image-picker.component';
+import { SeoFormComponent } from '@shared/components/ui/seo-form/seo-form.component';
 
 @Component({
   selector: 'app-sample-main-seo-form',
@@ -77,7 +77,9 @@ import { SeoFormComponent } from '../../../../shared/components/ui/seo-form/seo-
             nzSpan="6"
             style="min-height: 280px; display: flex; flex-direction: column; background: #fff; padding: 12px 16px; border-radius: 8px;"
           >
-            <div style="flex: 1; display: flex; flex-direction: column; height: 100%;">
+            <div
+              style="flex: 1; display: flex; flex-direction: column; height: 100%;"
+            >
               <!-- CUSTOM MAIN IMAGE UPLOADER -->
               <div
                 class="custom-image-uploader"
@@ -85,14 +87,19 @@ import { SeoFormComponent } from '../../../../shared/components/ui/seo-form/seo-
                 (click)="openVsEditorForMain()"
               >
                 <!-- EMPTY STATE -->
-                <div class="upload-placeholder" *ngIf="!form.get('urlPictureMain')?.value">
+                <div
+                  class="upload-placeholder"
+                  *ngIf="!form.get('urlPictureMain')?.value"
+                >
                   <span
                     nz-icon
                     nzType="cloud-upload"
                     nzTheme="outline"
                     style="font-size: 32px; color: #40a9ff; margin-bottom: 8px;"
                   ></span>
-                  <div style="text-align: center; color: #8c8c8c; font-size: 13px;">
+                  <div
+                    style="text-align: center; color: #8c8c8c; font-size: 13px;"
+                  >
                     Загрузить обложку<br />(VS Editor)
                   </div>
                 </div>
@@ -102,7 +109,10 @@ import { SeoFormComponent } from '../../../../shared/components/ui/seo-form/seo-
                   class="image-preview-wrapper"
                   *ngIf="form.get('urlPictureMain')?.value as mainImgUrl"
                 >
-                  <img [src]="getImageUrl(mainImgUrl)" class="main-preview-img" />
+                  <img
+                    [src]="getImageUrl(mainImgUrl)"
+                    class="main-preview-img"
+                  />
                   <div class="overlay-actions">
                     <span nz-icon nzType="edit" nzTheme="outline"></span>
                   </div>
@@ -115,7 +125,9 @@ import { SeoFormComponent } from '../../../../shared/components/ui/seo-form/seo-
             nzSpan="18"
             style="min-height: 240px; padding: 12px 16px; background: #fff; border-radius: 8px; display: flex; align-items: flex-start;"
           >
-            <div style="display: flex; flex-direction: column; gap: 12px; width: 100%;">
+            <div
+              style="display: flex; flex-direction: column; gap: 12px; width: 100%;"
+            >
               <!-- Статус записи -->
               <nz-form-item nz-row style="margin-bottom: 0;">
                 <nz-form-label nz-col [nzSpan]="5">Статус записи</nz-form-label>
@@ -137,8 +149,16 @@ import { SeoFormComponent } from '../../../../shared/components/ui/seo-form/seo-
                     Техническое название <span class="required-star">*</span>
                   </div>
                 </nz-form-label>
-                <nz-form-control nz-col [nzSpan]="19" nzErrorTip="Введите название">
-                  <input nz-input formControlName="name" placeholder="Напр: Home Page" />
+                <nz-form-control
+                  nz-col
+                  [nzSpan]="19"
+                  nzErrorTip="Введите название"
+                >
+                  <input
+                    nz-input
+                    formControlName="name"
+                    placeholder="Напр: Home Page"
+                  />
                 </nz-form-control>
               </nz-form-item>
 
@@ -146,20 +166,33 @@ import { SeoFormComponent } from '../../../../shared/components/ui/seo-form/seo-
               <nz-form-item nz-row style="margin-bottom: 0;">
                 <nz-form-label nz-col [nzSpan]="5">Системный код</nz-form-label>
                 <nz-form-control nz-col [nzSpan]="19">
-                  <input nz-input formControlName="systemCode" placeholder="Напр: HOME_PAGE" />
+                  <input
+                    nz-input
+                    formControlName="systemCode"
+                    placeholder="Напр: HOME_PAGE"
+                  />
                 </nz-form-control>
               </nz-form-item>
             </div>
           </div>
 
           <div nz-col nzSpan="24">
-            <nz-divider nzText="Локализация и Контент" nzOrientation="left"></nz-divider>
+            <nz-divider
+              nzText="Локализация и Контент"
+              nzOrientation="left"
+            ></nz-divider>
           </div>
 
           <!-- ТАБЫ: Языки -->
           <div nz-col nzSpan="24">
-            <nz-tabset [(nzSelectedIndex)]="selectedTabIndex" [nzAnimated]="false">
-              <nz-tab *ngFor="let lang of languages; let i = index" [nzTitle]="langTemplate">
+            <nz-tabset
+              [(nzSelectedIndex)]="selectedTabIndex"
+              [nzAnimated]="false"
+            >
+              <nz-tab
+                *ngFor="let lang of languages; let i = index"
+                [nzTitle]="langTemplate"
+              >
                 <ng-template #langTemplate>
                   <div style="display: flex; align-items: center; gap: 8px;">
                     <span class="mini-preview" *ngIf="getPreviewUrl(lang.id)">
@@ -195,7 +228,11 @@ import { SeoFormComponent } from '../../../../shared/components/ui/seo-form/seo-
                         >
                           <!-- Заголовок -->
                           <nz-form-item nz-row style="margin-bottom: 0;">
-                            <nz-form-label nz-col [nzSpan]="5" style="overflow: visible;">
+                            <nz-form-label
+                              nz-col
+                              [nzSpan]="5"
+                              style="overflow: visible;"
+                            >
                               <div
                                 style="display: flex; align-items: center; white-space: nowrap; justify-content: flex-start;"
                               >
@@ -203,18 +240,26 @@ import { SeoFormComponent } from '../../../../shared/components/ui/seo-form/seo-
                                 <span class="required-star">*</span>
                               </div>
                             </nz-form-label>
-                            <nz-form-control nz-col [nzSpan]="19" nzErrorTip="Введите заголовок">
+                            <nz-form-control
+                              nz-col
+                              [nzSpan]="19"
+                              nzErrorTip="Введите заголовок"
+                            >
                               <input
                                 nz-input
                                 formControlName="name"
-                                [placeholder]="'Название на ' + lang.nativeTitle"
+                                [placeholder]="
+                                  'Название на ' + lang.nativeTitle
+                                "
                               />
                             </nz-form-control>
                           </nz-form-item>
 
                           <!-- Краткое описание (Intro) -->
                           <nz-form-item nz-row style="margin-bottom: 0;">
-                            <nz-form-label nz-col [nzSpan]="5">Краткое описание</nz-form-label>
+                            <nz-form-label nz-col [nzSpan]="5"
+                              >Краткое описание</nz-form-label
+                            >
                             <nz-form-control nz-col [nzSpan]="19">
                               <textarea
                                 nz-input
@@ -238,12 +283,18 @@ import { SeoFormComponent } from '../../../../shared/components/ui/seo-form/seo-
             nz-col
             nzSpan="24"
             *ngIf="
-              languages && languages.length > 0 && languages[selectedTabIndex] && currentHtmlControl
+              languages &&
+              languages.length > 0 &&
+              languages[selectedTabIndex] &&
+              currentHtmlControl
             "
           >
             <div class="shared-editor-section">
               <nz-divider
-                [nzText]="'Основной контент: ' + (languages[selectedTabIndex].nativeTitle || '')"
+                [nzText]="
+                  'Основной контент: ' +
+                  (languages[selectedTabIndex].nativeTitle || '')
+                "
                 nzOrientation="left"
               ></nz-divider>
               <div class="editor-container">
@@ -260,9 +311,14 @@ import { SeoFormComponent } from '../../../../shared/components/ui/seo-form/seo-
           <div
             nz-col
             nzSpan="24"
-            *ngIf="languages && languages.length > 0 && languages[selectedTabIndex]"
+            *ngIf="
+              languages && languages.length > 0 && languages[selectedTabIndex]
+            "
           >
-            <div class="seo-section" *ngIf="languages[selectedTabIndex] as currentLang">
+            <div
+              class="seo-section"
+              *ngIf="languages[selectedTabIndex] as currentLang"
+            >
               <div class="seo-collapse-container" style="margin-top: 16px;">
                 <nz-collapse [nzBordered]="false">
                   <nz-collapse-panel
@@ -273,9 +329,12 @@ import { SeoFormComponent } from '../../../../shared/components/ui/seo-form/seo-
                     <app-seo-form
                       *ngIf="getSeoFormGroup(currentLang.id)"
                       [form]="getSeoFormGroup(currentLang.id)"
-                      [sourceName]="getDescFormGroup(currentLang.id)?.get('name')?.value"
+                      [sourceName]="
+                        getDescFormGroup(currentLang.id)?.get('name')?.value
+                      "
                       [sourceDescription]="
-                        getDescFormGroup(currentLang.id)?.get('description')?.value
+                        getDescFormGroup(currentLang.id)?.get('description')
+                          ?.value
                       "
                     ></app-seo-form>
                   </nz-collapse-panel>
@@ -289,8 +348,15 @@ import { SeoFormComponent } from '../../../../shared/components/ui/seo-form/seo-
             <div class="form-actions">
               <nz-divider></nz-divider>
               <div class="buttons-row">
-                <button nz-button nzType="default" (click)="cancel.emit()">Отмена</button>
-                <button nz-button nzType="primary" (click)="submitForm()" [nzLoading]="loading">
+                <button nz-button nzType="default" (click)="cancel.emit()">
+                  Отмена
+                </button>
+                <button
+                  nz-button
+                  nzType="primary"
+                  (click)="submitForm()"
+                  [nzLoading]="loading"
+                >
                   Сохранить
                 </button>
               </div>
@@ -514,7 +580,9 @@ export class SampleMainSeoFormComponent implements OnInit {
   getDescFormGroup(langId: string | number): FormGroup | null {
     const descs = this.descriptionsArray;
     if (!descs || !descs.controls) return null;
-    const group = descs.controls.find((c) => c.value.languageAppId == langId) as FormGroup;
+    const group = descs.controls.find(
+      (c) => c.value.languageAppId == langId,
+    ) as FormGroup;
     return group || null;
   }
 
@@ -600,7 +668,9 @@ export class SampleMainSeoFormComponent implements OnInit {
       this.save.emit(formValue);
     } else {
       this.markFormGroupDirty(this.form);
-      this.message.warning('Пожалуйста, проверьте правильность заполнения полей');
+      this.message.warning(
+        'Пожалуйста, проверьте правильность заполнения полей',
+      );
     }
   }
 
@@ -620,7 +690,11 @@ export class SampleMainSeoFormComponent implements OnInit {
    */
   getImageUrl(url: string | null): string {
     if (!url) return '';
-    if (url.startsWith('http') || url.startsWith('blob:') || url.startsWith('data:')) {
+    if (
+      url.startsWith('http') ||
+      url.startsWith('blob:') ||
+      url.startsWith('data:')
+    ) {
       return url;
     }
     return `${environment.apiUrl}${url}`;
@@ -667,7 +741,10 @@ export class SampleMainSeoFormComponent implements OnInit {
         this.form.patchValue({ urlPictureMain: result.url });
         this.cdr.markForCheck();
 
-        console.log('📝 Form Control Value:', this.form.get('urlPictureMain')?.value);
+        console.log(
+          '📝 Form Control Value:',
+          this.form.get('urlPictureMain')?.value,
+        );
         this.message.success('Главное изображение обновлено');
       } else {
         console.warn('⚠️ No image URL returned from editor');

@@ -9,6 +9,8 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzPaginationModule } from 'ng-zorro-antd/pagination';
 import { NzSelectModule } from 'ng-zorro-antd/select';
+import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
+import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 import { filter, take } from 'rxjs';
 import { SampleMainApiService } from '../../services/sample-main-api.service';
 import { SampleMainStateService } from '../../services/sample-main-state.service';
@@ -27,6 +29,8 @@ import { SampleMainTableComponent } from '../sample-main-table/sample-main-table
     NzPaginationModule,
     NzSelectModule,
     FormsModule,
+    NzModalModule,
+    NzToolTipModule,
     SampleMainTableComponent,
     SampleMainModalComponent,
   ],
@@ -36,8 +40,11 @@ import { SampleMainTableComponent } from '../sample-main-table/sample-main-table
       <div nz-row [nzGutter]="[16, 16]">
         <!-- Header -->
         <div nz-col nzSpan="24" class="header-row">
-          <div class="title-group">
+          <div class="title-group" style="display: flex; align-items: center; gap: 8px;">
             <h2 class="m0">Multi-Language Manager 🌐</h2>
+            <button nz-button nzType="text" (click)="showHelp()" nz-tooltip nzTooltipTitle="Открыть справку">
+              <span nz-icon nzType="question-circle" style="font-size: 18px; color: #1890ff;"></span>
+            </button>
             <span class="total-count">Всего: {{ (state$ | async)?.total }}</span>
           </div>
 
@@ -170,7 +177,8 @@ import { SampleMainTableComponent } from '../sample-main-table/sample-main-table
   ],
 })
 export class SampleMainManagerComponent implements OnInit {
-  public service = inject(SampleMainStateService);
+  private readonly modalService = inject(NzModalService);
+  protected readonly service = inject(SampleMainStateService);
   private langService = inject(LanguageService);
 
   state$ = this.service.getState();
@@ -204,5 +212,29 @@ export class SampleMainManagerComponent implements OnInit {
 
   onClearSearch(): void {
     this.service.search('');
+  }
+
+  showHelp(): void {
+    this.modalService.info({
+      nzTitle: 'Справка: Multi-Language Manager (Basic)',
+      nzWidth: 800,
+      nzContent: `
+        <div style="line-height: 1.8; font-size: 14px;">
+          <p>Это <strong>базовая реализация</strong> многоязычного справочника.</p>
+          <div style="background: #fffbe6; padding: 10px; border-radius: 4px; border: 1px solid #ffe58f; margin: 10px 0;">
+            <strong>🤔 Не уверены, подходит ли этот шаблон?</strong><br>
+            Посмотрите <a href="/#/help/models-comparison" target="_blank" style="color: #1890ff; font-weight: bold;">Сравнение моделей: Basic vs SEO</a>.
+          </div>
+          <ul>
+            <li><strong>Простота</strong>: Только необходимые поля (Name, Code, Title, Desc).</li>
+            <li><strong>Технический фокус</strong>: Идеально для внутренних каталогов и системных справочников.</li>
+            <li><strong>Модальное редактирование</strong>: Весь CRUD происходит в быстрых диалогах.</li>
+          </ul>
+          <p>Для более тяжелых контентных страниц (статьи, товары) рекомендуется использовать <em>SEO Model</em>.</p>
+        </div>
+      `,
+      nzFooter: null,
+      nzMaskClosable: true
+    });
   }
 }

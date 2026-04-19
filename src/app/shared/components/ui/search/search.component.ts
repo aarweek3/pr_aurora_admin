@@ -1,36 +1,41 @@
 import { CommonModule } from '@angular/common';
 import { Component, ElementRef, ViewChild, input, model, output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { NzIconModule } from 'ng-zorro-antd/icon';
 import { ButtonDirective } from '../button/button.directive';
 import { InputDirective } from '../input/input.directive';
 
 /**
- * Standard Live Search Component
+ * Standard Live Search Component (Aurora Standard)
  *
- * Компонент поиска с живой фильтрацией, кнопкой очистки и кнопкой принудительного поиска.
- * Реализован согласно ТЗ "Standard Live Search".
+ * Компонент поиска с живой фильтрацией, кнопкой очистки, индикацией загрузки
+ * и опциональной кнопкой принудительного поиска.
  */
 @Component({
   selector: 'av-search',
   standalone: true,
-  imports: [CommonModule, FormsModule, InputDirective, ButtonDirective],
+  imports: [CommonModule, FormsModule, InputDirective, ButtonDirective, NzIconModule],
   template: `
     <div class="av-search" [class.av-search--large]="avSize() === 'large'">
       <div class="av-search__input-wrapper">
         <span class="av-search__icon">
-          <svg
-            width="18"
-            height="18"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <circle cx="11" cy="11" r="8"></circle>
-            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-          </svg>
+          @if (avLoading()) {
+            <span nz-icon nzType="loading" class="av-search__spinner"></span>
+          } @else {
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+          }
         </span>
 
         <input
@@ -54,39 +59,42 @@ import { InputDirective } from '../input/input.directive';
           class="av-search__input"
         />
 
-        @if (value().length > 0) {
-        <button
-          class="av-search__clear"
-          (click)="onClearClick()"
-          type="button"
-          aria-label="Очистить"
-        >
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+        @if (value().length > 0 && !avLoading()) {
+          <button
+            class="av-search__clear"
+            (click)="onClearClick()"
+            type="button"
+            aria-label="Очистить"
           >
-            <line x1="18" y1="6" x2="6" y2="18"></line>
-            <line x1="6" y1="6" x2="18" y2="18"></line>
-          </svg>
-        </button>
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
         }
       </div>
 
-      <button
-        av-button
-        avType="primary"
-        [avSize]="getButtonSize()"
-        (click)="onSearchClick()"
-        class="av-search__button"
-      >
-        {{ avButtonText() }}
-      </button>
+      @if (showButton()) {
+        <button
+          av-button
+          avType="primary"
+          [avSize]="getButtonSize()"
+          [disabled]="avLoading()"
+          (click)="onSearchClick()"
+          class="av-search__button"
+        >
+          {{ avButtonText() }}
+        </button>
+      }
     </div>
   `,
   styles: [
@@ -123,6 +131,11 @@ import { InputDirective } from '../input/input.directive';
           display: flex;
           align-items: center;
           z-index: 1;
+        }
+
+        &__spinner {
+          color: #1890ff;
+          font-size: 16px;
         }
 
         &__clear {
@@ -163,12 +176,15 @@ import { InputDirective } from '../input/input.directive';
               background-color: rgba(255, 255, 255, 0.1);
             }
           }
+          &__spinner {
+            color: #177ddc;
+          }
         }
       }
     `,
   ],
 })
-export class SearchInputComponent {
+export class AvSearchComponent {
   // Inputs
   avPlaceholder = input<string>('Поиск...');
   avButtonText = input<string>('Найти');
@@ -178,6 +194,8 @@ export class SearchInputComponent {
   avStatus = input<'default' | 'error' | 'warning' | 'success'>('default');
   avBlock = input<boolean>(false);
   avDashed = input<boolean>(false);
+  avLoading = input<boolean>(false);
+  showButton = input<boolean>(true);
 
   // Custom dimensions
   avWidth = input<string | number | null>(null);

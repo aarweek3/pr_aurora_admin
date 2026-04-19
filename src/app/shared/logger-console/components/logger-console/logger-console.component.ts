@@ -23,6 +23,9 @@ import { NavigationTrailComponent } from '../navigation-trail/navigation-trail.c
   styleUrls: ['./logger-console.component.scss'],
   host: {
     '[class.light-theme]': '!isDarkTheme()',
+    '[class.is-collapsed]': 'loggerService.isCollapsed()',
+    '[class.is-fullscreen]': 'loggerService.isFullScreen()',
+    '[style.--lc-font-size.px]': 'loggerService.loggerFontSize()',
   },
 })
 export class LoggerConsoleComponent {
@@ -68,6 +71,9 @@ export class LoggerConsoleComponent {
 
   /** Флаг состояния копирования всех логов */
   isCopied = signal(false);
+
+  /** Состояния копирования отдельных сообщений (ID -> boolean) */
+  copyStates = signal<Record<string, boolean>>({});
 
   /** Отфильтрованный список логов */
   filteredLogs = computed(() => {
@@ -178,9 +184,39 @@ export class LoggerConsoleComponent {
     this.showHelp.update((v) => !v);
   }
 
+  /** Переключение полноэкранного режима */
+  toggleFullScreen(): void {
+    this.loggerService.toggleFullScreen();
+  }
+
+  /** Переключение свернутого режима */
+  toggleCollapsed(): void {
+    this.loggerService.toggleCollapsed();
+  }
+
   /** Копирование сообщения в буфер */
-  copyMessage(message: string): void {
+  copyMessage(logId: string, message: string): void {
     navigator.clipboard.writeText(message);
+
+    // Установка статуса для конкретной записи
+    this.copyStates.update((prev) => ({ ...prev, [logId]: true }));
+    setTimeout(() => {
+      this.copyStates.update((prev) => {
+        const next = { ...prev };
+        delete next[logId];
+        return next;
+      });
+    }, 2000);
+  }
+
+  /** Установка конкретной ширины */
+  setWidth(width: number): void {
+    this.loggerService.setWidth(width);
+  }
+
+  /** Установка размера шрифта */
+  setFontSize(size: number): void {
+    this.loggerService.setFontSize(size);
   }
 
   /** Копирование всех отфильтрованных логов в текстовом формате */

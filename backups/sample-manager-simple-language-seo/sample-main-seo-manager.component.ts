@@ -27,7 +27,7 @@ import { SampleMainSeoModalComponent } from './components/sample-main-seo-modal/
     <div class="page-container">
       <div class="page-header">
         <div class="header-main">
-          <h1>Образцовая модель: Многоязычность + SEO</h1>
+          <h1>Sample Образцовая модель: Многоязычность + SEO</h1>
           <nz-radio-group [(ngModel)]="viewMode" nzButtonStyle="solid">
             <label nz-radio-button nzValue="modal">Модалка</label>
             <label nz-radio-button nzValue="inline">Встроенная</label>
@@ -35,7 +35,8 @@ import { SampleMainSeoModalComponent } from './components/sample-main-seo-modal/
           </nz-radio-group>
         </div>
         <p class="subtitle">
-          Универсальный компонент в 3-х вариантах хостинга (одна форма — разные задачи)
+          Универсальный компонент в 3-х вариантах хостинга (одна форма — разные
+          задачи)
         </p>
       </div>
 
@@ -52,7 +53,9 @@ import { SampleMainSeoModalComponent } from './components/sample-main-seo-modal/
       ></app-sample-main-seo-list>
 
       <!-- Варианты хостинга формы -->
-      <app-sample-main-seo-modal *ngIf="viewMode === 'modal'"></app-sample-main-seo-modal>
+      <app-sample-main-seo-modal
+        *ngIf="viewMode === 'modal'"
+      ></app-sample-main-seo-modal>
 
       <div class="inline-container" *ngIf="viewMode === 'inline'">
         <app-sample-main-seo-inline></app-sample-main-seo-inline>

@@ -180,16 +180,29 @@ export class AvTinymceControlComponent
           'av-image-shadow': '/assets/tinymce/plugins/av-image-shadow/plugin.js',
         },
         toolbar: this.toolbar,
+        extended_valid_elements: 'figure[*],figcaption[*],img[*],a[*]',
+        valid_children: '+figure[figcaption|img|a],+a[figure|img]',
         image_context_toolbar: false,
         quickbars_image_toolbar: false,
-        content_style: 'body { font-family: Arial, sans-serif; font-size: 14px; }',
+        contextmenu: false,
+        content_style: `
+          body { font-family: Arial, sans-serif; font-size: 14px; }
+          figure.av-image { display: table; margin: 15px auto; }
+          figure.av-image img { display: block; max-width: 100%; height: auto; }
+          figure.av-image--align-left { float: left; margin: 0 15px 15px 0; }
+          figure.av-image--align-right { float: right; margin: 0 0 15px 15px; }
+          figure.av-image--align-center { float: none; margin-left: auto; margin-right: auto; }
+          figure.av-image--align-full { float: none; width: 100%; margin-left: 0; margin-right: 0; }
+          figure.av-image--align-full img { width: 100%; }
+          .aurora-image__caption { font-size: 0.9em; color: #666; text-align: center; margin-top: 8px; font-style: italic; }
+        `,
         setup: (editor: any) => {
           this.editor = editor;
 
-          // Регистрация брендированной кнопки Aurora Image Studio (+)
+          // Регистрация брендированной иконки Aurora Image Studio
           editor.ui.registry.addIcon(
-            'av-studio-icon',
-            '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" fill="currentColor"/></svg>',
+            'av_image_aurora',
+            '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M21 19V5C21 3.9 20.1 3 19 3H5C3.9 3 3 3.9 3 5V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19ZM8.5 13.5L11 16.51L14.5 12L19 18H5L8.5 13.5Z" fill="#ff4d4f"/></svg>',
           );
 
           // КРАСНАЯ ИКОНКА YOUTUBE (теперь с уникальным именем для плагина av-youtube)
@@ -207,8 +220,7 @@ export class AvTinymceControlComponent
           editor.ui.registry.addIcon('media', cdSvg);
 
           editor.ui.registry.addButton('av-image-studio', {
-            icon: 'av-studio-icon',
-            text: 'Aurora Studio',
+            icon: 'av_image_aurora',
             tooltip: 'Aurora Image Studio (VS)',
             onAction: () => {
               this.bridgeService.openImageStudio(editor);

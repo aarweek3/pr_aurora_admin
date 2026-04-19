@@ -3,9 +3,16 @@ import { toObservable } from '@angular/core/rxjs-interop';
 import { LanguageService } from '@assets/languageApp/services/language.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { distinctUntilChanged, finalize, map, shareReplay, takeUntil } from 'rxjs/operators';
-import { ErrorResponse } from '../../../shared/infrastructure/interceptor/models/error-response.model';
-import { ErrorHandlingService } from '../../../shared/infrastructure/interceptor/services/error-handling.service';
+import {
+  distinctUntilChanged,
+  finalize,
+  map,
+  shareReplay,
+  takeUntil,
+} from 'rxjs/operators';
+
+import { ErrorResponse } from '@shared/infrastructure/interceptor/models/error-response.model';
+import { ErrorHandlingService } from '@shared/infrastructure/interceptor/services/error-handling.service';
 import {
   INITIAL_SAMPLE_MAIN_SEO_STATE,
   SampleMainSeoCreateDto,
@@ -21,7 +28,9 @@ export class SampleMainSeoStateService implements OnDestroy {
   private destroy$ = new Subject<void>();
 
   // Single Source of Truth
-  private state$ = new BehaviorSubject<SampleMainSeoState>(INITIAL_SAMPLE_MAIN_SEO_STATE);
+  private state$ = new BehaviorSubject<SampleMainSeoState>(
+    INITIAL_SAMPLE_MAIN_SEO_STATE,
+  );
 
   // ---------- SELECTORS ----------
   readonly items$ = this.state$.pipe(
@@ -65,7 +74,9 @@ export class SampleMainSeoStateService implements OnDestroy {
     distinctUntilChanged(),
   );
 
-  readonly languages$ = toObservable(this.langService.availableLanguages).pipe(shareReplay(1));
+  readonly languages$ = toObservable(this.langService.availableLanguages).pipe(
+    shareReplay(1),
+  );
 
   constructor(
     private api: SampleMainSeoApiService,
@@ -76,7 +87,10 @@ export class SampleMainSeoStateService implements OnDestroy {
 
   // ---------- HELPERS ----------
 
-  private executeWithLoading<T>(operation: Observable<T>, isModal = false): Observable<T> {
+  private executeWithLoading<T>(
+    operation: Observable<T>,
+    isModal = false,
+  ): Observable<T> {
     const loadingKey = isModal ? 'modalLoading' : 'loading';
     this.updateState({ [loadingKey]: true, error: null } as any);
 
@@ -104,7 +118,11 @@ export class SampleMainSeoStateService implements OnDestroy {
   loadItems(): void {
     const s = this.state$.value;
     console.groupCollapsed('[SampleMainSeo] Load Items');
-    console.log('Params:', { page: s.pageNumber, size: s.pageSize, term: s.searchTerm });
+    console.log('Params:', {
+      page: s.pageNumber,
+      size: s.pageSize,
+      term: s.searchTerm,
+    });
     console.groupEnd();
 
     this.executeWithLoading(
@@ -182,7 +200,10 @@ export class SampleMainSeoStateService implements OnDestroy {
     const isAdd = s.modalMode === 'add';
     const request = isAdd
       ? this.api.create(data as SampleMainSeoCreateDto)
-      : this.api.update((data as SampleMainSeoUpdateDto).id, data as SampleMainSeoUpdateDto);
+      : this.api.update(
+          (data as SampleMainSeoUpdateDto).id,
+          data as SampleMainSeoUpdateDto,
+        );
 
     console.log(`[SampleMainSeo] Saving (${s.modalMode})...`, data);
 

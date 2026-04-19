@@ -1,0 +1,46 @@
+.modal-header-custom {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  
+  .header-icon {
+    color: #4f46e5;
+    font-size: 20px;
+    background: #eef2ff;
+    padding: 8px;
+    border-radius: 10px;
+  }
+  
+  span {
+    font-size: 18px;
+    font-weight: 600;
+    color: #1e293b;
+    
+    strong {
+      color: #4f46e5;
+    }
+  }
+}
+
+.modal-body-scroll {
+  max-height: 70vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 8px;
+
+  /* Custom Scrollbar for modern look */
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  &::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 10px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 10px;
+    &:hover {
+      background: #94a3b8;
+    }
+  }
+}

@@ -48,19 +48,19 @@
   min-height: 200px;
 
   &--small {
-    width: 400px;
+    width: var(--av-modal-width-small);
   }
 
   &--medium {
-    width: 600px;
+    width: var(--av-modal-width-medium);
   }
 
   &--large {
-    width: 800px;
+    width: var(--av-modal-width-large);
   }
 
   &--xlarge {
-    width: 1000px;
+    width: var(--av-modal-width-xlarge);
   }
 
   &--fullscreen {

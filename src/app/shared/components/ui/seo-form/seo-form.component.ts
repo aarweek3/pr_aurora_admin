@@ -121,6 +121,32 @@ import { NzTabsModule } from 'ng-zorro-antd/tabs';
             </div>
             <div nz-col nzSpan="24">
               <nz-form-item>
+                <nz-form-label [nzNoColon]="true">
+                  Meta Keywords
+                  <span
+                    class="char-counter"
+                    [class.warning]="(form.get('metaKeywords')?.value?.length || 0) > 200"
+                  >
+                    {{ form.get('metaKeywords')?.value?.length || 0 }}/200
+                  </span>
+                </nz-form-label>
+                <nz-form-control [nzErrorTip]="metaKeywordsError">
+                  <ng-template #metaKeywordsError>
+                    <span *ngIf="form.get('metaKeywords')?.hasError('maxlength')"
+                      >Ключевые слова слишком длинные (макс. 200 симв.)</span
+                    >
+                  </ng-template>
+                  <input
+                    nz-input
+                    formControlName="metaKeywords"
+                    placeholder="Ключевые слова через запятую"
+                    [readonly]="readonly"
+                  />
+                </nz-form-control>
+              </nz-form-item>
+            </div>
+            <div nz-col nzSpan="24">
+              <nz-form-item>
                 <nz-form-label>Url Slug (ЧПУ)</nz-form-label>
                 <nz-form-control [nzErrorTip]="urlSlugError">
                   <ng-template #urlSlugError>
@@ -346,6 +372,15 @@ export class SeoFormComponent {
         this.form.get('twitterDescription')?.setValue(this.form.get('metaDescription')?.value);
     }
 
+    // Meta Keywords generation
+    if (this.sourceName && !this.form.get('metaKeywords')?.value) {
+      const keywords = this.sourceName
+        .split(/[\s,._-]+/)
+        .filter((word) => word.length > 2)
+        .join(', ');
+      this.form.get('metaKeywords')?.setValue(keywords);
+    }
+
     // Slug generation
     if (this.sourceName && !this.form.get('urlSlug')?.value) {
       const slug = this.sourceName
@@ -360,7 +395,7 @@ export class SeoFormComponent {
     return fb.group({
       metaTitle: ['', [Validators.minLength(5), Validators.maxLength(70)]],
       metaDescription: ['', [Validators.minLength(10), Validators.maxLength(160)]],
-      metaKeywords: [''],
+      metaKeywords: ['', [Validators.maxLength(200)]],
       urlSlug: ['', [Validators.maxLength(200), Validators.pattern(/^[a-z0-9-]+$/)]],
       canonicalUrl: [''],
       ogTitle: [''],

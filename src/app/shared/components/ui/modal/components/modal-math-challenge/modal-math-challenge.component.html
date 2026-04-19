@@ -1,0 +1,53 @@
+<av-modal
+  [isOpen]="true"
+  [title]="config.title || 'Подтверждение безопасности'"
+  [showCloseButton]="true"
+  [centered]="true"
+  size="small"
+  (closed)="onCancel()"
+>
+  <div modal-body class="challenge-body">
+    <div class="icon-header">
+      <av-icon type="actions/av_trash" [size]="64" class="danger-icon"></av-icon>
+    </div>
+
+    <div class="message-section">
+      <h3>ВНИМАНИЕ! КРИТИЧЕСКОЕ ДЕЙСТВИЕ</h3>
+      <p>{{ config.message || 'Это действие приведет к полному стиранию записи. Данное действие необратимо.' }}</p>
+    </div>
+
+    <div class="math-challenge">
+      <p class="challenge-label">Решите пример для подтверждения:</p>
+      <div class="challenge-math">{{ config.question }}</div>
+      
+      <div class="answer-field">
+        <input 
+          type="text" 
+          placeholder="Ваш ответ..." 
+          [ngModel]="userAnswer()"
+          (ngModelChange)="userAnswer.set($event)"
+          (keyup.enter)="onConfirm()"
+          autocomplete="off"
+        />
+      </div>
+    </div>
+  </div>
+
+  <div modal-footer class="challenge-footer">
+    <button 
+      av-button 
+      avType="text" 
+      (click)="onCancel()"
+    >
+      {{ config.cancelText || 'Отмена' }}
+    </button>
+    <button 
+      av-button 
+      avType="danger" 
+      [disabled]="!isAnswerCorrect"
+      (click)="onConfirm()"
+    >
+      {{ config.confirmText || 'Стереть полностью (Hard)' }}
+    </button>
+  </div>
+</av-modal>

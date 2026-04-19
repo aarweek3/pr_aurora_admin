@@ -9,7 +9,7 @@ import { authGuard } from './core/guards/auth.guard';
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: 'dashboard', // Or 'auth/login'
+    redirectTo: 'auth/login',
     pathMatch: 'full',
   },
   {
@@ -82,9 +82,39 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'developer',
+        loadChildren: () =>
+          import('./business/components/developer/routes/developer.routes').then(
+            (m) => m.DEVELOPER_ROUTES,
+          ),
+      },
+      {
+        path: 'platforms',
+        loadChildren: () =>
+          import('./pages/platform-manager/platform.routes').then((m) => m.PLATFORM_MANAGER_ROUTES),
+      },
+      {
         path: 'sample-manager-simple-language-seo',
         redirectTo: 'sample-seo',
         pathMatch: 'full',
+      },
+      {
+        path: 'help',
+        loadChildren: () => import('./pages/help/help.routes').then((m) => m.HELP_ROUTES),
+      },
+      {
+        path: 'agregator/references/language',
+        loadChildren: () =>
+          import(
+            './AGREGATOR/PAGES/SPRAVKA/LanguageOfAggregator/language-of-aggregator.routes'
+          ).then((m) => m.LANGUAGE_OF_AGGREGATOR_ROUTES),
+      },
+      {
+        path: 'agregator/references/os',
+        loadChildren: () =>
+          import(
+            './AGREGATOR/PAGES/SPRAVKA/PlatformOfAggregatorPage/platform-of-aggregator.routes'
+          ).then((m) => m.PLATFORM_OF_AGGREGATOR_ROUTES),
       },
       // { path: 'reports', loadChildren: () => import('./pages/reports/reports.routes') },
     ],

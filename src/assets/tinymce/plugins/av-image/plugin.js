@@ -2472,9 +2472,9 @@
     function AvModal(editor) {
       this.editor = editor;
       // Services
-      this.loader = new AvLoader('https://localhost:7233/api');
+      this.loader = new AvLoader('/api');
       this.ui = new AvUIManager();
-      this.presetManager = new AvPresetManager('https://localhost:7233');
+      this.presetManager = new AvPresetManager('');
       this.imageTools = new AvImageTools();
       this.exportModal = new AvExportModal(this);
 
@@ -3940,10 +3940,10 @@
 
             console.log(
               'AvImage: Sending upload request (with credentials) to:',
-              'https://localhost:7233/api/simple-image/upload',
+              '/api/simple-image/upload',
             );
 
-            fetch('https://localhost:7233/api/simple-image/upload', {
+            fetch('/api/simple-image/upload', {
               method: 'POST',
               credentials: 'include', // Important for HttpOnly cookies
               body: formData,

@@ -12,7 +12,7 @@
 
     AvSeoModal.prototype.create = function (node) {
       var self = this;
-      var figure = this.editor.dom.getParent(node, 'figure.aurora-image');
+      var figure = this.editor.dom.getParent(node, 'figure.aurora-image, figure.av-image');
       if (!figure) return;
 
       var img = figure.querySelector('img');

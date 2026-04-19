@@ -76,4 +76,17 @@ export class IconLaboratoryService {
   createDirectory(path: string): Observable<any> {
     return this.http.post(ApiEndpoints.ICONS.CREATE_DIRECTORY(path), {});
   }
+
+  openFile(path: string): Observable<any> {
+    return this.http.post(ApiEndpoints.ICONS.OPEN_FILE(path), {});
+  }
+
+  /**
+   * Trigger filesystem to DB synchronization
+   */
+  syncIcons(): Observable<any> {
+    // The endpoint is on IconCategory controller, but we'll use a hardcoded path for now 
+    // unless it's added to ApiEndpoints.
+    return this.http.post(`${ApiEndpoints.ICONS.BASE.replace('Icons', 'IconCategory')}/sync`, {});
+  }
 }

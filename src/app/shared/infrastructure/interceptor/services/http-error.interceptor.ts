@@ -54,6 +54,7 @@ export function HttpErrorInterceptor(
       const shouldSkipErrorHandler = req.headers.has('X-Skip-Error-Handler');
 
       if (
+        httpError.status !== 401 &&
         !isIconRequest &&
         !isHealthCheck &&
         !isDebugToken &&

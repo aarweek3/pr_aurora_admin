@@ -16,7 +16,7 @@ export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
         {
           id: 'admin-menu',
           icon: 'setting',
-          label: 'АДМИНИСТРИРОВАНИЕ',
+          label: 'АДМИНИSTRИРОВАНИЕ',
           type: 'submenu',
           submenu: [
             {
@@ -64,50 +64,6 @@ export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
       ],
     },
     {
-      id: 'catalogs',
-      title: 'Справочники',
-      items: [
-        {
-          id: 'reference-data',
-          icon: 'book',
-          label: 'СПРАВОЧНИКИ',
-          type: 'submenu',
-          submenu: [
-            {
-              id: 'ref-platforms',
-              label: 'Операционные системы (платформы)',
-              route: '/platforms',
-              icon: 'windows',
-            },
-            {
-              id: 'ref-categories',
-              label: 'Категории',
-              route: '/catalogs/categories',
-              icon: 'folder',
-            },
-            {
-              id: 'ref-subcategories',
-              label: 'Подкатегории',
-              route: '/catalogs/subcategories',
-              icon: 'folder-open',
-            },
-            {
-              id: 'ref-developers',
-              label: 'Разработчики',
-              route: '/developer',
-              icon: 'code',
-            },
-            {
-              id: 'ref-languages',
-              label: 'Языки',
-              route: '/tools/language-manager',
-              icon: 'global',
-            },
-          ],
-        },
-      ],
-    },
-    {
       id: 'tools',
       title: 'Инструменты',
       items: [
@@ -147,6 +103,16 @@ export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
               badge: {
                 value: 'New',
                 intent: 'success',
+              },
+            },
+            {
+              id: 'icon-sync',
+              icon: 'sync',
+              label: 'Синхронизация иконок',
+              route: '/tools/icon-sync',
+              badge: {
+                value: 'System',
+                intent: 'warning',
               },
             },
             {
@@ -402,9 +368,47 @@ export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
         {
           id: 'tests-main',
           icon: 'experiment',
-          label: 'Тесты',
+          label: 'ТЕСТЫ',
           type: 'submenu',
           submenu: [
+            {
+              id: 'reference-data',
+              icon: 'book',
+              label: 'СПРАВОЧНИКИ',
+              type: 'submenu',
+              submenu: [
+                {
+                  id: 'ref-platforms',
+                  label: 'Операционные системы (платформы)',
+                  route: '/platforms',
+                  icon: 'windows',
+                },
+                {
+                  id: 'ref-categories',
+                  label: 'Категории',
+                  route: '/catalogs/categories',
+                  icon: 'folder',
+                },
+                {
+                  id: 'ref-subcategories',
+                  label: 'Подкатегории',
+                  route: '/catalogs/subcategories',
+                  icon: 'folder-open',
+                },
+                {
+                  id: 'ref-developers',
+                  label: 'Разработчики',
+                  route: '/developer',
+                  icon: 'code',
+                },
+                {
+                  id: 'ref-languages',
+                  label: 'Языки',
+                  route: '/tools/language-manager',
+                  icon: 'global',
+                },
+              ],
+            },
             {
               id: 'test-language-app',
               label: 'Test languageApp',
@@ -437,7 +441,7 @@ export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
             },
             {
               id: 'test-sample-manager-simple-language',
-              label: 'Test Sample Multi-Lang 🌐',
+              label: 'Sample Языки',
               route: '/test/sample-manager-simple-language',
               icon: 'global',
             },
@@ -494,20 +498,219 @@ export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
       ],
     },
     {
+      id: 'agregator',
+      title: 'АГРЕГАТОР',
+      items: [
+        {
+          id: 'agregator-menu',
+          icon: 'api',
+          label: 'АГРЕГАТОР',
+          type: 'submenu',
+          submenu: [
+            {
+              id: 'agregator-references',
+              label: 'Справочники',
+              icon: 'book',
+              type: 'submenu',
+              intent: 'orange',
+              submenu: [
+                {
+                  id: 'agregator-ref-license',
+                  label: 'Лицензии',
+                  route: '/agregator/references/license',
+                  icon: 'audit',
+                },
+                {
+                  id: 'agregator-ref-os',
+                  label: 'Операционные системы',
+                  route: '/agregator/references/os',
+                  icon: 'windows',
+                },
+                {
+                  id: 'agregator-ref-platform',
+                  label: 'Платформы',
+                  route: '/agregator/references/platform',
+                  icon: 'deployment-unit',
+                },
+                {
+                  id: 'agregator-ref-developer',
+                  label: 'Разработчики',
+                  route: '/agregator/references/developer',
+                  icon: 'team',
+                },
+                {
+                  id: 'agregator-ref-tag',
+                  label: 'Теги',
+                  route: '/agregator/references/tag',
+                  icon: 'tags',
+                },
+                {
+                  id: 'agregator-ref-language',
+                  label: 'Языки',
+                  route: '/agregator/references/language',
+                  icon: 'global',
+                },
+                {
+                  id: 'agregator-ref-seo',
+                  label: 'SEO',
+                  route: '/agregator/references/seo',
+                  icon: 'google',
+                },
+              ],
+            },
+            {
+              id: 'agregator-pages',
+              label: 'Страницы',
+              icon: 'file-text',
+              intent: 'orange',
+              type: 'submenu',
+              submenu: [
+                {
+                  id: 'agregator-pages-programs',
+                  label: 'Программы',
+                  route: '/agregator/pages/program',
+                  icon: 'appstore',
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+
+    {
       id: 'help-group',
-      title: 'Справка',
+      title: 'СПРАВКА',
       items: [
         {
           id: 'help-menu',
           icon: 'question-circle',
-          label: 'Справка',
+          label: 'СПРАВКА',
           type: 'submenu',
           submenu: [
             {
-              id: 'sidebar-help',
-              label: 'Меню боковое',
-              route: '/help/sidebar',
-              icon: 'layout',
+              id: 'help-base-group',
+              label: 'База и Стандарты',
+              icon: 'book',
+              type: 'submenu',
+              submenu: [
+                {
+                  id: 'sidebar-documentation-standard',
+                  label: 'Справка о справке 📚',
+                  route: '/help/documentation-standard',
+                  icon: 'read',
+                },
+                {
+                  id: 'sidebar-help',
+                  label: 'Меню боковое',
+                  route: '/help/sidebar',
+                  icon: 'layout',
+                },
+              ],
+            },
+            {
+              id: 'help-references-group',
+              label: 'Справочники',
+              icon: 'book',
+              type: 'submenu',
+              submenu: [
+                {
+                  id: 'sidebar-platform-aggregator',
+                  label: 'Платформы Агрегатора 🌐',
+                  route: '/help/platform-aggregator',
+                  icon: 'windows',
+                },
+              ],
+            },
+            {
+              id: 'help-controls-group',
+              label: 'UI Контролы',
+              icon: 'appstore',
+              type: 'submenu',
+              submenu: [
+                {
+                  id: 'sidebar-search-guide',
+                  label: 'Компонент Поиск',
+                  route: '/help/search-control',
+                  icon: 'search',
+                },
+                {
+                  id: 'sidebar-pagination-guide',
+                  label: 'Пагинация',
+                  route: '/help/pagination',
+                  icon: 'number',
+                },
+                {
+                  id: 'sidebar-modal-guide',
+                  label: 'Модальное окно',
+                  route: '/help/modal-window',
+                  icon: 'layout',
+                },
+                {
+                  id: 'sidebar-buttons-guide',
+                  label: 'Кнопки (Скопировать путь) 🚀',
+                  route: '/help/buttons-guide',
+                  icon: 'rocket',
+                },
+                {
+                  id: 'sidebar-logger-console-help',
+                  label: 'Logger Console 🛠️',
+                  route: '/help/logger-console',
+                  icon: 'code',
+                },
+              ],
+            },
+            {
+              id: 'help-samples-group',
+              label: 'Образцы (Samples)',
+              icon: 'code',
+              type: 'submenu',
+              submenu: [
+                {
+                  id: 'sidebar-sample-simple-guide',
+                  label: 'Sample Simple',
+                  route: '/help/sample-simple-guide',
+                  icon: 'thunderbolt',
+                },
+                {
+                  id: 'sidebar-test-sample-multi-lang',
+                  label: 'Sample Языки',
+                  route: '/help/test-sample-multi-lang',
+                  icon: 'global',
+                },
+                {
+                  id: 'sidebar-sample-seo-guide',
+                  label: 'Sample Языки + SEO',
+                  route: '/help/sample-seo-guide',
+                  icon: 'google',
+                },
+                {
+                  id: 'sidebar-models-comparison',
+                  label: 'Сравнение моделей: Basic vs SEO',
+                  route: '/help/models-comparison',
+                  icon: 'reconciliation',
+                },
+              ],
+            },
+            {
+              id: 'help-editors-group',
+              label: 'Редакторы (TinyMCE)',
+              icon: 'edit',
+              type: 'submenu',
+              submenu: [
+                {
+                  id: 'sidebar-tiny-test',
+                  label: 'Подключение Tiny',
+                  route: '/help/tiny-test',
+                  icon: 'api',
+                },
+                {
+                  id: 'sidebar-tiny-save',
+                  label: 'Архитектура сохранение файлов',
+                  route: '/help/tiny-save',
+                  icon: 'save',
+                },
+              ],
             },
           ],
         },

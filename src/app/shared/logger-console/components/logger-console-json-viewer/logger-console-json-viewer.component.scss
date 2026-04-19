@@ -1,8 +1,7 @@
 :host {
   display: block;
-  font-family: "JetBrains Mono", "Fira Code", monospace;
-  font-size: 13px;
-  font-size: 12px; /* Чуть меньше стандартного */
+  font-family: "JetBrains Mono", "Consolas", "Fira Code", monospace;
+  font-size: var(--lc-font-size, 13px);
   line-height: 1.35;
   color: var(--lc-text-main);
 }
@@ -59,13 +58,13 @@
 .type-label {
   color: var(--lc-color-prefix); /* Reusing prefix color or could use a specific one */
   font-style: italic;
-  font-size: 11px;
+  font-size: var(--lc-font-size, 13px);
   margin-right: 6px;
 }
 
 .collapsed-preview {
   color: var(--lc-text-muted);
-  font-size: 11px;
+  font-size: var(--lc-font-size, 13px);
 
   /* Ограничение в 5 строк с переносом */
   display: -webkit-box;
@@ -120,7 +119,7 @@
   border: none;
   cursor: pointer;
   padding: 0 4px;
-  font-size: 12px;
+  font-size: var(--lc-font-size, 13px);
   transition: opacity 0.2s, transform 0.2s;
   color: var(--lc-text-muted);
   margin-left: auto;

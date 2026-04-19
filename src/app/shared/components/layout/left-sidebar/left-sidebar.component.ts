@@ -101,6 +101,7 @@ import { MenuGroup, MenuItem, SidebarConfig, SidebarState, SubMenuItem } from '.
                       [class.is-disabled]="item.disabled"
                       [class.is-active]="isActive(item.id)"
                       [class.has-submenu-open]="isSubmenuOpen(item.id)"
+                      [class]="item.intent ? 'is-intent-' + item.intent : ''"
                       nz-tooltip
                       [nzTooltipTitle]="state() === 'collapsed' ? item.label : ''"
                       nzTooltipPlacement="right"
@@ -135,6 +136,7 @@ import { MenuGroup, MenuItem, SidebarConfig, SidebarState, SubMenuItem } from '.
                               <div
                                 class="submenu-item submenu-item--toggle"
                                 [class.is-active]="isSubSubmenuOpen(subItem.id)"
+                                [class]="subItem.intent ? 'is-intent-' + subItem.intent : ''"
                                 (click)="handleSubSubmenuToggle(subItem)"
                               >
                                 @if (subItem.icon) {
@@ -186,6 +188,7 @@ import { MenuGroup, MenuItem, SidebarConfig, SidebarState, SubMenuItem } from '.
                                 class="submenu-item"
                                 [class.is-active]="isSubActive(subItem.id)"
                                 [class.is-disabled]="subItem.disabled"
+                                [class]="subItem.intent ? 'is-intent-' + subItem.intent : ''"
                                 (click)="handleSubmenuItemClick(item, subItem)"
                               >
                                 @if (subItem.icon) {

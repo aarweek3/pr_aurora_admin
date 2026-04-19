@@ -14,6 +14,7 @@ import {
   UserProfileDto,
   UserSessionDto,
 } from '../models';
+import { LanguageService } from '@assets/languageApp/services/language.service';
 import { TokenService } from './token.service';
 
 @Injectable({
@@ -23,6 +24,7 @@ export class AuthService {
   private http = inject(HttpClient);
   private router = inject(Router);
   private tokenService = inject(TokenService);
+  private languageService = inject(LanguageService);
   private logger = inject(LoggerConsoleService).getLogger('AuthService');
 
   // Простые сигналы состояния - только самое необходимое
@@ -65,6 +67,7 @@ export class AuthService {
     return this.http
       .post<ApiResponse<AuthResponseDto>>(ApiEndpoints.AUTH.LOGIN, data, {
         withCredentials: true,
+        headers: { 'X-Skip-Error-Handler': 'true' },
       })
       .pipe(
         tap((response) => {
@@ -97,7 +100,14 @@ export class AuthService {
    */
   refreshToken(): Observable<ApiResponse<AuthResponseDto>> {
     return this.http
-      .post<ApiResponse<AuthResponseDto>>(ApiEndpoints.AUTH.REFRESH, {}, { withCredentials: true })
+      .post<ApiResponse<AuthResponseDto>>(
+        ApiEndpoints.AUTH.REFRESH,
+        {},
+        {
+          withCredentials: true,
+          headers: { 'X-Skip-Error-Handler': 'true' },
+        },
+      )
       .pipe(
         tap((response) => {
           if (response.success && response.data) {
@@ -118,7 +128,10 @@ export class AuthService {
    */
   getProfile(): Observable<ApiResponse<UserProfileDto>> {
     return this.http
-      .get<ApiResponse<UserProfileDto>>(ApiEndpoints.AUTH.PROFILE, { withCredentials: true })
+      .get<ApiResponse<UserProfileDto>>(ApiEndpoints.AUTH.PROFILE, {
+        withCredentials: true,
+        headers: { 'X-Skip-Error-Handler': 'true' },
+      })
       .pipe(
         tap((response) => {
           if (response.success && response.data) {
@@ -375,6 +388,9 @@ export class AuthService {
     }, 500);
 
     this.logger.debug('Авторизация успешна:', user.email);
+
+    // Инициализируем проверку языков после входа
+    this.languageService.init();
   }
 
   /**

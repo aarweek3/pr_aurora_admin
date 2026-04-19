@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { ButtonDirective } from '../../../shared/components/ui/button/button.directive';
 import { HelpCopyContainerComponent } from '../../../shared/components/ui/container-help-copy-ui';
 import { ModalComponent } from '../../../shared/components/ui/modal';
-import { SearchInputComponent } from '../../../shared/components/ui/search/search.component';
+import { AvSearchComponent } from '../../../shared/components/ui/search/search.component';
 
 @Component({
   selector: 'app-search-ui',
@@ -12,7 +12,7 @@ import { SearchInputComponent } from '../../../shared/components/ui/search/searc
   imports: [
     CommonModule,
     FormsModule,
-    SearchInputComponent,
+    AvSearchComponent,
     HelpCopyContainerComponent,
     ModalComponent,
     ButtonDirective,

@@ -72,4 +72,18 @@ export class LanguageApiService {
     const params = new HttpParams().set('enabled', enabled.toString());
     return this.http.patch<void>(ApiEndpoints.LANGUAGES_APP.STATUS(id), {}, { params });
   }
+
+  /**
+   * Полная очистка таблицы языков и сброс последовательности ID
+   */
+  hardReset(): Observable<void> {
+    return this.http.delete<void>(ApiEndpoints.LANGUAGES_APP.HARD_RESET);
+  }
+
+  /**
+   * Инициализировать стандартный набор языков из JSON
+   */
+  initialize(): Observable<void> {
+    return this.http.post<void>(ApiEndpoints.LANGUAGES_APP.INITIALIZE, {});
+  }
 }

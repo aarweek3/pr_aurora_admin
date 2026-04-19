@@ -29,8 +29,10 @@ import { HttpRequestLoggerInterceptor } from './shared/infrastructure/intercepto
 import { NavigationTrailService } from './shared/logger-console/services/navigation-trail.service';
 
 // Import all icons (for dev purposes, production should be selective)
-const antDesignIcons = AllIcons as { [key: string]: IconDefinition };
-const icons: IconDefinition[] = Object.keys(antDesignIcons).map((key) => antDesignIcons[key]);
+const antDesignIcons = AllIcons as { [key: string]: any };
+const icons: IconDefinition[] = Object.keys(antDesignIcons)
+  .filter((key) => typeof antDesignIcons[key] === 'object' && 'name' in antDesignIcons[key])
+  .map((key) => antDesignIcons[key] as IconDefinition);
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -83,16 +85,6 @@ export const appConfig: ApplicationConfig = {
           // Сервис инициализируется автоматически в конструкторе
           console.log('Navigation Trail initialized');
         };
-      },
-      multi: true,
-    },
-
-    // Инициализация LanguageService
-    {
-      provide: APP_INITIALIZER,
-      useFactory: () => {
-        const languageService = inject(LanguageService);
-        return () => languageService.init();
       },
       multi: true,
     },

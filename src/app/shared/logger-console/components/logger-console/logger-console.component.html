@@ -1,7 +1,53 @@
 <div class="logger-container" [class.light-theme]="!isDarkTheme()">
   <!-- Toolbox / Header -->
   <header class="logger-toolbar">
-    <!-- Top Row: Tabs, Search and Actions -->
+    <!-- Row 1: Controls (Width, Font, FullScreen, Collapse, Actions) - Left Aligned -->
+    <div class="toolbar-row width-presets-row">
+      <div class="width-presets">
+        <button class="action-btn preset-btn" [class.active]="loggerService.loggerWidth() === 500" (click)="setWidth(500)">500</button>
+        <button class="action-btn preset-btn" [class.active]="loggerService.loggerWidth() === 750" (click)="setWidth(750)">750</button>
+        <button class="action-btn preset-btn" [class.active]="loggerService.loggerWidth() === 1200" (click)="setWidth(1200)">1200</button>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="width-presets font-presets">
+        <button class="action-btn preset-btn" [class.active]="loggerService.loggerFontSize() === 11" (click)="setFontSize(11)">11</button>
+        <button class="action-btn preset-btn" [class.active]="loggerService.loggerFontSize() === 12" (click)="setFontSize(12)">12</button>
+        <button class="action-btn preset-btn" [class.active]="loggerService.loggerFontSize() === 13" (click)="setFontSize(13)">13</button>
+      </div>
+
+      <div class="divider"></div>
+
+      <button class="action-btn control-btn" (click)="toggleFullScreen()" [title]="loggerService.isFullScreen() ? 'Minimize' : 'Full Screen'">
+        {{ loggerService.isFullScreen() ? '🗗' : '🗖' }}
+      </button>
+      <button class="action-btn control-btn" (click)="toggleCollapsed()" title="Collapse/Expand">
+        {{ loggerService.isCollapsed() ? '➕' : '⚊' }}
+      </button>
+
+      <div class="divider"></div>
+
+      <div class="toolbar-right">
+        <button class="action-btn theme-toggle" (click)="toggleHelp()" title="Show Help" [class.active]="showHelp()">
+          ❓
+        </button>
+        <button
+          class="action-btn theme-toggle"
+          (click)="toggleTheme()"
+          [title]="isDarkTheme() ? 'Switch to Light Mode' : 'Switch to Dark Mode'"
+        >
+          {{ isDarkTheme() ? '☀️' : '🌙' }}
+        </button>
+        <button class="action-btn" [class.copied]="isCopied()" (click)="copyAllLogs()" title="Copy all visible logs">
+          {{ isCopied() ? '✅ Copied' : '📋 Copy All' }}
+        </button>
+        <button class="action-btn" (click)="export()" title="Download JSON">📥 Export</button>
+        <button class="action-btn danger" (click)="clear()" title="Clear logs">🗑️ Clear</button>
+      </div>
+    </div>
+
+    <!-- Row 2: Tabs, Search and Actions -->
     <div class="toolbar-row top-row">
       <div class="toolbar-left">
         <!-- Вкладки -->
@@ -31,24 +77,6 @@
           />
         </div>
         }
-      </div>
-
-      <div class="toolbar-right">
-        <button class="action-btn theme-toggle" (click)="toggleHelp()" title="Show Help" [class.active]="showHelp()">
-          ❓
-        </button>
-        <button
-          class="action-btn theme-toggle"
-          (click)="toggleTheme()"
-          [title]="isDarkTheme() ? 'Switch to Light Mode' : 'Switch to Dark Mode'"
-        >
-          {{ isDarkTheme() ? '☀️' : '🌙' }}
-        </button>
-        <button class="action-btn" [class.copied]="isCopied()" (click)="copyAllLogs()" title="Copy all visible logs">
-          {{ isCopied() ? '✅ Copied' : '📋 Copy All' }}
-        </button>
-        <button class="action-btn" (click)="export()" title="Download JSON">📥 Export</button>
-        <button class="action-btn danger" (click)="clear()" title="Clear logs">🗑️ Clear</button>
       </div>
     </div>
 
@@ -173,7 +201,9 @@
           } @if (log.type === 'http') {
           <button class="copy-entry-btn curl-btn" (click)="copyAsCurl(log)" title="Copy as cURL">cURL</button>
           }
-          <button class="copy-entry-btn" (click)="copyMessage(log.message)" title="Copy message">📋</button>
+          <button class="copy-entry-btn" [class.success]="copyStates()[log.id]" (click)="copyMessage(log.id, log.message)" title="Copy message">
+            {{ copyStates()[log.id] ? '✅' : '📋' }}
+          </button>
 
           <div class="log-time">
             <span class="time-base">{{ log.timestamp | date : 'HH:mm' }}</span>

@@ -68,6 +68,7 @@
     "editor.lineHeight": 22,
     // Размер шрифта
     "editor.fontSize": 12,
+    "editor.padding.left": 50,
     // Лигатуры (=> !== &&)
     "editor.fontLigatures": true,
     // Шрифты для кода
@@ -116,7 +117,7 @@
     "explorer.confirmDelete": true,
     "explorer.sortOrder": "type",
     "workbench.tree.expandMode": "singleClick",
-    "workbench.tree.indent": 6,
+    "workbench.tree.indent": 50,
     "window.openFoldersInNewWindow": "off",
     "window.restoreWindows": "all",
     "workbench.startupEditor": "none",
@@ -127,7 +128,7 @@
     // 🎨 ЦВЕТА — ГЛОБАЛЬНЫЙ SHELL IDE
     // ======================================================
     // Основная тема
-    "workbench.colorTheme": "Default Dark Modern",
+    "workbench.colorTheme": "Dark Modern",
     // Accent цвет (Peacock)
     "peacock.color": "#0d445f",
     "workbench.colorCustomizations": {

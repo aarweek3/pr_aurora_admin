@@ -133,9 +133,9 @@ export interface AlertConfig<TData = any> extends ModalConfig<TData> {
  * Размеры модальных окон в пикселях
  */
 export const MODAL_SIZES: Record<ModalSize, string> = {
-  small: '400px',
-  medium: '600px',
-  large: '800px',
-  xlarge: '1000px',
+  small: 'var(--av-modal-width-small)',
+  medium: 'var(--av-modal-width-medium)',
+  large: 'var(--av-modal-width-large)',
+  xlarge: 'var(--av-modal-width-xlarge)',
   fullscreen: '100vw',
 };

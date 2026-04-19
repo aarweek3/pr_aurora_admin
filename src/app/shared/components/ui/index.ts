@@ -9,6 +9,8 @@ export * from './code-block/code-block.component';
 export * from './container-help-copy-ui';
 export * from './field-group';
 export * from './form-field/form-field.component';
+export * from './help-path-header/help-path-header.component';
+export * from './help-path-actions/help-path-actions.component';
 export * from './icon';
 export * from './input';
 export * from './modal';
@@ -42,7 +44,7 @@ import { InputComponent, InputDirective } from './input';
 import { PasswordInputComponent } from './password-input/password-input.component';
 import { PhoneInputComponent } from './phone-input';
 import { PickerComponent } from './picker/picker.component';
-import { SearchInputComponent } from './search';
+import { AvSearchComponent } from './search';
 import { TagInputComponent } from './tag';
 import { ToggleComponent, ToggleDirective, ToggleLabeledComponent } from './toggle';
 
@@ -53,6 +55,8 @@ import { CodeBlockComponent } from './code-block/code-block.component';
 import { HelpCopyContainerComponent } from './container-help-copy-ui';
 import { ModalCloseDirective, ModalComponent } from './modal';
 import { AvMonitorModalComponent } from './monitor-modal/monitor-modal.component';
+import { HelpPathHeaderComponent } from './help-path-header/help-path-header.component';
+import { HelpPathActionsComponent } from './help-path-actions/help-path-actions.component';
 import { PaginationComponent } from './pagination';
 import { WrapperUiComponent } from './wrapper-ui/wrapper-ui.component';
 
@@ -74,7 +78,7 @@ export const AV_FORM_UI = [
   PhoneInputComponent,
   PasswordInputComponent,
   PickerComponent,
-  SearchInputComponent,
+  AvSearchComponent,
   TagInputComponent,
 ] as const;
 
@@ -89,6 +93,8 @@ export const AV_UTILITY_UI = [
   ModalComponent,
   ModalCloseDirective,
   PaginationComponent,
+  HelpPathHeaderComponent,
+  HelpPathActionsComponent,
   HelpCopyContainerComponent,
   CodeBlockComponent,
   WrapperUiComponent,

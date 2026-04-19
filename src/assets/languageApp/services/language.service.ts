@@ -1,5 +1,6 @@
 import { computed, effect, inject, Injectable, signal } from '@angular/core';
 import { IconGetService } from '@core/services/icon/icon-get.service';
+import { NzModalService } from 'ng-zorro-antd/modal';
 import { finalize, tap } from 'rxjs';
 import { LANGUAGE_ICONS_MAP } from '../config/language-icons.config';
 import { AppLanguage, LanguageState } from '../models/appLanguage.model';
@@ -15,6 +16,7 @@ import { LanguageApiService } from './language-api.service';
 export class LanguageService {
   private apiService = inject(LanguageApiService);
   private iconService = inject(IconGetService);
+  private modal = inject(NzModalService);
   private readonly STORAGE_KEY = 'app_language';
 
   // --- Состояние (Signals) ---
@@ -57,13 +59,29 @@ export class LanguageService {
    * Инициализация сервиса: загрузка списка языков и выбор текущего
    */
   init(): void {
+    console.log('[LanguageService] Начинаю инициализацию языков...');
     this.state.update((s) => ({ ...s, isLoading: true, syncStatus: 'syncing' }));
 
     this.apiService
       .getAvailable()
       .pipe(
         tap((languages) => {
+          console.log(`[LanguageService] Загружено языков: ${languages?.length || 0}`);
+
+          if (!languages || languages.length === 0) {
+            console.warn('[LanguageService] ТАБЛИЦА ЯЗЫКОВ ПУСТА! Вызываю модальное окно.');
+            this.showNoLanguagesWarning();
+            this.state.update((s) => ({
+              ...s,
+              available: [],
+              current: null,
+              syncStatus: 'synced',
+            }));
+            return;
+          }
+
           const savedCode = localStorage.getItem(this.STORAGE_KEY);
+          console.log(`[LanguageService] Сохраненный код языка в LocalStorage: ${savedCode}`);
 
           // Поиск языка: из хранилища -> по умолчанию -> первый доступный
           const current =
@@ -71,6 +89,10 @@ export class LanguageService {
             languages.find((l) => l.isDefault) ||
             languages[0] ||
             null;
+
+          console.log(
+            `[LanguageService] Установлен текущий язык: ${current?.code} (${current?.nativeTitle})`,
+          );
 
           this.state.update((s) => ({
             ...s,
@@ -86,10 +108,27 @@ export class LanguageService {
       )
       .subscribe({
         error: (err) => {
-          console.error('Ошибка инициализации языков:', err);
+          console.error('[LanguageService] КРИТИЧЕСКАЯ ОШИБКА инициализации языков:', err);
           this.state.update((s) => ({ ...s, syncStatus: 'error', lastSyncError: err.message }));
         },
       });
+  }
+
+  /**
+   * Вывод предупреждения об отсутствии языков
+   */
+  private showNoLanguagesWarning(): void {
+    console.log('[LanguageService] Отображение модального окна NzModalService.warning');
+    this.modal.warning({
+      nzTitle: 'Внимание: Языки не настроены!',
+      nzContent: `Таблица <b>LanguageApp</b> пуста.
+                  <br><br>
+                  Пожалуйста, перейдите в раздел <b>"Управление языками"</b> и сгенерируйте языки.
+                  <br><br>
+                  Без настроенных языков создание новых записей (платформ и др.) будет работать некорректно или "виснуть".`,
+      nzOkText: 'Понятно',
+      nzMaskClosable: false,
+    });
   }
 
   /**

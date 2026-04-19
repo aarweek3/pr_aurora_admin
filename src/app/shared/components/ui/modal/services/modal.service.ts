@@ -3,6 +3,7 @@ import { ComponentPortal, ComponentType } from '@angular/cdk/portal';
 import { ComponentRef, inject, Injectable, Injector } from '@angular/core';
 import { ModalAlertComponent } from '../components/modal-alert/modal-alert.component';
 import { ModalConfirmComponent } from '../components/modal-confirm/modal-confirm.component';
+import { MathChallengeConfig, ModalMathChallengeComponent } from '../components/modal-math-challenge/modal-math-challenge.component';
 import { AlertConfig, ConfirmConfig, MODAL_SIZES, ModalConfig } from '../models/modal-config.model';
 import { ModalRef } from '../models/modal-ref.model';
 import { MODAL_DATA, MODAL_REF } from '../tokens/modal-tokens';
@@ -28,14 +29,6 @@ export class ModalService {
 
   /**
    * Открыть компонент в модальном окне
-   *
-   * @example
-   * const modalRef = this.modalService.open(MyComponent, { title: 'Title' });
-   * modalRef.afterClosed().subscribe(result => console.log(result));
-   *
-   * @template TComponent - Тип компонента
-   * @template TData - Тип данных, передаваемых в модал
-   * @template TResult - Тип результата при закрытии
    */
   open<TComponent, TData = any, TResult = any>(
     component: ComponentType<TComponent>,
@@ -90,7 +83,7 @@ export class ModalService {
 
     // Закрытие по ESC
     if (modalConfig.closeOnEsc) {
-      overlayRef.keydownEvents().subscribe((event) => {
+      overlayRef.keydownEvents().subscribe((event: KeyboardEvent) => {
         if (event.key === 'Escape' && this.isTopModal(modalRef)) {
           modalRef.close();
         }
@@ -102,9 +95,6 @@ export class ModalService {
 
   /**
    * Открыть модал подтверждения
-   * @returns Promise<boolean> - true если нажато "Подтвердить", false если "Отмена"
-   * @example
-   * const confirmed = await this.modalService.confirm({ title: 'Удалить?', message: 'Вы уверены?' });
    */
   async confirm<TResult = boolean>(config: ConfirmConfig): Promise<TResult | undefined> {
     const modalRef = this.open<ModalConfirmComponent, ConfirmConfig, TResult>(
@@ -139,28 +129,7 @@ export class ModalService {
   }
 
   /**
-   * Специализированный модал для подтверждения удаления (Centered Design).
-   * Используется для критических действий. Отображает большую красную иконку корзины,
-   * заголовок жирным шрифтом и две крупные кнопки во всю ширину.
-   *
-   * @param message - Текст пояснения (например, "Все данные будут удалены")
-   * @param title - Заголовок окна (по умолчанию "Удалить?")
-   * @param confirmText - Текст на красной кнопке (по умолчанию "Удалить")
-   *
-   * @returns Promise<boolean>:
-   * - true: пользователь осознанно нажал красную кнопку "Удалить"
-   * - false: пользователь нажал "Отмена", кликнул на фон или нажал ESC
-   *
-   * @example
-   * const confirmed = await this.modalService.delete(
-   *   'Все данные отчета будут безвозвратно удалены.',
-   *   'Удалить отчет?'
-   * );
-   *
-   * if (confirmed) {
-   *   // Здесь вызываем метод API для удаления
-   *   console.log('Удаление подтверждено');
-   * }
+   * Специализированный модал для подтверждения удаления
    */
   async delete(message: string, title = 'Удалить?', confirmText = 'Удалить'): Promise<boolean> {
     const result = await this.confirm({
@@ -177,22 +146,7 @@ export class ModalService {
   }
 
   /**
-   * Модал успешного завершения операции.
-   * Отображает зеленую иконку галочки. Если параметр centered=true,
-   * иконка становится большой (80px), а кнопка "ОК" — широкой.
-   *
-   * @param message - Текст сообщения об успехе
-   * @param title - Заголовок окна (по умолчанию "Успешно")
-   * @param centered - Использовать ли центрированный дизайн с большой иконкой
-   *
-   * @returns Promise<void> - разрешается, когда пользователь закрывает окно
-   *
-   * @example
-   * await this.modalService.success(
-   *   'Проект успешно создан и готов к работе!',
-   *   'Готово',
-   *   true // Включает центрированный дизайн
-   * );
+   * Модал успешного завершения операции
    */
   async success(message: string, title = 'Успешно', centered = false): Promise<void> {
     return this.alert({
@@ -206,22 +160,7 @@ export class ModalService {
   }
 
   /**
-   * Модал ошибки или неудачного завершения операции.
-   * Отображает красную иконку крестика. Если параметр centered=true,
-   * иконка становится большой (80px), а кнопка "ОК" — красной и широкой.
-   *
-   * @param message - Текст описания ошибки
-   * @param title - Заголовок окна (по умолчанию "Ошибка")
-   * @param centered - Использовать ли центрированный дизайн с большой иконкой
-   *
-   * @returns Promise<void> - разрешается, когда пользователь закрывает окно
-   *
-   * @example
-   * await this.modalService.error(
-   *   'Не удалось сохранить изменения. Попробуйте позже.',
-   *   'Ошибка',
-   *   true // Включает центрированный дизайн
-   * );
+   * Модал ошибки
    */
   async error(message: string, title = 'Ошибка', centered = false): Promise<void> {
     return this.alert({
@@ -258,6 +197,33 @@ export class ModalService {
   }
 
   /**
+   * Модал с математической проверкой
+   */
+  async challenge(message: string, question: string, expectedAnswer: string, title = 'Подтверждение'): Promise<boolean> {
+    const modalRef = this.open<ModalMathChallengeComponent, MathChallengeConfig, boolean>(
+      ModalMathChallengeComponent,
+      {
+        data: {
+          title,
+          message,
+          question,
+          expectedAnswer,
+          confirmText: 'Стереть полностью (Hard)',
+          cancelText: 'Отмена'
+        },
+        size: 'small',
+        centered: true
+      }
+    );
+
+    return new Promise((resolve) => {
+      modalRef.afterClosed().subscribe((result) => {
+        resolve(!!result);
+      });
+    });
+  }
+
+  /**
    * Закрыть все модалы
    */
   closeAll(): void {
@@ -278,7 +244,6 @@ export class ModalService {
   private createOverlay(config: ModalConfig): OverlayRef {
     const positionStrategy = this.overlay.position().global().centerHorizontally();
 
-    // Позиционирование
     switch (config.position) {
       case 'top':
         positionStrategy.top('0');
@@ -319,11 +284,7 @@ export class ModalService {
     return this.overlay.create(overlayConfig);
   }
 
-  /**
-   * Получить ширину модала на основе размера
-   */
   private getWidth(config: ModalConfig): string {
-    // На мобильных устройствах fullscreen если включено
     if (
       config.mobileFullscreen &&
       typeof window !== 'undefined' &&
@@ -336,12 +297,7 @@ export class ModalService {
     return MODAL_SIZES[config.size || 'medium'];
   }
 
-  /**
-   * Создать injector с данными для компонента
-   */
   private createInjector(modalRef: ModalRef, config: ModalConfig): Injector {
-    // Для специализированных модалов (confirm, alert) мы передаем весь конфиг как данные,
-    // если поле data не заполнено явно.
     const modalData = config.data !== undefined ? config.data : config;
 
     return Injector.create({
@@ -354,9 +310,6 @@ export class ModalService {
     });
   }
 
-  /**
-   * Удалить модал из стека
-   */
   private removeFromStack(ref: ModalRef): void {
     const index = this.modalStack.indexOf(ref);
     if (index > -1) {
@@ -364,9 +317,6 @@ export class ModalService {
     }
   }
 
-  /**
-   * Проверить, является ли модал верхним в стеке
-   */
   private isTopModal(ref: ModalRef): boolean {
     return this.modalStack.length > 0 && this.modalStack[this.modalStack.length - 1] === ref;
   }

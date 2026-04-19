@@ -59,6 +59,11 @@
               },
               {
                 "glob": "**/*",
+                "input": "src/documentation",
+                "output": "/documentation/"
+              },
+              {
+                "glob": "**/*",
                 "input": "./node_modules/@ant-design/icons-angular/src/inline-svg/",
                 "output": "/assets/"
               },
@@ -69,6 +74,7 @@
               }
             ],
             "styles": [
+              "./node_modules/easymde/dist/easymde.min.css",
               "src/theme.less",
               "src/styles.scss"
             ],
