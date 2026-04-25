@@ -1,0 +1,124 @@
+.page-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: #f8fafc;
+  position: relative;
+  padding-bottom: 40px; /* Space for sticky bar */
+}
+
+.page-header {
+  background: #fff;
+  padding: 24px 32px;
+  border-bottom: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+
+  .header-main {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+
+  .title-section {
+    h1 {
+      margin: 0;
+      font-size: 24px;
+      font-weight: 800;
+      color: #0f172a;
+      letter-spacing: -0.5px;
+    }
+    .title-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .count-badge {
+      background: #eff6ff;
+      color: #3b82f6;
+      padding: 2px 10px;
+      border-radius: 99px;
+      font-size: 12px;
+      font-weight: 700;
+      border: 1px solid #dbeafe;
+    }
+    .subtitle {
+      margin: 4px 0 0;
+      color: #64748b;
+      font-size: 14px;
+    }
+  }
+
+  .header-actions {
+    display: flex;
+    gap: 12px;
+  }
+}
+
+.page-content {
+  flex: 1;
+  padding: 24px;
+  overflow-y: auto;
+
+  &.split-view {
+    display: grid;
+    grid-template-columns: 1fr 450px;
+    gap: 24px;
+  }
+}
+
+.sticky-status-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 36px;
+  background: #1e293b;
+  color: #94a3b8;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 24px;
+  font-size: 11px;
+  z-index: 100;
+
+  .status-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    
+    .status-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      i { font-size: 14px; }
+    }
+    .status-divider { color: #334155; }
+  }
+
+  .version-tag {
+    background: #334155;
+    padding: 2px 8px;
+    border-radius: 4px;
+    color: #cbd5e1;
+  }
+}
+
+.view-mode-toggle {
+  background: #f1f5f9;
+  padding: 4px;
+  border-radius: 8px;
+  display: flex;
+  gap: 4px;
+
+  button {
+    border: none;
+    height: 32px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    
+    &.ant-btn-primary {
+      box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2);
+    }
+  }
+}

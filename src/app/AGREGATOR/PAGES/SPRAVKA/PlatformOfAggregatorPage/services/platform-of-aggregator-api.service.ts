@@ -42,7 +42,9 @@ export class PlatformOfAggregatorApiService {
       if (request.sortDirection !== undefined) params = params.set('sortDirection', request.sortDirection.toString());
       if (request.showDeleted) params = params.set('showDeleted', 'true');
 
-      const request$ = this.http.get<PlatformOfAggregatorPagedResponseDto>(this.baseUrl, { params }).pipe(
+      const url = this.baseUrl;
+      console.log(`[PlatformAPI] getPaged: ${url}`, { params: params.toString() });
+      const request$ = this.http.get<PlatformOfAggregatorPagedResponseDto>(url, { params }).pipe(
         shareReplay(1),
         finalize(() => {
           setTimeout(() => this.cache.delete(cacheKey), 30000);
@@ -56,7 +58,9 @@ export class PlatformOfAggregatorApiService {
   }
 
   getById(id: number): Observable<PlatformOfAggregatorDetailDto> {
-    return this.http.get<PlatformOfAggregatorDetailDto>(`${this.baseUrl}/${id}`);
+    const url = `${this.baseUrl}/${id}`;
+    console.log(`[PlatformAPI] getById: ${url}`);
+    return this.http.get<PlatformOfAggregatorDetailDto>(url);
   }
 
   create(dto: PlatformOfAggregatorCreateDto): Observable<PlatformOfAggregatorDetailDto> {

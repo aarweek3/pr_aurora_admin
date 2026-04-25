@@ -48,6 +48,24 @@ import { HelpPathHeaderComponent } from '@shared/components/ui';
           <button nz-button style="background: #52c41a; border-color: #52c41a; color: white;" (click)="showDemoChallenge()">
             <span nz-icon nzType="safety-certificate"></span> Критическое удаление (Math)
           </button>
+          <button nz-button nzType="dashed" (click)="showDemoMaintenanceConfirm()">
+            <span nz-icon nzType="sync"></span> Обслуживание (Confirm)
+          </button>
+          
+          <nz-divider nzType="vertical"></nz-divider>
+          
+          <button nz-button style="background: #52c41a; border-color: #52c41a; color: white;" (click)="showDemoSuccess()">
+            <span nz-icon nzType="check-circle"></span> Success
+          </button>
+          <button nz-button nzDanger (click)="showDemoError()">
+            <span nz-icon nzType="close-circle"></span> Error
+          </button>
+          <button nz-button style="background: #faad14; border-color: #faad14; color: white;" (click)="showDemoWarning()">
+            <span nz-icon nzType="warning"></span> Warning
+          </button>
+          <button nz-button nzType="primary" (click)="showDemoInfo()">
+            <span nz-icon nzType="info-circle"></span> Info
+          </button>
         </div>
       </nz-card>
 
@@ -85,9 +103,31 @@ import { HelpPathHeaderComponent } from '@shared/components/ui';
         <h3 nz-typography style="margin-top: 24px;">Специализированные методы</h3>
         <p>Сервис предоставляет готовые пресеты для типичных задач:</p>
         <ul>
-          <li><code>success(message, title?, centered?)</code> — Зеленая иконка успеха.</li>
-          <li><code>error(message, title?, centered?)</code> — Красная иконка ошибки.</li>
+          <li><code>success(message, title?, centered?)</code> — Зеленая иконка успеха (<code>general/av_check-circle</code>).</li>
+          <div class="code-block-container mini">
+            <pre><code>{{ successCode }}</code></pre>
+          </div>
+          
+          <li><code>error(message, title?, centered?)</code> — Красная иконка ошибки (<code>general/av_error-failure</code>).</li>
+          <div class="code-block-container mini">
+            <pre><code>{{ errorCode }}</code></pre>
+          </div>
+          
+          <li><code>warning(message, title?)</code> — Желтая иконка предупреждения.</li>
+          <div class="code-block-container mini">
+            <pre><code>{{ warningCode }}</code></pre>
+          </div>
+          
+          <li><code>info(message, title?)</code> — Синяя иконка информации.</li>
+          <div class="code-block-container mini">
+            <pre><code>{{ infoCode }}</code></pre>
+          </div>
+          
           <li><code>delete(message, title?, confirmText?)</code> — Центрированное окно удаления с красной кнопкой.</li>
+          <div class="code-block-container mini">
+            <pre><code>{{ deleteCode }}</code></pre>
+          </div>
+          
           <li><code>challenge(message, question, expectedAnswer, title?)</code> — Окно с математической проверкой перед выполнением действия.</li>
         </ul>
 
@@ -95,6 +135,12 @@ import { HelpPathHeaderComponent } from '@shared/components/ui';
         <p>Используется для защиты от случайного удаления особо важных данных.</p>
         <div class="code-block-container">
           <pre><code>{{ challengeCode }}</code></pre>
+        </div>
+
+        <h3 nz-typography style="margin-top: 24px;">Пример подтверждения ТО (Maintenance)</h3>
+        <p>Паттерн подтверждения перед выполнением тяжелых операций чтения/записи в БД.</p>
+        <div class="code-block-container">
+          <pre><code>{{ maintenanceConfirmCode }}</code></pre>
         </div>
       </div>
 
@@ -140,6 +186,13 @@ import { HelpPathHeaderComponent } from '@shared/components/ui';
       padding: 16px;
       margin: 12px 0;
       overflow: hidden;
+    }
+    .code-block-container.mini {
+      padding: 8px 12px;
+      margin: 4px 0 16px 0;
+    }
+    .code-block-container.mini pre {
+      font-size: 11px;
     }
     .code-actions {
       position: absolute;
@@ -210,6 +263,25 @@ if (confirmed) {
   // Выполняем жесткое удаление
 }`;
 
+  maintenanceConfirmCode = `const confirmed = await this.modalService.confirm({
+  title: 'Подтверждение',
+  message: 'Вы действительно хотите перечиттать данные из БД и обновить таблицу?',
+  confirmText: 'Да',
+  cancelText: 'Нет',
+  centered: true,
+  icon: 'system/av_info'
+});
+
+if (confirmed) {
+  this.state.loadItems(true); // Загрузка с флагом уведомления
+}`;
+
+  successCode = `await this.modalService.success('Операция выполнена успешно!');`;
+  errorCode = `await this.modalService.error('Произошла системная ошибка.');`;
+  warningCode = `await this.modalService.warning('Внимание: лицензия истекает.');`;
+  infoCode = `await this.modalService.info('Доступно обновление v3.5.');`;
+  deleteCode = `const confirmed = await this.modalService.delete('Удалить этот объект?');`;
+
   onCopied() {
     this.message.success('Код скопирован в буфер обмена');
   }
@@ -262,5 +334,36 @@ if (confirmed) {
     } else {
       this.message.warning('Удаление отменено (проверка не пройдена или окно закрыто)');
     }
+  }
+
+  async showDemoMaintenanceConfirm() {
+    const res = await this.modalService.confirm({
+      title: 'Подтверждение ТО',
+      message: 'Вы действительно хотите перечиттать данные из БД и обновить таблицу?',
+      confirmText: 'Да',
+      cancelText: 'Нет',
+      centered: true,
+      icon: 'system/av_info'
+    });
+
+    if (res) {
+      this.modalService.success('Данные из БД считаны, таблица обновлена. Всего загружено записей: 42');
+    }
+  }
+
+  async showDemoSuccess() {
+    await this.modalService.success('Операция выполнена успешно!', 'Завершено', true);
+  }
+
+  async showDemoError() {
+    await this.modalService.error('Произошла непредвиденная ошибка на сервере.', 'Системная ошибка', true);
+  }
+
+  async showDemoWarning() {
+    await this.modalService.warning('Срок действия лицензии истекает через 3 дня.', 'Предупреждение');
+  }
+
+  async showDemoInfo() {
+    await this.modalService.info('Доступно новое обновление системы (v3.5.1).', 'Информация');
   }
 }

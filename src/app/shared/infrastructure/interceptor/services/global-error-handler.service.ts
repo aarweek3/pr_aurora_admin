@@ -94,6 +94,8 @@ export class GlobalErrorHandler implements ErrorHandler {
       "Cannot read properties of null (reading 'innerHeight')",
       'tabSwitchMotion',
       'ResizeObserver loop limit exceeded',
+      'NG04002',
+      'Cannot match any routes'
     ];
 
     const isKnown = knownErrors.some((ke) => errorMessage.includes(ke));

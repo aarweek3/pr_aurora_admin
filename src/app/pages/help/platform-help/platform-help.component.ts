@@ -5,6 +5,7 @@ import { NzTabsModule } from 'ng-zorro-antd/tabs';
 import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzTagModule } from 'ng-zorro-antd/tag';
 import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzAlertModule } from 'ng-zorro-antd/alert';
 import { 
   HelpCopyContainerComponent,
   HelpPathHeaderComponent
@@ -20,14 +21,15 @@ import {
     NzTableModule,
     NzTagModule,
     NzIconModule,
+    NzAlertModule,
     HelpCopyContainerComponent,
     HelpPathHeaderComponent
   ],
   template: `
     <div class="help-container">
       <av-help-path-header
-        title="Platform Management v3.5"
-        subtitle="Архитектурный стандарт управления справочниками на базе Angular Signals и OnPush."
+        title="Platform Management Standard v3.5"
+        subtitle="Исчерпывающее руководство по архитектуре, бизнес-логике и обслуживанию справочников Aggregator."
         icon="🏗️"
         componentPath="src/app/pages/help/platform-help/platform-help.component.ts"
       ></av-help-path-header>
@@ -36,194 +38,201 @@ import {
         <!-- 1. ОБЗОР -->
         <nz-tab nzTitle="🌟 Обзор">
           <div class="help-section">
-            <nz-card nzTitle="Назначение">
-              <p>Модуль <strong>Platform Of Aggregator</strong> — это эталонная реализация справочника Aurora admin v3.5. Он служит шаблоном для создания любых CRUD-модулей, требующих мультиязычности и SEO-оптимизации.</p>
+            <nz-card nzTitle="Назначение и Эталонный статус">
+              <p>Модуль <strong>Platform Of Aggregator</strong> — это «Золотой стандарт» (Golden Sample) реализации справочников в системе Aurora Admin v3.5. Он объединяет в себе все современные архитектурные паттерны: Signals, OnPush, SSOT и продвинутую SEO-оптимизацию.</p>
               
               <div class="feature-grid">
                 <div class="feature-item">
                   <i nz-icon nzType="thunderbolt" class="f-icon"></i>
                   <div class="f-text">
-                    <strong>Signals First:</strong> Полное отсутствие RxJS-подписок в шаблонах. Использование <code>signal</code>, <code>computed</code> и <code>toSignal</code>.
+                    <strong>Signals First:</strong> Полное отсутствие RxJS-подписок в шаблонах. Прямая связь между бизнес-состоянием и UI через <code>signal</code>.
                   </div>
                 </div>
-                <div class="feature-item">
-                  <i nz-icon nzType="block" class="f-icon"></i>
+                <div class="f-item">
+                  <i nz-icon nzType="setting" class="f-icon"></i>
                   <div class="f-text">
-                    <strong>Smart State:</strong> Сервис-хранилище (SSOT) управляет всем состоянием, включая пагинацию, поиск и режимы отображения.
+                    <strong>Maintenance Ready:</strong> Встроенные инструменты для очистки, восстановления и инициализации данных из JSON.
                   </div>
                 </div>
                 <div class="feature-item">
                   <i nz-icon nzType="global" class="f-icon"></i>
                   <div class="f-text">
-                    <strong>SEO Fallbacks:</strong> Автоматическое заполнение пустых локализаций из мастер-контента (en-US).
+                    <strong>AI-Ready Content:</strong> Интеллектуальное заполнение пустых локализаций из мастер-контента для SEO-стабильности.
                   </div>
                 </div>
               </div>
             </nz-card>
+
+            <nz-alert
+              nzType="info"
+              nzMessage="Архитектурное правило"
+              nzDescription="Любой новый справочник в папке AGREGATOR/PAGES/SPRAVKA должен создаваться путем клонирования или следования паттернам модуля Platform."
+              nzShowIcon
+            ></nz-alert>
           </div>
         </nz-tab>
 
-        <!-- 2. АРХИТЕКТУРА -->
-        <nz-tab nzTitle="🧠 Архитектура v3.5">
+        <!-- 2. АРХИТЕКТУРА И ЛОГИКА -->
+        <nz-tab nzTitle="🧠 Логика и Архитектура">
           <div class="help-section">
-            <nz-card nzTitle="Single Source of Truth (SSOT)">
-              <p>Вся логика модуля сосредоточена в <strong>State Service</strong>. Компоненты являются «глупыми» (presentational) и лишь отображают данные из сигналов сервиса.</p>
-              <av-help-copy-container 
-                title="Pattern: Signal State Service" 
-                [content]="architectureCode"
-              ></av-help-copy-container>
+            <nz-card nzTitle="Жизненный цикл данных (Data Lifecycle)">
+              <div class="logic-flow">
+                <div class="flow-step"><strong>API Layer</strong><br>HTTP запросы</div>
+                <i nz-icon nzType="arrow-right"></i>
+                <div class="flow-step"><strong>State Service</strong><br>updateState()</div>
+                <i nz-icon nzType="arrow-right"></i>
+                <div class="flow-step"><strong>Signals</strong><br>computed()</div>
+                <i nz-icon nzType="arrow-right"></i>
+                <div class="flow-step"><strong>Components</strong><br>OnPush Render</div>
+              </div>
             </nz-card>
 
             <div class="logic-grid">
               <div class="logic-card">
-                <h4>Слой Представления</h4>
+                <h4>Бизнес-логика: Localization Fallbacks</h4>
+                <p>Метод <code>applyEnglishFallbacks()</code> в State-сервисе гарантирует, что база данных не будет содержать «дырок» в контенте:</p>
                 <ul>
-                  <li><strong>Standalone Only:</strong> Все компоненты независимы.</li>
-                  <li><strong>OnPush Strategy:</strong> Максимальная производительность.</li>
-                  <li><strong>Split View:</strong> Поддержка Modal, Inline и Page режимов в одном менеджере.</li>
+                  <li>Если поле <code>name</code> или <code>description</code> в текущем языке пусто — оно автоматически копируется из локализации <strong>en-US</strong> при сохранении.</li>
+                  <li>Аналогично обрабатываются SEO-метатеги (metaTitle, metaDescription).</li>
+                  <li>Источник истины — техническое поле <code>name</code> или <code>canonicalName</code> объекта.</li>
                 </ul>
               </div>
               <div class="logic-card">
-                <h4>Слой Данных</h4>
+                <h4>Централизованный Loading</h4>
+                <p>Паттерн <code>executeWithLoading()</code>:</p>
                 <ul>
-                  <li><strong>Soft Delete:</strong> Полноценная работа с корзиной (Restore/Hard Delete).</li>
-                  <li><strong>Auto-Mapping:</strong> Преобразование DTO в реактивные состояния.</li>
+                  <li>Позволяет одной строкой обернуть любой Observable запрос в состояние загрузки.</li>
+                  <li>Автоматически переключает <code>loading</code> или <code>modalLoading</code> сигналы.</li>
+                  <li>Гарантирует завершение индикации загрузки через оператор <code>finalize</code>.</li>
                 </ul>
               </div>
             </div>
+
+            <av-help-copy-container 
+              title="Пример реализации SSOT Signal Service" 
+              [content]="architectureCode"
+            ></av-help-copy-container>
           </div>
         </nz-tab>
 
-        <!-- 3. МОДЕЛИ -->
-        <nz-tab nzTitle="📦 Модели">
+        <!-- 3. ОБСЛУЖИВАНИЕ ДАННЫХ -->
+        <nz-tab nzTitle="🛠 Обслуживание">
           <div class="help-section">
-            <nz-card nzTitle="State Interface">
-              <p>Полное описание состояния модуля:</p>
-              <av-help-copy-container 
-                title="PlatformOfAggregatorState" 
-                [content]="stateModelCode"
-              ></av-help-copy-container>
-            </nz-card>
-          </div>
-        </nz-tab>
-
-        <!-- 4. КАК СОЗДАТЬ АНАЛОГ -->
-        <nz-tab nzTitle="🛠 Как создать аналог">
-          <div class="help-section guide-section">
-            <nz-card nzTitle="Пошаговый план (Recipe)">
-              <div class="steps-container">
-                <div class="step">
-                  <div class="step-number">1</div>
-                  <div class="step-content">
-                    <h5>Модель и API</h5>
-                    <p>Создайте DTO и <code>ApiService</code>. Убедитесь, что API поддерживает пагинацию и фильтры.</p>
-                  </div>
+            <nz-card nzTitle="Блок обслуживания (Maintenance Block)">
+              <p>Для администраторов предусмотрен скрытый блок управления целостностью данных. Он вызывается нажатием на <strong>иконку шестеренки</strong> в заголовке Manager-компонента.</p>
+              
+              <div class="maintenance-detail">
+                <div class="m-item">
+                  <nz-tag nzColor="error">Очистить БД</nz-tag>
+                  <p>Полная очистка таблицы. Реализована защита <strong>Challenge Modal</strong>: пользователю нужно решить математический пример, чтобы подтвердить действие. Это предотвращает случайное удаление всех данных.</p>
                 </div>
-                <div class="step">
-                  <div class="step-number">2</div>
-                  <div class="step-content">
-                    <h5>State Service</h5>
-                    <p>Реализуйте сервис на базе <code>signal()</code>. Добавьте методы <code>loadItems</code>, <code>save</code>, <code>delete</code>.</p>
-                  </div>
+                <div class="m-item">
+                  <nz-tag nzColor="processing">Считать данные из БД</nz-tag>
+                  <p>Принудительное обновление текущего списка. Реализована защита <strong>Confirm Modal</strong>: перед выполнением запрашивается подтверждение. После загрузки выводится информационное окно о количестве найденных записей или предупреждение о пустой базе.</p>
                 </div>
-                <div class="step">
-                  <div class="step-number">3</div>
-                  <div class="step-content">
-                    <h5>Компоненты (v3.5)</h5>
-                    <p>Разделите логику: <code>List</code>, <code>Form</code>, <code>Modal</code>, <code>Inline</code>. Используйте <code>Manager</code> как хост.</p>
-                  </div>
-                </div>
-                <div class="step">
-                  <div class="step-number">4</div>
-                  <div class="step-content">
-                    <h5>Роутинг</h5>
-                    <p>Настройте дочерние маршруты для поддержки режима "Отдельная страница" (/:id/edit).</p>
-                  </div>
+                <div class="m-item">
+                  <nz-tag nzColor="warning">Перенести из JSON в БД</nz-tag>
+                  <p>Функция <code>seedFromJson()</code>. Читает эталонный JSON-файл на сервере и наполняет пустую базу. <strong>Важно:</strong> действие блокируется, если в базе уже есть хотя бы одна запись.</p>
                 </div>
               </div>
             </nz-card>
 
-            <div class="info-alert info">
-              <strong>Совет:</strong> Используйте существующие SCSS файлы модуля Platform как основу. Они содержат переменные для стекломорфизма и адаптивные сетки.
+            <div class="logic-card full-width">
+              <h4>Где реализована логика кнопок?</h4>
+              <ul>
+                <li><strong>UI:</strong> Контрол <code>app-button-control-json-block</code> в шаблоне <code>ManagerComponent</code>.</li>
+                <li><strong>Flow Control:</strong> Методы <code>handleReadFromDb()</code> (с подтверждением) и <code>clearDatabase()</code> в <code>ManagerComponent</code>.</li>
+                <li><strong>State:</strong> Методы <code>loadItems()</code>, <code>seedFromJson()</code>, <code>clearDatabase()</code> в State-сервисе.</li>
+                <li><strong>API:</strong> Одноименные эндпоинты в <code>PlatformOfAggregatorApiService</code>, проксирующие запросы к бэкенду.</li>
+              </ul>
             </div>
           </div>
         </nz-tab>
 
-        <!-- 5. ЧЕК-ЛИСТ СЕРВЕР -->
-        <nz-tab nzTitle="📋 Чек-лист Сервер">
+        <!-- 4. КОМПОНЕНТЫ И РЕЖИМЫ -->
+        <nz-tab nzTitle="🖥 Режимы и UI">
           <div class="help-section">
-            <nz-card nzTitle="Backend Architecture Checklist">
-              <p>Полный перечень компонентов серверной части для реализации справочника по стандарту v3.5:</p>
+            <nz-card nzTitle="Три режима отображения (View Modes)">
+              <p>Manager-компонент управляет переменной <code>viewMode</code>, которая переключает способ взаимодействия с формами:</p>
+              <div class="view-mode-grid">
+                <div class="v-mode">
+                  <h5>1. Modal Mode</h5>
+                  <p>Форма открывается в стандартном всплывающем окне поверх списка.</p>
+                </div>
+                <div class="v-mode">
+                  <h5>2. Inline (Split) Mode</h5>
+                  <p>Экран делится на две части: слева список, справа форма редактирования. Идеально для быстрой правки нескольких записей.</p>
+                </div>
+                <div class="v-mode">
+                  <h5>3. Page Mode</h5>
+                  <p>Переход на отдельный роут (/:id/edit). Используется для сложных правок, когда нужно полное пространство экрана.</p>
+                </div>
+              </div>
+            </nz-card>
+          </div>
+        </nz-tab>
+
+        <!-- 5. ЧЕК-ЛИСТЫ -->
+        <nz-tab nzTitle="📋 Чек-листы">
+          <div class="help-section">
+            <nz-card nzTitle="Client Structure Checklist">
               <div class="checklist-grid">
                 <div class="checklist-item">
-                  <nz-tag nzColor="blue">DAL</nz-tag>
+                  <nz-tag nzColor="geekblue">Base System</nz-tag>
                   <ul>
-                    <li><strong>Entity:</strong> PlatformOfAggregator.cs</li>
-                    <li><strong>Localization:</strong> PlatformOfAggregatorLocalization.cs</li>
-                    <li><strong>Repository:</strong> IPlatformOfAggregatorRepository / PlatformOfAggregatorRepository</li>
+                    <li><strong>Manager:</strong> platform-of-aggregator-manager.component.ts (Оркестратор)</li>
+                    <li><strong>State:</strong> platform-of-aggregator-state.service.ts (Логика и Сигналы)</li>
+                    <li><strong>API:</strong> platform-of-aggregator-api.service.ts (HTTP взаимодействие)</li>
                   </ul>
                 </div>
                 <div class="checklist-item">
-                  <nz-tag nzColor="green">BLL</nz-tag>
+                  <nz-tag nzColor="purple">View Components</nz-tag>
                   <ul>
-                    <li><strong>Service:</strong> IPlatformOfAggregatorService / PlatformOfAggregatorService</li>
-                    <li><strong>DTOs:</strong> PlatformOfAggregatorDto.cs (Item, Detail, Create, Update)</li>
-                    <li><strong>Validation:</strong> PlatformOfAggregatorValidators (FluentValidation)</li>
-                    <li><strong>Mapping:</strong> PlatformOfAggregatorProfile (AutoMapper)</li>
-                  </ul>
-                </div>
-                <div class="checklist-item">
-                  <nz-tag nzColor="orange">API</nz-tag>
-                  <ul>
-                    <li><strong>Controller:</strong> PlatformOfAggregatorController.cs</li>
-                    <li><strong>Registration:</strong> ServiceCollectionExtensions.cs (AddScoped)</li>
+                    <li><strong>List:</strong> components/platform-of-aggregator-list/</li>
+                    <li><strong>Form:</strong> components/platform-of-aggregator-form/ (Общая база)</li>
+                    <li><strong>Modal:</strong> platform-of-aggregator-modal.component.ts</li>
+                    <li><strong>Details:</strong> components/platform-of-aggregator-details/ (Просмотр)</li>
                   </ul>
                 </div>
               </div>
-              <av-help-copy-container 
-                title="Полный чек-лист с путями" 
-                [content]="serverChecklistCode"
-                bgColor="#1e293b"
+               <av-help-copy-container 
+                title="Полный список файлов клиентской части" 
+                [content]="clientChecklistCode"
+                bgColor="#1e1b4b"
               ></av-help-copy-container>
             </nz-card>
           </div>
         </nz-tab>
 
-        <!-- 6. ЧЕК-ЛИСТ КЛИЕНТ -->
-        <nz-tab nzTitle="💻 Чек-лист Клиент">
+        <!-- 6. СОРТИРОВКА -->
+        <nz-tab nzTitle="📊 Сортировка">
           <div class="help-section">
-            <nz-card nzTitle="Client Architecture Checklist (Signals v3.5)">
-              <p>Список основных файлов фронтенд-модуля и их ответственности:</p>
-              <div class="checklist-grid">
-                <div class="checklist-item">
-                  <nz-tag nzColor="geekblue">Data & State</nz-tag>
+            <nz-card nzTitle="Серверная сортировка (Server-Side Sorting)">
+              <p>В Aurora v3.5 реализован паттерн <strong>Pure Server Sorting</strong>. Это означает, что при клике на заголовок колонки данные пересчитываются на стороне БД, что гарантирует корректную работу пагинации и учет всех записей базы, а не только текущей страницы.</p>
+              
+              <div class="logic-grid">
+                <div class="logic-card">
+                  <h4>Реализация на клиенте</h4>
                   <ul>
-                    <li><strong>Model:</strong> platform-of-aggregator.model.ts</li>
-                    <li><strong>API:</strong> platform-of-aggregator-api.service.ts</li>
-                    <li><strong>State:</strong> platform-of-aggregator-state.service.ts (SSOT)</li>
+                    <li><strong>State:</strong> Поля <code>sortBy</code> (строка) и <code>sortDirection</code> (0 - Asc, 1 - Desc).</li>
+                    <li><strong>Service:</strong> Метод <code>setSort(column, direction)</code> обновляет состояние и сбрасывает страницу на первую.</li>
+                    <li><strong>UI:</strong> Директивы <code>[nzSortFn]="true"</code> и <code>(nzSortOrderChange)</code> в заголовках <code>th</code>.</li>
                   </ul>
                 </div>
-                <div class="checklist-item">
-                  <nz-tag nzColor="purple">Components</nz-tag>
+                <div class="logic-card">
+                  <h4>Реализация на сервере</h4>
                   <ul>
-                    <li><strong>Manager:</strong> platform-of-aggregator-manager.component.ts</li>
-                    <li><strong>List:</strong> platform-of-aggregator-list.component.ts</li>
-                    <li><strong>Form:</strong> platform-of-aggregator-page-form.component.ts</li>
-                    <li><strong>Modal:</strong> platform-of-aggregator-modal.component.ts</li>
-                  </ul>
-                </div>
-                <div class="checklist-item">
-                  <nz-tag nzColor="cyan">Configuration</nz-tag>
-                  <ul>
-                    <li><strong>Routing:</strong> platform-of-aggregator.routes.ts</li>
-                    <li><strong>EndPoints:</strong> end-points.ts</li>
+                    <li><strong>DTO:</strong> Параметры <code>SortBy</code> и <code>SortDirection</code> в объекте запроса страницы.</li>
+                    <li><strong>Logic:</strong> Метод <code>ApplySorting</code> в C# сервисе использует <code>switch</code> для динамического построения <code>OrderBy</code>. Поддерживает поля: <code>Id</code>, <code>Name</code>, <code>SortOrder</code> и др.</li>
+                    <li><strong>Default:</strong> "Золотой стандарт" — сортировка по <strong>Name</strong> (алфавиту).</li>
                   </ul>
                 </div>
               </div>
+
               <av-help-copy-container 
-                title="Полный чек-лист с путями" 
-                [content]="clientChecklistCode"
-                bgColor="#1e1b4b"
+                title="Паттерн подключения сортировки (Frontend)" 
+                [content]="sortingCode"
+                bgColor="#1e293b"
               ></av-help-copy-container>
             </nz-card>
           </div>
@@ -232,10 +241,10 @@ import {
         <!-- 7. AI PROMPT -->
         <nz-tab nzTitle="🤖 AI Prompt">
           <div class="help-section">
-             <nz-card nzTitle="Промпт для генерации нового справочника" class="ai-card">
-              <p class="ai-intro">Скопируйте этот промпт в чат с ИИ-помощником для создания нового раздела по стандарту Aurora v3.5:</p>
+             <nz-card nzTitle="Мастер-промпт для клонирования справочника" class="ai-card">
+              <p class="ai-intro">Используйте этот промпт для генерации нового функционального раздела в стиле v3.5:</p>
               <av-help-copy-container 
-                title="Master Prompt: New Aurora Module" 
+                title="Master Prompt: Aurora v3.5 Reference" 
                 [content]="masterPrompt"
                 bgColor="#0f172a"
               ></av-help-copy-container>
@@ -246,228 +255,109 @@ import {
     </div>
   `,
   styles: [`
-    .help-container { padding: 32px; max-width: 1400px; margin: 0 auto; }
+    .help-container { padding: 32px; max-width: 1400px; margin: 0 auto; min-height: 800px; }
     .help-tabs { margin-top: 24px; }
-    
-    .help-section { display: flex; flex-direction: column; gap: 32px; padding-top: 24px; }
+    .help-section { display: flex; flex-direction: column; gap: 24px; padding-top: 16px; }
 
-    /* Features */
-    .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin-top: 24px; }
-    .feature-item { display: flex; gap: 16px; align-items: flex-start; padding: 20px; background: #f8fafc; border-radius: 12px; border: 1px solid #e2e8f0; }
-    .f-icon { font-size: 24px; color: #3b82f6; margin-top: 4px; }
-    .f-text strong { display: block; margin-bottom: 4px; color: #0f172a; }
-    .f-text { font-size: 14px; color: #475569; line-height: 1.5; }
+    /* Logic Flow */
+    .logic-flow { display: flex; align-items: center; justify-content: space-around; padding: 20px; background: #f0f7ff; border-radius: 12px; }
+    .flow-step { text-align: center; padding: 12px; background: white; border: 1px solid #bfdbfe; border-radius: 8px; font-size: 13px; }
 
-    /* Logic Grid */
-    .logic-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
-    .logic-card { padding: 24px; background: white; border: 1px solid #e2e8f0; border-radius: 16px; }
-    .logic-card h4 { margin-bottom: 16px; font-weight: 700; color: #1e293b; }
-    .logic-card ul { padding-left: 20px; color: #64748b; }
-    .logic-card li { margin-bottom: 8px; }
+    /* Features and Maintenance */
+    .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; margin-top: 20px; }
+    .feature-item, .f-item { display: flex; gap: 12px; align-items: flex-start; padding: 16px; background: #fff; border-radius: 8px; border: 1px solid #e2e8f0; }
+    .f-icon { font-size: 20px; color: #3b82f6; }
+    .f-text { font-size: 14px; color: #475569; }
 
-    /* Guide Steps */
-    .steps-container { display: flex; flex-direction: column; gap: 16px; margin-top: 16px; }
-    .step { display: flex; gap: 20px; align-items: flex-start; }
-    .step-number { 
-      min-width: 32px; height: 32px; background: #3b82f6; color: white; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center; font-weight: 700;
-    }
-    .step-content h5 { margin: 0 0 4px 0; font-weight: 700; color: #0f172a; }
-    .step-content p { margin: 0; color: #64748b; font-size: 14px; }
+    .maintenance-detail { display: flex; flex-direction: column; gap: 12px; margin-top: 16px; }
+    .m-item { padding: 12px; border-left: 4px solid #e2e8f0; background: #f8fafc; }
+    .m-item p { margin: 4px 0 0 0; font-size: 13px; color: #64748b; }
 
-    .info-alert {
-      padding: 20px; border-radius: 12px; border-left: 8px solid; margin-top: 16px;
-    }
-    .info-alert.info { background: #eff6ff; border-color: #3b82f6; color: #1e40af; }
+    .logic-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .logic-card { padding: 20px; background: white; border: 1px solid #e2e8f0; border-radius: 12px; }
+    .logic-card h4 { margin-bottom: 12px; font-weight: 700; color: #1e293b; }
+    .logic-card ul { padding-left: 18px; color: #64748b; font-size: 13px; }
+    .full-width { grid-column: 1 / -1; }
 
-    .ai-intro { color: #64748b; font-size: 14px; margin-bottom: 16px; border-left: 4px solid #3b82f6; padding-left: 12px; }
+    /* View Modes */
+    .view-mode-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 16px; }
+    .v-mode { padding: 16px; background: #f1f5f9; border-radius: 8px; text-align: center; }
+    .v-mode h5 { margin-bottom: 8px; font-weight: 700; }
+    .v-mode p { font-size: 12px; color: #64748b; }
 
-    /* Checklist */
-    .checklist-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 24px; }
-    .checklist-item { padding: 16px; background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; }
-    .checklist-item ul { padding-left: 18px; margin-top: 12px; list-style-type: circle; color: #64748b; font-size: 13px; }
-    .checklist-item li { margin-bottom: 6px; }
-
-    @media (max-width: 768px) {
-      .logic-grid { grid-template-columns: 1fr; }
-    }
+    .checklist-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+    .checklist-item { padding: 16px; border: 1px solid #e2e8f0; border-radius: 8px; }
+    .checklist-item ul { padding-left: 18px; list-style-type: circle; font-size: 13px; color: #64748b; margin-top: 10px; }
   `]
 })
 export class PlatformHelpComponent {
-  architectureCode = `// Standard SSOT Signal Service Structure
-@Injectable({ providedIn: 'root' })
-export class FeatureStateService {
-  // 1. Single State (Signal)
-  private readonly state = signal<FeatureState>(INITIAL_STATE);
+  architectureCode = `// --- ПАТТЕРН executeWithLoading ---
+private executeWithLoading<T>(operation: Observable<T>, isModal = false): Observable<T> {
+  const loadingKey = isModal ? 'modalLoading' : 'loading';
+  this.updateState({ [loadingKey]: true, error: null } as any);
 
-  // 2. Computed Selectors
-  readonly items = computed(() => this.state().items);
-  readonly loading = computed(() => this.state().loading);
-
-  // 3. Reducer Helper
-  private updateState(partial: Partial<FeatureState>) {
-    this.state.update(s => ({ ...s, ...partial }));
-  }
-
-  // 4. Reactive Actions
-  load() {
-    this.api.get().subscribe(data => this.updateState({ items: data }));
-  }
-}`;
-
-  stateModelCode = `export interface PlatformOfAggregatorState {
-  items: PlatformOfAggregatorItemDto[];
-  total: number;
-  loading: boolean;
-  pageNumber: number;
-  pageSize: number;
-  searchTerm: string;
-  languageId: number | null;
-  showDeleted: boolean;
-
-  // Form State
-  modalVisible: boolean;
-  modalMode: 'add' | 'edit';
-  editingItem: PlatformOfAggregatorDetailDto | null;
-  modalLoading: boolean;
-
-  error: ErrorResponse | null;
-  deletingId: number | null;
-
-  // View State
-  viewModalVisible: boolean;
-  viewItem: PlatformOfAggregatorDetailDto | null;
-}`;
-
-  masterPrompt = `### TASK: CREATE AURORA v3.5 MODULE
-Create a professional administrative module for [ENTITY_NAME] in Aurora Admin.
-
-### FOLDER STRUCTURE:
-src/app/[MODULE_PATH]/
-├── components/
-│   ├── entity-list/         (Table + Filters)
-│   ├── entity-form/         (Shared Base Form)
-│   ├── entity-modal/        (Modal wrapper)
-│   └── entity-inline/       (Split-view wrapper)
-├── services/
-│   ├── entity-api.service.ts
-│   └── entity-state.service.ts
-├── models/
-│   └── entity.model.ts
-└── entity-manager.component.ts
-
-### REQUIREMENTS:
-1. USE SIGNALS: All state must be in entity-state.service.ts as a single signal<State>.
-2. ONPUSH: Use ChangeDetectionStrategy.OnPush in every component.
-3. STANDALONE: All components must be standalone.
-4. CRUD FEATURES: Pagination, Search (debounced), Soft Delete (Trash mode), Detail viewing.
-5. LOCALIZATION: Integrate LanguageService to handle multiple locales with SEO fallbacks (taking content from en-US if current is empty).
-6. UI: Modern glassmorphism design, skeleton loading in tables, sticky status bar at the bottom.
-
-Use PlatformOfAggregator module as a reference architecture.`;
-
-  serverChecklistCode = `### 📋 Чек-лист реализации серверной части (Aurora v3.5)
-
----
-
-#### 1. Уровень данных (DAL - Data Access Layer)
-На этом уровне определяется структура таблиц в БД и базовые операции с ними.
-
-*   **[ ] Сущность (Entity):**
-    *   **Файл:** DAL\\Models\\Aggregator\\PlatformOfAggregator.cs
-    *   **Роль:** Описание основной таблицы. Наследует FullAuditableEntityOfAggregator (Soft Delete, аудит).
-*   **[ ] Локализация (Localization Entity):**
-    *   **Файл:** DAL\\Models\\Aggregator\\Localizations\\PlatformOfAggregatorLocalization.cs
-    *   **Роль:** Таблица для хранения переводов (имя, описание) и SEO-данных.
-*   **[ ] Интерфейс репозитория:**
-    *   **Файл:** DAL\\Repositories\\Interfaces\\IPlatformOfAggregatorRepository.cs
-*   **[ ] Реализация репозитория:**
-    *   **Файл:** DAL\\Repositories\\PlatformOfAggregatorRepository.cs
-*   **[ ] Регистрация в Unit of Work:**
-    *   **Файлы:** DAL\\Interfaces\\IUnitOfWork.cs и DAL\\Repositories\\UnitOfWork.cs
-
----
-
-#### 2. Слой логики (Business Logic / Page Services)
-Здесь сосредоточена вся бизнес-логика: проверка уникальности, обработка SEO, пагинация.
-
-*   **[ ] Интерфейс сервиса:**
-    *   **Файл:** Project_Server_Auth\\Pages\\AGGREGATOR\\PlatformOfAggregator\\Interfaces\\IPlatformOfAggregatorService.cs
-*   **[ ] Реализация сервиса:**
-    *   **Файл:** Project_Server_Auth\\Pages\\AGGREGATOR\\PlatformOfAggregator\\Services\\PlatformOfAggregatorService.cs
-*   **[ ] Модели данных (DTO):**
-    *   **Файл:** Project_Server_Auth\\Pages\\AGGREGATOR\\PlatformOfAggregator\\Dtos\\PlatformOfAggregatorDto.cs
-*   **[ ] Валидаторы (FluentValidation):**
-    *   **Файл:** Project_Server_Auth\\Pages\\AGGREGATOR\\PlatformOfAggregator\\Validators\\PlatformOfAggregatorValidators.cs
-*   **[ ] Маппинг (AutoMapper):**
-    *   **Файл:** Project_Server_Auth\\Pages\\AGGREGATOR\\PlatformOfAggregator\\Mappings\\PlatformOfAggregatorProfile.cs
-
----
-
-#### 3. Слой API (Controllers)
-Внешний интерфейс для общения с фронтендом.
-
-*   **[ ] Контроллер:**
-    *   **Файл:** Project_Server_Auth\\Controllers\\PlatformOfAggregatorController.cs
-    *   **Роль:** Обработка HTTP-запросов. Роут: api/v1/aggregator/platforms.
-
----
-
-#### 4. Инфраструктура и регистрация (DI)
-Связывание всех частей воедино.
-
-*   **[ ] Регистрация зависимостей (DI):**
-    *   **Файл:** Project_Server_Auth\\Extensions\\ServiceCollectionExtensions.cs
-    *   **Роль:** Регистрация сервиса и репозитория через services.AddScoped.`;
-
-  clientChecklistCode = `### 📋 Чек-лист реализации клиентской части (Angular 17+ Signals)
-
----
-
-#### 1. Структура модуля
-Путь: src/app/AGREGATOR/PAGES/SPRAVKA/PlatformOfAggregatorPage
-
-*   **[ ] Менеджер (Оркестратор):**
-    *   **Файл:** platform-of-aggregator-manager.component.ts
-    *   **Роль:** Главный хост, управляющий режимами Modal / Inline / Page и передающий сигналы состояния дочерним компонентам.
-*   **[ ] Роутинг:**
-    *   **Файл:** platform-of-aggregator.routes.ts
-    *   **Роль:** Определение путей и ленивая загрузка компонентов.
-
----
-
-#### 2. Модели и API
-*   **[ ] Интерфейсы и State:**
-    *   **Файл:** models/platform-of-aggregator.model.ts
-*   **[ ] API Сервис:**
-    *   **Файл:** services/platform-of-aggregator-api.service.ts
-    *   **Роль:** Инкапсуляция HTTP-запросов к бэкенду.
-
----
-
-#### 3. State Management (Angular Signals)
-*   **[ ] Сервис состояния (SSOT):**
-    *   **Файл:** services/platform-of-aggregator-state.service.ts
-    *   **Роль:** Единый источник правды. Хранит данные в signal(), обрабатывает пагинацию, фильтры и CRUD-операции.
-
----
-
-#### 4. Компоненты (Standalone + OnPush)
-*   **[ ] Список (List):**
-    *   **Файл:** components/platform-of-aggregator-list/platform-of-aggregator-list.component.ts
-    *   **Роль:** Таблица, фильтры, пагинация. Только отображение данных из State.
-*   **[ ] Форма (Form):**
-    *   **Файл:** components/platform-of-aggregator-page-form/platform-of-aggregator-page-form.component.ts
-    *   **Роль:** Общая логика редактирования (Reactive Forms + Localizations).
-*   **[ ] Модальные окна:**
-    *   **Файлы:** platform-of-aggregator-modal.component.ts, platform-of-aggregator-view-modal.component.ts
-    *   **Роль:** Обертки для формы и просмотра в диалоговых окнах.
-
----
-
-#### 5. Конфигурация
-*   **[ ] Точки доступа (EndPoints):**
-    *   **Файл:** end-points.ts
-    *   **Роль:** Централизованное хранение URL для API.`;
+  return operation.pipe(
+    takeUntil(this.destroy$),
+    finalize(() => this.updateState({ [loadingKey]: false } as any))
+  );
 }
 
+// --- ПАТТЕРН Localization Fallbacks ---
+private applyEnglishFallbacks(data: Dto) {
+  const enLoc = data.localizations.find(l => l.languageCode === 'en-US');
+  data.localizations.forEach(loc => {
+    if (!loc.name?.trim()) loc.name = enLoc?.name || data.canonicalName;
+    // ... копирование SEO данных
+  });
+}`;
+
+  clientChecklistCode = `Путь: src/app/AGREGATOR/PAGES/SPRAVKA/PlatformOfAggregatorPage/...
+
+[ ] MANAGER: platform-of-aggregator-manager.component.ts (Включает Maintenance блок)
+[ ] STATE: services/platform-of-aggregator-state.service.ts
+[ ] API: services/platform-of-aggregator-api.service.ts
+[ ] LIST: components/platform-of-aggregator-list/
+[ ] FORM: components/platform-of-aggregator-form/
+[ ] DETAILS: components/platform-of-aggregator-details/
+[ ] MODAL: components/platform-of-aggregator-modal/
+[ ] VIEW-MODAL: components/platform-of-aggregator-view-modal/
+[ ] INLINE: components/platform-of-aggregator-inline/
+[ ] PAGE-FORM: components/platform-of-aggregator-page-form/`;
+
+  masterPrompt = `TASK: Create administrative module for [ENTITY_NAME]
+Reference: PlatformOfAggregatorPage (Aurora v3.5)
+
+Key Logic Requirements:
+1. Signal State Management: Single writable signal<State>.
+2. SSOT Actions: loadItems, save, delete (soft/hard), restore, seedFromJson, clearDatabase.
+3. Loading Pattern: Use executeWithLoading helper for signals.
+4. SEO Fallbacks: Transfer content from en-US if localized fields are empty.
+5. Server Sorting: Default by 'Name', persistent via signals.
+6. Multi-Mode: Support Modal, Private Page, and Inline (Split) views.
+7. Maintenance: Implement the standard ButtonControlJsonBlock in the Manager header.`;
+
+  sortingCode = `// 1. В ТАБЛИЦЕ (TEMPLATE)
+<th [nzSortFn]="true" 
+    [nzSortOrder]="state.sortBy() === 'Name' ? (state.sortDirection() === 0 ? 'ascend' : 'descend') : null"
+    (nzSortOrderChange)="onSortChange('Name', $event)">
+    Название
+</th>
+
+<th [nzSortFn]="true" 
+    [nzSortOrder]="state.sortBy() === 'Id' ? (state.sortDirection() === 0 ? 'ascend' : 'descend') : null"
+    (nzSortOrderChange)="onSortChange('Id', $event)">
+    ID
+</th>
+
+// 2. В КОМПОНЕНТЕ (TS)
+onSortChange(column: string, direction: string | null): void {
+  this.state.setSort(column, direction);
+}
+
+// 3. В STATE СЕРВИСЕ
+setSort(column: string, direction: string | null): void {
+  const dirNum = direction === 'descend' ? 1 : 0;
+  this.updateState({ sortBy: column, sortDirection: dirNum, pageNumber: 1 });
+  this.loadItems();
+}`;
+}

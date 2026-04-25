@@ -1,0 +1,20 @@
+Результаты производства находятся на диске D:/в пакете проекта, используйте этот вариант команд. Он также был выпущен в углу диска D, не для этого скрипта, который был проигнорирован его владельцем (в бесконечном цикле записей).
+
+Примените это в терминале VS Code:
+
+PowerShell
+cd "D:\_PROGECT\pr_srv_names\DAL\Models\Aggregator"; Get-ChildItem -Recurse -File | ForEach-Object {
+    if ($_.Name -ne "all_models_merged.txt") {
+        "--- FILE: $($_.FullName) ---" | Add-Content "D:\all_models_merged.txt" -Encoding UTF8
+        Get-Content $_.FullName | Add-Content "D:\all_models_merged.txt" -Encoding UTF8
+        "`n" | Add-Content "D:\all_models_merged.txt" -Encoding UTF8
+    }
+}
+Что это за скрипт:
+Пожалуйста, ознакомьтесь с содержимым упаковки и моделями.
+
+Рекурсивно (включая все подпапки) собирает все файлы.
+
+Добавляет заголовок полностью к каждому файлу (чтобы вы различали особенности при чтении).
+
+Сохраняет всё в файле D:\all_models_merged.txt.

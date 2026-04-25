@@ -51,6 +51,21 @@ import { HelpPathActionsComponent } from '../help-path-actions/help-path-actions
           </div>
         }
 
+        <!-- DAL / Модели -->
+        @if (normalizedDalPaths().length > 0) {
+          <div class="path-group">
+            <span class="path-label">DAL:</span>
+            <div class="paths-list">
+              @for (path of normalizedDalPaths(); track path) {
+                <div class="path-item">
+                  <code class="path-value dal">{{ path }}</code>
+                  <av-help-path-actions [path]="path"></av-help-path-actions>
+                </div>
+              }
+            </div>
+          </div>
+        }
+
         <!-- Файл документации (Content) -->
         @if (normalizedDocPaths().length > 0) {
           <div class="path-group">
@@ -148,6 +163,7 @@ import { HelpPathActionsComponent } from '../help-path-actions/help-path-actions
       padding: 2px 0;
       
       &.doc { color: #0891b2; }
+      &.dal { color: #7c3aed; }
     }
   `]
 })
@@ -159,10 +175,17 @@ export class HelpPathHeaderComponent {
   icon = input<string>();
   
   componentPath = input<string | string[]>();
+  dalPath = input<string | string[]>();
   docPath = input<string | string[]>();
 
   normalizedComponentPaths = computed(() => {
     const val = this.componentPath();
+    if (!val) return [];
+    return Array.isArray(val) ? val : [val];
+  });
+
+  normalizedDalPaths = computed(() => {
+    const val = this.dalPath();
     if (!val) return [];
     return Array.isArray(val) ? val : [val];
   });

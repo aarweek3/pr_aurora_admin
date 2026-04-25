@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { AdminLayoutComponent } from './shared/components/layout/admin-layout/admin-layout.component';
+import { NotFoundComponent } from './auth/components/not-found/not-found.component';
 
 // TODO: Import AuthLayout when created (Phase 6)
 // import { AuthLayoutComponent } from './shared/components/layout/auth-layout/auth-layout.component';
@@ -116,6 +117,49 @@ export const routes: Routes = [
             './AGREGATOR/PAGES/SPRAVKA/PlatformOfAggregatorPage/platform-of-aggregator.routes'
           ).then((m) => m.PLATFORM_OF_AGGREGATOR_ROUTES),
       },
+      {
+        path: 'agregator/references/license-types',
+        loadChildren: () =>
+          import(
+            './AGREGATOR/PAGES/SPRAVKA/LicenseTypeOfAggregatorPage/license-type-of-aggregator.routes'
+          ).then((m) => m.LICENSE_TYPE_OF_AGGREGATOR_ROUTES),
+      },
+      {
+        path: 'agregator/references/developer',
+        loadChildren: () =>
+          import(
+            './AGREGATOR/PAGES/SPRAVKA/DeveloperOfAggregatorPage/developer-of-aggregator.routes'
+          ).then((m) => m.DEVELOPER_OF_AGGREGATOR_ROUTES),
+      },
+      {
+        path: 'agregator/references/categories',
+        loadChildren: () =>
+          import(
+            './AGREGATOR/PAGES/SPRAVKA/CategoryOfAggregatorPage/category-of-aggregator.routes'
+          ).then((m) => m.CATEGORY_OF_AGGREGATOR_ROUTES),
+      },
+      {
+        path: 'agregator/references/tag-categories',
+        loadChildren: () =>
+          import(
+            './AGREGATOR/PAGES/SPRAVKA/CategoryTagOfAggregatorPage/category-tag-of-aggregator.routes'
+          ).then((m) => m.CATEGORY_TAG_OF_AGGREGATOR_ROUTES),
+      },
+      {
+        path: 'agregator/references/tags',
+        loadChildren: () =>
+          import(
+            './AGREGATOR/PAGES/SPRAVKA/TagOfAggregatorPage/tag-of-aggregator.routes'
+          ).then((m) => m.TAG_OF_AGGREGATOR_ROUTES),
+      },
+      {
+        path: 'agregator/pages/program',
+        loadChildren: () =>
+          import(
+            './AGREGATOR/PAGES/SPRAVKA/ProgramOfAggregatorPage/program-of-aggregator.routes'
+          ).then((m) => m.PROGRAM_OF_AGGREGATOR_ROUTES),
+      },
+
       // { path: 'reports', loadChildren: () => import('./pages/reports/reports.routes') },
     ],
   },
@@ -123,5 +167,14 @@ export const routes: Routes = [
   {
     path: 'auth',
     loadChildren: () => import('./auth/auth.routes').then((m) => m.authRoutes),
+  },
+  // Not Found & Wildcard
+  {
+    path: 'not-found',
+    component: NotFoundComponent,
+  },
+  {
+    path: '**',
+    redirectTo: 'not-found',
   },
 ];

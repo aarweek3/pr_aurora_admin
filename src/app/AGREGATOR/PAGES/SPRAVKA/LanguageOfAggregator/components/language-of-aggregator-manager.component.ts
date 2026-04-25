@@ -91,7 +91,7 @@ import { LanguageOfAggregatorModalComponent } from './language-of-aggregator-mod
                 <av-icon [type]="getIconName(data)" [size]="24"></av-icon>
               </td>
               <td>
-                <code>{{ data.code }}</code>
+                <span class="av-tag-slug">{{ data.code }}</span>
               </td>
               <td>{{ data.shortCode }}</td>
               <td>{{ data.title }}</td>

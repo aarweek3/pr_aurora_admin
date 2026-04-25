@@ -41,6 +41,8 @@ export class PlatformOfAggregatorStateService implements OnDestroy {
   readonly pageSize = computed(() => this.state().pageSize);
   readonly pageNumber = computed(() => this.state().pageNumber);
   readonly searchTerm = computed(() => this.state().searchTerm);
+  readonly sortBy = computed(() => this.state().sortBy);
+  readonly sortDirection = computed(() => this.state().sortDirection);
 
   readonly viewModalVisible = computed(() => this.state().viewModalVisible);
   readonly viewItem = computed(() => this.state().viewItem);
@@ -74,6 +76,15 @@ export class PlatformOfAggregatorStateService implements OnDestroy {
 
   private handleError(err: any, context: string): void {
     const errorResponse = ErrorResponse.fromError(err, context);
+    
+    // Diagnostic log for the 404 mystery
+    console.error(`[PlatformState][${context}] Error detected:`, {
+      url: err?.url,
+      status: err?.status,
+      message: err?.message,
+      errorBody: err?.error
+    });
+
     this.updateState({ error: errorResponse });
     if (context === 'Save' || context === 'Delete') {
       this.message.error(errorResponse.getUserMessage());
@@ -90,19 +101,31 @@ export class PlatformOfAggregatorStateService implements OnDestroy {
         searchTerm: s.searchTerm,
         languageId: s.languageId || undefined,
         showDeleted: s.showDeleted,
+        sortBy: s.sortBy,
+        sortDirection: s.sortDirection,
       }),
     ).subscribe({
       next: (res) => {
         this.updateState({ items: res.items, total: res.total, error: null });
-
-        if (checkEmpty && res.total === 0 && !s.showDeleted) {
-          this.modalService.alert({
-            title: 'База данных пуста',
-            message: 'В данный момент в базе данных нет ни одной записи о платформах. Вы можете внести их вручную или воспользоваться кнопкой "Перенести из JSON".',
-            alertType: 'info',
-            centered: true,
-            icon: 'system/av_info'
-          });
+        
+        if (checkEmpty && !s.showDeleted) {
+          if (res.total === 0) {
+            this.modalService.alert({
+              title: 'База данных пуста!',
+              message: 'В базе данных \'DbNames\' (таблица \'platforms_of_aggregator\') нет записей для отображения. Вы можете инициализировать данные из JSON файла в блоке обслуживания.',
+              alertType: 'info',
+              centered: true,
+              icon: 'system/av_info'
+            });
+          } else {
+            this.modalService.alert({
+              title: 'Обновление завершено',
+              message: 'Данные из БД считаны, таблица обновлена. Всего загружено записей: ' + res.total,
+              alertType: 'success',
+              centered: true,
+              icon: 'general/av_check-circle'
+            });
+          }
         }
       },
       error: (err) => this.handleError(err, 'LoadItems'),
@@ -136,6 +159,23 @@ export class PlatformOfAggregatorStateService implements OnDestroy {
   setPageSize(size: number): void {
     if (this.state().pageSize === size) return;
     this.updateState({ pageSize: size, pageNumber: 1 });
+    this.loadItems();
+  }
+
+  setSort(column: string, direction: string | null): void {
+    // direction: 'ascend', 'descend', null
+    let dirNum = 0; // default asc
+    if (direction === 'descend') dirNum = 1;
+
+    // Если сброс (null) — возвращаемся к Name/Asc (т.к. это наш дефолт)
+    if (direction === null) {
+      if (this.state().sortBy === 'Name' && this.state().sortDirection === 0) return;
+      this.updateState({ sortBy: 'Name', sortDirection: 0, pageNumber: 1 });
+    } else {
+      if (this.state().sortBy === column && this.state().sortDirection === dirNum) return;
+      this.updateState({ sortBy: column, sortDirection: dirNum, pageNumber: 1 });
+    }
+
     this.loadItems();
   }
 

@@ -64,8 +64,18 @@
               },
               {
                 "glob": "**/*",
-                "input": "./node_modules/@ant-design/icons-angular/src/inline-svg/",
-                "output": "/assets/"
+                "input": "./node_modules/@ant-design/icons-angular/src/inline-svg/outline/",
+                "output": "/assets/nz-icon/"
+              },
+              {
+                "glob": "**/*",
+                "input": "./node_modules/@ant-design/icons-angular/src/inline-svg/fill/",
+                "output": "/assets/nz-icon/fill/"
+              },
+              {
+                "glob": "**/*",
+                "input": "./node_modules/@ant-design/icons-angular/src/inline-svg/twotone/",
+                "output": "/assets/nz-icon/twotone/"
               },
               {
                 "glob": "**/*",

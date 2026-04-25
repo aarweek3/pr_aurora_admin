@@ -1,0 +1,17 @@
+.tab-content {
+  padding: 16px;
+  background: #fff;
+  min-height: 500px;
+}
+
+.no-langs-container {
+  padding: 40px;
+  text-align: center;
+  color: #64748b;
+}
+
+:ng-deep {
+  .ant-tabs-nav {
+    margin-bottom: 24px;
+  }
+}

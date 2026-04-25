@@ -493,6 +493,12 @@ export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
               route: '/tools/test-image-editor-vs',
               icon: 'picture',
             },
+            {
+              id: 'test-image-uni',
+              label: 'Test Image UNI 🖼️',
+              route: '/test/image-uni',
+              icon: 'picture',
+            },
           ],
         },
       ],
@@ -517,7 +523,7 @@ export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
                 {
                   id: 'agregator-ref-license',
                   label: 'Лицензии',
-                  route: '/agregator/references/license',
+                  route: '/agregator/references/license-types',
                   icon: 'audit',
                 },
                 {
@@ -527,21 +533,27 @@ export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
                   icon: 'windows',
                 },
                 {
-                  id: 'agregator-ref-platform',
-                  label: 'Платформы',
-                  route: '/agregator/references/platform',
-                  icon: 'deployment-unit',
-                },
-                {
                   id: 'agregator-ref-developer',
                   label: 'Разработчики',
                   route: '/agregator/references/developer',
                   icon: 'team',
                 },
                 {
+                  id: 'agregator-ref-categories',
+                  label: 'Категории',
+                  route: '/agregator/references/categories',
+                  icon: 'folder',
+                },
+                {
+                  id: 'agregator-ref-tag-categories',
+                  label: 'Категории тегов',
+                  route: '/agregator/references/tag-categories',
+                  icon: 'folder',
+                },
+                {
                   id: 'agregator-ref-tag',
                   label: 'Теги',
-                  route: '/agregator/references/tag',
+                  route: '/agregator/references/tags',
                   icon: 'tags',
                 },
                 {
@@ -606,6 +618,18 @@ export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
                   route: '/help/sidebar',
                   icon: 'layout',
                 },
+                {
+                  id: 'sidebar-image-management',
+                  label: 'Управление изображениями 🖼️',
+                  route: '/help/image-management',
+                  icon: 'picture',
+                },
+                {
+                  id: 'sidebar-error-handling-guide',
+                  label: 'Обработка ошибок ⚠️',
+                  route: '/help/error-handling',
+                  icon: 'warning',
+                },
               ],
             },
             {
@@ -619,6 +643,56 @@ export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
                   label: 'Платформы Агрегатора 🌐',
                   route: '/help/platform-aggregator',
                   icon: 'windows',
+                },
+                {
+                  id: 'sidebar-language-aggregator',
+                  label: 'Языки Агрегатора 🌍',
+                  route: '/help/language-aggregator',
+                  icon: 'global',
+                },
+                {
+                  id: 'sidebar-developer-aggregator',
+                  label: 'Разработчики Агрегатора 👨‍💻',
+                  route: '/help/developer-aggregator',
+                  icon: 'code',
+                },
+                {
+                  id: 'sidebar-category-aggregator',
+                  label: 'Категории Агрегатора 📁',
+                  route: '/help/category-aggregator',
+                  icon: 'folder',
+                },
+                {
+                  id: 'sidebar-tag-aggregator',
+                  label: 'Теги Агрегатора 🏷️',
+                  route: '/help/tag-aggregator',
+                  icon: 'tags',
+                },
+                {
+                  id: 'sidebar-category-tag-aggregator',
+                  label: 'Категории тегов Агрегатора 📂',
+                  route: '/help/category-tag-aggregator',
+                  icon: 'folder-open',
+                },
+                {
+                  id: 'sidebar-program-aggregator',
+                  label: 'Программы Агрегатора 📦',
+                  route: '/help/program-aggregator',
+                  icon: 'appstore',
+                },
+              ],
+            },
+            {
+              id: 'help-models-group',
+              label: 'Модели',
+              icon: 'database',
+              type: 'submenu',
+              submenu: [
+                {
+                  id: 'sidebar-migration-help',
+                  label: 'Миграции БД 🛠️',
+                  route: '/help/migration',
+                  icon: 'database',
                 },
               ],
             },

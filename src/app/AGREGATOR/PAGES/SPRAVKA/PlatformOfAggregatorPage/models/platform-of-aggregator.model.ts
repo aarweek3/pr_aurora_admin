@@ -102,6 +102,8 @@ export interface PlatformOfAggregatorState {
   searchTerm: string;
   languageId: number | null;
   showDeleted: boolean;
+  sortBy: string;
+  sortDirection: number;
 
   // Состояние модалки/формы
   modalVisible: boolean;
@@ -129,6 +131,8 @@ export const INITIAL_PLATFORM_STATE: PlatformOfAggregatorState = {
   searchTerm: '',
   languageId: null,
   showDeleted: false,
+  sortBy: 'Name',
+  sortDirection: 0,
 
   modalVisible: false,
   modalMode: 'add',

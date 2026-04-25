@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { NzButtonModule } from 'ng-zorro-antd/button';
@@ -13,6 +13,7 @@ import { PlatformOfAggregatorListComponent } from './components/platform-of-aggr
 import { PlatformOfAggregatorModalComponent } from './components/platform-of-aggregator-modal/platform-of-aggregator-modal.component';
 import { PlatformOfAggregatorViewModalComponent } from './components/platform-of-aggregator-view-modal/platform-of-aggregator-view-modal.component';
 import { PlatformOfAggregatorStateService } from './services/platform-of-aggregator-state.service';
+import { ModalService } from '@shared/components/ui/modal/services/modal.service';
 
 @Component({
   selector: 'app-platform-of-aggregator-manager',
@@ -64,7 +65,7 @@ import { PlatformOfAggregatorStateService } from './services/platform-of-aggrega
           </div>
           <nz-radio-group [(ngModel)]="viewMode" nzButtonStyle="solid">
             <label nz-radio-button nzValue="modal">Модалка</label>
-            <label nz-radio-button nzValue="inline">Сплит-режим</label>
+            <label nz-radio-button nzValue="inline">Инлайн (Split)</label>
             <label nz-radio-button nzValue="page">Отдельная страница</label>
           </nz-radio-group>
         </div>
@@ -75,8 +76,8 @@ import { PlatformOfAggregatorStateService } from './services/platform-of-aggrega
         *ngIf="showMaintenance"
         [loading]="state.loading()"
         [total]="state.total() || 0"
-        (onClear)="state.clearDatabase()"
-        (onRead)="state.loadItems(true)"
+        (onClear)="handleClearDatabase()"
+        (onRead)="handleReadFromDb()"
         (onSeed)="state.seedFromJson()"
       ></app-button-control-json-block>
 
@@ -128,9 +129,45 @@ import { PlatformOfAggregatorStateService } from './services/platform-of-aggrega
   `,
   styleUrls: ['./platform-of-aggregator-manager.component.scss'],
 })
-export class PlatformOfAggregatorManagerComponent {
+export class PlatformOfAggregatorManagerComponent implements OnInit {
   viewMode: 'modal' | 'inline' | 'page' = 'modal';
   showMaintenance = false;
 
-  constructor(public state: PlatformOfAggregatorStateService) {}
+  constructor(
+    public state: PlatformOfAggregatorStateService,
+    private modalService: ModalService
+  ) {}
+  
+  async handleReadFromDb(): Promise<void> {
+    const confirmed = await this.modalService.confirm({
+      title: 'Подтверждение',
+      message: 'Вы действительно хотите перечиттать данные из БД и обновить таблицу?',
+      confirmText: 'Да',
+      cancelText: 'Нет',
+      confirmType: 'primary',
+      centered: true,
+      icon: 'system/av_info'
+    });
+    
+    if (confirmed) {
+      this.state.loadItems(true);
+    }
+  }
+
+  async handleClearDatabase(): Promise<void> {
+    const confirmed = await this.modalService.challenge(
+      'Вы действительно хотите СТЕРЕТЬ ВСЕ ДАННЫЕ из таблицы платформ?',
+      '2 + 2 * 2 = ?',
+      '6',
+      'Критическое действие'
+    );
+
+    if (confirmed) {
+      this.state.clearDatabase();
+    }
+  }
+
+  ngOnInit(): void {
+    this.state.loadItems();
+  }
 }

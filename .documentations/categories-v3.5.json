@@ -1,0 +1,5904 @@
+[
+  {
+    "Id": 1,
+    "ParentId": null,
+    "CanonicalName": "MULTIMEDIA",
+    "Slug": "multimedia",
+    "IconPath": "category_multimedia",
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 10,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Multimedia",
+        "Description": "Comprehensive software suites for audio, video, and graphic design creation and consumption.",
+        "MetaTitle": "Multimedia Software",
+        "MetaDescription": "Audio, video, graphic and multimedia software"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Мультимедиа",
+        "Description": "Полнофункциональные программные пакеты для работы со звуком, видео и графическим дизайном.",
+        "MetaTitle": "Мультимедиа программы",
+        "MetaDescription": "Аудио, видео, графика и мультимедийные программы"
+      }
+    ]
+  },
+  {
+    "Id": 2,
+    "ParentId": 1,
+    "CanonicalName": "MULTIMEDIA_AUDIO",
+    "Slug": "audio",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 10,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Audio",
+        "Description": "Audio players, editors, converters and plugins for high-quality sound management.",
+        "MetaTitle": "Audio Software",
+        "MetaDescription": "Audio players, editors, converters and plugins"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Аудио",
+        "Description": "Аудиоплееры, редакторы, конвертеры и плагины для качественной работы со звуком.",
+        "MetaTitle": "Аудио программы",
+        "MetaDescription": "Аудиоплееры, редакторы, конвертеры и плагины"
+      }
+    ]
+  },
+  {
+    "Id": 3,
+    "ParentId": 2,
+    "CanonicalName": "AUDIO_PLAYERS",
+    "Slug": "audio-players",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 10,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Audio Players / Jukeboxes",
+        "Description": "Music players and jukeboxes",
+        "MetaTitle": "Audio Players",
+        "MetaDescription": "Music players and jukeboxes"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Аудиоплееры",
+        "Description": "Музыкальные плееры и медиатеки",
+        "MetaTitle": "Аудиоплееры",
+        "MetaDescription": "Музыкальные плееры и медиатеки"
+      }
+    ]
+  },
+  {
+    "Id": 4,
+    "ParentId": 2,
+    "CanonicalName": "AUDIO_EDITORS",
+    "Slug": "audio-editors",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 20,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Audio Editors & Recorders",
+        "Description": "Audio editing and recording software",
+        "MetaTitle": "Audio Editors",
+        "MetaDescription": "Audio editing and recording software"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Аудиоредакторы и запись",
+        "Description": "Редактирование и запись звука",
+        "MetaTitle": "Аудиоредакторы",
+        "MetaDescription": "Редактирование и запись звука"
+      }
+    ]
+  },
+  {
+    "Id": 5,
+    "ParentId": 2,
+    "CanonicalName": "AUDIO_CONVERTERS",
+    "Slug": "audio-converters",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 30,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Audio Converters / Grabbers",
+        "Description": "Audio format converters and CD rippers",
+        "MetaTitle": "Audio Converters",
+        "MetaDescription": "Audio format converters and CD rippers"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Конвертеры аудио",
+        "Description": "Конвертеры форматов и граберы CD",
+        "MetaTitle": "Конвертеры аудио",
+        "MetaDescription": "Конвертеры форматов и граберы CD"
+      }
+    ]
+  },
+  {
+    "Id": 6,
+    "ParentId": 2,
+    "CanonicalName": "AUDIO_CD",
+    "Slug": "cd-rippers-burners",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 40,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "CD Rippers & Burners",
+        "Description": "CD ripping and disc burning software",
+        "MetaTitle": "CD Rippers & Burners",
+        "MetaDescription": "CD ripping and disc burning software"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Запись и риппинг CD",
+        "Description": "Программы для записи и риппинга дисков",
+        "MetaTitle": "Запись дисков",
+        "MetaDescription": "Программы для записи и риппинга дисков"
+      }
+    ]
+  },
+  {
+    "Id": 7,
+    "ParentId": 2,
+    "CanonicalName": "AUDIO_DJ",
+    "Slug": "dj-mixing-tools",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 50,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "DJ / Mixing Tools",
+        "Description": "DJ software and audio mixing tools",
+        "MetaTitle": "DJ & Mixing Software",
+        "MetaDescription": "DJ software and audio mixing tools"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "DJ и микширование",
+        "Description": "Программы для DJ и микширования звука",
+        "MetaTitle": "DJ программы",
+        "MetaDescription": "Программы для DJ и микширования звука"
+      }
+    ]
+  },
+  {
+    "Id": 8,
+    "ParentId": 2,
+    "CanonicalName": "AUDIO_PLUGINS",
+    "Slug": "audio-plugins",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 60,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Audio Plugins / VST",
+        "Description": "VST plugins and audio effects",
+        "MetaTitle": "Audio Plugins & VST",
+        "MetaDescription": "VST plugins and audio effects"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Аудиоплагины / VST",
+        "Description": "VST плагины и аудиоэффекты",
+        "MetaTitle": "Аудиоплагины",
+        "MetaDescription": "VST плагины и аудиоэффекты"
+      }
+    ]
+  },
+  {
+    "Id": 9,
+    "ParentId": 1,
+    "CanonicalName": "MULTIMEDIA_VIDEO",
+    "Slug": "video",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 20,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Video",
+        "Description": "Video players, editors, converters and live streaming tools for all your video needs.",
+        "MetaTitle": "Video Software",
+        "MetaDescription": "Video players, editors, converters and streaming"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Видео",
+        "Description": "Видеоплееры, редакторы, конвертеры и инструменты для стриминга на любой вкус.",
+        "MetaTitle": "Видео программы",
+        "MetaDescription": "Видеоплееры, редакторы, конвертеры и стриминг"
+      }
+    ]
+  },
+  {
+    "Id": 10,
+    "ParentId": 9,
+    "CanonicalName": "VIDEO_PLAYERS",
+    "Slug": "video-players",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 10,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Video Players",
+        "Description": "Software for playing video files",
+        "MetaTitle": "Video Players",
+        "MetaDescription": "Software for playing video files"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Видеоплееры",
+        "Description": "Программы для воспроизведения видео",
+        "MetaTitle": "Видеоплееры",
+        "MetaDescription": "Программы для воспроизведения видео"
+      }
+    ]
+  },
+  {
+    "Id": 11,
+    "ParentId": 9,
+    "CanonicalName": "VIDEO_EDITORS",
+    "Slug": "video-editors",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 20,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Video Editors / Post-production",
+        "Description": "Video editing and post-production software",
+        "MetaTitle": "Video Editors",
+        "MetaDescription": "Video editing and post-production software"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Видеоредакторы / Постпродакшн",
+        "Description": "Монтаж и постобработка видео",
+        "MetaTitle": "Видеоредакторы",
+        "MetaDescription": "Монтаж и постобработка видео"
+      }
+    ]
+  },
+  {
+    "Id": 12,
+    "ParentId": 9,
+    "CanonicalName": "VIDEO_CONVERTERS",
+    "Slug": "video-converters",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 30,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Video Converters & Encoders",
+        "Description": "Video format converters and encoders",
+        "MetaTitle": "Video Converters",
+        "MetaDescription": "Video format converters and encoders"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Конвертеры видео",
+        "Description": "Конвертеры и энкодеры видеоформатов",
+        "MetaTitle": "Конвертеры видео",
+        "MetaDescription": "Конвертеры и энкодеры видеоформатов"
+      }
+    ]
+  },
+  {
+    "Id": 13,
+    "ParentId": 9,
+    "CanonicalName": "VIDEO_RECORDERS",
+    "Slug": "screen-capture",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 40,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Screen Capture / Recorders",
+        "Description": "Screen recording and capture software",
+        "MetaTitle": "Screen Capture",
+        "MetaDescription": "Screen recording and capture software"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Захват и запись экрана",
+        "Description": "Программы для захвата и записи экрана",
+        "MetaTitle": "Запись экрана",
+        "MetaDescription": "Программы для захвата и записи экрана"
+      }
+    ]
+  },
+  {
+    "Id": 14,
+    "ParentId": 9,
+    "CanonicalName": "VIDEO_STREAMING",
+    "Slug": "streaming-tools",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 50,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Streaming Tools",
+        "Description": "Live streaming software like OBS and alternatives",
+        "MetaTitle": "Streaming Software",
+        "MetaDescription": "Live streaming software like OBS and alternatives"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Стриминг",
+        "Description": "Программы для стриминга: OBS и аналоги",
+        "MetaTitle": "Стриминг",
+        "MetaDescription": "Программы для стриминга: OBS и аналоги"
+      }
+    ]
+  },
+  {
+    "Id": 15,
+    "ParentId": 9,
+    "CanonicalName": "VIDEO_SUBTITLES",
+    "Slug": "subtitles",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 60,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Subtitles / Closed Captions",
+        "Description": "Subtitle editors and downloaders",
+        "MetaTitle": "Subtitle Software",
+        "MetaDescription": "Subtitle editors and downloaders"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Субтитры",
+        "Description": "Редакторы и загрузчики субтитров",
+        "MetaTitle": "Субтитры",
+        "MetaDescription": "Редакторы и загрузчики субтитров"
+      }
+    ]
+  },
+  {
+    "Id": 16,
+    "ParentId": 1,
+    "CanonicalName": "MULTIMEDIA_GRAPHIC",
+    "Slug": "graphic",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 30,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Graphic",
+        "Description": "Professional software for digital artists: editors, viewers, 3D modeling and CAD tools.",
+        "MetaTitle": "Graphic Software",
+        "MetaDescription": "Graphic editors, viewers, 3D and CAD tools"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Графика",
+        "Description": "Профессиональный софт для цифровых художников: редакторы, просмотрщики, 3D и САПР.",
+        "MetaTitle": "Графические программы",
+        "MetaDescription": "Графические редакторы, просмотрщики, 3D и САПР"
+      }
+    ]
+  },
+  {
+    "Id": 17,
+    "ParentId": 16,
+    "CanonicalName": "GRAPHIC_RASTER",
+    "Slug": "graphic-editors-raster",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 10,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Graphic Editors (Raster)",
+        "Description": "Raster image editing software",
+        "MetaTitle": "Raster Graphic Editors",
+        "MetaDescription": "Raster image editing software"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Растровые редакторы",
+        "Description": "Редакторы растровых изображений",
+        "MetaTitle": "Растровые редакторы",
+        "MetaDescription": "Редакторы растровых изображений"
+      }
+    ]
+  },
+  {
+    "Id": 18,
+    "ParentId": 16,
+    "CanonicalName": "GRAPHIC_VECTOR",
+    "Slug": "graphic-editors-vector",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 20,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Graphic Editors (Vector)",
+        "Description": "Vector image editing software",
+        "MetaTitle": "Vector Graphic Editors",
+        "MetaDescription": "Vector image editing software"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Векторные редакторы",
+        "Description": "Редакторы векторной графики",
+        "MetaTitle": "Векторные редакторы",
+        "MetaDescription": "Редакторы векторной графики"
+      }
+    ]
+  },
+  {
+    "Id": 19,
+    "ParentId": 16,
+    "CanonicalName": "GRAPHIC_VIEWERS",
+    "Slug": "graphic-viewers",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 30,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Graphic Viewers & Management",
+        "Description": "Image viewers and photo management software",
+        "MetaTitle": "Image Viewers",
+        "MetaDescription": "Image viewers and photo management software"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Просмотрщики изображений",
+        "Description": "Просмотр и управление фото",
+        "MetaTitle": "Просмотрщики",
+        "MetaDescription": "Просмотр и управление фото"
+      }
+    ]
+  },
+  {
+    "Id": 20,
+    "ParentId": 16,
+    "CanonicalName": "GRAPHIC_3D",
+    "Slug": "3d-modeling",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 40,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "3D Modeling & Rendering",
+        "Description": "3D modeling and rendering applications",
+        "MetaTitle": "3D Modeling Software",
+        "MetaDescription": "3D modeling and rendering applications"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "3D моделирование и рендеринг",
+        "Description": "Программы для 3D моделирования и рендеринга",
+        "MetaTitle": "3D моделирование",
+        "MetaDescription": "Программы для 3D моделирования и рендеринга"
+      }
+    ]
+  },
+  {
+    "Id": 21,
+    "ParentId": 16,
+    "CanonicalName": "GRAPHIC_CAD",
+    "Slug": "cad-architecture",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 50,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "CAD / Architecture",
+        "Description": "CAD and architectural design software",
+        "MetaTitle": "CAD Software",
+        "MetaDescription": "CAD and architectural design software"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "САПР / Проектирование",
+        "Description": "Программы автоматизированного проектирования",
+        "MetaTitle": "САПР",
+        "MetaDescription": "Программы автоматизированного проектирования"
+      }
+    ]
+  },
+  {
+    "Id": 22,
+    "ParentId": 16,
+    "CanonicalName": "GRAPHIC_FONTS",
+    "Slug": "font-tools",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 60,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Font Tools",
+        "Description": "Font editors and management software",
+        "MetaTitle": "Font Tools",
+        "MetaDescription": "Font editors and management software"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Работа со шрифтами",
+        "Description": "Редакторы и менеджеры шрифтов",
+        "MetaTitle": "Шрифты",
+        "MetaDescription": "Редакторы и менеджеры шрифтов"
+      }
+    ]
+  },
+  {
+    "Id": 23,
+    "ParentId": 16,
+    "CanonicalName": "GRAPHIC_ICONS",
+    "Slug": "icon-cursor-tools",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 70,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Icon & Cursor Tools",
+        "Description": "Icon editors and cursor tools",
+        "MetaTitle": "Icon & Cursor Tools",
+        "MetaDescription": "Icon editors and cursor tools"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Редакторы иконок и курсоров",
+        "Description": "Редакторы иконок и курсоров",
+        "MetaTitle": "Иконки и курсоры",
+        "MetaDescription": "Редакторы иконок и курсоров"
+      }
+    ]
+  },
+  {
+    "Id": 24,
+    "ParentId": 1,
+    "CanonicalName": "MULTIMEDIA_OTHER",
+    "Slug": "other-multimedia",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 99,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Other Multimedia",
+        "Description": "Other multimedia software",
+        "MetaTitle": "Other Multimedia",
+        "MetaDescription": "Other multimedia software"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Прочее мультимедиа",
+        "Description": "Другие мультимедийные программы",
+        "MetaTitle": "Прочее мультимедиа",
+        "MetaDescription": "Другие мультимедийные программы"
+      }
+    ]
+  },
+  {
+    "Id": 100,
+    "ParentId": null,
+    "CanonicalName": "AI_TOOLS",
+    "Slug": "ai-tools",
+    "IconPath": "category_ai",
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 20,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "AI Tools",
+        "Description": "Cutting-edge tools leveraging artificial intelligence and neural networks for generators, chatbots, and speech synthesis.",
+        "MetaTitle": "AI & Neural Network Tools",
+        "MetaDescription": "Artificial intelligence and neural network software"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Инструменты ИИ",
+        "Description": "Современные инструменты на базе ИИ и нейросетей: генераторы, чат-боты и синтез речи.",
+        "MetaTitle": "ИИ и нейросети",
+        "MetaDescription": "Программы искусственного интеллекта и нейросетей"
+      }
+    ]
+  },
+  {
+    "Id": 101,
+    "ParentId": 100,
+    "CanonicalName": "AI_IMAGE_GEN",
+    "Slug": "ai-image-generation",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 10,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Image Generation",
+        "Description": "Cutting-edge Stable Diffusion based local generators and AI image enhancement tools.",
+        "MetaTitle": "AI Image Generation",
+        "MetaDescription": "Stable Diffusion and AI image generation tools"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Генерация изображений",
+        "Description": "Передовые локальные генераторы на базе Stable Diffusion и инструменты улучшения фото.",
+        "MetaTitle": "Генерация изображений",
+        "MetaDescription": "Stable Diffusion и другие генераторы изображений"
+      }
+    ]
+  },
+  {
+    "Id": 102,
+    "ParentId": 101,
+    "CanonicalName": "AI_STABLE_DIFF",
+    "Slug": "stable-diffusion",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 10,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Stable Diffusion & Local Generators",
+        "Description": "Local AI image generators based on Stable Diffusion",
+        "MetaTitle": "Stable Diffusion",
+        "MetaDescription": "Local AI image generators based on Stable Diffusion"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Stable Diffusion и локальные генераторы",
+        "Description": "Локальные генераторы изображений на базе Stable Diffusion",
+        "MetaTitle": "Stable Diffusion",
+        "MetaDescription": "Локальные генераторы изображений на базе Stable Diffusion"
+      }
+    ]
+  },
+  {
+    "Id": 103,
+    "ParentId": 101,
+    "CanonicalName": "AI_UPSCALERS",
+    "Slug": "ai-upscalers",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 20,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Upscalers & Image Enhancement",
+        "Description": "AI-powered image upscaling and enhancement tools",
+        "MetaTitle": "AI Upscalers",
+        "MetaDescription": "AI-powered image upscaling and enhancement tools"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Апскейлеры и улучшение изображений",
+        "Description": "ИИ-инструменты для увеличения и улучшения изображений",
+        "MetaTitle": "Апскейлеры",
+        "MetaDescription": "ИИ-инструменты для увеличения и улучшения изображений"
+      }
+    ]
+  },
+  {
+    "Id": 104,
+    "ParentId": 101,
+    "CanonicalName": "AI_PHOTO_EDIT",
+    "Slug": "ai-photo-editors",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 30,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "AI Photo Editors",
+        "Description": "AI-powered photo editing software",
+        "MetaTitle": "AI Photo Editors",
+        "MetaDescription": "AI-powered photo editing software"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "ИИ-фоторедакторы",
+        "Description": "Фоторедакторы на базе искусственного интеллекта",
+        "MetaTitle": "ИИ-фоторедакторы",
+        "MetaDescription": "Фоторедакторы на базе искусственного интеллекта"
+      }
+    ]
+  },
+  {
+    "Id": 105,
+    "ParentId": 100,
+    "CanonicalName": "AI_LLM",
+    "Slug": "llm-chatbots",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 20,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "LLM / Chatbots",
+        "Description": "Run large language models locally and use AI chatbots to boost your daily productivity.",
+        "MetaTitle": "LLM & Chatbots",
+        "MetaDescription": "Large language models and AI chatbot software"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "LLM / Чат-боты",
+        "Description": "Запускайте большие языковые модели локально и используйте чат-ботов для продуктивной работы.",
+        "MetaTitle": "LLM и чат-боты",
+        "MetaDescription": "Языковые модели и ИИ-ассистенты"
+      }
+    ]
+  },
+  {
+    "Id": 106,
+    "ParentId": 105,
+    "CanonicalName": "AI_LLM_LOCAL",
+    "Slug": "local-llm-runners",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 10,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Local LLM Runners",
+        "Description": "Run large language models locally: LM Studio, Ollama",
+        "MetaTitle": "Local LLM Runners",
+        "MetaDescription": "Run large language models locally: LM Studio, Ollama"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Локальные LLM",
+        "Description": "Запуск языковых моделей локально: LM Studio, Ollama",
+        "MetaTitle": "Локальные LLM",
+        "MetaDescription": "Запуск языковых моделей локально: LM Studio, Ollama"
+      }
+    ]
+  },
+  {
+    "Id": 107,
+    "ParentId": 105,
+    "CanonicalName": "AI_ASSISTANTS",
+    "Slug": "ai-assistants",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 20,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "AI Assistants & Productivity",
+        "Description": "AI productivity assistants and automation tools",
+        "MetaTitle": "AI Assistants",
+        "MetaDescription": "AI productivity assistants and automation tools"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "ИИ-ассистенты и продуктивность",
+        "Description": "ИИ-ассистенты и инструменты автоматизации",
+        "MetaTitle": "ИИ-ассистенты",
+        "MetaDescription": "ИИ-ассистенты и инструменты автоматизации"
+      }
+    ]
+  },
+  {
+    "Id": 108,
+    "ParentId": 100,
+    "CanonicalName": "AI_VOICE",
+    "Slug": "voice-speech-ai",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 30,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Voice & Speech AI",
+        "Description": "Text-to-speech, speech recognition and voice cloning",
+        "MetaTitle": "Voice & Speech AI",
+        "MetaDescription": "Text-to-speech, speech recognition and voice cloning"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Голос и речь ИИ",
+        "Description": "Синтез, распознавание и клонирование голоса",
+        "MetaTitle": "Голосовой ИИ",
+        "MetaDescription": "Синтез, распознавание и клонирование голоса"
+      }
+    ]
+  },
+  {
+    "Id": 109,
+    "ParentId": 108,
+    "CanonicalName": "AI_TTS",
+    "Slug": "text-to-speech",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 10,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Text-to-Speech",
+        "Description": "Text to speech and voice synthesis software",
+        "MetaTitle": "Text-to-Speech",
+        "MetaDescription": "Text to speech and voice synthesis software"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Синтез речи (TTS)",
+        "Description": "Программы синтеза речи из текста",
+        "MetaTitle": "Синтез речи",
+        "MetaDescription": "Программы синтеза речи из текста"
+      }
+    ]
+  },
+  {
+    "Id": 110,
+    "ParentId": 108,
+    "CanonicalName": "AI_STT",
+    "Slug": "speech-to-text",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 20,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Speech-to-Text",
+        "Description": "Speech recognition and transcription software",
+        "MetaTitle": "Speech Recognition",
+        "MetaDescription": "Speech recognition and transcription software"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Распознавание речи (STT)",
+        "Description": "Программы распознавания и транскрипции речи",
+        "MetaTitle": "Распознавание речи",
+        "MetaDescription": "Программы распознавания и транскрипции речи"
+      }
+    ]
+  },
+  {
+    "Id": 111,
+    "ParentId": 108,
+    "CanonicalName": "AI_VOICE_CLONE",
+    "Slug": "voice-cloning",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 30,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Voice Cloning",
+        "Description": "AI voice cloning and synthesis tools",
+        "MetaTitle": "Voice Cloning",
+        "MetaDescription": "AI voice cloning and synthesis tools"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Клонирование голоса",
+        "Description": "ИИ-инструменты клонирования голоса",
+        "MetaTitle": "Клонирование голоса",
+        "MetaDescription": "ИИ-инструменты клонирования голоса"
+      }
+    ]
+  },
+  {
+    "Id": 112,
+    "ParentId": 100,
+    "CanonicalName": "AI_VIDEO",
+    "Slug": "ai-video-animation",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 40,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "AI Video & Animation",
+        "Description": "AI video generation and animation tools",
+        "MetaTitle": "AI Video & Animation",
+        "MetaDescription": "AI video generation and animation tools"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "ИИ-видео и анимация",
+        "Description": "Генерация видео и анимации с помощью ИИ",
+        "MetaTitle": "ИИ-видео",
+        "MetaDescription": "Генерация видео и анимации с помощью ИИ"
+      }
+    ]
+  },
+  {
+    "Id": 200,
+    "ParentId": null,
+    "CanonicalName": "INTERNET",
+    "Slug": "internet",
+    "IconPath": "category_internet",
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 30,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Internet",
+        "Description": "Applications for web browsing, instant messaging, file transfers, and network security management.",
+        "MetaTitle": "Internet Software",
+        "MetaDescription": "Browsers, email, chat, VPN and network tools"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Интернет",
+        "Description": "Приложения для веб-серфинга, общения в мессенджерах, передачи файлов и системного сетевого контроля.",
+        "MetaTitle": "Интернет программы",
+        "MetaDescription": "Браузеры, почта, мессенджеры, VPN и сетевые утилиты"
+      }
+    ]
+  },
+  {
+    "Id": 201,
+    "ParentId": 200,
+    "CanonicalName": "INTERNET_BROWSERS",
+    "Slug": "browsers-extensions",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 10,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Browsers & Extensions",
+        "Description": "Modern web browsers and a collection of useful extensions for productivity and security.",
+        "MetaTitle": "Web Browsers",
+        "MetaDescription": "Web browsers and browser extensions"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Браузеры и расширения",
+        "Description": "Современные браузеры и коллекция полезных расширений для безопасности и учебы.",
+        "MetaTitle": "Браузеры",
+        "MetaDescription": "Веб-браузеры и расширения для них"
+      }
+    ]
+  },
+  {
+    "Id": 202,
+    "ParentId": 201,
+    "CanonicalName": "INTERNET_BROWSERS_MAIN",
+    "Slug": "web-browsers",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 10,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Web Browsers",
+        "Description": "Chrome, Firefox, Opera and other browsers",
+        "MetaTitle": "Web Browsers",
+        "MetaDescription": "Chrome, Firefox, Opera and other browsers"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Веб-браузеры",
+        "Description": "Chrome, Firefox, Opera и другие браузеры",
+        "MetaTitle": "Веб-браузеры",
+        "MetaDescription": "Chrome, Firefox, Opera и другие браузеры"
+      }
+    ]
+  },
+  {
+    "Id": 203,
+    "ParentId": 201,
+    "CanonicalName": "INTERNET_CHROME_EXT",
+    "Slug": "chrome-extensions",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 20,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Chrome Extensions",
+        "Description": "Extensions and add-ons for Google Chrome",
+        "MetaTitle": "Chrome Extensions",
+        "MetaDescription": "Extensions and add-ons for Google Chrome"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Расширения Chrome",
+        "Description": "Расширения и дополнения для Google Chrome",
+        "MetaTitle": "Расширения Chrome",
+        "MetaDescription": "Расширения и дополнения для Google Chrome"
+      }
+    ]
+  },
+  {
+    "Id": 204,
+    "ParentId": 201,
+    "CanonicalName": "INTERNET_FIREFOX_EXT",
+    "Slug": "firefox-addons",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 30,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Firefox Add-ons",
+        "Description": "Add-ons and extensions for Mozilla Firefox",
+        "MetaTitle": "Firefox Add-ons",
+        "MetaDescription": "Add-ons and extensions for Mozilla Firefox"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Дополнения Firefox",
+        "Description": "Дополнения и расширения для Mozilla Firefox",
+        "MetaTitle": "Дополнения Firefox",
+        "MetaDescription": "Дополнения и расширения для Mozilla Firefox"
+      }
+    ]
+  },
+  {
+    "Id": 205,
+    "ParentId": 200,
+    "CanonicalName": "INTERNET_COMM",
+    "Slug": "communications",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 20,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Communications",
+        "Description": "Stay connected with chat apps, VoIP services, and reliable video meeting platforms.",
+        "MetaTitle": "Communication Software",
+        "MetaDescription": "Chat, VoIP and video conferencing tools"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Коммуникации",
+        "Description": "Оставайтесь на связи с помощью чатов, VoIP и надежных платформ для видеовстреч.",
+        "MetaTitle": "Средства общения",
+        "MetaDescription": "Мессенджеры, VoIP и видеоконференции"
+      }
+    ]
+  },
+  {
+    "Id": 206,
+    "ParentId": 205,
+    "CanonicalName": "INTERNET_CHAT",
+    "Slug": "chat-messaging",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 10,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Chat / Instant Messaging",
+        "Description": "Instant messaging and chat software",
+        "MetaTitle": "Instant Messaging",
+        "MetaDescription": "Instant messaging and chat software"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Чат / Мессенджеры",
+        "Description": "Программы для чата и обмена сообщениями",
+        "MetaTitle": "Мессенджеры",
+        "MetaDescription": "Программы для чата и обмена сообщениями"
+      }
+    ]
+  },
+  {
+    "Id": 207,
+    "ParentId": 205,
+    "CanonicalName": "INTERNET_VOIP",
+    "Slug": "voip",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 20,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "VoIP",
+        "Description": "Voice over IP and internet telephony software",
+        "MetaTitle": "VoIP Software",
+        "MetaDescription": "Voice over IP and internet telephony software"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "VoIP / IP-телефония",
+        "Description": "Голосовая связь через интернет",
+        "MetaTitle": "IP-телефония",
+        "MetaDescription": "Голосовая связь через интернет"
+      }
+    ]
+  },
+  {
+    "Id": 208,
+    "ParentId": 205,
+    "CanonicalName": "INTERNET_VIDEOCONF",
+    "Slug": "video-conferencing",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 30,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Video Conferencing",
+        "Description": "Video conferencing and online meeting software",
+        "MetaTitle": "Video Conferencing",
+        "MetaDescription": "Video conferencing and online meeting software"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Видеоконференции",
+        "Description": "Программы для видеозвонков и онлайн-встреч",
+        "MetaTitle": "Видеоконференции",
+        "MetaDescription": "Программы для видеозвонков и онлайн-встреч"
+      }
+    ]
+  },
+  {
+    "Id": 209,
+    "ParentId": 200,
+    "CanonicalName": "INTERNET_TRANSFER",
+    "Slug": "file-transfer",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 30,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "File Transfer",
+        "Description": "Download managers, FTP clients and P2P software",
+        "MetaTitle": "File Transfer Software",
+        "MetaDescription": "Download managers, FTP clients and P2P software"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Передача файлов",
+        "Description": "Менеджеры загрузок, FTP-клиенты и торрент",
+        "MetaTitle": "Передача файлов",
+        "MetaDescription": "Менеджеры загрузок, FTP-клиенты и торрент"
+      }
+    ]
+  },
+  {
+    "Id": 210,
+    "ParentId": 209,
+    "CanonicalName": "INTERNET_DOWNLOAD",
+    "Slug": "download-managers",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 10,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Download Managers",
+        "Description": "Software for managing and accelerating downloads",
+        "MetaTitle": "Download Managers",
+        "MetaDescription": "Software for managing and accelerating downloads"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Менеджеры загрузок",
+        "Description": "Управление и ускорение загрузок",
+        "MetaTitle": "Менеджеры загрузок",
+        "MetaDescription": "Управление и ускорение загрузок"
+      }
+    ]
+  },
+  {
+    "Id": 211,
+    "ParentId": 209,
+    "CanonicalName": "INTERNET_FTP",
+    "Slug": "ftp-ssh-clients",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 20,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "FTP / SSH Clients",
+        "Description": "FTP and SSH file transfer clients",
+        "MetaTitle": "FTP & SSH Clients",
+        "MetaDescription": "FTP and SSH file transfer clients"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "FTP / SSH клиенты",
+        "Description": "Клиенты передачи файлов по FTP и SSH",
+        "MetaTitle": "FTP и SSH",
+        "MetaDescription": "Клиенты передачи файлов по FTP и SSH"
+      }
+    ]
+  },
+  {
+    "Id": 212,
+    "ParentId": 209,
+    "CanonicalName": "INTERNET_P2P",
+    "Slug": "p2p-torrent",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 30,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "P2P / Torrent",
+        "Description": "P2P file sharing and torrent clients",
+        "MetaTitle": "P2P & Torrent",
+        "MetaDescription": "P2P file sharing and torrent clients"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "P2P / Торрент",
+        "Description": "Торрент-клиенты и P2P файлообмен",
+        "MetaTitle": "Торрент",
+        "MetaDescription": "Торрент-клиенты и P2P файлообмен"
+      }
+    ]
+  },
+  {
+    "Id": 213,
+    "ParentId": 200,
+    "CanonicalName": "INTERNET_EMAIL",
+    "Slug": "email",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 40,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Email",
+        "Description": "Email clients and email utility software",
+        "MetaTitle": "Email Software",
+        "MetaDescription": "Email clients and email utility software"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Электронная почта",
+        "Description": "Почтовые клиенты и утилиты для email",
+        "MetaTitle": "Почтовые программы",
+        "MetaDescription": "Почтовые клиенты и утилиты для email"
+      }
+    ]
+  },
+  {
+    "Id": 214,
+    "ParentId": 213,
+    "CanonicalName": "INTERNET_EMAIL_CLIENTS",
+    "Slug": "email-clients",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 10,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Email Clients",
+        "Description": "Desktop email client software",
+        "MetaTitle": "Email Clients",
+        "MetaDescription": "Desktop email client software"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Почтовые клиенты",
+        "Description": "Программы для работы с электронной почтой",
+        "MetaTitle": "Почтовые клиенты",
+        "MetaDescription": "Программы для работы с электронной почтой"
+      }
+    ]
+  },
+  {
+    "Id": 215,
+    "ParentId": 213,
+    "CanonicalName": "INTERNET_ANTISPAM",
+    "Slug": "spam-filters",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 20,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Spam Filters",
+        "Description": "Anti-spam and email filtering software",
+        "MetaTitle": "Spam Filters",
+        "MetaDescription": "Anti-spam and email filtering software"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Антиспам",
+        "Description": "Программы для фильтрации спама",
+        "MetaTitle": "Антиспам",
+        "MetaDescription": "Программы для фильтрации спама"
+      }
+    ]
+  },
+  {
+    "Id": 216,
+    "ParentId": 213,
+    "CanonicalName": "INTERNET_EMAIL_NOTIFY",
+    "Slug": "email-notification-tools",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 30,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Email Notification Tools",
+        "Description": "Email notification and alert software",
+        "MetaTitle": "Email Notifiers",
+        "MetaDescription": "Email notification and alert software"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Уведомления о почте",
+        "Description": "Программы уведомлений о новых письмах",
+        "MetaTitle": "Почтовые уведомления",
+        "MetaDescription": "Программы уведомлений о новых письмах"
+      }
+    ]
+  },
+  {
+    "Id": 217,
+    "ParentId": 200,
+    "CanonicalName": "INTERNET_NETWORK",
+    "Slug": "network-tools",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 50,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Network Tools",
+        "Description": "IP scanners, VPN, remote desktop and network utilities",
+        "MetaTitle": "Network Tools",
+        "MetaDescription": "IP scanners, VPN, remote desktop and network utilities"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Сетевые утилиты",
+        "Description": "IP-сканеры, VPN, удалённый доступ и сеть",
+        "MetaTitle": "Сетевые утилиты",
+        "MetaDescription": "IP-сканеры, VPN, удалённый доступ и сеть"
+      }
+    ]
+  },
+  {
+    "Id": 218,
+    "ParentId": 217,
+    "CanonicalName": "INTERNET_IP_SCAN",
+    "Slug": "ip-scanners",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 10,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "IP Scanners & Whois",
+        "Description": "Network scanners, Whois and ping tools",
+        "MetaTitle": "IP Scanners",
+        "MetaDescription": "Network scanners, Whois and ping tools"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "IP-сканеры и Whois",
+        "Description": "Сетевые сканеры, Whois и ping утилиты",
+        "MetaTitle": "IP-сканеры",
+        "MetaDescription": "Сетевые сканеры, Whois и ping утилиты"
+      }
+    ]
+  },
+  {
+    "Id": 219,
+    "ParentId": 217,
+    "CanonicalName": "INTERNET_TRAFFIC",
+    "Slug": "traffic-monitoring",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 20,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Traffic Monitoring",
+        "Description": "Network traffic monitoring and analysis tools",
+        "MetaTitle": "Traffic Monitoring",
+        "MetaDescription": "Network traffic monitoring and analysis tools"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Мониторинг трафика",
+        "Description": "Анализ и мониторинг сетевого трафика",
+        "MetaTitle": "Мониторинг трафика",
+        "MetaDescription": "Анализ и мониторинг сетевого трафика"
+      }
+    ]
+  },
+  {
+    "Id": 220,
+    "ParentId": 217,
+    "CanonicalName": "INTERNET_VPN",
+    "Slug": "vpn-proxy",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 30,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "VPN & Proxy",
+        "Description": "VPN clients and proxy software",
+        "MetaTitle": "VPN & Proxy",
+        "MetaDescription": "VPN clients and proxy software"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "VPN и прокси",
+        "Description": "VPN-клиенты и прокси-программы",
+        "MetaTitle": "VPN и прокси",
+        "MetaDescription": "VPN-клиенты и прокси-программы"
+      }
+    ]
+  },
+  {
+    "Id": 221,
+    "ParentId": 217,
+    "CanonicalName": "INTERNET_REMOTE",
+    "Slug": "remote-desktop",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 40,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Remote Desktop / VNC",
+        "Description": "Remote desktop and VNC software",
+        "MetaTitle": "Remote Desktop",
+        "MetaDescription": "Remote desktop and VNC software"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Удалённый рабочий стол",
+        "Description": "Программы удалённого рабочего стола и VNC",
+        "MetaTitle": "Удалённый доступ",
+        "MetaDescription": "Программы удалённого рабочего стола и VNC"
+      }
+    ]
+  },
+  {
+    "Id": 222,
+    "ParentId": 200,
+    "CanonicalName": "INTERNET_SOCIAL",
+    "Slug": "social-web",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 60,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Social & Web",
+        "Description": "Social network clients, RSS readers and blog tools",
+        "MetaTitle": "Social & Web Tools",
+        "MetaDescription": "Social network clients, RSS readers and blog tools"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Соцсети и веб",
+        "Description": "Клиенты соцсетей, RSS-читалки и блог-инструменты",
+        "MetaTitle": "Соцсети и веб",
+        "MetaDescription": "Клиенты соцсетей, RSS-читалки и блог-инструменты"
+      }
+    ]
+  },
+  {
+    "Id": 223,
+    "ParentId": 222,
+    "CanonicalName": "INTERNET_SOCIAL_CLIENTS",
+    "Slug": "social-network-clients",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 10,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Social Network Clients",
+        "Description": "Desktop clients for social networks",
+        "MetaTitle": "Social Network Clients",
+        "MetaDescription": "Desktop clients for social networks"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Клиенты соцсетей",
+        "Description": "Настольные клиенты для социальных сетей",
+        "MetaTitle": "Клиенты соцсетей",
+        "MetaDescription": "Настольные клиенты для социальных сетей"
+      }
+    ]
+  },
+  {
+    "Id": 224,
+    "ParentId": 222,
+    "CanonicalName": "INTERNET_RSS",
+    "Slug": "rss-readers",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 20,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "RSS Readers",
+        "Description": "RSS and Atom feed readers",
+        "MetaTitle": "RSS Readers",
+        "MetaDescription": "RSS and Atom feed readers"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "RSS-читалки",
+        "Description": "Программы для чтения RSS и Atom лент",
+        "MetaTitle": "RSS-ридеры",
+        "MetaDescription": "Программы для чтения RSS и Atom лент"
+      }
+    ]
+  },
+  {
+    "Id": 225,
+    "ParentId": 222,
+    "CanonicalName": "INTERNET_BLOG",
+    "Slug": "blog-publishing-tools",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 30,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Blog / Publishing Tools",
+        "Description": "Blogging and web publishing tools",
+        "MetaTitle": "Blog & Publishing",
+        "MetaDescription": "Blogging and web publishing tools"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Блоги и публикации",
+        "Description": "Инструменты для блогов и публикаций",
+        "MetaTitle": "Блоги",
+        "MetaDescription": "Инструменты для блогов и публикаций"
+      }
+    ]
+  },
+  {
+    "Id": 226,
+    "ParentId": 200,
+    "CanonicalName": "INTERNET_CRYPTO",
+    "Slug": "crypto-blockchain",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 70,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Crypto & Blockchain",
+        "Description": "Cryptocurrency wallets, trackers and mining tools",
+        "MetaTitle": "Crypto & Blockchain",
+        "MetaDescription": "Cryptocurrency wallets, trackers and mining tools"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Крипто и блокчейн",
+        "Description": "Криптокошельки, трекеры и майнинг",
+        "MetaTitle": "Криптовалюта",
+        "MetaDescription": "Криптокошельки, трекеры и майнинг"
+      }
+    ]
+  },
+  {
+    "Id": 227,
+    "ParentId": 226,
+    "CanonicalName": "INTERNET_CRYPTO_WALLETS",
+    "Slug": "crypto-wallets",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 10,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Crypto Wallets",
+        "Description": "Cryptocurrency wallet software",
+        "MetaTitle": "Crypto Wallets",
+        "MetaDescription": "Cryptocurrency wallet software"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Криптокошельки",
+        "Description": "Программы-кошельки для криптовалют",
+        "MetaTitle": "Криптокошельки",
+        "MetaDescription": "Программы-кошельки для криптовалют"
+      }
+    ]
+  },
+  {
+    "Id": 228,
+    "ParentId": 226,
+    "CanonicalName": "INTERNET_CRYPTO_TRACK",
+    "Slug": "portfolio-trackers",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 20,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Portfolio Trackers",
+        "Description": "Cryptocurrency portfolio tracking tools",
+        "MetaTitle": "Crypto Portfolio Trackers",
+        "MetaDescription": "Cryptocurrency portfolio tracking tools"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Трекеры портфеля",
+        "Description": "Отслеживание крипто-портфеля",
+        "MetaTitle": "Трекеры портфеля",
+        "MetaDescription": "Отслеживание крипто-портфеля"
+      }
+    ]
+  },
+  {
+    "Id": 229,
+    "ParentId": 226,
+    "CanonicalName": "INTERNET_CRYPTO_MINING",
+    "Slug": "mining-tools",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 30,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Mining Tools",
+        "Description": "Cryptocurrency mining software",
+        "MetaTitle": "Crypto Mining",
+        "MetaDescription": "Cryptocurrency mining software"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Майнинг",
+        "Description": "Программы для майнинга криптовалют",
+        "MetaTitle": "Майнинг",
+        "MetaDescription": "Программы для майнинга криптовалют"
+      }
+    ]
+  },
+  {
+    "Id": 230,
+    "ParentId": 200,
+    "CanonicalName": "INTERNET_OFFLINE",
+    "Slug": "offline-browsers",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 80,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Offline Browsers",
+        "Description": "Website downloaders and offline browsers",
+        "MetaTitle": "Offline Browsers",
+        "MetaDescription": "Website downloaders and offline browsers"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Офлайн-браузеры",
+        "Description": "Программы для сохранения сайтов офлайн",
+        "MetaTitle": "Офлайн-браузеры",
+        "MetaDescription": "Программы для сохранения сайтов офлайн"
+      }
+    ]
+  },
+  {
+    "Id": 300,
+    "ParentId": null,
+    "CanonicalName": "SECURITY",
+    "Slug": "security",
+    "IconPath": "category_security",
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 40,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Security",
+        "Description": "Sophisticated tools for complete digital defense, including real-time protection and network monitoring.",
+        "MetaTitle": "Security Software",
+        "MetaDescription": "Antivirus, firewalls, encryption and privacy tools"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Безопасность",
+        "Description": "Комплексные средства цифровой защиты, включая мониторинг угроз в реальном времени и сетевую безопасность.",
+        "MetaTitle": "Программы безопасности",
+        "MetaDescription": "Антивирусы, файрволы, шифрование и приватность"
+      }
+    ]
+  },
+  {
+    "Id": 301,
+    "ParentId": 300,
+    "CanonicalName": "SECURITY_ANTIVIRUS",
+    "Slug": "antivirus",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 10,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Antivirus / Anti-Malware",
+        "Description": "Antivirus and anti-malware protection software",
+        "MetaTitle": "Antivirus Software",
+        "MetaDescription": "Antivirus and anti-malware protection software"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Антивирусы / Антималварь",
+        "Description": "Антивирусные программы и защита от вредоносного ПО",
+        "MetaTitle": "Антивирусы",
+        "MetaDescription": "Антивирусные программы и защита от вредоносного ПО"
+      }
+    ]
+  },
+  {
+    "Id": 302,
+    "ParentId": 301,
+    "CanonicalName": "SECURITY_AV_SUITES",
+    "Slug": "antivirus-suites",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 10,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Antivirus Suites",
+        "Description": "Full antivirus security suite packages",
+        "MetaTitle": "Antivirus Suites",
+        "MetaDescription": "Full antivirus security suite packages"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Антивирусные пакеты",
+        "Description": "Комплексные антивирусные решения",
+        "MetaTitle": "Антивирусные пакеты",
+        "MetaDescription": "Комплексные антивирусные решения"
+      }
+    ]
+  },
+  {
+    "Id": 303,
+    "ParentId": 301,
+    "CanonicalName": "SECURITY_ANTISPYWARE",
+    "Slug": "anti-spyware",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 20,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Anti-Spyware / Anti-Adware",
+        "Description": "Spyware and adware removal tools",
+        "MetaTitle": "Anti-Spyware",
+        "MetaDescription": "Spyware and adware removal tools"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Антишпионы / Антиреклама",
+        "Description": "Удаление шпионского и рекламного ПО",
+        "MetaTitle": "Антишпионы",
+        "MetaDescription": "Удаление шпионского и рекламного ПО"
+      }
+    ]
+  },
+  {
+    "Id": 304,
+    "ParentId": 301,
+    "CanonicalName": "SECURITY_ANTIRANSOM",
+    "Slug": "anti-ransomware",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 30,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Anti-Ransomware",
+        "Description": "Ransomware protection and removal tools",
+        "MetaTitle": "Anti-Ransomware",
+        "MetaDescription": "Ransomware protection and removal tools"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Антивымогатели",
+        "Description": "Защита от программ-вымогателей (ransomware)",
+        "MetaTitle": "Защита от вымогателей",
+        "MetaDescription": "Защита от программ-вымогателей (ransomware)"
+      }
+    ]
+  },
+  {
+    "Id": 305,
+    "ParentId": 300,
+    "CanonicalName": "SECURITY_FIREWALLS",
+    "Slug": "firewalls",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 20,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Firewalls & Network Guard",
+        "Description": "Personal firewalls and network protection software",
+        "MetaTitle": "Firewalls",
+        "MetaDescription": "Personal firewalls and network protection software"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Файрволы и защита сети",
+        "Description": "Персональные файрволы и защита сети",
+        "MetaTitle": "Файрволы",
+        "MetaDescription": "Персональные файрволы и защита сети"
+      }
+    ]
+  },
+  {
+    "Id": 306,
+    "ParentId": 300,
+    "CanonicalName": "SECURITY_PRIVACY",
+    "Slug": "privacy-encryption",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 30,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Privacy & Encryption",
+        "Description": "Password managers, disk encryption and anonymity tools",
+        "MetaTitle": "Privacy & Encryption",
+        "MetaDescription": "Password managers, disk encryption and anonymity tools"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Приватность и шифрование",
+        "Description": "Менеджеры паролей, шифрование и анонимность",
+        "MetaTitle": "Приватность и шифрование",
+        "MetaDescription": "Менеджеры паролей, шифрование и анонимность"
+      }
+    ]
+  },
+  {
+    "Id": 307,
+    "ParentId": 306,
+    "CanonicalName": "SECURITY_PASSWORDS",
+    "Slug": "password-managers",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 10,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Password Managers",
+        "Description": "Software for managing and storing passwords securely",
+        "MetaTitle": "Password Managers",
+        "MetaDescription": "Software for managing and storing passwords securely"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Менеджеры паролей",
+        "Description": "Безопасное хранение паролей",
+        "MetaTitle": "Менеджеры паролей",
+        "MetaDescription": "Безопасное хранение паролей"
+      }
+    ]
+  },
+  {
+    "Id": 308,
+    "ParentId": 306,
+    "CanonicalName": "SECURITY_DISK_ENC",
+    "Slug": "disk-encryption",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 20,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Disk Encryption",
+        "Description": "Full disk and file encryption software",
+        "MetaTitle": "Disk Encryption",
+        "MetaDescription": "Full disk and file encryption software"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Шифрование дисков",
+        "Description": "Шифрование дисков и файлов",
+        "MetaTitle": "Шифрование дисков",
+        "MetaDescription": "Шифрование дисков и файлов"
+      }
+    ]
+  },
+  {
+    "Id": 309,
+    "ParentId": 306,
+    "CanonicalName": "SECURITY_ANONYMITY",
+    "Slug": "anonymity-tools",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 30,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Anonymity Tools",
+        "Description": "Tools for online anonymity and privacy protection",
+        "MetaTitle": "Anonymity Tools",
+        "MetaDescription": "Tools for online anonymity and privacy protection"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Анонимность",
+        "Description": "Инструменты анонимности и приватности онлайн",
+        "MetaTitle": "Анонимность в сети",
+        "MetaDescription": "Инструменты анонимности и приватности онлайн"
+      }
+    ]
+  },
+  {
+    "Id": 310,
+    "ParentId": 300,
+    "CanonicalName": "SECURITY_CLEANING",
+    "Slug": "secure-cleaning",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 40,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Secure Cleaning",
+        "Description": "File shredders and privacy cleaners",
+        "MetaTitle": "Secure File Deletion",
+        "MetaDescription": "File shredders and privacy cleaners"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Безопасное удаление",
+        "Description": "Шредеры файлов и очистка следов работы",
+        "MetaTitle": "Безопасное удаление данных",
+        "MetaDescription": "Шредеры файлов и очистка следов работы"
+      }
+    ]
+  },
+  {
+    "Id": 311,
+    "ParentId": 310,
+    "CanonicalName": "SECURITY_SHREDDERS",
+    "Slug": "file-shredders",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 10,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "File Shredders",
+        "Description": "Secure file deletion and shredding tools",
+        "MetaTitle": "File Shredders",
+        "MetaDescription": "Secure file deletion and shredding tools"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Шредеры файлов",
+        "Description": "Безвозвратное удаление файлов",
+        "MetaTitle": "Шредеры файлов",
+        "MetaDescription": "Безвозвратное удаление файлов"
+      }
+    ]
+  },
+  {
+    "Id": 312,
+    "ParentId": 310,
+    "CanonicalName": "SECURITY_PRIV_CLEAN",
+    "Slug": "privacy-cleaners",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 20,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Privacy Cleaners",
+        "Description": "Tools for cleaning browsing history and private data",
+        "MetaTitle": "Privacy Cleaners",
+        "MetaDescription": "Tools for cleaning browsing history and private data"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Очистка следов",
+        "Description": "Очистка истории браузера и приватных данных",
+        "MetaTitle": "Очистка данных",
+        "MetaDescription": "Очистка истории браузера и приватных данных"
+      }
+    ]
+  },
+  {
+    "Id": 313,
+    "ParentId": 300,
+    "CanonicalName": "SECURITY_SANDBOX",
+    "Slug": "sandbox",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 50,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Sandbox / Behavior Analysis",
+        "Description": "Sandboxing and behavior analysis security tools",
+        "MetaTitle": "Sandbox Tools",
+        "MetaDescription": "Sandboxing and behavior analysis security tools"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Песочницы / Анализ поведения",
+        "Description": "Изоляция и анализ поведения программ",
+        "MetaTitle": "Песочницы",
+        "MetaDescription": "Изоляция и анализ поведения программ"
+      }
+    ]
+  },
+  {
+    "Id": 314,
+    "ParentId": 300,
+    "CanonicalName": "SECURITY_PARENTAL",
+    "Slug": "parental-controls",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 60,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Parental Controls",
+        "Description": "Parental control and content filtering software",
+        "MetaTitle": "Parental Controls",
+        "MetaDescription": "Parental control and content filtering software"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Родительский контроль",
+        "Description": "Программы родительского контроля и фильтрации",
+        "MetaTitle": "Родительский контроль",
+        "MetaDescription": "Программы родительского контроля и фильтрации"
+      }
+    ]
+  },
+  {
+    "Id": 400,
+    "ParentId": null,
+    "CanonicalName": "SYSTEM",
+    "Slug": "system",
+    "IconPath": "category_system",
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 50,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "System",
+        "Description": "Professional tools for deep system optimization, disk partitioning, virtualization, and advanced file control.",
+        "MetaTitle": "System Software",
+        "MetaDescription": "System tools, file management, disk utils and virtualization"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Система",
+        "Description": "Профессиональные инструменты для глубокой оптимизации системы, управления разделами дисков и виртуализации.",
+        "MetaTitle": "Системные программы",
+        "MetaDescription": "Системные утилиты, управление файлами, диски и виртуализация"
+      }
+    ]
+  },
+  {
+    "Id": 401,
+    "ParentId": 400,
+    "CanonicalName": "SYSTEM_INFO",
+    "Slug": "system-info",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 10,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "System Info & Diagnostics",
+        "Description": "System information, diagnostics and benchmarks",
+        "MetaTitle": "System Info & Diagnostics",
+        "MetaDescription": "System information, diagnostics and benchmarks"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Информация о системе и диагностика",
+        "Description": "Информация о системе, диагностика и тесты",
+        "MetaTitle": "Диагностика системы",
+        "MetaDescription": "Информация о системе, диагностика и тесты"
+      }
+    ]
+  },
+  {
+    "Id": 402,
+    "ParentId": 401,
+    "CanonicalName": "SYSTEM_INFO_MAIN",
+    "Slug": "system-information",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 10,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "System Information",
+        "Description": "Hardware and software system information tools",
+        "MetaTitle": "System Information",
+        "MetaDescription": "Hardware and software system information tools"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Информация о системе",
+        "Description": "Утилиты для просмотра информации о железе и ОС",
+        "MetaTitle": "Информация о системе",
+        "MetaDescription": "Утилиты для просмотра информации о железе и ОС"
+      }
+    ]
+  },
+  {
+    "Id": 403,
+    "ParentId": 401,
+    "CanonicalName": "SYSTEM_HW_MONITOR",
+    "Slug": "hardware-monitoring",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 20,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Hardware Monitoring",
+        "Description": "Temperature, fan and hardware monitoring tools",
+        "MetaTitle": "Hardware Monitoring",
+        "MetaDescription": "Temperature, fan and hardware monitoring tools"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Мониторинг железа",
+        "Description": "Контроль температур, вентиляторов и состояния железа",
+        "MetaTitle": "Мониторинг железа",
+        "MetaDescription": "Контроль температур, вентиляторов и состояния железа"
+      }
+    ]
+  },
+  {
+    "Id": 404,
+    "ParentId": 403,
+    "CanonicalName": "SYSTEM_TEMP_FAN",
+    "Slug": "temperature-fan-control",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 10,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Temperature & Fan Control",
+        "Description": "CPU and GPU temperature and fan speed monitoring",
+        "MetaTitle": "Temperature & Fan Control",
+        "MetaDescription": "CPU and GPU temperature and fan speed monitoring"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Температура и вентиляторы",
+        "Description": "Мониторинг температуры CPU/GPU и скорости вентиляторов",
+        "MetaTitle": "Температура и вентиляторы",
+        "MetaDescription": "Мониторинг температуры CPU/GPU и скорости вентиляторов"
+      }
+    ]
+  },
+  {
+    "Id": 405,
+    "ParentId": 403,
+    "CanonicalName": "SYSTEM_STRESS",
+    "Slug": "stress-testing",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 20,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Stress Testing",
+        "Description": "CPU, GPU and RAM stress testing tools",
+        "MetaTitle": "Stress Testing",
+        "MetaDescription": "CPU, GPU and RAM stress testing tools"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Стресс-тесты",
+        "Description": "Нагрузочное тестирование CPU, GPU и RAM",
+        "MetaTitle": "Стресс-тестирование",
+        "MetaDescription": "Нагрузочное тестирование CPU, GPU и RAM"
+      }
+    ]
+  },
+  {
+    "Id": 406,
+    "ParentId": 403,
+    "CanonicalName": "SYSTEM_SMART",
+    "Slug": "smart-ssd-health",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 30,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "S.M.A.R.T. / SSD Health",
+        "Description": "Disk health monitoring and S.M.A.R.T. tools",
+        "MetaTitle": "S.M.A.R.T. & SSD Health",
+        "MetaDescription": "Disk health monitoring and S.M.A.R.T. tools"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "S.M.A.R.T. / Здоровье SSD",
+        "Description": "Мониторинг состояния дисков и S.M.A.R.T.",
+        "MetaTitle": "Здоровье дисков",
+        "MetaDescription": "Мониторинг состояния дисков и S.M.A.R.T."
+      }
+    ]
+  },
+  {
+    "Id": 407,
+    "ParentId": 401,
+    "CanonicalName": "SYSTEM_BENCHMARKS",
+    "Slug": "benchmarks",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 30,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Benchmarks",
+        "Description": "System and hardware benchmark tools",
+        "MetaTitle": "Benchmarks",
+        "MetaDescription": "System and hardware benchmark tools"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Бенчмарки",
+        "Description": "Тестирование производительности системы",
+        "MetaTitle": "Бенчмарки",
+        "MetaDescription": "Тестирование производительности системы"
+      }
+    ]
+  },
+  {
+    "Id": 408,
+    "ParentId": 400,
+    "CanonicalName": "SYSTEM_FILES",
+    "Slug": "file-management",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 20,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "File Management",
+        "Description": "File managers, search and batch rename tools",
+        "MetaTitle": "File Management",
+        "MetaDescription": "File managers, search and batch rename tools"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Управление файлами",
+        "Description": "Файловые менеджеры, поиск и пакетная обработка",
+        "MetaTitle": "Управление файлами",
+        "MetaDescription": "Файловые менеджеры, поиск и пакетная обработка"
+      }
+    ]
+  },
+  {
+    "Id": 409,
+    "ParentId": 408,
+    "CanonicalName": "SYSTEM_FILE_MANAGERS",
+    "Slug": "file-managers",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 10,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "File Managers",
+        "Description": "Two-panel and advanced file managers",
+        "MetaTitle": "File Managers",
+        "MetaDescription": "Two-panel and advanced file managers"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Файловые менеджеры",
+        "Description": "Двухпанельные и продвинутые файловые менеджеры",
+        "MetaTitle": "Файловые менеджеры",
+        "MetaDescription": "Двухпанельные и продвинутые файловые менеджеры"
+      }
+    ]
+  },
+  {
+    "Id": 410,
+    "ParentId": 408,
+    "CanonicalName": "SYSTEM_FILE_SEARCH",
+    "Slug": "file-search",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 20,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "File Search",
+        "Description": "Fast file search software",
+        "MetaTitle": "File Search",
+        "MetaDescription": "Fast file search software"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Поиск файлов",
+        "Description": "Быстрый поиск файлов на диске",
+        "MetaTitle": "Поиск файлов",
+        "MetaDescription": "Быстрый поиск файлов на диске"
+      }
+    ]
+  },
+  {
+    "Id": 411,
+    "ParentId": 408,
+    "CanonicalName": "SYSTEM_FILE_RENAME",
+    "Slug": "file-rename",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 30,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "File Rename / Batch Tools",
+        "Description": "Batch file renaming software",
+        "MetaTitle": "File Rename Tools",
+        "MetaDescription": "Batch file renaming software"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Переименование файлов",
+        "Description": "Пакетное переименование файлов",
+        "MetaTitle": "Переименование файлов",
+        "MetaDescription": "Пакетное переименование файлов"
+      }
+    ]
+  },
+  {
+    "Id": 412,
+    "ParentId": 408,
+    "CanonicalName": "SYSTEM_DUPLICATES",
+    "Slug": "duplicate-finders",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 40,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Duplicate Finders",
+        "Description": "Find and remove duplicate files",
+        "MetaTitle": "Duplicate Finders",
+        "MetaDescription": "Find and remove duplicate files"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Поиск дубликатов",
+        "Description": "Поиск и удаление дублирующихся файлов",
+        "MetaTitle": "Поиск дубликатов",
+        "MetaDescription": "Поиск и удаление дублирующихся файлов"
+      }
+    ]
+  },
+  {
+    "Id": 413,
+    "ParentId": 400,
+    "CanonicalName": "SYSTEM_DISK",
+    "Slug": "hard-disk-utils",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 30,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Hard Disk Utils",
+        "Description": "Partition, backup and disk cleanup tools",
+        "MetaTitle": "Hard Disk Utils",
+        "MetaDescription": "Partition, backup and disk cleanup tools"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Утилиты для дисков",
+        "Description": "Разделы, резервное копирование и очистка дисков",
+        "MetaTitle": "Утилиты для дисков",
+        "MetaDescription": "Разделы, резервное копирование и очистка дисков"
+      }
+    ]
+  },
+  {
+    "Id": 414,
+    "ParentId": 413,
+    "CanonicalName": "SYSTEM_DISK_PARTITION",
+    "Slug": "partition-managers",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 10,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Partition Managers",
+        "Description": "Disk partition management software",
+        "MetaTitle": "Partition Managers",
+        "MetaDescription": "Disk partition management software"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Менеджеры разделов",
+        "Description": "Управление разделами диска",
+        "MetaTitle": "Менеджеры разделов",
+        "MetaDescription": "Управление разделами диска"
+      }
+    ]
+  },
+  {
+    "Id": 415,
+    "ParentId": 413,
+    "CanonicalName": "SYSTEM_DISK_CLEANUP",
+    "Slug": "disk-cleanup",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 20,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Disk Cleanup",
+        "Description": "Disk cleaning and junk removal tools",
+        "MetaTitle": "Disk Cleanup",
+        "MetaDescription": "Disk cleaning and junk removal tools"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Очистка дисков",
+        "Description": "Очистка диска от мусора и временных файлов",
+        "MetaTitle": "Очистка дисков",
+        "MetaDescription": "Очистка диска от мусора и временных файлов"
+      }
+    ]
+  },
+  {
+    "Id": 416,
+    "ParentId": 413,
+    "CanonicalName": "SYSTEM_DISK_BACKUP",
+    "Slug": "disk-imaging-backup",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 30,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Disk Imaging / Backup",
+        "Description": "Disk imaging and backup software",
+        "MetaTitle": "Disk Imaging & Backup",
+        "MetaDescription": "Disk imaging and backup software"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Резервное копирование / Образы",
+        "Description": "Образы дисков и резервное копирование",
+        "MetaTitle": "Резервное копирование",
+        "MetaDescription": "Образы дисков и резервное копирование"
+      }
+    ]
+  },
+  {
+    "Id": 417,
+    "ParentId": 413,
+    "CanonicalName": "SYSTEM_DISK_BENCH",
+    "Slug": "disk-benchmarks",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 40,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Disk Benchmarks",
+        "Description": "Hard drive and SSD benchmark tools",
+        "MetaTitle": "Disk Benchmarks",
+        "MetaDescription": "Hard drive and SSD benchmark tools"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Тесты дисков",
+        "Description": "Тестирование скорости HDD и SSD",
+        "MetaTitle": "Тесты дисков",
+        "MetaDescription": "Тестирование скорости HDD и SSD"
+      }
+    ]
+  },
+  {
+    "Id": 418,
+    "ParentId": 400,
+    "CanonicalName": "SYSTEM_OS_COMPONENTS",
+    "Slug": "os-components",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 40,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "OS Components",
+        "Description": "Runtime libraries and Windows updates",
+        "MetaTitle": "OS Components",
+        "MetaDescription": "Runtime libraries and Windows updates"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Компоненты ОС",
+        "Description": "Библиотеки и обновления Windows",
+        "MetaTitle": "Компоненты ОС",
+        "MetaDescription": "Библиотеки и обновления Windows"
+      }
+    ]
+  },
+  {
+    "Id": 419,
+    "ParentId": 418,
+    "CanonicalName": "SYSTEM_RUNTIMES",
+    "Slug": "runtime-libraries",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 10,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Runtime Libraries",
+        "Description": "DirectX, .NET, C++ Redistributables",
+        "MetaTitle": "Runtime Libraries",
+        "MetaDescription": "DirectX, .NET, C++ Redistributables"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Библиотеки (DirectX, .NET, C++)",
+        "Description": "DirectX, .NET Framework, C++ Redistributables",
+        "MetaTitle": "Библиотеки",
+        "MetaDescription": "DirectX, .NET Framework, C++ Redistributables"
+      }
+    ]
+  },
+  {
+    "Id": 420,
+    "ParentId": 418,
+    "CanonicalName": "SYSTEM_WIN_UPDATES",
+    "Slug": "windows-updates",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 20,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Windows Updates & Patches",
+        "Description": "Windows update packages and patches",
+        "MetaTitle": "Windows Updates",
+        "MetaDescription": "Windows update packages and patches"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Обновления Windows",
+        "Description": "Пакеты обновлений и патчи Windows",
+        "MetaTitle": "Обновления Windows",
+        "MetaDescription": "Пакеты обновлений и патчи Windows"
+      }
+    ]
+  },
+  {
+    "Id": 421,
+    "ParentId": 400,
+    "CanonicalName": "SYSTEM_STARTUP",
+    "Slug": "startup-task-managers",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 50,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Startup / Task Managers",
+        "Description": "Startup and process management tools",
+        "MetaTitle": "Startup & Task Managers",
+        "MetaDescription": "Startup and process management tools"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Автозагрузка / Диспетчер задач",
+        "Description": "Управление автозагрузкой и процессами",
+        "MetaTitle": "Автозагрузка",
+        "MetaDescription": "Управление автозагрузкой и процессами"
+      }
+    ]
+  },
+  {
+    "Id": 422,
+    "ParentId": 400,
+    "CanonicalName": "SYSTEM_UNINSTALLERS",
+    "Slug": "uninstallers",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 60,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Uninstallers",
+        "Description": "Program uninstaller and cleanup tools",
+        "MetaTitle": "Uninstallers",
+        "MetaDescription": "Program uninstaller and cleanup tools"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Деинсталляторы",
+        "Description": "Удаление программ и очистка следов установки",
+        "MetaTitle": "Деинсталляторы",
+        "MetaDescription": "Удаление программ и очистка следов установки"
+      }
+    ]
+  },
+  {
+    "Id": 423,
+    "ParentId": 400,
+    "CanonicalName": "SYSTEM_REGISTRY",
+    "Slug": "registry-tools",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 70,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Registry Tools",
+        "Description": "Windows registry editors and cleaners",
+        "MetaTitle": "Registry Tools",
+        "MetaDescription": "Windows registry editors and cleaners"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Работа с реестром",
+        "Description": "Редакторы и очистка реестра Windows",
+        "MetaTitle": "Реестр Windows",
+        "MetaDescription": "Редакторы и очистка реестра Windows"
+      }
+    ]
+  },
+  {
+    "Id": 424,
+    "ParentId": 400,
+    "CanonicalName": "SYSTEM_VIRTUAL",
+    "Slug": "virtualization",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 80,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Virtualization",
+        "Description": "Virtual machines and emulators",
+        "MetaTitle": "Virtualization",
+        "MetaDescription": "Virtual machines and emulators"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Виртуализация",
+        "Description": "Виртуальные машины и эмуляторы",
+        "MetaTitle": "Виртуализация",
+        "MetaDescription": "Виртуальные машины и эмуляторы"
+      }
+    ]
+  },
+  {
+    "Id": 425,
+    "ParentId": 424,
+    "CanonicalName": "SYSTEM_VM",
+    "Slug": "virtual-machines",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 10,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Virtual Machines",
+        "Description": "Virtual machine software",
+        "MetaTitle": "Virtual Machines",
+        "MetaDescription": "Virtual machine software"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Виртуальные машины",
+        "Description": "Программы виртуализации: VMware, VirtualBox",
+        "MetaTitle": "Виртуальные машины",
+        "MetaDescription": "Программы виртуализации: VMware, VirtualBox"
+      }
+    ]
+  },
+  {
+    "Id": 426,
+    "ParentId": 424,
+    "CanonicalName": "SYSTEM_ANDROID_EMU",
+    "Slug": "android-emulators",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 20,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Android Emulators",
+        "Description": "Android emulators for PC",
+        "MetaTitle": "Android Emulators",
+        "MetaDescription": "Android emulators for PC"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Эмуляторы Android",
+        "Description": "Эмуляторы Android для ПК",
+        "MetaTitle": "Эмуляторы Android",
+        "MetaDescription": "Эмуляторы Android для ПК"
+      }
+    ]
+  },
+  {
+    "Id": 500,
+    "ParentId": null,
+    "CanonicalName": "DRIVERS",
+    "Slug": "drivers",
+    "IconPath": "category_drivers",
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 60,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Drivers",
+        "Description": "Latest hardware drivers ensuring peak performance and stability for your devices across all platforms.",
+        "MetaTitle": "Drivers",
+        "MetaDescription": "Hardware drivers for Windows"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Драйверы",
+        "Description": "Актуальные драйверы для обеспечения максимальной производительности и стабильности оборудования.",
+        "MetaTitle": "Драйверы",
+        "MetaDescription": "Драйверы для оборудования Windows"
+      }
+    ]
+  },
+  {
+    "Id": 501,
+    "ParentId": 500,
+    "CanonicalName": "DRIVERS_GPU",
+    "Slug": "drivers-graphics",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 10,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Graphics Cards",
+        "Description": "GPU drivers for NVIDIA, AMD and Intel",
+        "MetaTitle": "Graphics Card Drivers",
+        "MetaDescription": "GPU drivers for NVIDIA, AMD and Intel"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Драйверы видеокарт",
+        "Description": "Драйверы GPU: NVIDIA, AMD и Intel",
+        "MetaTitle": "Драйверы видеокарт",
+        "MetaDescription": "Драйверы GPU: NVIDIA, AMD и Intel"
+      }
+    ]
+  },
+  {
+    "Id": 502,
+    "ParentId": 501,
+    "CanonicalName": "DRIVERS_NVIDIA",
+    "Slug": "drivers-nvidia",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 10,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "NVIDIA",
+        "Description": "NVIDIA GeForce and Quadro drivers",
+        "MetaTitle": "NVIDIA Drivers",
+        "MetaDescription": "NVIDIA GeForce and Quadro drivers"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "NVIDIA",
+        "Description": "Драйверы NVIDIA GeForce и Quadro",
+        "MetaTitle": "Драйверы NVIDIA",
+        "MetaDescription": "Драйверы NVIDIA GeForce и Quadro"
+      }
+    ]
+  },
+  {
+    "Id": 503,
+    "ParentId": 501,
+    "CanonicalName": "DRIVERS_AMD",
+    "Slug": "drivers-amd",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 20,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "AMD / ATI",
+        "Description": "AMD Radeon and ATI drivers",
+        "MetaTitle": "AMD Drivers",
+        "MetaDescription": "AMD Radeon and ATI drivers"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "AMD / ATI",
+        "Description": "Драйверы AMD Radeon и ATI",
+        "MetaTitle": "Драйверы AMD",
+        "MetaDescription": "Драйверы AMD Radeon и ATI"
+      }
+    ]
+  },
+  {
+    "Id": 504,
+    "ParentId": 501,
+    "CanonicalName": "DRIVERS_INTEL_GPU",
+    "Slug": "drivers-intel-gpu",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 30,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Intel Graphics",
+        "Description": "Intel integrated graphics drivers",
+        "MetaTitle": "Intel Graphics Drivers",
+        "MetaDescription": "Intel integrated graphics drivers"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Intel Graphics",
+        "Description": "Драйверы встроенной графики Intel",
+        "MetaTitle": "Драйверы Intel Graphics",
+        "MetaDescription": "Драйверы встроенной графики Intel"
+      }
+    ]
+  },
+  {
+    "Id": 505,
+    "ParentId": 500,
+    "CanonicalName": "DRIVERS_CHIPSET",
+    "Slug": "drivers-chipset",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 20,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Chipset & Motherboard",
+        "Description": "Motherboard and chipset drivers",
+        "MetaTitle": "Chipset Drivers",
+        "MetaDescription": "Motherboard and chipset drivers"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Чипсет и материнская плата",
+        "Description": "Драйверы чипсета и материнской платы",
+        "MetaTitle": "Драйверы чипсета",
+        "MetaDescription": "Драйверы чипсета и материнской платы"
+      }
+    ]
+  },
+  {
+    "Id": 506,
+    "ParentId": 500,
+    "CanonicalName": "DRIVERS_AUDIO",
+    "Slug": "drivers-audio",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 30,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Audio Drivers",
+        "Description": "Sound card and audio device drivers",
+        "MetaTitle": "Audio Drivers",
+        "MetaDescription": "Sound card and audio device drivers"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Аудиодрайверы",
+        "Description": "Драйверы звуковых карт и аудиоустройств",
+        "MetaTitle": "Аудиодрайверы",
+        "MetaDescription": "Драйверы звуковых карт и аудиоустройств"
+      }
+    ]
+  },
+  {
+    "Id": 507,
+    "ParentId": 500,
+    "CanonicalName": "DRIVERS_NETWORK",
+    "Slug": "drivers-network",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 40,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Network & Wireless",
+        "Description": "Ethernet, Wi-Fi and Bluetooth drivers",
+        "MetaTitle": "Network Drivers",
+        "MetaDescription": "Ethernet, Wi-Fi and Bluetooth drivers"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Сеть и беспроводная связь",
+        "Description": "Драйверы Ethernet, Wi-Fi и Bluetooth",
+        "MetaTitle": "Сетевые драйверы",
+        "MetaDescription": "Драйверы Ethernet, Wi-Fi и Bluetooth"
+      }
+    ]
+  },
+  {
+    "Id": 508,
+    "ParentId": 507,
+    "CanonicalName": "DRIVERS_ETHERNET",
+    "Slug": "drivers-ethernet",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 10,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Ethernet",
+        "Description": "Wired network adapter drivers",
+        "MetaTitle": "Ethernet Drivers",
+        "MetaDescription": "Wired network adapter drivers"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Ethernet",
+        "Description": "Драйверы проводных сетевых адаптеров",
+        "MetaTitle": "Драйверы Ethernet",
+        "MetaDescription": "Драйверы проводных сетевых адаптеров"
+      }
+    ]
+  },
+  {
+    "Id": 509,
+    "ParentId": 507,
+    "CanonicalName": "DRIVERS_WIFI",
+    "Slug": "drivers-wifi",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 20,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Wi-Fi / Bluetooth",
+        "Description": "Wireless and Bluetooth drivers",
+        "MetaTitle": "Wi-Fi & Bluetooth Drivers",
+        "MetaDescription": "Wireless and Bluetooth drivers"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Wi-Fi / Bluetooth",
+        "Description": "Драйверы беспроводных адаптеров и Bluetooth",
+        "MetaTitle": "Драйверы Wi-Fi и Bluetooth",
+        "MetaDescription": "Драйверы беспроводных адаптеров и Bluetooth"
+      }
+    ]
+  },
+  {
+    "Id": 510,
+    "ParentId": 500,
+    "CanonicalName": "DRIVERS_PRINTERS",
+    "Slug": "drivers-printers",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 50,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Printers & Scanners",
+        "Description": "Drivers for printers and scanners",
+        "MetaTitle": "Printer & Scanner Drivers",
+        "MetaDescription": "Drivers for printers and scanners"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Принтеры и сканеры",
+        "Description": "Драйверы для принтеров и сканеров",
+        "MetaTitle": "Драйверы принтеров и сканеров",
+        "MetaDescription": "Драйверы для принтеров и сканеров"
+      }
+    ]
+  },
+  {
+    "Id": 511,
+    "ParentId": 500,
+    "CanonicalName": "DRIVERS_CAMERAS",
+    "Slug": "drivers-cameras",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 60,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Cameras & Webcams",
+        "Description": "Drivers for cameras and webcams",
+        "MetaTitle": "Camera & Webcam Drivers",
+        "MetaDescription": "Drivers for cameras and webcams"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Камеры и веб-камеры",
+        "Description": "Драйверы для камер и веб-камер",
+        "MetaTitle": "Драйверы камер",
+        "MetaDescription": "Драйверы для камер и веб-камер"
+      }
+    ]
+  },
+  {
+    "Id": 512,
+    "ParentId": 500,
+    "CanonicalName": "DRIVERS_STORAGE",
+    "Slug": "drivers-storage",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 70,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Storage Controllers",
+        "Description": "SATA, NVMe and RAID controller drivers",
+        "MetaTitle": "Storage Drivers",
+        "MetaDescription": "SATA, NVMe and RAID controller drivers"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Контроллеры хранения",
+        "Description": "Драйверы SATA, NVMe и RAID контроллеров",
+        "MetaTitle": "Драйверы контроллеров",
+        "MetaDescription": "Драйверы SATA, NVMe и RAID контроллеров"
+      }
+    ]
+  },
+  {
+    "Id": 513,
+    "ParentId": 500,
+    "CanonicalName": "DRIVERS_OTHER",
+    "Slug": "drivers-other",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 99,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Other Devices",
+        "Description": "Drivers for other hardware devices",
+        "MetaTitle": "Other Device Drivers",
+        "MetaDescription": "Drivers for other hardware devices"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Другие устройства",
+        "Description": "Драйверы прочего оборудования",
+        "MetaTitle": "Прочие драйверы",
+        "MetaDescription": "Драйверы прочего оборудования"
+      }
+    ]
+  },
+  {
+    "Id": 600,
+    "ParentId": null,
+    "CanonicalName": "TWEAK",
+    "Slug": "tweak-desktop",
+    "IconPath": "category_tweak",
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 70,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Tweak & Desktop",
+        "Description": "Tools to customize every aspect of your Windows experience, from UI tweaks to performance shell modifications.",
+        "MetaTitle": "Tweak & Desktop Enhancement",
+        "MetaDescription": "System tweakers and desktop customization tools"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Оптимизация и рабочий стол",
+        "Description": "Инструменты для настройки любого аспекта Windows: от визуальных твиков до глубокой кастомизации оболочки.",
+        "MetaTitle": "Оптимизация и рабочий стол",
+        "MetaDescription": "Твикеры системы и настройка рабочего стола"
+      }
+    ]
+  },
+  {
+    "Id": 601,
+    "ParentId": 600,
+    "CanonicalName": "TWEAK_SYSTEM",
+    "Slug": "system-tweakers",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 10,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "System Tweakers",
+        "Description": "Registry and Windows settings tweakers",
+        "MetaTitle": "System Tweakers",
+        "MetaDescription": "Registry and Windows settings tweakers"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Твикеры системы",
+        "Description": "Твикеры реестра и настроек Windows",
+        "MetaTitle": "Твикеры системы",
+        "MetaDescription": "Твикеры реестра и настроек Windows"
+      }
+    ]
+  },
+  {
+    "Id": 602,
+    "ParentId": 601,
+    "CanonicalName": "TWEAK_REGISTRY",
+    "Slug": "registry-tweakers",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 10,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Registry Tweakers",
+        "Description": "Windows registry tweak tools",
+        "MetaTitle": "Registry Tweakers",
+        "MetaDescription": "Windows registry tweak tools"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Твикеры реестра",
+        "Description": "Инструменты для твика реестра Windows",
+        "MetaTitle": "Твикеры реестра",
+        "MetaDescription": "Инструменты для твика реестра Windows"
+      }
+    ]
+  },
+  {
+    "Id": 603,
+    "ParentId": 601,
+    "CanonicalName": "TWEAK_WIN_SETTINGS",
+    "Slug": "windows-settings-tools",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 20,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Windows Settings Tools",
+        "Description": "Hidden and advanced Windows settings tools",
+        "MetaTitle": "Windows Settings Tools",
+        "MetaDescription": "Hidden and advanced Windows settings tools"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Скрытые настройки Windows",
+        "Description": "Скрытые и расширенные настройки Windows",
+        "MetaTitle": "Настройки Windows",
+        "MetaDescription": "Скрытые и расширенные настройки Windows"
+      }
+    ]
+  },
+  {
+    "Id": 604,
+    "ParentId": 600,
+    "CanonicalName": "TWEAK_DESKTOP",
+    "Slug": "desktop-enhancements",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 20,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Desktop Enhancements",
+        "Description": "Launchers, docks, widgets and taskbar mods",
+        "MetaTitle": "Desktop Enhancements",
+        "MetaDescription": "Launchers, docks, widgets and taskbar mods"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Улучшения рабочего стола",
+        "Description": "Лаунчеры, доки, виджеты и панель задач",
+        "MetaTitle": "Улучшения рабочего стола",
+        "MetaDescription": "Лаунчеры, доки, виджеты и панель задач"
+      }
+    ]
+  },
+  {
+    "Id": 605,
+    "ParentId": 604,
+    "CanonicalName": "TWEAK_LAUNCHERS",
+    "Slug": "launchers-docks",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 10,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Launchers / Docks",
+        "Description": "Application launchers and dock software",
+        "MetaTitle": "Launchers & Docks",
+        "MetaDescription": "Application launchers and dock software"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Лаунчеры / Доки",
+        "Description": "Лаунчеры и доки для приложений",
+        "MetaTitle": "Лаунчеры и доки",
+        "MetaDescription": "Лаунчеры и доки для приложений"
+      }
+    ]
+  },
+  {
+    "Id": 606,
+    "ParentId": 604,
+    "CanonicalName": "TWEAK_WIDGETS",
+    "Slug": "widgets-gadgets",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 20,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Widgets & Gadgets",
+        "Description": "Desktop widgets and sidebar gadgets",
+        "MetaTitle": "Widgets & Gadgets",
+        "MetaDescription": "Desktop widgets and sidebar gadgets"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Виджеты и гаджеты",
+        "Description": "Виджеты и гаджеты для рабочего стола",
+        "MetaTitle": "Виджеты и гаджеты",
+        "MetaDescription": "Виджеты и гаджеты для рабочего стола"
+      }
+    ]
+  },
+  {
+    "Id": 607,
+    "ParentId": 604,
+    "CanonicalName": "TWEAK_STARTMENU",
+    "Slug": "start-menu-mods",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 30,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Start Menu / Taskbar Mods",
+        "Description": "Start menu and taskbar customization tools",
+        "MetaTitle": "Start Menu Mods",
+        "MetaDescription": "Start menu and taskbar customization tools"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Меню Пуск / Панель задач",
+        "Description": "Кастомизация меню Пуск и панели задач",
+        "MetaTitle": "Меню Пуск и панель задач",
+        "MetaDescription": "Кастомизация меню Пуск и панели задач"
+      }
+    ]
+  },
+  {
+    "Id": 608,
+    "ParentId": 604,
+    "CanonicalName": "TWEAK_CONTEXT_MENU",
+    "Slug": "context-menu-tools",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 40,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Context Menu Tools",
+        "Description": "Right-click context menu editors",
+        "MetaTitle": "Context Menu Tools",
+        "MetaDescription": "Right-click context menu editors"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Контекстное меню",
+        "Description": "Редакторы контекстного меню Windows",
+        "MetaTitle": "Контекстное меню",
+        "MetaDescription": "Редакторы контекстного меню Windows"
+      }
+    ]
+  },
+  {
+    "Id": 609,
+    "ParentId": 600,
+    "CanonicalName": "TWEAK_PERSONAL",
+    "Slug": "personalization",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 30,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Personalization",
+        "Description": "Themes, wallpapers and screensavers",
+        "MetaTitle": "Personalization",
+        "MetaDescription": "Themes, wallpapers and screensavers"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Персонализация",
+        "Description": "Темы, обои и заставки для Windows",
+        "MetaTitle": "Персонализация",
+        "MetaDescription": "Темы, обои и заставки для Windows"
+      }
+    ]
+  },
+  {
+    "Id": 610,
+    "ParentId": 609,
+    "CanonicalName": "TWEAK_THEMES",
+    "Slug": "themes-skins",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 10,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Themes / Skins",
+        "Description": "Windows themes and UI skins",
+        "MetaTitle": "Themes & Skins",
+        "MetaDescription": "Windows themes and UI skins"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Темы / Скины",
+        "Description": "Темы и скины для Windows",
+        "MetaTitle": "Темы и скины",
+        "MetaDescription": "Темы и скины для Windows"
+      }
+    ]
+  },
+  {
+    "Id": 611,
+    "ParentId": 609,
+    "CanonicalName": "TWEAK_WALLPAPERS",
+    "Slug": "wallpapers-screensavers",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 20,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Wallpapers / Screensavers",
+        "Description": "Desktop wallpapers and screensavers",
+        "MetaTitle": "Wallpapers & Screensavers",
+        "MetaDescription": "Desktop wallpapers and screensavers"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Обои / Заставки",
+        "Description": "Обои и заставки для рабочего стола",
+        "MetaTitle": "Обои и заставки",
+        "MetaDescription": "Обои и заставки для рабочего стола"
+      }
+    ]
+  },
+  {
+    "Id": 612,
+    "ParentId": 609,
+    "CanonicalName": "TWEAK_FONTS",
+    "Slug": "font-management",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 30,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Font Management",
+        "Description": "Font installation and management tools",
+        "MetaTitle": "Font Management",
+        "MetaDescription": "Font installation and management tools"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Управление шрифтами",
+        "Description": "Установка и управление шрифтами",
+        "MetaTitle": "Управление шрифтами",
+        "MetaDescription": "Установка и управление шрифтами"
+      }
+    ]
+  },
+  {
+    "Id": 613,
+    "ParentId": 600,
+    "CanonicalName": "TWEAK_MEMORY",
+    "Slug": "memory-optimizers",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 40,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Memory Optimizers",
+        "Description": "RAM optimization and management tools",
+        "MetaTitle": "Memory Optimizers",
+        "MetaDescription": "RAM optimization and management tools"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Оптимизаторы памяти",
+        "Description": "Оптимизация и управление оперативной памятью",
+        "MetaTitle": "Оптимизаторы памяти",
+        "MetaDescription": "Оптимизация и управление оперативной памятью"
+      }
+    ]
+  },
+  {
+    "Id": 614,
+    "ParentId": 600,
+    "CanonicalName": "TWEAK_INPUT",
+    "Slug": "input-accessibility",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 50,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Input & Accessibility",
+        "Description": "Keyboard tools, macros and clipboard managers",
+        "MetaTitle": "Input & Accessibility",
+        "MetaDescription": "Keyboard tools, macros and clipboard managers"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Ввод и доступность",
+        "Description": "Клавиатура, макросы и буфер обмена",
+        "MetaTitle": "Ввод и доступность",
+        "MetaDescription": "Клавиатура, макросы и буфер обмена"
+      }
+    ]
+  },
+  {
+    "Id": 615,
+    "ParentId": 614,
+    "CanonicalName": "TWEAK_KEYBOARD",
+    "Slug": "keyboard-tools",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 10,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Keyboard Tools & Remappers",
+        "Description": "Keyboard remappers and layout switchers",
+        "MetaTitle": "Keyboard Tools",
+        "MetaDescription": "Keyboard remappers and layout switchers"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Клавиатурные инструменты",
+        "Description": "Переключатели раскладки и ремапперы клавиш",
+        "MetaTitle": "Клавиатура",
+        "MetaDescription": "Переключатели раскладки и ремапперы клавиш"
+      }
+    ]
+  },
+  {
+    "Id": 616,
+    "ParentId": 614,
+    "CanonicalName": "TWEAK_MACROS",
+    "Slug": "macro-recorders",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 20,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Macro Recorders",
+        "Description": "Mouse and keyboard macro recorders",
+        "MetaTitle": "Macro Recorders",
+        "MetaDescription": "Mouse and keyboard macro recorders"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Запись макросов",
+        "Description": "Запись и воспроизведение макросов мыши и клавиатуры",
+        "MetaTitle": "Макросы",
+        "MetaDescription": "Запись и воспроизведение макросов мыши и клавиатуры"
+      }
+    ]
+  },
+  {
+    "Id": 617,
+    "ParentId": 614,
+    "CanonicalName": "TWEAK_CLIPBOARD",
+    "Slug": "clipboard-managers",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 30,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Clipboard Managers",
+        "Description": "Advanced clipboard management tools",
+        "MetaTitle": "Clipboard Managers",
+        "MetaDescription": "Advanced clipboard management tools"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Менеджеры буфера обмена",
+        "Description": "Расширенное управление буфером обмена",
+        "MetaTitle": "Буфер обмена",
+        "MetaDescription": "Расширенное управление буфером обмена"
+      }
+    ]
+  },
+  {
+    "Id": 700,
+    "ParentId": null,
+    "CanonicalName": "OFFICE",
+    "Slug": "office-tools",
+    "IconPath": "category_office",
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 80,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Office Tools",
+        "Description": "Essential tools for any workspace: word processors, spreadsheets, PDF management, and project planning.",
+        "MetaTitle": "Office Tools",
+        "MetaDescription": "Office suites, PDF, notes and project management"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Офис",
+        "Description": "Профессиональный софт для работы с текстами, таблицами, PDF и удобного планирования проектов.",
+        "MetaTitle": "Офисные программы",
+        "MetaDescription": "Офисные пакеты, PDF, заметки и управление проектами"
+      }
+    ]
+  },
+  {
+    "Id": 701,
+    "ParentId": 700,
+    "CanonicalName": "OFFICE_DOCS",
+    "Slug": "document-processing",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 10,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Document Processing",
+        "Description": "Office suites and word processors",
+        "MetaTitle": "Document Processing",
+        "MetaDescription": "Office suites and word processors"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Обработка документов",
+        "Description": "Офисные пакеты и текстовые редакторы",
+        "MetaTitle": "Документы",
+        "MetaDescription": "Офисные пакеты и текстовые редакторы"
+      }
+    ]
+  },
+  {
+    "Id": 702,
+    "ParentId": 701,
+    "CanonicalName": "OFFICE_SUITES",
+    "Slug": "office-suites",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 10,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Office Suites",
+        "Description": "Full office productivity suites",
+        "MetaTitle": "Office Suites",
+        "MetaDescription": "Full office productivity suites"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Офисные пакеты",
+        "Description": "Полные офисные пакеты программ",
+        "MetaTitle": "Офисные пакеты",
+        "MetaDescription": "Полные офисные пакеты программ"
+      }
+    ]
+  },
+  {
+    "Id": 703,
+    "ParentId": 701,
+    "CanonicalName": "OFFICE_WORD",
+    "Slug": "word-processors",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 20,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Word Processors",
+        "Description": "Word processing and text editing software",
+        "MetaTitle": "Word Processors",
+        "MetaDescription": "Word processing and text editing software"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Текстовые редакторы",
+        "Description": "Программы для работы с текстовыми документами",
+        "MetaTitle": "Текстовые редакторы",
+        "MetaDescription": "Программы для работы с текстовыми документами"
+      }
+    ]
+  },
+  {
+    "Id": 704,
+    "ParentId": 701,
+    "CanonicalName": "OFFICE_SPREADSHEETS",
+    "Slug": "spreadsheets",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 30,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Spreadsheets",
+        "Description": "Spreadsheet and calculation software",
+        "MetaTitle": "Spreadsheets",
+        "MetaDescription": "Spreadsheet and calculation software"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Электронные таблицы",
+        "Description": "Программы для работы с электронными таблицами",
+        "MetaTitle": "Таблицы",
+        "MetaDescription": "Программы для работы с электронными таблицами"
+      }
+    ]
+  },
+  {
+    "Id": 705,
+    "ParentId": 700,
+    "CanonicalName": "OFFICE_PDF",
+    "Slug": "pdf-tools",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 20,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "PDF Tools",
+        "Description": "PDF readers, editors and converters",
+        "MetaTitle": "PDF Tools",
+        "MetaDescription": "PDF readers, editors and converters"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Работа с PDF",
+        "Description": "Чтение, редактирование и конвертация PDF",
+        "MetaTitle": "PDF программы",
+        "MetaDescription": "Чтение, редактирование и конвертация PDF"
+      }
+    ]
+  },
+  {
+    "Id": 706,
+    "ParentId": 705,
+    "CanonicalName": "OFFICE_PDF_READERS",
+    "Slug": "pdf-readers",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 10,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "PDF Readers",
+        "Description": "PDF viewing and reading software",
+        "MetaTitle": "PDF Readers",
+        "MetaDescription": "PDF viewing and reading software"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Просмотр PDF",
+        "Description": "Программы для просмотра PDF документов",
+        "MetaTitle": "PDF ридеры",
+        "MetaDescription": "Программы для просмотра PDF документов"
+      }
+    ]
+  },
+  {
+    "Id": 707,
+    "ParentId": 705,
+    "CanonicalName": "OFFICE_PDF_EDITORS",
+    "Slug": "pdf-editors",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 20,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "PDF Editors",
+        "Description": "PDF editing and annotation software",
+        "MetaTitle": "PDF Editors",
+        "MetaDescription": "PDF editing and annotation software"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Редакторы PDF",
+        "Description": "Редактирование и аннотации PDF документов",
+        "MetaTitle": "Редакторы PDF",
+        "MetaDescription": "Редактирование и аннотации PDF документов"
+      }
+    ]
+  },
+  {
+    "Id": 708,
+    "ParentId": 705,
+    "CanonicalName": "OFFICE_PDF_CONVERTERS",
+    "Slug": "pdf-converters",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 30,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "PDF Converters",
+        "Description": "Convert PDF to other formats",
+        "MetaTitle": "PDF Converters",
+        "MetaDescription": "Convert PDF to other formats"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Конвертеры PDF",
+        "Description": "Конвертация PDF в другие форматы",
+        "MetaTitle": "Конвертеры PDF",
+        "MetaDescription": "Конвертация PDF в другие форматы"
+      }
+    ]
+  },
+  {
+    "Id": 709,
+    "ParentId": 700,
+    "CanonicalName": "OFFICE_ORG",
+    "Slug": "organization",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 30,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Organization",
+        "Description": "Notes, calendars and project management",
+        "MetaTitle": "Organization Tools",
+        "MetaDescription": "Notes, calendars and project management"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Организация",
+        "Description": "Заметки, календари и управление проектами",
+        "MetaTitle": "Органайзеры",
+        "MetaDescription": "Заметки, календари и управление проектами"
+      }
+    ]
+  },
+  {
+    "Id": 710,
+    "ParentId": 709,
+    "CanonicalName": "OFFICE_NOTES",
+    "Slug": "note-taking",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 10,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Note Taking",
+        "Description": "Note taking and digital notebook apps",
+        "MetaTitle": "Note Taking",
+        "MetaDescription": "Note taking and digital notebook apps"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Заметки",
+        "Description": "Приложения для заметок и цифровые блокноты",
+        "MetaTitle": "Заметки",
+        "MetaDescription": "Приложения для заметок и цифровые блокноты"
+      }
+    ]
+  },
+  {
+    "Id": 711,
+    "ParentId": 709,
+    "CanonicalName": "OFFICE_CALENDARS",
+    "Slug": "calendars-planners",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 20,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Calendars / Planners",
+        "Description": "Calendar and task planning software",
+        "MetaTitle": "Calendars & Planners",
+        "MetaDescription": "Calendar and task planning software"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Календари / Планировщики",
+        "Description": "Календари и планировщики задач",
+        "MetaTitle": "Календари",
+        "MetaDescription": "Календари и планировщики задач"
+      }
+    ]
+  },
+  {
+    "Id": 712,
+    "ParentId": 709,
+    "CanonicalName": "OFFICE_PROJECT",
+    "Slug": "project-management",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 30,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Project Management",
+        "Description": "Project management software",
+        "MetaTitle": "Project Management",
+        "MetaDescription": "Project management software"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Управление проектами",
+        "Description": "Программы для управления проектами",
+        "MetaTitle": "Управление проектами",
+        "MetaDescription": "Программы для управления проектами"
+      }
+    ]
+  },
+  {
+    "Id": 713,
+    "ParentId": 709,
+    "CanonicalName": "OFFICE_MINDMAP",
+    "Slug": "mind-mapping",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 40,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Mind Mapping",
+        "Description": "Mind mapping and brainstorming tools",
+        "MetaTitle": "Mind Mapping",
+        "MetaDescription": "Mind mapping and brainstorming tools"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Интеллект-карты",
+        "Description": "Инструменты для создания интеллект-карт",
+        "MetaTitle": "Интеллект-карты",
+        "MetaDescription": "Инструменты для создания интеллект-карт"
+      }
+    ]
+  },
+  {
+    "Id": 714,
+    "ParentId": 700,
+    "CanonicalName": "OFFICE_FINANCE",
+    "Slug": "finance",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 40,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Finance",
+        "Description": "Personal accounting and invoicing software",
+        "MetaTitle": "Finance Software",
+        "MetaDescription": "Personal accounting and invoicing software"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Финансы",
+        "Description": "Личная бухгалтерия и выставление счетов",
+        "MetaTitle": "Финансовые программы",
+        "MetaDescription": "Личная бухгалтерия и выставление счетов"
+      }
+    ]
+  },
+  {
+    "Id": 715,
+    "ParentId": 714,
+    "CanonicalName": "OFFICE_FINANCE_PERSONAL",
+    "Slug": "personal-accounting",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 10,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Personal Accounting",
+        "Description": "Personal finance and budget management software",
+        "MetaTitle": "Personal Accounting",
+        "MetaDescription": "Personal finance and budget management software"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Личная бухгалтерия",
+        "Description": "Управление личными финансами и бюджетом",
+        "MetaTitle": "Личная бухгалтерия",
+        "MetaDescription": "Управление личными финансами и бюджетом"
+      }
+    ]
+  },
+  {
+    "Id": 716,
+    "ParentId": 714,
+    "CanonicalName": "OFFICE_FINANCE_INVOICE",
+    "Slug": "invoice-billing",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 20,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Invoice & Billing",
+        "Description": "Invoice and billing management software",
+        "MetaTitle": "Invoice & Billing",
+        "MetaDescription": "Invoice and billing management software"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Счета и выставление счетов",
+        "Description": "Программы для выставления счетов и биллинга",
+        "MetaTitle": "Выставление счетов",
+        "MetaDescription": "Программы для выставления счетов и биллинга"
+      }
+    ]
+  },
+  {
+    "Id": 717,
+    "ParentId": 700,
+    "CanonicalName": "OFFICE_OCR",
+    "Slug": "ocr-software",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 50,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "OCR Software",
+        "Description": "Optical character recognition software",
+        "MetaTitle": "OCR Software",
+        "MetaDescription": "Optical character recognition software"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Программы OCR",
+        "Description": "Оптическое распознавание символов и текста",
+        "MetaTitle": "Распознавание текста (OCR)",
+        "MetaDescription": "Оптическое распознавание символов и текста"
+      }
+    ]
+  },
+  {
+    "Id": 718,
+    "ParentId": 700,
+    "CanonicalName": "OFFICE_DICT",
+    "Slug": "dictionary-translation",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 60,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Dictionary / Translation",
+        "Description": "Dictionary and translation software",
+        "MetaTitle": "Dictionary & Translation",
+        "MetaDescription": "Dictionary and translation software"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Словари / Переводчики",
+        "Description": "Словари и программы-переводчики",
+        "MetaTitle": "Словари и переводчики",
+        "MetaDescription": "Словари и программы-переводчики"
+      }
+    ]
+  },
+  {
+    "Id": 719,
+    "ParentId": 700,
+    "CanonicalName": "OFFICE_EBOOK",
+    "Slug": "ebook-tools",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 70,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "E-Book Tools",
+        "Description": "E-book readers, editors and converters",
+        "MetaTitle": "E-Book Tools",
+        "MetaDescription": "E-book readers, editors and converters"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Работа с электронными книгами",
+        "Description": "Читалки, редакторы и конвертеры электронных книг",
+        "MetaTitle": "Электронные книги",
+        "MetaDescription": "Читалки, редакторы и конвертеры электронных книг"
+      }
+    ]
+  },
+  {
+    "Id": 720,
+    "ParentId": 700,
+    "CanonicalName": "OFFICE_PRESENTATIONS",
+    "Slug": "presentation-tools",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 80,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Presentation Tools",
+        "Description": "Presentation creation and delivery software",
+        "MetaTitle": "Presentation Tools",
+        "MetaDescription": "Presentation creation and delivery software"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Презентации",
+        "Description": "Программы для создания и показа презентаций",
+        "MetaTitle": "Презентации",
+        "MetaDescription": "Программы для создания и показа презентаций"
+      }
+    ]
+  },
+  {
+    "Id": 800,
+    "ParentId": null,
+    "CanonicalName": "PROGRAMMING",
+    "Slug": "programming",
+    "IconPath": "category_programming",
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 90,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Programming",
+        "Description": "Everything for developers: high-end IDEs, compilers, database managers, and version control clients.",
+        "MetaTitle": "Programming Software",
+        "MetaDescription": "IDEs, code editors, web dev and database tools"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Программирование",
+        "Description": "Всё для разработчиков: среды разработки, компиляторы, СУБД и инструменты контроля версий.",
+        "MetaTitle": "Программирование",
+        "MetaDescription": "IDE, редакторы кода, веб-разработка и базы данных"
+      }
+    ]
+  },
+  {
+    "Id": 801,
+    "ParentId": 800,
+    "CanonicalName": "PROG_DEV",
+    "Slug": "development",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 10,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Development",
+        "Description": "IDEs, compilers, debuggers and code editors",
+        "MetaTitle": "Development Tools",
+        "MetaDescription": "IDEs, compilers, debuggers and code editors"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Разработка",
+        "Description": "IDE, компиляторы, отладчики и редакторы кода",
+        "MetaTitle": "Инструменты разработки",
+        "MetaDescription": "IDE, компиляторы, отладчики и редакторы кода"
+      }
+    ]
+  },
+  {
+    "Id": 802,
+    "ParentId": 801,
+    "CanonicalName": "PROG_IDES",
+    "Slug": "ides",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 10,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "IDEs",
+        "Description": "Integrated development environments",
+        "MetaTitle": "IDEs",
+        "MetaDescription": "Integrated development environments"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "IDE",
+        "Description": "Интегрированные среды разработки",
+        "MetaTitle": "Среды разработки (IDE)",
+        "MetaDescription": "Интегрированные среды разработки"
+      }
+    ]
+  },
+  {
+    "Id": 803,
+    "ParentId": 801,
+    "CanonicalName": "PROG_CODE_EDITORS",
+    "Slug": "code-editors",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 20,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Code Editors",
+        "Description": "Lightweight code and text editors",
+        "MetaTitle": "Code Editors",
+        "MetaDescription": "Lightweight code and text editors"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Редакторы кода",
+        "Description": "Легковесные редакторы кода и текста",
+        "MetaTitle": "Редакторы кода",
+        "MetaDescription": "Легковесные редакторы кода и текста"
+      }
+    ]
+  },
+  {
+    "Id": 804,
+    "ParentId": 801,
+    "CanonicalName": "PROG_COMPILERS",
+    "Slug": "compilers",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 30,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Compilers / Interpreters",
+        "Description": "Language compilers and interpreters",
+        "MetaTitle": "Compilers & Interpreters",
+        "MetaDescription": "Language compilers and interpreters"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Компиляторы / Интерпретаторы",
+        "Description": "Компиляторы и интерпретаторы языков программирования",
+        "MetaTitle": "Компиляторы",
+        "MetaDescription": "Компиляторы и интерпретаторы языков программирования"
+      }
+    ]
+  },
+  {
+    "Id": 805,
+    "ParentId": 801,
+    "CanonicalName": "PROG_DEBUGGERS",
+    "Slug": "debuggers",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 40,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Debuggers",
+        "Description": "Code debugging and profiling tools",
+        "MetaTitle": "Debuggers",
+        "MetaDescription": "Code debugging and profiling tools"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Отладчики",
+        "Description": "Инструменты отладки и профилирования кода",
+        "MetaTitle": "Отладчики",
+        "MetaDescription": "Инструменты отладки и профилирования кода"
+      }
+    ]
+  },
+  {
+    "Id": 806,
+    "ParentId": 800,
+    "CanonicalName": "PROG_WEB",
+    "Slug": "web-development",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 20,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Web Development",
+        "Description": "HTML, CSS, JS editors and local servers",
+        "MetaTitle": "Web Development",
+        "MetaDescription": "HTML, CSS, JS editors and local servers"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Веб-разработка",
+        "Description": "HTML, CSS, JS редакторы и локальные серверы",
+        "MetaTitle": "Веб-разработка",
+        "MetaDescription": "HTML, CSS, JS редакторы и локальные серверы"
+      }
+    ]
+  },
+  {
+    "Id": 807,
+    "ParentId": 806,
+    "CanonicalName": "PROG_WEB_HTML",
+    "Slug": "html-css-js-editors",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 10,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "HTML / CSS / JS Editors",
+        "Description": "Web front-end code editors",
+        "MetaTitle": "HTML / CSS / JS Editors",
+        "MetaDescription": "Web front-end code editors"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "HTML / CSS / JS редакторы",
+        "Description": "Редакторы фронтенд-кода",
+        "MetaTitle": "HTML/CSS/JS редакторы",
+        "MetaDescription": "Редакторы фронтенд-кода"
+      }
+    ]
+  },
+  {
+    "Id": 808,
+    "ParentId": 806,
+    "CanonicalName": "PROG_WEB_SERVERS",
+    "Slug": "local-servers",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 20,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Local Servers",
+        "Description": "Local web server software: XAMPP, WAMP and others",
+        "MetaTitle": "Local Servers",
+        "MetaDescription": "Local web server software: XAMPP, WAMP and others"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Локальные серверы",
+        "Description": "Локальные веб-серверы: XAMPP, WAMP и другие",
+        "MetaTitle": "Локальные серверы",
+        "MetaDescription": "Локальные веб-серверы: XAMPP, WAMP и другие"
+      }
+    ]
+  },
+  {
+    "Id": 809,
+    "ParentId": 806,
+    "CanonicalName": "PROG_WEB_CMS",
+    "Slug": "cms-tools",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 30,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "CMS Tools",
+        "Description": "Content management system tools and plugins",
+        "MetaTitle": "CMS Tools",
+        "MetaDescription": "Content management system tools and plugins"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "CMS инструменты",
+        "Description": "Инструменты и плагины для CMS",
+        "MetaTitle": "CMS инструменты",
+        "MetaDescription": "Инструменты и плагины для CMS"
+      }
+    ]
+  },
+  {
+    "Id": 810,
+    "ParentId": 806,
+    "CanonicalName": "PROG_WEB_TESTING",
+    "Slug": "testing-qa-tools",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 40,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Testing & QA Tools",
+        "Description": "Web and software testing tools",
+        "MetaTitle": "Testing & QA",
+        "MetaDescription": "Web and software testing tools"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Тестирование и QA",
+        "Description": "Инструменты тестирования программного обеспечения",
+        "MetaTitle": "Тестирование",
+        "MetaDescription": "Инструменты тестирования программного обеспечения"
+      }
+    ]
+  },
+  {
+    "Id": 811,
+    "ParentId": 800,
+    "CanonicalName": "PROG_DB",
+    "Slug": "database",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 30,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Database",
+        "Description": "SQL managers, DB design and migration tools",
+        "MetaTitle": "Database Tools",
+        "MetaDescription": "SQL managers, DB design and migration tools"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Базы данных",
+        "Description": "SQL менеджеры, проектирование и миграция БД",
+        "MetaTitle": "Базы данных",
+        "MetaDescription": "SQL менеджеры, проектирование и миграция БД"
+      }
+    ]
+  },
+  {
+    "Id": 812,
+    "ParentId": 811,
+    "CanonicalName": "PROG_DB_SQL",
+    "Slug": "sql-managers",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 10,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "SQL Managers",
+        "Description": "SQL database management tools",
+        "MetaTitle": "SQL Managers",
+        "MetaDescription": "SQL database management tools"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "SQL менеджеры",
+        "Description": "Инструменты управления SQL базами данных",
+        "MetaTitle": "SQL менеджеры",
+        "MetaDescription": "Инструменты управления SQL базами данных"
+      }
+    ]
+  },
+  {
+    "Id": 813,
+    "ParentId": 811,
+    "CanonicalName": "PROG_DB_DESIGN",
+    "Slug": "db-design-tools",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 20,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "DB Design Tools",
+        "Description": "Database schema design and modeling tools",
+        "MetaTitle": "DB Design Tools",
+        "MetaDescription": "Database schema design and modeling tools"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Проектирование БД",
+        "Description": "Инструменты проектирования схем баз данных",
+        "MetaTitle": "Проектирование баз данных",
+        "MetaDescription": "Инструменты проектирования схем баз данных"
+      }
+    ]
+  },
+  {
+    "Id": 814,
+    "ParentId": 811,
+    "CanonicalName": "PROG_DB_MIGRATION",
+    "Slug": "db-migration-tools",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 30,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Migration Tools",
+        "Description": "Database migration and synchronization tools",
+        "MetaTitle": "DB Migration Tools",
+        "MetaDescription": "Database migration and synchronization tools"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Миграция БД",
+        "Description": "Инструменты миграции и синхронизации баз данных",
+        "MetaTitle": "Миграция баз данных",
+        "MetaDescription": "Инструменты миграции и синхронизации баз данных"
+      }
+    ]
+  },
+  {
+    "Id": 815,
+    "ParentId": 800,
+    "CanonicalName": "PROG_UTILS",
+    "Slug": "dev-utilities",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 40,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Dev Utilities",
+        "Description": "Version control, diff tools, API testing and docs",
+        "MetaTitle": "Dev Utilities",
+        "MetaDescription": "Version control, diff tools, API testing and docs"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Утилиты разработчика",
+        "Description": "Контроль версий, diff, тестирование API и документация",
+        "MetaTitle": "Утилиты разработчика",
+        "MetaDescription": "Контроль версий, diff, тестирование API и документация"
+      }
+    ]
+  },
+  {
+    "Id": 816,
+    "ParentId": 815,
+    "CanonicalName": "PROG_VCS",
+    "Slug": "version-control",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 10,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Version Control",
+        "Description": "Git clients and version control tools",
+        "MetaTitle": "Version Control",
+        "MetaDescription": "Git clients and version control tools"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Контроль версий",
+        "Description": "Git-клиенты и системы контроля версий",
+        "MetaTitle": "Контроль версий",
+        "MetaDescription": "Git-клиенты и системы контроля версий"
+      }
+    ]
+  },
+  {
+    "Id": 817,
+    "ParentId": 815,
+    "CanonicalName": "PROG_DIFF",
+    "Slug": "diff-merge-tools",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 20,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Diff / Merge Tools",
+        "Description": "File and code diff and merge tools",
+        "MetaTitle": "Diff & Merge Tools",
+        "MetaDescription": "File and code diff and merge tools"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Diff / Merge инструменты",
+        "Description": "Инструменты сравнения и слияния файлов и кода",
+        "MetaTitle": "Diff и Merge",
+        "MetaDescription": "Инструменты сравнения и слияния файлов и кода"
+      }
+    ]
+  },
+  {
+    "Id": 818,
+    "ParentId": 815,
+    "CanonicalName": "PROG_API",
+    "Slug": "api-testing",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 30,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "API Testing",
+        "Description": "API testing tools like Postman and alternatives",
+        "MetaTitle": "API Testing",
+        "MetaDescription": "API testing tools like Postman and alternatives"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Тестирование API",
+        "Description": "Инструменты тестирования API: Postman и аналоги",
+        "MetaTitle": "Тестирование API",
+        "MetaDescription": "Инструменты тестирования API: Postman и аналоги"
+      }
+    ]
+  },
+  {
+    "Id": 819,
+    "ParentId": 815,
+    "CanonicalName": "PROG_DOCS",
+    "Slug": "documentation-tools",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 40,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Documentation Tools",
+        "Description": "Code and project documentation generators",
+        "MetaTitle": "Documentation Tools",
+        "MetaDescription": "Code and project documentation generators"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Документация",
+        "Description": "Генераторы документации для кода и проектов",
+        "MetaTitle": "Инструменты документации",
+        "MetaDescription": "Генераторы документации для кода и проектов"
+      }
+    ]
+  },
+  {
+    "Id": 820,
+    "ParentId": 800,
+    "CanonicalName": "PROG_AI_TOOLS",
+    "Slug": "ai-llm-dev-tools",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 50,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "AI / LLM Dev Tools",
+        "Description": "AI-assisted coding and LLM development tools",
+        "MetaTitle": "AI & LLM Dev Tools",
+        "MetaDescription": "AI-assisted coding and LLM development tools"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "ИИ / LLM для разработки",
+        "Description": "ИИ-ассистенты программирования и LLM инструменты",
+        "MetaTitle": "ИИ для разработки",
+        "MetaDescription": "ИИ-ассистенты программирования и LLM инструменты"
+      }
+    ]
+  },
+  {
+    "Id": 821,
+    "ParentId": 820,
+    "CanonicalName": "PROG_LLM_LOCAL",
+    "Slug": "prog-local-llm",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 10,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Local LLM Runners",
+        "Description": "Local LLM runners for developers",
+        "MetaTitle": "Local LLM Runners",
+        "MetaDescription": "Local LLM runners for developers"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Локальные LLM для разработки",
+        "Description": "Запуск языковых моделей локально для разработчиков",
+        "MetaTitle": "Локальные LLM",
+        "MetaDescription": "Запуск языковых моделей локально для разработчиков"
+      }
+    ]
+  },
+  {
+    "Id": 822,
+    "ParentId": 820,
+    "CanonicalName": "PROG_AI_WORKFLOW",
+    "Slug": "prompt-ai-workflow",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 20,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Prompt & AI Workflow Tools",
+        "Description": "Prompt engineering and AI workflow automation tools",
+        "MetaTitle": "Prompt & AI Workflow",
+        "MetaDescription": "Prompt engineering and AI workflow automation tools"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Промпты и ИИ-воркфлоу",
+        "Description": "Инструменты промпт-инжиниринга и автоматизации ИИ",
+        "MetaTitle": "Промпт-инжиниринг",
+        "MetaDescription": "Инструменты промпт-инжиниринга и автоматизации ИИ"
+      }
+    ]
+  },
+  {
+    "Id": 900,
+    "ParentId": null,
+    "CanonicalName": "GAMES",
+    "Slug": "games",
+    "IconPath": "category_games",
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 100,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Games & Entertainment",
+        "Description": "A wide variety of games, digital distribution clients, and utilities for modern and retro gaming.",
+        "MetaTitle": "Games & Entertainment",
+        "MetaDescription": "Games, game clients, utilities and retro emulators"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Игры и развлечения",
+        "Description": "Широкий выбор игр, сервисы цифровой дистрибуции и утилиты для современного и ретро-гейминга.",
+        "MetaTitle": "Игры и развлечения",
+        "MetaDescription": "Игры, игровые клиенты, утилиты и эмуляторы"
+      }
+    ]
+  },
+  {
+    "Id": 901,
+    "ParentId": 900,
+    "CanonicalName": "GAMES_ACTION",
+    "Slug": "action-shooters",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 10,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Action / Shooters",
+        "Description": "Action and shooter games",
+        "MetaTitle": "Action & Shooters",
+        "MetaDescription": "Action and shooter games"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Экшен / Шутеры",
+        "Description": "Экшен-игры и шутеры",
+        "MetaTitle": "Экшен и шутеры",
+        "MetaDescription": "Экшен-игры и шутеры"
+      }
+    ]
+  },
+  {
+    "Id": 902,
+    "ParentId": 900,
+    "CanonicalName": "GAMES_STRATEGY",
+    "Slug": "strategy",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 20,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Strategy",
+        "Description": "Real-time and turn-based strategy games",
+        "MetaTitle": "Strategy Games",
+        "MetaDescription": "Real-time and turn-based strategy games"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Стратегии",
+        "Description": "Стратегии в реальном времени и пошаговые",
+        "MetaTitle": "Стратегии",
+        "MetaDescription": "Стратегии в реальном времени и пошаговые"
+      }
+    ]
+  },
+  {
+    "Id": 903,
+    "ParentId": 900,
+    "CanonicalName": "GAMES_RPG",
+    "Slug": "rpg",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 30,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "RPG",
+        "Description": "Role-playing games",
+        "MetaTitle": "RPG Games",
+        "MetaDescription": "Role-playing games"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "РПГ",
+        "Description": "Ролевые игры",
+        "MetaTitle": "РПГ игры",
+        "MetaDescription": "Ролевые игры"
+      }
+    ]
+  },
+  {
+    "Id": 904,
+    "ParentId": 900,
+    "CanonicalName": "GAMES_PUZZLE",
+    "Slug": "puzzle-logic",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 40,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Puzzle / Logic",
+        "Description": "Puzzle and logic games",
+        "MetaTitle": "Puzzle & Logic Games",
+        "MetaDescription": "Puzzle and logic games"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Головоломки / Логические",
+        "Description": "Головоломки и логические игры",
+        "MetaTitle": "Головоломки",
+        "MetaDescription": "Головоломки и логические игры"
+      }
+    ]
+  },
+  {
+    "Id": 905,
+    "ParentId": 900,
+    "CanonicalName": "GAMES_SPORTS",
+    "Slug": "sports-games",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 50,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Sports",
+        "Description": "Sports and racing games",
+        "MetaTitle": "Sports Games",
+        "MetaDescription": "Sports and racing games"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Спортивные игры",
+        "Description": "Спортивные и гоночные игры",
+        "MetaTitle": "Спортивные игры",
+        "MetaDescription": "Спортивные и гоночные игры"
+      }
+    ]
+  },
+  {
+    "Id": 906,
+    "ParentId": 900,
+    "CanonicalName": "GAMES_SIMULATORS",
+    "Slug": "simulators",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 60,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Simulators",
+        "Description": "Simulation and sandbox games",
+        "MetaTitle": "Simulators",
+        "MetaDescription": "Simulation and sandbox games"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Симуляторы",
+        "Description": "Симуляторы и песочницы",
+        "MetaTitle": "Симуляторы",
+        "MetaDescription": "Симуляторы и песочницы"
+      }
+    ]
+  },
+  {
+    "Id": 907,
+    "ParentId": 900,
+    "CanonicalName": "GAMES_CLIENTS",
+    "Slug": "game-clients",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 70,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Game Clients",
+        "Description": "Gaming platform clients and launchers",
+        "MetaTitle": "Game Clients",
+        "MetaDescription": "Gaming platform clients and launchers"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Игровые клиенты",
+        "Description": "Клиенты и лаунчеры игровых платформ",
+        "MetaTitle": "Игровые клиенты",
+        "MetaDescription": "Клиенты и лаунчеры игровых платформ"
+      }
+    ]
+  },
+  {
+    "Id": 908,
+    "ParentId": 907,
+    "CanonicalName": "GAMES_STEAM",
+    "Slug": "steam",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 10,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Steam",
+        "Description": "Steam gaming platform client",
+        "MetaTitle": "Steam",
+        "MetaDescription": "Steam gaming platform client"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Steam",
+        "Description": "Клиент игровой платформы Steam",
+        "MetaTitle": "Steam",
+        "MetaDescription": "Клиент игровой платформы Steam"
+      }
+    ]
+  },
+  {
+    "Id": 909,
+    "ParentId": 907,
+    "CanonicalName": "GAMES_EPIC",
+    "Slug": "epic-games",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 20,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Epic Games",
+        "Description": "Epic Games Store client",
+        "MetaTitle": "Epic Games Store",
+        "MetaDescription": "Epic Games Store client"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Epic Games",
+        "Description": "Клиент Epic Games Store",
+        "MetaTitle": "Epic Games Store",
+        "MetaDescription": "Клиент Epic Games Store"
+      }
+    ]
+  },
+  {
+    "Id": 910,
+    "ParentId": 907,
+    "CanonicalName": "GAMES_GOG",
+    "Slug": "gog-galaxy",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 30,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "GOG Galaxy",
+        "Description": "GOG Galaxy DRM-free game client",
+        "MetaTitle": "GOG Galaxy",
+        "MetaDescription": "GOG Galaxy DRM-free game client"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "GOG Galaxy",
+        "Description": "Клиент GOG Galaxy для игр без DRM",
+        "MetaTitle": "GOG Galaxy",
+        "MetaDescription": "Клиент GOG Galaxy для игр без DRM"
+      }
+    ]
+  },
+  {
+    "Id": 911,
+    "ParentId": 907,
+    "CanonicalName": "GAMES_BATTLENET",
+    "Slug": "battlenet-others",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 40,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Battle.net & Others",
+        "Description": "Battle.net, EA App and other game launchers",
+        "MetaTitle": "Battle.net & Other Clients",
+        "MetaDescription": "Battle.net, EA App and other game launchers"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Battle.net и другие",
+        "Description": "Battle.net, EA App и другие игровые лаунчеры",
+        "MetaTitle": "Battle.net и другие",
+        "MetaDescription": "Battle.net, EA App и другие игровые лаунчеры"
+      }
+    ]
+  },
+  {
+    "Id": 912,
+    "ParentId": 900,
+    "CanonicalName": "GAMES_UTILS",
+    "Slug": "game-utils",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 80,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Game Utils",
+        "Description": "Game cheats, benchmarks and mod tools",
+        "MetaTitle": "Game Utilities",
+        "MetaDescription": "Game cheats, benchmarks and mod tools"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Игровые утилиты",
+        "Description": "Читы, бенчмарки и инструменты модификаций",
+        "MetaTitle": "Игровые утилиты",
+        "MetaDescription": "Читы, бенчмарки и инструменты модификаций"
+      }
+    ]
+  },
+  {
+    "Id": 913,
+    "ParentId": 912,
+    "CanonicalName": "GAMES_CHEATS",
+    "Slug": "cheats-trainers",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 10,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Cheats / Trainers",
+        "Description": "Game cheat engines and trainers",
+        "MetaTitle": "Cheats & Trainers",
+        "MetaDescription": "Game cheat engines and trainers"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Читы / Трейнеры",
+        "Description": "Чит-движки и трейнеры для игр",
+        "MetaTitle": "Читы и трейнеры",
+        "MetaDescription": "Чит-движки и трейнеры для игр"
+      }
+    ]
+  },
+  {
+    "Id": 914,
+    "ParentId": 912,
+    "CanonicalName": "GAMES_BENCH",
+    "Slug": "game-benchmarks",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 20,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Game Benchmarks",
+        "Description": "Gaming performance benchmark tools",
+        "MetaTitle": "Game Benchmarks",
+        "MetaDescription": "Gaming performance benchmark tools"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Игровые бенчмарки",
+        "Description": "Тесты производительности для игр",
+        "MetaTitle": "Игровые бенчмарки",
+        "MetaDescription": "Тесты производительности для игр"
+      }
+    ]
+  },
+  {
+    "Id": 915,
+    "ParentId": 912,
+    "CanonicalName": "GAMES_MODS",
+    "Slug": "mod-tools",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 30,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Mod Tools",
+        "Description": "Game modding and modification tools",
+        "MetaTitle": "Mod Tools",
+        "MetaDescription": "Game modding and modification tools"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Инструменты модов",
+        "Description": "Инструменты для создания модификаций игр",
+        "MetaTitle": "Моддинг",
+        "MetaDescription": "Инструменты для создания модификаций игр"
+      }
+    ]
+  },
+  {
+    "Id": 916,
+    "ParentId": 900,
+    "CanonicalName": "GAMES_EMULATORS",
+    "Slug": "emulators-retrogaming",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 90,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Emulators / RetroGaming",
+        "Description": "Console emulators and retro gaming software",
+        "MetaTitle": "Emulators & RetroGaming",
+        "MetaDescription": "Console emulators and retro gaming software"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Эмуляторы / Ретроигры",
+        "Description": "Эмуляторы консолей и ретро-игровые программы",
+        "MetaTitle": "Эмуляторы и ретроигры",
+        "MetaDescription": "Эмуляторы консолей и ретро-игровые программы"
+      }
+    ]
+  },
+  {
+    "Id": 917,
+    "ParentId": 916,
+    "CanonicalName": "GAMES_CONSOLE_EMU",
+    "Slug": "console-emulators",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 10,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Console Emulators",
+        "Description": "PlayStation, Xbox, Nintendo and other emulators",
+        "MetaTitle": "Console Emulators",
+        "MetaDescription": "PlayStation, Xbox, Nintendo and other emulators"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Эмуляторы консолей",
+        "Description": "Эмуляторы PlayStation, Xbox, Nintendo и других консолей",
+        "MetaTitle": "Эмуляторы консолей",
+        "MetaDescription": "Эмуляторы PlayStation, Xbox, Nintendo и других консолей"
+      }
+    ]
+  },
+  {
+    "Id": 918,
+    "ParentId": 916,
+    "CanonicalName": "GAMES_MAME",
+    "Slug": "arcade-mame",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 20,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Arcade (MAME)",
+        "Description": "Arcade and MAME emulators",
+        "MetaTitle": "Arcade & MAME",
+        "MetaDescription": "Arcade and MAME emulators"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Аркады (MAME)",
+        "Description": "Эмуляторы аркадных автоматов и MAME",
+        "MetaTitle": "Аркады и MAME",
+        "MetaDescription": "Эмуляторы аркадных автоматов и MAME"
+      }
+    ]
+  },
+  {
+    "Id": 1000,
+    "ParentId": null,
+    "CanonicalName": "MOBILE",
+    "Slug": "mobile-tools",
+    "IconPath": "category_mobile",
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 110,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Mobile Tools",
+        "Description": "Comprehensive suites for mobile device management, data backup, and firmware modification.",
+        "MetaTitle": "Mobile Tools",
+        "MetaDescription": "Android and iOS management and utility software"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Мобильные инструменты",
+        "Description": "Полнофункциональные пакеты для управления мобильными устройствами, бэкапа и прошивки.",
+        "MetaTitle": "Мобильные инструменты",
+        "MetaDescription": "Программы для управления Android и iOS устройствами"
+      }
+    ]
+  },
+  {
+    "Id": 1001,
+    "ParentId": 1000,
+    "CanonicalName": "MOBILE_ANDROID",
+    "Slug": "android-tools",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 10,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Android Tools",
+        "Description": "Android device management and utility software",
+        "MetaTitle": "Android Tools",
+        "MetaDescription": "Android device management and utility software"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Android инструменты",
+        "Description": "Программы для управления Android устройствами",
+        "MetaTitle": "Android инструменты",
+        "MetaDescription": "Программы для управления Android устройствами"
+      }
+    ]
+  },
+  {
+    "Id": 1002,
+    "ParentId": 1001,
+    "CanonicalName": "MOBILE_ANDROID_MANAGERS",
+    "Slug": "android-managers",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 10,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Android Managers & Sync",
+        "Description": "Android device managers and sync tools",
+        "MetaTitle": "Android Managers",
+        "MetaDescription": "Android device managers and sync tools"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Android менеджеры и синхронизация",
+        "Description": "Менеджеры и синхронизация Android устройств",
+        "MetaTitle": "Android менеджеры",
+        "MetaDescription": "Менеджеры и синхронизация Android устройств"
+      }
+    ]
+  },
+  {
+    "Id": 1003,
+    "ParentId": 1001,
+    "CanonicalName": "MOBILE_ADB",
+    "Slug": "adb-root-tools",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 20,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "ADB / Root Tools",
+        "Description": "Android ADB, root and advanced tools",
+        "MetaTitle": "ADB & Root Tools",
+        "MetaDescription": "Android ADB, root and advanced tools"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "ADB / Root инструменты",
+        "Description": "Инструменты ADB, рут и расширенного управления Android",
+        "MetaTitle": "ADB и Root",
+        "MetaDescription": "Инструменты ADB, рут и расширенного управления Android"
+      }
+    ]
+  },
+  {
+    "Id": 1004,
+    "ParentId": 1001,
+    "CanonicalName": "MOBILE_ROM",
+    "Slug": "rom-flashing",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 30,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "ROM Flashing",
+        "Description": "Android ROM flashing and firmware tools",
+        "MetaTitle": "ROM Flashing",
+        "MetaDescription": "Android ROM flashing and firmware tools"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Прошивка ROM",
+        "Description": "Инструменты для прошивки Android ROM и прошивок",
+        "MetaTitle": "Прошивка ROM",
+        "MetaDescription": "Инструменты для прошивки Android ROM и прошивок"
+      }
+    ]
+  },
+  {
+    "Id": 1005,
+    "ParentId": 1000,
+    "CanonicalName": "MOBILE_IOS",
+    "Slug": "ios-tools",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 20,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "iOS Tools",
+        "Description": "iPhone and iPad management software",
+        "MetaTitle": "iOS Tools",
+        "MetaDescription": "iPhone and iPad management software"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "iOS инструменты",
+        "Description": "Программы для управления iPhone и iPad",
+        "MetaTitle": "iOS инструменты",
+        "MetaDescription": "Программы для управления iPhone и iPad"
+      }
+    ]
+  },
+  {
+    "Id": 1006,
+    "ParentId": 1005,
+    "CanonicalName": "MOBILE_IOS_MANAGERS",
+    "Slug": "iphone-ipad-managers",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 10,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "iPhone / iPad Managers",
+        "Description": "iPhone and iPad device management software",
+        "MetaTitle": "iPhone & iPad Managers",
+        "MetaDescription": "iPhone and iPad device management software"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Менеджеры iPhone / iPad",
+        "Description": "Программы для управления iPhone и iPad",
+        "MetaTitle": "Менеджеры iPhone и iPad",
+        "MetaDescription": "Программы для управления iPhone и iPad"
+      }
+    ]
+  },
+  {
+    "Id": 1007,
+    "ParentId": 1005,
+    "CanonicalName": "MOBILE_IOS_BACKUP",
+    "Slug": "ios-backup-recovery",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 20,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "iOS Backup & Recovery",
+        "Description": "iPhone and iPad backup and data recovery tools",
+        "MetaTitle": "iOS Backup & Recovery",
+        "MetaDescription": "iPhone and iPad backup and data recovery tools"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Резервное копирование iOS",
+        "Description": "Резервное копирование и восстановление данных iPhone",
+        "MetaTitle": "Резервное копирование iOS",
+        "MetaDescription": "Резервное копирование и восстановление данных iPhone"
+      }
+    ]
+  },
+  {
+    "Id": 1100,
+    "ParentId": null,
+    "CanonicalName": "EDUCATION",
+    "Slug": "education-science",
+    "IconPath": "category_education",
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 120,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Education & Science",
+        "Description": "Reliable tools for students and researchers: language learning, scientific modeling, and reference databases.",
+        "MetaTitle": "Education & Science",
+        "MetaDescription": "E-learning, science, astronomy and language learning"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Образование и наука",
+        "Description": "Надежные инструменты для студентов и исследователей: изучение языков, научное моделирование и справочники.",
+        "MetaTitle": "Образование и наука",
+        "MetaDescription": "Обучение, наука, астрономия и изучение языков"
+      }
+    ]
+  },
+  {
+    "Id": 1101,
+    "ParentId": 1100,
+    "CanonicalName": "EDU_ELEARNING",
+    "Slug": "elearning-courses",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 10,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "E-Learning & Courses",
+        "Description": "Online learning and course management software",
+        "MetaTitle": "E-Learning",
+        "MetaDescription": "Online learning and course management software"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Электронное обучение",
+        "Description": "Программы для онлайн-обучения и курсов",
+        "MetaTitle": "Электронное обучение",
+        "MetaDescription": "Программы для онлайн-обучения и курсов"
+      }
+    ]
+  },
+  {
+    "Id": 1102,
+    "ParentId": 1100,
+    "CanonicalName": "EDU_MATH",
+    "Slug": "mathematics-science",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 20,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Mathematics & Science",
+        "Description": "Math, physics and science software",
+        "MetaTitle": "Mathematics & Science",
+        "MetaDescription": "Math, physics and science software"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Математика и наука",
+        "Description": "Программы по математике, физике и естественным наукам",
+        "MetaTitle": "Математика и наука",
+        "MetaDescription": "Программы по математике, физике и естественным наукам"
+      }
+    ]
+  },
+  {
+    "Id": 1103,
+    "ParentId": 1100,
+    "CanonicalName": "EDU_ASTRONOMY",
+    "Slug": "astronomy-space",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 30,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Astronomy & Space",
+        "Description": "Astronomy and planetarium software",
+        "MetaTitle": "Astronomy & Space",
+        "MetaDescription": "Astronomy and planetarium software"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Астрономия и космос",
+        "Description": "Программы для астрономии и планетарии",
+        "MetaTitle": "Астрономия",
+        "MetaDescription": "Программы для астрономии и планетарии"
+      }
+    ]
+  },
+  {
+    "Id": 1104,
+    "ParentId": 1100,
+    "CanonicalName": "EDU_GEOGRAPHY",
+    "Slug": "geography-maps",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 40,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Geography & Maps",
+        "Description": "Geography, maps and GPS software",
+        "MetaTitle": "Geography & Maps",
+        "MetaDescription": "Geography, maps and GPS software"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "География и карты",
+        "Description": "Программы для географии, карт и GPS",
+        "MetaTitle": "География и карты",
+        "MetaDescription": "Программы для географии, карт и GPS"
+      }
+    ]
+  },
+  {
+    "Id": 1105,
+    "ParentId": 1100,
+    "CanonicalName": "EDU_LANGUAGES",
+    "Slug": "language-learning",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 50,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Language Learning",
+        "Description": "Foreign language learning software",
+        "MetaTitle": "Language Learning",
+        "MetaDescription": "Foreign language learning software"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Изучение языков",
+        "Description": "Программы для изучения иностранных языков",
+        "MetaTitle": "Изучение языков",
+        "MetaDescription": "Программы для изучения иностранных языков"
+      }
+    ]
+  },
+  {
+    "Id": 1106,
+    "ParentId": 1100,
+    "CanonicalName": "EDU_KIDS",
+    "Slug": "kids-software",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 60,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Kids Software",
+        "Description": "Educational software for children",
+        "MetaTitle": "Kids Software",
+        "MetaDescription": "Educational software for children"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Программы для детей",
+        "Description": "Образовательные программы для детей",
+        "MetaTitle": "Программы для детей",
+        "MetaDescription": "Образовательные программы для детей"
+      }
+    ]
+  },
+  {
+    "Id": 1200,
+    "ParentId": null,
+    "CanonicalName": "OTHERS",
+    "Slug": "others",
+    "IconPath": "category_others",
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 130,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Others / Portable",
+        "Description": "Collection of handy utilities: high-performance archivers, virtual drive tools, and system automation scripts.",
+        "MetaTitle": "Others & Portable",
+        "MetaDescription": "Archivers, ISO tools, portable software and automation"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Прочее / Портативное",
+        "Description": "Сборник полезных утилит: высокопроизводительные архиваторы, работа с образами дисков и автоматизация.",
+        "MetaTitle": "Прочее и портативное",
+        "MetaDescription": "Архиваторы, ISO, портативные программы и автоматизация"
+      }
+    ]
+  },
+  {
+    "Id": 1201,
+    "ParentId": 1200,
+    "CanonicalName": "OTHERS_COMPRESSION",
+    "Slug": "compression-archivers",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 10,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Compression / Archivers",
+        "Description": "File compression and archiving software",
+        "MetaTitle": "Compression & Archivers",
+        "MetaDescription": "File compression and archiving software"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Сжатие / Архиваторы",
+        "Description": "Программы сжатия и архивации файлов",
+        "MetaTitle": "Архиваторы",
+        "MetaDescription": "Программы сжатия и архивации файлов"
+      }
+    ]
+  },
+  {
+    "Id": 1202,
+    "ParentId": 1200,
+    "CanonicalName": "OTHERS_ISO",
+    "Slug": "cd-dvd-iso",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 20,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "CD / DVD / ISO Tools",
+        "Description": "Disc burning, ripping and ISO management tools",
+        "MetaTitle": "CD / DVD / ISO Tools",
+        "MetaDescription": "Disc burning, ripping and ISO management tools"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "CD / DVD / ISO инструменты",
+        "Description": "Запись дисков, риппинг и управление ISO образами",
+        "MetaTitle": "CD/DVD/ISO",
+        "MetaDescription": "Запись дисков, риппинг и управление ISO образами"
+      }
+    ]
+  },
+  {
+    "Id": 1203,
+    "ParentId": 1200,
+    "CanonicalName": "OTHERS_PORTABLE",
+    "Slug": "portable-software",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 30,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Portable Software",
+        "Description": "Portable apps that run without installation",
+        "MetaTitle": "Portable Software",
+        "MetaDescription": "Portable apps that run without installation"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Портативные программы",
+        "Description": "Программы, работающие без установки",
+        "MetaTitle": "Портативное ПО",
+        "MetaDescription": "Программы, работающие без установки"
+      }
+    ]
+  },
+  {
+    "Id": 1204,
+    "ParentId": 1200,
+    "CanonicalName": "OTHERS_AUTOMATION",
+    "Slug": "automation-schedulers",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 40,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Automation & Schedulers",
+        "Description": "Task automation and job scheduler software",
+        "MetaTitle": "Automation & Schedulers",
+        "MetaDescription": "Task automation and job scheduler software"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Автоматизация и планировщики",
+        "Description": "Программы автоматизации задач и планировщики",
+        "MetaTitle": "Автоматизация",
+        "MetaDescription": "Программы автоматизации задач и планировщики"
+      }
+    ]
+  },
+  {
+    "Id": 1205,
+    "ParentId": 1200,
+    "CanonicalName": "OTHERS_UPDATES",
+    "Slug": "signatures-updates",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 50,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Signatures & Updates",
+        "Description": "Software update managers and digital signature tools",
+        "MetaTitle": "Signatures & Updates",
+        "MetaDescription": "Software update managers and digital signature tools"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Обновления и подписи",
+        "Description": "Менеджеры обновлений и инструменты цифровой подписи",
+        "MetaTitle": "Обновления и подписи",
+        "MetaDescription": "Менеджеры обновлений и инструменты цифровой подписи"
+      }
+    ]
+  },
+  {
+    "Id": 1206,
+    "ParentId": 1200,
+    "CanonicalName": "OTHERS_MISC",
+    "Slug": "miscellaneous",
+    "IconPath": null,
+    "IsActive": true,
+    "IsSystem": false,
+    "SortOrder": 99,
+    "Localizations": [
+      {
+        "LanguageOfAggregatorId": 1,
+        "Name": "Miscellaneous",
+        "Description": "Other software that does not fit other categories",
+        "MetaTitle": "Miscellaneous",
+        "MetaDescription": "Other software that does not fit other categories"
+      },
+      {
+        "LanguageOfAggregatorId": 2,
+        "Name": "Разное",
+        "Description": "Прочие программы, не вошедшие в другие категории",
+        "MetaTitle": "Разное",
+        "MetaDescription": "Прочие программы, не вошедшие в другие категории"
+      }
+    ]
+  }
+]

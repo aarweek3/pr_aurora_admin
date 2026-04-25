@@ -125,12 +125,35 @@ import { PlatformOfAggregatorStateService } from '../../services/platform-of-agg
       >
         <thead>
           <tr>
-            <th nzWidth="60px">ID</th>
-            <th>Платформа</th>
-            <th>Системный код</th>
+            <th 
+              nzWidth="100px" 
+              [nzSortFn]="true" 
+              [nzSortOrder]="state.sortBy() === 'Id' ? (state.sortDirection() === 0 ? 'ascend' : 'descend') : null"
+              (nzSortOrderChange)="onSortChange('Id', $event)"
+            >ID</th>
+            <th 
+              [nzSortFn]="true" 
+              [nzSortOrder]="state.sortBy() === 'Name' ? (state.sortDirection() === 0 ? 'ascend' : 'descend') : null"
+              (nzSortOrderChange)="onSortChange('Name', $event)"
+            >Платформа</th>
+            <th 
+              [nzSortFn]="true" 
+              [nzSortOrder]="state.sortBy() === 'SystemCode' ? (state.sortDirection() === 0 ? 'ascend' : 'descend') : null"
+              (nzSortOrderChange)="onSortChange('SystemCode', $event)"
+            >Системный код</th>
             <th>Локализации</th>
-            <th nzWidth="100px">Программы</th>
-            <th nzWidth="80px">Порядок</th>
+            <th 
+              nzWidth="120px" 
+              [nzSortFn]="true" 
+              [nzSortOrder]="state.sortBy() === 'ProgramsCount' ? (state.sortDirection() === 0 ? 'ascend' : 'descend') : null"
+              (nzSortOrderChange)="onSortChange('ProgramsCount', $event)"
+            >Программы</th>
+            <th 
+              nzWidth="100px"
+              [nzSortFn]="true" 
+              [nzSortOrder]="state.sortBy() === 'SortOrder' ? (state.sortDirection() === 0 ? 'ascend' : 'descend') : null"
+              (nzSortOrderChange)="onSortChange('SortOrder', $event)"
+            >Порядок</th>
             <th nzWidth="100px">Статус</th>
             <th nzWidth="120px">Действия</th>
           </tr>
@@ -279,7 +302,7 @@ import { PlatformOfAggregatorStateService } from '../../services/platform-of-agg
   `,
   styleUrls: ['./platform-of-aggregator-list.component.scss'],
 })
-export class PlatformOfAggregatorListComponent implements OnInit {
+export class PlatformOfAggregatorListComponent {
   searchTerm = '';
 
   @Input() usePageNavigation = false;
@@ -288,10 +311,6 @@ export class PlatformOfAggregatorListComponent implements OnInit {
     public state: PlatformOfAggregatorStateService,
     private modalService: ModalService,
   ) {}
-
-  ngOnInit(): void {
-    this.state.loadItems();
-  }
 
   onSearchChange(term: string): void {
     this.searchTerm = term;
@@ -305,6 +324,10 @@ export class PlatformOfAggregatorListComponent implements OnInit {
   onPaginationChange(event: PaginationChangeEvent): void {
     this.state.setPageSize(event.pageSize);
     this.state.setPageIndex(event.page);
+  }
+
+  onSortChange(column: string, direction: string | null): void {
+    this.state.setSort(column, direction);
   }
 
   onToggleTrash(show: boolean): void {
@@ -322,6 +345,7 @@ export class PlatformOfAggregatorListComponent implements OnInit {
   onView(id: number): void {
     this.state.openViewModal(id);
   }
+
 
   async onRestore(id: number): Promise<void> {
     const confirmed = await this.modalService.confirm({

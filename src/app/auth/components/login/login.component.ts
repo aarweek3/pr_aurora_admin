@@ -230,13 +230,12 @@ export class LoginComponent implements OnInit {
           if (response.success) {
             this.handleLoginSuccess();
           } else {
-            this.handleLoginError(response.message || 'Ошибка входа');
+            this.handleLoginError(response);
           }
         },
         error: (error) => {
-          this.handleLoginError(
-            error?.error?.message || error?.message || 'Произошла ошибка при входе',
-          );
+          console.log('DEBUG: LoginComponent catch error:', error);
+          this.handleLoginError(error);
         },
       });
   }
@@ -261,16 +260,33 @@ export class LoginComponent implements OnInit {
     }, 500);
   }
 
-  private handleLoginError(errorMessage: string): void {
+  private handleLoginError(error: any): void {
+    const errorMessage =
+      typeof error === 'string'
+        ? error
+        : error?.error?.message || error?.message || error?.detail || error?.userMessage || '';
+
+    console.log('DEBUG: handleLoginError error object:', error);
+    console.log('DEBUG: handleLoginError extracted message:', errorMessage);
+
     this.logger.error('Ошибка входа', { error: errorMessage });
     this.isLoading.set(false);
 
-    const userFriendlyMessage = this.getUserFriendlyErrorMessage(errorMessage);
+    const userFriendlyMessage = this.getUserFriendlyErrorMessage(errorMessage, error);
+    console.log('DEBUG: final userFriendlyMessage:', userFriendlyMessage);
     this.message.error(userFriendlyMessage);
   }
 
-  private getUserFriendlyErrorMessage(errorMessage: string): string {
-    const lowerMessage = errorMessage.toLowerCase();
+  private getUserFriendlyErrorMessage(errorMessage: string, error?: any): string {
+    const lowerMessage = String(errorMessage || '').toLowerCase();
+    const status = error?.status;
+
+    console.log('DEBUG: lowerMessage:', lowerMessage, 'status:', status);
+
+    // Самая надежная проверка - по статусу 0 (Network Error)
+    if (status === 0 || lowerMessage.includes('связь') || lowerMessage.includes('connection')) {
+      return 'Нет связи с сервером';
+    }
 
     if (
       lowerMessage.includes('invalid credentials') ||
@@ -283,14 +299,6 @@ export class LoginComponent implements OnInit {
 
     if (lowerMessage.includes('account locked') || lowerMessage.includes('аккаунт заблокирован')) {
       return 'Аккаунт временно заблокирован';
-    }
-
-    if (
-      lowerMessage.includes('network') ||
-      lowerMessage.includes('connection') ||
-      lowerMessage.includes('сеть')
-    ) {
-      return 'Проблемы с подключением к серверу';
     }
 
     return 'Произошла ошибка при входе. Попробуйте еще раз.';

@@ -33,7 +33,6 @@
 @use "styles/components/toggle";
 @use "styles/components/input";
 @use "styles/components/form-field";
-// @import 'styles/components/alert';
 
 // =============================================================================
 // 0. DESIGN TOKENS (CSS Variables)
@@ -43,6 +42,17 @@
   --av-modal-width-medium: 600px;
   --av-modal-width-large: 800px;
   --av-modal-width-xlarge: 1000px;
+
+  /* Aurora Tag Design Tokens */
+  --av-tag-blue: #1890ff;
+  --av-tag-cyan: #13c2c2;
+  --av-tag-green: #52c41a;
+  --av-tag-gold: #faad14;
+  --av-tag-red: #f5222d;
+  --av-tag-orange: #fa8c16;
+  --av-tag-purple: #722ed1;
+  --av-tag-magenta: #eb2f96;
+  --av-tag-gray: #8c8c8c;
 }
 
 // =============================================================================
@@ -82,11 +92,6 @@
   }
 }
 
-// Временные стили для отладки (удалить в production)
-// body {
-//   outline: 1px solid red;
-// }
-
 // =============================================================================
 // 9. VS MODAL (VS Code Style Modal Windows)
 // =============================================================================
@@ -121,5 +126,44 @@
     background: transparent !important;
     box-shadow: none !important;
     border: none !important;
+  }
+}
+
+
+// =============================================================================
+// 11. TAG STYLES (Aurora Standard)
+// =============================================================================
+
+.av-tag-slug {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  background: #f1f5f9;
+  color: #475569;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  font-family: "SF Mono", Monaco, "Cascadia Code", "Roboto Mono", Consolas, "Courier New", monospace;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.2;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: #e2e8f0;
+    color: #1e293b;
+    border-color: #cbd5e1;
+  }
+}
+
+[data-theme="dark"] .av-tag-slug {
+  background: #1e293b;
+  color: #94a3b8;
+  border-color: #334155;
+
+  &:hover {
+    background: #334155;
+    color: #f1f5f9;
+    border-color: #475569;
   }
 }

@@ -1,0 +1,152 @@
+.page-card {
+  margin: 0;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.table-header {
+  margin-bottom: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .left-actions {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+
+    .search-box {
+      width: 320px;
+    }
+
+    .trash-toggle {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 12px;
+      background: #f8fafc;
+      border-radius: 6px;
+      border: 1px solid #e2e8f0;
+      transition: all 0.3s ease;
+
+      .label {
+        font-size: 11px;
+        font-weight: 700;
+        color: #64748b;
+        letter-spacing: 0.5px;
+      }
+
+      &.active {
+        background: #fff1f0;
+        border-color: #ffa39e;
+        .label { color: #f5222d; }
+      }
+    }
+  }
+}
+
+.category-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  .tree-cell {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .category-icon {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+    border-radius: 6px;
+    background: #f1f5f9;
+    padding: 4px;
+  }
+
+  .category-icon-placeholder {
+    width: 32px;
+    height: 32px;
+    background: #f1f5f9;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #94a3b8;
+    font-size: 16px;
+  }
+
+  .text-group {
+    display: flex;
+    flex-direction: column;
+
+    .tech-name {
+      font-weight: 600;
+      color: #1e293b;
+      font-size: 14px;
+    }
+
+    .localization-subtext {
+      font-size: 12px;
+      color: #64748b;
+    }
+  }
+}
+
+.slug-text {
+  font-family: 'JetBrains Mono', 'Consolas', monospace;
+  font-size: 12px;
+  color: #475569;
+  background: #f1f5f9;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.programs-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #3b82f6;
+  font-weight: 600;
+
+  i { font-size: 14px; }
+}
+
+.actions {
+  display: flex;
+  gap: 4px;
+  justify-content: flex-end;
+
+  button {
+    color: #64748b;
+    &:hover { background: #f1f5f9; }
+  }
+
+  .view-icon:hover { color: #10b981; }
+  .edit-icon:hover { color: #3b82f6; }
+  .delete-icon:hover { color: #f59e0b; }
+  .hard-delete-icon:hover { color: #ef4444; }
+  .restore-icon:hover { color: #10b981; }
+}
+
+.trash-alert {
+  margin-bottom: 20px;
+}
+
+.deleted-row {
+  opacity: 0.7;
+  background: #fff1f0;
+  
+  td {
+    color: #cf1322 !important;
+  }
+}
+
+.pagination-footer {
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid #f1f5f9;
+  display: flex;
+  justify-content: center;
+}

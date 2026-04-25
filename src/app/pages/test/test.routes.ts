@@ -32,4 +32,9 @@ export const TEST_ROUTES: Routes = [
     path: 'sample-manager-simple-language',
     component: SampleMainManagerComponent,
   },
+  {
+    path: 'image-uni',
+    loadComponent: () =>
+      import('./test-image-uni/test-image-uni.component').then((m) => m.TestImageUniComponent),
+  },
 ];

@@ -37,6 +37,8 @@ export const authInterceptor: HttpInterceptorFn = (
     return next(req);
   }
 
+  const isNoisy = isNoisyRequest(req.url);
+
   const isSimulator = req.headers.has('X-Simulator-Request');
 
   if (isSimulator) {
@@ -74,7 +76,7 @@ export const authInterceptor: HttpInterceptorFn = (
   });
 
   // Логируем только в development режиме
-  if (isDevMode) {
+  if (isDevMode && !isNoisy) {
     console.log(`🌐 HTTP ${authReq.method} ${authReq.url}`, {
       withCredentials: authReq.withCredentials,
       headers: Object.fromEntries(
@@ -85,7 +87,7 @@ export const authInterceptor: HttpInterceptorFn = (
 
   return next(authReq).pipe(
     tap((event) => {
-      if (event.type === HttpEventType.Response && isDevMode) {
+      if (event.type === HttpEventType.Response && isDevMode && !isNoisy) {
         console.log(`✅ HTTP ${authReq.method} ${authReq.url} - SUCCESS ${event.status}`);
       }
     }),
@@ -308,17 +310,39 @@ function isAuthEndpoint(url: string): boolean {
 }
 
 /**
+ * Проверяет, является ли запрос "шумным" (частые запросы, которые не нужно логировать при успехе)
+ */
+function isNoisyRequest(url: string): boolean {
+  const noisyPatterns = [
+    '/api/Icons/',
+    '/api/HealthCheck',
+    '/api/Auth/debug-token',
+    '.svg',
+    '.json',
+    'assets/',
+  ];
+
+  const lowerUrl = url.toLowerCase();
+  return noisyPatterns.some((pattern) => lowerUrl.includes(pattern.toLowerCase()));
+}
+
+/**
  * Обрабатывает HTTP ошибки и возвращает понятное сообщение
  */
 function handleError(error: HttpErrorResponse): Error {
   let errorMessage = 'Произошла неизвестная ошибка';
   const serverError = error.error as { message?: string; error?: string; errors?: any };
 
-  // Пытаемся получить сообщение об ошибке от сервера
+  console.log('DEBUG: auth.interceptor.ts handleError caught:', error);
+  // Пытаемся получить сообщение об ошибке от сервера или из объекта ErrorResponse
   if (serverError?.message) {
     errorMessage = serverError.message;
   } else if (serverError?.error) {
     errorMessage = serverError.error;
+  } else if ((error as any).detail) {
+    errorMessage = (error as any).detail;
+  } else if ((error as any).userMessage) {
+    errorMessage = (error as any).userMessage;
   } else if (serverError?.errors) {
     // Обрабатываем ошибки валидации
     const validationErrors = Object.values(serverError.errors).flat();
@@ -327,9 +351,10 @@ function handleError(error: HttpErrorResponse): Error {
     }
   } else {
     // Стандартные сообщения для разных HTTP статусов
+    console.log('DEBUG: Switching on status:', error.status);
     switch (error.status) {
       case 0:
-        errorMessage = 'Не удается подключиться к серверу. Проверьте интернет-соединение.';
+        errorMessage = 'Нет связи с сервером';
         break;
       case 400:
         errorMessage = 'Некорректный запрос. Проверьте введенные данные.';
