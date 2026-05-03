@@ -22,7 +22,7 @@ registerLocaleData(ru);
 
 import { LanguageService } from '@assets/languageApp/services/language.service';
 import { routes } from './app.routes';
-import { authInterceptor } from './auth/services/auth.interceptor';
+import { authInterceptor } from '@auth';
 import { GlobalErrorHandler } from './shared/infrastructure/interceptor/services/global-error-handler.service';
 import { HttpErrorInterceptor } from './shared/infrastructure/interceptor/services/http-error.interceptor';
 import { HttpRequestLoggerInterceptor } from './shared/infrastructure/interceptor/services/http-request-logger.interceptor';

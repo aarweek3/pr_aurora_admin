@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { 
   CategoryOfAggregatorItem, 
   CategoryOfAggregatorDetail, 
@@ -65,5 +65,17 @@ export class CategoryOfAggregatorApiService {
     let params = new HttpParams();
     if (languageId) params = params.set('languageId', languageId.toString());
     return this.http.get<CategoryOfAggregatorItem[]>(`${this.baseUrl}/tree`, { params });
+  }
+
+  getChildren(parentId: number | string): Observable<CategoryOfAggregatorItem[]> {
+    const params = new HttpParams()
+      .set('parentId', parentId.toString())
+      .set('pageSize', '500')
+      .set('sortBy', 'CanonicalName')
+      .set('sortDirection', '0')
+      .set('showDeleted', 'false');
+    
+    return this.http.get<CategoryOfAggregatorPagedResponse>(this.baseUrl, { params })
+      .pipe(map(res => res.items));
   }
 }

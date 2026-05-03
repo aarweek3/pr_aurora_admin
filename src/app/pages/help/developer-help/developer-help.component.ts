@@ -82,6 +82,22 @@ import { NzTagModule } from 'ng-zorro-antd/tag';
               nzDescription="Модуль является образцом реализации современных паттернов: Signals, CRUD v1, алфавитное шардирование и умная система локализации."
               nzShowIcon
             ></nz-alert>
+
+            <nz-card nzTitle="⚙️ Системные требования БД" style="margin-top: 16px;">
+              <p>
+                Для корректной работы логики «Умного мастера» в справочнике разработчиков 
+                <strong>обязательно</strong> должна присутствовать запись с <code>ID = 1</code>.
+              </p>
+              <div class="logic-card" style="background: #fffbe6; border: 1px solid #ffe58f; padding: 12px; border-radius: 8px;">
+                <ul style="margin-bottom: 0; padding-left: 20px;">
+                  <li><strong>ID: 1</strong> — Зарезервированный системный идентификатор.</li>
+                  <li><strong>Назначение:</strong> Используется как значение по умолчанию («Не указан»), 
+                      когда оператор оставляет поле разработчика пустым в мастере программ.</li>
+                  <li><strong>Рекомендация:</strong> При начальном заполнении БД (Seed Data) создайте под этим ID 
+                      запись с системным именем <em>"Unknown / Не указан"</em>.</li>
+                </ul>
+              </div>
+            </nz-card>
           </div>
         </nz-tab>
 
@@ -654,7 +670,53 @@ import { NzTagModule } from 'ng-zorro-antd/tag';
           </div>
         </nz-tab>
 
-        <!-- 5. ROADMAP -->
+        <!-- 6. СИСТЕМНЫЕ ТРЕБОВАНИЯ (АРХИТЕКТУРА) -->
+        <nz-tab nzTitle="⚙️ Системные требования">
+          <div class="help-section">
+            <nz-card nzTitle="Архитектурный стандарт: Системные требования v1.0">
+              <p>
+                Система требований реализована через связку справочника версий ОС и архитектур процессоров. 
+                Это позволяет избежать текстового хардкода и обеспечить фильтрацию ПО по совместимости.
+              </p>
+
+              <div class="logic-grid">
+                <div class="logic-card">
+                  <h5>Ключевые сущности:</h5>
+                  <ul>
+                    <li><code>PlatformOsVersionOfAggregator</code> — Справочник (Win 10, macOS Sonoma).</li>
+                    <li><code>RequirementArchitecture</code> — Enum (x64, Arm64, Universal).</li>
+                    <li><code>SystemRequirementOfAggregator</code> — Связующая таблица.</li>
+                  </ul>
+                </div>
+                <div class="logic-card">
+                  <h5>Логика Min/Max Version:</h5>
+                  <p>Мы используем инклюзивный диапазон:</p>
+                  <ul>
+                    <li><code>Min: Win 10, Max: null</code> = "Windows 10 и выше".</li>
+                    <li>Автоматическая поддержка новых ОС (Win 12) без правки кода.</li>
+                  </ul>
+                </div>
+              </div>
+            </nz-card>
+
+            <nz-card nzTitle="Спецификация моделей (C#)">
+              <nz-tabset>
+                <nz-tab nzTitle="RequirementArchitecture (Enum)">
+                  <av-help-copy-container [content]="sysReqEnumCode"></av-help-copy-container>
+                </nz-tab>
+                <nz-tab nzTitle="SystemRequirementOfAggregator">
+                  <av-help-copy-container [content]="sysReqCoreCode"></av-help-copy-container>
+                </nz-tab>
+                <nz-tab nzTitle="Seed Data (JSON)">
+                  <p>Стандарт заполнения справочников через <code>DAL/SeedData/Aggregator/platform_os_versions.json</code></p>
+                  <av-help-copy-container [content]="sysReqJsonCode"></av-help-copy-container>
+                </nz-tab>
+              </nz-tabset>
+            </nz-card>
+          </div>
+        </nz-tab>
+
+        <!-- 7. ROADMAP -->
         <nz-tab nzTitle="🚀 Roadmap v3.5">
           <div class="help-section">
             <nz-card nzTitle="Как собрать такой модуль с нуля? (Пошаговый план)">
@@ -1788,6 +1850,46 @@ dest.LanguageName -> src.LanguageOfAggregator.Title</code></pre>
             </nz-card>
           </div>
         </nz-tab>
+        <!-- 8. СПЕЦИФИКАЦИЯ AURORA V3.5 -->
+        <nz-tab nzTitle="📋 Спецификация Aurora v3.5">
+          <div class="help-section">
+            <nz-card nzTitle="Глобальный чек-лист соответствия (Reference Checklist)">
+              <p>Любая новая сущность в системе Агрегатора должна соответствовать следующим критериям:</p>
+              
+              <div class="logic-grid">
+                <div class="logic-card">
+                  <h5>Frontend (Angular 17+):</h5>
+                  <ul>
+                    <li><nz-tag nzColor="success">Signals</nz-tag> Полный переход на Signal-based State.</li>
+                    <li><nz-tag nzColor="success">Standalone</nz-tag> Компоненты без модулей.</li>
+                    <li><nz-tag nzColor="success">AvShowcase</nz-tag> Использование базовых компонентов для CRUD.</li>
+                    <li><nz-tag nzColor="success">Localizations</nz-tag> Вкладки для всех активных языков.</li>
+                  </ul>
+                </div>
+                <div class="logic-card">
+                  <h5>Backend (.NET Core):</h5>
+                  <ul>
+                    <li><nz-tag nzColor="processing">FullAuditable</nz-tag> Наследование от базовых сущностей аудита.</li>
+                    <li><nz-tag nzColor="processing">UnitOfWork</nz-tag> Регистрация в репозиториях.</li>
+                    <li><nz-tag nzColor="processing">AutoMapper</nz-tag> Наличие DTO и профилей маппинга.</li>
+                    <li><nz-tag nzColor="processing">Migrations</nz-tag> Наличие чистых миграций без конфликтов.</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="logic-box bg-dark" style="margin-top: 24px;">
+                <h4 style="color: #52c41a;">🗂️ Эталонные файлы проекта:</h4>
+                <pre style="font-size: 12px; color: #a6e22e;">
+// Backend Core: 
+DAL/Models/Aggregator/DeveloperOfAggregator.cs
+// Frontend Page:
+src/app/AGREGATOR/PAGES/DeveloperOfAggregatorPage/
+// Documentation:
+src/app/pages/help/developer-help/developer-help.component.ts</pre>
+              </div>
+            </nz-card>
+          </div>
+        </nz-tab>
       </nz-tabset>
     </div>
   `,
@@ -2231,4 +2333,48 @@ onToggleTrash(show: boolean): void {
     border-color: #fee2e2;
   }
 }`;
+
+  // --- SYSTEM REQUIREMENTS SECTION ---
+  sysReqEnumCode = `public enum RequirementArchitecture
+{
+    Any       = 0,
+    x86       = 1,
+    x64       = 2,
+    Arm64     = 3,  // Apple Silicon, ARM Windows
+    Universal = 4   // macOS Universal Binary
+}`;
+
+  sysReqCoreCode = `[Table("system_requirements_of_aggregator")]
+public class SystemRequirementOfAggregator : FullAuditableEntityOfAggregator
+{
+    public int VersionOfAggregatorId { get; set; }
+    public int PlatformOfAggregatorId { get; set; }
+    public RequirementArchitecture Architecture { get; set; }
+    
+    public int? MinOsVersionId { get; set; } // FK to PlatformOsVersion
+    public int? MaxOsVersionId { get; set; } // FK to PlatformOsVersion
+
+    public bool IsRecommended { get; set; }
+    public int SortOrder { get; set; }
+
+    public virtual ICollection<SystemRequirementOfAggregatorLocalization> Localizations { get; set; }
+}`;
+
+  sysReqJsonCode = `[
+  {
+    "platformCode": "windows",
+    "versions": [
+      { "code": "7", "name": "Windows 7", "sort": 20 },
+      { "code": "10", "name": "Windows 10", "sort": 40 },
+      { "code": "11", "name": "Windows 11", "sort": 50 }
+    ]
+  },
+  {
+    "platformCode": "macos",
+    "versions": [
+      { "code": "14", "name": "macOS Sonoma", "sort": 80 },
+      { "code": "15", "name": "macOS Sequoia", "sort": 90 }
+    ]
+  }
+]`;
 }

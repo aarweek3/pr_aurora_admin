@@ -244,7 +244,7 @@ export class IconComponent {
       error: (err: any) => {
         this.svgContent.set(
           this.sanitizer.bypassSecurityTrustHtml(
-            `<svg viewBox="0 0 24 24"><rect width="24" height="24" fill="red" opacity="0.3"/></svg>`,
+            `<svg viewBox="0 0 24 24"><rect width="24" height="24" fill="red"/></svg>`,
           ),
         );
       },

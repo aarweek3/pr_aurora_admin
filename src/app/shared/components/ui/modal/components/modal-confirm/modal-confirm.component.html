@@ -20,9 +20,7 @@
       </div>
       <div class="confirm-text-container">
         <h2 class="confirm-title" *ngIf="config.centered && config.title">{{ config.title }}</h2>
-        <div class="confirm-message">
-          {{ config.message || 'Вы уверены, что хотите продолжить?' }}
-        </div>
+        <div class="confirm-message" [innerHTML]="safeMessage"></div>
       </div>
     </div>
   </div>

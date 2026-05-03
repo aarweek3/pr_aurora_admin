@@ -107,7 +107,7 @@ export class TestLanguageAppComponent {
   private iconService = inject(IconGetService);
   private sanitizer = inject(DomSanitizer);
 
-  targetIcon = 'av_l_mexico-flag';
+  targetIcon = 'av_add';
   loading = signal(false);
 
   result = signal<{

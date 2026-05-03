@@ -1,0 +1,135 @@
+﻿{
+  "helpId": "developer-of-aggregator-help-2026-04-30-20-49",
+  "title": "Техническая документация: DeveloperOfAggregatorPage",
+  "subtitle": "Полная спецификация модуля управления разработчиками (Aurora v3.5)",
+  "icon": "code",
+  "width": 1200,
+  "reference": [
+    {
+      "id": "ref-general",
+      "title": "📘 1. Общие положения",
+      "content": "<p>Модуль <strong>DeveloperOfAggregatorPage</strong> является частью системы справочников (SPRAVKA) раздела AGREGATOR. Он предназначен для централизованного управления базой данных разработчиков и вендоров программного обеспечения. Модуль обеспечивает полный цикл CRUD-операций, поддержку мультиязычного контента и SEO-параметров для каждого разработчика.</p><p><strong>Путь в проекте:</strong> <code>D:\\_PROGECT\\pr_aurora_admin\\src\\app\\AGREGATOR\\PAGES\\SPRAVKA\\DeveloperOfAggregatorPage</code></p><p><strong>Назначение:</strong> Сущность DeveloperOfAggregator предназначена для хранения информации о создателях программного обеспечения. Она является ключевым справочник для группировки ПО по вендорам.</p>",
+      "type": "standard"
+    },
+    {
+      "id": "ref-philosophy",
+      "title": "🎨 Философия интерфейса Aurora v3.5",
+      "content": "<p>Интерфейс спроектирован по паттерну <strong>\"Information Density & Clarity\"</strong>. Мы используем мягкие тени и акцентные цвета для ключевых данных (ID, SystemCode), чтобы разработчик мог мгновенно ориентироваться в справочнике. Каждое действие имеет цветовую кодировку: синий — конгруэнтность, оранжевый — корзина, красный — сброс/очистка.</p>",
+      "type": "standard"
+    },
+    {
+      "id": "ref-logic",
+      "title": "⚙️ 2. Общий принцип работы",
+      "content": "<ul><li><strong>Архитектура:</strong> Модуль построен на архитектуре State Manager Pattern с использованием Angular Signals.</li><li><strong>Управление данными:</strong> Все операции проходят через <code>DeveloperOfAggregatorStateService</code>.</li><li><strong>Режимы отображения (Dual-Mode UI):</strong> Поддерживается два режима работы — «Модальный» (быстрое редактирование в окне) и «Страничный» (полноэкранная форма для глубокого редактирования).</li><li><strong>Обслуживание БД:</strong> Предусмотрены инструменты для очистки таблицы и начального заполнения (seed) из JSON-файла.</li></ul>",
+      "type": "info"
+    },
+    {
+      "id": "ref-l10n",
+      "title": "🌍 3. Локализация и Fallback",
+      "content": "<h3>Механизм English Fallback (Aurora v3.5 Standard)</h3><p>Система Aurora v3.5 минимизирует рутинную работу по заполнению переводов. Если пользователь не заполнил вкладку другого языка, данные будут автоматически подтянуты из эталонной английской версии.</p><h4>Приоритеты Fallback:</h4><ol><li>Значение в текущей вкладке.</li><li>Значение из вкладки en-US.</li><li>Значение из поля Техническое название.</li></ol><h4>Охватываемые поля:</h4><ul><li>Отображаемое название (Name)</li><li>Описание (Description)</li><li>SEO Title & Meta Description</li></ul><h4>TypeScript Logic:</h4><pre><code>applyEnglishFallbacks(localizations: any[], technicalName: string): any[] {\n  const enLocale = localizations.find(l =&gt; l.languageCode === 'en-US');\n  return localizations.map(loc =&gt; ({\n    ...loc,\n    name: loc.name || enLocale?.name || technicalName,\n    description: loc.description || enLocale?.description,\n    metaTitle: loc.metaTitle || enLocale?.metaTitle,\n    metaDescription: loc.metaDescription || enLocale?.metaDescription\n  }));\n}</code></pre>",
+      "type": "standard"
+    }
+  ],
+  "blocks-main": [
+    {
+      "id": "roadmap-mega-step",
+      "title": "🚀 Roadmap: Как собрать такой модуль с нуля?",
+      "content": "<h3>Как собрать такой модуль с нуля? (Пошаговый план)</h3><h4>Карта Бэкенд-модуля (DAL & API)</h4><pre><code>[DAL] Слой доступа к данным\n├── 📂 Models/Aggregator/\n│ ├── 📄 DeveloperOfAggregator.cs\n│ └── 📄 Localizations/Devel...Localization.cs\n├── 📂 Repositories/\n│ ├── 📄 DeveloperOfAggregatorRepository.cs\n│ └── 📄 Interfaces/IDeveloperOfAgg...Repository.cs\n├── 📄 AppDbContext.Aggregator.cs\n└── 📄 AggregatorModelConfiguration.cs\n\n[API] Слой логики и сервисов\n├── 📂 Controllers/\n│ └── 📄 DeveloperOfAggregatorController.cs\n└── 📂 Pages/AGGREGATOR/DeveloperOfAggregator/\n├── 📂 Dtos/DeveloperOfAggregatorDto.cs\n├── 📂 Interfaces/IDeveloperOfAgg...Service.cs\n├── 📂 Services/DeveloperOfAggregatorService.cs\n├── 📂 Mappings/DeveloperOfAggregatorProfile.cs\n├── 📂 Validators/DeveloperOfAgg...Validators.cs\n└── 📂 Jsons/DeveloperOfAggregator.json</code></pre><h4>Шаги 1-13 (Полный цикл):</h4><ol><li><strong>Entity & Migrations:</strong> Создание DeveloperOfAggregator в DAL.</li><li><strong>Repositories:</strong> Реализация IDeveloperOfAggregatorRepository.</li><li><strong>UnitOfWork:</strong> Регистрация новой сущности.</li><li><strong>Services & API:</strong> Реализация бизнес-логики и контроллера.</li><li><strong>Frontend Infra:</strong> Создание API-сервиса и State-сервиса.</li><li><strong>UI Manager:</strong> Оркестратор страницы.</li><li><strong>UI List & Table:</strong> Отображение данных и пагинация.</li><li><strong>UI Form:</strong> Форма создания/редактирования с поддержкой SEO.</li><li><strong>Logic: Soft Delete:</strong> Реализация корзины.</li><li><strong>Logic: Hard Delete:</strong> Физическое удаление с капчей.</li><li><strong>Logic: Media:</strong> Интеграция иконок с шардированием.</li><li><strong>Logic: Search:</strong> Реактивный поиск по Name/SystemCode.</li><li><strong>Final: Routing:</strong> Интеграция в общую навигацию.</li></ol>",
+      "type": "standard"
+    },
+    {
+      "id": "database-structure",
+      "title": "💾 Структура БД",
+      "content": "<h4>Core Entity (DeveloperOfAggregator)</h4><table><thead><tr><th>Поле</th><th>Тип</th><th>Описание</th></tr></thead><tbody><tr><td>Id</td><td>int</td><td>Первичный ключ (Identity)</td></tr><tr><td>Name</td><td>string(200)</td><td>Техническое название вендора (Обязательное). Используется как Fallback для локализаций.</td></tr><tr><td>SystemCode</td><td>string(150)</td><td>Уникальный системный код (Slug). Обязательное поле для формирования URL.</td></tr><tr><td>Website</td><td>string?</td><td>URL официального сайта разработчика.</td></tr><tr><td>IconPath</td><td>string?</td><td>Относительный путь к файлу логотипа в assets.</td></tr><tr><td>IsActive</td><td>bool</td><td>Флаг активности записи. По умолчанию true.</td></tr><tr><td>SortOrder</td><td>int</td><td>Приоритет ручной сортировки. Чем меньше число, тем выше в списке.</td></tr></tbody></table><h4>Localization (DeveloperOfAggregatorLocalization)</h4><table><thead><tr><th>Поле</th><th>Тип</th><th>Описание</th></tr></thead><tbody><tr><td>DeveloperOfAggregatorId</td><td>int</td><td>Внешний ключ (FK) на родительскую сущность.</td></tr><tr><td>LanguageOfAggregatorId</td><td>int</td><td>Внешний ключ (FK) на справочник языков.</td></tr><tr><td>Name</td><td>string(200)</td><td>Локализованное отображаемое имя (Отображается клиенту).</td></tr><tr><td>Description</td><td>string?</td><td>Развернутое описание разработчика на конкретном языке.</td></tr><tr><td>MetaTitle</td><td>string?</td><td>SEO-заголовок страницы (Title).</td></tr><tr><td>MetaDescription</td><td>string?</td><td>SEO-описание страницы (Description).</td></tr></tbody></table>",
+      "type": "standard"
+    },
+    {
+      "id": "spec-json-samples",
+      "title": "🔄 [SPEC] JSON-схемы (Request/Response)",
+      "content": "<h4>Response: GetById (Полный объект)</h4><pre><code>{\n  \"id\": 1,\n  \"name\": \"Microsoft\",\n  \"systemCode\": \"microsoft\",\n  \"isActive\": true,\n  \"iconPath\": \"uploads/developers/m/microsoft.svg\",\n  \"localizations\": [\n    {\n      \"languageOfAggregatorId\": 1,\n      \"languageCode\": \"en-US\",\n      \"name\": \"Microsoft Corporation\",\n      \"description\": \"&lt;p&gt;Technology leader...&lt;/p&gt;\",\n      \"metaTitle\": \"Microsoft - Official Software\",\n      \"metaDescription\": \"Full list of MS products...\"\n    }\n  ]\n}</code></pre><h4>Request: Create / Update (DTO)</h4><pre><code>{\n  \"id\": 1,\n  \"name\": \"Microsoft\",\n  \"systemCode\": \"microsoft\",\n  \"isActive\": true,\n  \"localizations\": [\n    {\n      \"languageOfAggregatorId\": 1,\n      \"name\": \"Microsoft\",\n      \"description\": \"...\"\n    }\n  ]\n}</code></pre>",
+      "type": "standard"
+    },
+    {
+      "id": "specification-integrity",
+      "title": "🛡️ Спецификация и Надежность",
+      "content": "<h4>🛡️ Data Integrity & Safety (Надежность данных)</h4><ul><li><strong>Soft Delete & Recycle Bin:</strong> Все объекты поддерживают мягкое удаление. В БД поле IsDeleted. На фронтенде реализован режим «Корзины» через сигнал showDeleted.</li><li><strong>Localization Fallbacks:</strong> Метод applyEnglishFallbacks гарантирует отсутствие пустых полей. Если локализация не заполнена, данные копируются из English (ID: 1) или Canonical Name.</li></ul><h4>💡 Особенности реализации (Premium UX)</h4><ul><li><strong>GET Стандарт для списков:</strong> Для получения списков всегда используйте GET-запросы.</li><li><strong>Безопасность удалений (Confirm & Challenge):</strong> Для обычного удаления — modal.confirm(), для необратимого (Hard Delete) — modal.challenge().</li><li><strong>Навигация и Роутинг:</strong> Бесшовное переключение между модалками и страницами. Используйте routerLink для страниц и Signals для модалок.</li></ul>",
+      "type": "standard"
+    },
+    {
+      "id": "technical-checklist",
+      "title": "💎 Технический чек-лист Aurora v3.5",
+      "content": "<h4>State Management (Signals & Effects)</h4><ul><li>Используется signal для состояния и computed для селекторов.</li><li>Логика диалогов (alerts) об пустой БД встроена в loadItems(true).</li><li>Централизованная обработка ошибок через ErrorResponse.</li></ul><h4>Frontend UI (Premium Identity)</h4><ul><li>Skeleton Loading: Использование nz-skeleton при загрузке списка (Items.length === 0).</li><li>Form Grid: Строгое соблюдение сетки 12/24 и отступов 16px.</li><li>Lazy Tabs: Инициализация вкладок локализации через ng-template nz-tab.</li><li>Seo Mapping: Форма использует вложенный SeoFormComponent. Логика маппинга \"плоских\" полей БД в объект SEO инкапсулирована в методах Save/Load.</li><li>AutoMapper Profile (Mappings): dest.LanguageCode -&gt; src.LanguageOfAggregator.Code, dest.LanguageName -&gt; src.LanguageOfAggregator.Title</li><li>Frontend UI &amp; Components (Aurora v3.5): Create Flow через модальное окно. Использовать тег &lt;nz-tabset&gt;. В NzModalService.confirm() параметр nzOkDanger: true.</li></ul>",
+      "type": "standard"
+    },
+    {
+      "id": "file-structure-tree",
+      "title": "📂 Эталонная структура файлов (Client)",
+      "content": "<pre><code>src/app/AGREGATOR/PAGES/SPRAVKA/DeveloperOfAggregatorPage/\n├── components/\n│   ├── developer-of-aggregator-form/\n│   ├── developer-of-aggregator-list/\n│   ├── developer-of-aggregator-manager/\n│   └── developer-of-aggregator-modal/\n├── models/\n│   └── developer-of-aggregator.model.ts\n├── services/\n│   ├── developer-of-aggregator-api.service.ts\n│   └── developer-of-aggregator-state.service.ts\n└── developer-of-aggregator.routes.ts</code></pre>",
+      "type": "standard"
+    }
+  ],
+  "blocks-front": [
+    {
+      "id": "check-front-progress",
+      "title": "✅ Check Front: Progress Tracking",
+      "content": "<h3>Frontend Implementation Progress</h3><p>Отслеживание реализации клиентской части агрегатора согласно утвержденному плану.</p><h4>1. Infrastructure (Инфраструктура)</h4><ul><li>[x] DeveloperOfAggregator models созданы</li><li>[x] DeveloperOfAggregatorApiService (REST эндпоинты)</li><li>[x] DeveloperOfAggregatorStateService (Signals, SSOT)</li></ul><h4>2. Manager & Components</h4><ul><li>[x] DeveloperOfAggregatorManagerComponent (Оркестратор)</li><li>[x] Таблица List (AvShowcase style)</li><li>[x] Интеграция Search, Pagination, Trash</li><li>[x] Header: базовая структура с Pill-toggle — вёрстка капсулы</li></ul><h4>3. Form & Modals (Сложная форма)</h4><ul><li>[x] Вкладка: Основные данные (Name, Slug, Website)</li><li>[x] Вкладка: Медиа (IconPath / Logo)</li><li>[x] Вкладка: Локализация (Name, Description)</li><li>[x] Вкладка: SEO (SeoFormComponent интеграция)</li></ul><h4>4. Maintenance & Polish</h4><ul><li>[x] Блок обслуживания (Seed/Clear/Read)</li><li>[x] Закрепленный Status Bar (v3.5 Style)</li><li>[x] Universal Localization интеграция</li></ul><h4>5. Quality & Compliance (Чек-лист Aurora v3.5)</h4><ul><li>[ ] Skeleton Loading (nz-skeleton) при Items.length === 0</li><li>[ ] Lazy Tabs для локализации (ng-template)</li><li>[ ] Actions: Hard Delete с modal.challenge</li><li>[ ] Pill Active State: смена фона/цвета при активации корзины</li><li>[ ] AutoMapper-маппинг плоских SEO полей</li></ul><div style=\"background:#f6ffed; padding:10px; border:1px solid #b7eb8f; margin-top:10px;\"><strong>✅ ВЫПОЛНЕНО:</strong> Базовая верстка и логика БД.</div>",
+      "type": "standard"
+    },
+    {
+      "id": "frontend-search-hero",
+      "title": "🔍 Поиск и Сортировка (Frontend)",
+      "content": "<h3>Универсальный компонент поиска (AvSearchComponent)</h3><ul><li><strong>Реактивный Debounce:</strong> Автоматическая задержка в 300мс.</li><li><strong>Two-way Signals:</strong> Использование model signal.</li></ul><h4>Техническая интеграция:</h4><pre><code>&lt;av-search [(value)]=\"searchTerm\" (onSearch)=\"onSearchChange($event)\"&gt;&lt;/av-search&gt;</code></pre><h4>💎 Нюансы реализации поиска (Standard Hero)</h4><ul><li><strong>Frontend: Reactive UI:</strong> Model Signals: Используйте searchTerm = '' в компоненте и this.state.setSearch(term) для триггера загрузки данных.</li><li><strong>Debounce 300ms:</strong> Встроен в av-search. Срабатывает автоматически при наборе.</li><li><strong>Sync:</strong> Двустороннее связывание [(value)] критически важно для корректной очистки строки поиска.</li></ul>",
+      "type": "standard"
+    },
+    {
+      "id": "frontend-actions-logic",
+      "title": "🛠️ Логика Actions и паттерны UI",
+      "content": "<table><thead><tr><th>Действие</th><th>Иконка</th><th>Цвет</th><th>Метод State</th><th>Механика UX</th></tr></thead><tbody><tr><td>Просмотр</td><td>eye</td><td>Primary</td><td>openView()</td><td>Modal Read-only</td></tr><tr><td>Редактировать</td><td>edit</td><td>Warning</td><td>updateState()</td><td>Modal Form</td></tr><tr><td>В корзину</td><td>rest</td><td>Error</td><td>delete()</td><td>Soft Delete (confirm)</td></tr><tr><td>Восстановить</td><td>undo</td><td>Success</td><td>restore()</td><td>Возврат из корзины в основной список</td></tr><tr><td>Hard Delete</td><td>fire</td><td>Critical</td><td>hardDelete()</td><td>Метод modal.challenge</td></tr></tbody></table><h4>Пример реализации (TS):</h4><pre><code>async onHardDelete(id: number): Promise&lt;void&gt; {\n  const confirmed = await this.modalService.challenge(\n    'ВНИМАНИЕ: Это действие безвозвратно удалит запись.',\n    '2 + 2 = ?',\n    '4',\n    'Удалить навсегда'\n  );\n  if (confirmed) this.state.hardDelete(id);\n}</code></pre>",
+      "type": "standard"
+    },
+    {
+      "id": "spec-diagnostics",
+      "title": "⚠️ Диагностика фронтенда",
+      "content": "<h3>Типовые проблемы и решения (Frontend Troubleshooting)</h3><ul><li><strong>Пустая форма:</strong> Убедитесь, что <code>LanguageService</code> инициализировал языки.</li><li><strong>Ошибка 404 на иконке:</strong> Проверьте <code>environment.help.assetsPath</code> и физическое наличие файла в папке шардирования.</li><li><strong>Кнопка «Сохранить» неактивна:</strong> Проверьте Regex-валидацию SystemCode (только <code>a-z0-9-</code>) и наличие хотя бы одной локализации.</li></ul>",
+      "type": "warning"
+    }
+  ],
+  "blocks-server": [
+    {
+      "id": "check-back-progress",
+      "title": "✅ Check Back: Progress Tracking",
+      "content": "<h3>Backend Implementation Progress</h3><p>Отслеживание реализации серверной части агрегатора согласно утвержденному плану.</p><h4>1. Models & DAL (Слой данных)</h4><ul><li>[x] Сущности DeveloperOfAggregator / Localization сконфигурированы</li><li>[x] Таблицы локализаций созданы в /Localizations</li><li>[x] Миграции БД применены (developers_of_aggregator)</li></ul><h4>2. Repositories (Слой доступа)</h4><ul><li>[x] DeveloperOfAggregatorRepository реализован</li><li>[x] UnitOfWork расширен новыми свойствами</li><li>[x] DI регистрация в ServiceCollection</li></ul><h4>3. Service Layer (Бизнес-логика)</h4><ul><li>[x] GetPaged с фильтрами по SearchTerm и IsDeleted</li><li>[x] Глобальная проверка уникальности SystemCode (Slug)</li><li>[ ] Пересчет количества софта (Aggregation Logic)</li><li>[ ] Каскадный Hard Delete (удаление иконок и локализаций)</li></ul><h4>4. API Controllers (Эндпоинты)</h4><ul><li>[x] DeveloperOfAggregatorController реализован</li><li>[x] Поддержка Soft & Hard Delete (ProblemDetails contract)</li><li>[x] Интеграция с MediaController (Шардирование иконок)</li></ul><div style=\"background:#f6ffed; padding:10px; border:1px solid #b7eb8f; margin-top:10px;\"><strong>✅ ВЫПОЛНЕНО:</strong> Слой данных и базовый CRUD API.</div>",
+      "type": "standard"
+    },
+    {
+      "id": "backend-cascade-hard-delete",
+      "title": "⚙️ Каскадный Hard Delete (Спецификация)",
+      "content": "<h3>Логика безвозвратного удаления (Hard Delete)</h3><p>В отличие от Soft Delete, метод Hard Delete полностью очищает базу данных и файловую систему от упоминаний объекта. Это действие необратимо.</p><h4>Алгоритм реализации (C# Service):</h4><ol><li><strong>Удаление локализаций:</strong> Сначала удаляются все записи из таблицы <code>developer_of_aggregator_localizations</code>.</li><li><strong>Физическое удаление иконки:</strong> Если поле <code>IconPath</code> не пустое, необходимо удалить файл с диска, используя <code>_webHostEnvironment.WebRootPath</code>.</li><li><strong>Удаление основной записи:</strong> В последнюю очередь удаляется сама сущность из <code>developers_of_aggregator</code>.</li></ol><h4>Пример реализации:</h4><pre><code>public async Task HardDeleteAsync(int id)\n{\n    var entity = await _repository.GetByIdAsync(id);\n    if (entity == null) return;\n\n    // 1. Удаление файла\n    if (!string.IsNullOrEmpty(entity.IconPath))\n    {\n        var fullPath = Path.Combine(_env.WebRootPath, entity.IconPath);\n        if (File.Exists(fullPath)) File.Delete(fullPath);\n    }\n\n    // 2. Удаление из БД (Репозиторий сам удалит Localizations через Cascade)\n    await _repository.HardDeleteAsync(entity);\n    await _uow.SaveChangesAsync();\n}</code></pre>",
+      "type": "danger"
+    },
+    {
+      "id": "backend-entity-csharp",
+      "title": "🛠️ Модель данных (C# Entity Implementation)",
+      "content": "<h4>DAL / Models / Aggregator / DeveloperOfAggregator.cs</h4><pre><code>[Table(\"developers_of_aggregator\")]\npublic class DeveloperOfAggregator : FullAuditableEntityOfAggregator\n{\n    [Required, MaxLength(DeveloperConstants.NameMaxLength)]\n    public string Name { get; set; } = string.Empty;\n\n    [Required, MaxLength(DeveloperConstants.SlugMaxLength)]\n    public string SystemCode { get; set; } = string.Empty;\n\n    public string? Website { get; set; }\n    public string? IconPath { get; set; }\n\n    public bool IsActive { get; set; } = true;\n    public int SortOrder { get; set; } = 0;\n\n    public virtual ICollection&lt;DeveloperOfAggregatorLocalization&gt; Localizations { get; set; }\n        = new List&lt;DeveloperOfAggregatorLocalization&gt;();\n}</code></pre>",
+      "type": "standard"
+    },
+    {
+      "id": "spec-api-errors",
+      "title": "🚫 Контракт ошибок API (ProblemDetails)",
+      "content": "<h3>Контракт обработки ошибок (Aurora Standard v3.5)</h3><p>Все методы API возвращают стандартный <code>ProblemDetails</code> (RFC 7807) при ошибках 4xx и 5xx.</p><h4>HTTP Статусы:</h4><ul><li><code>200 OK / 201 Created</code> — Успех.</li><li><code>400 Bad Request</code> — Ошибка валидации.</li><li><code>404 Not Found</code> — Запись не найдена.</li><li><code>409 Conflict</code> — Дублирование SystemCode или попытка Seed в непустую БД.</li></ul><h4>Пример ошибки валидации:</h4><pre><code>{\n  \"type\": \"https://tools.ietf.org/html/rfc7231#section-6.5.1\",\n  \"title\": \"Validation Error\",\n  \"status\": 400,\n  \"errors\": {\n    \"SystemCode\": [\"SystemCode must be in lowercase with hyphens only.\"]\n  }\n}</code></pre>",
+      "type": "danger"
+    },
+    {
+      "id": "guide-maintenance",
+      "title": "🛠️ Обслуживание и Сидинг (Maintenance)",
+      "content": "<h3>Инструменты обслуживания</h3><ul><li><strong>Clear Database:</strong> Удаляет все записи. Требует <code>modal.challenge</code>.</li><li><strong>Seed from JSON:</strong> Загружает эталонные данные.</li></ul><h4>Бизнес-логика защиты:</h4><p>Если <code>count &gt; 0</code>, API возвращает <code>409 Conflict</code>. Это предотвращает случайное дублирование данных при повторном сидинге.</p>",
+      "type": "warning"
+    },
+    {
+      "id": "backend-media-sharding",
+      "title": "🖼️ Иконки и Медиа (Шардирование)",
+      "content": "<h3>Алфавитное шардирование (Aurora v3.5)</h3><p>Путь к файлу: <code>uploads/{folder}/{shard}/{filename}</code></p><h4>GetShard Method:</h4><pre><code>private string GetShard(string filename)\n{\n    if (string.IsNullOrEmpty(filename)) return \"unknown\";\n    char firstChar = char.ToLower(filename[0]);\n    return (firstChar &gt;= 'a' &amp;&amp; firstChar &lt;= 'z') ? firstChar.ToString() : \"0\";\n}</code></pre>",
+      "type": "standard"
+    }
+  ]
+}

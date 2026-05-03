@@ -1,0 +1,314 @@
+==========================================
+ДОКУМЕНТАЦИЯ: Техническая документация: DeveloperOfAggregatorPage
+ID: developer-of-aggregator-help
+Подзаголовок: Полная спецификация модуля управления разработчиками (Aurora v3.5)
+Дата экспорта: 30.04.2026, 14:57:04
+==========================================
+
+>>> БАЗОВАЯ СПРАВКА / REFERENCE <<<
+
+[ 📘 1. Общие положения ]
+------------------------------------------
+Модуль DeveloperOfAggregatorPage является частью системы справочников (SPRAVKA) раздела AGREGATOR. Он предназначен для централизованного управления базой данных разработчиков и вендоров программного обеспечения. Модуль обеспечивает полный цикл CRUD-операций, поддержку мультиязычного контента и SEO-параметров для каждого разработчика.
+
+Путь в проекте: D:\_PROGECT\pr_aurora_admin\src\app\AGREGATOR\PAGES\SPRAVKA\DeveloperOfAggregatorPage
+
+Назначение: Сущность DeveloperOfAggregator предназначена для хранения информации о создателях программного обеспечения. Она является ключевым справочник для группировки ПО по вендорам.
+
+[ 🎨 Философия интерфейса Aurora v3.5 ]
+------------------------------------------
+Интерфейс спроектирован по паттерну "Information Density & Clarity". Мы используем мягкие тени и акцентные цвета для ключевых данных (ID, SystemCode), чтобы разработчик мог мгновенно ориентироваться в справочнике. Каждое действие имеет цветовую кодировку: синий — конгруэнтность, оранжевый — корзина, красный — сброс/очистка.
+
+[ ⚙️ 2. Общий принцип работы ]
+------------------------------------------
+Архитектура: Модуль построен на архитектуре State Manager Pattern с использованием Angular Signals.
+Управление данными: Все операции проходят через DeveloperOfAggregatorStateService.
+Режимы отображения (Dual-Mode UI): Поддерживается два режима работы — «Модальный» (быстрое редактирование в окне) и «Страничный» (полноэкранная форма для глубокого редактирования).
+Обслуживание БД: Предусмотрены инструменты для очистки таблицы и начального заполнения (seed) из JSON-файла.
+
+[ 🌍 3. Локализация и Fallback ]
+------------------------------------------
+Механизм English Fallback (Aurora v3.5 Standard)Система Aurora v3.5 минимизирует рутинную работу по заполнению переводов. Если пользователь не заполнил вкладку другого языка, данные будут автоматически подтянуты из эталонной английской версии.
+
+Приоритеты Fallback:Значение в текущей вкладке.
+Значение из вкладки en-US.
+Значение из поля Техническое название.
+Охватываемые поля:Отображаемое название (Name)
+Описание (Description)
+SEO Title & Meta Description
+TypeScript Logic:applyEnglishFallbacks(localizations: any[], technicalName: string): any[] {
+  const enLocale = localizations.find(l => l.languageCode === 'en-US');
+  return localizations.map(loc => ({
+    ...loc,
+    name: loc.name || enLocale?.name || technicalName,
+    description: loc.description || enLocale?.description,
+    metaTitle: loc.metaTitle || enLocale?.metaTitle,
+    metaDescription: loc.metaDescription || enLocale?.metaDescription
+  }));
+}
+
+
+>>> ОСНОВНЫЕ РАЗДЕЛЫ (MAIN) <<<
+
+[ 🚀 Roadmap: Как собрать такой модуль с нуля? ]
+------------------------------------------
+Как собрать такой модуль с нуля? (Пошаговый план)Карта Бэкенд-модуля (DAL & API)[DAL] Слой доступа к данным
+├── 📂 Models/Aggregator/
+│ ├── 📄 DeveloperOfAggregator.cs
+│ └── 📄 Localizations/Devel...Localization.cs
+├── 📂 Repositories/
+│ ├── 📄 DeveloperOfAggregatorRepository.cs
+│ └── 📄 Interfaces/IDeveloperOfAgg...Repository.cs
+├── 📄 AppDbContext.Aggregator.cs
+└── 📄 AggregatorModelConfiguration.cs
+
+[API] Слой логики и сервисов
+├── 📂 Controllers/
+│ └── 📄 DeveloperOfAggregatorController.cs
+└── 📂 Pages/AGGREGATOR/DeveloperOfAggregator/
+├── 📂 Dtos/DeveloperOfAggregatorDto.cs
+├── 📂 Interfaces/IDeveloperOfAgg...Service.cs
+├── 📂 Services/DeveloperOfAggregatorService.cs
+├── 📂 Mappings/DeveloperOfAggregatorProfile.cs
+├── 📂 Validators/DeveloperOfAgg...Validators.cs
+└── 📂 Jsons/DeveloperOfAggregator.jsonШаги 1-13 (Полный цикл):Entity & Migrations: Создание DeveloperOfAggregator в DAL.
+Repositories: Реализация IDeveloperOfAggregatorRepository.
+UnitOfWork: Регистрация новой сущности.
+Services & API: Реализация бизнес-логики и контроллера.
+Frontend Infra: Создание API-сервиса и State-сервиса.
+UI Manager: Оркестратор страницы.
+UI List & Table: Отображение данных и пагинация.
+UI Form: Форма создания/редактирования с поддержкой SEO.
+Logic: Soft Delete: Реализация корзины.
+Logic: Hard Delete: Физическое удаление с капчей.
+Logic: Media: Интеграция иконок с шардированием.
+Logic: Search: Реактивный поиск по Name/SystemCode.
+Final: Routing: Интеграция в общую навигацию.
+
+[ 💾 Структура БД ]
+------------------------------------------
+Core Entity (DeveloperOfAggregator)ПолеТипОписаниеIdintПервичный ключ (Identity)Namestring(200)Техническое название вендора (Обязательное). Используется как Fallback для локализаций.SystemCodestring(150)Уникальный системный код (Slug). Обязательное поле для формирования URL.Websitestring?URL официального сайта разработчика.IconPathstring?Относительный путь к файлу логотипа в assets.IsActiveboolФлаг активности записи. По умолчанию true.SortOrderintПриоритет ручной сортировки. Чем меньше число, тем выше в списке.Localization (DeveloperOfAggregatorLocalization)ПолеТипОписаниеDeveloperOfAggregatorIdintВнешний ключ (FK) на родительскую сущность.LanguageOfAggregatorIdintВнешний ключ (FK) на справочник языков.Namestring(200)Локализованное отображаемое имя (Отображается клиенту).Descriptionstring?Развернутое описание разработчика на конкретном языке.MetaTitlestring?SEO-заголовок страницы (Title).MetaDescriptionstring?SEO-описание страницы (Description).
+
+[ 🔄 [SPEC] JSON-схемы (Request/Response) ]
+------------------------------------------
+Response: GetById (Полный объект){
+  "id": 1,
+  "name": "Microsoft",
+  "systemCode": "microsoft",
+  "isActive": true,
+  "iconPath": "uploads/developers/m/microsoft.svg",
+  "localizations": [
+    {
+      "languageOfAggregatorId": 1,
+      "languageCode": "en-US",
+      "name": "Microsoft Corporation",
+      "description": "<p>Technology leader...</p>",
+      "metaTitle": "Microsoft - Official Software",
+      "metaDescription": "Full list of MS products..."
+    }
+  ]
+}Request: Create / Update (DTO){
+  "id": 1,
+  "name": "Microsoft",
+  "systemCode": "microsoft",
+  "isActive": true,
+  "localizations": [
+    {
+      "languageOfAggregatorId": 1,
+      "name": "Microsoft",
+      "description": "..."
+    }
+  ]
+}
+
+[ 🛡️ Спецификация и Надежность ]
+------------------------------------------
+🛡️ Data Integrity & Safety (Надежность данных)Soft Delete & Recycle Bin: Все объекты поддерживают мягкое удаление. В БД поле IsDeleted. На фронтенде реализован режим «Корзины» через сигнал showDeleted.
+Localization Fallbacks: Метод applyEnglishFallbacks гарантирует отсутствие пустых полей. Если локализация не заполнена, данные копируются из English (ID: 1) или Canonical Name.
+💡 Особенности реализации (Premium UX)GET Стандарт для списков: Для получения списков всегда используйте GET-запросы.
+Безопасность удалений (Confirm & Challenge): Для обычного удаления — modal.confirm(), для необратимого (Hard Delete) — modal.challenge().
+Навигация и Роутинг: Бесшовное переключение между модалками и страницами. Используйте routerLink для страниц и Signals для модалок.
+
+[ 💎 Технический чек-лист Aurora v3.5 ]
+------------------------------------------
+State Management (Signals & Effects)Используется signal для состояния и computed для селекторов.
+Логика диалогов (alerts) об пустой БД встроена в loadItems(true).
+Централизованная обработка ошибок через ErrorResponse.
+Frontend UI (Premium Identity)Skeleton Loading: Использование nz-skeleton при загрузке списка (Items.length === 0).
+Form Grid: Строгое соблюдение сетки 12/24 и отступов 16px.
+Lazy Tabs: Инициализация вкладок локализации через ng-template nz-tab.
+Seo Mapping: Форма использует вложенный SeoFormComponent. Логика маппинга "плоских" полей БД в объект SEO инкапсулирована в методах Save/Load.
+AutoMapper Profile (Mappings): dest.LanguageCode -> src.LanguageOfAggregator.Code, dest.LanguageName -> src.LanguageOfAggregator.Title
+Frontend UI & Components (Aurora v3.5): Create Flow через модальное окно. Использовать тег <nz-tabset>. В NzModalService.confirm() параметр nzOkDanger: true.
+
+[ 📂 Эталонная структура файлов (Client) ]
+------------------------------------------
+src/app/AGREGATOR/PAGES/SPRAVKA/DeveloperOfAggregatorPage/
+├── components/
+│   ├── developer-of-aggregator-form/
+│   ├── developer-of-aggregator-list/
+│   ├── developer-of-aggregator-manager/
+│   └── developer-of-aggregator-modal/
+├── models/
+│   └── developer-of-aggregator.model.ts
+├── services/
+│   ├── developer-of-aggregator-api.service.ts
+│   └── developer-of-aggregator-state.service.ts
+└── developer-of-aggregator.routes.ts
+
+
+>>> ФРОНТЕНД (FRONT) <<<
+
+[ ✅ Check Front: Progress Tracking ]
+------------------------------------------
+Frontend Implementation ProgressОтслеживание реализации клиентской части агрегатора согласно утвержденному плану.
+
+1. Infrastructure (Инфраструктура)[x] DeveloperOfAggregator models созданы
+[x] DeveloperOfAggregatorApiService (REST эндпоинты)
+[x] DeveloperOfAggregatorStateService (Signals, SSOT)
+2. Manager & Components[x] DeveloperOfAggregatorManagerComponent (Оркестратор)
+[x] Таблица List (AvShowcase style)
+[x] Интеграция Search, Pagination, Trash
+[x] Header: базовая структура с Pill-toggle — вёрстка капсулы
+3. Form & Modals (Сложная форма)[x] Вкладка: Основные данные (Name, Slug, Website)
+[x] Вкладка: Медиа (IconPath / Logo)
+[x] Вкладка: Локализация (Name, Description)
+[x] Вкладка: SEO (SeoFormComponent интеграция)
+4. Maintenance & Polish[x] Блок обслуживания (Seed/Clear/Read)
+[x] Закрепленный Status Bar (v3.5 Style)
+[x] Universal Localization интеграция
+5. Quality & Compliance (Чек-лист Aurora v3.5)[ ] Skeleton Loading (nz-skeleton) при Items.length === 0
+[ ] Lazy Tabs для локализации (ng-template)
+[ ] Actions: Hard Delete с modal.challenge
+[ ] Pill Active State: смена фона/цвета при активации корзины
+[ ] AutoMapper-маппинг плоских SEO полей
+✅ ВЫПОЛНЕНО: Базовая верстка и логика БД.
+
+[ 🔍 Поиск и Сортировка (Frontend) ]
+------------------------------------------
+Универсальный компонент поиска (AvSearchComponent)Реактивный Debounce: Автоматическая задержка в 300мс.
+Two-way Signals: Использование model signal.
+Техническая интеграция:<av-search [(value)]="searchTerm" (onSearch)="onSearchChange($event)"></av-search>💎 Нюансы реализации поиска (Standard Hero)Frontend: Reactive UI: Model Signals: Используйте searchTerm = '' в компоненте и this.state.setSearch(term) для триггера загрузки данных.
+Debounce 300ms: Встроен в av-search. Срабатывает автоматически при наборе.
+Sync: Двустороннее связывание [(value)] критически важно для корректной очистки строки поиска.
+
+[ 🛠️ Логика Actions и паттерны UI ]
+------------------------------------------
+ДействиеИконкаЦветМетод StateМеханика UXПросмотрeyePrimaryopenView()Modal Read-onlyРедактироватьeditWarningupdateState()Modal FormВ корзинуrestErrordelete()Soft Delete (confirm)ВосстановитьundoSuccessrestore()Возврат из корзины в основной списокHard DeletefireCriticalhardDelete()Метод modal.challengeПример реализации (TS):async onHardDelete(id: number): Promise<void> {
+  const confirmed = await this.modalService.challenge(
+    'ВНИМАНИЕ: Это действие безвозвратно удалит запись.',
+    '2 + 2 = ?',
+    '4',
+    'Удалить навсегда'
+  );
+  if (confirmed) this.state.hardDelete(id);
+}
+
+[ ⚠️ Диагностика фронтенда ]
+------------------------------------------
+Типовые проблемы и решения (Frontend Troubleshooting)Пустая форма: Убедитесь, что LanguageService инициализировал языки.
+Ошибка 404 на иконке: Проверьте environment.help.assetsPath и физическое наличие файла в папке шардирования.
+Кнопка «Сохранить» неактивна: Проверьте Regex-валидацию SystemCode (только a-z0-9-) и наличие хотя бы одной локализации.
+
+
+>>> СЕРВЕР / БЭКЕНД (SERVER) <<<
+
+[ ✅ Check Back: Progress Tracking ]
+------------------------------------------
+Backend Implementation ProgressОтслеживание реализации серверной части агрегатора согласно утвержденному плану.
+
+1. Models & DAL (Слой данных)[x] Сущности DeveloperOfAggregator / Localization сконфигурированы
+[x] Таблицы локализаций созданы в /Localizations
+[x] Миграции БД применены (developers_of_aggregator)
+2. Repositories (Слой доступа)[x] DeveloperOfAggregatorRepository реализован
+[x] UnitOfWork расширен новыми свойствами
+[x] DI регистрация в ServiceCollection
+3. Service Layer (Бизнес-логика)[x] GetPaged с фильтрами по SearchTerm и IsDeleted
+[x] Глобальная проверка уникальности SystemCode (Slug)
+[ ] Пересчет количества софта (Aggregation Logic)
+[ ] Каскадный Hard Delete (удаление иконок и локализаций)
+4. API Controllers (Эндпоинты)[x] DeveloperOfAggregatorController реализован
+[x] Поддержка Soft & Hard Delete (ProblemDetails contract)
+[x] Интеграция с MediaController (Шардирование иконок)
+✅ ВЫПОЛНЕНО: Слой данных и базовый CRUD API.
+
+[ ⚙️ Каскадный Hard Delete (Спецификация) ]
+------------------------------------------
+Логика безвозвратного удаления (Hard Delete)В отличие от Soft Delete, метод Hard Delete полностью очищает базу данных и файловую систему от упоминаний объекта. Это действие необратимо.
+
+Алгоритм реализации (C# Service):Удаление локализаций: Сначала удаляются все записи из таблицы developer_of_aggregator_localizations.
+Физическое удаление иконки: Если поле IconPath не пустое, необходимо удалить файл с диска, используя _webHostEnvironment.WebRootPath.
+Удаление основной записи: В последнюю очередь удаляется сама сущность из developers_of_aggregator.
+Пример реализации:public async Task HardDeleteAsync(int id)
+{
+    var entity = await _repository.GetByIdAsync(id);
+    if (entity == null) return;
+
+    // 1. Удаление файла
+    if (!string.IsNullOrEmpty(entity.IconPath))
+    {
+        var fullPath = Path.Combine(_env.WebRootPath, entity.IconPath);
+        if (File.Exists(fullPath)) File.Delete(fullPath);
+    }
+
+    // 2. Удаление из БД (Репозиторий сам удалит Localizations через Cascade)
+    await _repository.HardDeleteAsync(entity);
+    await _uow.SaveChangesAsync();
+}
+
+[ 🛠️ Модель данных (C# Entity Implementation) ]
+------------------------------------------
+DAL / Models / Aggregator / DeveloperOfAggregator.cs[Table("developers_of_aggregator")]
+public class DeveloperOfAggregator : FullAuditableEntityOfAggregator
+{
+    [Required, MaxLength(DeveloperConstants.NameMaxLength)]
+    public string Name { get; set; } = string.Empty;
+
+    [Required, MaxLength(DeveloperConstants.SlugMaxLength)]
+    public string SystemCode { get; set; } = string.Empty;
+
+    public string? Website { get; set; }
+    public string? IconPath { get; set; }
+
+    public bool IsActive { get; set; } = true;
+    public int SortOrder { get; set; } = 0;
+
+    public virtual ICollection<DeveloperOfAggregatorLocalization> Localizations { get; set; }
+        = new List<DeveloperOfAggregatorLocalization>();
+}
+
+[ 🚫 Контракт ошибок API (ProblemDetails) ]
+------------------------------------------
+Контракт обработки ошибок (Aurora Standard v3.5)Все методы API возвращают стандартный ProblemDetails (RFC 7807) при ошибках 4xx и 5xx.
+
+HTTP Статусы:200 OK / 201 Created — Успех.
+400 Bad Request — Ошибка валидации.
+404 Not Found — Запись не найдена.
+409 Conflict — Дублирование SystemCode или попытка Seed в непустую БД.
+Пример ошибки валидации:{
+  "type": "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+  "title": "Validation Error",
+  "status": 400,
+  "errors": {
+    "SystemCode": ["SystemCode must be in lowercase with hyphens only."]
+  }
+}
+
+[ 🛠️ Обслуживание и Сидинг (Maintenance) ]
+------------------------------------------
+Инструменты обслуживанияClear Database: Удаляет все записи. Требует modal.challenge.
+Seed from JSON: Загружает эталонные данные.
+Бизнес-логика защиты:Если count > 0, API возвращает 409 Conflict. Это предотвращает случайное дублирование данных при повторном сидинге.
+
+[ 🖼️ Иконки и Медиа (Шардирование) ]
+------------------------------------------
+Алфавитное шардирование (Aurora v3.5)Путь к файлу: uploads/{folder}/{shard}/{filename}
+
+GetShard Method:private string GetShard(string filename)
+{
+    if (string.IsNullOrEmpty(filename)) return "unknown";
+    char firstChar = char.ToLower(filename[0]);
+    return (firstChar >= 'a' && firstChar <= 'z') ? firstChar.ToString() : "0";
+}
+
+

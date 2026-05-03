@@ -10,6 +10,8 @@ export interface ProgramOfAggregatorLocalization {
   fullDescription?: string;
   pros?: string;
   cons?: string;
+  licenseType?: string;
+  licenseTypeId?: number;
   metaTitle?: string;
   metaDescription?: string;
 }
@@ -20,6 +22,8 @@ export interface ProgramOfAggregatorItem {
   slug: string;
   iconPath?: string;
   categoryName?: string;
+  mainPlatformName?: string;
+  mainPlatformId?: number;
   developerName?: string;
   totalDownloads: number;
   averageRating: number;
@@ -38,6 +42,7 @@ export interface ProgramOfAggregatorDetail {
   developerOfAggregatorId: number;
   canonicalName: string;
   slug: string;
+  mainPlatformId: number;
   iconPath?: string;
   website?: string;
   status: number;
@@ -49,6 +54,25 @@ export interface ProgramOfAggregatorDetail {
   localizations: ProgramOfAggregatorLocalization[];
   platformIds: number[];
   tagIds: number[];
+  tags: TagInfo[];
+  screenshots: ScreenshotOfAggregator[];
+  versions: VersionOfAggregatorDetail[];
+}
+
+export interface TagInfo {
+  id: number;
+  name: string;
+  systemCode: string;
+  color?: string;
+  categoryName?: string;
+  isFeature: boolean;
+}
+
+export interface ScreenshotOfAggregator {
+  id: number;
+  filePath: string;
+  sortOrder: number;
+  languageOfAggregatorId?: number;
 }
 
 export interface ProgramOfAggregatorCreate {
@@ -57,6 +81,7 @@ export interface ProgramOfAggregatorCreate {
   developerOfAggregatorId: number;
   canonicalName: string;
   slug: string;
+  mainPlatformId: number;
   iconPath?: string;
   website?: string;
   status: number;
@@ -158,9 +183,14 @@ export interface ProgramOfAggregatorState {
   sortDirection: number;
   editingItem: ProgramOfAggregatorDetail | null;
   viewItem: ProgramOfAggregatorDetail | null;
+  viewModalVisible: boolean;
+  viewModalMaximized: boolean;
   deletingId: number | null;
   prerequisites: ProgramPrerequisites | null;
   languages: any[];
+  categories: any[];
+  developers: any[];
+  platforms: any[];
   error: any | null;
 }
 
@@ -182,8 +212,13 @@ export const INITIAL_PROGRAM_STATE: ProgramOfAggregatorState = {
   sortDirection: 1, // Desc
   editingItem: null,
   viewItem: null,
+  viewModalVisible: false,
+  viewModalMaximized: false,
   deletingId: null,
   prerequisites: null,
   languages: [],
+  categories: [],
+  developers: [],
+  platforms: [],
   error: null
 };

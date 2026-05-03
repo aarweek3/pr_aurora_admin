@@ -37,4 +37,18 @@ export const TEST_ROUTES: Routes = [
     loadComponent: () =>
       import('./test-image-uni/test-image-uni.component').then((m) => m.TestImageUniComponent),
   },
+  {
+    path: 'rating',
+    loadComponent: () =>
+      import('../../../assets/tests/test-rating/test-rating.component').then(
+        (m) => m.TestRatingComponent,
+      ),
+  },
+  {
+    path: 'help-universal',
+    loadComponent: () =>
+      import('../../shared/components/test-components/test-help-modal/test-help-modal.component').then(
+        (m) => m.TestHelpModalComponent
+      ),
+  }
 ];

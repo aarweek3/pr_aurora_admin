@@ -1,0 +1,189 @@
+==========================================
+ДОКУМЕНТАЦИЯ: Универсальный эталон справки (Aurora v3.5)
+ID: a-master-demo
+Подзаголовок: Максимальный технический шаблон для создания документации новых модулей
+Дата экспорта: 30.04.2026, 15:13:12
+==========================================
+
+>>> БАЗОВАЯ СПРАВКА / REFERENCE <<<
+
+[ 📘 1. Стандарт документации ]
+------------------------------------------
+Данный файл является Золотым Эталоном (Golden Sample). При создании документации для любого нового модуля (Platform, Category, Program и др.) необходимо копировать структуру этого файла.
+
+Критическое требование: Документация должна быть избыточной. Проще удалить лишний пункт чек-листа, чем забыть реализовать важную системную механику (например, Soft Delete или Шардирование).
+
+[ 🎨 Философия Aurora Design ]
+------------------------------------------
+Мы используем паттерн "Information Density & Clarity". Интерфейс должен быть плотным, но читаемым. Цветовая кодировка действий в системе:
+
+Тип блокаЦветСмысловая нагрузкаstandardСинийБазовая информация и просмотр данныхinfoГолубойАрхитектурные пояснения и советыwarningЖелтыйДиагностика и инструменты обслуживанияdangerКрасныйКонтракты ошибок и необратимые действия
+
+[ ⚙️ Реактивность (Signals) ]
+------------------------------------------
+Все модули v3.5 обязаны использовать Angular Signals. Состояние хранится в signal<State> внутри StateService. Прямые манипуляции с переменными в компонентах запрещены — только через методы State.
+
+[ 🌍 Локализация (English Fallback) ]
+------------------------------------------
+Механизм English Fallback (Эталон)Система Aurora v3.5 минимизирует рутинную работу по заполнению переводов. Если пользователь не заполнил вкладку другого языка, данные будут автоматически подтянуты из эталонной английской версии.
+
+Приоритеты Fallback:Значение в текущей вкладке.
+Значение из вкладки en-US.
+Значение из технического поля Name (Техническое название).
+Эталонная реализация (StateService):applyEnglishFallbacks(localizations: any[], technicalName: string): any[] {
+  const enLocale = localizations.find(l => l.languageCode === 'en-US');
+  return localizations.map(loc => ({
+    ...loc,
+    name: loc.name || enLocale?.name || technicalName,
+    description: loc.description || enLocale?.description,
+    metaTitle: loc.metaTitle || enLocale?.metaTitle,
+    metaDescription: loc.metaDescription || enLocale?.metaDescription
+  }));
+}
+
+
+>>> ОСНОВНЫЕ РАЗДЕЛЫ (MAIN) <<<
+
+[ 🚀 Roadmap: Полный цикл разработки (1-13) ]
+------------------------------------------
+Шаблоны шагов для нового модуляI. Подготовка (DAL & API)Entity: Описание Core + Localization моделей (унаследовано от FullAuditable).
+Repository: Реализация CRUD + специфичные фильтры.
+UnitOfWork: Регистрация в UoW.
+API: Создание контроллера с маршрутами v1 (GetPaged, Create, etc).
+II. Клиентская часть (Angular)Infrastructure: Модели, ApiService, StateService (Signals).
+Orchestrator: Manager Component.
+List: Таблица в стиле AvShowcase с пагинацией.
+Form: Реактивная форма + SEO интеграция + Tabs.
+III. Системная логика (Quality)Soft Delete: Механика корзины (showDeleted signal).
+Hard Delete: Капча (modal.challenge).
+Media: Алфавитное шардирование (GetShard).
+Search: Реактивный фильтр (300ms debounce).
+Maintenance: Инструменты Seed и Clear.
+
+[ 💾 Спецификация БД (Полный набор) ]
+------------------------------------------
+Core Entity [EntityName]ПолеТипОписаниеIdintПервичный ключ (Identity)Namestring(200)Техническое название (Обязательное / Fallback)SystemCodestring(150)Slug для URL (Unique / Regex: a-z0-9-)Websitestring?URL официального ресурсаIconPathstring?Путь к файлу логотипа (uploads/...)IsActiveboolФлаг активности записиSortOrderintПриоритет ручной сортировкиLocalization Entity [EntityNameLocalization]ПолеТипОписаниеNamestring(200)Локализованное витринное имяDescriptionstring?Развернутое описание (HTML)MetaTitlestring?SEO TitleMetaDescriptionstring?SEO Description
+
+[ 🔄 JSON-схемы (Request/Response) ]
+------------------------------------------
+Response: GetById (Эталон){
+  "id": 101,
+  "name": "Entity Name",
+  "systemCode": "entity-slug",
+  "isActive": true,
+  "localizations": [
+    {
+      "languageId": 1,
+      "languageCode": "en-US",
+      "name": "Display Name EN",
+      "metaTitle": "SEO Title EN"
+    }
+  ]
+}Request: Create / Update (DTO){
+  "name": "New Tech Name",
+  "systemCode": "new-slug",
+  "localizations": [
+    {
+      "languageId": 1,
+      "name": "Display Name EN"
+    }
+  ]
+}
+
+
+>>> ФРОНТЕНД (FRONT) <<<
+
+[ 🔌 Интеграция: Как вызвать справку в коде ]
+------------------------------------------
+Пример вызова из любого компонентаЧтобы открыть окно справки, используйте NzModalService и универсальный компонент HelpUniversalModalComponent.
+
+TypeScript (Метод в компоненте):import { HelpUniversalModalComponent } from '@shared/components/help-universal-modal/help-universal-modal.component';
+
+// ...
+
+openHelp() {
+  this.http.get('assets/help-data/your-file-id.json').subscribe((data: any) => {
+    this.modal.create({
+      nzTitle: undefined,
+      nzContent: HelpUniversalModalComponent,
+      nzData: { ...data, initialMode: 'view' },
+      nzFooter: null,
+      nzWidth: data.width || 1000,
+      nzCentered: true
+    });
+  });
+}HTML:<button nz-button (click)="openHelp()">
+  <span nz-icon nzType="question-circle"></span>
+</button>
+
+[ ✅ Check Front: Progress Tracking ]
+------------------------------------------
+Индикаторы реализации (Клиент)1. Infrastructure[x] Models / Interfaces DTO
+[x] ApiService (REST эндпоинты)
+[x] StateService (Signals, SSOT)
+2. Components[x] Manager (Orchestrator)
+[x] Таблица List (AvShowcase style)
+[x] Header: базовая структура с Pill-toggle корзины
+3. Tabbed Form[x] Вкладка: Основные данные (Slug, Category)
+[x] Вкладка: Медиа (Иконки / Шардирование)
+[x] Вкладка: SEO (SeoFormComponent интеграция)
+4. Quality & Compliance (v3.5)[ ] Skeleton Loading (nz-skeleton) при Items.length === 0
+[ ] Lazy Tabs для локализации (ng-template)
+[ ] Actions: Hard Delete с modal.challenge
+[ ] Pill Active State: смена цветов при активации корзины
+[ ] AutoMapper-маппинг плоских SEO полей
+
+[ 🔍 Поиск: Стандарт Hero ]
+------------------------------------------
+Debounce: 300ms (реактивный).
+Two-way Signals: Использование model signal для синхронизации.
+Reset: Пагинация сбрасывается на 1 при любом изменении фильтра.
+
+[ ⚠️ Диагностика (Frontend Troubleshooting) ]
+------------------------------------------
+Пустая форма: Проверь инициализацию языков в LanguageService.
+404 на медиа: Проверь корректность GetShard логики.
+Save Error: Проверь соответствие DTO на бэкенде.
+
+
+>>> СЕРВЕР / БЭКЕНД (SERVER) <<<
+
+[ ✅ Check Back: Progress Tracking ]
+------------------------------------------
+Индикаторы реализации (Сервер)1. DAL & Repositories[x] Entities Core/L10n сконфигурированы
+[x] Таблицы локализаций в /Localizations
+[x] Миграции БД применены
+2. Service Layer[x] GetPaged (Search + IsDeleted filter)
+[x] Slug Uniqueness Guard
+[ ] Пересчет статистики (Aggregation Logic)
+[ ] Каскадный Hard Delete (File + DB)
+3. API Controllers[x] Controller реализован (v1)
+[x] Поддержка Soft & Hard Delete
+[x] Интеграция с MediaController (Шардирование)
+
+[ 🚫 Контракт ошибок (ProblemDetails RFC 7807) ]
+------------------------------------------
+Стандарт обработки ошибок400 Bad Request: Ошибка валидации (ValidationErrors dictionary).
+404 Not Found: Запись отсутствует.
+409 Conflict: Дублирование Slug или Seed в непустую БД.
+{
+  "title": "Validation Error",
+  "status": 400,
+  "errors": { "SystemCode": ["Already exists"] }
+}
+
+[ 🖼️ Медиа: Алфавитное шардирование ]
+------------------------------------------
+Путь: uploads/{folder}/{shard}/{filename}
+
+C# GetShard Logic:private string GetShard(string filename) {
+  char first = char.ToLower(filename[0]);
+  return (first >= 'a' && first <= 'z') ? first.ToString() : "0";
+}
+
+[ 🛠️ Обслуживание (Maintenance) ]
+------------------------------------------
+Seed: Загрузка данных из JSON. Блокируется 409 Conflict, если БД не пуста (count > 0).
+Clear: Полная очистка таблиц. Требует прохождения капчи (modal.challenge) на фронтенде.
+
+

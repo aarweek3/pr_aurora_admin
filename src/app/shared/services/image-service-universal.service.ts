@@ -117,12 +117,22 @@ export class ImageServiceUniversal {
   getAssetUrl(path: string | null | undefined): string {
     if (!path) return this.getPlaceholder();
     if (path.startsWith('http')) return path;
+    if (path.startsWith('assets/')) return path; // Локальные ассеты фронтенда
+    
     const host = environment.api.baseUrl.split('/api')[0];
     const cleanPath = path.startsWith('/') ? path : `/${path}`;
     return `${host}${cleanPath}`;
   }
 
+  /**
+   * Обработчик ошибки загрузки изображения (404 и др.)
+   * Вызывается через (error) на теге <img>
+   */
+  handleError(event: any): void {
+    event.target.src = this.getPlaceholder();
+  }
+
   getPlaceholder(): string {
-    return 'assets/icons/aggregator/default-api.svg';
+    return 'assets/argregator_icons/placeholder-program.svg';
   }
 }

@@ -62,6 +62,36 @@ import { ModalService } from '@shared/components/ui/modal/services/modal.service
             <i nz-icon nzType="file-add"></i>
             Перенести данные из JSON в БД
           </button>
+
+          <!-- Синхронизировать иконки (опционально) -->
+          <ng-container *ngIf="onSyncIcons.observed">
+            <button *nzSpaceItem
+              nz-button 
+              nzType="default"
+              (click)="onSyncIcons.emit()"
+              nz-tooltip
+              nzTooltipTitle="Поиск и привязка иконок по алфавитным папкам на сервере"
+              [nzLoading]="loading"
+            >
+              <i nz-icon nzType="picture"></i>
+              Синхронизировать иконки
+            </button>
+          </ng-container>
+
+          <!-- Синхронизировать скриншоты (опционально) -->
+          <ng-container *ngIf="onSyncScreenshots.observed">
+            <button *nzSpaceItem
+              nz-button 
+              nzType="default"
+              (click)="onSyncScreenshots.emit()"
+              nz-tooltip
+              nzTooltipTitle="Поиск и привязка скриншотов по локализованным папкам"
+              [nzLoading]="loading"
+            >
+              <i nz-icon nzType="picture"></i>
+              Синхронизировать скриншоты
+            </button>
+          </ng-container>
         </nz-space>
 
         <div class="status-line">
@@ -121,6 +151,8 @@ export class ButtonControlJsonBlockComponent {
   @Output() onClear = new EventEmitter<void>();
   @Output() onRead = new EventEmitter<void>();
   @Output() onSeed = new EventEmitter<void>();
+  @Output() onSyncIcons = new EventEmitter<void>();
+  @Output() onSyncScreenshots = new EventEmitter<void>();
 
   async handleClear(): Promise<void> {
     const confirmed = await this.modalService.challenge(

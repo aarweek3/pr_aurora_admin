@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, Inject } from '@angular/core';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ButtonDirective } from '../../../button/button.directive';
 import { IconComponent } from '../../../icon/icon.component';
 import { AlertConfig } from '../../models/modal-config.model';
@@ -16,7 +17,12 @@ import { ModalComponent } from '../modal/modal.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ModalAlertComponent {
-  constructor(@Inject(MODAL_DATA) public config: AlertConfig, private modalRef: ModalRef<void>) {}
+  private sanitizer = inject(DomSanitizer);
+  public safeMessage: SafeHtml;
+
+  constructor(@Inject(MODAL_DATA) public config: AlertConfig, private modalRef: ModalRef<void>) {
+    this.safeMessage = this.sanitizer.bypassSecurityTrustHtml(this.config.message);
+  }
 
   onOk(): void {
     this.modalRef.close();

@@ -27,7 +27,7 @@ import { HelpPathActionsComponent } from '../help-path-actions/help-path-actions
   ],
   template: `
     <div class="help-header-wrapper">
-      <div class="help-header-main">
+      <div class="help-header-main" *ngIf="!hideHeader()">
         <div class="header-icon" *ngIf="icon()">{{ icon() }}</div>
         <div class="header-text">
           <h1>{{ title() }}</h1>
@@ -177,6 +177,7 @@ export class HelpPathHeaderComponent {
   componentPath = input<string | string[]>();
   dalPath = input<string | string[]>();
   docPath = input<string | string[]>();
+  hideHeader = input<boolean>(false);
 
   normalizedComponentPaths = computed(() => {
     const val = this.componentPath();

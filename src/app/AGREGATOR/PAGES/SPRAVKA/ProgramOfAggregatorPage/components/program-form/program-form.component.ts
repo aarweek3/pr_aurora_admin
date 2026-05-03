@@ -31,6 +31,7 @@ import { NzModalService } from 'ng-zorro-antd/modal';
 import { NzPageHeaderModule } from 'ng-zorro-antd/page-header';
 import { NzBreadCrumbModule } from 'ng-zorro-antd/breadcrumb';
 import { NzSpaceModule } from 'ng-zorro-antd/space';
+import { NzTreeSelectModule } from 'ng-zorro-antd/tree-select';
 
 import { AvUniversalUploadModalComponent } from '@shared/components/av-universal-upload-modal/av-universal-upload-modal.component';
 import { SeoFormComponent } from '@shared/components/ui/seo-form/seo-form.component';
@@ -43,6 +44,7 @@ import { CategoryOfAggregatorApiService } from '../../../CategoryOfAggregatorPag
 import { DeveloperOfAggregatorApiService } from '../../../DeveloperOfAggregatorPage/services/developer-of-aggregator-api.service';
 import { PlatformOfAggregatorApiService } from '../../../PlatformOfAggregatorPage/services/platform-of-aggregator-api.service';
 import { TagOfAggregatorApiService } from '../../../TagOfAggregatorPage/services/tag-of-aggregator-api.service';
+import { ProgramVersionManagerComponent } from '../program-version-manager/program-version-manager.component';
 
 @Component({
   selector: 'app-program-form',
@@ -67,7 +69,9 @@ import { TagOfAggregatorApiService } from '../../../TagOfAggregatorPage/services
     NzSpaceModule,
     NzAlertModule,
     NzResultModule,
-    SeoFormComponent
+    SeoFormComponent,
+    NzTreeSelectModule,
+    ProgramVersionManagerComponent
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -90,7 +94,7 @@ import { TagOfAggregatorApiService } from '../../../TagOfAggregatorPage/services
     <div class="form-container">
       <nz-spin [nzSpinning]="loading">
         
-        <div class="alerts-container" *ngIf="!loading && (categories.length === 0 || developers.length === 0 || languages.length === 0)">
+        <div class="alerts-container" *ngIf="!loading && (categoryTree.length === 0 || developers.length === 0 || languages.length === 0)">
           <nz-alert
             nzType="warning"
             nzMessage="Внимание: Справочники пусты"
@@ -102,7 +106,7 @@ import { TagOfAggregatorApiService } from '../../../TagOfAggregatorPage/services
             Для полноценной работы формы необходимо создать:
             <ul style="margin-top: 8px;">
               <li *ngIf="languages.length === 0" style="color: red; font-weight: bold;">Языки системы (ОБЯЗАТЕЛЬНО)</li>
-              <li *ngIf="categories.length === 0">Категории программ</li>
+              <li *ngIf="categoryTree.length === 0">Категории программ</li>
               <li *ngIf="developers.length === 0">Разработчиков</li>
             </ul>
           </ng-template>
@@ -132,23 +136,31 @@ import { TagOfAggregatorApiService } from '../../../TagOfAggregatorPage/services
                     </nz-form-item>
                   </div>
 
-                  <div nz-col nzSpan="8">
+                  <div nz-col nzSpan="24">
                     <nz-form-item>
-                      <nz-form-label nzRequired>Категория</nz-form-label>
-                      <nz-form-control nzErrorTip="Выберите категорию">
-                        <nz-select formControlName="categoryOfAggregatorId" nzShowSearch nzAllowClear (ngModelChange)="onCategoryChange($event)">
-                          <nz-option *ngFor="let cat of categories" [nzValue]="cat.id" [nzLabel]="cat.canonicalName"></nz-option>
+                      <nz-form-label nzRequired>Основная платформа (Маршрут)</nz-form-label>
+                      <nz-form-control nzErrorTip="Выберите основную платформу. Она определяет корень URL (напр. /windows/...)">
+                        <nz-select formControlName="mainPlatformId" nzShowSearch nzAllowClear nzPlaceHolder="Выберите платформу для иерархии">
+                          <nz-option *ngFor="let p of platforms" [nzValue]="p.id" [nzLabel]="p.localizedName || p.name || p.systemCode || 'ID: ' + p.id"></nz-option>
                         </nz-select>
                       </nz-form-control>
                     </nz-form-item>
                   </div>
-                  <div nz-col nzSpan="8">
+
+                  <div nz-col nzSpan="16">
                     <nz-form-item>
-                      <nz-form-label>Подкатегория</nz-form-label>
-                      <nz-form-control>
-                        <nz-select formControlName="subCategoryOfAggregatorId" nzShowSearch nzAllowClear [nzDisabled]="!form.get('categoryOfAggregatorId')?.value">
-                          <nz-option *ngFor="let cat of subCategories" [nzValue]="cat.id" [nzLabel]="cat.canonicalName"></nz-option>
-                        </nz-select>
+                      <nz-form-label nzRequired>Категория</nz-form-label>
+                      <nz-form-control nzErrorTip="Выберите категорию">
+                        <nz-tree-select
+                          style="width: 100%"
+                          [nzNodes]="categoryTree"
+                          formControlName="categoryOfAggregatorId"
+                          nzPlaceHolder="Выберите категорию (иерархически)"
+                          nzShowSearch
+                          nzAllowClear
+                          [nzDropdownStyle]="{ 'max-height': '350px' }"
+                        >
+                        </nz-tree-select>
                       </nz-form-control>
                     </nz-form-item>
                   </div>
@@ -157,7 +169,7 @@ import { TagOfAggregatorApiService } from '../../../TagOfAggregatorPage/services
                       <nz-form-label nzRequired>Разработчик</nz-form-label>
                       <nz-form-control nzErrorTip="Выберите разработчика">
                         <nz-select formControlName="developerOfAggregatorId" nzShowSearch nzAllowClear>
-                          <nz-option *ngFor="let dev of developers" [nzValue]="dev.id" [nzLabel]="dev.name"></nz-option>
+                          <nz-option *ngFor="let dev of developers" [nzValue]="dev.id" [nzLabel]="dev.localizedName || dev.name || dev.systemCode || 'ID: ' + dev.id"></nz-option>
                         </nz-select>
                       </nz-form-control>
                     </nz-form-item>
@@ -218,7 +230,7 @@ import { TagOfAggregatorApiService } from '../../../TagOfAggregatorPage/services
                       <nz-form-label>Платформы</nz-form-label>
                       <nz-form-control>
                         <nz-select formControlName="platformIds" nzMode="multiple" nzPlaceHolder="Выберите платформы">
-                          <nz-option *ngFor="let p of platforms" [nzValue]="p.id" [nzLabel]="p.name"></nz-option>
+                          <nz-option *ngFor="let p of platforms" [nzValue]="p.id" [nzLabel]="p.localizedName || p.name || p.systemCode || 'ID: ' + p.id"></nz-option>
                         </nz-select>
                       </nz-form-control>
                     </nz-form-item>
@@ -228,7 +240,7 @@ import { TagOfAggregatorApiService } from '../../../TagOfAggregatorPage/services
                       <nz-form-label>Теги</nz-form-label>
                       <nz-form-control>
                         <nz-select formControlName="tagIds" nzMode="multiple" nzPlaceHolder="Выберите теги">
-                          <nz-option *ngFor="let t of tags" [nzValue]="t.id" [nzLabel]="t.name"></nz-option>
+                          <nz-option *ngFor="let t of tags" [nzValue]="t.id" [nzLabel]="(t.localizedName || t.name || t.slug || 'ID: ' + t.id)"></nz-option>
                         </nz-select>
                       </nz-form-control>
                     </nz-form-item>
@@ -334,16 +346,32 @@ import { TagOfAggregatorApiService } from '../../../TagOfAggregatorPage/services
               </div>
             </nz-tab>
 
-            <!-- 5. ВЕРСИИ (Placeholder) -->
-            <nz-tab nzTitle="Версии" [nzDisabled]="!isEdit">
-              <div class="tab-content">
-                <nz-result nzStatus="info" nzTitle="Менеджер версий" nzSubTitle="Управление версиями будет доступно после сохранения программы. (Шаг 3.2)">
-                </nz-result>
-              </div>
-            </nz-tab>
-
           </nz-tabset>
         </form>
+
+        <!-- ОТДЕЛЬНЫЙ БЛОК ДЛЯ ВЕРСИЙ -->
+        <div class="versions-wrapper">
+          @if (isEdit && selectedId) {
+            <div class="versions-section">
+              <nz-divider nzText="УПРАВЛЕНИЕ ВЕРСИЯМИ ПРОГРАММЫ" nzOrientation="left"></nz-divider>
+              <div class="versions-inner">
+                <app-program-version-manager 
+                  [programId]="selectedId" 
+                  [mainPlatformId]="form.get('mainPlatformId')?.value">
+                </app-program-version-manager>
+              </div>
+            </div>
+          } @else {
+            <div class="versions-placeholder">
+              <nz-divider nzText="ВЕРСИИ" nzOrientation="left"></nz-divider>
+              <nz-result 
+                nzStatus="info" 
+                nzTitle="Менеджер версий заблокирован" 
+                nzSubTitle="Создание и управление версиями станет доступно сразу после первичного сохранения основной информации о программе.">
+              </nz-result>
+            </div>
+          }
+        </div>
       </nz-spin>
     </div>
 
@@ -360,6 +388,9 @@ import { TagOfAggregatorApiService } from '../../../TagOfAggregatorPage/services
     .media-preview img { max-width: 100%; max-height: 100%; object-fit: contain; }
     .media-controls { flex: 1; display: flex; flex-direction: column; gap: 8px; }
     .no-langs-container { padding: 50px; text-align: center; color: #8c8c8c; }
+    .versions-wrapper { margin-top: 48px; border-top: 1px solid #f0f0f0; padding-top: 24px; }
+    .versions-inner { background: #fafafa; padding: 24px; border-radius: 8px; border: 1px solid #f0f0f0; }
+    .versions-placeholder { opacity: 0.7; }
   `]
 })
 export class ProgramFormComponent implements OnInit, OnDestroy {
@@ -387,8 +418,7 @@ export class ProgramFormComponent implements OnInit, OnDestroy {
   selectedLangIndex = 0;
 
   // Options
-  categories: any[] = [];
-  subCategories: any[] = [];
+  categoryTree: any[] = [];
   developers: any[] = [];
   platforms: any[] = [];
   tags: any[] = [];
@@ -399,7 +429,6 @@ export class ProgramFormComponent implements OnInit, OnDestroy {
       canonicalName: ['', [Validators.required, Validators.maxLength(255)]],
       slug: ['', [Validators.required, Validators.maxLength(255)]],
       categoryOfAggregatorId: [null, [Validators.required]],
-      subCategoryOfAggregatorId: [null],
       developerOfAggregatorId: [null, [Validators.required]],
       iconPath: [''],
       website: [''],
@@ -407,6 +436,7 @@ export class ProgramFormComponent implements OnInit, OnDestroy {
       sortOrder: [0],
       isActive: [true],
       platformIds: [[]],
+      mainPlatformId: [null, [Validators.required]],
       tagIds: [[]],
       localizations: this.fb.array([])
     });
@@ -443,31 +473,33 @@ export class ProgramFormComponent implements OnInit, OnDestroy {
 
   private loadOptions(): void {
     forkJoin({
-      categories: this.catApi.getPaged({ pageNumber: 1, pageSize: 500, sortBy: 'CanonicalName', sortDirection: 0, showDeleted: false }),
-      developers: this.devApi.getPaged({ pageNumber: 1, pageSize: 500, sortBy: 'Name', sortDirection: 0, showDeleted: false }),
-      platforms: this.platApi.getPaged({ pageNumber: 1, pageSize: 100, sortBy: 'Name', sortDirection: 0 }),
-      tags: this.tagApi.getPaged({ pageNumber: 1, pageSize: 500, sortBy: 'Name', sortDirection: 0, showDeleted: false })
+      categories: this.catApi.getTree(),
+      developers: this.devApi.getPaged({ pageNumber: 1, pageSize: 500, sortBy: 'SortOrder', sortDirection: 0, showDeleted: false }),
+      platforms: this.platApi.getPaged({ pageNumber: 1, pageSize: 100, sortBy: 'SortOrder', sortDirection: 0 }),
+      tags: this.tagApi.getPaged({ pageNumber: 1, pageSize: 500, sortBy: 'SortOrder', sortDirection: 0, showDeleted: false })
     }).subscribe(res => {
-      this.categories = res.categories.items.filter((c: any) => !c.parentId);
-      this.developers = res.developers.items;
-      this.platforms = res.platforms.items;
-      this.tags = res.tags.items;
+      this.categoryTree = this.mapCategoriesToTree(res.categories);
+      this.developers = [...res.developers.items];
+      this.platforms = [...res.platforms.items];
+      this.tags = [...res.tags.items];
+      
+      console.log('DEBUG: Loaded tags:', this.tags);
+      console.log('DEBUG: First tag object:', this.tags[0]);
+
       this.cdr.markForCheck();
     });
   }
 
-  onCategoryChange(catId: number): void {
-    this.form.get('subCategoryOfAggregatorId')?.setValue(null);
-    if (catId) {
-      this.catApi.getPaged({ pageNumber: 1, pageSize: 500, parentId: catId, sortBy: 'CanonicalName', sortDirection: 0, showDeleted: false })
-        .subscribe(res => {
-          this.subCategories = res.items;
-          this.cdr.markForCheck();
-        });
-    } else {
-      this.subCategories = [];
-    }
+  private mapCategoriesToTree(cats: any[]): any[] {
+    return cats.map(c => ({
+      title: c.canonicalName,
+      key: c.id,
+      children: c.children ? this.mapCategoriesToTree(c.children) : [],
+      isLeaf: !c.children || c.children.length === 0
+    }));
   }
+
+
 
   private initLocTabs(): void {
     const locs = this.form.get('localizations') as FormArray;
@@ -507,20 +539,18 @@ export class ProgramFormComponent implements OnInit, OnDestroy {
           canonicalName: data.canonicalName,
           slug: data.slug,
           categoryOfAggregatorId: data.categoryOfAggregatorId,
-          subCategoryOfAggregatorId: data.subCategoryOfAggregatorId,
           developerOfAggregatorId: data.developerOfAggregatorId,
           iconPath: data.iconPath,
           website: data.website,
           status: data.status,
           sortOrder: data.sortOrder,
           isActive: data.isActive,
+          mainPlatformId: data.mainPlatformId,
           platformIds: data.platformIds,
           tagIds: data.tagIds
         });
 
-        if (data.categoryOfAggregatorId) {
-          this.onCategoryChange(data.categoryOfAggregatorId);
-        }
+
 
         data.localizations?.forEach((loc: any) => {
           const group = this.getLocGroup(loc.languageOfAggregatorId);

@@ -59,4 +59,9 @@ export const environment: Environment = {
     sentryDsn: 'YOUR_SENTRY_DSN',
     mixpanelToken: 'YOUR_MIXPANEL_TOKEN',
   },
+
+  help: {
+    storagePath: '/var/www/aurora-admin/data/help-universal', // Внешний путь на сервере
+    assetsPath: 'assets/help-data' // Виртуальный путь (через Nginx/IIS)
+  }
 };

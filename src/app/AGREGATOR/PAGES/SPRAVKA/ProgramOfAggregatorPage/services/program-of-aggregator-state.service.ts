@@ -15,6 +15,7 @@ import { CategoryOfAggregatorApiService } from '../../CategoryOfAggregatorPage/s
 import { DeveloperOfAggregatorApiService } from '../../DeveloperOfAggregatorPage/services/developer-of-aggregator-api.service';
 import { PlatformOfAggregatorApiService } from '../../PlatformOfAggregatorPage/services/platform-of-aggregator-api.service';
 import { TagOfAggregatorApiService } from '../../TagOfAggregatorPage/services/tag-of-aggregator-api.service';
+import { ModalService } from '@shared/components/ui/modal/services/modal.service';
 
 @Injectable({
   providedIn: 'root',
@@ -30,9 +31,16 @@ export class ProgramOfAggregatorStateService implements OnDestroy {
   readonly pageLoading$ = this.state$.pipe(map((s) => s.pageLoading), distinctUntilChanged());
   readonly editingItem$ = this.state$.pipe(map((s) => s.editingItem), distinctUntilChanged());
   readonly viewItem$ = this.state$.pipe(map((s) => s.viewItem), distinctUntilChanged());
+  readonly viewModalVisible$ = this.state$.pipe(map((s) => s.viewModalVisible), distinctUntilChanged());
+  readonly viewModalMaximized$ = this.state$.pipe(map((s) => s.viewModalMaximized), distinctUntilChanged());
   readonly prerequisites$ = this.state$.pipe(map((s) => s.prerequisites), distinctUntilChanged());
   readonly languages$ = this.state$.pipe(map((s) => s.languages), distinctUntilChanged());
+  readonly categories$ = this.state$.pipe(map((s) => s.categories), distinctUntilChanged());
+  readonly developers$ = this.state$.pipe(map((s) => s.developers), distinctUntilChanged());
+  readonly platforms$ = this.state$.pipe(map((s) => s.platforms), distinctUntilChanged());
   readonly selectedLanguageId$ = this.state$.pipe(map((s) => s.languageId), distinctUntilChanged());
+  readonly selectedCategoryId$ = this.state$.pipe(map((s) => s.categoryId), distinctUntilChanged());
+  readonly selectedDeveloperId$ = this.state$.pipe(map((s) => s.developerId), distinctUntilChanged());
 
   constructor(
     private api: ProgramOfAggregatorApiService,
@@ -41,7 +49,8 @@ export class ProgramOfAggregatorStateService implements OnDestroy {
     private devApi: DeveloperOfAggregatorApiService,
     private platApi: PlatformOfAggregatorApiService,
     private tagApi: TagOfAggregatorApiService,
-    private message: NzMessageService
+    private message: NzMessageService,
+    private modalService: ModalService
   ) {}
 
   public updateState(partial: Partial<ProgramOfAggregatorState>): void {
@@ -51,32 +60,52 @@ export class ProgramOfAggregatorStateService implements OnDestroy {
   checkPrerequisites(): void {
     forkJoin({
       langs: this.langApi.getAll().pipe(take(1)),
-      cats: this.catApi.getPaged({ pageNumber: 1, pageSize: 1, sortBy: 'Id', sortDirection: 1, showDeleted: false }).pipe(take(1)),
-      devs: this.devApi.getPaged({ pageNumber: 1, pageSize: 1, sortBy: 'Id', sortDirection: 1, showDeleted: false }).pipe(take(1)),
+      // Загружаем по 1 элементу для подсчета в пререквизитах
+      catsCount: this.catApi.getPaged({ pageNumber: 1, pageSize: 1, sortBy: 'Id', sortDirection: 1, showDeleted: false }).pipe(take(1)),
+      devsCount: this.devApi.getPaged({ pageNumber: 1, pageSize: 1, sortBy: 'Id', sortDirection: 1, showDeleted: false }).pipe(take(1)),
       plats: this.platApi.getPaged({ pageNumber: 1, pageSize: 1, sortBy: 'Id', sortDirection: 1, showDeleted: false }).pipe(take(1)),
-      tags: this.tagApi.getPaged({ pageNumber: 1, pageSize: 1 }).pipe(take(1))
+      tags: this.tagApi.getPaged({ pageNumber: 1, pageSize: 1 }).pipe(take(1)),
+      
+      // Загружаем полные списки для фильтров (категории - дерево, разработчики - список, платформы - список)
+      allCats: this.catApi.getTree().pipe(take(1)),
+      allDevs: this.devApi.getPaged({ pageNumber: 1, pageSize: 100, sortBy: 'Name', sortDirection: 0, showDeleted: false }).pipe(take(1)),
+      allPlats: this.platApi.getPaged({ pageNumber: 1, pageSize: 100, sortBy: 'Name', sortDirection: 0, showDeleted: false }).pipe(take(1))
     }).pipe(
       takeUntil(this.destroy$)
     ).subscribe({
       next: (res: any) => {
         const prereq = {
           languagesCount: res.langs.length,
-          categoriesCount: res.cats.total,
-          developersCount: res.devs.total,
+          categoriesCount: res.catsCount.total,
+          developersCount: res.devsCount.total,
           platformsCount: res.plats.total,
           tagsCount: res.tags.total,
-          isValid: res.langs.length > 0 && res.cats.total > 0 && res.devs.total > 0
+          isValid: res.langs.length > 0 && res.catsCount.total > 0 && res.devsCount.total > 0
         };
         this.updateState({ 
           prerequisites: prereq,
-          languages: res.langs
+          languages: res.langs,
+          categories: this.mapCategoriesToTreeNodes(res.allCats),
+          developers: res.allDevs.items,
+          platforms: res.allPlats.items
         });
       },
       error: (err) => console.error('Prerequisites check failed', err)
     });
   }
 
-  loadItems(): void {
+  private mapCategoriesToTreeNodes(items: any[]): any[] {
+    return items
+      .map(item => ({
+        title: item.localizedName || item.canonicalName,
+        key: item.id,
+        isLeaf: !item.children || item.children.length === 0,
+        children: item.children ? this.mapCategoriesToTreeNodes(item.children) : []
+      }))
+      .sort((a, b) => a.title.localeCompare(b.title));
+  }
+
+  loadItems(checkEmpty = false): void {
     const s = this.stateSubject$.value;
     this.updateState({ loading: true, error: null });
     this.api
@@ -98,14 +127,72 @@ export class ProgramOfAggregatorStateService implements OnDestroy {
         finalize(() => this.updateState({ loading: false }))
       )
       .subscribe({
-        next: (res) => this.updateState({ items: res.items, total: res.total }),
+        next: (res) => {
+          this.updateState({ items: res.items, total: res.total });
+          if (checkEmpty && res.total === 0) {
+            this.showEmptyAlert();
+          }
+        },
         error: (err) => this.handleError(err, 'LoadItems')
       });
+  }
+
+  private showEmptyAlert(): void {
+    this.modalService.alert({
+      title: 'База данных пуста!',
+      message: 'В базе данных \'DbNames\' (таблица \'programs_of_aggregator\') нет программ для отображения.',
+      alertType: 'info',
+      centered: true,
+      icon: 'system/av_info'
+    });
   }
 
   setLanguageId(id: number | null): void {
     this.updateState({ languageId: id, pageNumber: 1 });
     this.loadItems();
+  }
+
+  setCategoryId(id: number | null): void {
+    this.updateState({ categoryId: id, pageNumber: 1 });
+    this.loadItems();
+  }
+
+  setDeveloperId(id: number | null): void {
+    this.updateState({ developerId: id, pageNumber: 1 });
+    this.loadItems();
+  }
+
+  openView(id: number): void {
+    this.updateState({ pageLoading: true, error: null });
+    this.api
+      .getById(id)
+      .pipe(
+        takeUntil(this.destroy$),
+        finalize(() => this.updateState({ pageLoading: false }))
+      )
+      .subscribe({
+        next: (item) => {
+          if (item && item.localizations) {
+            item.localizations.sort((a, b) => {
+              if (a.languageOfAggregatorId === 1) return -1;
+              if (b.languageOfAggregatorId === 1) return 1;
+              if (a.languageOfAggregatorId === 2) return -1;
+              if (b.languageOfAggregatorId === 2) return 1;
+              return 0;
+            });
+          }
+          this.updateState({ viewItem: item, viewModalVisible: true });
+        },
+        error: (err) => this.handleError(err, 'OpenView')
+      });
+  }
+
+  closeViewModal(): void {
+    this.updateState({ viewModalVisible: false, viewItem: null, viewModalMaximized: false });
+  }
+
+  toggleViewModalMaximize(): void {
+    this.updateState({ viewModalMaximized: !this.stateSubject$.value.viewModalMaximized });
   }
 
   loadById(id: number): void {
@@ -117,7 +204,18 @@ export class ProgramOfAggregatorStateService implements OnDestroy {
         finalize(() => this.updateState({ pageLoading: false }))
       )
       .subscribe({
-        next: (item) => this.updateState({ editingItem: item }),
+        next: (item) => {
+          if (item && item.localizations) {
+            item.localizations.sort((a, b) => {
+              if (a.languageOfAggregatorId === 1) return -1;
+              if (b.languageOfAggregatorId === 1) return 1;
+              if (a.languageOfAggregatorId === 2) return -1;
+              if (b.languageOfAggregatorId === 2) return 1;
+              return 0;
+            });
+          }
+          this.updateState({ editingItem: item });
+        },
         error: (err) => this.handleError(err, 'LoadById')
       });
   }
@@ -135,21 +233,24 @@ export class ProgramOfAggregatorStateService implements OnDestroy {
     );
   }
 
-  delete(id: number, hardDelete: boolean = false): void {
-    this.updateState({ deletingId: id });
-    this.api
-      .delete(id, hardDelete)
-      .pipe(
-        takeUntil(this.destroy$),
-        finalize(() => this.updateState({ deletingId: null }))
-      )
-      .subscribe({
-        next: () => {
-          this.message.success(hardDelete ? 'Программа окончательно удалена' : 'Программа перемещена в корзину');
-          this.loadItems();
-        },
-        error: (err) => this.handleError(err, 'Delete')
-      });
+  delete(id: number): void {
+    this.executeWithLoading(this.api.delete(id, false)).subscribe({
+      next: () => {
+        this.message.success('Программа перемещена в корзину');
+        this.loadItems();
+      },
+      error: (err) => this.handleError(err, 'Delete')
+    });
+  }
+
+  hardDelete(id: number): void {
+    this.executeWithLoading(this.api.delete(id, true)).subscribe({
+      next: () => {
+        this.message.success('Программа полностью удалена из базы');
+        this.loadItems();
+      },
+      error: (err) => this.handleError(err, 'HardDelete')
+    });
   }
 
   restore(id: number): void {
@@ -184,7 +285,7 @@ export class ProgramOfAggregatorStateService implements OnDestroy {
     ).subscribe({
       next: (res) => {
         this.message.remove(msgId);
-        this.message.success(res.message || 'Импорт завершен');
+        this.message.success(`Импорт завершен. Добавлено объектов: ${res.count}`);
         this.loadItems();
       },
       error: (err) => {
@@ -213,9 +314,55 @@ export class ProgramOfAggregatorStateService implements OnDestroy {
     });
   }
 
+  syncIcons(): void {
+    const msgId = this.message.loading('Синхронизация иконок...', { nzDuration: 0 }).messageId;
+    this.updateState({ loading: true });
+    this.api.syncIcons().pipe(
+      takeUntil(this.destroy$),
+      finalize(() => this.updateState({ loading: false }))
+    ).subscribe({
+      next: (res) => {
+        this.message.remove(msgId);
+        this.message.success(`Синхронизация завершена. Обновлено: ${res.count}`);
+        this.loadItems();
+      },
+      error: (err) => {
+        this.message.remove(msgId);
+        this.handleError(err, 'SyncIcons');
+      }
+    });
+  }
+
+  syncScreenshots(): void {
+    const msgId = this.message.loading('Синхронизация скриншотов...', { nzDuration: 0 }).messageId;
+    this.updateState({ loading: true });
+    this.api.syncScreenshots().pipe(
+      takeUntil(this.destroy$),
+      finalize(() => this.updateState({ loading: false }))
+    ).subscribe({
+      next: (res) => {
+        this.message.remove(msgId);
+        this.message.success(`Синхронизация завершена. Изменено записей: ${res.count}`);
+        this.loadItems();
+      },
+      error: (err) => {
+        this.message.remove(msgId);
+        this.handleError(err, 'SyncScreenshots');
+      }
+    });
+  }
+
   private handleError(err: any, context: string): void {
     this.updateState({ error: err });
     this.message.error(`Ошибка [${context}]: ${err.message || 'Произошла непредвиденная ошибка'}`);
+  }
+
+  private executeWithLoading<T>(obs: Observable<T>): Observable<T> {
+    this.updateState({ loading: true, error: null });
+    return obs.pipe(
+      takeUntil(this.destroy$),
+      finalize(() => this.updateState({ loading: false }))
+    );
   }
 
   ngOnDestroy(): void {

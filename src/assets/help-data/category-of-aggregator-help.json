@@ -1,0 +1,114 @@
+{
+  "helpId": "category-of-aggregator-help",
+  "title": "Техническая документация: CategoryOfAggregatorPage",
+  "subtitle": "Управление иерархией и разделами каталога (Aurora v3.5)",
+  "icon": "appstore",
+  "width": 1200,
+  "reference": [
+    {
+      "id": "ref-integration",
+      "title": "🔌 1. Подключение в коде",
+      "content": "<h3>Как вызвать справку из компонента</h3><p>Чтобы быстро вызвать справку из любой части программы, используйте следующий кусок кода в вашем компоненте:</p><h4>TypeScript:</h4><pre><code>private modal = inject(NzModalService);\nprivate http = inject(HttpClient);\n\nopenHelp() {\n  this.http.get('assets/help-data/category-of-aggregator-help.json').subscribe((data: any) => {\n    this.modal.create({\n      nzTitle: undefined,\n      nzContent: HelpUniversalModalComponent,\n      nzData: { ...data, initialMode: 'view' },\n      nzFooter: null,\n      nzWidth: data.width || 1200,\n      nzCentered: true\n    });\n  });\n}</code></pre><h4>HTML:</h4><pre><code>&lt;button nz-button (click)=\"openHelp()\"&gt;\n  &lt;span nz-icon nzType=\"question-circle\"&gt;&lt;/span&gt;\n&lt;/button&gt;</code></pre>",
+      "type": "info"
+    },
+    {
+      "id": "ref-json-structure",
+      "title": "📄 2. Структура JSON",
+      "content": "<h3>Анатомия справочного файла</h3><p>Данная документация построена на базе стандарта <em>Aurora Master Demo</em>. Основные разделы разделены на общую справку (Reference) и технические блоки (Blocks).</p><ul><li><strong>Reference:</strong> Глобальные архитектурные принципы.</li><li><strong>Blocks-Front:</strong> Специфика клиентской реализации (Signals, Tree Table).</li><li><strong>Blocks-Server:</strong> Специфика API и БД (Recursion, Slugs).</li></ul>",
+      "type": "standard"
+    },
+    {
+      "id": "ref-general",
+      "title": "📘 3. Общие положения",
+      "content": "<p>Модуль <strong>CategoryOfAggregatorPage</strong> управляет древовидной структурой каталога. Каждая категория может иметь неограниченное количество подкатегорий (Parent/Child) и связана с программами агрегатора.</p><p><strong>Ключевые особенности:</strong></p><ul><li><strong>Иерархия:</strong> Поддержка бесконечной вложенности через <code>parentId</code>.</li><li><strong>SEO-Friendly Slugs:</strong> Автоматическая генерация и валидация уникальных URL-адресов.</li><li><strong>Системный флаг (isSystem):</strong> Защита критических категорий от удаления или изменения Slug.</li><li><strong>Метрики:</strong> Автоматический расчет <code>childrenCount</code> (вложенные категории) и <code>programsCount</code> (количество ПО в категории).</li></ul>",
+      "type": "standard"
+    },
+    {
+      "id": "ref-hierarchy-logic",
+      "title": "🌳 4. Логика Иерархии (Recursion)",
+      "content": "<h3>Древовидная структура</h3><p>В отличие от плоских справочников, категории используют рекурсивную модель данных.</p><h4>Механика ParentId:</h4><ul><li>Если <code>parentId == null</code>, категория считается корневой (Top Level).</li><li>При удалении родительской категории в режиме <strong>Hard Delete</strong>, все дочерние элементы также должны быть удалены или переназначены (согласно бизнес-логике).</li><li>В интерфейсе используется <strong>NzTreeTable</strong> для визуализации вложенности.</li></ul>",
+      "type": "info"
+    },
+    {
+      "id": "ref-l10n",
+      "title": "🌍 5. Локализация и Fallback",
+      "content": "<h3>Логика выбора языка (L10n)</h3><p>Система Aurora v3.5 поддерживает мультиязычность на уровне ядра. Для модуля категорий установлены следующие правила:</p><ul><li><strong>Язык по умолчанию:</strong> При загрузке страницы система всегда инициализирует фильтр значением <strong>English (ID: 1)</strong>. Это обеспечивает единообразие при первом входе.</li><li><strong>English Fallback:</strong> Если перевод на выбранный язык (например, RU) отсутствует, система автоматически подставляет данные из английской версии (en-US).</li></ul><h4>Приоритеты отображения:</h4><ol><li>Текущий перевод (выбранный в фильтре).</li><li>Перевод en-US (Fallback).</li><li>Canonical Name (техническое название в коде).</li></ol>",
+      "type": "standard"
+    },
+    {
+      "id": "ref-ui-construction",
+      "title": "🖼️ 6. UI КОМПОНЕТА (Построение интерфейса)",
+      "content": "<h3>Архитектура пользовательского интерфейса</h3>\n<p>Интерфейс модуля <strong>CategoryOfAggregatorPage</strong> построен по модульному принципу в стиле <em>Aurora Control</em>. Основная цель &mdash; управление сложной иерархией при сохранении визуальной чистоты.</p>\n<h4>1. Основной оркестратор (Manager)</h4>\n<p>Компонент <code>CategoryOfAggregatorManagerComponent</code> управляет общим состоянием страницы, переключением режимов отображения и блоком обслуживания.</p>\n<p><strong>Элементы управления:</strong></p>\n<ul>\n<li><strong>Кнопка &laquo;Настройки&raquo; (Шестеренка):</strong> Переключает видимость блока обслуживания.</li>\n<li><strong>Фильтр по языку:</strong> Влияет на отображение имен в дереве и на выбор вкладки в форме.</li>\n</ul>\n<h4>1.5 Блок обслуживания (Maintenance)</h4>\n<p>Реализован через <code>ButtonControlJsonBlockComponent</code>. Позволяет выполнять массовые операции:</p>\n<ul>\n<li><strong>Очистить БД (Красная):</strong> Полное удаление всех категорий. Требует прохождения математической капчи (<code>modal.challenge</code>).</li>\n<li><strong>Перезаписать из JSON (Синяя):</strong> Заполнение базы эталонными данными.\n  <ul>\n    <li><strong>Файл:</strong> <code>CategoryOfAggregator.json</code></li>\n    <li><strong>Логика:</strong> Метод десериализует массив и сохраняет его в БД. Заменяет текущие записи (при пустой базе).</li>\n  </ul>\n</li>\n</ul>\n<h4>3. Список и Поиск</h4>\n<p><strong>Компоненты поиска и отображения:</strong></p>\n<ul>\n<li><strong>AvSearchComponent:</strong> Обеспечивает реактивный поиск по названию и Slug.</li>\n<li><strong>CategoryOfAggregatorListComponent:</strong> Главный компонент отображения.</li>\n</ul>\n<p><strong>Синхронизация фильтра:</strong> Выбранный в списке язык автоматически становится активной вкладкой при открытии модального окна добавления или редактирования.</p>\n<h4>4. Табуляция и Форма</h4>\n<p><strong>Оптимизация и локализация:</strong></p>\n<ul>\n<li><strong>Синхронные вкладки:</strong> Форма автоматически переключается на язык, выбранный в основном фильтре Менеджера.</li>\n<li><strong>Селектор родителя:</strong> Выпадающий список родительских категорий полностью локализован. Он загружает названия на языке, активном в текущем фильтре.</li>\n</ul>",
+      "type": "standard"
+    },
+    {
+      "id": "database-structure-category",
+      "title": "💾 7. Структура БД",
+      "content": "<h4>Core Entity (CategoryOfAggregator)</h4><table><thead><tr><th>Поле</th><th>Тип</th><th>Описание</th></tr></thead><tbody><tr><td>Id</td><td>int</td><td>Первичный ключ</td></tr><tr><td>ParentId</td><td>int?</td><td>Внешний ключ на родителя (Self-reference)</td></tr><tr><td>Slug</td><td>string(255)</td><td>Уникальный URL-код (kebab-case)</td></tr><tr><td>CanonicalName</td><td>string(255)</td><td>Техническое название категории</td></tr><tr><td>IsActive</td><td>bool</td><td>Флаг доступности в каталоге</td></tr><tr><td>IsSystem</td><td>bool</td><td>Защита от удаления и смены Slug</td></tr><tr><td>SortOrder</td><td>int</td><td>Порядок ручной сортировки</td></tr></tbody></table><h4>Localization (CategoryOfAggregatorLocalization)</h4><table><thead><tr><th>Поле</th><th>Тип</th><th>Описание</th></tr></thead><tbody><tr><td>CategoryId</td><td>int</td><td>FK на родительскую категорию</td></tr><tr><td>LanguageId</td><td>int</td><td>FK на справочник языков</td></tr><tr><td>Name</td><td>string(200)</td><td>Локализованное название</td></tr><tr><td>Description</td><td>string?</td><td>HTML-описание раздела</td></tr></tbody></table>",
+      "type": "standard"
+    },
+    {
+      "id": "spec-json-samples-category",
+      "title": "🔄 8. [SPEC] JSON-схемы",
+      "content": "<h4>Response: GetById</h4><pre><code>{\n  \"id\": 10,\n  \"slug\": \"office-software\",\n  \"parentId\": null,\n  \"isActive\": true,\n  \"localizations\": [\n    {\n      \"languageOfAggregatorId\": 1,\n      \"name\": \"Office Software\",\n      \"description\": \"Tools for productivity...\"\n    }\n  ]\n}</code></pre><h4>Request: Create / Update</h4><pre><code>{\n  \"slug\": \"office-software\",\n  \"parentId\": null,\n  \"localizations\": [\n    {\n      \"languageOfAggregatorId\": 1,\n      \"name\": \"Office Software\"\n    }\n  ]\n}</code></pre>",
+      "type": "standard"
+    },
+    {
+      "id": "file-structure-category",
+      "title": "📂 9. Эталонная структура файлов",
+      "content": "<pre><code>src/app/AGREGATOR/PAGES/SPRAVKA/CategoryOfAggregatorPage/\n├── components/\n│   ├── category-of-aggregator-list/\n│   ├── category-of-aggregator-manager/\n│   └── category-of-aggregator-modal/\n├── models/\n│   └── category-of-aggregator.model.ts\n├── services/\n│   ├── category-of-aggregator-api.service.ts\n│   └── category-of-aggregator-state.service.ts\n└── category-of-aggregator.routes.ts</code></pre>",
+      "type": "standard"
+    },
+    {
+      "id": "ref-base-json",
+      "title": "📦 10. Базовый JSON (Seeding Data)",
+      "content": "<h3>Эталонные данные для инициализации</h3><p>Для быстрого развертывания системы или восстановления стандартной структуры категорий используется механизм Seeding из статического JSON-файла.</p><h4>Локация файла на сервере:</h4><p><code>Project_Server_Auth/Pages/AGGREGATOR/CategoryOfAggregator/Jsons/CategoryOfAggregator.json</code></p><h4>Полная структура объекта:</h4><pre><code>[\n  {\n    \"slug\": \"office-software\",\n    \"canonicalName\": \"Office Software\",\n    \"iconPath\": \"assets/icons/office.svg\",\n    \"sortOrder\": 10,\n    \"isActive\": true,\n    \"isSystem\": true,\n    \"localizations\": [\n      {\n        \"languageOfAggregatorId\": 1,\n        \"name\": \"Office Software\",\n        \"description\": \"&lt;p&gt;Business and productivity tools&lt;/p&gt;\"\n      },\n      {\n        \"languageOfAggregatorId\": 2,\n        \"name\": \"Офисное ПО\",\n        \"description\": \"&lt;p&gt;Инструменты для бизнеса и продуктивности&lt;/p&gt;\"\n      }\n    ]\n  }\n]</code></pre><h4>Технический регламент:</h4><ul><li><strong>Уникальность:</strong> Slug должен быть уникальным. При совпадении с существующей записью операция прерывается.</li><li><strong>ParentId:</strong> В текущей версии сидинга рекомендуется загружать плоский список. Иерархия выстраивается через UI после загрузки.</li><li><strong>Защита:</strong> Метод <code>SeedFromJson</code> в API защищен проверкой <code>_repository.Any()</code>.</li></ul>",
+      "type": "standard"
+    }
+  ],
+  "blocks-main": [
+    {
+      "id": "roadmap-category",
+      "title": "🚀 Roadmap: Реализация категорий",
+      "content": "<h3>Цикл разработки модуля категорий</h3><ol><li><strong>Backend:</strong> Создание сущности с <code>ParentId</code> и <code>Slug</code>.</li><li><strong>API:</strong> Реализация рекурсивного получения дерева.</li><li><strong>Frontend Service:</strong> Интеграция <code>CategoryOfAggregatorStateService</code>.</li><li><strong>UI:</strong> Реализация Tree Table для списка.</li><li><strong>Logic:</strong> Валидация циклических ссылок.</li></ol>",
+      "type": "standard"
+    }
+  ],
+  "blocks-front": [
+    {
+      "id": "check-front-category",
+      "title": "✅ Check Front: Progress Tracking",
+      "content": "<h4>1. Infrastructure</h4><ul><li>[x] Models / Interfaces</li><li>[x] ApiService (REST)</li><li>[x] StateService (Signals)</li></ul><h4>2. UI Components</h4><ul><li>[x] Tree Table Implementation</li><li>[x] Search & Trash Toggle</li><li>[x] Inline Help Integration</li></ul><h4>3. Form Logic</h4><ul><li>[x] Parent Selector (Dropdown)</li><li>[x] Slug Validation (Regex)</li><li>[x] English Fallback Logic</li></ul>",
+      "type": "standard"
+    },
+    {
+      "id": "frontend-actions-category",
+      "title": "🛠️ Логика Actions и паттерны UI",
+      "content": "<table><thead><tr><th>Действие</th><th>Иконка</th><th>Метод State</th><th>Механика UX</th></tr></thead><tbody><tr><td>Просмотр</td><td>eye</td><td>openView()</td><td>Modal Read-only</td></tr><tr><td>Редактировать</td><td>edit</td><td>updateState()</td><td>Modal Form</td></tr><tr><td>В корзину</td><td>rest</td><td>delete()</td><td>Soft Delete (confirm)</td></tr><tr><td>Восстановить</td><td>undo</td><td>restore()</td><td>Undo soft delete</td></tr></tbody></table>",
+      "type": "standard"
+    },
+    {
+      "id": "spec-diagnostics-category",
+      "title": "⚠️ Диагностика фронтенда",
+      "content": "<h3>Типовые проблемы</h3><ul><li><strong>Циклическая ссылка:</strong> Ошибка 400 при попытке назначить категорию родителем самой себе.</li><li><strong>Slug Conflict:</strong> Ошибка 409 при дублировании системного кода.</li><li><strong>Tree Not Expanding:</strong> Проверьте наличие поля <code>expand</code> в модели данных.</li></ul>",
+      "type": "warning"
+    }
+  ],
+  "blocks-server": [
+    {
+      "id": "spec-api-category",
+      "title": "⚙️ Backend & API Спецификация",
+      "content": "<h3>Эндпоинты контроллера</h3><pre><code>GET  api/v1/aggregator/categories\nGET  api/v1/aggregator/categories/{id}\nPOST api/v1/aggregator/categories/seed\nDEL  api/v1/aggregator/categories/{id}/hard</code></pre>",
+      "type": "standard"
+    },
+    {
+      "id": "backend-recursion-logic",
+      "title": "⚙️ Логика рекурсии (Recursive CTE)",
+      "content": "<h3>Рекурсивное получение дерева</h3><p>Для эффективного получения всей иерархии рекомендуется использовать Recursive Common Table Expressions (CTE) на уровне базы данных или маппинг на уровне сервиса.</p><h4>Пример маппинга (C#):</h4><pre><code>public List&lt;CategoryDto&gt; BuildTree(IEnumerable&lt;CategoryDto&gt; source)\n{\n    var groups = source.GroupBy(i =&gt; i.ParentId);\n    var roots = groups.FirstOrDefault(g =&gt; g.Key == null)?.ToList();\n    if (roots == null) return new List&lt;CategoryDto&gt;();\n\n    foreach (var root in roots)\n        root.Children = GetChildren(root.Id, groups);\n\n    return roots;\n}</code></pre>",
+      "type": "info"
+    }
+  ],
+  "initialMode": "view",
+  "docPath": "src/assets/help-data/category-of-aggregator-help.json",
+  "blocks": []
+}

@@ -83,7 +83,7 @@ export const initialCategoryOfAggregatorState: CategoryOfAggregatorState = {
   pageNumber: 1,
   pageSize: 10,
   searchTerm: '',
-  languageId: undefined,
+  languageId: 1,
   sortBy: 'SortOrder',
   sortDirection: 0,
   showDeleted: false,

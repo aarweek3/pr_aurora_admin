@@ -1,6 +1,7 @@
-import { Injectable, OnDestroy, signal, computed } from '@angular/core';
-import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { Injectable, OnDestroy, signal, computed, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { LanguageService } from '@assets/languageApp/services/language.service';
+import { AppLanguage } from '@assets/languageApp/models/appLanguage.model';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { ModalService } from '@shared/components/ui/modal/services/modal.service';
@@ -47,13 +48,13 @@ export class PlatformOfAggregatorStateService implements OnDestroy {
   readonly viewModalVisible = computed(() => this.state().viewModalVisible);
   readonly viewItem = computed(() => this.state().viewItem);
 
-  // Языки из LanguageService (через toSignal для реактивности)
-  readonly languages = toSignal(toObservable(this.langService.availableLanguages).pipe(shareReplay(1)), { initialValue: [] });
+  private langService = inject(LanguageService);
+  // Языки из LanguageService (через computed для реактивности)
+  readonly languages = computed<AppLanguage[]>(() => this.langService.availableLanguages() || []);
 
   constructor(
     private api: PlatformOfAggregatorApiService,
     private message: NzMessageService,
-    private langService: LanguageService,
     private modal: NzModalService,
     private modalService: ModalService,
   ) {}

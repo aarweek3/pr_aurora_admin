@@ -23,6 +23,11 @@ export const ICON_REGISTRY: IconCategory[] = [
         "category": "actions"
       },
       {
+        "name": "av_check_mark",
+        "type": "actions/av_check_mark",
+        "category": "actions"
+      },
+      {
         "name": "av_close",
         "type": "actions/av_close",
         "category": "actions"
@@ -55,11 +60,6 @@ export const ICON_REGISTRY: IconCategory[] = [
       {
         "name": "av_upload",
         "type": "actions/av_upload",
-        "category": "actions"
-      },
-      {
-        "name": "av_check_mark",
-        "type": "actions/av_check_mark",
         "category": "actions"
       }
     ]
@@ -263,6 +263,66 @@ export const ICON_REGISTRY: IconCategory[] = [
     "category": "general",
     "icons": [
       {
+        "name": "av_chevron-right",
+        "type": "general/av_chevron-right",
+        "category": "general"
+      },
+      {
+        "name": "av_chevron-up",
+        "type": "general/av_chevron-up",
+        "category": "general"
+      },
+      {
+        "name": "av_folder",
+        "type": "general/av_folder",
+        "category": "general"
+      },
+      {
+        "name": "av_paperclip",
+        "type": "general/av_paperclip",
+        "category": "general"
+      },
+      {
+        "name": "av_align-justify",
+        "type": "general/av_align-justify",
+        "category": "general"
+      },
+      {
+        "name": "av_align-left",
+        "type": "general/av_align-left",
+        "category": "general"
+      },
+      {
+        "name": "av_align-right",
+        "type": "general/av_align-right",
+        "category": "general"
+      },
+      {
+        "name": "av_bold",
+        "type": "general/av_bold",
+        "category": "general"
+      },
+      {
+        "name": "av_edit",
+        "type": "general/av_edit",
+        "category": "general"
+      },
+      {
+        "name": "av_copy",
+        "type": "general/av_copy",
+        "category": "general"
+      },
+      {
+        "name": "av_eye",
+        "type": "general/av_eye",
+        "category": "general"
+      },
+      {
+        "name": "av_minus",
+        "type": "general/av_minus",
+        "category": "general"
+      },
+      {
         "name": "av_plus",
         "type": "general/av_plus",
         "category": "general"
@@ -275,6 +335,11 @@ export const ICON_REGISTRY: IconCategory[] = [
       {
         "name": "av_search",
         "type": "general/av_search",
+        "category": "general"
+      },
+      {
+        "name": "av_trash",
+        "type": "general/av_trash",
         "category": "general"
       },
       {
@@ -298,91 +363,6 @@ export const ICON_REGISTRY: IconCategory[] = [
         "category": "general"
       },
       {
-        "name": "av_trash",
-        "type": "general/av_trash",
-        "category": "general"
-      },
-      {
-        "name": "av_copy",
-        "type": "general/av_copy",
-        "category": "general"
-      },
-      {
-        "name": "av_eye",
-        "type": "general/av_eye",
-        "category": "general"
-      },
-      {
-        "name": "av_minus",
-        "type": "general/av_minus",
-        "category": "general"
-      },
-      {
-        "name": "av_chevron-up",
-        "type": "general/av_chevron-up",
-        "category": "general"
-      },
-      {
-        "name": "av_chatgpt-green-circular-logo-22057",
-        "type": "general/av_chatgpt-green-circular-logo-22057",
-        "category": "general"
-      },
-      {
-        "name": "av_gear-1213",
-        "type": "general/av_gear-1213",
-        "category": "general"
-      },
-      {
-        "name": "av_india-flag-circular-17791",
-        "type": "general/av_india-flag-circular-17791",
-        "category": "general"
-      },
-      {
-        "name": "av_pdf-2616",
-        "type": "general/av_pdf-2616",
-        "category": "general"
-      },
-      {
-        "name": "av_thermometer",
-        "type": "general/av_thermometer",
-        "category": "general"
-      },
-      {
-        "name": "av_umbrella",
-        "type": "general/av_umbrella",
-        "category": "general"
-      },
-      {
-        "name": "av_visa-credit-card-payment",
-        "type": "general/av_visa-credit-card-payment",
-        "category": "general"
-      },
-      {
-        "name": "av_mail",
-        "type": "general/av_mail",
-        "category": "general"
-      },
-      {
-        "name": "av_youtube-logo-7121",
-        "type": "general/av_youtube-logo-7121",
-        "category": "general"
-      },
-      {
-        "name": "av_align-center",
-        "type": "general/av_align-center",
-        "category": "general"
-      },
-      {
-        "name": "av_align-justify",
-        "type": "general/av_align-justify",
-        "category": "general"
-      },
-      {
-        "name": "av_align-left",
-        "type": "general/av_align-left",
-        "category": "general"
-      },
-      {
         "name": "av_chevron-down",
         "type": "general/av_chevron-down",
         "category": "general"
@@ -393,23 +373,13 @@ export const ICON_REGISTRY: IconCategory[] = [
         "category": "general"
       },
       {
-        "name": "av_chevron-right",
-        "type": "general/av_chevron-right",
+        "name": "av_mail",
+        "type": "general/av_mail",
         "category": "general"
       },
       {
-        "name": "av_align-right",
-        "type": "general/av_align-right",
-        "category": "general"
-      },
-      {
-        "name": "av_bold",
-        "type": "general/av_bold",
-        "category": "general"
-      },
-      {
-        "name": "av_edit",
-        "type": "general/av_edit",
+        "name": "av_align-center",
+        "type": "general/av_align-center",
         "category": "general"
       },
       {
@@ -425,16 +395,6 @@ export const ICON_REGISTRY: IconCategory[] = [
       {
         "name": "av_list",
         "type": "general/av_list",
-        "category": "general"
-      },
-      {
-        "name": "av_folder",
-        "type": "general/av_folder",
-        "category": "general"
-      },
-      {
-        "name": "av_paperclip",
-        "type": "general/av_paperclip",
         "category": "general"
       },
       {
@@ -493,6 +453,21 @@ export const ICON_REGISTRY: IconCategory[] = [
         "category": "general"
       },
       {
+        "name": "av_corner-right-up",
+        "type": "general/av_corner-right-up",
+        "category": "general"
+      },
+      {
+        "name": "av_corner-up-left",
+        "type": "general/av_corner-up-left",
+        "category": "general"
+      },
+      {
+        "name": "av_corner-up-right",
+        "type": "general/av_corner-up-right",
+        "category": "general"
+      },
+      {
         "name": "av_black-mac-folder-13646",
         "type": "general/av_black-mac-folder-13646",
         "category": "general"
@@ -515,6 +490,26 @@ export const ICON_REGISTRY: IconCategory[] = [
       {
         "name": "av_businessman",
         "type": "general/av_businessman",
+        "category": "general"
+      },
+      {
+        "name": "av_chatgpt-green-circular-logo-22057",
+        "type": "general/av_chatgpt-green-circular-logo-22057",
+        "category": "general"
+      },
+      {
+        "name": "av_crop",
+        "type": "general/av_crop",
+        "category": "general"
+      },
+      {
+        "name": "av_database",
+        "type": "general/av_database",
+        "category": "general"
+      },
+      {
+        "name": "av_table",
+        "type": "general/av_table",
         "category": "general"
       },
       {
@@ -590,31 +585,6 @@ export const ICON_REGISTRY: IconCategory[] = [
       {
         "name": "av_corner-right-down",
         "type": "general/av_corner-right-down",
-        "category": "general"
-      },
-      {
-        "name": "av_corner-right-up",
-        "type": "general/av_corner-right-up",
-        "category": "general"
-      },
-      {
-        "name": "av_corner-up-left",
-        "type": "general/av_corner-up-left",
-        "category": "general"
-      },
-      {
-        "name": "av_corner-up-right",
-        "type": "general/av_corner-up-right",
-        "category": "general"
-      },
-      {
-        "name": "av_crop",
-        "type": "general/av_crop",
-        "category": "general"
-      },
-      {
-        "name": "av_database",
-        "type": "general/av_database",
         "category": "general"
       },
       {
@@ -713,6 +683,11 @@ export const ICON_REGISTRY: IconCategory[] = [
         "category": "general"
       },
       {
+        "name": "av_gear-1213",
+        "type": "general/av_gear-1213",
+        "category": "general"
+      },
+      {
         "name": "av_globe",
         "type": "general/av_globe",
         "category": "general"
@@ -720,6 +695,11 @@ export const ICON_REGISTRY: IconCategory[] = [
       {
         "name": "av_green-arrow-up-11385",
         "type": "general/av_green-arrow-up-11385",
+        "category": "general"
+      },
+      {
+        "name": "av_house",
+        "type": "general/av_house",
         "category": "general"
       },
       {
@@ -768,8 +748,8 @@ export const ICON_REGISTRY: IconCategory[] = [
         "category": "general"
       },
       {
-        "name": "av_house",
-        "type": "general/av_house",
+        "name": "av_india-flag-circular-17791",
+        "type": "general/av_india-flag-circular-17791",
         "category": "general"
       },
       {
@@ -893,6 +873,11 @@ export const ICON_REGISTRY: IconCategory[] = [
         "category": "general"
       },
       {
+        "name": "av_red-arrow-down-11380",
+        "type": "general/av_red-arrow-down-11380",
+        "category": "general"
+      },
+      {
         "name": "av_number-one-13217",
         "type": "general/av_number-one-13217",
         "category": "general"
@@ -900,6 +885,11 @@ export const ICON_REGISTRY: IconCategory[] = [
       {
         "name": "av_page",
         "type": "general/av_page",
+        "category": "general"
+      },
+      {
+        "name": "av_pdf-2616",
+        "type": "general/av_pdf-2616",
         "category": "general"
       },
       {
@@ -935,11 +925,6 @@ export const ICON_REGISTRY: IconCategory[] = [
       {
         "name": "av_power",
         "type": "general/av_power",
-        "category": "general"
-      },
-      {
-        "name": "av_red-arrow-down-11380",
-        "type": "general/av_red-arrow-down-11380",
         "category": "general"
       },
       {
@@ -1028,11 +1013,6 @@ export const ICON_REGISTRY: IconCategory[] = [
         "category": "general"
       },
       {
-        "name": "av_table",
-        "type": "general/av_table",
-        "category": "general"
-      },
-      {
         "name": "av_tag",
         "type": "general/av_tag",
         "category": "general"
@@ -1040,6 +1020,11 @@ export const ICON_REGISTRY: IconCategory[] = [
       {
         "name": "av_telegram-logo",
         "type": "general/av_telegram-logo",
+        "category": "general"
+      },
+      {
+        "name": "av_thermometer",
+        "type": "general/av_thermometer",
         "category": "general"
       },
       {
@@ -1065,6 +1050,16 @@ export const ICON_REGISTRY: IconCategory[] = [
       {
         "name": "av_ticket",
         "type": "general/av_ticket",
+        "category": "general"
+      },
+      {
+        "name": "av_x",
+        "type": "general/av_x",
+        "category": "general"
+      },
+      {
+        "name": "av_youtube-logo-7121",
+        "type": "general/av_youtube-logo-7121",
         "category": "general"
       },
       {
@@ -1118,6 +1113,11 @@ export const ICON_REGISTRY: IconCategory[] = [
         "category": "general"
       },
       {
+        "name": "av_umbrella",
+        "type": "general/av_umbrella",
+        "category": "general"
+      },
+      {
         "name": "av_underline",
         "type": "general/av_underline",
         "category": "general"
@@ -1158,6 +1158,11 @@ export const ICON_REGISTRY: IconCategory[] = [
         "category": "general"
       },
       {
+        "name": "av_visa-credit-card-payment",
+        "type": "general/av_visa-credit-card-payment",
+        "category": "general"
+      },
+      {
         "name": "av_vk-120",
         "type": "general/av_vk-120",
         "category": "general"
@@ -1188,11 +1193,6 @@ export const ICON_REGISTRY: IconCategory[] = [
         "category": "general"
       },
       {
-        "name": "av_x",
-        "type": "general/av_x",
-        "category": "general"
-      },
-      {
         "name": "av_zoom-in",
         "type": "general/av_zoom-in",
         "category": "general"
@@ -1200,6 +1200,16 @@ export const ICON_REGISTRY: IconCategory[] = [
       {
         "name": "av_zoom-out",
         "type": "general/av_zoom-out",
+        "category": "general"
+      },
+      {
+        "name": "Atom",
+        "type": "general/Atom",
+        "category": "general"
+      },
+      {
+        "name": "screenshot",
+        "type": "general/screenshot",
         "category": "general"
       }
     ]
@@ -1246,6 +1256,11 @@ export const ICON_REGISTRY: IconCategory[] = [
   },
   {
     "category": "one",
+    "icons": [
+    ]
+  },
+  {
+    "category": "platforms",
     "icons": [
     ]
   },
@@ -1333,11 +1348,6 @@ export const ICON_REGISTRY: IconCategory[] = [
         "category": "settings"
       },
       {
-        "name": "av_question-mark",
-        "type": "settings/av_question-mark",
-        "category": "settings"
-      },
-      {
         "name": "av_cross",
         "type": "settings/av_cross",
         "category": "settings"
@@ -1345,6 +1355,11 @@ export const ICON_REGISTRY: IconCategory[] = [
       {
         "name": "av_exclamation-mark",
         "type": "settings/av_exclamation-mark",
+        "category": "settings"
+      },
+      {
+        "name": "av_question-mark",
+        "type": "settings/av_question-mark",
         "category": "settings"
       },
       {
@@ -1393,13 +1408,13 @@ export const ICON_REGISTRY: IconCategory[] = [
     "category": "system",
     "icons": [
       {
-        "name": "av_star",
-        "type": "system/av_star",
+        "name": "av_settings",
+        "type": "system/av_settings",
         "category": "system"
       },
       {
-        "name": "av_settings",
-        "type": "system/av_settings",
+        "name": "av_star",
+        "type": "system/av_star",
         "category": "system"
       },
       {

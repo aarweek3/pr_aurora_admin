@@ -11,6 +11,7 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { ModalService } from '@shared/components/ui/modal/services/modal.service';
 import { LanguageService } from '@assets/languageApp/services/language.service';
+import { AppLanguage } from '@assets/languageApp/models/appLanguage.model';
 import { ErrorResponse } from '../../../../../shared/infrastructure/interceptor/models/error-response.model';
 
 @Injectable({
@@ -39,7 +40,7 @@ export class CategoryOfAggregatorStateService implements OnDestroy {
   showDeleted = computed(() => this.state().showDeleted);
   selectedId = computed(() => this.state().selectedId);
   selectedLanguageId = computed(() => this.state().languageId);
-  languages = computed(() => this.langService.availableLanguages());
+  languages = computed<AppLanguage[]>(() => this.langService.availableLanguages() || []);
   error = computed(() => this.state().error);
   viewModalVisible = computed(() => this.state().viewModalVisible);
   viewItem = computed(() => this.state().viewItem);
@@ -111,14 +112,16 @@ export class CategoryOfAggregatorStateService implements OnDestroy {
 
   private flattenTree(items: CategoryOfAggregatorItem[], level = 0): CategoryOfAggregatorItem[] {
     const result: CategoryOfAggregatorItem[] = [];
-    items.forEach(item => {
-      item.level = level;
-      item.expand = item.expand ?? false;
-      result.push(item);
-      if (item.children && item.children.length > 0) {
-        result.push(...this.flattenTree(item.children, level + 1));
-      }
-    });
+    [...items]
+      .sort((a, b) => (a.localizedName || a.canonicalName || '').localeCompare(b.localizedName || b.canonicalName || ''))
+      .forEach(item => {
+        item.level = level;
+        item.expand = item.expand ?? false;
+        result.push(item);
+        if (item.children && item.children.length > 0) {
+          result.push(...this.flattenTree(item.children, level + 1));
+        }
+      });
     return result;
   }
 
@@ -158,7 +161,7 @@ export class CategoryOfAggregatorStateService implements OnDestroy {
   }
 
   setLanguageId(id: number | null): void {
-    if (this.state().languageId === id) return;
+    if (this.state().languageId === (id ?? undefined)) return;
     this.updateState({ languageId: id ?? undefined, pageNumber: 1 });
     this.loadItems();
   }

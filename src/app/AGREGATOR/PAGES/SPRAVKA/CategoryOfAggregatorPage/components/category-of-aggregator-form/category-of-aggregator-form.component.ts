@@ -30,6 +30,7 @@ import { CategoryOfAggregatorApiService } from '../../services/category-of-aggre
 import { CategoryOfAggregatorItem } from '../../models/category-of-aggregator.model';
 import { ImageServiceUniversal } from '@shared/services/image-service-universal.service';
 import { LanguageService } from '@assets/languageApp/services/language.service';
+import { CategoryOfAggregatorStateService } from '../../services/category-of-aggregator-state.service';
 import { SeoFormComponent } from '@shared/components/ui/seo-form/seo-form.component';
 import { AppLanguage } from '@assets/languageApp/models/appLanguage.model';
 import { AvUniversalUploadModalComponent } from '@shared/components/av-universal-upload-modal/av-universal-upload-modal.component';
@@ -212,6 +213,7 @@ export class CategoryOfAggregatorFormComponent implements OnInit {
   private cdr = inject(ChangeDetectorRef);
   private message = inject(NzMessageService);
   private modal = inject(NzModalService);
+  private stateService = inject(CategoryOfAggregatorStateService);
 
   id = input<number | null>(null);
   onSave = output<any>();
@@ -240,20 +242,46 @@ export class CategoryOfAggregatorFormComponent implements OnInit {
       .subscribe(langs => {
         this.languages = langs;
         this.initLocTabs();
+        this.syncSelectedTab();
         this.loadParents();
         if (this.id()) this.loadData(this.id()!);
         this.cdr.markForCheck();
+      });
+
+    toObservable(this.stateService.selectedLanguageId)
+      .pipe(takeUntilDestroyed())
+      .subscribe(() => {
+        this.syncSelectedTab();
+        this.loadParents();
       });
   }
 
   ngOnInit(): void {}
 
   private loadParents(): void {
-    this.api.getPaged({ pageNumber: 1, pageSize: 1000, sortBy: 'CanonicalName', sortDirection: 0, showDeleted: false })
+    const langId = this.stateService.selectedLanguageId();
+    this.api.getPaged({ 
+      pageNumber: 1, 
+      pageSize: 1000, 
+      sortBy: 'CanonicalName', 
+      sortDirection: 0, 
+      showDeleted: false,
+      languageId: langId
+    })
       .pipe(take(1)).subscribe(res => {
         this.parentCategories = res.items.filter(i => i.id !== this.id());
         this.cdr.markForCheck();
       });
+  }
+
+  private syncSelectedTab(): void {
+    const langId = this.stateService.selectedLanguageId();
+    if (langId) {
+      const index = this.languages.findIndex(l => l.id === langId);
+      if (index !== -1) {
+        this.selectedTabIndex = index;
+      }
+    }
   }
 
   openIconUploadModal(): void {

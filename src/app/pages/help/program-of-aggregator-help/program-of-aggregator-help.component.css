@@ -1,0 +1,291 @@
+.help-container { padding: 32px; max-width: 1400px; margin: 0 auto; min-height: 800px; }
+.help-tabs { margin-top: 24px; }
+.help-section { display: flex; flex-direction: column; gap: 24px; padding-top: 16px; }
+.feature-grid, .logic-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+.feature-item { padding: 16px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; }
+code { background: #f1f5f9; padding: 2px 6px; border-radius: 4px; color: #e11d48; font-size: 13px; }
+
+.hierarchy-container { display: flex; flex-direction: column; align-items: center; padding: 20px; background: #fff; }
+.hierarchy-item { display: flex; align-items: center; gap: 12px; padding: 12px 20px; border-radius: 12px; border: 2px solid #e2e8f0; background: white; min-width: 240px; }
+.hierarchy-item.parent { border-color: #3b82f6; background: #eff6ff; }
+.hierarchy-item.child { border-color: #10b981; background: #ecfdf5; }
+.hierarchy-item.sub-child { border-color: #f59e0b; background: #fffbeb; margin-left: 40px; }
+.hierarchy-connector { width: 2px; height: 30px; background: #cbd5e1; }
+.hierarchy-connector.mini { height: 15px; margin-left: 20px; }
+.hierarchy-grid { display: flex; gap: 40px; margin-top: 0; border-top: 2px solid #cbd5e1; padding-top: 30px; }
+.hierarchy-branch { display: flex; flex-direction: column; align-items: center; }
+.node-icon { font-size: 24px; }
+.node-content { display: flex; flex-direction: column; }
+.node-content strong { font-size: 14px; color: #1e293b; }
+.model-name { font-size: 10px; color: #94a3b8; font-style: italic; display: block; margin-bottom: 2px; }
+.node-fields { list-style: none; padding: 0; margin: 4px 0 0 0; border-top: 1px solid #f1f5f9; padding-top: 4px; }
+.node-fields li { font-size: 10px; color: #64748b; line-height: 1.6; text-align: left; }
+.node-fields code { padding: 0; background: transparent; color: #3b82f6; font-weight: bold; font-size: 10px; }
+.node-label { font-size: 10px; font-weight: bold; color: #94a3b8; margin-bottom: 8px; background: #f1f5f9; padding: 2px 8px; border-radius: 10px; }
+
+/* Expanded Wide Styles */
+.hierarchy-container.wide { padding: 40px 10px; }
+.full-width { width: 100%; justify-content: space-around; }
+.hierarchy-item.main { transform: scale(1.1); box-shadow: 0 4px 20px rgba(59, 130, 246, 0.2); }
+.hierarchy-item.dict { border-color: #8b5cf6; background: #f5f3ff; }
+.hierarchy-item.content { border-color: #10b981; background: #ecfdf5; }
+.hierarchy-item.media { border-color: #ec4899; background: #fdf2f8; }
+.hierarchy-item.market { border-color: #06b6d4; background: #ecfeff; }
+.hierarchy-item.links { border-color: #f59e0b; background: #fffbeb; }
+
+/* Mock UI Premium Styles */
+.mock-ui-container {
+  background: #f8fafc;
+  padding: 32px;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  box-shadow: inset 0 2px 4px 0 rgba(0,0,0,0.05);
+  margin-top: 16px;
+}
+.mock-header { margin-bottom: 24px; }
+.mock-title { margin: 0; color: #0f172a; font-size: 24px; font-weight: 800; letter-spacing: -0.5px; }
+.mock-settings-icon { font-size: 18px; color: #94a3b8; margin-left: 8px; cursor: pointer; }
+.mock-stats { color: #64748b; font-size: 14px; margin-top: 6px; }
+.mock-badge { color: #3b82f6; font-weight: 700; background: #eff6ff; padding: 2px 8px; border-radius: 12px; }
+
+.mock-main-card {
+  background: white;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  padding: 20px;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.mock-filter-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.mock-search-input {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #f1f5f9;
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  color: #94a3b8;
+  font-size: 14px;
+}
+.mock-dropdown {
+  background: white;
+  border: 1px solid #e2e8f0;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #475569;
+  display: flex;
+  justify-content: space-between;
+  min-width: 160px;
+  cursor: pointer;
+}
+.mock-btn-primary {
+  background: #3b82f6;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 14px;
+  white-space: nowrap;
+  box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.3);
+}
+.mock-switch-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-left: 10px;
+}
+.mock-switch-label { font-size: 11px; font-weight: 800; color: #64748b; letter-spacing: 0.5px; }
+.mock-switch {
+  width: 40px;
+  height: 20px;
+  background: #cbd5e1;
+  border-radius: 20px;
+  position: relative;
+}
+.mock-switch::after {
+  content: '';
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  background: white;
+  border-radius: 50%;
+  top: 2px;
+  left: 2px;
+}
+
+.mock-table-container { margin: 0 -20px; border-top: 1px solid #f1f5f9; }
+.mock-table { width: 100%; border-collapse: collapse; }
+.mock-table th {
+  text-align: left;
+  padding: 16px 20px;
+  font-size: 12px;
+  text-transform: uppercase;
+  color: #64748b;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid #e2e8f0;
+}
+.mock-table td { padding: 16px 20px; border-bottom: 1px solid #f1f5f9; font-size: 14px; color: #1e293b; }
+
+.mock-entity-cell { display: flex; align-items: center; gap: 12px; }
+.mock-entity-icon { width: 32px; height: 32px; background: #f1f5f9; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+.mock-entity-name { font-weight: 700; color: #0f172a; }
+.mock-entity-slug { font-size: 11px; color: #94a3b8; font-family: monospace; }
+
+.mock-tag-green { background: #dcfce7; color: #16a34a; padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 700; }
+
+.mock-actions { display: flex; gap: 12px; }
+.mock-action-icon {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.mock-action-icon:hover { background: #f1f5f9; transform: translateY(-1px); }
+.mock-action-icon.view:hover { border-color: #8b5cf6; color: #8b5cf6; }
+.mock-action-icon.edit:hover { border-color: #3b82f6; color: #3b82f6; }
+.mock-action-icon.delete-soft:hover { border-color: #f59e0b; background: #fffbeb; }
+.mock-action-icon.delete-hard:hover { border-color: #ef4444; background: #fee2e2; }
+
+.mock-pagination-row {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 24px;
+}
+.mock-pagination-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #f8fafc;
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+}
+.mock-page-arrow, .mock-page-num {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  font-size: 14px;
+  background: white;
+  color: #475569;
+  cursor: pointer;
+}
+.mock-page-num.active {
+  border-color: #3b82f6;
+  color: #3b82f6;
+  font-weight: 700;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+}
+.mock-page-info { font-size: 13px; color: #64748b; margin: 0 8px; }
+.mock-page-selector, .mock-page-input {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid #d1d5db;
+  padding: 4px 10px;
+  border-radius: 4px;
+  background: white;
+  font-size: 13px;
+  color: #1e293b;
+  cursor: pointer;
+}
+.mock-page-goto {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #64748b;
+}
+.mock-chevron-mini { font-size: 10px; color: #94a3b8; }
+
+.mock-status-bar {
+  margin-top: 24px;
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: #1e293b;
+  color: #94a3b8;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 500;
+}
+.mock-divider { margin: 0 12px; opacity: 0.3; }
+.mock-status-right { color: #f1f5f9; font-weight: 700; opacity: 0.5; }
+
+.file-tree {
+  background: #0f172a;
+  color: #38bdf8;
+  padding: 16px;
+  border-radius: 8px;
+  font-family: 'Fira Code', monospace;
+  font-size: 12px;
+  line-height: 1.5;
+  overflow-x: auto;
+}
+.file-list-detailed {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.file-list-detailed li {
+  padding: 4px 0;
+  font-size: 13px;
+  color: #475569;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.file-list-detailed li code {
+  color: #3b82f6;
+  background: #eff6ff;
+  border: 1px solid #dbeafe;
+}
+
+.url-info p {
+  margin-bottom: 12px;
+  line-height: 1.6;
+}
+.example-box {
+  background: #f8fafc;
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+}
+.example-item {
+  margin-bottom: 8px;
+}
+.example-item:last-child {
+  margin-bottom: 0;
+}
+.rule-box {
+  margin-top: 20px;
+  padding: 16px;
+  background: #e6f7ff;
+  border-radius: 12px;
+}
+.rule-box h4 {
+  margin-top: 0;
+  color: #0050b3;
+}
+.rule-box ul {
+  margin-bottom: 0;
+  padding-left: 20px;
+}

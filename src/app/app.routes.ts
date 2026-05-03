@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { AdminLayoutComponent } from './shared/components/layout/admin-layout/admin-layout.component';
-import { NotFoundComponent } from './auth/components/not-found/not-found.component';
+import { NotFoundComponent } from './authorization/features/not-found/not-found.component';
 
 // TODO: Import AuthLayout when created (Phase 6)
 // import { AuthLayoutComponent } from './shared/components/layout/auth-layout/auth-layout.component';
@@ -46,12 +46,12 @@ export const routes: Routes = [
       },
       {
         path: 'admin',
-        loadChildren: () => import('./auth/admin.routes').then((m) => m.ADMIN_ROUTES),
+        loadChildren: () => import('./authorization/routes/admin.routes').then((m) => m.ADMIN_ROUTES),
       },
       {
         path: 'auth-control',
         loadChildren: () =>
-          import('./auth/auth-control/auth-control.routes').then((m) => m.AUTH_CONTROL_ROUTES),
+          import('./authorization/features/auth-control/auth-control.routes').then((m) => m.AUTH_CONTROL_ROUTES),
       },
       // TODO: Add feature modules (Phase 7)
       // { path: 'users', loadChildren: () => import('./pages/users/users.routes') },
@@ -59,12 +59,12 @@ export const routes: Routes = [
       {
         path: 'settings',
         loadChildren: () =>
-          import('./auth/pages/settings-user/settings-user.routes').then((m) => m.SETTINGS_ROUTES),
+          import('./authorization/features/pages/settings-user/settings-user.routes').then((m) => m.SETTINGS_ROUTES),
       },
       {
         path: 'profile',
         loadChildren: () =>
-          import('./auth/pages/user-profile/user-profile.routes').then(
+          import('./authorization/features/pages/user-profile/user-profile.routes').then(
             (m) => m.USER_PROFILE_ROUTES,
           ),
       },
@@ -118,6 +118,13 @@ export const routes: Routes = [
           ).then((m) => m.PLATFORM_OF_AGGREGATOR_ROUTES),
       },
       {
+        path: 'agregator/references/os-versions',
+        loadChildren: () =>
+          import(
+            './AGREGATOR/PAGES/SPRAVKA/SystemRequirementPage/system-requirement.routes'
+          ).then((m) => m.SYSTEM_REQUIREMENT_ROUTES),
+      },
+      {
         path: 'agregator/references/license-types',
         loadChildren: () =>
           import(
@@ -166,7 +173,7 @@ export const routes: Routes = [
   // Auth Layout
   {
     path: 'auth',
-    loadChildren: () => import('./auth/auth.routes').then((m) => m.authRoutes),
+    loadChildren: () => import('./authorization/routes/auth.routes').then((m) => m.authRoutes),
   },
   // Not Found & Wildcard
   {

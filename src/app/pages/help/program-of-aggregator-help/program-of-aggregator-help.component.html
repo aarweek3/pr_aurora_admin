@@ -1,0 +1,1700 @@
+<div class="help-container">
+  <av-help-path-header
+    title="Program Of Aggregator Model"
+    subtitle="Техническая спецификация центральной сущности Программа в системе агрегатора."
+    icon="📦"
+    componentPath="src/app/pages/help/program-of-aggregator-help/program-of-aggregator-help.component.ts"
+  ></av-help-path-header>
+
+  <nz-tabset nzType="card" class="help-tabs">
+    <!-- 0. МОДЕЛЬ -->
+    <nz-tab nzTitle="📄 Модель">
+      <div class="help-section">
+        <nz-card nzTitle="Назначение модели">
+          <p>
+            Сущность <strong>ProgramOfAggregator</strong> является центральным «якорем» (Anchor Entity) модуля Агрегатора. 
+            Она представляет собой карточку программного продукта, объединяющую общие (инвариантные) данные, 
+            локализации, медиа-файлы и информацию о версиях.
+          </p>
+        </nz-card>
+
+        <nz-card nzTitle="Иерархия и Глубина связей (Object Hierarchy)">
+          <div class="hierarchy-container wide">
+            <!-- ROOT -->
+            <div class="hierarchy-item parent main" style="margin: 0 auto;">
+              <span class="node-icon">📦</span>
+              <div class="node-content">
+                <strong>ProgramOfAggregator</strong>
+                <span class="model-name">Anchor Entity</span>
+              </div>
+            </div>
+            <div class="hierarchy-connector"></div>
+            
+            <div class="hierarchy-grid full-width">
+              <!-- ВЕТКА 1: Системные зависимости -->
+              <div class="hierarchy-branch">
+                <div class="node-label">Infrastructure</div>
+                <div class="hierarchy-item child dict">
+                  <span class="node-icon">🌍</span>
+                  <div class="node-content"><strong>Languages</strong></div>
+                </div>
+                <div class="hierarchy-connector mini"></div>
+                <div class="hierarchy-item child dict">
+                  <span class="node-icon">🔑</span>
+                  <div class="node-content"><strong>License Types</strong></div>
+                </div>
+              </div>
+
+              <!-- ВЕТКА 2: Основная таксономия -->
+              <div class="hierarchy-branch">
+                <div class="node-label">Core Logic</div>
+                <div class="hierarchy-item child dict">
+                  <span class="node-icon">📁</span>
+                  <div class="node-content"><strong>Categories</strong></div>
+                </div>
+                <div class="hierarchy-connector mini"></div>
+                <div class="hierarchy-item child dict">
+                  <span class="node-icon">👨‍💻</span>
+                  <div class="node-content"><strong>Developers</strong></div>
+                </div>
+              </div>
+
+              <!-- ВЕТКА 3: Контент (Центральная) -->
+              <div class="hierarchy-branch">
+                <div class="node-label">1 : N / Content</div>
+                <div class="hierarchy-item child content">
+                  <span class="node-icon">🌍</span>
+                  <div class="node-content"><strong>Localizations</strong></div>
+                </div>
+                <div class="hierarchy-connector mini"></div>
+                <div class="hierarchy-item child nested-parent">
+                  <span class="node-icon">📦</span>
+                  <div class="node-content"><strong>Versions</strong></div>
+                </div>
+                <div class="hierarchy-connector mini"></div>
+                <div class="hierarchy-item sub-child links">
+                  <span class="node-icon">🔗</span>
+                  <div class="node-content"><strong>DownloadLinks</strong></div>
+                </div>
+              </div>
+
+              <!-- ВЕТКА 4: Медиа и Безопасность -->
+              <div class="hierarchy-branch">
+                <div class="node-label">Assets & SEO</div>
+                <div class="hierarchy-item child media">
+                  <span class="node-icon">🖼️</span>
+                  <div class="node-content"><strong>Screenshots</strong></div>
+                </div>
+                <div class="hierarchy-connector mini"></div>
+                <div class="hierarchy-item child dict">
+                  <span class="node-icon">🛡️</span>
+                  <div class="node-content"><strong>Redirects</strong></div>
+                </div>
+              </div>
+
+              <!-- ВЕТКА 5: Теги (M:M) -->
+              <div class="hierarchy-branch">
+                <div class="node-label">Tags Hierarchy</div>
+                <div class="hierarchy-item child dict">
+                  <span class="node-icon">🏷️</span>
+                  <div class="node-content"><strong>Tag Categories</strong></div>
+                </div>
+                <div class="hierarchy-connector mini"></div>
+                <div class="hierarchy-item sub-child">
+                  <span class="node-icon">🔖</span>
+                  <div class="node-content"><strong>Tags (M:M)</strong></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <nz-alert
+            nzType="info"
+            nzMessage="Глубина вложенности"
+            nzDescription="Максимальная глубина связей достигает 3 уровней (Program -> Version -> Link), что требует оптимизации SQL-запросов через .Include()."
+            nzShowIcon
+            style="margin-top: 16px;"
+          ></nz-alert>
+        </nz-card>
+
+        <!-- ARCHITECTURAL CONNECTION: PROGRAM - PLATFORM -->
+        <nz-card nzTitle="🏛️ Архитектурная связь: Программа — Платформа (Hierarchical Option 1)" class="premium-card" style="border-left: 4px solid #722ed1;">
+          <div class="url-info">
+            <p>
+              В версии Aurora v3.5 принята <strong>иерархическая модель владения</strong>, где каждая запись программы (<code>ProgramOfAggregator</code>) жестко привязана к одной основной операционной системе (Платформе).
+            </p>
+
+            <div class="logic-grid">
+              <div class="feature-item">
+                <h4>1. Основная связь (Main Relationship)</h4>
+                <p>В сущность <code>ProgramOfAggregator</code> вводится обязательное поле <code>MainPlatformId</code>. Платформа выступает в роли «контейнера» для программы.</p>
+                <ul>
+                  <li><strong>Поле:</strong> <code>MainPlatformId</code> (int, Required)</li>
+                  <li><strong>Тип связи:</strong> Many-to-One</li>
+                </ul>
+              </div>
+              <div class="feature-item">
+                <h4>2. Правило уникальности (Composite Slug)</h4>
+                <p>Slug программы уникален только в связке с Основной платформой (<code>Slug + MainPlatformId</code>).</p>
+                <ul>
+                  <li><strong>Индекс:</strong> <code>UX_Programs_Slug_MainPlatformId</code></li>
+                  <li><strong>Логика:</strong> Позволяет иметь <code>/windows/chrome</code> и <code>/android/chrome</code> как разные записи.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="rule-box" style="margin-top: 16px;">
+              <h4>🔗 Формирование URL (Routing)</h4>
+              <p>Полный путь генерируется автоматически: <code>/&#123;platform&#125;/&#123;category&#125;/&#123;subcategory&#125;/&#123;program-slug&#125;</code></p>
+              <div class="example-box">
+                <div class="example-item"><code>site.com/windows/browsers/chrome</code></div>
+                <div class="example-item"><code>site.com/android/browsers/chrome</code></div>
+              </div>
+            </div>
+
+            <div class="feature-item" style="margin-top: 16px;">
+              <h4>⚡ Влияние на контент и SEO</h4>
+              <ul>
+                <li><strong>Локализации:</strong> Описания и Meta-теги создаются отдельно для каждой платформы.</li>
+                <li><strong>Категории:</strong> Программа может находиться в разных категориях на разных ОС.</li>
+                <li><strong>Редиректы:</strong> При смене платформы или слага система генерирует автоматический 301-редирект.</li>
+              </ul>
+            </div>
+          </div>
+        </nz-card>
+
+        <nz-card nzTitle="Свойства модели (Core Fields)">
+          <nz-table #fieldsTable [nzData]="coreFields" [nzFrontPagination]="false" nzSize="small">
+            <thead>
+              <tr>
+                <th>Поле</th>
+                <th>Тип</th>
+                <th>Описание</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let f of fieldsTable.data">
+                <td><code>{{ f.name }}</code></td>
+                <td><nz-tag>{{ f.type }}</nz-tag></td>
+                <td>{{ f.desc }}</td>
+              </tr>
+            </tbody>
+          </nz-table>
+        </nz-card>
+
+        <nz-card nzTitle="Детализация и Локализация (Localization Fields)">
+          <p>Эти поля хранятся отдельно для каждого языка в таблице <code>programs_of_aggregator_localizations</code>.</p>
+          <nz-table #locTable [nzData]="locFields" [nzFrontPagination]="false" nzSize="small">
+            <thead>
+              <tr>
+                <th>Поле</th>
+                <th>Тип</th>
+                <th>Описание</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let f of locTable.data">
+                <td><code>{{ f.name }}</code></td>
+                <td><nz-tag>{{ f.type }}</nz-tag></td>
+                <td>{{ f.desc }}</td>
+              </tr>
+            </tbody>
+          </nz-table>
+        </nz-card>
+
+        <nz-card nzTitle="Механика связи (Relationship Mechanics)">
+          <div class="logic-grid">
+            <div class="feature-item">
+              <p><strong>Foreign Key:</strong> Связь осуществляется через поле <code>ProgramOfAggregatorId</code>.</p>
+              <p><strong>Ключ языка:</strong> Каждая запись локализации имеет <code>LanguageOfAggregatorId</code>.</p>
+            </div>
+            <div class="feature-item">
+              <p><strong>Выборка данных:</strong> Фильтр по языку:</p>
+              <code>.Localizations.FirstOrDefault(x => x.LanguageId == currentLangId)</code>
+            </div>
+          </div>
+          <nz-alert
+            nzType="warning"
+            nzMessage="English Fallback"
+            nzDescription="Если локализация на языке пользователя отсутствует, загружается английская версия (ID = 1)."
+            nzShowIcon
+            style="margin-top: 16px;"
+          ></nz-alert>
+        </nz-card>
+
+        <div class="logic-grid">
+          <nz-card nzTitle="Прямые связи и Коллекции" style="flex: 1">
+            <ul>
+              <li><strong>CategoryOfAggregator</strong> (<code>Category</code>): Основная и Под-категория.</li>
+              <li><strong>DeveloperOfAggregator</strong> (<code>Developer</code>): Разработчик (автор) ПО.</li>
+              <li><strong>Versions (1:N)</strong> (<code>VersionOfAggregator</code>): История релизов.</li>
+              <li><strong>MarketData</strong> (<code>ProgramMarketDataOfAggregator</code>): Текущие цены и рейтинги.</li>
+              <li><strong>Screenshots (1:N)</strong> (<code>ScreenshotOfAggregator</code>): Галерея изображений.</li>
+              <li><strong>ProgramTags (M:M)</strong> (<code>ProgramTagOfAggregator</code>): Теги и метки.</li>
+            </ul>
+          </nz-card>
+          <nz-card nzTitle="Архитектурные особенности" style="flex: 1">
+            <ul>
+              <li><strong>Universal Localization</strong>: Все сущности (теги, скриншоты и др.) имеют свои таблицы локализации.</li>
+              <li><strong>Many-to-Many Platforms & Tags</strong>: Гибкая привязка к ОС и характеристикам.</li>
+              <li><strong>Full Audit</strong>: Наследование от <code>FullAuditableEntityOfAggregator</code>.</li>
+            </ul>
+          </nz-card>
+        </div>
+
+        <nz-alert
+          nzType="info"
+          nzMessage="Рекомендация для разработчиков"
+          nzDescription="Используйте .Include() для подгрузки локализаций, чтобы избежать N+1."
+          nzShowIcon
+        ></nz-alert>
+
+        <nz-card nzTitle="Эволюция архитектуры (v2 -> v3.5)">
+          <ul>
+            <li><strong>Details → Localizations</strong>: Вынесено для поддержки мультиязычности.</li>
+            <li><strong>Sources → MarketData</strong>: Данные из внешних сторов хранятся независимо.</li>
+            <li><strong>DownloadLinks</strong>: Ссылки теперь привязаны к конкретным <strong>Версиям</strong>.</li>
+            <li><strong>Meta-платформы → ProgramPlatforms</strong>: Переход на Many-to-Many.</li>
+          </ul>
+        </nz-card>
+      </div>
+    </nz-tab>
+
+    <nz-tab nzTitle="🌟 Обзор">
+      <div class="help-section">
+        <nz-card nzTitle="Центральный хаб управления контентом">
+          <p>
+            Модуль <strong>Program Of Aggregator</strong> является ключевым в экосистеме Aurora v3.5. 
+            Он объединяет в себе все аспекты управления программным обеспечением: от метаданных и локализаций до версионности и аналитики из внешних маркетов.
+          </p>
+          <div class="logic-grid">
+            <div class="feature-item">
+              <h4>Единая точка входа</h4>
+              <p>Консолидация данных из Steam, Google Play, App Store и прямых источников в одну мастер-запись.</p>
+            </div>
+            <div class="feature-item">
+              <h4>Гибкая таксономия</h4>
+              <p>Многоуровневые категории и динамическая система тегов позволяют строить сложные фильтры и навигацию.</p>
+            </div>
+          </div>
+        </nz-card>
+        <nz-alert
+          nzType="info"
+          nzMessage="Стандарт Aurora v3.5"
+          nzDescription="Данный модуль следует паттерну Golden Sample и является эталоном для реализации других агрегаторных сущностей."
+          nzShowIcon
+        ></nz-alert>
+      </div>
+    </nz-tab>
+
+    <nz-tab nzTitle="💾 Структура БД">
+      <div class="help-section">
+        <nz-card nzTitle="Генеральная спецификация полей (Master Reference)">
+          <p>Сводная таблица всех моделей и полей для оценки полноты покрытия данных агрегатором.</p>
+          <nz-table #masterTable [nzData]="masterFields" [nzFrontPagination]="true" [nzPageSize]="15" nzSize="small">
+            <thead>
+              <tr>
+                <th nzWidth="200px">Модель (Сущность)</th>
+                <th nzWidth="200px">Поле</th>
+                <th nzWidth="100px">Тип</th>
+                <th>Описание / Комментарий</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let f of masterTable.data">
+                <td><nz-tag nzColor="blue">{{ f.model }}</nz-tag></td>
+                <td><code>{{ f.name }}</code></td>
+                <td><nz-tag nzColor="orange">{{ f.type }}</nz-tag></td>
+                <td style="font-size: 12px">{{ f.desc }}</td>
+              </tr>
+            </tbody>
+          </nz-table>
+        </nz-card>
+
+        <nz-collapse nzAccordion>
+          <!-- ТАБЛИЦА 1: ОСНОВНАЯ СУЩНОСТЬ -->
+          <nz-collapse-panel nzHeader="1. Основная таблица: programs_of_aggregator" [nzActive]="true">
+            <nz-table #parentTable [nzData]="coreFields" [nzFrontPagination]="false" nzSize="small">
+              <thead><tr><th>Поле</th><th>Тип</th><th>Описание</th></tr></thead>
+              <tbody>
+                <tr *ngFor="let f of parentTable.data">
+                  <td><code>{{ f.name }}</code></td>
+                  <td><nz-tag>{{ f.type }}</nz-tag></td>
+                  <td>{{ f.desc }}</td>
+                </tr>
+              </tbody>
+            </nz-table>
+          </nz-collapse-panel>
+
+          <!-- ТАБЛИЦА 2: ЛОКАЛИЗАЦИЯ -->
+          <nz-collapse-panel nzHeader="2. Локализация (Детали): programs_of_aggregator_localizations">
+            <nz-table #lTable [nzData]="locFields" [nzFrontPagination]="false" nzSize="small">
+              <thead><tr><th>Поле</th><th>Тип</th><th>Описание</th></tr></thead>
+              <tbody>
+                <tr *ngFor="let f of lTable.data">
+                  <td><code>{{ f.name }}</code></td>
+                  <td><nz-tag>{{ f.type }}</nz-tag></td>
+                  <td>{{ f.desc }}</td>
+                </tr>
+              </tbody>
+            </nz-table>
+          </nz-collapse-panel>
+
+          <!-- ТАБЛИЦА 3: ВЕРСИИ -->
+          <nz-collapse-panel nzHeader="3. Версии и Релизы: versions_of_aggregator">
+            <nz-table #vTable [nzData]="versionFields" [nzFrontPagination]="false" nzSize="small">
+              <thead><tr><th>Поле</th><th>Тип</th><th>Описание</th></tr></thead>
+              <tbody>
+                <tr *ngFor="let f of vTable.data">
+                  <td><code>{{ f.name }}</code></td>
+                  <td><nz-tag>{{ f.type }}</nz-tag></td>
+                  <td>{{ f.desc }}</td>
+                </tr>
+              </tbody>
+            </nz-table>
+          </nz-collapse-panel>
+
+          <!-- ТАБЛИЦА 4: ПЛАТФОРМЫ -->
+          <nz-collapse-panel nzHeader="4. Кроссплатформенность: program_platforms_of_aggregator">
+            <nz-table #pTable [nzData]="platformFields" [nzFrontPagination]="false" nzSize="small">
+              <thead><tr><th>Поле</th><th>Тип</th><th>Описание</th></tr></thead>
+              <tbody>
+                <tr *ngFor="let f of pTable.data">
+                  <td><code>{{ f.name }}</code></td>
+                  <td><nz-tag>{{ f.type }}</nz-tag></td>
+                  <td>{{ f.desc }}</td>
+                </tr>
+              </tbody>
+            </nz-table>
+          </nz-collapse-panel>
+
+          <!-- ТАБЛИЦА 5: МАРКЕТ-ДАННЫЕ -->
+          <nz-collapse-panel nzHeader="5. Внешние данные: program_market_data_of_aggregator">
+            <nz-table #mDataTable [nzData]="marketFields" [nzFrontPagination]="false" nzSize="small">
+              <thead><tr><th>Поле</th><th>Тип</th><th>Описание</th></tr></thead>
+              <tbody>
+                <tr *ngFor="let f of mDataTable.data">
+                  <td><code>{{ f.name }}</code></td>
+                  <td><nz-tag>{{ f.type }}</nz-tag></td>
+                  <td>{{ f.desc }}</td>
+                </tr>
+              </tbody>
+            </nz-table>
+          </nz-collapse-panel>
+        </nz-collapse>
+      </div>
+    </nz-tab>
+    
+    <!-- 3. СХЕМА СВЯЗЕЙ -->
+    <nz-tab nzTitle="🔗 Схема связей">
+      <div class="help-section">
+        <nz-card nzTitle="Генеральная карта связей (Full Relationship Map)">
+          <div class="hierarchy-container wide">
+            <!-- ROOT -->
+            <div class="hierarchy-item parent main">
+              <span class="node-icon">📦</span>
+              <div class="node-content">
+                <strong>Program</strong>
+                <span class="model-name">ProgramOfAggregator</span>
+                <ul class="node-fields">
+                  <li><code>Slug</code>: URL-префикс</li>
+                  <li><code>CanonicalName</code>: Эталонное имя</li>
+                  <li><code>Status</code>: Статус (Draft/Pub)</li>
+                  <li><code>IconPath</code>: Ссылка на лого</li>
+                </ul>
+              </div>
+            </div>
+            <div class="hierarchy-connector"></div>
+            
+            <div class="hierarchy-grid full-width">
+              <!-- ЛЕВАЯ ВЕТКА: Справочники -->
+              <div class="hierarchy-branch">
+                <div class="node-label">System Dictionaries</div>
+                <div class="hierarchy-item child dict">
+                  <span class="node-icon">🌍</span>
+                  <div class="node-content">
+                    <strong>Languages</strong>
+                    <span class="model-name">LanguageOfAggregator</span>
+                    <ul class="node-fields">
+                      <li><code>Name</code>: Название (RU, EN)</li>
+                      <li><code>Culture</code>: Код (ru-RU)</li>
+                      <li><code>IsSystem</code>: Системный</li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="hierarchy-connector mini"></div>
+                <div class="hierarchy-item child dict">
+                  <span class="node-icon">🔑</span>
+                  <div class="node-content">
+                    <strong>License Types</strong>
+                    <span class="model-name">LicenseTypeOfAggregator</span>
+                    <ul class="node-fields">
+                      <li><code>Name</code>: Тип (Free/Trial)</li>
+                      <li><code>Slug</code>: Тех. код</li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="hierarchy-connector mini"></div>
+                <div class="hierarchy-item child dict">
+                  <span class="node-icon">💼</span>
+                  <div class="node-content">
+                    <strong>Sources</strong>
+                    <span class="model-name">AggregatorSource</span>
+                    <ul class="node-fields">
+                      <li><code>Name</code>: Магазин (Steam)</li>
+                      <li><code>BaseUrl</code>: Ссылка на стор</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <!-- ВТОРАЯ ВЕТКА: Категории и Авторы -->
+              <div class="hierarchy-branch">
+                <div class="node-label">Core Dictionaries</div>
+                <div class="hierarchy-item child dict">
+                  <span class="node-icon">📁</span>
+                  <div class="node-content">
+                    <strong>Categories</strong>
+                    <span class="model-name">CategoryOfAggregator</span>
+                    <ul class="node-fields">
+                      <li><code>Name</code>: Имя категории</li>
+                      <li><code>HierarchyPath</code>: Путь (1/2/)</li>
+                      <li><code>IsSystem</code>: Флаг защиты</li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="hierarchy-connector mini"></div>
+                <div class="hierarchy-item child dict">
+                  <span class="node-icon">👨‍💻</span>
+                  <div class="node-content">
+                    <strong>Developers</strong>
+                    <span class="model-name">DeveloperOfAggregator</span>
+                    <ul class="node-fields">
+                      <li><code>Name</code>: Название</li>
+                      <li><code>SiteUrl</code>: Сайт автора</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <!-- ЦЕНТРАЛЬНАЯ ВЕТКА: Контент и Версии -->
+              <div class="hierarchy-branch">
+                <div class="node-label">1 : N (Core Content)</div>
+                <div class="hierarchy-item child content">
+                  <span class="node-icon">🌍</span>
+                  <div class="node-content">
+                    <strong>Localizations</strong>
+                    <span class="model-name">ProgramOfAggregatorLocalization</span>
+                    <ul class="node-fields">
+                      <li><code>LocalizedName</code>: Имя</li>
+                      <li><code>ShortDescription</code>: Краткое</li>
+                      <li><code>FullDescription</code>: Обзор (HTML)</li>
+                      <li><code>Pros/Cons</code>: Плюсы/минусы</li>
+                      <li><code>MetaTitle</code>: SEO Title</li>
+                      <li><code>MetaDescription</code>: SEO Desc</li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="hierarchy-connector mini"></div>
+                <div class="hierarchy-item child content nested-parent">
+                  <span class="node-icon">📦</span>
+                  <div class="node-content">
+                    <strong>Versions</strong>
+                    <span class="model-name">VersionOfAggregator</span>
+                    <ul class="node-fields">
+                      <li><code>Number</code>: Версия ПО</li>
+                      <li><code>ReleasedAt</code>: Дата</li>
+                      <li><code>Status</code>: Стабильность</li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="hierarchy-connector mini"></div>
+                <div class="hierarchy-item sub-child links">
+                  <span class="node-icon">🔗</span>
+                  <div class="node-content">
+                    <strong>DownloadLinks</strong>
+                    <span class="model-name">DownloadLinkOfAggregator</span>
+                    <ul class="node-fields">
+                      <li><code>Url</code>: Ссылка на файл</li>
+                      <li><code>Architecture</code>: ОС/Арх</li>
+                      <li><code>Size</code>: Вес файла</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <!-- ПРАВАЯ ВЕТКА: Медиа и Связи -->
+              <div class="hierarchy-branch">
+                <div class="node-label">Media & Safety</div>
+                <div class="hierarchy-item child media">
+                  <span class="node-icon">🖼️</span>
+                  <div class="node-content">
+                    <strong>Screenshots</strong>
+                    <span class="model-name">ScreenshotOfAggregator</span>
+                    <ul class="node-fields">
+                      <li><code>FilePath</code>: URL изображения</li>
+                      <li><code>Priority</code>: Порядок</li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="hierarchy-connector mini"></div>
+                <div class="hierarchy-item child dict">
+                  <span class="node-icon">🛡️</span>
+                  <div class="node-content">
+                    <strong>Slug Redirects</strong>
+                    <span class="model-name">ProgramSlugRedirectOfAggregator</span>
+                    <ul class="node-fields">
+                      <li><code>OldSlug</code>: Старый URL</li>
+                      <li><code>NewSlug</code>: Актуальный</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <!-- ПЯТАЯ ВЕТКА: Теги и Таксономия -->
+              <div class="hierarchy-branch">
+                <div class="node-label">Taxonomy & Tags (M:M)</div>
+                <div class="hierarchy-item child dict">
+                  <span class="node-icon">🏷️</span>
+                  <div class="node-content">
+                    <strong>Tag Categories</strong>
+                    <span class="model-name">CategoryTagOfAggregator</span>
+                    <ul class="node-fields">
+                      <li><code>Color</code>: Цвет группы</li>
+                      <li><code>IconPath</code>: Иконка</li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="hierarchy-connector mini"></div>
+                <div class="hierarchy-item child dict">
+                  <span class="node-icon">🔖</span>
+                  <div class="node-content">
+                    <strong>Tags</strong>
+                    <span class="model-name">TagOfAggregator</span>
+                    <ul class="node-fields">
+                      <li><code>IsFeature</code>: Важный</li>
+                      <li><code>Color</code>: HEX/Inherit</li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="hierarchy-connector mini"></div>
+                <div class="hierarchy-item sub-child links">
+                  <span class="node-icon">🔗</span>
+                  <div class="node-content">
+                    <strong>Program Tags</strong>
+                    <span class="model-name">ProgramTagOfAggregator</span>
+                    <ul class="node-fields">
+                      <li><code>IsMain</code>: Основной</li>
+                      <li><code>SortOrder</code>: Вес</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </nz-card>
+
+        <nz-card nzTitle="Исходный код Mermaid (для документации)">
+          <p>Если вам нужно вставить схему в GitHub или внешний документ, используйте этот код:</p>
+          <av-help-copy-container 
+            title="Mermaid Class Diagram Source" 
+            [content]="mermaidCode" 
+            bgColor="#0f172a"
+          ></av-help-copy-container>
+        </nz-card>
+      </div>
+    </nz-tab>
+
+    <nz-tab nzTitle="🔍 Поиск и Сортировка">
+      <div class="help-section">
+        <nz-card nzTitle="Универсальный компонент поиска (AvSearchComponent)">
+          <p>В модуле используется <strong>Universal Search Hero</strong> — стандартизированный компонент Aurora из <code>&#64;shared/components/ui/search</code>.</p>
+          <ul>
+            <li><strong>Реактивный Debounce</strong>: Автоматическая задержка в 300мс при наборе текста, чтобы минимизировать нагрузку на БД.</li>
+            <li><strong>Two-way Signals</strong>: Использование model signal для мгновенной синхронизации строки поиска между компонентами.</li>
+          </ul>
+          <div class="feature-item">
+            <h5>Техническая интеграция:</h5>
+            <ul>
+              <li><strong>Шаблон</strong>: <code>&lt;av-search [(value)]="searchTerm" (onSearch)="onSearchChange($event)"&gt;</code></li>
+              <li><strong>Входные данные</strong>: <code>avPlaceholder</code> (подсказка), <code>avLoading</code> (индикация процесса).</li>
+              <li><strong>Событие onSearch</strong>: Срабатывает автоматически после паузы или мгновенно при нажатии Enter.</li>
+            </ul>
+          </div>
+        </nz-card>
+
+        <nz-card nzTitle="Серверная фильтрация & Сортировка (Backend Pattern)">
+          <p>Поиск и сортировка выполняются на стороне базы данных PostgreSQL для обеспечения производительности при больших объемах данных.</p>
+          <div class="logic-grid">
+            <div class="feature-item">
+              <h4>Логика поиска (C#)</h4>
+              <ul>
+                <li><strong>Поля</strong>: <code>Name</code>, <code>SystemCode</code> и локализованные имена в <code>Localizations</code>.</li>
+                <li><strong>Регистр</strong>: Поиск регистронезависимый (используется <code>ToLower()</code>).</li>
+                <li><strong>SEO</strong>: Исключено (поля MetaTitle/Description не участвуют в поиске согласно стандарту вендоров).</li>
+              </ul>
+            </div>
+            <div class="feature-item">
+              <h4>Параметры сортировки</h4>
+              <ul>
+                <li><code>Id</code>, <code>Name</code>, <code>SystemCode</code>.</li>
+                <li><code>SortOrder</code> (Приоритет в каталоге).</li>
+                <li><code>ProgramsCount</code> — <nz-tag nzColor="green">New</nz-tag> Сортировка по количеству софта.</li>
+              </ul>
+            </div>
+          </div>
+          
+          <div style="margin-top: 16px;">
+            <h5>Пример: Реализация серверного поиска</h5>
+            <av-help-copy-container 
+              title="C# Search Logic" 
+              [content]="searchCodeSample" 
+              bgColor="#1e293b"
+            ></av-help-copy-container>
+          </div>
+        </nz-card>
+      </div>
+    </nz-tab>
+
+    <nz-tab nzTitle="🖼️ Иконки и Медиа">
+      <div class="help-section">
+        <nz-card nzTitle="Управление визуальным контентом">
+          <p>Система поддерживает многослойную архитектуру медиа-данных для каждой программы.</p>
+          <div class="logic-grid">
+            <div class="feature-item">
+              <h4>Иконки (Logo)</h4>
+              <p>SVG или PNG файлы, хранящиеся в <code>argregator_icons/programs/</code>. Поддержка темной и светлой темы через CSS-фильтры.</p>
+            </div>
+            <div class="feature-item">
+              <h4>Скриншоты (Gallery)</h4>
+              <p>Коллекция 1:N with support for localization (different screenshots for different languages if needed).</p>
+            </div>
+          </div>
+        </nz-card>
+      </div>
+    </nz-tab>
+
+    <nz-tab nzTitle="🎨 UI Layout">
+      <div class="help-section">
+        <nz-card nzTitle="Визуальная структура интерфейса (Manager Layout)">
+          <p>Схематичное представление расположения элементов управления в основном менеджере программ.</p>
+          
+          <div class="mock-ui-container">
+            <div class="mock-header">
+              <div class="mock-title-group">
+                <h2 class="mock-title">Программы Агрегатора <span class="mock-settings-icon">⚙️</span></h2>
+                <div class="mock-stats">Справочник каталога ПО (Aurora v3.5 Reference) — <span class="mock-badge">Всего: 124</span></div>
+              </div>
+            </div>
+
+            <div class="mock-main-card">
+              <div class="mock-filter-row">
+                <div class="mock-search-input">
+                  <span class="mock-search-icon">🔍</span>
+                  <span class="mock-placeholder">Поиск по названию, коду или slug...</span>
+                </div>
+                <div class="mock-dropdown">
+                  <span>Все языки</span>
+                  <span class="mock-chevron">▼</span>
+                </div>
+                <div class="mock-btn-primary">
+                  <span class="mock-plus">+</span> Добавить программу
+                </div>
+                <div class="mock-switch-container">
+                  <span class="mock-switch-label">КОРЗИНА</span>
+                  <div class="mock-switch"></div>
+                </div>
+              </div>
+
+              <div class="mock-table-container">
+                <table class="mock-table">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Программа</th>
+                      <th>Категория</th>
+                      <th>Статус</th>
+                      <th>Версия</th>
+                      <th>Действия</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>124</td>
+                      <td>
+                        <div class="mock-entity-cell">
+                          <div class="mock-entity-icon"> foxes </div>
+                          <div class="mock-entity-info">
+                            <div class="mock-entity-name">Firefox Browser</div>
+                            <div class="mock-entity-slug">mozilla-firefox</div>
+                          </div>
+                        </div>
+                      </td>
+                      <td>Браузеры</td>
+                      <td><span class="mock-tag-green">Активен</span></td>
+                      <td>125.0.1</td>
+                      <td>
+                        <div class="mock-actions">
+                          <span class="mock-action-icon view" title="Просмотр">👁️</span>
+                          <span class="mock-action-icon edit" title="Редактировать">📝</span>
+                          <span class="mock-action-icon delete-soft" title="Мягкое удаление (в корзину)">🗑️</span>
+                          <span class="mock-action-icon delete-hard" title="Жесткое удаление (из БД)">🔥</span>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>121</td>
+                      <td>
+                        <div class="mock-entity-cell">
+                          <div class="mock-entity-icon"> planes </div>
+                          <div class="mock-entity-info">
+                            <div class="mock-entity-name">Telegram Desktop</div>
+                            <div class="mock-entity-slug">telegram-desktop</div>
+                          </div>
+                        </div>
+                      </td>
+                      <td>Мессенджеры</td>
+                      <td><span class="mock-tag-green">Активен</span></td>
+                      <td>4.15.2</td>
+                      <td>
+                        <div class="mock-actions">
+                          <span class="mock-action-icon view" title="Просмотр">👁️</span>
+                          <span class="mock-action-icon edit" title="Редактировать">📝</span>
+                          <span class="mock-action-icon delete-soft" title="Мягкое удаление (в корзину)">🗑️</span>
+                          <span class="mock-action-icon delete-hard" title="Жесткое удаление (из БД)">🔥</span>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="mock-pagination-row">
+                <div class="mock-pagination-wrapper">
+                  <div class="mock-page-arrow">‹</div>
+                  <div class="mock-page-num active">1</div>
+                  <div class="mock-page-info">Показано 1-10 из 124</div>
+                  <div class="mock-page-selector">
+                    <span>10 на странице</span>
+                    <span class="mock-chevron-mini">▼</span>
+                  </div>
+                  <div class="mock-page-goto">
+                    <span>Перейти к:</span>
+                    <div class="mock-page-input">
+                      <span>1-13</span>
+                      <span class="mock-chevron-mini">▼</span>
+                    </div>
+                  </div>
+                  <div class="mock-page-arrow">›</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="mock-status-bar">
+              <div class="mock-status-left">
+                <span>📁 Всего записей: 124</span>
+                <span class="mock-divider">|</span>
+                <span>🌍 Языки: RU, EN</span>
+              </div>
+              <div class="mock-status-right">v3.5.0</div>
+            </div>
+          </div>
+        </nz-card>
+
+        <nz-card nzTitle="Особенности расположения">
+          <ul>
+            <li><strong>Интеграция кнопки создания</strong>: Кнопка «Добавить» перенесена непосредственно в блок фильтров для ускорения доступа при поиске.</li>
+            <li><strong>Удаление лишних переключателей</strong>: Кнопки «Модалка» и «Страница» удалены из заголовка для децентрализации управления.</li>
+            <li><strong>Двойное удаление</strong>: Поддержка двух режимов удаления: 
+              <code>Мягкое (Soft Delete)</code> — перемещение в корзину (флаг IsDeleted), 
+              <code>Жесткое (Hard Delete)</code> — полное удаление записи из базы данных.
+            </li>
+            <li><strong>Компактность</strong>: Все ключевые фильтры и кнопка действия находятся на одной линии, минимизируя вертикальный скролл.</li>
+          </ul>
+        </nz-card>
+      </div>
+    </nz-tab>
+
+    <!-- 🆕 UI ADD -->
+    <nz-tab nzTitle="🆕 UI Add">
+      <div class="help-section">
+        <nz-card nzTitle="Проектирование идеальной формы добавления">
+          <p>
+            Создание UI для <strong>ProgramOfAggregator</strong> — это самая сложная и ответственная задача в модуле агрегатора, 
+            так как эта сущность является «центром вселенной» и связывает воедино почти все остальные таблицы.
+          </p>
+          <nz-alert
+            nzType="warning"
+            nzMessage="Сложность интерфейса"
+            nzDescription="Учитывая огромное количество полей и связей, мы не можем вывалить всё на одну страницу. Здесь идеально подходит Табовая структура (Tabbed Form)."
+            nzShowIcon
+            style="margin-bottom: 24px;"
+          ></nz-alert>
+
+          <nz-collapse nzAccordion>
+            <!-- SECTION 1 -->
+            <nz-collapse-panel nzHeader="1. Вкладка: Основные сведения (General)" [nzActive]="true">
+              <p>Это «паспорт» программы, содержащий базовые системные данные.</p>
+              <ul>
+                <li><strong>Идентификация:</strong> Каноническое название, Slug (с автогенерацией из названия), Статус публикации (Draft/Published).</li>
+                <li><strong>Классификация:</strong> Категория и Подкатегория (зависимые списки), Разработчик (поиск с выпадающим списком).</li>
+                <li><strong>Визуал:</strong> Загрузчик иконки программы (через AvImageEditor).</li>
+                <li><strong>Настройки:</strong> Порядок сортировки, флаги «Нужна проверка», «Активна», «Системная».</li>
+              </ul>
+            </nz-collapse-panel>
+
+            <!-- SECTION 2 -->
+            <nz-collapse-panel nzHeader="2. Вкладка: Локализация (Content)">
+              <p>Самая объемная часть, управляемая через под-компонент <code>ProgramLocalizationManager</code>.</p>
+              <ul>
+                <li><strong>Под-табы по языкам:</strong> (RU, EN, DE...).</li>
+                <li><strong>Поля:</strong> Локализованное название, Краткое описание, Полное описание (TinyMCE), Плюсы и Минусы (динамические списки).</li>
+                <li><strong>Справочники:</strong> Тот самый <strong>LicenseType</strong>, который мы обсуждали (выбор из словаря с быстрым добавлением).</li>
+                <li><strong>SEO:</strong> Вложенная форма <code>app-seo-form</code> для каждого языка.</li>
+              </ul>
+            </nz-collapse-panel>
+
+            <!-- SECTION 3 -->
+            <nz-collapse-panel nzHeader="3. Вкладка: Платформы и Теги (Targeting)">
+              <ul>
+                <li><strong>Платформы:</strong> Визуальная сетка иконок (<code>ProgramPlatformSelector</code>) с вводом MinOsVersion.</li>
+                <li><strong>Теги:</strong> Компонент выбора тегов (цветные плашки) для классификации (например, «Open Source», «Portable»).</li>
+              </ul>
+            </nz-collapse-panel>
+
+            <!-- SECTION 4 -->
+            <nz-collapse-panel nzHeader="4. Вкладка: Медиа-галерея (Media)">
+              <p>Управляется через <code>ProgramMediaManager</code>.</p>
+              <ul>
+                <li><strong>Скриншоты:</strong> Загрузчик с поддержкой Drag&Drop и возможностью менять порядок (Reorder).</li>
+                <li><strong>Видео:</strong> Список ссылок на YouTube или другие сервисы с автоматическим получением превью.</li>
+              </ul>
+            </nz-collapse-panel>
+
+            <!-- SECTION 5 -->
+            <nz-collapse-panel nzHeader="5. Вкладка: Версии (Releases)">
+              <p>Управляется через <code>ProgramVersionManager</code>.</p>
+              <ul>
+                <li><strong>История:</strong> Таблица истории версий (Timeline).</li>
+                <li><strong>Управление:</strong> Кнопка «Добавить версию» открывает Drawer для ввода данных о конкретном релизе и ссылках на скачивание.</li>
+              </ul>
+            </nz-collapse-panel>
+
+            <!-- SECTION 6 -->
+            <nz-collapse-panel nzHeader="6. Вкладка: Маркеты и Аналитика (External)">
+              <ul>
+                <li><strong>Ссылки:</strong> Ссылки на внешние магазины (App Store, Google Play, Steam).</li>
+                <li><strong>Статистика:</strong> Отображение суммарных загрузок и рейтинга (агрегированные данные из MarketData).</li>
+              </ul>
+            </nz-collapse-panel>
+          </nz-collapse>
+        </nz-card>
+
+        <nz-card nzTitle="Технические «фишки» реализации">
+          <div class="logic-grid">
+            <div class="feature-item">
+              <h4>Индикация ошибок в табах</h4>
+              <p>Если пользователь нажал "Сохранить", но форма невалидна — на самих вкладках должны появиться красные точки или цифры с количеством ошибок (например, «Локализация ❷»).</p>
+            </div>
+            <div class="feature-item">
+              <h4>Умный Slug</h4>
+              <p>При вводе названия на английском в первой вкладке, Slug должен предлагаться автоматически, проверяя уникальность через API на лету.</p>
+            </div>
+            <div class="feature-item">
+              <h4>Черновики</h4>
+              <p>Автоматическое сохранение в <code>localStorage</code>, чтобы при случайной перезагрузке страницы менеджер не потерял описание, которое писал полчаса.</p>
+            </div>
+            <div class="feature-item">
+              <h4>Sticky Actions</h4>
+              <p>Кнопки «Сохранить», «Применить» и «Отмена» всегда зафиксированы внизу экрана, чтобы не нужно было скроллить 3 экрана для сохранения.</p>
+            </div>
+          </div>
+        </nz-card>
+
+        <nz-card nzTitle="Архитектура компонентов (Component Breakdown)">
+          <p>Для поддержки чистоты кода и переиспользования логики, форма разделяется на специализированные дочерние компоненты:</p>
+          <div class="logic-grid">
+            <div class="feature-item">
+              <h5>ProgramFormComponent</h5>
+              <p>Основной контейнер, отвечающий за скелет формы, <code>nz-tabset</code>, управление общим состоянием (FormGroup) и финальную отправку данных на сервер.</p>
+            </div>
+            <div class="feature-item">
+              <h5>ProgramLocalizationManager</h5>
+              <p>Изолированный компонент для работы с мультиязычностью. Инкапсулирует логику переключения вкладок, инициализацию TinyMCE и управление SEO-формами.</p>
+            </div>
+            <div class="feature-item">
+              <h5>ProgramMediaManager</h5>
+              <p>Отвечает за галерею скриншотов (интеграция с <code>AvImageEditor</code>) и список видео-ссылок. Реализует логику сортировки изображений и получения превью для видео.</p>
+            </div>
+            <div class="feature-item">
+              <h5>ProgramVersionManager</h5>
+              <p>Визуализация истории релизов. Содержит таблицу версий и вызывает <code>VersionEditDrawerComponent</code> для глубокого редактирования конкретного релиза.</p>
+            </div>
+            <div class="feature-item">
+              <h5>ProgramPlatformSelector</h5>
+              <p>Специализированный селектор ОС. Использует иконки платформ из БД и позволяет в один клик активировать поддержку ОС с указанием минимальной версии.</p>
+            </div>
+          </div>
+        </nz-card>
+      </div>
+    </nz-tab>
+
+    <nz-tab nzTitle="🌍 Локализация">
+      <div class="help-section">
+        <nz-card nzTitle="Механизм English Fallback (Aurora v3.5 Standard)">
+          <p>
+            Система Aurora v3.5 минимизирует рутинную работу по заполнению переводов. 
+            Если пользователь не заполнил вкладку другого языка (например, испанского), данные будут автоматически подтянуты из эталонной английской версии. 
+            Это гарантирует, что витрина никогда не останется без контента.
+          </p>
+          
+          <div class="logic-grid">
+            <div class="feature-item">
+              <h4>Приоритеты Fallback (LIFO):</h4>
+              <ol>
+                <li><strong>Значение в текущей вкладке</strong> (User Input)</li>
+                <li><strong>Значение из вкладки en-US</strong> (Reference)</li>
+                <li><strong>Техническое название</strong> (System Code / Slug)</li>
+              </ol>
+            </div>
+            <div class="feature-item">
+              <h4>Охватываемые поля:</h4>
+              <ul>
+                <li><code>LocalizedName</code> (Отображаемое имя)</li>
+                <li><code>ShortDescription</code> (Краткий обзор)</li>
+                <li><code>FullDescription</code> (Rich Text)</li>
+                <li><code>MetaTitle & MetaDescription</code> (SEO)</li>
+              </ul>
+            </div>
+          </div>
+        </nz-card>
+
+        <nz-card nzTitle="Техническая реализация в StateService">
+          <p>Для обеспечения консистентности в UI менеджера, логика Fallback применяется на уровне сервиса состояния перед отрисовкой формы.</p>
+          <av-help-copy-container 
+            title="TypeScript: Fallback Logic" 
+            [content]="fallbackCodeSample" 
+            bgColor="#1e293b"
+          ></av-help-copy-container>
+        </nz-card>
+
+        <div class="logic-grid">
+          <nz-card nzTitle="Умная валидация">
+            <p>Несмотря на наличие Fallback, система применяет строгие правила:</p>
+            <ul>
+              <li><strong>Обязательность EN</strong>: Запись не может быть сохранена без заполненной английской локализации.</li>
+              <li><strong>Индикация в UI</strong>: Поля, заполненные через Fallback, в интерфейсе подсвечиваются серым цветом (placeholder-style), чтобы администратор видел отсутствие оригинального перевода.</li>
+            </ul>
+          </nz-card>
+          <nz-card nzTitle="SEO Стратегия">
+            <p>Локализованные SEO-метатеги критически важны для индексации:</p>
+            <ul>
+              <li>Автоматическая генерация <code>canonical</code> ссылок на основе текущего языка.</li>
+              <li>Поддержка <code>hreflang</code> для указания поисковикам на наличие других языковых версий.</li>
+            </ul>
+          </nz-card>
+        </div>
+
+        <nz-alert
+          nzType="warning"
+          nzMessage="Внимание: HTML Теги"
+          nzDescription="При использовании Fallback для FullDescription, убедитесь, что HTML-разметка корректно отображается во всех локалях, так как специфичные для языка ссылки могут вести на 404."
+          nzShowIcon
+        ></nz-alert>
+      </div>
+    </nz-tab>
+
+    <nz-tab nzTitle="🚀 Пошаговый план (Roadmap)">
+      <div class="help-section">
+        <nz-card nzTitle="Как собрать такой модуль с нуля?">
+          <p>Данное руководство описывает стандарт создания агрегаторного модуля Aurora v3.5 на примере <code>ProgramOfAggregator</code>.</p>
+          
+          <nz-collapse nzAccordion>
+            <nz-collapse-panel nzHeader="🗺️ Архитектура Бэкенд-модуля (DAL & API)" [nzActive]="true">
+              <div class="logic-grid">
+                <div class="feature-item">
+                  <h5>[DAL] Слой доступа к данным</h5>
+                  <pre class="file-tree">
+├── 📂 Models/Aggregator/
+│   ├── 📄 ProgramOfAggregator.cs
+│   └── 📄 Localizations/Prog...Localization.cs
+├── 📂 Repositories/
+│   ├── 📄 ProgramOfAggregatorRepository.cs
+│   └── 📄 Interfaces/IProgramOfAgg...Repository.cs
+├── 📄 AppDbContext.Aggregator.cs
+└── 📄 AggregatorModelConfiguration.cs</pre>
+                </div>
+                <div class="feature-item">
+                  <h5>[API] Слой логики и сервисов</h5>
+                  <pre class="file-tree">
+├── 📂 Controllers/
+│   └── 📄 ProgramOfAggregatorController.cs
+└── 📂 Pages/AGGREGATOR/Program/
+    ├── 📂 Dtos/ProgramOfAggregatorDto.cs
+    ├── 📂 Interfaces/IProgramOfAgg...Service.cs
+    ├── 📂 Services/ProgramOfAggregatorService.cs
+    ├── 📂 Mappings/ProgramOfAggregatorProfile.cs
+    └── 📂 Validators/ProgramOfAgg...Validators.cs</pre>
+                </div>
+              </div>
+            </nz-collapse-panel>
+
+            <nz-collapse-panel nzHeader="Step 1: Бэкенд — Модели и БД">
+              <p>Создайте Entity и Localization в папке <code>DAL/Models/Aggregator</code>.</p>
+              
+              <div class="logic-grid">
+                <div class="feature-item">
+                  <h5>📦 Реестр всех моделей (Master Registry)</h5>
+                  <p>Полный список сущностей, зарегистрированных в <code>DAL/Models/Aggregator</code>:</p>
+                  
+                  <div class="logic-grid">
+                    <div>
+                      <h6>Core & Content (Ядро)</h6>
+                      <ul class="file-list-detailed">
+                        <li><code>ProgramOfAggregator</code> <nz-tag nzColor="green">Loc</nz-tag></li>
+                        <li><code>VersionOfAggregator</code> <nz-tag nzColor="green">Loc</nz-tag></li>
+                        <li><code>DownloadLinkOfAggregator</code> <nz-tag nzColor="green">Loc</nz-tag></li>
+                        <li><code>ProgramMarketDataOfAggregator</code></li>
+                        <li><code>ProgramSnapshotOfAggregator</code></li>
+                        <li><code>ProgramSlugRedirectOfAggregator</code></li>
+                      </ul>
+                    </div>
+                    <div>
+                      <h6>Taxonomy & Tags (Таксономия)</h6>
+                      <ul class="file-list-detailed">
+                        <li><code>CategoryOfAggregator</code> <nz-tag nzColor="green">Loc</nz-tag></li>
+                        <li><code>CategoryTagOfAggregator</code> <nz-tag nzColor="green">Loc</nz-tag></li>
+                        <li><code>TagOfAggregator</code> <nz-tag nzColor="green">Loc</nz-tag></li>
+                        <li><code>ProgramTagOfAggregator</code> <nz-tag>Join</nz-tag></li>
+                      </ul>
+                    </div>
+                    <div>
+                      <h6>Dictionaries (Справочники)</h6>
+                      <ul class="file-list-detailed">
+                        <li><code>PlatformOfAggregator</code> <nz-tag nzColor="green">Loc</nz-tag></li>
+                        <li><code>DeveloperOfAggregator</code> <nz-tag nzColor="green">Loc</nz-tag></li>
+                        <li><code>LicenseTypeOfAggregator</code> <nz-tag nzColor="green">Loc</nz-tag></li>
+                        <li><code>AggregatorSource</code></li>
+                        <li><code>LanguageOfAggregator</code></li>
+                      </ul>
+                    </div>
+                    <div>
+                      <h6>Media & Audit (Медиа)</h6>
+                      <ul class="file-list-detailed">
+                        <li><code>ScreenshotOfAggregator</code> <nz-tag nzColor="green">Loc</nz-tag></li>
+                        <li><code>VideoOfAggregator</code> <nz-tag nzColor="green">Loc</nz-tag></li>
+                        <li><code>DownloadLogOfAggregator</code></li>
+                        <li><code>ProgramPlatformOfAggregator</code> <nz-tag>Join</nz-tag></li>
+                      </ul>
+                    </div>
+                  </div>
+                  <p style="margin-top: 8px; font-size: 11px; color: #64748b;">
+                    <nz-tag nzColor="green">Loc</nz-tag> — Сущность имеет таблицу в папке <code>/Localizations</code>.<br/>
+                    <nz-tag>Join</nz-tag> — Связующая таблица Many-to-Many.
+                  </p>
+                </div>
+              </div>
+              
+              <div style="margin-top: 16px;">
+                <h5>Техническая спецификация (Стандарт v3.5):</h5>
+                <div class="logic-grid">
+                  <div class="feature-item">
+                    <h6>Core Entity:</h6>
+                    <ul>
+                      <li><code>Name</code> (Required, MaxLength) - Системное имя</li>
+                      <li><code>SystemCode</code> (Required, MaxLength) - Slug для URL</li>
+                      <li><code>IsActive</code> (bool) - По умолчанию true</li>
+                      <li>Унаследовано от: <code>FullAuditableEntityOfAggregator</code></li>
+                    </ul>
+                  </div>
+                  <div class="feature-item">
+                    <h6>Localization Entity:</h6>
+                    <ul>
+                      <li><code>Name</code> (Required, MaxLength) - Витринное имя</li>
+                      <li><code>Description</code> (string?) - Описание</li>
+                      <li>Унаследовано от: <code>AuditableEntityOfAggregator</code></li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <div style="margin-top: 16px;">
+                <h6>Naming Conventions:</h6>
+                <ul>
+                  <li>Table Name: <code>platforms_of_aggregator</code> (plural)</li>
+                  <li>Localization Table: <code>platform_of_aggregator_localizations</code> (singular_localizations)</li>
+                </ul>
+              </div>
+              
+              <nz-alert nzType="info" nzMessage="Golden Sample" nzDescription="При проектировании ориентируйтесь на PlatformOfAggregator.cs" nzShowIcon></nz-alert>
+            </nz-collapse-panel>
+
+            <nz-collapse-panel nzHeader="Step 2: Бэкенд — Репозитории и UnitOfWork">
+              <p>Реализуйте <code>IRepository</code> и <code>Repository</code> для каждой мастер-сущности.</p>
+              
+              <div class="logic-grid">
+                <div class="feature-item">
+                  <h5>Список обязательных репозиториев:</h5>
+                  <ul class="file-list-detailed">
+                    <li><code>IProgramOfAggregatorRepository</code></li>
+                    <li><code>IVersionOfAggregatorRepository</code></li>
+                    <li><code>IDownloadLinkOfAggregatorRepository</code></li>
+                    <li><code>ICategoryOfAggregatorRepository</code></li>
+                    <li><code>IPlatformOfAggregatorRepository</code></li>
+                    <li><code>IDeveloperOfAggregatorRepository</code></li>
+                    <li><code>ITagOfAggregatorRepository</code></li>
+                    <li><code>ICategoryTagOfAggregatorRepository</code></li>
+                    <li><code>ILicenseTypeOfAggregatorRepository</code></li>
+                    <li><code>ILanguageOfAggregatorRepository</code></li>
+                    <li><code>IAggregatorSourceRepository</code></li>
+                    <li><code>IScreenshotOfAggregatorRepository</code></li>
+                    <li><code>IVideoOfAggregatorRepository</code></li>
+                    <li><code>IDownloadLogOfAggregatorRepository</code></li>
+                  </ul>
+                </div>
+                <div class="feature-item">
+                  <h5>Unit of Work (IUnitOfWork.cs):</h5>
+                  <p>Добавьте свойства для быстрого доступа к репозиториям:</p>
+                  <code>IProgramOfAggregatorRepository Programs &#123; get; &#125;</code><br/>
+                  <code>ICategoryOfAggregatorRepository Categories &#123; get; &#125;</code><br/>
+                  <code>IPlatformOfAggregatorRepository Platforms &#123; get; &#125;</code>
+                  <p style="margin-top: 8px; font-size: 12px; color: #64748b;">Это позволяет выполнять сложные транзакции между разными сущностями.</p>
+                </div>
+              </div>
+
+              <div style="margin-top: 16px;">
+                <h5>Регистрация DI (ServiceCollectionExtensions.cs):</h5>
+                <p>Все репозитории должны быть зарегистрированы как <code>Scoped</code>:</p>
+                <pre class="file-tree">
+services.AddScoped&lt;IProgramOfAggregatorRepository, ProgramOfAggregatorRepository&gt;();
+services.AddScoped&lt;IVersionOfAggregatorRepository, VersionOfAggregatorRepository&gt;();
+services.AddScoped&lt;IDownloadLinkOfAggregatorRepository, DownloadLinkOfAggregatorRepository&gt;();
+services.AddScoped&lt;ICategoryOfAggregatorRepository, CategoryOfAggregatorRepository&gt;();
+services.AddScoped&lt;IPlatformOfAggregatorRepository, PlatformOfAggregatorRepository&gt;();
+services.AddScoped&lt;IDeveloperOfAggregatorRepository, DeveloperOfAggregatorRepository&gt;();
+services.AddScoped&lt;ITagOfAggregatorRepository, TagOfAggregatorRepository&gt;();
+services.AddScoped&lt;ILicenseTypeOfAggregatorRepository, LicenseTypeOfAggregatorRepository&gt;();
+services.AddScoped&lt;ILanguageOfAggregatorRepository, LanguageOfAggregatorRepository&gt;();
+services.AddScoped&lt;IAggregatorSourceRepository, AggregatorSourceRepository&gt;();
+services.AddScoped&lt;IScreenshotOfAggregatorRepository, ScreenshotOfAggregatorRepository&gt;();
+services.AddScoped&lt;IVideoOfAggregatorRepository, VideoOfAggregatorRepository&gt;();
+services.AddScoped&lt;IDownloadLogOfAggregatorRepository, DownloadLogOfAggregatorRepository&gt;();</pre>
+              </div>
+
+              <nz-alert
+                nzType="warning"
+                nzMessage="Generic Repository"
+                nzDescription="Для вспомогательных сущностей (Join-таблицы, Скриншоты) допускается использование Generic Repository через метод _uow.GetRepository&lt;T&gt;()."
+                nzShowIcon
+                style="margin-top: 16px;"
+              ></nz-alert>
+            </nz-collapse-panel>
+
+            <nz-collapse-panel nzHeader="Step 3: Бэкенд — Бизнес-логика (Service Layer)">
+              <p>Бизнес-логика реализуется в проекте <code>Project_Server_Auth</code> по адресу <code>Pages/AGGREGATOR/[ModuleName]</code>.</p>
+              
+              <div class="logic-grid">
+                <div class="feature-item">
+                  <h5>Структура папки модуля:</h5>
+                  <ul class="file-list-detailed">
+                    <li>
+                      <code>📂 Dtos/</code> — Модели данных:
+                      <div class="file-tree" style="margin-top: 4px; padding: 8px;">
+                        📄 [Name]OfAggregatorCreateDto.cs<br/>
+                        📄 [Name]OfAggregatorUpdateDto.cs<br/>
+                        📄 [Name]OfAggregatorItemDto.cs<br/>
+                        📄 [Name]OfAggregatorDetailDto.cs<br/>
+                        📄 [Name]OfAggregatorPageRequestDto.cs<br/>
+                        📄 [Name]OfAggregatorPagedResponseDto.cs
+                      </div>
+                    </li>
+                    <li>
+                      <code>📂 Interfaces/</code> — 📄 I[Name]OfAggregatorService.cs
+                    </li>
+                    <li>
+                      <code>📂 Services/</code> — 📄 [Name]OfAggregatorService.cs
+                    </li>
+                    <li>
+                      <code>📂 Validators/</code> — Валидация:
+                      <div class="file-tree" style="margin-top: 4px; padding: 8px;">
+                        📄 [Name]OfAggregatorCreateValidator.cs<br/>
+                        📄 [Name]OfAggregatorUpdateValidator.cs<br/>
+                        📄 [Name]OfAggregatorPageRequestValidator.cs
+                      </div>
+                    </li>
+                    <li>
+                      <code>📂 Mappings/</code> — 📄 [Name]OfAggregatorProfile.cs (AutoMapper)
+                    </li>
+                  </ul>
+                </div>
+                <div class="feature-item">
+                  <h5>Ключевые зависимости сервиса:</h5>
+                  <ul>
+                    <li><code>IUnitOfWork</code> — Доступ к данным и транзакции.</li>
+                    <li><code>IMapper</code> — Преобразование моделей.</li>
+                    <li><code>IValidator&lt;T&gt;</code> — Валидация входных данных.</li>
+                    <li><code>IMaintenanceSeeder</code> — Инструмент для импорта из JSON.</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div style="margin-top: 16px;">
+                <h5>Паттерны реализации (Standard v3.5):</h5>
+                <div class="logic-grid">
+                  <div class="feature-item">
+                    <h6>🔍 GetPaged (Поиск и Фильтры)</h6>
+                    <ul>
+                      <li>Использование <code>IQueryable</code> для построения запроса.</li>
+                      <li>Обработка <code>SearchTerm</code> по полям Name, Slug и Localization.Name.</li>
+                      <li><strong>Фильтрация:</strong> Поддержка фильтрации по <code>PlatformId</code> (без учета версии ОС на этапе списка).</li>
+                      <li>Реактивная сортировка через <code>Switch-case</code>.</li>
+                    </ul>
+                  </div>
+                  <div class="feature-item">
+                    <h6>💾 Create / Update / Sync</h6>
+                    <ul>
+                      <li><strong>Slug Uniqueness:</strong> Глобальная проверка уникальности Slug (проверка в таблице программ + таблица <code>SlugRedirects</code>).</li>
+                      <li><strong>Агрегация:</strong> Автоматический пересчет <code>TotalDownloads</code> и <code>AverageRating</code> в мастер-записи при любом обновлении <code>MarketData</code>.</li>
+                      <li><strong>Версионность:</strong> Логика "Switch Latest" — автоматический сброс флага <code>IsLatest</code> у старых версий при назначении новой.</li>
+                    </ul>
+                  </div>
+                  <div class="feature-item">
+                    <h6>🔥 Hard Delete (Каскад)</h6>
+                    <ul>
+                      <li><strong>Политика:</strong> Полное физическое удаление корневой записи и всех связанных данных (Версии, Локализации, Скриншоты, Ссылки).</li>
+                      <li><strong>Файлы:</strong> Удаление связанных медиа-файлов из хранилища при Hard Delete.</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <div style="margin-top: 16px;">
+                <h6>Автоматизация (Seeding):</h6>
+                <p>Каждый модуль должен поддерживать метод <code>SeedFromJsonAsync()</code>, который использует <code>IMaintenanceSeeder</code> для загрузки начальных данных из <code>Jsons/[ModuleName].json</code>.</p>
+              </div>
+              
+              <av-help-copy-container title="AI Prompt: Service Creation" [content]="servicePrompt" bgColor="#0f172a" style="margin-top: 16px;"></av-help-copy-container>
+            </nz-collapse-panel>
+
+            <nz-collapse-panel nzHeader="Step 4: Бэкенд — API Контроллер">
+              <p>Контроллер является тонкой прослойкой, делегирующей всю работу сервису.</p>
+              
+              <div class="logic-grid">
+                <div class="feature-item">
+                  <h5>Спецификация файла:</h5>
+                  <ul class="file-list-detailed">
+                    <li><strong>Имя</strong>: <code>📄 [Name]OfAggregatorController.cs</code></li>
+                    <li><strong>Путь</strong>: <code>Project_Server_Auth/Controllers/</code></li>
+                    <li><strong>Базовый класс</strong>: <code>ControllerBase</code></li>
+                    <li><strong>Маршрут</strong>: <code>[Route("api/v1/aggregator/[plural-name]")]</code></li>
+                  </ul>
+                </div>
+                <div class="feature-item">
+                  <h5>Регистрация в DI:</h5>
+                  <p>Не забудьте зарегистрировать сервис в <code>ServiceCollectionExtensions</code>:</p>
+                  <pre class="file-tree" style="padding: 8px;">services.AddScoped&lt;I[Name]Service, [Name]Service&gt;();</pre>
+                </div>
+              </div>
+
+              <div style="margin-top: 16px;">
+                <h5>Маршруты и Эндпоинты:</h5>
+                <nz-table nzSize="small" [nzData]="['']" [nzFrontPagination]="false">
+                  <thead>
+                    <tr>
+                      <th>Метод</th>
+                      <th>Путь</th>
+                      <th>Назначение</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><nz-tag nzColor="blue">GET</nz-tag></td>
+                      <td><code>/paged</code></td>
+                      <td>Список с пагинацией и фильтрами</td>
+                    </tr>
+                    <tr>
+                      <td><nz-tag nzColor="blue">GET</nz-tag></td>
+                      <td><code>/&#123;id&#125;</code></td>
+                      <td>Детальная информация по ID</td>
+                    </tr>
+                    <tr>
+                      <td><nz-tag nzColor="green">POST</nz-tag></td>
+                      <td><code>/</code></td>
+                      <td>Создание новой записи</td>
+                    </tr>
+                    <tr>
+                      <td><nz-tag nzColor="orange">PUT</nz-tag></td>
+                      <td><code>/</code></td>
+                      <td>Обновление существующей записи</td>
+                    </tr>
+                    <tr>
+                      <td><nz-tag nzColor="red">DELETE</nz-tag></td>
+                      <td><code>/&#123;id&#125;</code></td>
+                      <td>Мягкое удаление (IsDeleted=true)</td>
+                    </tr>
+                    <tr>
+                      <td><nz-tag nzColor="magenta">DELETE</nz-tag></td>
+                      <td><code>/&#123;id&#125;/hard</code></td>
+                      <td>Полное физическое удаление</td>
+                    </tr>
+                    <tr>
+                      <td><nz-tag nzColor="cyan">POST</nz-tag></td>
+                      <td><code>/&#123;id&#125;/restore</code></td>
+                      <td>Восстановление из корзины</td>
+                    </tr>
+                    <tr>
+                      <td><nz-tag nzColor="purple">POST</nz-tag></td>
+                      <td><code>/seed-json</code></td>
+                      <td>Импорт данных из JSON-файла</td>
+                    </tr>
+                    <tr>
+                      <td><nz-tag nzColor="volcano">POST</nz-tag></td>
+                      <td><code>/clear-all</code></td>
+                      <td>Полная очистка таблицы (Truncate)</td>
+                    </tr>
+                  </tbody>
+                </nz-table>
+              </div>
+
+              <av-help-copy-container title="AI Prompt: Controller Creation" [content]="searchPrompt" bgColor="#0f172a" style="margin-top: 16px;"></av-help-copy-container>
+            </nz-collapse-panel>
+
+            <nz-collapse-panel nzHeader="🗺️ Архитектура Фронтенд-модуля (Angular v17+)">
+              <pre class="file-tree">
+src/app/AGREGATOR/PAGES/SPRAVKA/ProgramPage/
+├── 📂 components/      // UI (List, Form, Modal)
+├── 📂 models/          // DTO & State interfaces
+├── 📂 services/
+│   ├── 📄 api.service.ts   // API v1 Integration
+│   └── 📄 state.service.ts // Signals + Fallbacks
+├── 📄 manager.component.ts // Orchestrator
+└── 📄 routes.ts        // Child routes</pre>
+            </nz-collapse-panel>
+
+            <nz-collapse-panel nzHeader="Step 4-5: Фронтенд — Инфраструктура и UI">
+              <div class="logic-grid">
+                <div class="feature-item">
+                  <h4>State Service</h4>
+                  <p>Внедрите <strong>SSOT</strong> на базе <code>signal&lt;State&gt;</code>. Используйте <code>computed()</code> для реактивности и <code>executeWithLoading()</code> для спиннеров.</p>
+                </div>
+                <div class="feature-item">
+                  <h4>UI Controls</h4>
+                  <ul>
+                    <li><strong>Search</strong>: AvSearchComponent (Reactive).</li>
+                    <li><strong>Pagination</strong>: nz-pagination (pageIndex/pageSize).</li>
+                    <li><strong>Trash</strong>: Переключатель режима корзины.</li>
+                  </ul>
+                </div>
+              </div>
+            </nz-collapse-panel>
+
+            <nz-collapse-panel nzHeader="🛠️ Детализация реализации (Actions & Layout)">
+              <nz-table nzSize="small" [nzData]="['']" [nzFrontPagination]="false">
+                <thead>
+                  <tr>
+                    <th>Действие</th>
+                    <th>Иконка</th>
+                    <th>Метод State</th>
+                    <th>Механика UX</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Просмотр</td>
+                    <td>👁️</td>
+                    <td><code>openView()</code></td>
+                    <td>Modal Read-only</td>
+                  </tr>
+                  <tr>
+                    <td>Редактировать</td>
+                    <td>📝</td>
+                    <td><code>updateState()</code></td>
+                    <td>Modal с формой</td>
+                  </tr>
+                  <tr>
+                    <td>В корзину</td>
+                    <td>🗑️</td>
+                    <td><code>delete()</code></td>
+                    <td>Soft Delete + Confirm</td>
+                  </tr>
+                  <tr>
+                    <td>Hard Delete</td>
+                    <td>🔥</td>
+                    <td><code>hardDelete()</code></td>
+                    <td>modal.challenge (Капча)</td>
+                  </tr>
+                </tbody>
+              </nz-table>
+              
+              <div style="margin-top: 16px;">
+                <h5>Action Column Template (Angular 17+)</h5>
+                <av-help-copy-container title="HTML Template" [content]="actionColumnTemplate" bgColor="#1e293b"></av-help-copy-container>
+              </div>
+            </nz-collapse-panel>
+          </nz-collapse>
+        </nz-card>
+      </div>
+    </nz-tab>
+
+    <!-- ✅ CHECK BACK -->
+    <nz-tab nzTitle="✅ Check Back">
+      <div class="help-section">
+        <nz-card nzTitle="Backend Implementation Progress">
+          <p>Отслеживание реализации серверной части агрегатора согласно утвержденному плану.</p>
+          
+            <div class="logic-grid">
+              <div class="feature-item">
+                <h4>1. Models & DAL (Слой данных)</h4>
+                <ul class="checklist">
+                  <li><label nz-checkbox [ngModel]="true" style="color: #000 !important; font-weight: 500; opacity: 1; cursor: default;">Сущности Program/Version/Platform сконфигурированы</label></li>
+                  <li><label nz-checkbox [ngModel]="true" style="color: #000 !important; font-weight: 500; opacity: 1; cursor: default;">Таблицы локализаций созданы в /Localizations</label></li>
+                  <li><label nz-checkbox [ngModel]="true" style="color: #000 !important; font-weight: 500; opacity: 1; cursor: default;">Миграции БД применены</label></li>
+                </ul>
+              </div>
+
+              <div class="feature-item">
+                <h4>2. Repositories (Слой доступа)</h4>
+                <ul class="checklist">
+                  <li><label nz-checkbox [ngModel]="true" style="color: #000 !important; font-weight: 500; opacity: 1; cursor: default;">Репозитории для мастер-сущностей реализованы</label></li>
+                  <li><label nz-checkbox [ngModel]="true" style="color: #000 !important; font-weight: 500; opacity: 1; cursor: default;">UnitOfWork расширен новыми свойствами</label></li>
+                  <li><label nz-checkbox [ngModel]="true" style="color: #000 !important; font-weight: 500; opacity: 1; cursor: default;">DI регистрация в ServiceCollection</label></li>
+                </ul>
+              </div>
+
+              <div class="feature-item">
+                <h4>3. Service Layer (Бизнес-логика)</h4>
+                <ul class="checklist">
+                  <li><label nz-checkbox [ngModel]="true" style="color: #000 !important; font-weight: 500; opacity: 1; cursor: default;">GetPaged с фильтром по PlatformId</label></li>
+                  <li><label nz-checkbox [ngModel]="true" style="color: #000 !important; font-weight: 500; opacity: 1; cursor: default;">Глобальная проверка уникальности Slug</label></li>
+                  <li><label nz-checkbox [ngModel]="true" style="color: #000 !important; font-weight: 500; opacity: 1; cursor: default;">Пересчет TotalDownloads/AverageRating (Aggregation)</label></li>
+                  <li><label nz-checkbox [ngModel]="true" style="color: #000 !important; font-weight: 500; opacity: 1; cursor: default;">Логика Switch Latest для версий</label></li>
+                  <li><label nz-checkbox [ngModel]="true" style="color: #000 !important; font-weight: 500; opacity: 1; cursor: default;">Каскадный Hard Delete</label></li>
+                </ul>
+              </div>
+
+              <div class="feature-item">
+                <h4>4. API Controllers (Эндпоинты)</h4>
+                <ul class="checklist">
+                  <li><label nz-checkbox [ngModel]="true" style="color: #000 !important; font-weight: 500; opacity: 1; cursor: default;">Контроллер ProgramOfAggregator реализован</label></li>
+                  <li><label nz-checkbox [ngModel]="true" style="color: #000 !important; font-weight: 500; opacity: 1; cursor: default;">Поддержка Soft & Hard Delete</label></li>
+                  <li><label nz-checkbox [ngModel]="true" style="color: #000 !important; font-weight: 500; opacity: 1; cursor: default;">Интеграция с MediaController (Иконки/Скриншоты)</label></li>
+                </ul>
+              </div>
+            </div>
+
+          <nz-alert
+            nzType="info"
+            nzMessage="Метод обновления"
+            nzDescription="Данный список будет обновляться ИИ-ассистентом по мере завершения каждого этапа реализации."
+            nzShowIcon
+            style="margin-top: 24px; margin-bottom: 24px;"
+          ></nz-alert>
+
+          <div class="feature-item">
+            <h4>📝 Детальный лог действий (Activity Log)</h4>
+            <div class="activity-log" style="background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; font-family: 'Consolas', monospace; font-size: 13px; max-height: 400px; overflow-y: auto;">
+              <div style="color: #6a9955;">// --- Начало реализации Backend (Aurora v3.5) ---</div>
+              
+              <div style="margin-top: 8px;">
+                <b style="color: #569cd6;">[ШАГ 1: Модели и Контекст]</b><br/>
+                - Проверка DAL\Models\Aggregator\ProgramOfAggregator.cs (OK)<br/>
+                - Проверка DAL\Models\Aggregator\VersionOfAggregator.cs (OK)<br/>
+                - Проверка DAL\AppDbContext.Aggregator.cs (Регистрация DbSet: OK)
+              </div>
+
+              <div style="margin-top: 8px;">
+                <b style="color: #569cd6;">[ШАГ 2: Репозитории - Интерфейсы]</b><br/>
+                - <span style="color: #ce9178;">[NEW]</span> IProgramOfAggregatorRepository.cs -> Создан<br/>
+                - <span style="color: #ce9178;">[NEW]</span> IVersionOfAggregatorRepository.cs -> Создан<br/>
+                - <span style="color: #ce9178;">[NEW]</span> IDownloadLinkOfAggregatorRepository.cs -> Создан<br/>
+                - <span style="color: #ce9178;">[NEW]</span> IAggregatorSourceRepository.cs -> Создан<br/>
+                - <span style="color: #ce9178;">[NEW]</span> IScreenshotOfAggregatorRepository.cs -> Создан<br/>
+                - <span style="color: #ce9178;">[NEW]</span> IVideoOfAggregatorRepository.cs -> Создан<br/>
+                - <span style="color: #ce9178;">[NEW]</span> IDownloadLogOfAggregatorRepository.cs -> Создан
+              </div>
+
+              <div style="margin-top: 8px;">
+                <b style="color: #569cd6;">[ШАГ 3: Репозитории - Реализация]</b><br/>
+                - <span style="color: #ce9178;">[NEW]</span> ProgramOfAggregatorRepository.cs -> Реализован (GetWithDetails, IsSlugUnique)<br/>
+                - <span style="color: #ce9178;">[NEW]</span> VersionOfAggregatorRepository.cs -> Реализован (LatestVersion logic)<br/>
+                - <span style="color: #ce9178;">[NEW]</span> DownloadLinkOfAggregatorRepository.cs -> Реализован<br/>
+                - <span style="color: #ce9178;">[NEW]</span> AggregatorSourceRepository.cs -> Реализован<br/>
+                - <span style="color: #ce9178;">[NEW]</span> ScreenshotOfAggregatorRepository.cs -> Реализован<br/>
+                - <span style="color: #ce9178;">[NEW]</span> VideoOfAggregatorRepository.cs -> Реализован<br/>
+                - <span style="color: #ce9178;">[NEW]</span> DownloadLogOfAggregatorRepository.cs -> Реализован
+              </div>
+
+              <div style="margin-top: 8px;">
+                <b style="color: #569cd6;">[ШАГ 4: Инфраструктура DAL]</b><br/>
+                - <span style="color: #4ec9b0;">[MODIFY]</span> IUnitOfWork.cs -> Добавлены новые репозитории<br/>
+                - <span style="color: #4ec9b0;">[MODIFY]</span> UnitOfWork.cs -> Реализована Lazy инстанциация<br/>
+                - <span style="color: #4ec9b0;">[MODIFY]</span> ServiceCollectionExtensions.cs -> Scoped регистрация завершена
+              </div>
+
+              <div style="margin-top: 8px;">
+                <b style="color: #569cd6;">[ШАГ 5: Сервисный слой - DTO & Maps]</b><br/>
+                - <span style="color: #ce9178;">[NEW]</span> ProgramOfAggregatorDto.cs -> Описаны Item/Detail/Create/Update<br/>
+                - <span style="color: #ce9178;">[NEW]</span> VersionOfAggregatorDto.cs -> Описаны Version/DownloadLink DTOs<br/>
+                - <span style="color: #ce9178;">[NEW]</span> ProgramOfAggregatorProfile.cs -> Настроен AutoMapper<br/>
+                - <span style="color: #ce9178;">[NEW]</span> ProgramOfAggregatorValidators.cs -> FluentValidation правила
+              </div>
+
+              <div style="margin-top: 8px;">
+                <b style="color: #569cd6;">[ШАГ 6: Сервисный слой - Логика]</b><br/>
+                - <span style="color: #ce9178;">[NEW]</span> IProgramOfAggregatorService.cs -> Описан интерфейс (CRUD + Versions)<br/>
+                - <span style="color: #ce9178;">[NEW]</span> ProgramOfAggregatorService.cs -> РЕАЛИЗОВАНО:<br/>
+                &nbsp;&nbsp; * Проверка Slug + Redirects<br/>
+                &nbsp;&nbsp; * Логика переключения Latest Version<br/>
+                &nbsp;&nbsp; * Каскадное удаление (Hard Delete) всех вложенных сущностей<br/>
+                &nbsp;&nbsp; * Синхронизация Тегов и Платформ (Junction tables)<br/>
+                - <span style="color: #4ec9b0;">[FIX]</span> Исправлены ошибки компиляции (Ambiguity, Property Names, Exceptions)
+              </div>
+
+              <div style="margin-top: 8px;">
+                <b style="color: #569cd6;">[ШАГ 7: API Контроллер]</b><br/>
+                - <span style="color: #ce9178;">[NEW]</span> ProgramOfAggregatorController.cs -> Реализованы REST эндпоинты
+              </div>
+
+              <div style="margin-top: 15px; color: #6a9955;">// --- Бекенд полностью готов. Переходим к UI ---</div>
+            </div>
+          </div>
+        </nz-card>
+      </div>
+    </nz-tab>
+
+    <!-- ✅ CHECK FRONT -->
+    <nz-tab nzTitle="✅ Check Front">
+      <div class="help-section">
+        <nz-card nzTitle="Frontend Implementation Progress">
+          <p>Отслеживание реализации клиентской части агрегатора согласно утвержденному плану.</p>
+          
+            <div class="logic-grid">
+              <div class="feature-item">
+                <h4>1. Infrastructure (Инфраструктура)</h4>
+                <ul class="checklist">
+                  <li><label nz-checkbox [ngModel]="true" style="color: #000 !important; font-weight: 500; opacity: 1; cursor: default;">Модели и Интерфейсы DTO созданы</label></li>
+                  <li><label nz-checkbox [ngModel]="true" style="color: #000 !important; font-weight: 500; opacity: 1; cursor: default;">ProgramApiService (REST эндпоинты)</label></li>
+                  <li><label nz-checkbox [ngModel]="true" style="color: #000 !important; font-weight: 500; opacity: 1; cursor: default;">ProgramStateService (Signals, SSOT)</label></li>
+                </ul>
+              </div>
+
+              <div class="feature-item">
+                <h4>2. Manager & Components</h4>
+                <ul class="checklist">
+                  <li><label nz-checkbox [ngModel]="true" style="color: #000 !important; font-weight: 500; opacity: 1; cursor: default;">ProgramManagerComponent (Оркестратор)</label></li>
+                  <li><label nz-checkbox [ngModel]="true" style="color: #000 !important; font-weight: 500; opacity: 1; cursor: default;">Таблица List (AvShowcase style)</label></li>
+                  <li><label nz-checkbox [ngModel]="true" style="color: #000 !important; font-weight: 500; opacity: 1; cursor: default;">Интеграция Search, Pagination, Trash</label></li>
+                  <li><label nz-checkbox [ngModel]="true" style="color: #3b82f6 !important; font-weight: 800; opacity: 1; cursor: default;">Header с «колесиком» и счетчиком</label></li>
+                </ul>
+              </div>
+
+              <div class="feature-item">
+                <h4>3. Tabbed Form (Сложная форма)</h4>
+                <ul class="checklist">
+                  <li><label nz-checkbox [ngModel]="true" style="color: #000 !important; font-weight: 500; opacity: 1; cursor: default;">Вкладка: Основные данные (Slug, Category)</label></li>
+                  <li><label nz-checkbox [ngModel]="true" style="color: #000 !important; font-weight: 500; opacity: 1; cursor: default;">Вкладка: Медиа (Иконки, Скриншоты)</label></li>
+                  <li><label nz-checkbox [ngModel]="true" style="color: #000 !important; font-weight: 500; opacity: 1; cursor: default;">Вкладка: Метаданные (Теги, Платформы)</label></li>
+                  <li><label nz-checkbox [ngModel]="false" style="color: #000 !important; font-weight: 500; opacity: 1; cursor: default;">Вкладка: Управление версиями (Вложенный менеджер)</label></li>
+                </ul>
+              </div>
+
+              <div class="feature-item">
+                <h4>4. Maintenance & Polish</h4>
+                <ul class="checklist">
+                  <li><label nz-checkbox [ngModel]="true" style="color: #000 !important; font-weight: 500; opacity: 1; cursor: default;">Блок обслуживания (Seed/Clear/Read)</label></li>
+                  <li><label nz-checkbox [ngModel]="true" style="color: #000 !important; font-weight: 500; opacity: 1; cursor: default;">Закрепленный Status Bar (v3.5 Style)</label></li>
+                  <li><label nz-checkbox [ngModel]="true" style="color: #000 !important; font-weight: 500; opacity: 1; cursor: default;">Universal Localization интеграция</label></li>
+                  <li><label nz-checkbox [ngModel]="true" style="color: #3b82f6 !important; font-weight: 800; opacity: 1; cursor: default;">✅ ВЫПОЛНЕНО: Базовая верстка и логика БД</label></li>
+                </ul>
+              </div>
+            </div>
+
+          <nz-alert
+            nzType="info"
+            nzMessage="Метод обновления"
+            nzDescription="Данный список будет обновляться ИИ-ассистентом по мере реализации фронтенд-компонентов."
+            nzShowIcon
+            style="margin-top: 24px; margin-bottom: 24px;"
+          ></nz-alert>
+
+          <div class="feature-item">
+            <h4>📝 Детальный лог действий (Activity Log)</h4>
+            <div class="activity-log" style="background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; font-family: 'Consolas', monospace; font-size: 13px; max-height: 400px; overflow-y: auto;">
+              <div style="color: #6a9955;">// --- Начало реализации Frontend (Aurora v3.5) ---</div>
+              
+              <div style="margin-top: 8px;">
+                <b style="color: #569cd6;">[ЭТАП 1: Backend Infrastructure] — ВЫПОЛНЕНО</b><br/>
+                - <span style="color: #ce9178;">[DATABASE]</span> Созданы модели: Program, Version, DownloadLink, Localization, Junction-таблицы.<br/>
+                - <span style="color: #ce9178;">[DATA ACCESS]</span> Репозитории зарегистрированы в UnitOfWork.<br/>
+                - <span style="color: #ce9178;">[SERVICE]</span> ProgramOfAggregatorService -> Реализована логика Slug, переключение Latest Version, каскадное удаление.<br/>
+                - <span style="color: #ce9178;">[API]</span> Создан ProgramOfAggregatorController (CRUD, Restore, Maintenance).<br/>
+                - <span style="color: #52c41a;">[FIX]</span> Исправлены конфликты пространств имен и типизация в маппингах.
+              </div>
+
+              <div style="margin-top: 12px;">
+                <b style="color: #569cd6;">[ЭТАП 2: Frontend Foundation] — ВЫПОЛНЕНО</b><br/>
+                - <span style="color: #4ec9b0;">[MODELS]</span> Создан полный набор DTO интерфейсов для синхронизации с бэкендом.<br/>
+                - <span style="color: #4ec9b0;">[SERVICES]</span> ProgramOfAggregatorApiService & StateService (SSOT паттерн).<br/>
+                - <span style="color: #4ec9b0;">[ROUTING]</span> Модуль зарегистрирован по пути '/agregator/pages/program'.<br/>
+                - Интеграция в основное меню навигации админ-панели.
+              </div>
+
+              <div style="margin-top: 12px;">
+                <b style="color: #569cd6;">[ЭТАП 3: UI Components & Manager] — ВЫПОЛНЕНО</b><br/>
+                - <span style="color: #ce9178;">[NEW]</span> ProgramManagerComponent -> Оркестратор страницы.<br/>
+                - <span style="color: #ce9178;">[NEW]</span> ProgramListComponent -> Таблица с поиском, пагинацией и режимом "Корзина".<br/>
+                - <span style="color: #ce9178;">[NEW]</span> ProgramFormComponent -> Сложная форма (Основные данные, Медиа, Метаданные, Локализация).<br/>
+                - <span style="color: #4ec9b0;">[INTEGRATION]</span> Выбор иконок через модальное окно и поддержка Universal Localization (SEO).<br/>
+                - <span style="color: #52c41a;">[FIX]</span> Устранены ошибки компиляции (Union types в Observable, импорты RxJS).
+              </div>
+
+              <div style="margin-top: 12px;">
+                <b style="color: #569cd6;">[ЭТАП 4: Maintenance & DB Tools] — ВЫПОЛНЕНО</b><br/>
+                - <span style="color: #4ec9b0;">[UI]</span> Добавлен Header с анимированным «колесиком» настроек.<br/>
+                - <span style="color: #4ec9b0;">[LOGIC]</span> Реализован блок обслуживания (ButtonControlJsonBlock).<br/>
+                - <span style="color: #4ec9b0;">[BACKEND]</span> Методы TruncateTable и IMaintenanceSeeder интегрированы в сервис программ.<br/>
+                - <span style="color: #4ec9b0;">[STATUS]</span> Добавлен Sticky Status Bar с информацией о БД и версии.<br/>
+                - <span style="color: #4ec9b0;">[SEED]</span> Создан демонстрационный JSON с набором программ (Chrome, VS Code).
+              </div>
+
+              <div style="margin-top: 15px; padding: 12px; background: #fffbeb; border: 1px solid #fef3c7; border-radius: 6px;">
+                <b style="color: #d97706;">[NEXT STEP]</b><br/>
+                - <span style="color: #b45309;">Перейти к реализации Менеджера версий</span>.<br/>
+                - Это позволит добавлять к программе конкретные релизы и ссылки.
+              </div>
+
+              <div style="margin-top: 15px; color: #ce9178;">// Текущий статус: Базовая функциональность модуля программ (Maintenance + CRUD) полностью готова.</div>
+            </div>
+          </div>
+        </nz-card>
+      </div>
+    </nz-tab>
+
+    <nz-tab nzTitle="📋 Спецификация Aurora v3.5">
+      <div class="help-section">
+        <nz-card nzTitle="Технические стандарты разработки">
+          <p>Все модули агрегатора должны соответствовать следующим стандартам:</p>
+          <div class="logic-grid">
+            <div class="feature-item">
+              <h4>Frontend</h4>
+              <ul>
+                <li>Angular 17+ (Signals).</li>
+                <li>NG-Zorro Ant Design.</li>
+                <li>OnPush Change Detection.</li>
+              </ul>
+            </div>
+            <div class="feature-item">
+              <h4>Backend</h4>
+              <ul>
+                <li>EF Core 8 (SQL Server/PostgreSQL).</li>
+                <li>Repository Pattern.</li>
+                <li>CQRS (MediatR) для сложных выборок.</li>
+              </ul>
+            </div>
+          </div>
+        </nz-card>
+      </div>
+    </nz-tab>
+
+    <nz-tab nzTitle="💾 JSON & Импорт"><div class="help-section"><p>Раздел в разработке...</p></div></nz-tab>
+  </nz-tabset>
+</div>

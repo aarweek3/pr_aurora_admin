@@ -1,6 +1,6 @@
 export enum VersionStatus {
-  Draft = 0,
-  Active = 1,
-  Archive = 2,
-  Deleted = 3
+  Stable = 0,
+  Beta = 1,
+  Alpha = 2,
+  Lts = 3
 }

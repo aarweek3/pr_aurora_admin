@@ -393,4 +393,4 @@ export class LoggerConsoleService {
 }
 
 // Импорт в конце файла для использования в Injector.get(AuthService)
-import { AuthService } from '../../../auth/services/auth.service';
+import { AuthService } from '@auth';

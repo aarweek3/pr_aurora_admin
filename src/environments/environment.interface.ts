@@ -57,4 +57,9 @@ export interface Environment {
     sentryDsn: string;
     mixpanelToken: string;
   };
+
+  help: {
+    storagePath: string; // Физический путь для сохранения через API (бэкенд должен знать его)
+    assetsPath: string;  // Виртуальный путь для HttpClient
+  };
 }

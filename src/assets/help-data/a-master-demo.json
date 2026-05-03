@@ -1,0 +1,123 @@
+{
+  "helpId": "a-master-demo",
+  "title": "Универсальный эталон справки (Aurora v3.5)",
+  "subtitle": "Максимальный технический шаблон для создания документации новых модулей",
+  "icon": "rocket",
+  "width": 1250,
+  "reference": [
+    {
+      "id": "ref-integration",
+      "title": "🔌 1. Подключение в коде",
+      "content": "<h3>Как вызвать справку из компонента</h3><p>Чтобы быстро вызвать справку из любой части программы, используйте следующий кусок кода в вашем компоненте:</p><h4>TypeScript:</h4><pre><code>private modal = inject(NzModalService);\nprivate http = inject(HttpClient);\n\nopenHelp() {\n  this.http.get('assets/help-data/[File-Name].json').subscribe((data: any) => {\n    this.modal.create({\n      nzTitle: undefined,\n      nzContent: HelpUniversalModalComponent,\n      nzData: { ...data, initialMode: 'view' },\n      nzFooter: null,\n      nzWidth: data.width || 1200,\n      nzCentered: true\n    });\n  });\n}</code></pre><h4>HTML:</h4><pre><code>&lt;button nz-button (click)=\"openHelp()\"&gt;\n  &lt;span nz-icon nzType=\"question-circle\"&gt;&lt;/span&gt;\n&lt;/button&gt;</code></pre>",
+      "type": "info"
+    },
+    {
+      "id": "ref-json-structure",
+      "title": "📄 2. Структура JSON",
+      "content": "<h3>Анатомия справочного файла</h3><p>Чтобы система корректно отобразила вашу справку, файл должен соответствовать следующей структуре. Вы можете использовать это как стартовый шаблон:</p><pre><code>{\n  \"helpId\": \"id-файла\",\n  \"title\": \"Главный заголовок\",\n  \"subtitle\": \"Подзаголовок модуля\",\n  \"reference\": [\n    {\n      \"id\": \"r1\",\n      \"title\": \"Общая справка\",\n      \"content\": \"Этот текст виден сразу после открытия...\",\n      \"type\": \"standard\"\n    }\n  ],\n  \"blocks-main\": [\n    {\n      \"id\": \"b1\",\n      \"title\": \"Дополнительный блок\",\n      \"content\": \"Этот контент скрыт за иконкой 'Глаз'...\",\n      \"type\": \"info\"\n    }\n  ]\n}</code></pre><p>💡 <strong>Совет:</strong> Чтобы структурировать большие объемы данных, используйте списки <code>blocks-main</code>, <code>blocks-front</code> и <code>blocks-server</code> — они автоматически группируются в интерфейсе.</p>",
+      "type": "standard"
+    },
+    {
+      "id": "ref-standard",
+      "title": "📘 2. Стандарт документации",
+      "content": "<p>Данный файл является <strong>Золотым Эталоном (Golden Sample)</strong>. При создании документации для любого нового модуля необходимо копировать структуру этого файла.</p><p><strong>Критическое требование:</strong> Документация должна быть технически глубокой. Проще удалить лишний пункт, чем забыть реализовать важную системную механику (например, Lazy Tabs или Challenge Modal).</p>",
+      "type": "standard"
+    },
+    {
+      "id": "ref-philosophy",
+      "title": "🎨 3. Философия Aurora Design",
+      "content": "<p>Мы используем паттерн <strong>\"Information Density & Clarity\"</strong>. Интерфейс должен быть плотным, но читаемым. Цветовая кодировка действий в системе:</p><table><thead><tr><th>Тип блока</th><th>Цвет</th><th>Смысловая нагрузка</th></tr></thead><tbody><tr><td><code>standard</code></td><td>Синий</td><td>Базовая информация и просмотр данных</td></tr><tr><td><code>info</code></td><td>Голубой</td><td>Архитектурные пояснения и советы</td></tr><tr><td><code>warning</code></td><td>Желтый</td><td>Диагностика и инструменты обслуживания</td></tr><tr><td><code>danger</code></td><td>Красный</td><td>Контракты ошибок и необратимые действия</td></tr></tbody></table>",
+      "type": "standard"
+    },
+    {
+      "id": "ref-l10n",
+      "title": "🌍 4. Локализация и Fallback",
+      "content": "<h3>Механизм English Fallback (Aurora v3.5 Standard)</h3><p>Система Aurora v3.5 минимизирует рутинную работу по заполнению переводов. Если пользователь не заполнил вкладку другого языка, данные будут автоматически подтянуты из эталонной английской версии.</p><h4>Приоритеты Fallback:</h4><ol><li>Значение в текущей вкладке.</li><li>Значение из вкладки en-US.</li><li>Значение из поля Техническое название.</li></ol><h4>TypeScript Logic:</h4><pre><code>applyEnglishFallbacks(localizations: any[], technicalName: string): any[] {\n  const enLocale = localizations.find(l =&gt; l.languageCode === 'en-US');\n  return localizations.map(loc =&gt; ({\n    ...loc,\n    name: loc.name || enLocale?.name || technicalName,\n    description: loc.description || enLocale?.description,\n    metaTitle: loc.metaTitle || enLocale?.metaTitle,\n    metaDescription: loc.metaDescription || enLocale?.metaDescription\n  }));\n}</code></pre>",
+      "type": "standard"
+    },
+    {
+      "id": "ref-ui-construction",
+      "title": "🖼️ 5. UI КОМПОНЕТА (Построение интерфейса)",
+      "content": "<h3>Архитектура пользовательского интерфейса</h3>\n<p>Интерфейс строится по модульному принципу в стиле <em>Aurora Control</em>. Основная цель &mdash; обеспечить высокую плотность данных при сохранении визуальной чистоты.</p>\n<h4>1. Основной оркестратор (Manager)</h4>\n<p>Компонент <code>[Entity]ManagerComponent</code> управляет общим состоянием страницы, переключением режимов отображения и блоком обслуживания.</p>\n<p><img src=\"assets/help-data/imeges/form/01-главная.webp\" alt=\"Главный экран\" style=\"width: 100%; border-radius: 8px; margin-bottom: 10px; border: 1px solid #ddd;\"></p>\n<h4>1.5 Блок обслуживания (Maintenance)</h4>\n<p><strong>Архитектурное решение:</strong> Блок реализован как отдельный переиспользуемый компонент <code>ButtonControlJsonBlockComponent</code> (путь: <code>@shared/controls/button-control-json-block</code>). Это позволяет унифицировать инструменты обслуживания во всех справочниках системы.</p>\n<p><strong>Механика подключения:</strong></p>\n<ul>\n<li><strong>Триггер:</strong> Кнопка-шестеренка в заголовке управляет флагом <code>showMaintenance</code>.</li>\n<li><strong>Визуальная связь:</strong> Иконка имеет привязку <code>[nzSpin]=\"showMaintenance\"</code>.</li>\n<li><strong>Условный рендеринг:</strong> Панель вставляется через <code>*ngIf=\"showMaintenance\"</code>.</li>\n</ul>\n<p><strong>Функциональные кнопки:</strong></p>\n<ul>\n<li><strong>Очистить БД (Красная):</strong> Полное удаление всех записей. Используется <code>modal.challenge</code> (математическая капча).</li>\n<li><strong>Перезаписать из JSON (Синяя):</strong> Заполнение БД эталонными данными из JSON-файла на сервере.</li>\n</ul>\n<h4>3. Список и Поиск</h4>\n<p><strong>Механика взаимодействия:</strong></p>\n<ol>\n<li>Пользователь вводит текст в <code>av-search</code>.</li>\n<li>Список обновляет сигнал поиска в <code>StateService</code> через <code>state.setSearch(term)</code>.</li>\n<li>Стейт-сервис автоматически инициирует новый запрос к API, сбрасывая пагинацию.</li>\n</ol>\n<p><strong>Переключатель «КОРЗИНА» (Trash Toggle):</strong></p>\n<ul>\n<li><strong>Логика:</strong> Управляет сигналом <code>showDeleted</code>. API получает параметр <code>showDeleted=true</code>.</li>\n<li><strong>Визуальная индикация:</strong> Появляется предупреждающая плашка (nz-alert).</li>\n<li><strong>Смена контекста действий:</strong> Кнопки заменяются на <strong>Восстановить</strong> (undo) и <strong>Удалить навсегда</strong> (fire).</li>\n</ul>\n<h4>4. Табуляция и Форма</h4>\n<p><strong>Оптимизация производительности:</strong></p>\n<ul>\n<li><strong>Ленивые вкладки (Lazy Loading):</strong> Используется <code>nz-tabset</code> в сочетании с <code>ng-template nz-tab</code>. Контент инициализируется только при первом переключении.</li>\n</ul>\n<p><strong>Логика маппинга данных (Data Flow):</strong></p>\n<ul>\n<li><strong>Вложенность SEO:</strong> Внутри локализации работает <code>app-seo-form</code>. SEO-данные хранятся во вложенной группе <code>seoData</code>.</li>\n<li><strong>Трансформация (Flattening):</strong> Перед отправкой на сервер вложенный объект разворачивается в плоские поля (metaTitle, metaDescription).</li>\n</ul>",
+      "type": "standard"
+    }
+  ],
+  "blocks-main": [
+    {
+      "id": "master-roadmap",
+      "title": "🚀 Roadmap: Как собрать такой модуль с нуля?",
+      "content": "<h3>Как собрать такой модуль с нуля? (Пошаговый план)</h3><h4>Карта Бэкенд-модуля (DAL & API)</h4><pre><code>[DAL] Слой доступа к данным\n├── 📂 Models/Aggregator/\n│ ├── 📄 [Entity].cs\n│ └── 📄 Localizations/[Entity]Localization.cs\n├── 📂 Repositories/\n│ ├── 📄 [Entity]Repository.cs\n│ └── 📄 Interfaces/I[Entity]Repository.cs\n├── 📄 AppDbContext.Aggregator.cs\n└── 📄 AggregatorModelConfiguration.cs\n\n[API] Слой логики и сервисов\n├── 📂 Controllers/\n│ └── 📄 [Entity]Controller.cs\n└── 📂 Pages/AGGREGATOR/[Entity]/\n├── 📂 Dtos/[Entity]Dto.cs\n├── 📂 Interfaces/I[Entity]Service.cs\n├── 📂 Services/[Entity]Service.cs\n├── 📂 Mappings/[Entity]Profile.cs\n├── 📂 Validators/[Entity]Validators.cs\n└── 📂 Jsons/[Entity].json</code></pre><h4>Шаги 1-13 (Полный цикл):</h4><ol><li><strong>Entity & Migrations:</strong> Создание моделей в DAL.</li><li><strong>Repositories:</strong> Реализация IRepository.</li><li><strong>UnitOfWork:</strong> Регистрация новой сущности.</li><li><strong>Services & API:</strong> Реализация бизнес-логики и контроллера.</li><li><strong>Frontend Infra:</strong> Создание API-сервиса и State-сервиса.</li><li><strong>UI Manager:</strong> Оркестратор страницы.</li><li><strong>UI List & Table:</strong> Отображение данных и пагинация.</li><li><strong>UI Form:</strong> Форма создания/редактирования с поддержкой SEO.</li><li><strong>Logic: Soft Delete:</strong> Реализация корзины.</li><li><strong>Logic: Hard Delete:</strong> Физическое удаление с капчей.</li><li><strong>Logic: Media:</strong> Интеграция иконок с шардированием.</li><li><strong>Logic: Search:</strong> Реактивный поиск по Name/SystemCode.</li><li><strong>Final: Routing:</strong> Интеграция в общую навигацию.</li></ol>",
+      "type": "standard"
+    },
+    {
+      "id": "db-structure-template",
+      "title": "💾 Структура БД (Эталон)",
+      "content": "<h4>Core Entity ([Entity])</h4><table><thead><tr><th>Поле</th><th>Тип</th><th>Описание</th></tr></thead><tbody><tr><td>Id</td><td>int</td><td>Первичный ключ (Identity)</td></tr><tr><td>Name</td><td>string(200)</td><td>Техническое название (Обязательное). Fallback для локализаций.</td></tr><tr><td>SystemCode</td><td>string(150)</td><td>Уникальный системный код (Slug). Обязательно для URL.</td></tr><tr><td>IsActive</td><td>bool</td><td>Флаг активности записи.</td></tr><tr><td>SortOrder</td><td>int</td><td>Приоритет ручной сортировки.</td></tr></tbody></table><h4>Localization ([Entity]Localization)</h4><table><thead><tr><th>Поле</th><th>Тип</th><th>Описание</th></tr></thead><tbody><tr><td>[Entity]Id</td><td>int</td><td>Внешний ключ (FK) на родителя.</td></tr><tr><td>LanguageId</td><td>int</td><td>Внешний ключ (FK) на справочник языков.</td></tr><tr><td>Name</td><td>string(200)</td><td>Локализованное отображаемое имя.</td></tr><tr><td>Description</td><td>string?</td><td>Развернутое описание (HTML).</td></tr><tr><td>MetaTitle</td><td>string?</td><td>SEO-заголовок страницы (Title).</td></tr><tr><td>MetaDescription</td><td>string?</td><td>SEO-описание страницы (Description).</td></tr></tbody></table>",
+      "type": "standard"
+    },
+    {
+      "id": "json-samples-template",
+      "title": "🔄 JSON-схемы (Request/Response)",
+      "content": "<h4>Response: GetById (Полный объект)</h4><pre><code>{\n  \"id\": 1,\n  \"name\": \"Example\",\n  \"systemCode\": \"example\",\n  \"isActive\": true,\n  \"localizations\": [\n    {\n      \"languageId\": 1,\n      \"languageCode\": \"en-US\",\n      \"name\": \"Example Display Name\",\n      \"description\": \"&lt;p&gt;HTML content...&lt;/p&gt;\",\n      \"metaTitle\": \"SEO Title\",\n      \"metaDescription\": \"SEO Description\"\n    }\n  ]\n}</code></pre><h4>Request: Create / Update (DTO)</h4><pre><code>{\n  \"name\": \"Example\",\n  \"systemCode\": \"example\",\n  \"isActive\": true,\n  \"localizations\": [\n    {\n      \"languageId\": 1,\n      \"name\": \"Example\",\n      \"description\": \"...\"\n    }\n  ]\n}</code></pre>",
+      "type": "standard"
+    }
+  ],
+  "blocks-front": [
+    {
+      "id": "check-front-master",
+      "title": "✅ Check Front: Progress Tracking",
+      "content": "<h3>Индикаторы реализации (Клиент)</h3><h4>1. Infrastructure</h4><ul><li>[x] Models / Interfaces DTO</li><li>[x] ApiService (REST эндпоинты)</li><li>[x] StateService (Signals, SSOT)</li></ul><h4>2. Components</h4><ul><li>[x] Manager (Orchestrator)</li><li>[x] Таблица List (AvShowcase style)</li><li>[x] Header: базовая структура с Pill-toggle корзины</li></ul><h4>3. Tabbed Form</h4><ul><li>[x] Вкладка: Основные данные (Slug, Category)</li><li>[x] Вкладка: Медиа (Иконки / Шардирование)</li><li>[x] Вкладка: SEO (SeoFormComponent интеграция)</li></ul><h4>4. Quality & Compliance (v3.5)</h4><ul><li>[ ] Skeleton Loading (nz-skeleton) при Items.length === 0</li><li>[ ] Lazy Tabs для локализации (ng-template)</li><li>[ ] Actions: Hard Delete с modal.challenge</li><li>[ ] Pill Active State: смена цветов при активации корзины</li><li>[ ] AutoMapper-маппинг плоских SEO полей</li></ul>",
+      "type": "standard"
+    },
+    {
+      "id": "front-search-standard",
+      "title": "🔍 Поиск: Стандарт Hero",
+      "content": "<ul><li><strong>Debounce:</strong> 300ms (реактивный).</li><li><strong>Two-way Signals:</strong> Использование <code>model signal</code> для синхронизации.</li><li><strong>Reset:</strong> Пагинация сбрасывается на 1 при любом изменении фильтра.</li></ul>",
+      "type": "standard"
+    },
+    {
+      "id": "frontend-actions-template",
+      "title": "🛠️ Логика Actions и паттерны UI",
+      "content": "<table><thead><tr><th>Действие</th><th>Иконка</th><th>Цвет</th><th>Метод State</th><th>Механика UX</th></tr></thead><tbody><tr><td>Просмотр</td><td>eye</td><td>Primary</td><td>openView()</td><td>Modal Read-only</td></tr><tr><td>Редактировать</td><td>edit</td><td>Warning</td><td>updateState()</td><td>Modal Form</td></tr><tr><td>В корзину</td><td>rest</td><td>Error</td><td>delete()</td><td>Soft Delete (confirm)</td></tr><tr><td>Восстановить</td><td>undo</td><td>Success</td><td>restore()</td><td>Возврат из корзины</td></tr><tr><td>Hard Delete</td><td>fire</td><td>Critical</td><td>hardDelete()</td><td>Метод modal.challenge</td></tr></tbody></table><h4>Пример реализации (TS):</h4><pre><code>async onHardDelete(id: number): Promise&lt;void&gt; {\n  const confirmed = await this.modalService.challenge(\n    'ВНИМАНИЕ: Это действие безвозвратно удалит запись.',\n    '2 + 2 = ?',\n    '4',\n    'Удалить навсегда'\n  );\n  if (confirmed) this.state.hardDelete(id);\n}</code></pre>",
+      "type": "standard"
+    },
+    {
+      "id": "front-diagnostics",
+      "title": "⚠️ Диагностика (Frontend Troubleshooting)",
+      "content": "<ul><li><strong>Пустая форма:</strong> Проверь инициализацию языков в <code>LanguageService</code>.</li><li><strong>404 на медиа:</strong> Проверь корректность GetShard логики.</li><li><strong>Save Error:</strong> Проверь соответствие DTO на бэкенде.</li></ul>",
+      "type": "warning"
+    }
+  ],
+  "blocks-server": [
+    {
+      "id": "check-back-master",
+      "title": "✅ Check Back: Progress Tracking",
+      "content": "<h3>Индикаторы реализации (Сервер)</h3><h4>1. DAL & Repositories</h4><ul><li>[x] Entities Core/L10n сконфигурированы</li><li>[x] Таблицы локализаций в /Localizations</li><li>[x] Миграции БД применены</li></ul><h4>2. Service Layer</h4><ul><li>[x] GetPaged (Search + IsDeleted filter)</li><li>[x] Slug Uniqueness Guard</li><li>[ ] Пересчет статистики (Aggregation Logic)</li><li>[ ] Каскадный Hard Delete (File + DB)</li></ul><h4>3. API Controllers</h4><ul><li>[x] Controller реализован (v1)</li><li>[x] Поддержка Soft & Hard Delete</li><li>[x] Интеграция с MediaController (Шардирование)</li></ul>",
+      "type": "standard"
+    },
+    {
+      "id": "backend-cascade-hard-delete-template",
+      "title": "⚙️ Каскадный Hard Delete (Спецификация)",
+      "content": "<h3>Логика безвозвратного удаления (Hard Delete)</h3><p>Метод Hard Delete полностью очищает базу данных и файловую систему от упоминаний объекта.</p><h4>Алгоритм реализации (C# Service):</h4><ol><li><strong>Удаление локализаций:</strong> Удаляются связанные записи из таблицы <code>localizations</code>.</li><li><strong>Физическое удаление файла:</strong> Если есть <code>Path</code>, удаляем файл с диска.</li><li><strong>Удаление основной записи:</strong> В последнюю очередь удаляется сама сущность.</li></ol><h4>Пример реализации:</h4><pre><code>public async Task HardDeleteAsync(int id)\n{\n    var entity = await _repository.GetByIdAsync(id);\n    if (entity == null) return;\n    if (!string.IsNullOrEmpty(entity.Path)) _fileService.Delete(entity.Path);\n    await _repository.HardDeleteAsync(entity);\n    await _uow.SaveChangesAsync();\n}</code></pre>",
+      "type": "danger"
+    },
+    {
+      "id": "api-error-contract",
+      "title": "🚫 Контракт ошибок (ProblemDetails RFC 7807)",
+      "content": "<h3>Стандарт обработки ошибок</h3><ul><li><strong>400 Bad Request:</strong> Ошибка валидации (ValidationErrors dictionary).</li><li><strong>404 Not Found:</strong> Запись отсутствует.</li><li><strong>409 Conflict:</strong> Дублирование Slug или Seed в непустую БД.</li></ul><pre><code>{\n  \"title\": \"Validation Error\",\n  \"status\": 400,\n  \"errors\": { \"SystemCode\": [\"Already exists\"] }\n}</code></pre>",
+      "type": "danger"
+    },
+    {
+      "id": "media-storage-spec",
+      "title": "🖼️ Медиа: Алфавитное шардирование",
+      "content": "<p>Путь: <code>uploads/{folder}/{shard}/{filename}</code></p><h4>C# GetShard Logic:</h4><pre><code>private string GetShard(string filename) {\n  char first = char.ToLower(filename[0]);\n  return (first &gt;= 'a' &amp;&amp; first &lt;= 'z') ? first.ToString() : \"0\";\n}</code></pre>",
+      "type": "standard"
+    },
+    {
+      "id": "server-maintenance-template",
+      "title": "🛠️ Обслуживание и Сидинг (Maintenance)",
+      "content": "<h3>Инструменты обслуживания</h3><ul><li><strong>Clear Database:</strong> Удаляет все записи. Требует <code>modal.challenge</code>.</li><li><strong>Seed from JSON:</strong> Загружает эталонные данные из <code>Jsons/[Entity].json</code>.</li></ul><h4>Бизнес-логика защиты:</h4><p>Если <code>count &gt; 0</code>, API возвращает <code>409 Conflict</code>. Это предотвращает случайное дублирование данных при повторном сидинге.</p>",
+      "type": "warning"
+    }
+  ]
+}

@@ -1,18 +1,21 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, inject, effect, ChangeDetectionStrategy, signal } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { ChangeDetectionStrategy, Component, OnInit, effect, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { RouterModule, Router, ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { HelpUniversalModalComponent } from '@shared/components/help-universal-modal/help-universal-modal.component';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
 import { NzRadioModule } from 'ng-zorro-antd/radio';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 
+import { ModalService } from '@shared/components/ui/modal/services/modal.service';
 import { ButtonControlJsonBlockComponent } from '@shared/controls/button-control-json-block/button-control-json-block.component';
 import { DeveloperOfAggregatorListComponent } from './components/developer-of-aggregator-list/developer-of-aggregator-list.component';
 import { DeveloperOfAggregatorModalComponent } from './components/developer-of-aggregator-modal/developer-of-aggregator-modal.component';
 import { DeveloperOfAggregatorViewModalComponent } from './components/developer-of-aggregator-view-modal/developer-of-aggregator-view-modal.component';
 import { DeveloperOfAggregatorStateService } from './services/developer-of-aggregator-state.service';
-import { ModalService } from '@shared/components/ui/modal/services/modal.service';
 
 @Component({
   selector: 'app-developer-of-aggregator-manager',
@@ -26,6 +29,7 @@ import { ModalService } from '@shared/components/ui/modal/services/modal.service
     NzButtonModule,
     NzIconModule,
     NzToolTipModule,
+    NzModalModule,
     DeveloperOfAggregatorListComponent,
     DeveloperOfAggregatorModalComponent,
     DeveloperOfAggregatorViewModalComponent,
@@ -56,6 +60,17 @@ import { ModalService } from '@shared/components/ui/modal/services/modal.service
             </div>
             <p class="subtitle">
               Справочник вендоров и создателей ПО (Aurora v3.5 Reference)
+              <button
+                nz-button
+                nzType="text"
+                nzShape="circle"
+                class="help-btn-inline"
+                (click)="openHelp()"
+                nz-tooltip
+                nzTooltipTitle="Открыть справку модуля"
+              >
+                <i nz-icon nzType="question-circle" nzTheme="outline"></i>
+              </button>
               <span class="count-badge" *ngIf="state.total() !== null">
                 — Всего: <b>{{ state.total() }}</b>
               </span>
@@ -69,11 +84,7 @@ import { ModalService } from '@shared/components/ui/modal/services/modal.service
             </nz-radio-group>
 
             <ng-container *ngIf="!state.showDeleted()">
-               <button 
-                nz-button 
-                nzType="primary" 
-                (click)="handleAdd()"
-              >
+              <button nz-button nzType="primary" (click)="handleAdd()">
                 <i nz-icon nzType="plus"></i>
                 Добавить разработчика
               </button>
@@ -126,9 +137,7 @@ import { ModalService } from '@shared/components/ui/modal/services/modal.service
           <span class="status-item" *ngIf="state.loading()">
             <i nz-icon nzType="loading"></i> Обновление...
           </span>
-          <span class="status-item version-tag">
-            v3.5.0
-          </span>
+          <span class="status-item version-tag"> v3.5.0 </span>
         </div>
       </div>
     </div>
@@ -138,6 +147,8 @@ import { ModalService } from '@shared/components/ui/modal/services/modal.service
 export class DeveloperOfAggregatorManagerComponent implements OnInit {
   state = inject(DeveloperOfAggregatorStateService);
   private modalService = inject(ModalService);
+  private nzModal = inject(NzModalService);
+  private http = inject(HttpClient);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
 
@@ -158,6 +169,23 @@ export class DeveloperOfAggregatorManagerComponent implements OnInit {
     this.state.loadItems();
   }
 
+  openHelp(): void {
+    this.http.get('assets/help-data/developer-of-aggregator-help.json').subscribe((data: any) => {
+      this.nzModal.create({
+        nzTitle: undefined,
+        nzContent: HelpUniversalModalComponent,
+        nzData: {
+          ...data,
+          initialMode: 'view',
+        },
+        nzFooter: null,
+        nzWidth: data.width || 1200,
+        nzCentered: true,
+        nzClassName: 'aurora-modal-glass',
+      });
+    });
+  }
+
   handleAdd(): void {
     if (this.viewMode() === 'page') {
       this.router.navigate(['new'], { relativeTo: this.route });
@@ -167,7 +195,7 @@ export class DeveloperOfAggregatorManagerComponent implements OnInit {
   }
 
   onAdd(): void {
-    this.state.openAddModal(() => this.isModalVisible = true);
+    this.state.openAddModal(() => (this.isModalVisible = true));
   }
 
   closeModal(): void {
@@ -183,7 +211,7 @@ export class DeveloperOfAggregatorManagerComponent implements OnInit {
       cancelText: 'Нет',
       confirmType: 'primary',
       centered: true,
-      icon: 'system/av_info'
+      icon: 'system/av_info',
     });
 
     if (confirmed) {
@@ -200,7 +228,7 @@ export class DeveloperOfAggregatorManagerComponent implements OnInit {
       'Вы действительно хотите СТЕРЕТЬ ВСЕ ДАННЫЕ из таблицы разработчиков?',
       '2 + 2 * 2 = ?',
       '6',
-      'Критическое действие'
+      'Критическое действие',
     );
 
     if (confirmed) {

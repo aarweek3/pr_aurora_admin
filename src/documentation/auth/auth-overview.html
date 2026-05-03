@@ -1,0 +1,24 @@
+<div class="auth-overview-container">
+    <div style="background: #fffbe6; padding: 24px; border-radius: 8px; border: 1px solid #ffe58f; margin-bottom: 24px;">
+        <h2 style="color: #faad14; margin: 0;"><span nz-icon nzType="info-circle"></span> Общий обзор системы</h2>
+        <p style="margin: 8px 0 0 0; color: #595959;">Текущая архитектура безопасности Aurora v3.5.</p>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+        <div style="background: #fafafa; padding: 20px; border-radius: 8px; border: 1px solid #f0f0f0;">
+            <h3 style="color: #1890ff;">Принципы</h3>
+            <ul>
+                <li><strong>HttpOnly Cookies</strong> для хранения токенов.</li>
+                <li><strong>JWT</strong> для аутентификации запросов.</li>
+                <li><strong>Identity</strong> для управления пользователями.</li>
+            </ul>
+        </div>
+        <div style="background: #fafafa; padding: 20px; border-radius: 8px; border: 1px solid #f0f0f0;">
+            <h3 style="color: #52c41a;">Статус</h3>
+            <p>Система стабильна, используется во всех модулях админ-панели. Готова к разделению на независимые сервисы.</p>
+        </div>
+    </div>
+
+    <h3 style="margin-top: 30px;">Схема взаимодействия</h3>
+    <p>Взаимодействие между Angular и ASP.NET Core происходит через защищенный канал с автоматическим продлением сессии.</p>
+</div>

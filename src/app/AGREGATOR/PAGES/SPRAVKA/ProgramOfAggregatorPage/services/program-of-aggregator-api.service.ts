@@ -59,8 +59,16 @@ export class ProgramOfAggregatorApiService {
     return this.http.post<void>(`${this.baseUrl}/${id}/restore`, {});
   }
 
-  seedFromJson(): Observable<any> {
-    return this.http.post<any>(`${this.baseUrl}/maintenance/seed`, {});
+  seedFromJson(): Observable<{ count: number }> {
+    return this.http.post<{ count: number }>(`${this.baseUrl}/seed-from-json`, {});
+  }
+
+  syncIcons(): Observable<{ count: number }> {
+    return this.http.post<{ count: number }>(`${this.baseUrl}/sync-icons`, {});
+  }
+
+  syncScreenshots(): Observable<{ count: number }> {
+    return this.http.post<{ count: number }>(`${this.baseUrl}/sync-screenshots`, {});
   }
 
   clearDatabase(): Observable<void> {

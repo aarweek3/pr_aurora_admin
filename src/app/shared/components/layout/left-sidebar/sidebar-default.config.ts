@@ -38,6 +38,16 @@ export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
               route: '/admin/roles',
             },
             {
+              id: 'dictionary-seeding',
+              icon: 'cloud-upload',
+              label: 'Наполнение справочников',
+              route: '/admin/dictionary-seeding',
+              badge: {
+                value: 'New',
+                intent: 'info',
+              },
+            },
+            {
               id: 'auth-control',
               icon: 'security-scan',
               label: 'Auth Control',
@@ -499,6 +509,18 @@ export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
               route: '/test/image-uni',
               icon: 'picture',
             },
+            {
+              id: 'test-rating',
+              label: 'Test Rating ⭐',
+              route: '/test/rating',
+              icon: 'star',
+            },
+            {
+              id: 'test-help-universal',
+              label: 'Help Universal 📘',
+              route: '/test/help-universal',
+              icon: 'question-circle',
+            },
           ],
         },
       ],
@@ -531,6 +553,12 @@ export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
                   label: 'Операционные системы',
                   route: '/agregator/references/os',
                   icon: 'windows',
+                },
+                {
+                  id: 'agregator-ref-os-versions',
+                  label: 'Версии ОС',
+                  route: '/agregator/references/os-versions',
+                  icon: 'ordered-list',
                 },
                 {
                   id: 'agregator-ref-developer',
@@ -601,6 +629,13 @@ export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
           type: 'submenu',
           submenu: [
             {
+              id: 'help-management',
+              label: 'Создание справки 🛠️',
+              route: '/help/management',
+              icon: 'plus-circle',
+              intent: 'success',
+            },
+            {
               id: 'help-base-group',
               label: 'База и Стандарты',
               icon: 'book',
@@ -629,6 +664,18 @@ export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
                   label: 'Обработка ошибок ⚠️',
                   route: '/help/error-handling',
                   icon: 'warning',
+                },
+                {
+                  id: 'sidebar-auth-help',
+                  label: 'Авторизация и Безопасность 🔐',
+                  route: '/help/auth-guide',
+                  icon: 'safety',
+                },
+                {
+                  id: 'sidebar-auth-standard-plan',
+                  label: 'Авторизация Технический Стандарт 📋',
+                  route: '/help/auth-standard-plan',
+                  icon: 'project',
                 },
               ],
             },
@@ -680,6 +727,18 @@ export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
                   route: '/help/program-aggregator',
                   icon: 'appstore',
                 },
+                {
+                  id: 'sidebar-program-add-guide',
+                  label: 'Программы Add Агрегатора ➕',
+                  route: '/help/program-add',
+                  icon: 'plus-circle',
+                },
+                {
+                  id: 'sidebar-version-spec-help',
+                  label: 'Версии спецификация ⚙️',
+                  route: '/help/version-spec',
+                  icon: 'profile',
+                },
               ],
             },
             {
@@ -719,6 +778,12 @@ export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
                   label: 'Модальное окно',
                   route: '/help/modal-window',
                   icon: 'layout',
+                },
+                {
+                  id: 'sidebar-rating-guide',
+                  label: 'Рейтинг (Звезды) ⭐',
+                  route: '/help/rating',
+                  icon: 'star',
                 },
                 {
                   id: 'sidebar-buttons-guide',

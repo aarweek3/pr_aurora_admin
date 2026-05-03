@@ -8,7 +8,7 @@ export const PROGRAM_OF_AGGREGATOR_ROUTES: Routes = [
   },
   {
     path: 'new',
-    loadComponent: () => import('./components/program-form/program-form.component').then(m => m.ProgramFormComponent),
+    loadComponent: () => import('./components/program-add-wizard/program-add-wizard.component').then(m => m.ProgramAddWizardComponent),
     data: { title: 'Добавить программу' }
   },
   {

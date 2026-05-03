@@ -59,4 +59,9 @@ export const environment: Environment = {
     sentryDsn: '',
     mixpanelToken: '',
   },
+
+  help: {
+    storagePath: 'src/assets/help-data',
+    assetsPath: 'assets/help-data'
+  }
 };

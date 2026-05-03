@@ -125,8 +125,10 @@ export class ApiEndpoints {
     SAVE_TO_DISK: `${this.BASE_URL}/Icons/save-to-disk`,
     CREATE_DIRECTORY: (path: string) => `${this.BASE_URL}/Icons/create-directory?path=${encodeURIComponent(path)}`,
     OPEN_FILE: (path: string) => `${this.BASE_URL}/Icons/open-file?path=${encodeURIComponent(path)}`,
+    READ_FILE: (path: string) => `${this.BASE_URL}/Icons/read-file?path=${encodeURIComponent(path)}`,
     DELETE: (type: string, b: boolean, f: boolean) =>
       `${this.BASE_URL}/Icons/delete?iconType=${type}&fromBackend=${b}&fromFrontend=${f}`,
+    RENAME_FILE: `${this.BASE_URL}/Icons/rename-file`,
   };
 
   // Language App endpoints

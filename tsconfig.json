@@ -38,6 +38,30 @@
       "@environments/*": [
         "./src/environments/*"
       ],
+      "@auth": [
+        "./src/app/authorization/index.ts"
+      ],
+      "@auth/services/*": [
+        "./src/app/authorization/core/services/*"
+      ],
+      "@auth/models": [
+        "./src/app/authorization/core/models/index.ts"
+      ],
+      "@auth/models/*": [
+        "./src/app/authorization/core/models/*"
+      ],
+      "@auth/guards/*": [
+        "./src/app/authorization/core/guards/*"
+      ],
+      "@auth/interceptors/*": [
+        "./src/app/authorization/core/interceptors/*"
+      ],
+      "@auth/enums/*": [
+        "./src/app/authorization/core/enums/*"
+      ],
+      "@auth/*": [
+        "./src/app/authorization/*"
+      ],
       "@assets/*": [
         "./src/assets/*"
       ],

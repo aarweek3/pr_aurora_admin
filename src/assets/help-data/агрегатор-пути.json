@@ -1,0 +1,50 @@
+﻿{
+  "helpId": "агрегатор-пути",
+  "initialMode": "view",
+  "title": "Реестр файлов модуля",
+  "subtitle": "ProgramOfAggregator (v3.5 Architecture)",
+  "icon": "📦",
+  "reference": [
+    {
+      "id": "intro",
+      "title": "📦 ПОЛНЫЙ СПИСОК ФАЙЛОВ ПРОГРАММ",
+      "type": "standard",
+      "content": "<p><i>Вертикальный срез модуля: от базы данных до интерфейса.</i></p>"
+    }
+  ],
+  "blocks": [
+    {
+      "id": "frontend",
+      "title": "Frontend Core",
+      "type": "info",
+      "content": "<p>Путь: <code>src/app/AGREGATOR/PAGES/SPRAVKA/ProgramOfAggregatorPage/</code></p><table><thead><tr><th>№</th><th>Файл</th><th>Описание</th></tr></thead><tbody><tr><td>1</td><td><code>program-manager.component.ts</code></td><td>Главный компонент страницы</td></tr><tr><td>2</td><td><code>program-of-aggregator.routes.ts</code></td><td>Конфигурация роутинга</td></tr><tr><td>3</td><td><code>services/program-of-aggregator-api.service.ts</code></td><td>API Сервис (HTTP)</td></tr><tr><td>4</td><td><code>services/program-of-aggregator-state.service.ts</code></td><td>State Сервис (Signals)</td></tr><tr><td>5</td><td><code>models/program-of-aggregator.model.ts</code></td><td>Модели данных</td></tr><tr><td>6</td><td><code>models/version-status.enum.ts</code></td><td>Enum статусов версий</td></tr><tr><td>7</td><td><code>components/program-list/program-list.component.ts</code></td><td>Таблица со списком</td></tr><tr><td>8</td><td><code>components/program-form/program-form.component.ts</code></td><td>Форма редактирования</td></tr><tr><td>9</td><td><code>components/program-add-wizard/program-add-wizard.component.ts</code></td><td>Мастер создания (Wizard)</td></tr><tr><td>10</td><td><code>components/program-of-aggregator-details/program-of-aggregator-details.component.ts</code></td><td>Просмотр данных (Tabs)</td></tr><tr><td>11</td><td><code>components/program-of-aggregator-view-modal/program-of-aggregator-view-modal.component.ts</code></td><td>Модалка быстрого просмотра</td></tr><tr><td>12</td><td><code>components/program-version-manager/program-version-manager.component.ts</code></td><td>Менеджер версий и ссылок</td></tr></tbody></table>"
+    },
+    {
+      "id": "backend",
+      "title": "Backend Core",
+      "type": "standard",
+      "content": "<p>Путь: <code>Project_Server_Auth/Pages/AGGREGATOR/ProgramOfAggregator/</code></p><table><thead><tr><th>№</th><th>Файл</th><th>Описание</th></tr></thead><tbody><tr><td>13</td><td><code>Services/ProgramOfAggregatorService.cs</code></td><td>Основной сервис логики</td></tr><tr><td>14</td><td><code>Interfaces/IProgramOfAggregatorService.cs</code></td><td>Интерфейс сервиса</td></tr><tr><td>15</td><td><code>Dtos/ProgramOfAggregatorDto.cs</code></td><td>DTO программы</td></tr><tr><td>16</td><td><code>Dtos/VersionOfAggregatorDto.cs</code></td><td>DTO версий и ссылок</td></tr><tr><td>17</td><td><code>Mappings/ProgramOfAggregatorProfile.cs</code></td><td>Профиль AutoMapper</td></tr><tr><td>18</td><td><code>Validators/ProgramOfAggregatorValidators.cs</code></td><td>Валидаторы FluentValidation</td></tr><tr><td>19</td><td><code>Jsons/ProgramOfAggregator.json</code></td><td>Seed-данные модуля</td></tr><tr><td>20</td><td><code>Controllers/ProgramOfAggregatorController.cs</code></td><td>API Контроллер программ</td></tr></tbody></table>"
+    },
+    {
+      "id": "dal",
+      "title": "DAL Core (Database & Repository)",
+      "type": "standard",
+      "content": "<p>Путь: <code>DAL/</code></p><table><thead><tr><th>№</th><th>Файл</th><th>Описание</th></tr></thead><tbody><tr><td>21</td><td><code>DAL/Models/Aggregator/ProgramOfAggregator.cs</code></td><td>Сущность программы (Entity)</td></tr><tr><td>22</td><td><code>DAL/Models/Aggregator/Localizations/ProgramOfAggregatorLocalization.cs</code></td><td>Локализация программы</td></tr><tr><td>23</td><td><code>DAL/Repositories/ProgramOfAggregatorRepository.cs</code></td><td>Репозиторий доступа к БД</td></tr><tr><td>24</td><td><code>DAL/Interfaces/IProgramOfAggregatorRepository.cs</code></td><td>Интерфейс репозитория</td></tr></tbody></table>"
+    },
+    {
+      "id": "extra",
+      "title": "🏗️ Дополнительные слои (Кластер данных)",
+      "type": "info",
+      "content": "<table><thead><tr><th>№</th><th>Путь к файлу</th><th>Назначение</th></tr></thead><tbody><tr><td>25</td><td><code>DAL/Models/Aggregator/VersionOfAggregator.cs</code></td><td>Сущность версии</td></tr><tr><td>26</td><td><code>DAL/Models/Aggregator/ScreenshotOfAggregator.cs</code></td><td>Сущность скриншота</td></tr><tr><td>27</td><td><code>DAL/Repositories/VersionOfAggregatorRepository.cs</code></td><td>Репозиторий версий</td></tr></tbody></table>"
+    },
+    {
+      "id": "block_1777622051426",
+      "title": "Json для наполнения тестовыми данными",
+      "content": "<p>pr_srv_names\\Project_Server_Auth\\Pages\\AGGREGATOR\\ProgramOfAggregator\\Jsons\\ProgramOfAggregator.json</p>",
+      "type": "standard"
+    }
+  ],
+  "blocks-main": [],
+  "blocks-front": [],
+  "blocks-server": []
+}

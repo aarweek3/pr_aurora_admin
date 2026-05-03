@@ -17,7 +17,28 @@ import { CategoryAggregatorHelpComponent } from './category-aggregator-help/cate
 import { ProgramOfAggregatorHelpComponent } from './program-of-aggregator-help/program-of-aggregator-help.component';
 import { ErrorHandlingHelpComponent } from './error-handling-help/error-handling-help.component';
 
+import { RatingHelpComponent } from './rating-help/rating-help.component';
+import { ProgramAddHelpComponent } from './program-add-help/program-add-help.component';
+import { VersionSpecHelpComponent } from './version-spec-help/version-spec-help.component';
+import { HelpManagementComponent } from './help-management/help-management.component';
+
 export const HELP_ROUTES: Routes = [
+  {
+    path: 'management',
+    component: HelpManagementComponent,
+  },
+  {
+    path: 'version-spec',
+    component: VersionSpecHelpComponent,
+  },
+  {
+    path: 'program-add',
+    component: ProgramAddHelpComponent,
+  },
+  {
+    path: 'rating',
+    component: RatingHelpComponent,
+  },
   {
     path: 'migration',
     component: MigrationHelpComponent,
@@ -61,6 +82,24 @@ export const HELP_ROUTES: Routes = [
   {
     path: 'error-handling',
     component: ErrorHandlingHelpComponent,
+  },
+  {
+    path: 'auth-guide',
+    component: HelpDocumentationComponent,
+    data: {
+      title: 'Авторизация и Безопасность 🔐',
+      fileName: 'auth/auth-full.html',
+      editorType: 'tinymce',
+    },
+  },
+  {
+    path: 'auth-standard-plan',
+    component: HelpDocumentationComponent,
+    data: {
+      title: 'База и Стандарты - Авторизация Технический Стандарт 📋',
+      fileName: 'auth/auth-standard-plan.html',
+      editorType: 'tinymce',
+    },
   },
   {
     path: 'modal-window',

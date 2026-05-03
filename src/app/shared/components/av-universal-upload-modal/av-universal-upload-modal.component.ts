@@ -2,6 +2,8 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NZ_MODAL_DATA, NzModalRef } from 'ng-zorro-antd/modal';
+import { MODAL_DATA, MODAL_REF } from '@shared/components/ui/modal/tokens/modal-tokens';
+import { ModalRef } from '@shared/components/ui/modal/models/modal-ref.model';
 import { ImageServiceUniversal, MediaUploadResponse, MediaFileMetadata } from '@shared/services/image-service-universal.service';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
@@ -271,8 +273,14 @@ export interface AvUniversalUploadModalData {
   `]
 })
 export class AvUniversalUploadModalComponent implements OnInit {
-  readonly modalData = inject<AvUniversalUploadModalData>(NZ_MODAL_DATA, { optional: true }) || {};
-  private modalRef = inject(NzModalRef);
+  // Поддержка обоих типов модалок (NzModal и наш ModalService)
+  readonly modalData = inject<AvUniversalUploadModalData>(MODAL_DATA, { optional: true }) 
+                    || inject<AvUniversalUploadModalData>(NZ_MODAL_DATA, { optional: true }) 
+                    || {};
+                    
+  private modalRef = (inject(ModalRef, { optional: true }) 
+                  || inject(NzModalRef, { optional: true })) as any;
+                  
   private imgService = inject(ImageServiceUniversal);
   private message = inject(NzMessageService);
 

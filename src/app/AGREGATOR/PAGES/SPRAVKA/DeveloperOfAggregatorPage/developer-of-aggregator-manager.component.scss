@@ -36,6 +36,28 @@
     margin-top: 8px;
     font-size: 15px;
     font-weight: 500;
+    display: flex;
+    align-items: center;
+
+    .help-btn-inline {
+      margin-left: 4px;
+      margin-right: 4px;
+      color: #3b82f6;
+      height: 24px;
+      width: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      
+      &:hover {
+        background: #eff6ff;
+        color: #2563eb;
+      }
+
+      i {
+        font-size: 16px;
+      }
+    }
   }
 }
 

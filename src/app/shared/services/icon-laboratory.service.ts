@@ -81,6 +81,18 @@ export class IconLaboratoryService {
     return this.http.post(ApiEndpoints.ICONS.OPEN_FILE(path), {});
   }
 
+  readFile(path: string): Observable<string> {
+    return this.http.get(ApiEndpoints.ICONS.READ_FILE(path), { responseType: 'text' });
+  }
+
+  renameFile(oldPath: string, newPath: string): Observable<any> {
+    return this.http.post(ApiEndpoints.ICONS.RENAME_FILE, { oldPath, newPath });
+  }
+
+  deleteFile(path: string): Observable<any> {
+    return this.http.delete(`${ApiEndpoints.ICONS.BASE}/delete-file?path=${encodeURIComponent(path)}`);
+  }
+
   /**
    * Trigger filesystem to DB synchronization
    */

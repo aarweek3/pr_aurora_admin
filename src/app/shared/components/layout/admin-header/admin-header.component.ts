@@ -5,7 +5,7 @@ import { NzAvatarModule } from 'ng-zorro-antd/avatar';
 import { NzBadgeModule } from 'ng-zorro-antd/badge';
 import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
 import { NzIconModule } from 'ng-zorro-antd/icon';
-import { AuthService } from '../../../../auth/services/auth.service';
+import { AuthService } from '@auth';
 
 import { LanguageSwitcherComponent } from '../../../../../assets/languageApp/components/language-switcher.component';
 

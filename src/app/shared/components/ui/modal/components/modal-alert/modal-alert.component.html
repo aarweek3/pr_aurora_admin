@@ -19,9 +19,7 @@
         ></av-icon>
       </div>
       <h2 class="alert-title" *ngIf="config.centered && config.title">{{ config.title }}</h2>
-      <div class="alert-message">
-        {{ config.message }}
-      </div>
+      <div class="alert-message" [innerHTML]="safeMessage"></div>
     </div>
   </div>
 
