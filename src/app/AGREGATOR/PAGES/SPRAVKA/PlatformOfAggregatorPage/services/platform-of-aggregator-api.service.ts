@@ -1,5 +1,5 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { finalize, shareReplay } from 'rxjs/operators';
 import { environment } from '../../../../../../environments/environment';
@@ -16,12 +16,14 @@ import {
   providedIn: 'root',
 })
 export class PlatformOfAggregatorApiService {
+  private http = inject(HttpClient);
+
   private readonly baseUrl = `${environment.apiUrl}/${PLATFORM_OF_AGGREGATOR_BASE_URL}`;
   private cache = new Map<string, Observable<PlatformOfAggregatorPagedResponseDto>>();
 
-  constructor(private http: HttpClient) {}
-
-  getPaged(request: PlatformOfAggregatorPageRequestDto): Observable<PlatformOfAggregatorPagedResponseDto> {
+  getPaged(
+    request: PlatformOfAggregatorPageRequestDto,
+  ): Observable<PlatformOfAggregatorPagedResponseDto> {
     const cacheKey = JSON.stringify(
       Object.keys(request)
         .sort()
@@ -39,7 +41,8 @@ export class PlatformOfAggregatorApiService {
       if (request.searchTerm) params = params.set('searchTerm', request.searchTerm);
       if (request.languageId) params = params.set('languageId', request.languageId.toString());
       if (request.sortBy) params = params.set('sortBy', request.sortBy);
-      if (request.sortDirection !== undefined) params = params.set('sortDirection', request.sortDirection.toString());
+      if (request.sortDirection !== undefined)
+        params = params.set('sortDirection', request.sortDirection.toString());
       if (request.showDeleted) params = params.set('showDeleted', 'true');
 
       const url = this.baseUrl;
@@ -68,12 +71,15 @@ export class PlatformOfAggregatorApiService {
     return this.http.post<PlatformOfAggregatorDetailDto>(this.baseUrl, dto);
   }
 
-  update(id: number, dto: PlatformOfAggregatorUpdateDto): Observable<PlatformOfAggregatorDetailDto> {
+  update(
+    id: number,
+    dto: PlatformOfAggregatorUpdateDto,
+  ): Observable<PlatformOfAggregatorDetailDto> {
     this.clearCache();
     return this.http.put<PlatformOfAggregatorDetailDto>(`${this.baseUrl}/${id}`, dto);
   }
 
-  delete(id: number, isHard: boolean = false): Observable<void> {
+  delete(id: number, isHard = false): Observable<void> {
     this.clearCache();
     let params = new HttpParams();
     if (isHard) params = params.set('isHard', 'true');

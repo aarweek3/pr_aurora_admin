@@ -1,8 +1,8 @@
-﻿// sample-control.component.ts
+// sample-control.component.ts
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, inject, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { LoggingService } from '@shared/infrastructure/logging/logging.service';
+import { LoggingService } from '@core/services/logging/logging.service';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzSelectModule } from 'ng-zorro-antd/select';
@@ -36,7 +36,7 @@ interface Sample {
       <nz-select
         [(ngModel)]="selectedSampleId"
         (ngModelChange)="onSampleChange($event)"
-        nzPlaceHolder="Выберите родителя"
+        nzPlaceHolder="�������� ��������"
         nzShowSearch
       >
         <nz-option
@@ -82,26 +82,26 @@ export class SampleControlComponent implements OnInit, OnDestroy {
   private readonly logger = inject(LoggingService);
 
   ngOnInit(): void {
-    this.logger.debug('SampleControlComponent', 'Инициализация компонента');
+    this.logger.debug('SampleControlComponent', '������������� ����������');
     this.loadSamples();
     this.subscribeToModalOperations();
   }
 
   ngOnDestroy(): void {
-    this.logger.debug('SampleControlComponent', 'Очистка ресурсов');
+    this.logger.debug('SampleControlComponent', '������� ��������');
     this.destroy$.next();
     this.destroy$.complete();
   }
 
   loadSamples(): void {
-    this.logger.debug('SampleControlComponent', 'Загрузка родителей');
+    this.logger.debug('SampleControlComponent', '�������� ���������');
 
     this.sampleService
       .getAllSamplesForSelector()
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (samples) => {
-          this.logger.debug('SampleControlComponent', 'Родители получены', {
+          this.logger.debug('SampleControlComponent', '�������� ��������', {
             samples,
           });
           this.samples = samples;
@@ -109,7 +109,7 @@ export class SampleControlComponent implements OnInit, OnDestroy {
           this.selectDefaultSample();
         },
         error: (error) => {
-          this.logger.error('SampleControlComponent', 'Ошибка при загрузке родителей', { error });
+          this.logger.error('SampleControlComponent', '������ ��� �������� ���������', { error });
           this.samples = [{ id: 1, name: 'default' }];
           this.selectDefaultSample();
         },
@@ -129,7 +129,7 @@ export class SampleControlComponent implements OnInit, OnDestroy {
     if (defaultSample && !this.selectedSampleId) {
       this.selectedSampleId = defaultSample.id;
       this.sampleSelected.emit(defaultSample);
-      this.logger.debug('SampleControlComponent', 'Выбран default родитель', {
+      this.logger.debug('SampleControlComponent', '������ default ��������', {
         sample: defaultSample,
       });
     }
@@ -138,7 +138,7 @@ export class SampleControlComponent implements OnInit, OnDestroy {
   onSampleChange(sampleId: number): void {
     const selectedSample = this.samples.find((cat) => cat.id === sampleId);
     if (selectedSample) {
-      this.logger.debug('SampleControlComponent', 'Изменен родитель', {
+      this.logger.debug('SampleControlComponent', '������� ��������', {
         sample: selectedSample,
       });
       this.sampleSelected.emit(selectedSample);
@@ -146,12 +146,12 @@ export class SampleControlComponent implements OnInit, OnDestroy {
   }
 
   onAddClick(): void {
-    this.logger.debug('SampleControlComponent', 'Открытие модального окна создания родителя');
+    this.logger.debug('SampleControlComponent', '�������� ���������� ���� �������� ��������');
     this.modalVisible = true;
   }
 
   onModalCancel(): void {
-    this.logger.debug('SampleControlComponent', 'Отмена создания родителя');
+    this.logger.debug('SampleControlComponent', '������ �������� ��������');
     this.modalVisible = false;
   }
 
@@ -159,19 +159,19 @@ export class SampleControlComponent implements OnInit, OnDestroy {
     mode: 'add' | 'edit';
     sample: SampleCreateRequestDto | SampleUpdateRequestDto;
   }): void {
-    this.logger.debug('SampleControlComponent', 'Сохранение родителя', {
+    this.logger.debug('SampleControlComponent', '���������� ��������', {
       data,
     });
 
     if (data.mode === 'add') {
       const createRequest = data.sample as SampleCreateRequestDto;
-      this.logger.debug('SampleControlComponent', 'Отправка запроса на создание родителя', {
+      this.logger.debug('SampleControlComponent', '�������� ������� �� �������� ��������', {
         createRequest,
       });
       this.sampleService.createSample(createRequest);
     } else {
       const updateRequest = data.sample as SampleUpdateRequestDto;
-      this.logger.debug('SampleControlComponent', 'Отправка запроса на обновление родителя', {
+      this.logger.debug('SampleControlComponent', '�������� ������� �� ���������� ��������', {
         updateRequest,
       });
       this.sampleService.updateSample(updateRequest.id, updateRequest);
@@ -183,7 +183,7 @@ export class SampleControlComponent implements OnInit, OnDestroy {
       .getState()
       .pipe(takeUntil(this.destroy$))
       .subscribe((state: SampleState) => {
-        this.logger.debug('SampleControlComponent', 'Состояние модальной операции', {
+        this.logger.debug('SampleControlComponent', '��������� ��������� ��������', {
           modalIsLoading: state.modalIsLoading,
           modalOperation: state.modalOperation,
           modalError: state.modalError,
@@ -197,14 +197,14 @@ export class SampleControlComponent implements OnInit, OnDestroy {
         ) {
           this.logger.debug(
             'SampleControlComponent',
-            'родитель успешно создана, перезагружаем список',
+            '�������� ������� �������, ������������� ������',
           );
           this.sampleService
             .getAllSamplesForSelector()
             .pipe(takeUntil(this.destroy$))
             .subscribe({
               next: (samples) => {
-                this.logger.debug('SampleControlComponent', 'Список родителей обновлен', {
+                this.logger.debug('SampleControlComponent', '������ ��������� ��������', {
                   samples,
                 });
                 this.samples = samples;
@@ -215,14 +215,14 @@ export class SampleControlComponent implements OnInit, OnDestroy {
               error: (error) => {
                 this.logger.error(
                   'SampleControlComponent',
-                  'Ошибка при обновлении списка родителей',
+                  '������ ��� ���������� ������ ���������',
                   { error },
                 );
                 this.modalVisible = false;
               },
             });
         } else if (state.modalError) {
-          this.logger.error('SampleControlComponent', 'Ошибка при создании родителя', {
+          this.logger.error('SampleControlComponent', '������ ��� �������� ��������', {
             error: state.modalError,
           });
         }
@@ -234,7 +234,7 @@ export class SampleControlComponent implements OnInit, OnDestroy {
       const newestSample = this.samples.reduce((prev, current) =>
         prev.id > current.id ? prev : current,
       );
-      this.logger.debug('SampleControlComponent', 'Выбор нового родителя ', {
+      this.logger.debug('SampleControlComponent', '����� ������ �������� ', {
         sample: newestSample,
       });
       this.selectedSampleId = newestSample.id;

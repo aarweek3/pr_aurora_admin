@@ -7,10 +7,10 @@ import { environment } from '../../../../environments/environment';
  * HTTP Request Options
  */
 export interface HttpRequestOptions {
-  headers?: HttpHeaders | { [header: string]: string | string[] };
+  headers?: HttpHeaders | Record<string, string | string[]>;
   params?:
     | HttpParams
-    | { [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean> };
+    | Record<string, string | number | boolean | readonly (string | number | boolean)[]>;
   responseType?: 'json' | 'text' | 'blob' | 'arraybuffer';
   observe?: 'body' | 'response';
   reportProgress?: boolean;
@@ -91,14 +91,14 @@ export class BaseHttpService {
   /**
    * GET запрос с параметрами (helper метод)
    */
-  getWithParams<T>(endpoint: string, params: { [key: string]: any }): Observable<T> {
+  getWithParams<T>(endpoint: string, params: Record<string, any>): Observable<T> {
     return this.get<T>(endpoint, { params });
   }
 
   /**
    * GET запрос с заголовками (helper метод)
    */
-  getWithHeaders<T>(endpoint: string, headers: { [key: string]: string }): Observable<T> {
+  getWithHeaders<T>(endpoint: string, headers: Record<string, string>): Observable<T> {
     return this.get<T>(endpoint, { headers });
   }
 }

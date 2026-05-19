@@ -59,14 +59,14 @@
             >
               Показывать "Отмена"
             </label>
-            @if(dialogConfig().showCancelButton) {
-            <input
-              nz-input
-              size="small"
-              [(ngModel)]="dialogConfig().cancelText"
-              (ngModelChange)="updateConfig('cancelText', $event)"
-              placeholder="Текст отмены"
-            />
+            @if (dialogConfig().showCancelButton) {
+              <input
+                nz-input
+                size="small"
+                [(ngModel)]="dialogConfig().cancelText"
+                (ngModelChange)="updateConfig('cancelText', $event)"
+                placeholder="Текст отмены"
+              />
             }
           </div>
 
@@ -403,24 +403,24 @@
 >
   <div modal-body>
     <div style="text-align: center; padding: 24px">
-      @if(iconConfig().type) {
-      <av-icon
-        [type]="iconConfig().type!"
-        [size]="iconConfig().size"
-        [color]="iconConfig().color"
-        [style.transform]="'rotate(' + iconConfig().rotation + 'deg) scale(' + iconConfig().scale + ')'"
-        [style.opacity]="iconConfig().opacity"
-      ></av-icon>
+      @if (iconConfig().type) {
+        <av-icon
+          [type]="iconConfig().type!"
+          [size]="iconConfig().size"
+          [color]="iconConfig().color"
+          [style.transform]="'rotate(' + iconConfig().rotation + 'deg) scale(' + iconConfig().scale + ')'"
+          [style.opacity]="iconConfig().opacity"
+        ></av-icon>
       }
       <h3 style="margin: 16px 0 8px; font-weight: 600">{{ dialogConfig().title }}</h3>
       <p style="color: #8c8c8c; margin: 0">{{ dialogConfig().message }}</p>
     </div>
   </div>
   <div modal-footer style="text-align: center; justify-content: center; gap: 8px">
-    @if(dialogConfig().showCancelButton) {
-    <button av-button avType="default" (click)="onCancel()">
-      {{ dialogConfig().cancelText }}
-    </button>
+    @if (dialogConfig().showCancelButton) {
+      <button av-button avType="default" (click)="onCancel()">
+        {{ dialogConfig().cancelText }}
+      </button>
     }
     <button av-button [avType]="dialogConfig().confirmType" (click)="onConfirm()">
       {{ dialogConfig().confirmText }}

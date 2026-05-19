@@ -1,4 +1,4 @@
-import { Directive, HostListener, Input, Optional } from '@angular/core';
+import { Directive, HostListener, Input, inject } from '@angular/core';
 import { ModalRef } from '../models/modal-ref.model';
 
 /**
@@ -24,14 +24,16 @@ import { ModalRef } from '../models/modal-ref.model';
   selector: '[avModalClose]',
   standalone: true,
 })
-export class ModalCloseDirective {
+export class ModalCloseDirective<T = unknown> {
+  private modalRef = inject<ModalRef<T>>(ModalRef, { optional: true });
+
   /** Результат для передачи при закрытии */
-  @Input('avModalClose') result?: any;
+  @Input('avModalClose') result?: T;
 
   /** Закрывать ли модал при клике */
   @Input() closeOnClick = true;
 
-  constructor(@Optional() private modalRef: ModalRef) {
+  constructor() {
     if (!this.modalRef) {
       throw new Error('ModalCloseDirective requires ModalRef to be injected');
     }
@@ -39,7 +41,7 @@ export class ModalCloseDirective {
 
   @HostListener('click', ['$event'])
   onClick(event: Event): void {
-    if (this.closeOnClick) {
+    if (this.closeOnClick && this.modalRef) {
       event.stopPropagation();
       this.modalRef.close(this.result);
     }

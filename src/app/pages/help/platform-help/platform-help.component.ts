@@ -6,10 +6,7 @@ import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzTagModule } from 'ng-zorro-antd/tag';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzAlertModule } from 'ng-zorro-antd/alert';
-import { 
-  HelpCopyContainerComponent,
-  HelpPathHeaderComponent
-} from '@shared/components/ui';
+import { HelpCopyContainerComponent, HelpPathHeaderComponent } from '@shared/components/ui';
 
 @Component({
   selector: 'app-platform-help',
@@ -23,7 +20,7 @@ import {
     NzIconModule,
     NzAlertModule,
     HelpCopyContainerComponent,
-    HelpPathHeaderComponent
+    HelpPathHeaderComponent,
   ],
   template: `
     <div class="help-container">
@@ -39,25 +36,33 @@ import {
         <nz-tab nzTitle="🌟 Обзор">
           <div class="help-section">
             <nz-card nzTitle="Назначение и Эталонный статус">
-              <p>Модуль <strong>Platform Of Aggregator</strong> — это «Золотой стандарт» (Golden Sample) реализации справочников в системе Aurora Admin v3.5. Он объединяет в себе все современные архитектурные паттерны: Signals, OnPush, SSOT и продвинутую SEO-оптимизацию.</p>
-              
+              <p>
+                Модуль <strong>Platform Of Aggregator</strong> — это «Золотой стандарт» (Golden
+                Sample) реализации справочников в системе Aurora Admin v3.5. Он объединяет в себе
+                все современные архитектурные паттерны: Signals, OnPush, SSOT и продвинутую
+                SEO-оптимизацию.
+              </p>
+
               <div class="feature-grid">
                 <div class="feature-item">
                   <i nz-icon nzType="thunderbolt" class="f-icon"></i>
                   <div class="f-text">
-                    <strong>Signals First:</strong> Полное отсутствие RxJS-подписок в шаблонах. Прямая связь между бизнес-состоянием и UI через <code>signal</code>.
+                    <strong>Signals First:</strong> Полное отсутствие RxJS-подписок в шаблонах.
+                    Прямая связь между бизнес-состоянием и UI через <code>signal</code>.
                   </div>
                 </div>
                 <div class="f-item">
                   <i nz-icon nzType="setting" class="f-icon"></i>
                   <div class="f-text">
-                    <strong>Maintenance Ready:</strong> Встроенные инструменты для очистки, восстановления и инициализации данных из JSON.
+                    <strong>Maintenance Ready:</strong> Встроенные инструменты для очистки,
+                    восстановления и инициализации данных из JSON.
                   </div>
                 </div>
                 <div class="feature-item">
                   <i nz-icon nzType="global" class="f-icon"></i>
                   <div class="f-text">
-                    <strong>AI-Ready Content:</strong> Интеллектуальное заполнение пустых локализаций из мастер-контента для SEO-стабильности.
+                    <strong>AI-Ready Content:</strong> Интеллектуальное заполнение пустых
+                    локализаций из мастер-контента для SEO-стабильности.
                   </div>
                 </div>
               </div>
@@ -77,39 +82,56 @@ import {
           <div class="help-section">
             <nz-card nzTitle="Жизненный цикл данных (Data Lifecycle)">
               <div class="logic-flow">
-                <div class="flow-step"><strong>API Layer</strong><br>HTTP запросы</div>
+                <div class="flow-step"><strong>API Layer</strong><br />HTTP запросы</div>
                 <i nz-icon nzType="arrow-right"></i>
-                <div class="flow-step"><strong>State Service</strong><br>updateState()</div>
+                <div class="flow-step"><strong>State Service</strong><br />updateState()</div>
                 <i nz-icon nzType="arrow-right"></i>
-                <div class="flow-step"><strong>Signals</strong><br>computed()</div>
+                <div class="flow-step"><strong>Signals</strong><br />computed()</div>
                 <i nz-icon nzType="arrow-right"></i>
-                <div class="flow-step"><strong>Components</strong><br>OnPush Render</div>
+                <div class="flow-step"><strong>Components</strong><br />OnPush Render</div>
               </div>
             </nz-card>
 
             <div class="logic-grid">
               <div class="logic-card">
                 <h4>Бизнес-логика: Localization Fallbacks</h4>
-                <p>Метод <code>applyEnglishFallbacks()</code> в State-сервисе гарантирует, что база данных не будет содержать «дырок» в контенте:</p>
+                <p>
+                  Метод <code>applyEnglishFallbacks()</code> в State-сервисе гарантирует, что база
+                  данных не будет содержать «дырок» в контенте:
+                </p>
                 <ul>
-                  <li>Если поле <code>name</code> или <code>description</code> в текущем языке пусто — оно автоматически копируется из локализации <strong>en-US</strong> при сохранении.</li>
+                  <li>
+                    Если поле <code>name</code> или <code>description</code> в текущем языке пусто —
+                    оно автоматически копируется из локализации <strong>en-US</strong> при
+                    сохранении.
+                  </li>
                   <li>Аналогично обрабатываются SEO-метатеги (metaTitle, metaDescription).</li>
-                  <li>Источник истины — техническое поле <code>name</code> или <code>canonicalName</code> объекта.</li>
+                  <li>
+                    Источник истины — техническое поле <code>name</code> или
+                    <code>canonicalName</code> объекта.
+                  </li>
                 </ul>
               </div>
               <div class="logic-card">
                 <h4>Централизованный Loading</h4>
                 <p>Паттерн <code>executeWithLoading()</code>:</p>
                 <ul>
-                  <li>Позволяет одной строкой обернуть любой Observable запрос в состояние загрузки.</li>
-                  <li>Автоматически переключает <code>loading</code> или <code>modalLoading</code> сигналы.</li>
-                  <li>Гарантирует завершение индикации загрузки через оператор <code>finalize</code>.</li>
+                  <li>
+                    Позволяет одной строкой обернуть любой Observable запрос в состояние загрузки.
+                  </li>
+                  <li>
+                    Автоматически переключает <code>loading</code> или
+                    <code>modalLoading</code> сигналы.
+                  </li>
+                  <li>
+                    Гарантирует завершение индикации загрузки через оператор <code>finalize</code>.
+                  </li>
                 </ul>
               </div>
             </div>
 
-            <av-help-copy-container 
-              title="Пример реализации SSOT Signal Service" 
+            <av-help-copy-container
+              title="Пример реализации SSOT Signal Service"
               [content]="architectureCode"
             ></av-help-copy-container>
           </div>
@@ -119,20 +141,37 @@ import {
         <nz-tab nzTitle="🛠 Обслуживание">
           <div class="help-section">
             <nz-card nzTitle="Блок обслуживания (Maintenance Block)">
-              <p>Для администраторов предусмотрен скрытый блок управления целостностью данных. Он вызывается нажатием на <strong>иконку шестеренки</strong> в заголовке Manager-компонента.</p>
-              
+              <p>
+                Для администраторов предусмотрен скрытый блок управления целостностью данных. Он
+                вызывается нажатием на <strong>иконку шестеренки</strong> в заголовке
+                Manager-компонента.
+              </p>
+
               <div class="maintenance-detail">
                 <div class="m-item">
                   <nz-tag nzColor="error">Очистить БД</nz-tag>
-                  <p>Полная очистка таблицы. Реализована защита <strong>Challenge Modal</strong>: пользователю нужно решить математический пример, чтобы подтвердить действие. Это предотвращает случайное удаление всех данных.</p>
+                  <p>
+                    Полная очистка таблицы. Реализована защита <strong>Challenge Modal</strong>:
+                    пользователю нужно решить математический пример, чтобы подтвердить действие. Это
+                    предотвращает случайное удаление всех данных.
+                  </p>
                 </div>
                 <div class="m-item">
                   <nz-tag nzColor="processing">Считать данные из БД</nz-tag>
-                  <p>Принудительное обновление текущего списка. Реализована защита <strong>Confirm Modal</strong>: перед выполнением запрашивается подтверждение. После загрузки выводится информационное окно о количестве найденных записей или предупреждение о пустой базе.</p>
+                  <p>
+                    Принудительное обновление текущего списка. Реализована защита
+                    <strong>Confirm Modal</strong>: перед выполнением запрашивается подтверждение.
+                    После загрузки выводится информационное окно о количестве найденных записей или
+                    предупреждение о пустой базе.
+                  </p>
                 </div>
                 <div class="m-item">
                   <nz-tag nzColor="warning">Перенести из JSON в БД</nz-tag>
-                  <p>Функция <code>seedFromJson()</code>. Читает эталонный JSON-файл на сервере и наполняет пустую базу. <strong>Важно:</strong> действие блокируется, если в базе уже есть хотя бы одна запись.</p>
+                  <p>
+                    Функция <code>seedFromJson()</code>. Читает эталонный JSON-файл на сервере и
+                    наполняет пустую базу. <strong>Важно:</strong> действие блокируется, если в базе
+                    уже есть хотя бы одна запись.
+                  </p>
                 </div>
               </div>
             </nz-card>
@@ -140,10 +179,22 @@ import {
             <div class="logic-card full-width">
               <h4>Где реализована логика кнопок?</h4>
               <ul>
-                <li><strong>UI:</strong> Контрол <code>app-button-control-json-block</code> в шаблоне <code>ManagerComponent</code>.</li>
-                <li><strong>Flow Control:</strong> Методы <code>handleReadFromDb()</code> (с подтверждением) и <code>clearDatabase()</code> в <code>ManagerComponent</code>.</li>
-                <li><strong>State:</strong> Методы <code>loadItems()</code>, <code>seedFromJson()</code>, <code>clearDatabase()</code> в State-сервисе.</li>
-                <li><strong>API:</strong> Одноименные эндпоинты в <code>PlatformOfAggregatorApiService</code>, проксирующие запросы к бэкенду.</li>
+                <li>
+                  <strong>UI:</strong> Контрол <code>app-button-control-json-block</code> в шаблоне
+                  <code>ManagerComponent</code>.
+                </li>
+                <li>
+                  <strong>Flow Control:</strong> Методы <code>handleReadFromDb()</code> (с
+                  подтверждением) и <code>clearDatabase()</code> в <code>ManagerComponent</code>.
+                </li>
+                <li>
+                  <strong>State:</strong> Методы <code>loadItems()</code>,
+                  <code>seedFromJson()</code>, <code>clearDatabase()</code> в State-сервисе.
+                </li>
+                <li>
+                  <strong>API:</strong> Одноименные эндпоинты в
+                  <code>PlatformOfAggregatorApiService</code>, проксирующие запросы к бэкенду.
+                </li>
               </ul>
             </div>
           </div>
@@ -153,7 +204,10 @@ import {
         <nz-tab nzTitle="🖥 Режимы и UI">
           <div class="help-section">
             <nz-card nzTitle="Три режима отображения (View Modes)">
-              <p>Manager-компонент управляет переменной <code>viewMode</code>, которая переключает способ взаимодействия с формами:</p>
+              <p>
+                Manager-компонент управляет переменной <code>viewMode</code>, которая переключает
+                способ взаимодействия с формами:
+              </p>
               <div class="view-mode-grid">
                 <div class="v-mode">
                   <h5>1. Modal Mode</h5>
@@ -161,11 +215,17 @@ import {
                 </div>
                 <div class="v-mode">
                   <h5>2. Inline (Split) Mode</h5>
-                  <p>Экран делится на две части: слева список, справа форма редактирования. Идеально для быстрой правки нескольких записей.</p>
+                  <p>
+                    Экран делится на две части: слева список, справа форма редактирования. Идеально
+                    для быстрой правки нескольких записей.
+                  </p>
                 </div>
                 <div class="v-mode">
                   <h5>3. Page Mode</h5>
-                  <p>Переход на отдельный роут (/:id/edit). Используется для сложных правок, когда нужно полное пространство экрана.</p>
+                  <p>
+                    Переход на отдельный роут (/:id/edit). Используется для сложных правок, когда
+                    нужно полное пространство экрана.
+                  </p>
                 </div>
               </div>
             </nz-card>
@@ -180,23 +240,37 @@ import {
                 <div class="checklist-item">
                   <nz-tag nzColor="geekblue">Base System</nz-tag>
                   <ul>
-                    <li><strong>Manager:</strong> platform-of-aggregator-manager.component.ts (Оркестратор)</li>
-                    <li><strong>State:</strong> platform-of-aggregator-state.service.ts (Логика и Сигналы)</li>
-                    <li><strong>API:</strong> platform-of-aggregator-api.service.ts (HTTP взаимодействие)</li>
+                    <li>
+                      <strong>Manager:</strong> platform-of-aggregator-manager.component.ts
+                      (Оркестратор)
+                    </li>
+                    <li>
+                      <strong>State:</strong> platform-of-aggregator-state.service.ts (Логика и
+                      Сигналы)
+                    </li>
+                    <li>
+                      <strong>API:</strong> platform-of-aggregator-api.service.ts (HTTP
+                      взаимодействие)
+                    </li>
                   </ul>
                 </div>
                 <div class="checklist-item">
                   <nz-tag nzColor="purple">View Components</nz-tag>
                   <ul>
                     <li><strong>List:</strong> components/platform-of-aggregator-list/</li>
-                    <li><strong>Form:</strong> components/platform-of-aggregator-form/ (Общая база)</li>
+                    <li>
+                      <strong>Form:</strong> components/platform-of-aggregator-form/ (Общая база)
+                    </li>
                     <li><strong>Modal:</strong> platform-of-aggregator-modal.component.ts</li>
-                    <li><strong>Details:</strong> components/platform-of-aggregator-details/ (Просмотр)</li>
+                    <li>
+                      <strong>Details:</strong> components/platform-of-aggregator-details/
+                      (Просмотр)
+                    </li>
                   </ul>
                 </div>
               </div>
-               <av-help-copy-container 
-                title="Полный список файлов клиентской части" 
+              <av-help-copy-container
+                title="Полный список файлов клиентской части"
                 [content]="clientChecklistCode"
                 bgColor="#1e1b4b"
               ></av-help-copy-container>
@@ -208,29 +282,55 @@ import {
         <nz-tab nzTitle="📊 Сортировка">
           <div class="help-section">
             <nz-card nzTitle="Серверная сортировка (Server-Side Sorting)">
-              <p>В Aurora v3.5 реализован паттерн <strong>Pure Server Sorting</strong>. Это означает, что при клике на заголовок колонки данные пересчитываются на стороне БД, что гарантирует корректную работу пагинации и учет всех записей базы, а не только текущей страницы.</p>
-              
+              <p>
+                В Aurora v3.5 реализован паттерн <strong>Pure Server Sorting</strong>. Это означает,
+                что при клике на заголовок колонки данные пересчитываются на стороне БД, что
+                гарантирует корректную работу пагинации и учет всех записей базы, а не только
+                текущей страницы.
+              </p>
+
               <div class="logic-grid">
                 <div class="logic-card">
                   <h4>Реализация на клиенте</h4>
                   <ul>
-                    <li><strong>State:</strong> Поля <code>sortBy</code> (строка) и <code>sortDirection</code> (0 - Asc, 1 - Desc).</li>
-                    <li><strong>Service:</strong> Метод <code>setSort(column, direction)</code> обновляет состояние и сбрасывает страницу на первую.</li>
-                    <li><strong>UI:</strong> Директивы <code>[nzSortFn]="true"</code> и <code>(nzSortOrderChange)</code> в заголовках <code>th</code>.</li>
+                    <li>
+                      <strong>State:</strong> Поля <code>sortBy</code> (строка) и
+                      <code>sortDirection</code> (0 - Asc, 1 - Desc).
+                    </li>
+                    <li>
+                      <strong>Service:</strong> Метод
+                      <code>setSort(column, direction)</code> обновляет состояние и сбрасывает
+                      страницу на первую.
+                    </li>
+                    <li>
+                      <strong>UI:</strong> Директивы <code>[nzSortFn]="true"</code> и
+                      <code>(nzSortOrderChange)</code> в заголовках <code>th</code>.
+                    </li>
                   </ul>
                 </div>
                 <div class="logic-card">
                   <h4>Реализация на сервере</h4>
                   <ul>
-                    <li><strong>DTO:</strong> Параметры <code>SortBy</code> и <code>SortDirection</code> в объекте запроса страницы.</li>
-                    <li><strong>Logic:</strong> Метод <code>ApplySorting</code> в C# сервисе использует <code>switch</code> для динамического построения <code>OrderBy</code>. Поддерживает поля: <code>Id</code>, <code>Name</code>, <code>SortOrder</code> и др.</li>
-                    <li><strong>Default:</strong> "Золотой стандарт" — сортировка по <strong>Name</strong> (алфавиту).</li>
+                    <li>
+                      <strong>DTO:</strong> Параметры <code>SortBy</code> и
+                      <code>SortDirection</code> в объекте запроса страницы.
+                    </li>
+                    <li>
+                      <strong>Logic:</strong> Метод <code>ApplySorting</code> в C# сервисе
+                      использует <code>switch</code> для динамического построения
+                      <code>OrderBy</code>. Поддерживает поля: <code>Id</code>, <code>Name</code>,
+                      <code>SortOrder</code> и др.
+                    </li>
+                    <li>
+                      <strong>Default:</strong> "Золотой стандарт" — сортировка по
+                      <strong>Name</strong> (алфавиту).
+                    </li>
                   </ul>
                 </div>
               </div>
 
-              <av-help-copy-container 
-                title="Паттерн подключения сортировки (Frontend)" 
+              <av-help-copy-container
+                title="Паттерн подключения сортировки (Frontend)"
                 [content]="sortingCode"
                 bgColor="#1e293b"
               ></av-help-copy-container>
@@ -241,10 +341,12 @@ import {
         <!-- 7. AI PROMPT -->
         <nz-tab nzTitle="🤖 AI Prompt">
           <div class="help-section">
-             <nz-card nzTitle="Мастер-промпт для клонирования справочника" class="ai-card">
-              <p class="ai-intro">Используйте этот промпт для генерации нового функционального раздела в стиле v3.5:</p>
-              <av-help-copy-container 
-                title="Master Prompt: Aurora v3.5 Reference" 
+            <nz-card nzTitle="Мастер-промпт для клонирования справочника" class="ai-card">
+              <p class="ai-intro">
+                Используйте этот промпт для генерации нового функционального раздела в стиле v3.5:
+              </p>
+              <av-help-copy-container
+                title="Master Prompt: Aurora v3.5 Reference"
                 [content]="masterPrompt"
                 bgColor="#0f172a"
               ></av-help-copy-container>
@@ -254,41 +356,152 @@ import {
       </nz-tabset>
     </div>
   `,
-  styles: [`
-    .help-container { padding: 32px; max-width: 1400px; margin: 0 auto; min-height: 800px; }
-    .help-tabs { margin-top: 24px; }
-    .help-section { display: flex; flex-direction: column; gap: 24px; padding-top: 16px; }
+  styles: [
+    `
+      .help-container {
+        padding: 32px;
+        max-width: 1400px;
+        margin: 0 auto;
+        min-height: 800px;
+      }
+      .help-tabs {
+        margin-top: 24px;
+      }
+      .help-section {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+        padding-top: 16px;
+      }
 
-    /* Logic Flow */
-    .logic-flow { display: flex; align-items: center; justify-content: space-around; padding: 20px; background: #f0f7ff; border-radius: 12px; }
-    .flow-step { text-align: center; padding: 12px; background: white; border: 1px solid #bfdbfe; border-radius: 8px; font-size: 13px; }
+      /* Logic Flow */
+      .logic-flow {
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        padding: 20px;
+        background: #f0f7ff;
+        border-radius: 12px;
+      }
+      .flow-step {
+        text-align: center;
+        padding: 12px;
+        background: white;
+        border: 1px solid #bfdbfe;
+        border-radius: 8px;
+        font-size: 13px;
+      }
 
-    /* Features and Maintenance */
-    .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; margin-top: 20px; }
-    .feature-item, .f-item { display: flex; gap: 12px; align-items: flex-start; padding: 16px; background: #fff; border-radius: 8px; border: 1px solid #e2e8f0; }
-    .f-icon { font-size: 20px; color: #3b82f6; }
-    .f-text { font-size: 14px; color: #475569; }
+      /* Features and Maintenance */
+      .feature-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 16px;
+        margin-top: 20px;
+      }
+      .feature-item,
+      .f-item {
+        display: flex;
+        gap: 12px;
+        align-items: flex-start;
+        padding: 16px;
+        background: #fff;
+        border-radius: 8px;
+        border: 1px solid #e2e8f0;
+      }
+      .f-icon {
+        font-size: 20px;
+        color: #3b82f6;
+      }
+      .f-text {
+        font-size: 14px;
+        color: #475569;
+      }
 
-    .maintenance-detail { display: flex; flex-direction: column; gap: 12px; margin-top: 16px; }
-    .m-item { padding: 12px; border-left: 4px solid #e2e8f0; background: #f8fafc; }
-    .m-item p { margin: 4px 0 0 0; font-size: 13px; color: #64748b; }
+      .maintenance-detail {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin-top: 16px;
+      }
+      .m-item {
+        padding: 12px;
+        border-left: 4px solid #e2e8f0;
+        background: #f8fafc;
+      }
+      .m-item p {
+        margin: 4px 0 0 0;
+        font-size: 13px;
+        color: #64748b;
+      }
 
-    .logic-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-    .logic-card { padding: 20px; background: white; border: 1px solid #e2e8f0; border-radius: 12px; }
-    .logic-card h4 { margin-bottom: 12px; font-weight: 700; color: #1e293b; }
-    .logic-card ul { padding-left: 18px; color: #64748b; font-size: 13px; }
-    .full-width { grid-column: 1 / -1; }
+      .logic-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+      }
+      .logic-card {
+        padding: 20px;
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+      }
+      .logic-card h4 {
+        margin-bottom: 12px;
+        font-weight: 700;
+        color: #1e293b;
+      }
+      .logic-card ul {
+        padding-left: 18px;
+        color: #64748b;
+        font-size: 13px;
+      }
+      .full-width {
+        grid-column: 1 / -1;
+      }
 
-    /* View Modes */
-    .view-mode-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 16px; }
-    .v-mode { padding: 16px; background: #f1f5f9; border-radius: 8px; text-align: center; }
-    .v-mode h5 { margin-bottom: 8px; font-weight: 700; }
-    .v-mode p { font-size: 12px; color: #64748b; }
+      /* View Modes */
+      .view-mode-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+        margin-top: 16px;
+      }
+      .v-mode {
+        padding: 16px;
+        background: #f1f5f9;
+        border-radius: 8px;
+        text-align: center;
+      }
+      .v-mode h5 {
+        margin-bottom: 8px;
+        font-weight: 700;
+      }
+      .v-mode p {
+        font-size: 12px;
+        color: #64748b;
+      }
 
-    .checklist-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
-    .checklist-item { padding: 16px; border: 1px solid #e2e8f0; border-radius: 8px; }
-    .checklist-item ul { padding-left: 18px; list-style-type: circle; font-size: 13px; color: #64748b; margin-top: 10px; }
-  `]
+      .checklist-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+        margin-bottom: 20px;
+      }
+      .checklist-item {
+        padding: 16px;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+      }
+      .checklist-item ul {
+        padding-left: 18px;
+        list-style-type: circle;
+        font-size: 13px;
+        color: #64748b;
+        margin-top: 10px;
+      }
+    `,
+  ],
 })
 export class PlatformHelpComponent {
   architectureCode = `// --- ПАТТЕРН executeWithLoading ---

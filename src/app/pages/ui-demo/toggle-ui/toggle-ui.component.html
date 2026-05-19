@@ -54,123 +54,123 @@
 
             <!-- 3. Content (Label) & Styling -->
             @if (pgType() === 'component' || pgType() === 'labeled') {
-            <div class="control-item">
-              <label nz-tooltip nzTooltipTitle="Текст рядом или внутри переключателя">
-                Текст и оформление: <span class="info-icon">ⓘ</span>
-              </label>
-              <div style="display: flex; gap: 8px; margin-bottom: 10px">
-                @if (pgType() === 'component') {
-                <input
-                  nz-input
-                  [ngModel]="pgLabel()"
-                  (ngModelChange)="pgLabel.set($event)"
-                  style="flex: 1"
-                  placeholder="Текст метки"
-                />
-                } @else {
-                <input
-                  nz-input
-                  [ngModel]="pgLeftLabel()"
-                  (ngModelChange)="pgLeftLabel.set($event)"
-                  placeholder="OFF"
-                  style="width: 50%"
-                />
-                <input
-                  nz-input
-                  [ngModel]="pgRightLabel()"
-                  (ngModelChange)="pgRightLabel.set($event)"
-                  placeholder="ON"
-                  style="width: 50%"
-                />
-                }
-              </div>
-
-              @if (pgType() === 'component') {
-              <div nz-row [nzGutter]="12">
-                <div nz-col [nzSpan]="12">
-                  <nz-select
-                    [ngModel]="pgLabelPosition()"
-                    (ngModelChange)="pgLabelPosition.set($event)"
-                    nzPlaceHolder="Позиция"
-                    style="width: 100%"
-                  >
-                    <nz-option nzValue="left" nzLabel="Слева"></nz-option>
-                    <nz-option nzValue="right" nzLabel="Справа"></nz-option>
-                    <nz-option nzValue="top" nzLabel="Над"></nz-option>
-                    <nz-option nzValue="bottom" nzLabel="Под"></nz-option>
-                  </nz-select>
-                </div>
-                <div nz-col [nzSpan]="12">
-                  <nz-input-group nzAddOnAfter="px">
+              <div class="control-item">
+                <label nz-tooltip nzTooltipTitle="Текст рядом или внутри переключателя">
+                  Текст и оформление: <span class="info-icon">ⓘ</span>
+                </label>
+                <div style="display: flex; gap: 8px; margin-bottom: 10px">
+                  @if (pgType() === 'component') {
                     <input
                       nz-input
-                      [ngModel]="pgLabelSize()"
-                      (ngModelChange)="pgLabelSize.set($event)"
-                      placeholder="14px"
+                      [ngModel]="pgLabel()"
+                      (ngModelChange)="pgLabel.set($event)"
+                      style="flex: 1"
+                      placeholder="Текст метки"
                     />
-                  </nz-input-group>
+                  } @else {
+                    <input
+                      nz-input
+                      [ngModel]="pgLeftLabel()"
+                      (ngModelChange)="pgLeftLabel.set($event)"
+                      placeholder="OFF"
+                      style="width: 50%"
+                    />
+                    <input
+                      nz-input
+                      [ngModel]="pgRightLabel()"
+                      (ngModelChange)="pgRightLabel.set($event)"
+                      placeholder="ON"
+                      style="width: 50%"
+                    />
+                  }
                 </div>
+
+                @if (pgType() === 'component') {
+                  <div nz-row [nzGutter]="12">
+                    <div nz-col [nzSpan]="12">
+                      <nz-select
+                        [ngModel]="pgLabelPosition()"
+                        (ngModelChange)="pgLabelPosition.set($event)"
+                        nzPlaceHolder="Позиция"
+                        style="width: 100%"
+                      >
+                        <nz-option nzValue="left" nzLabel="Слева"></nz-option>
+                        <nz-option nzValue="right" nzLabel="Справа"></nz-option>
+                        <nz-option nzValue="top" nzLabel="Над"></nz-option>
+                        <nz-option nzValue="bottom" nzLabel="Под"></nz-option>
+                      </nz-select>
+                    </div>
+                    <div nz-col [nzSpan]="12">
+                      <nz-input-group nzAddOnAfter="px">
+                        <input
+                          nz-input
+                          [ngModel]="pgLabelSize()"
+                          (ngModelChange)="pgLabelSize.set($event)"
+                          placeholder="14px"
+                        />
+                      </nz-input-group>
+                    </div>
+                  </div>
+                  <div style="margin-top: 8px; display: flex; align-items: center; gap: 8px">
+                    <span style="font-size: 12px; color: #8c8c8c">Цвет текста:</span>
+                    <nz-color-picker
+                      [ngModel]="pgLabelColor()"
+                      (ngModelChange)="pgLabelColor.set($event)"
+                      nzSize="small"
+                    ></nz-color-picker>
+                    <input
+                      nz-input
+                      [ngModel]="pgLabelColor()"
+                      (ngModelChange)="pgLabelColor.set($event)"
+                      style="flex: 1; height: 28px"
+                    />
+                  </div>
+                }
               </div>
-              <div style="margin-top: 8px; display: flex; align-items: center; gap: 8px">
-                <span style="font-size: 12px; color: #8c8c8c">Цвет текста:</span>
-                <nz-color-picker
-                  [ngModel]="pgLabelColor()"
-                  (ngModelChange)="pgLabelColor.set($event)"
-                  nzSize="small"
-                ></nz-color-picker>
-                <input
-                  nz-input
-                  [ngModel]="pgLabelColor()"
-                  (ngModelChange)="pgLabelColor.set($event)"
-                  style="flex: 1; height: 28px"
-                />
-              </div>
-              }
-            </div>
             }
 
             <!-- Custom Sizing (Shown only when pgSize() === 'custom') -->
             @if (pgSize() === 'custom') {
-            <div class="control-item" style="padding: 12px; background: #fafafa; border-radius: 8px">
-              <label style="font-weight: 500; font-size: 13px; margin-bottom: 12px; display: block">
-                Пользовательский размер (Custom API)
-              </label>
-              <div nz-row [nzGutter]="12">
-                <div nz-col [nzSpan]="8">
-                  <nz-input-group nzPrefix="W" nzSuffix="px">
-                    <input
-                      type="number"
-                      nz-input
-                      [ngModel]="pgWidth()"
-                      (ngModelChange)="pgWidth.set($event)"
-                      placeholder="Auto"
-                    />
-                  </nz-input-group>
-                </div>
-                <div nz-col [nzSpan]="8">
-                  <nz-input-group nzPrefix="H" nzSuffix="px">
-                    <input
-                      type="number"
-                      nz-input
-                      [ngModel]="pgHeight()"
-                      (ngModelChange)="pgHeight.set($event)"
-                      placeholder="Auto"
-                    />
-                  </nz-input-group>
-                </div>
-                <div nz-col [nzSpan]="8">
-                  <nz-input-group nzPrefix="R" nzSuffix="px">
-                    <input
-                      type="number"
-                      nz-input
-                      [ngModel]="pgRadius()"
-                      (ngModelChange)="pgRadius.set($event)"
-                      placeholder="Auto"
-                    />
-                  </nz-input-group>
+              <div class="control-item" style="padding: 12px; background: #fafafa; border-radius: 8px">
+                <label style="font-weight: 500; font-size: 13px; margin-bottom: 12px; display: block">
+                  Пользовательский размер (Custom API)
+                </label>
+                <div nz-row [nzGutter]="12">
+                  <div nz-col [nzSpan]="8">
+                    <nz-input-group nzPrefix="W" nzSuffix="px">
+                      <input
+                        type="number"
+                        nz-input
+                        [ngModel]="pgWidth()"
+                        (ngModelChange)="pgWidth.set($event)"
+                        placeholder="Auto"
+                      />
+                    </nz-input-group>
+                  </div>
+                  <div nz-col [nzSpan]="8">
+                    <nz-input-group nzPrefix="H" nzSuffix="px">
+                      <input
+                        type="number"
+                        nz-input
+                        [ngModel]="pgHeight()"
+                        (ngModelChange)="pgHeight.set($event)"
+                        placeholder="Auto"
+                      />
+                    </nz-input-group>
+                  </div>
+                  <div nz-col [nzSpan]="8">
+                    <nz-input-group nzPrefix="R" nzSuffix="px">
+                      <input
+                        type="number"
+                        nz-input
+                        [ngModel]="pgRadius()"
+                        (ngModelChange)="pgRadius.set($event)"
+                        placeholder="Auto"
+                      />
+                    </nz-input-group>
+                  </div>
                 </div>
               </div>
-            </div>
             }
 
             <!-- 5. Color Settings -->
@@ -181,22 +181,22 @@
               <div style="display: flex; flex-direction: column; gap: 10px">
                 <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap">
                   @for (color of colorPresets; track color) {
-                  <div
-                    class="color-preset"
-                    [style.background-color]="
-                      color === 'primary'
-                        ? '#1890ff'
-                        : color === 'success'
-                        ? '#52c41a'
-                        : color === 'warning'
-                        ? '#faad14'
-                        : color === 'danger'
-                        ? '#ff4d4f'
-                        : color
-                    "
-                    [class.active]="pgColor() === color"
-                    (click)="pgColor.set(color)"
-                  ></div>
+                    <div
+                      class="color-preset"
+                      [style.background-color]="
+                        color === 'primary'
+                          ? '#1890ff'
+                          : color === 'success'
+                            ? '#52c41a'
+                            : color === 'warning'
+                              ? '#faad14'
+                              : color === 'danger'
+                                ? '#ff4d4f'
+                                : color
+                      "
+                      [class.active]="pgColor() === color"
+                      (click)="pgColor.set(color)"
+                    ></div>
                   }
                 </div>
 
@@ -253,61 +253,61 @@
         <nz-card nzTitle="Результат">
           <div class="preview-area" style="min-height: 250px">
             @if (refreshTrigger()) {
-            <div style="display: flex; flex-direction: column; align-items: center; gap: 16px">
-              @if (pgType() === 'directive') {
-              <label class="av-toggle">
-                <input
-                  type="checkbox"
-                  avToggle
-                  [ngModel]="pgChecked()"
-                  (ngModelChange)="pgChecked.set($event)"
-                  [avSize]="appliedSize()"
-                  [avColor]="pgColor()"
-                  [avShape]="pgShape()"
-                  [avWidth]="pgSize() === 'custom' ? pgWidth() : null"
-                  [avHeight]="pgSize() === 'custom' ? pgHeight() : null"
-                  [avRadius]="pgSize() === 'custom' ? pgRadius() : null"
-                  [disabled]="pgDisabled()"
-                />
-                <span class="av-toggle__slider"></span>
-              </label>
-              } @else if (pgType() === 'component') {
-              <av-toggle
-                [checked]="pgChecked()"
-                (checkedChange)="pgChecked.set($event)"
-                [size]="appliedSize()"
-                [color]="pgColor()"
-                [shape]="pgShape()"
-                [labelPosition]="pgLabelPosition()"
-                [labelSize]="pgLabelSize()"
-                [labelColor]="pgLabelColor()"
-                [width]="pgSize() === 'custom' ? pgWidth() : null"
-                [height]="pgSize() === 'custom' ? pgHeight() : null"
-                [radius]="pgSize() === 'custom' ? pgRadius() : null"
-                [disabled]="pgDisabled()"
-              >
-                {{ pgLabel() }}
-              </av-toggle>
-              } @else if (pgType() === 'labeled') {
-              <av-toggle-labeled
-                [checked]="pgChecked()"
-                (checkedChange)="pgChecked.set($event)"
-                [size]="appliedSize()"
-                [color]="pgColor()"
-                [shape]="pgShape()"
-                [leftLabel]="pgLeftLabel()"
-                [rightLabel]="pgRightLabel()"
-                [width]="pgSize() === 'custom' ? pgWidth() : null"
-                [height]="pgSize() === 'custom' ? pgHeight() : null"
-                [radius]="pgSize() === 'custom' ? pgRadius() : null"
-                [disabled]="pgDisabled()"
-              ></av-toggle-labeled>
-              }
+              <div style="display: flex; flex-direction: column; align-items: center; gap: 16px">
+                @if (pgType() === 'directive') {
+                  <label class="av-toggle">
+                    <input
+                      type="checkbox"
+                      avToggle
+                      [ngModel]="pgChecked()"
+                      (ngModelChange)="pgChecked.set($event)"
+                      [avSize]="appliedSize()"
+                      [avColor]="pgColor()"
+                      [avShape]="pgShape()"
+                      [avWidth]="pgSize() === 'custom' ? pgWidth() : null"
+                      [avHeight]="pgSize() === 'custom' ? pgHeight() : null"
+                      [avRadius]="pgSize() === 'custom' ? pgRadius() : null"
+                      [disabled]="pgDisabled()"
+                    />
+                    <span class="av-toggle__slider"></span>
+                  </label>
+                } @else if (pgType() === 'component') {
+                  <av-toggle
+                    [checked]="pgChecked()"
+                    (checkedChange)="pgChecked.set($event)"
+                    [size]="appliedSize()"
+                    [color]="pgColor()"
+                    [shape]="pgShape()"
+                    [labelPosition]="pgLabelPosition()"
+                    [labelSize]="pgLabelSize()"
+                    [labelColor]="pgLabelColor()"
+                    [width]="pgSize() === 'custom' ? pgWidth() : null"
+                    [height]="pgSize() === 'custom' ? pgHeight() : null"
+                    [radius]="pgSize() === 'custom' ? pgRadius() : null"
+                    [disabled]="pgDisabled()"
+                  >
+                    {{ pgLabel() }}
+                  </av-toggle>
+                } @else if (pgType() === 'labeled') {
+                  <av-toggle-labeled
+                    [checked]="pgChecked()"
+                    (checkedChange)="pgChecked.set($event)"
+                    [size]="appliedSize()"
+                    [color]="pgColor()"
+                    [shape]="pgShape()"
+                    [leftLabel]="pgLeftLabel()"
+                    [rightLabel]="pgRightLabel()"
+                    [width]="pgSize() === 'custom' ? pgWidth() : null"
+                    [height]="pgSize() === 'custom' ? pgHeight() : null"
+                    [radius]="pgSize() === 'custom' ? pgRadius() : null"
+                    [disabled]="pgDisabled()"
+                  ></av-toggle-labeled>
+                }
 
-              <div style="font-size: 12px; color: #8c8c8c; margin-top: 12px; font-family: monospace">
-                checked: <strong [style.color]="pgChecked() ? '#52c41a' : '#ff4d4f'">{{ pgChecked() }}</strong>
+                <div style="font-size: 12px; color: #8c8c8c; margin-top: 12px; font-family: monospace">
+                  checked: <strong [style.color]="pgChecked() ? '#52c41a' : '#ff4d4f'">{{ pgChecked() }}</strong>
+                </div>
               </div>
-            </div>
             }
           </div>
 
@@ -340,30 +340,31 @@
     </div>
 
     @if (showDocs) {
-    <nz-card nzTitle="Документация: Toggle Component" class="api-docs-card" style="margin-bottom: 24px">
-      <div class="docs-summary">
-        <p>
-          <strong>Toggle</strong> — это универсальный компонент переключателя, поддерживающий три режима использования:
-        </p>
-        <ul>
-          <li>
-            <strong>Directive (avToggle):</strong> Применяется к нативному
-            <code>&lt;input type=&quot;checkbox&quot;&gt;</code>.
-          </li>
-          <li>
-            <strong>Component (&lt;av-toggle&gt;):</strong> Готовое решение с поддержкой внешних лейблов и
-            позиционирования.
-          </li>
-          <li>
-            <strong>Labeled (&lt;av-toggle-labeled&gt;):</strong> Стильный переключатель с подписями внутри трека.
-          </li>
-        </ul>
-        <p style="margin-top: 12px">
-          Используйте кнопку "?" в заголовке контейнера ниже, чтобы увидеть полную спецификацию и описание всех
-          параметров.
-        </p>
-      </div>
-    </nz-card>
+      <nz-card nzTitle="Документация: Toggle Component" class="api-docs-card" style="margin-bottom: 24px">
+        <div class="docs-summary">
+          <p>
+            <strong>Toggle</strong> — это универсальный компонент переключателя, поддерживающий три режима
+            использования:
+          </p>
+          <ul>
+            <li>
+              <strong>Directive (avToggle):</strong> Применяется к нативному
+              <code>&lt;input type=&quot;checkbox&quot;&gt;</code>.
+            </li>
+            <li>
+              <strong>Component (&lt;av-toggle&gt;):</strong> Готовое решение с поддержкой внешних лейблов и
+              позиционирования.
+            </li>
+            <li>
+              <strong>Labeled (&lt;av-toggle-labeled&gt;):</strong> Стильный переключатель с подписями внутри трека.
+            </li>
+          </ul>
+          <p style="margin-top: 12px">
+            Используйте кнопку "?" в заголовке контейнера ниже, чтобы увидеть полную спецификацию и описание всех
+            параметров.
+          </p>
+        </div>
+      </nz-card>
     }
 
     <nz-card class="api-docs-card">
@@ -385,8 +386,8 @@
 
   <!-- Toast Notification -->
   @if (message()) {
-  <div class="message-display">
-    {{ message() }}
-  </div>
+    <div class="message-display">
+      {{ message() }}
+    </div>
   }
 </div>

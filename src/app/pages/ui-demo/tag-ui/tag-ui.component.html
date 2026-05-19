@@ -299,7 +299,7 @@
 
     <div class="demo-section__preview">
       @for (color of colors; track color) {
-      <av-tag [label]="color" [color]="color"></av-tag>
+        <av-tag [label]="color" [color]="color"></av-tag>
       }
     </div>
 
@@ -317,21 +317,21 @@
       <div class="variant-group">
         <h4>Soft (мягкий фон)</h4>
         @for (color of colors; track color) {
-        <av-tag [label]="color" [color]="color" variant="soft"></av-tag>
+          <av-tag [label]="color" [color]="color" variant="soft"></av-tag>
         }
       </div>
 
       <div class="variant-group">
         <h4>Filled (заливка)</h4>
         @for (color of colors; track color) {
-        <av-tag [label]="color" [color]="color" variant="filled"></av-tag>
+          <av-tag [label]="color" [color]="color" variant="filled"></av-tag>
         }
       </div>
 
       <div class="variant-group">
         <h4>Outlined (контур)</h4>
         @for (color of colors; track color) {
-        <av-tag [label]="color" [color]="color" variant="outlined"></av-tag>
+          <av-tag [label]="color" [color]="color" variant="outlined"></av-tag>
         }
       </div>
     </div>
@@ -379,7 +379,7 @@
 
     <div class="demo-section__preview">
       @for (tag of basicTags; track tag) {
-      <av-tag [label]="tag" [removable]="true" color="primary" (removed)="onTagRemove(tag)"> </av-tag>
+        <av-tag [label]="tag" [removable]="true" color="primary" (removed)="onTagRemove(tag)"> </av-tag>
       }
     </div>
 

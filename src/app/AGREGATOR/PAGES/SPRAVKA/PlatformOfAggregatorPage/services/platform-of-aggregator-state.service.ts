@@ -1,13 +1,13 @@
 import { Injectable, OnDestroy, signal, computed, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { LanguageService } from '@assets/languageApp/services/language.service';
-import { AppLanguage } from '@assets/languageApp/models/appLanguage.model';
+import { LanguageService } from '@language-app/services/language.service';
+import { AppLanguage } from '@language-app/models/appLanguage.model';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { ModalService } from '@shared/components/ui/modal/services/modal.service';
 import { Observable, Subject } from 'rxjs';
 import { finalize, shareReplay, takeUntil } from 'rxjs/operators';
-import { ErrorResponse } from '../../../../../shared/infrastructure/interceptor/models/error-response.model';
+import { ErrorResponse } from '@core/models/error-response.model';
 import {
   INITIAL_PLATFORM_STATE,
   PlatformOfAggregatorCreateDto,
@@ -22,6 +22,11 @@ import { PlatformOfAggregatorApiService } from './platform-of-aggregator-api.ser
   providedIn: 'root',
 })
 export class PlatformOfAggregatorStateService implements OnDestroy {
+  private api = inject(PlatformOfAggregatorApiService);
+  private message = inject(NzMessageService);
+  private modal = inject(NzModalService);
+  private modalService = inject(ModalService);
+
   private destroy$ = new Subject<void>();
 
   // Single Source of Truth (Signal)
@@ -52,13 +57,6 @@ export class PlatformOfAggregatorStateService implements OnDestroy {
   // Языки из LanguageService (через computed для реактивности)
   readonly languages = computed<AppLanguage[]>(() => this.langService.availableLanguages() || []);
 
-  constructor(
-    private api: PlatformOfAggregatorApiService,
-    private message: NzMessageService,
-    private modal: NzModalService,
-    private modalService: ModalService,
-  ) {}
-
   private checkLanguagesAvailable(): boolean {
     const langs = this.langService.availableLanguages();
     return !!(langs && langs.length > 0);
@@ -77,13 +75,13 @@ export class PlatformOfAggregatorStateService implements OnDestroy {
 
   private handleError(err: any, context: string): void {
     const errorResponse = ErrorResponse.fromError(err, context);
-    
+
     // Diagnostic log for the 404 mystery
     console.error(`[PlatformState][${context}] Error detected:`, {
       url: err?.url,
       status: err?.status,
       message: err?.message,
-      errorBody: err?.error
+      errorBody: err?.error,
     });
 
     this.updateState({ error: errorResponse });
@@ -108,23 +106,25 @@ export class PlatformOfAggregatorStateService implements OnDestroy {
     ).subscribe({
       next: (res) => {
         this.updateState({ items: res.items, total: res.total, error: null });
-        
+
         if (checkEmpty && !s.showDeleted) {
           if (res.total === 0) {
             this.modalService.alert({
               title: 'База данных пуста!',
-              message: 'В базе данных \'DbNames\' (таблица \'platforms_of_aggregator\') нет записей для отображения. Вы можете инициализировать данные из JSON файла в блоке обслуживания.',
+              message:
+                "В базе данных 'DbNames' (таблица 'platforms_of_aggregator') нет записей для отображения. Вы можете инициализировать данные из JSON файла в блоке обслуживания.",
               alertType: 'info',
               centered: true,
-              icon: 'system/av_info'
+              icon: 'system/av_info',
             });
           } else {
             this.modalService.alert({
               title: 'Обновление завершено',
-              message: 'Данные из БД считаны, таблица обновлена. Всего загружено записей: ' + res.total,
+              message:
+                'Данные из БД считаны, таблица обновлена. Всего загружено записей: ' + res.total,
               alertType: 'success',
               centered: true,
-              icon: 'general/av_check-circle'
+              icon: 'general/av_check-circle',
             });
           }
         }
@@ -243,7 +243,10 @@ export class PlatformOfAggregatorStateService implements OnDestroy {
     const isAdd = s.modalMode === 'add';
     const request = isAdd
       ? this.api.create(data as PlatformOfAggregatorCreateDto)
-      : this.api.update((data as PlatformOfAggregatorUpdateDto).id, data as PlatformOfAggregatorUpdateDto);
+      : this.api.update(
+          (data as PlatformOfAggregatorUpdateDto).id,
+          data as PlatformOfAggregatorUpdateDto,
+        );
 
     this.executeWithLoading(request, true).subscribe({
       next: () => {
@@ -255,7 +258,7 @@ export class PlatformOfAggregatorStateService implements OnDestroy {
     });
   }
 
-  delete(id: number, isHard: boolean = false): void {
+  delete(id: number, isHard = false): void {
     this.updateState({ deletingId: id });
     this.api
       .delete(id, isHard)
@@ -265,7 +268,9 @@ export class PlatformOfAggregatorStateService implements OnDestroy {
       )
       .subscribe({
         next: () => {
-          this.message.success(isHard ? 'Платформа ПОЛНОСТЬЮ удалена' : 'Платформа перемещена в корзину (Soft Delete)');
+          this.message.success(
+            isHard ? 'Платформа ПОЛНОСТЬЮ удалена' : 'Платформа перемещена в корзину (Soft Delete)',
+          );
           this.loadItems();
         },
         error: (err) => this.handleError(err, 'Delete'),
@@ -299,15 +304,16 @@ export class PlatformOfAggregatorStateService implements OnDestroy {
 
   async seedFromJson(): Promise<void> {
     const s = this.state();
-    
+
     // Проверка наличия записей в БД
     if (s.total > 0) {
       await this.modalService.alert({
         title: 'Перенос невозможен',
-        message: 'В БД есть записи, перенос данных из Json в БД невозможен. Для нового переноса удалите данные из БД.',
+        message:
+          'В БД есть записи, перенос данных из Json в БД невозможен. Для нового переноса удалите данные из БД.',
         alertType: 'warning',
         centered: true,
-        icon: 'system/av_info'
+        icon: 'system/av_info',
       });
       return;
     }
@@ -327,27 +333,29 @@ export class PlatformOfAggregatorStateService implements OnDestroy {
   }
 
   private updateState(partial: Partial<PlatformOfAggregatorState>): void {
-    this.state.update(s => ({ ...s, ...partial }));
+    this.state.update((s) => ({ ...s, ...partial }));
   }
 
   /**
    * Автоматически заполняет пустые поля локализаций данными из английской версии (en-US).
    * @param data Данные платформы для сохранения
    */
-  private applyEnglishFallbacks(data: PlatformOfAggregatorCreateDto | PlatformOfAggregatorUpdateDto): void {
+  private applyEnglishFallbacks(
+    data: PlatformOfAggregatorCreateDto | PlatformOfAggregatorUpdateDto,
+  ): void {
     if (!data.localizations || data.localizations.length === 0) return;
 
     // 1. Ищем английскую локализацию как основной источник данных
-    const enLoc = data.localizations.find(l => l.languageCode === 'en-US');
+    const enLoc = data.localizations.find((l) => l.languageCode === 'en-US');
     const masterName = data.name; // Техническое название платформы
 
     // 2. Проходим по всем локализациям и заполняем пустоты
-    data.localizations.forEach(loc => {
+    data.localizations.forEach((loc) => {
       const isEn = loc.languageCode === 'en-US';
 
       // Если имя локализации пустое — берем из английской версии или из технического названия
       if (!loc.name?.trim()) {
-        loc.name = isEn ? masterName : (enLoc?.name || masterName);
+        loc.name = isEn ? masterName : enLoc?.name || masterName;
       }
 
       // Если это не английская локализация, заполняем остальные поля
@@ -361,16 +369,23 @@ export class PlatformOfAggregatorStateService implements OnDestroy {
           if (!loc.seoData) {
             // Если SEO блока вообще нет, создаем клон без ID
             const { id, ...seoRest } = enLoc.seoData;
-            loc.seoData = { ...seoRest, noIndex: enLoc.seoData.noIndex, noFollow: enLoc.seoData.noFollow } as any;
+            loc.seoData = {
+              ...seoRest,
+              noIndex: enLoc.seoData.noIndex,
+              noFollow: enLoc.seoData.noFollow,
+            } as any;
           } else {
             // Если SEO блок есть, заполняем только пустые поля
             if (!loc.seoData.metaTitle?.trim()) loc.seoData.metaTitle = enLoc.seoData.metaTitle;
-            if (!loc.seoData.metaDescription?.trim()) loc.seoData.metaDescription = enLoc.seoData.metaDescription;
-            if (!loc.seoData.metaKeywords?.trim()) loc.seoData.metaKeywords = enLoc.seoData.metaKeywords;
-            
+            if (!loc.seoData.metaDescription?.trim())
+              loc.seoData.metaDescription = enLoc.seoData.metaDescription;
+            if (!loc.seoData.metaKeywords?.trim())
+              loc.seoData.metaKeywords = enLoc.seoData.metaKeywords;
+
             // Дополнительные SEO поля
             if (!loc.seoData.ogTitle?.trim()) loc.seoData.ogTitle = enLoc.seoData.ogTitle;
-            if (!loc.seoData.ogDescription?.trim()) loc.seoData.ogDescription = enLoc.seoData.ogDescription;
+            if (!loc.seoData.ogDescription?.trim())
+              loc.seoData.ogDescription = enLoc.seoData.ogDescription;
           }
         }
       }

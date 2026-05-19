@@ -32,7 +32,7 @@
               <label class="control-label">Ширина (Width):</label>
               <nz-select [ngModel]="config().width" (ngModelChange)="updateConfig('width', $event)">
                 @for (w of widthPresets; track w.value) {
-                <nz-option [nzLabel]="w.label" [nzValue]="w.value"></nz-option>
+                  <nz-option [nzLabel]="w.label" [nzValue]="w.value"></nz-option>
                 }
               </nz-select>
             </div>
@@ -40,7 +40,7 @@
               <label class="control-label">Высота (Height):</label>
               <nz-select [ngModel]="config().height" (ngModelChange)="updateConfig('height', $event)">
                 @for (h of heightPresets; track h.value) {
-                <nz-option [nzLabel]="h.label" [nzValue]="h.value"></nz-option>
+                  <nz-option [nzLabel]="h.label" [nzValue]="h.value"></nz-option>
                 }
               </nz-select>
             </div>
@@ -82,15 +82,15 @@
           </div>
 
           @if (config().showHelpButton) {
-          <div class="control-group" style="margin-top: 16px">
-            <label class="control-label">Текст справки (HTML поддерживается):</label>
-            <textarea
-              nz-input
-              [ngModel]="config().helpContent"
-              (ngModelChange)="updateConfig('helpContent', $event)"
-              [nzAutosize]="{ minRows: 2, maxRows: 5 }"
-            ></textarea>
-          </div>
+            <div class="control-group" style="margin-top: 16px">
+              <label class="control-label">Текст справки (HTML поддерживается):</label>
+              <textarea
+                nz-input
+                [ngModel]="config().helpContent"
+                (ngModelChange)="updateConfig('helpContent', $event)"
+                [nzAutosize]="{ minRows: 2, maxRows: 5 }"
+              ></textarea>
+            </div>
           }
         </div>
       </nz-tab>

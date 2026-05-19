@@ -14,23 +14,58 @@ export const MERMAID_DIAGRAM_CODE = `graph TD
     F --> F2["Loading State / Version"]`;
 
 export const ACTION_PATTERNS = [
-  { name: 'Просмотр', icon: 'eye', color: 'primary', colorName: 'Primary', method: 'openView()', ux: 'Открывает Modal с деталями (Read-only)' },
-  { name: 'Редактировать', icon: 'edit', color: 'gold', colorName: 'Warning', method: 'openEditForm()', ux: 'Форма редактирования с SEO-блоком' },
-  { name: 'В корзину', icon: 'delete', color: 'error', colorName: 'Error', method: 'softDelete()', ux: 'Мягкое удаление (isDeleted = true)' },
-  { name: 'Восстановить', icon: 'sync', color: 'success', colorName: 'Success', method: 'restore()', ux: 'Возврат записи из корзины' },
-  { name: 'Hard Delete', icon: 'fire', color: 'red', colorName: 'Critical', method: 'hardDelete()', ux: 'Метод modal.challenge (Капча)' },
+  {
+    name: 'Просмотр',
+    icon: 'eye',
+    color: 'primary',
+    colorName: 'Primary',
+    method: 'openView()',
+    ux: 'Открывает Modal с деталями (Read-only)',
+  },
+  {
+    name: 'Редактировать',
+    icon: 'edit',
+    color: 'gold',
+    colorName: 'Warning',
+    method: 'openEditForm()',
+    ux: 'Форма редактирования с SEO-блоком',
+  },
+  {
+    name: 'В корзину',
+    icon: 'delete',
+    color: 'error',
+    colorName: 'Error',
+    method: 'softDelete()',
+    ux: 'Мягкое удаление (isDeleted = true)',
+  },
+  {
+    name: 'Восстановить',
+    icon: 'sync',
+    color: 'success',
+    colorName: 'Success',
+    method: 'restore()',
+    ux: 'Возврат записи из корзины',
+  },
+  {
+    name: 'Hard Delete',
+    icon: 'fire',
+    color: 'red',
+    colorName: 'Critical',
+    method: 'hardDelete()',
+    ux: 'Метод modal.challenge (Капча)',
+  },
 ];
 
 export const CATEGORY_FIELDS = [
   { name: 'Slug', type: 'string', desc: 'Уникальный код для URL' },
   { name: 'Color', type: 'string', desc: 'HEX-код цвета' },
-  { name: 'IsActive', type: 'bool', desc: 'Флаг активности' }
+  { name: 'IsActive', type: 'bool', desc: 'Флаг активности' },
 ];
 
 export const TAG_FIELDS = [
   { name: 'Slug', type: 'string', desc: 'Уникальный код (URL)' },
   { name: 'Color', type: 'string', desc: 'Цвет ("inherit" для наследования)' },
-  { name: 'IsActive', type: 'bool', desc: 'Флаг активности' }
+  { name: 'IsActive', type: 'bool', desc: 'Флаг активности' },
 ];
 
 export const SERVER_SEARCH_CODE = `if (!string.IsNullOrWhiteSpace(req.SearchTerm)) {

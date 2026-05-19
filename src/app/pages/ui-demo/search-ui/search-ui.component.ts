@@ -44,7 +44,7 @@ export class SearchUiComponent {
     const attributes: string[] = [];
 
     attributes.push(`[(value)]="searchQuery"`);
-    attributes.push(`(onSearch)="handleSearch($event)"`);
+    attributes.push(`(searchChange)="handleSearch($event)"`);
 
     if (this.playgroundPlaceholder() !== 'Поиск...') {
       attributes.push(`avPlaceholder="${this.playgroundPlaceholder()}"`);
@@ -83,11 +83,11 @@ handleSearch(query: string) {
 2. ЖИВОЙ ПОИСК (Debounce)
    При вводе текста срабатывает встроенный механизм задержки (по умолчанию 300мс).
    Это предотвращает избыточные вызовы API при каждом нажатии клавиши.
-   Событие (onSearch) генерируется только после паузы в наборе.
+   Событие (searchChange) генерируется только после паузы в наборе.
 
 3. ПРИНУДИТЕЛЬНЫЙ ПОИСК
    Нажатие кнопки "Найти" или клавиши Enter игнорирует дебаунс
-   и немедленно вызывает событие (onSearch).
+   и немедленно вызывает событие (searchChange).
 
 4. ОЧИСТКА (Clear)
    Кнопка "X" появляется только при наличии текста.
@@ -103,14 +103,14 @@ handleSearch(query: string) {
 // 1. БАЗОВЫЙ ПОИСК (с дебаунсом 300мс)
 <av-search
   [(value)]="query"
-  (onSearch)="handle($event)"
+  (searchChange)="handle($event)"
 ></av-search>
 
 // 2. ПОИСК С КНОПКОЙ И КАСТОМНЫМ ТЕКСТОМ
 <av-search
   avButtonText="Найти пользователя"
   avPlaceholder="Введите имя..."
-  (onSearch)="handle($event)"
+  (searchChange)="handle($event)"
 ></av-search>
 
 // 3. РАЗНЫЕ РАЗМЕРЫ (small, default, large, x-large)

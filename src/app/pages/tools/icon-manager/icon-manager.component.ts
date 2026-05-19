@@ -15,13 +15,13 @@ import { firstValueFrom } from 'rxjs';
 
 import { ApiEndpoints } from '@environments/api-endpoints';
 
+import { IconDataService } from '@core/services/icon/icon-data.service';
 import { IconGetService } from '@core/services/icon/icon-get.service';
-import { IconLaboratoryService } from '@shared/services/icon-laboratory.service';
-import { IconComponent } from '../../../shared/components/ui/icon/icon.component';
+import { IconComponent } from '@shared-ui';
 import { IconCategoryManagerComponent } from '../../icon-category-manager/icon-category-manager.component';
 import { IconCategory as DbCategory } from '../../icon-category-manager/models/icon-category.model';
 import { IconCategoryService } from '../../icon-category-manager/services/icon-category.service';
-import { IconMetadata } from '../../ui-demo/old-control/icon-ui/icon-metadata.model';
+import { IconMetadata } from '@shared/models/icon-metadata.model';
 import { IconCategory } from '../../ui-demo/old-control/icon-ui/icon-registry';
 
 // Local interface extension to support count from backend
@@ -332,7 +332,6 @@ interface IconCategoryWithCount extends IconCategory {
                         (ngModelChange)="editedName.set($event)"
                         (keydown)="onNameKeyDown($event)"
                         [disabled]="isRenamingInProgress()"
-                        autofocus
                         placeholder="Введите новое имя"
                       />
                       <div class="edit-actions">
@@ -2802,7 +2801,7 @@ interface IconCategoryWithCount extends IconCategory {
 })
 export class IconManagerComponent {
   private http = inject(HttpClient);
-  private iconDataService = inject(IconLaboratoryService);
+  private iconDataService = inject(IconDataService);
   private message = inject(NzMessageService);
   private modal = inject(NzModalService);
   private sanitizer = inject(DomSanitizer);
@@ -2963,7 +2962,7 @@ export class IconManagerComponent {
     });
   }
 
-  private loadIcons(force: boolean = false) {
+  private loadIcons(force = false) {
     // Legacy method kept for reference or full reload if needed, but not used on init
     // implementation omitted or kept as is if not conflicting
     console.log('Legacy loadIcons called');
@@ -3824,7 +3823,7 @@ export class IconManagerComponent {
     const ctx = document.createElement('canvas').getContext('2d');
     if (!ctx) return color;
     ctx.fillStyle = color;
-    let computed = ctx.fillStyle; // Usually #rrggbb
+    const computed = ctx.fillStyle; // Usually #rrggbb
 
     // Shorten if possible
     if (computed.startsWith('#') && computed.length === 7) {
@@ -3960,9 +3959,9 @@ export class IconManagerComponent {
     const svg = doc.querySelector('svg');
     if (!svg) return raw;
 
-    let vb = svg.getAttribute('viewBox');
-    let w = parseFloat(svg.getAttribute('width') || '0');
-    let h = parseFloat(svg.getAttribute('height') || '0');
+    const vb = svg.getAttribute('viewBox');
+    const w = parseFloat(svg.getAttribute('width') || '0');
+    const h = parseFloat(svg.getAttribute('height') || '0');
     let minX = 0,
       minY = 0,
       width = 0,

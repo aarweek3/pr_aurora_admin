@@ -6,16 +6,16 @@ export const PLATFORM_OF_AGGREGATOR_ROUTES: Routes = [
   {
     path: '',
     component: PlatformOfAggregatorManagerComponent,
-    data: { breadcrumb: 'Операционные системы' }
+    data: { breadcrumb: 'Операционные системы' },
   },
   {
     path: 'new',
     component: PlatformOfAggregatorPageFormComponent,
-    data: { breadcrumb: 'Новая платформа' }
+    data: { breadcrumb: 'Новая платформа' },
   },
   {
     path: ':id/edit',
     component: PlatformOfAggregatorPageFormComponent,
-    data: { breadcrumb: 'Редактирование платформы' }
-  }
+    data: { breadcrumb: 'Редактирование платформы' },
+  },
 ];

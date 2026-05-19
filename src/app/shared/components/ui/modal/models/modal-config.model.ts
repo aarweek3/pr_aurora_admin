@@ -21,7 +21,7 @@ export type ModalAlertType = 'info' | 'success' | 'warning' | 'error';
 /**
  * Конфигурация модального окна
  */
-export interface ModalConfig<TData = any> {
+export interface ModalConfig<TData = unknown, TResult = unknown> {
   /** Размер модала */
   size?: ModalSize;
 
@@ -74,7 +74,7 @@ export interface ModalConfig<TData = any> {
   maxHeight?: string;
 
   /** Hook перед закрытием (может предотвратить закрытие) */
-  beforeClose?: (result?: any) => boolean | Promise<boolean>;
+  beforeClose?: (result?: TResult) => boolean | Promise<boolean>;
 
   /** Блокировать закрытие footer во время loading */
   disableFooterWhileLoading?: boolean;
@@ -92,7 +92,7 @@ export interface ModalConfig<TData = any> {
 /**
  * Конфигурация для Confirm модала
  */
-export interface ConfirmConfig<TData = any> extends ModalConfig<TData> {
+export interface ConfirmConfig<TData = unknown, TResult = unknown> extends ModalConfig<TData, TResult> {
   /** Текст сообщения */
   message: string;
 
@@ -112,7 +112,7 @@ export interface ConfirmConfig<TData = any> extends ModalConfig<TData> {
 /**
  * Конфигурация для Alert модала
  */
-export interface AlertConfig<TData = any> extends ModalConfig<TData> {
+export interface AlertConfig<TData = unknown, TResult = unknown> extends ModalConfig<TData, TResult> {
   /** Текст сообщения */
   message: string;
 

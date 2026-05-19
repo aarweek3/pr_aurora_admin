@@ -123,9 +123,12 @@ export class ApiEndpoints {
     CATEGORY_CONTENT: (id: number) => `${this.BASE_URL}/Icons/category/${id}/content`,
     BATCH_CONTENT: `${this.BASE_URL}/Icons/batch-content`,
     SAVE_TO_DISK: `${this.BASE_URL}/Icons/save-to-disk`,
-    CREATE_DIRECTORY: (path: string) => `${this.BASE_URL}/Icons/create-directory?path=${encodeURIComponent(path)}`,
-    OPEN_FILE: (path: string) => `${this.BASE_URL}/Icons/open-file?path=${encodeURIComponent(path)}`,
-    READ_FILE: (path: string) => `${this.BASE_URL}/Icons/read-file?path=${encodeURIComponent(path)}`,
+    CREATE_DIRECTORY: (path: string) =>
+      `${this.BASE_URL}/Icons/create-directory?path=${encodeURIComponent(path)}`,
+    OPEN_FILE: (path: string) =>
+      `${this.BASE_URL}/Icons/open-file?path=${encodeURIComponent(path)}`,
+    READ_FILE: (path: string) =>
+      `${this.BASE_URL}/Icons/read-file?path=${encodeURIComponent(path)}`,
     DELETE: (type: string, b: boolean, f: boolean) =>
       `${this.BASE_URL}/Icons/delete?iconType=${type}&fromBackend=${b}&fromFrontend=${f}`,
     RENAME_FILE: `${this.BASE_URL}/Icons/rename-file`,
@@ -140,6 +143,7 @@ export class ApiEndpoints {
     STATUS: (id: number) => `${this.BASE_URL}/v1/languages-app/${id}/status`,
     HARD_RESET: `${this.BASE_URL}/v1/languages-app/hard-reset`,
     INITIALIZE: `${this.BASE_URL}/v1/languages-app/initialize`,
+    APP_STATUS: `${this.BASE_URL}/v1/languages-app/app-status`,
   };
 
   // Aggregator Languages endpoints
@@ -151,6 +155,8 @@ export class ApiEndpoints {
     STATUS: (id: number) => `${this.BASE_URL}/v1/aggregator/languages/${id}/status`,
     HARD_RESET: `${this.BASE_URL}/v1/aggregator/languages/hard-reset`,
     INITIALIZE: `${this.BASE_URL}/v1/aggregator/languages/initialize`,
+    RESTORE: (id: number) => `${this.BASE_URL}/v1/aggregator/languages/${id}/restore`,
+    HARD_DELETE: (id: number) => `${this.BASE_URL}/v1/aggregator/languages/${id}/hard`,
   };
 
   // Images General

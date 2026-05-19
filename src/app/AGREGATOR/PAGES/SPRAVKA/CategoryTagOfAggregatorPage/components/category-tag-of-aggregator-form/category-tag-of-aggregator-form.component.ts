@@ -1,11 +1,11 @@
-import { 
-  Component, 
-  OnInit, 
-  inject, 
-  input, 
-  output, 
-  ChangeDetectionStrategy, 
-  ChangeDetectorRef 
+import {
+  Component,
+  OnInit,
+  inject,
+  input,
+  output,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, FormArray } from '@angular/forms';
@@ -46,14 +46,18 @@ import { LanguageAggregator } from '../../../LanguageOfAggregator/models/languag
     NzCollapseModule,
     NzButtonModule,
     NzIconModule,
-    SeoFormComponent
+    SeoFormComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <nz-spin [nzSpinning]="loading">
-      <form nz-form [formGroup]="form" nzLayout="vertical" *ngIf="form && languages.length > 0; else noLangs">
+      <form
+        nz-form
+        [formGroup]="form"
+        nzLayout="vertical"
+        *ngIf="form && languages.length > 0; else noLangs"
+      >
         <div nz-row [nzGutter]="[16, 16]">
-          
           <div nz-col nzSpan="12">
             <nz-form-item>
               <nz-form-label nzRequired>Slug (URL-Friendly)</nz-form-label>
@@ -86,10 +90,18 @@ import { LanguageAggregator } from '../../../LanguageOfAggregator/models/languag
               <nz-form-label>Иконка (nz-icon type)</nz-form-label>
               <nz-form-control>
                 <nz-input-group [nzPrefix]="prefixIcon">
-                  <input nz-input formControlName="iconPath" placeholder="Напр: folder, tag, appstore" />
+                  <input
+                    nz-input
+                    formControlName="iconPath"
+                    placeholder="Напр: folder, tag, appstore"
+                  />
                 </nz-input-group>
                 <ng-template #prefixIcon>
-                  <i nz-icon [nzType]="getIconType(form.get('iconPath')?.value)" [style.color]="form.get('color')?.value"></i>
+                  <i
+                    nz-icon
+                    [nzType]="getIconType(form.get('iconPath')?.value)"
+                    [style.color]="form.get('color')?.value"
+                  ></i>
                 </ng-template>
               </nz-form-control>
             </nz-form-item>
@@ -100,10 +112,17 @@ import { LanguageAggregator } from '../../../LanguageOfAggregator/models/languag
               <nz-form-label>Цвет категории</nz-form-label>
               <nz-form-control>
                 <nz-input-group [nzPrefix]="colorPrefix">
-                  <input nz-input formControlName="color" placeholder="Напр: #1890ff или var(--av-tag-blue)" />
+                  <input
+                    nz-input
+                    formControlName="color"
+                    placeholder="Напр: #1890ff или var(--av-tag-blue)"
+                  />
                 </nz-input-group>
                 <ng-template #colorPrefix>
-                  <div class="color-preview-dot" [style.background-color]="form.get('color')?.value || '#d9d9d9'"></div>
+                  <div
+                    class="color-preview-dot"
+                    [style.background-color]="form.get('color')?.value || '#d9d9d9'"
+                  ></div>
                 </ng-template>
               </nz-form-control>
             </nz-form-item>
@@ -123,7 +142,9 @@ import { LanguageAggregator } from '../../../LanguageOfAggregator/models/languag
                         <div nz-row [nzGutter]="[16, 16]">
                           <div nz-col nzSpan="24">
                             <nz-form-item>
-                              <nz-form-label [nzRequired]="lang.code === 'en-US'">Название категории ({{ lang.code }})</nz-form-label>
+                              <nz-form-label [nzRequired]="lang.code === 'en-US'"
+                                >Название категории ({{ lang.code }})</nz-form-label
+                              >
                               <nz-form-control nzErrorTip="Введите название">
                                 <input nz-input formControlName="name" />
                               </nz-form-control>
@@ -174,17 +195,26 @@ import { LanguageAggregator } from '../../../LanguageOfAggregator/models/languag
       </ng-template>
     </nz-spin>
   `,
-  styles: [`
-    .tab-content { padding-top: 16px; min-height: 350px; }
-    .no-langs-container { padding: 40px; text-align: center; color: #8c8c8c; }
-    .color-preview-dot {
-      width: 16px;
-      height: 16px;
-      border-radius: 50%;
-      border: 1px solid rgba(0,0,0,0.1);
-      transition: all 0.3s;
-    }
-  `]
+  styles: [
+    `
+      .tab-content {
+        padding-top: 16px;
+        min-height: 350px;
+      }
+      .no-langs-container {
+        padding: 40px;
+        text-align: center;
+        color: #8c8c8c;
+      }
+      .color-preview-dot {
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        transition: all 0.3s;
+      }
+    `,
+  ],
 })
 export class CategoryTagOfAggregatorFormComponent implements OnInit {
   private fb = inject(FormBuilder);
@@ -194,7 +224,7 @@ export class CategoryTagOfAggregatorFormComponent implements OnInit {
   private message = inject(NzMessageService);
 
   id = input<number | null>(null);
-  onSave = output<any>();
+  save = output<any>();
 
   form: FormGroup;
   languages: LanguageAggregator[] = [];
@@ -209,19 +239,19 @@ export class CategoryTagOfAggregatorFormComponent implements OnInit {
       color: [''],
       isActive: [true],
       sortOrder: [0],
-      localizations: this.fb.array([])
+      localizations: this.fb.array([]),
     });
 
     // Используем availableLanguages из LanguageAggregatorService
     toObservable(this.langService.availableLanguages)
       .pipe(
-        filter(langs => !!langs && langs.length > 0),
-        takeUntilDestroyed()
+        filter((langs) => !!langs && langs.length > 0),
+        takeUntilDestroyed(),
       )
-      .subscribe(langs => {
+      .subscribe((langs) => {
         this.languages = langs;
         this.initLocTabs();
-        
+
         if (this.id()) {
           this.loadData(this.id()!);
         }
@@ -264,45 +294,48 @@ export class CategoryTagOfAggregatorFormComponent implements OnInit {
   private loadData(id: number): void {
     this.loading = true;
     this.cdr.markForCheck();
-    this.api.getById(id).pipe(take(1)).subscribe({
-      next: (data) => {
-        this.form.patchValue({
-          id: data.id,
-          slug: data.slug,
-          iconPath: data.iconPath,
-          color: data.color,
-          isActive: data.isActive,
-          sortOrder: data.sortOrder
-        });
+    this.api
+      .getById(id)
+      .pipe(take(1))
+      .subscribe({
+        next: (data) => {
+          this.form.patchValue({
+            id: data.id,
+            slug: data.slug,
+            iconPath: data.iconPath,
+            color: data.color,
+            isActive: data.isActive,
+            sortOrder: data.sortOrder,
+          });
 
-        data.localizations?.forEach((loc: any) => {
-          const group = this.getLocGroup(loc.languageOfAggregatorId);
-          if (group) {
-            group.patchValue({
-              name: loc.name,
-              description: loc.description
-            });
-            group.get('seoData')?.patchValue({
-              metaTitle: loc.metaTitle,
-              metaDescription: loc.metaDescription
-            });
-          }
-        });
+          data.localizations?.forEach((loc: any) => {
+            const group = this.getLocGroup(loc.languageOfAggregatorId);
+            if (group) {
+              group.patchValue({
+                name: loc.name,
+                description: loc.description,
+              });
+              group.get('seoData')?.patchValue({
+                metaTitle: loc.metaTitle,
+                metaDescription: loc.metaDescription,
+              });
+            }
+          });
 
-        this.loading = false;
-        this.cdr.markForCheck();
-      },
-      error: () => {
-        this.loading = false;
-        this.cdr.markForCheck();
-      }
-    });
+          this.loading = false;
+          this.cdr.markForCheck();
+        },
+        error: () => {
+          this.loading = false;
+          this.cdr.markForCheck();
+        },
+      });
   }
 
   submit(): void {
     if (this.form.valid) {
       const val = JSON.parse(JSON.stringify(this.form.value));
-      
+
       // Маппинг SEO данных перед отправкой
       val.localizations.forEach((loc: any) => {
         if (loc.seoData) {
@@ -312,7 +345,7 @@ export class CategoryTagOfAggregatorFormComponent implements OnInit {
         }
       });
 
-      this.onSave.emit(val);
+      this.save.emit(val);
     } else {
       this.message.warning('Проверьте обязательные поля (Slug и названия)');
       this.cdr.markForCheck();

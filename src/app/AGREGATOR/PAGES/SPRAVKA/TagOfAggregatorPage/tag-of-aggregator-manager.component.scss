@@ -11,7 +11,7 @@
   background: #fff;
   padding: 24px 32px;
   border-bottom: 1px solid #e2e8f0;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
 
   .header-main {
     display: flex;
@@ -85,14 +85,18 @@
     display: flex;
     align-items: center;
     gap: 12px;
-    
+
     .status-item {
       display: flex;
       align-items: center;
       gap: 6px;
-      i { font-size: 14px; }
+      i {
+        font-size: 14px;
+      }
     }
-    .status-divider { color: #334155; }
+    .status-divider {
+      color: #334155;
+    }
   }
 
   .version-tag {
@@ -116,7 +120,7 @@
     border-radius: 6px;
     font-size: 12px;
     font-weight: 600;
-    
+
     &.ant-btn-primary {
       box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2);
     }

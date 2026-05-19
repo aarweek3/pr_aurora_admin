@@ -24,10 +24,6 @@
     border: 1px solid #e2e8f0;
     min-height: 100px;
 
-    @include dark-theme {
-      background: rgba(255, 255, 255, 0.02);
-      border-color: rgba(255, 255, 255, 0.1);
-    }
   }
 
   .picker-container-bordered {
@@ -45,9 +41,6 @@
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 
-    @include dark-theme {
-      background: rgba(255, 255, 255, 0.05);
-    }
 
     .demo-items {
       display: flex;
@@ -71,9 +64,6 @@
       font-size: 0.875rem;
       font-style: italic;
 
-      @include dark-theme {
-        color: rgba(255, 255, 255, 0.6);
-      }
     }
   }
 }
@@ -87,10 +77,6 @@
   .control-card {
     border-radius: 8px;
 
-    @include dark-theme {
-      background: rgba(255, 255, 255, 0.02);
-      border-color: rgba(255, 255, 255, 0.08);
-    }
   }
 
   .control-group {
@@ -118,9 +104,6 @@
     padding-bottom: 8px;
     border-bottom: 1px solid #f0f0f0;
 
-    @include dark-theme {
-      border-bottom-color: rgba(255, 255, 255, 0.05);
-    }
 
     &:last-child {
       border-bottom: none;
@@ -147,9 +130,6 @@
     font-size: 16px;
     font-weight: 600;
 
-    @include dark-theme {
-      color: #e2e8f0;
-    }
   }
 
   h5 {
@@ -157,16 +137,9 @@
     font-size: 14px;
     color: #64748b;
 
-    @include dark-theme {
-      color: #94a3b8;
-    }
   }
 
   pre {
-    @include dark-theme {
-      background: #1e293b !important;
-      color: #e2e8f0;
-    }
   }
 }
 
@@ -176,9 +149,6 @@
   border: 1px solid #f0f0f0;
   border-radius: 8px;
 
-  @include dark-theme {
-    border-color: #303030;
-  }
 }
 
 .api-table {
@@ -191,31 +161,16 @@
     font-weight: 600;
     white-space: nowrap;
 
-    @include dark-theme {
-      background: #1f1f1f;
-      color: #d9d9d9;
-      border-right-color: #303030 !important;
-      border-bottom-color: #303030 !important;
-    }
   }
 
   td {
     color: #595959;
 
-    @include dark-theme {
-      color: #bfbfbf;
-      border-right-color: #303030 !important;
-      border-bottom-color: #303030 !important;
-    }
   }
 
   code {
     font-family: "Fira Code", monospace;
     font-size: 13px;
 
-    @include dark-theme {
-      background: rgba(255, 255, 255, 0.1) !important;
-      color: #e6f7ff;
-    }
   }
 }

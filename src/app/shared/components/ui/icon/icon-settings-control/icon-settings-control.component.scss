@@ -399,56 +399,6 @@
 }
 
 // Dark Theme Support
-:host-context([data-theme="dark"]) {
-  .av-icon-settings-control {
-    background: var(--color-bg-container, #1f1f1f);
-    border-color: var(--color-border, #434343);
-
-    &:hover {
-      border-color: var(--color-primary, #1890ff);
-      box-shadow: 0 2px 8px rgba(24, 144, 255, 0.15);
-    }
-  }
-
-  .icon-option-text {
-    .icon-label {
-      color: var(--color-text, #e8e8e8);
-    }
-
-    .icon-category {
-      color: var(--color-text-secondary, #a6a6a6);
-    }
-  }
-
-  .control-label,
-  .slider-label,
-  .control-compact label,
-  .control-item-mini label {
-    color: var(--color-text-secondary, #a6a6a6);
-  }
-
-  .flip-switch {
-    background: var(--color-bg-layout, #141414);
-    color: var(--color-text-secondary, #a6a6a6);
-  }
-
-  .size-preset-buttons .preset-btn {
-    border-color: var(--color-border, #434343) !important;
-
-    &.active {
-      background: var(--color-primary, #1890ff) !important;
-      color: #ffffff !important;
-    }
-  }
-
-  .color-preset-btn.active {
-    border-color: var(--color-text, #e8e8e8);
-  }
-
-  .border-settings {
-    border-top-color: var(--color-border, #434343);
-  }
-}
 
 // Responsive adjustments
 @media (max-width: 768px) {

@@ -1,4 +1,4 @@
-import { ErrorResponse } from '../../../shared/infrastructure/interceptor/models/error-response.model';
+import { ErrorResponse } from '@core/models/error-response.model';
 import { SeoDataDto } from '../../../shared/models/seo.model';
 
 export interface SampleMainDescriptionSeoDto {

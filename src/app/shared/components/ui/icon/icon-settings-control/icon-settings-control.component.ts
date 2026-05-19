@@ -11,7 +11,7 @@ import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 import { ButtonDirective } from '../../button/button.directive';
 import { FieldGroupComponent } from '../../field-group/field-group.component';
 import { IconComponent } from '../icon.component';
-import { AvIconConfig } from '../index';
+import { AvIconConfig, IconPreset } from '../index';
 
 @Component({
   selector: 'av-icon-settings-control',
@@ -36,7 +36,7 @@ import { AvIconConfig } from '../index';
 export class IconSettingsControlComponent {
   // API
   value = model<AvIconConfig>(this.getDefaultConfig());
-  presets = input<any[]>([]);
+  presets = input<IconPreset[]>([]);
   compact = input<boolean>(false);
 
   // UI State
@@ -74,7 +74,7 @@ export class IconSettingsControlComponent {
   // Computed: Icon style for preview
   iconStyle = computed(() => {
     const config = this.value();
-    const style: any = {
+    const style: Record<string, string | number> = {
       fontSize: `${config.size}px`,
       color: config.color,
       transform: `
@@ -91,7 +91,7 @@ export class IconSettingsControlComponent {
     };
 
     if (config.borderShow) {
-      style.border = `${config.borderWidth}px solid ${config.borderColor}`;
+      style['border'] = `${config.borderWidth}px solid ${config.borderColor}`;
     }
 
     return style;

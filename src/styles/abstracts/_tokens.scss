@@ -1,0 +1,111 @@
+// =============================================================================
+// DESIGN TOKENS (CSS VARIABLES) - v2.0 (2026 Standard)
+// =============================================================================
+
+@layer base {
+  :root {
+    // --- 1. COLORS ---
+    --av-color-primary: #1890ff;
+    --av-color-primary-rgb: 24, 144, 255;
+    --av-color-success: #52c41a;
+    --av-color-success-deep: #059669; // Deep Emerald Green
+    --av-color-success-deep-rgb: 5, 150, 105;
+    --av-color-warning: #faad14;
+    --av-color-error: #ff4d4f;
+    --av-color-white: #ffffff;
+    --av-color-black: #000000;
+
+    // --- 2. NEUTRALS ---
+    --av-neutral-1: #fafafa;
+    --av-neutral-2: #f5f5f5;
+    --av-neutral-3: #f0f0f0;
+    --av-neutral-4: #d9d9d9;
+    --av-neutral-5: #bfbfbf;
+    --av-neutral-6: #8c8c8c;
+    --av-neutral-7: #595959;
+    --av-neutral-8: #434343;
+    --av-neutral-9: #262626;
+
+    // --- 3. TEXT & INTERFACE ---
+    --av-text-primary: rgba(0, 0, 0, 0.88);
+    --av-text-secondary: rgba(0, 0, 0, 0.65);
+    --av-text-tertiary: rgba(0, 0, 0, 0.45);
+    --av-text-disabled: rgba(0, 0, 0, 0.25);
+    
+    --av-bg-base: #ffffff;
+    --av-bg-container: #ffffff;
+    --av-bg-layout: #f5f5f5;
+    --av-bg-component: #fafafa;
+
+    // --- 4. STATES (CSS Color Mix ready) ---
+    --av-state-hover-opacity: 0.08;
+    --av-state-active-opacity: 0.12;
+    --av-state-focus-ring: 0 0 0 3px rgba(24, 144, 255, 0.2);
+    --av-state-disabled-opacity: 0.5;
+
+    // --- 5. TYPOGRAPHY (Responsive Scale) ---
+    --av-font-size-xs: 12px;
+    --av-font-size-sm: 14px;
+    --av-font-size-base: clamp(14px, 0.2vw + 13.5px, 16px);
+    --av-font-size-md: clamp(16px, 0.4vw + 15px, 20px);
+    --av-font-size-lg: clamp(18px, 0.8vw + 16px, 24px);
+    --av-font-size-xl: clamp(20px, 1.5vw + 16px, 32px);
+    --av-font-size-xxl: clamp(24px, 2.5vw + 16px, 48px);
+
+    --av-font-weight-light: 300;
+    --av-font-weight-normal: 400;
+    --av-font-weight-medium: 500;
+    --av-font-weight-semibold: 600;
+    --av-font-weight-bold: 700;
+
+    --av-line-height-base: 1.5715;
+
+    // --- 6. RADIUS SCALE ---
+    --av-radius-none: 0px;
+    --av-radius-xs: 2px;
+    --av-radius-sm: 4px;
+    --av-radius-base: 6px;
+    --av-radius-md: 8px;
+    --av-radius-lg: 12px;
+    --av-radius-xl: 16px;
+    --av-radius-round: 50%;
+    --av-radius-pill: 9999px;
+
+    // --- 7. Z-INDEX SCALE ---
+    --av-z-hide: -1;
+    --av-z-base: 1;
+    --av-z-docked: 10;
+    --av-z-dropdown: 1000;
+    --av-z-sticky: 1020;
+    --av-z-fixed: 1030;
+    --av-z-modal-backdrop: 1040;
+    --av-z-modal: 1050;
+    --av-z-popover: 1060;
+    --av-z-tooltip: 1070;
+
+    // --- 8. ELEVATION ---
+    --av-elevation-1: 0 2px 8px rgba(0, 0, 0, 0.04);
+    --av-elevation-2: 0 4px 12px rgba(0, 0, 0, 0.08);
+    --av-elevation-3: 0 6px 16px rgba(0, 0, 0, 0.12);
+    --av-elevation-4: 0 9px 28px rgba(0, 0, 0, 0.15);
+
+    // --- 9. BORDERS ---
+    --av-border-width: 1px;
+    --av-border-color: #d9d9d9;
+    --av-border-color-split: #f0f0f0;
+
+    // --- 10. ANIMATION ---
+    --av-motion-duration-fast: 0.1s;
+    --av-motion-duration-base: 0.2s;
+    --av-motion-duration-slow: 0.3s;
+    --av-motion-ease: cubic-bezier(0.645, 0.045, 0.355, 1);
+
+    // --- 11. MODAL SYSTEM ---
+    --av-modal-width-small: 600px;
+    --av-modal-width-medium: 720px;
+    --av-modal-width-large: 1000px;
+    --av-modal-width-xlarge: 1240px;
+    --av-modal-radius: 12px;
+    --av-modal-backdrop-blur: 4px;
+  }
+}

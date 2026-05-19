@@ -277,7 +277,8 @@ import { TagOfAggregatorApiService } from '../../services/tag-of-aggregator-api.
                         <div nz-row [nzGutter]="[16, 16]">
                           <div nz-col nzSpan="12">
                             <nz-form-item>
-                              <nz-form-label [nzRequired]="lang.code === 'en-US' || lang.code === 'en'"
+                              <nz-form-label
+                                [nzRequired]="lang.code === 'en-US' || lang.code === 'en'"
                                 >Отображаемое название ({{ lang.code }})</nz-form-label
                               >
                               <nz-form-control nzErrorTip="Название обязательно">

@@ -7,7 +7,7 @@ import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { AuthService } from '@auth';
 
-import { LanguageSwitcherComponent } from '../../../../../assets/languageApp/components/language-switcher.component';
+import { LanguageSwitcherComponent } from '@language-app/components/language-switcher.component';
 
 /**
  * Admin Header Component

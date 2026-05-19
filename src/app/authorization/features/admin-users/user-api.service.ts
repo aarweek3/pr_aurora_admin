@@ -4,7 +4,7 @@ import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { ApiEndpoints } from '@environments/api-endpoints';
-import { LoggingService } from '@shared/infrastructure/logging/logging.service';
+import { LoggingService } from '@core/services/logging/logging.service';
 import {
   CreateUserDto,
   UpdateUserDto,
@@ -130,7 +130,7 @@ export class UserApiService {
    */
   searchUsers(
     query: string,
-    limit: number = 10,
+    limit = 10,
   ): Observable<{ success: boolean; data: UserSearchResultDto[] }> {
     this.logger.debug('UserApiService', 'Поиск пользователей', { query, limit });
     return this.http.get<{ success: boolean; data: UserSearchResultDto[] }>(
@@ -139,5 +139,3 @@ export class UserApiService {
     );
   }
 }
-
-

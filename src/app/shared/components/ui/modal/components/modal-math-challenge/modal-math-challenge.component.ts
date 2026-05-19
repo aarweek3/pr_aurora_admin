@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, Inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ButtonDirective } from '../../../button/button.directive';
 import { IconComponent } from '../../../icon/icon.component';
 import { ModalRef } from '../../models/modal-ref.model';
 import { MODAL_DATA } from '../../tokens/modal-tokens';
@@ -14,23 +13,22 @@ export interface MathChallengeConfig {
   expectedAnswer: string;
   confirmText?: string;
   cancelText?: string;
+  panelClass?: string | string[];
+  type?: 'danger' | 'warning';
 }
 
 @Component({
   selector: 'av-modal-math-challenge',
   standalone: true,
-  imports: [CommonModule, FormsModule, ButtonDirective, IconComponent, ModalComponent],
+  imports: [CommonModule, FormsModule, IconComponent, ModalComponent],
   templateUrl: './modal-math-challenge.component.html',
   styleUrls: ['./modal-math-challenge.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ModalMathChallengeComponent {
   userAnswer = signal('');
-  
-  constructor(
-    @Inject(MODAL_DATA) public config: MathChallengeConfig,
-    private modalRef: ModalRef<boolean>,
-  ) {}
+  public config = inject<MathChallengeConfig>(MODAL_DATA);
+  private modalRef = inject<ModalRef<boolean>>(ModalRef);
 
   get isAnswerCorrect(): boolean {
     return this.userAnswer().trim() === this.config.expectedAnswer;

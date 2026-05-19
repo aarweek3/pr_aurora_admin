@@ -110,10 +110,13 @@ export class LoggerConsoleComponent {
   /** Счетчики по уровням */
   counters = computed(() => {
     const logs = this.loggerService.logs();
-    return this.levels.reduce((acc, level) => {
-      acc[level] = logs.filter((l) => l.level === level).length;
-      return acc;
-    }, {} as Record<LogLevel, number>);
+    return this.levels.reduce(
+      (acc, level) => {
+        acc[level] = logs.filter((l) => l.level === level).length;
+        return acc;
+      },
+      {} as Record<LogLevel, number>,
+    );
   });
 
   constructor() {

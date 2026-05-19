@@ -1,12 +1,12 @@
 import { computed, inject, Injectable, OnDestroy, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { LanguageService } from '@assets/languageApp/services/language.service';
-import { AppLanguage } from '@assets/languageApp/models/appLanguage.model';
+import { LanguageService } from '@language-app/services/language.service';
+import { AppLanguage } from '@language-app/models/appLanguage.model';
 import { ModalService } from '@shared/components/ui/modal/services/modal.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { Observable, Subject } from 'rxjs';
 import { finalize, shareReplay, takeUntil } from 'rxjs/operators';
-import { ErrorResponse } from '../../../../../shared/infrastructure/interceptor/models/error-response.model';
+import { ErrorResponse } from '@core/models/error-response.model';
 import { PlatformOfAggregatorStateService } from '../../PlatformOfAggregatorPage/services/platform-of-aggregator-state.service';
 import {
   INITIAL_REQUIREMENT_STATE,
@@ -91,12 +91,12 @@ export class SystemRequirementStateService implements OnDestroy {
   /**
    * Загрузить справочник версий ОС
    */
-  loadOsVersions(platformId?: any, checkEmpty: boolean = false): void {
+  loadOsVersions(platformId?: any, checkEmpty = false): void {
     const s = this.state();
 
     // Нормализуем platformId (может прийти строка или 0)
-    const pId = (platformId && Number(platformId) !== 0) ? Number(platformId) : undefined;
-    
+    const pId = platformId && Number(platformId) !== 0 ? Number(platformId) : undefined;
+
     console.warn('[SystemRequirement] Loading OS versions for platform:', pId);
 
     // Сначала убедимся, что загружены данные о платформах (нужно для проверки зависимостей)
@@ -332,7 +332,10 @@ export class SystemRequirementStateService implements OnDestroy {
   save(data: SystemRequirementCreateDto | SystemRequirementUpdateDto): void {
     const isAdd = this.state().modalMode === 'add';
 
-    console.group('%c [PAYLOAD] Saving System Requirement ', 'background: #0052cc; color: #fff; padding: 4px;');
+    console.group(
+      '%c [PAYLOAD] Saving System Requirement ',
+      'background: #0052cc; color: #fff; padding: 4px;',
+    );
     console.log('Action:', isAdd ? 'CREATE' : 'UPDATE');
     console.log('Data:', data);
     console.groupEnd();
@@ -346,10 +349,10 @@ export class SystemRequirementStateService implements OnDestroy {
 
     this.executeWithLoading(request, true).subscribe({
       next: () => {
-        const msg = isAdd 
-          ? `Требование добавлено для версии ${data.versionId}` 
+        const msg = isAdd
+          ? `Требование добавлено для версии ${data.versionId}`
           : `Требование ID:${(data as any).id} обновлено`;
-          
+
         this.message.success(msg);
         this.closeModal();
         this.loadRequirements(data.versionId);

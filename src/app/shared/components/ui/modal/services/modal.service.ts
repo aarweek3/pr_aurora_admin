@@ -1,9 +1,12 @@
 import { Overlay, OverlayConfig, OverlayRef } from '@angular/cdk/overlay';
 import { ComponentPortal, ComponentType } from '@angular/cdk/portal';
-import { ComponentRef, inject, Injectable, Injector } from '@angular/core';
+import { inject, Injectable, Injector } from '@angular/core';
 import { ModalAlertComponent } from '../components/modal-alert/modal-alert.component';
 import { ModalConfirmComponent } from '../components/modal-confirm/modal-confirm.component';
-import { MathChallengeConfig, ModalMathChallengeComponent } from '../components/modal-math-challenge/modal-math-challenge.component';
+import {
+  MathChallengeConfig,
+  ModalMathChallengeComponent,
+} from '../components/modal-math-challenge/modal-math-challenge.component';
 import { AlertConfig, ConfirmConfig, MODAL_SIZES, ModalConfig } from '../models/modal-config.model';
 import { ModalRef } from '../models/modal-ref.model';
 import { MODAL_DATA, MODAL_REF } from '../tokens/modal-tokens';
@@ -19,7 +22,7 @@ export class ModalService {
   private readonly injector = inject(Injector);
 
   /** Стек открытых модалов */
-  private modalStack: ModalRef[] = [];
+  private modalStack: ModalRef<unknown>[] = [];
 
   /** Максимальное количество открытых модалов */
   private readonly maxOpenModals = 5;
@@ -30,9 +33,9 @@ export class ModalService {
   /**
    * Открыть компонент в модальном окне
    */
-  open<TComponent, TData = any, TResult = any>(
+  open<TComponent, TData = unknown, TResult = unknown>(
     component: ComponentType<TComponent>,
-    config?: ModalConfig<TData>,
+    config?: ModalConfig<TData, TResult>,
   ): ModalRef<TResult> {
     // Проверка лимита модалов
     if (this.modalStack.length >= this.maxOpenModals) {
@@ -41,7 +44,7 @@ export class ModalService {
     }
 
     // Дефолтная конфигурация
-    const defaultConfig: ModalConfig = {
+    const defaultConfig: Partial<ModalConfig<TData, TResult>> = {
       size: 'medium',
       position: 'center',
       closeOnBackdrop: true,
@@ -57,21 +60,21 @@ export class ModalService {
 
     // Создаем overlay
     const overlayRef = this.createOverlay(modalConfig);
-    const modalRef = new ModalRef<TResult>(overlayRef, modalConfig);
+    const modalRef = new ModalRef<TResult, TData>(overlayRef, modalConfig);
 
     // Создаем injector с данными
     const injector = this.createInjector(modalRef, modalConfig);
 
     // Создаем компонент
     const portal = new ComponentPortal(component, null, injector);
-    const componentRef: ComponentRef<TComponent> = overlayRef.attach(portal);
+    overlayRef.attach(portal);
 
     // Добавляем в стек
-    this.modalStack.push(modalRef);
+    this.modalStack.push(modalRef as unknown as ModalRef<unknown, unknown>);
 
     // Обработка закрытия
     modalRef.afterClosed().subscribe(() => {
-      this.removeFromStack(modalRef);
+      this.removeFromStack(modalRef as unknown as ModalRef<unknown, unknown>);
     });
 
     // Закрытие по клику на backdrop
@@ -84,7 +87,10 @@ export class ModalService {
     // Закрытие по ESC
     if (modalConfig.closeOnEsc) {
       overlayRef.keydownEvents().subscribe((event: KeyboardEvent) => {
-        if (event.key === 'Escape' && this.isTopModal(modalRef)) {
+        if (
+          event.key === 'Escape' &&
+          this.isTopModal(modalRef as unknown as ModalRef<unknown, unknown>)
+        ) {
           modalRef.close();
         }
       });
@@ -102,6 +108,7 @@ export class ModalService {
       {
         ...config,
         size: config.size || 'small',
+        data: config as unknown as ConfirmConfig,
       },
     );
 
@@ -119,6 +126,7 @@ export class ModalService {
     const modalRef = this.open<ModalAlertComponent, AlertConfig, void>(ModalAlertComponent, {
       ...config,
       size: config.size || 'small',
+      data: config as unknown as AlertConfig,
     });
 
     return new Promise((resolve) => {
@@ -197,23 +205,61 @@ export class ModalService {
   }
 
   /**
+   * Удобный хелпер для математической проверки (для обратной совместимости)
+   */
+  async challenge(
+    message: string,
+    question: string,
+    expectedAnswer: string,
+    title = 'Подтверждение',
+    panelClass?: string | string[],
+  ): Promise<boolean> {
+    return this.mathChallenge({
+      message,
+      question,
+      expectedAnswer,
+      title,
+      panelClass,
+      type: 'danger',
+    });
+  }
+
+  /**
+   * Предупреждающая проверка (желтая)
+   */
+  async challengeWarning(
+    message: string,
+    question: string,
+    expectedAnswer: string,
+    title = 'Предупреждение',
+    panelClass?: string | string[],
+  ): Promise<boolean> {
+    return this.mathChallenge({
+      message,
+      question,
+      expectedAnswer,
+      title,
+      panelClass,
+      type: 'warning',
+      confirmText: 'ДА, В КОРЗИНУ',
+    });
+  }
+
+  /**
    * Модал с математической проверкой
    */
-  async challenge(message: string, question: string, expectedAnswer: string, title = 'Подтверждение'): Promise<boolean> {
+  async mathChallenge(config: MathChallengeConfig): Promise<boolean> {
     const modalRef = this.open<ModalMathChallengeComponent, MathChallengeConfig, boolean>(
       ModalMathChallengeComponent,
       {
+        ...config,
+        centered: true,
+        panelClass: config.panelClass,
         data: {
-          title,
-          message,
-          question,
-          expectedAnswer,
-          confirmText: 'Стереть полностью (Hard)',
-          cancelText: 'Отмена'
-        },
-        size: 'small',
-        centered: true
-      }
+          ...config,
+          type: config.type || 'danger',
+        } as unknown as MathChallengeConfig,
+      },
     );
 
     return new Promise((resolve) => {
@@ -241,7 +287,7 @@ export class ModalService {
   /**
    * Создать overlay конфигурацию
    */
-  private createOverlay(config: ModalConfig): OverlayRef {
+  private createOverlay<TData, TResult>(config: ModalConfig<TData, TResult>): OverlayRef {
     const positionStrategy = this.overlay.position().global().centerHorizontally();
 
     switch (config.position) {
@@ -262,16 +308,16 @@ export class ModalService {
         ...(Array.isArray(config.backdropClass)
           ? config.backdropClass
           : config.backdropClass
-          ? [config.backdropClass]
-          : []),
+            ? [config.backdropClass]
+            : []),
       ],
       panelClass: [
         'modal-panel',
         ...(Array.isArray(config.panelClass)
           ? config.panelClass
           : config.panelClass
-          ? [config.panelClass]
-          : []),
+            ? [config.panelClass]
+            : []),
       ],
       scrollStrategy: this.overlay.scrollStrategies.block(),
       positionStrategy,
@@ -284,7 +330,7 @@ export class ModalService {
     return this.overlay.create(overlayConfig);
   }
 
-  private getWidth(config: ModalConfig): string {
+  private getWidth<TData, TResult>(config: ModalConfig<TData, TResult>): string {
     if (
       config.mobileFullscreen &&
       typeof window !== 'undefined' &&
@@ -297,7 +343,10 @@ export class ModalService {
     return MODAL_SIZES[config.size || 'medium'];
   }
 
-  private createInjector(modalRef: ModalRef, config: ModalConfig): Injector {
+  private createInjector<TData, TResult>(
+    modalRef: ModalRef<TResult>,
+    config: ModalConfig<TData, TResult>,
+  ): Injector {
     const modalData = config.data !== undefined ? config.data : config;
 
     return Injector.create({
@@ -310,14 +359,14 @@ export class ModalService {
     });
   }
 
-  private removeFromStack(ref: ModalRef): void {
+  private removeFromStack(ref: ModalRef<unknown>): void {
     const index = this.modalStack.indexOf(ref);
     if (index > -1) {
       this.modalStack.splice(index, 1);
     }
   }
 
-  private isTopModal(ref: ModalRef): boolean {
+  private isTopModal(ref: ModalRef<unknown>): boolean {
     return this.modalStack.length > 0 && this.modalStack[this.modalStack.length - 1] === ref;
   }
 }

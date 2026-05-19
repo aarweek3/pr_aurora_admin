@@ -21,6 +21,7 @@ export * from './pagination';
 export * from './password-input/password-input.component';
 export * from './phone-input';
 export * from './picker/picker.component';
+export * from './picker/picker.types';
 export * from './progress';
 export * from './search';
 export * from './showcase/showcase.component';
@@ -28,6 +29,8 @@ export * from './spinner/spinner.component';
 export * from './tag';
 export * from './toggle';
 export * from './wrapper-ui/wrapper-ui.component';
+export * from './seo-form/seo-form.component';
+export * from '../controls';
 
 // ==========================================================
 // 2. Коллекции компонентов (Группировка)
@@ -47,6 +50,11 @@ import { PickerComponent } from './picker/picker.component';
 import { AvSearchComponent } from './search';
 import { TagInputComponent } from './tag';
 import { ToggleComponent, ToggleDirective, ToggleLabeledComponent } from './toggle';
+import {
+  MarkdownControlComponent,
+  AvTinymceControlComponent,
+  ButtonControlJsonBlockComponent,
+} from '../controls';
 
 import { FieldGroupComponent } from './field-group';
 import { FormFieldComponent } from './form-field/form-field.component';
@@ -59,6 +67,7 @@ import { HelpPathHeaderComponent } from './help-path-header/help-path-header.com
 import { HelpPathActionsComponent } from './help-path-actions/help-path-actions.component';
 import { PaginationComponent } from './pagination';
 import { WrapperUiComponent } from './wrapper-ui/wrapper-ui.component';
+import { SeoFormComponent } from './seo-form/seo-form.component';
 
 /** Общий UI: Кнопки, иконки, теги, алерты */
 export const AV_GENERAL_UI = [
@@ -80,6 +89,9 @@ export const AV_FORM_UI = [
   PickerComponent,
   AvSearchComponent,
   TagInputComponent,
+  MarkdownControlComponent,
+  AvTinymceControlComponent,
+  ButtonControlJsonBlockComponent,
 ] as const;
 
 /** Структура форм: Группировка и поля */
@@ -99,6 +111,7 @@ export const AV_UTILITY_UI = [
   CodeBlockComponent,
   WrapperUiComponent,
   AvMonitorModalComponent,
+  SeoFormComponent,
 ] as const;
 
 /**

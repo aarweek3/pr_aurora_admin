@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ButtonDirective } from '../../../shared/components/ui/button/button.directive';
 import { HelpCopyContainerComponent } from '../../../shared/components/ui/container-help-copy-ui/container-help-copy-ui.component';
 import { ModalComponent, ModalService } from '../../../shared/components/ui/modal';
@@ -13,6 +13,8 @@ import { DemoModalContentComponent } from './components/demo-modal-content.compo
   styleUrl: './modal-ui.component.scss',
 })
 export class ModalUiComponent {
+  modalService = inject(ModalService);
+
   showBasicModal = false;
   showSizeModal = false;
   showPositionModal = false;
@@ -25,7 +27,7 @@ export class ModalUiComponent {
   currentSize: any = 'medium';
   currentPosition: any = 'center';
 
-  showCode: { [key: string]: boolean } = {};
+  showCode: Record<string, boolean> = {};
 
   helpCode = `// РУКОВОДСТВО ПО ИСПОЛЬЗОВАНИЮ MODAL SERVICE
 
@@ -261,8 +263,6 @@ this.modalService.warning('Низкий заряд батареи');
 4. СТИЛИЗАЦИЯ (BEM + CSS Variables)
    Все размеры и отступы контролируются через CSS-переменные,
    что позволяет легко менять тему оформления без правки JS-кода.`;
-
-  constructor(public modalService: ModalService) {}
 
   openModal(size: any): void {
     this.currentSize = size;

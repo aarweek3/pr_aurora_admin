@@ -103,7 +103,7 @@ import { IconCategoryService } from './services/icon-category.service';
                   {{ data.isSystem ? 'Системная' : 'Пользовательская' }}
                 </nz-tag>
               </td>
-              <td>{{ data.createdAt | date : 'dd.MM.yyyy' }}</td>
+              <td>{{ data.createdAt | date: 'dd.MM.yyyy' }}</td>
               <td>
                 <div class="row-actions">
                   <button

@@ -14,7 +14,7 @@
               [disabled]="config().isLabeled"
             >
               @for (t of types; track t.value) {
-              <label nz-radio-button [nzValue]="t.value">{{ t.label }}</label>
+                <label nz-radio-button [nzValue]="t.value">{{ t.label }}</label>
               }
             </nz-radio-group>
           </div>
@@ -33,7 +33,7 @@
                 [disabled]="config().useCustomSize"
               >
                 @for (s of sizes; track s.value) {
-                <nz-option [nzLabel]="s.label" [nzValue]="s.value"></nz-option>
+                  <nz-option [nzLabel]="s.label" [nzValue]="s.value"></nz-option>
                 }
               </nz-select>
             </div>
@@ -41,7 +41,7 @@
               <label class="control-label">Форма (Shape):</label>
               <nz-select [ngModel]="config().shape" (ngModelChange)="updateConfig('shape', $event)">
                 @for (sh of shapes; track sh.value) {
-                <nz-option [nzLabel]="sh.label" [nzValue]="sh.value"></nz-option>
+                  <nz-option [nzLabel]="sh.label" [nzValue]="sh.value"></nz-option>
                 }
               </nz-select>
             </div>
@@ -52,7 +52,7 @@
             <div class="color-picker-row">
               <nz-select [ngModel]="config().color" (ngModelChange)="updateConfig('color', $event)" style="flex: 1">
                 @for (c of colors; track c.value) {
-                <nz-option [nzLabel]="c.label" [nzValue]="c.value"></nz-option>
+                  <nz-option [nzLabel]="c.label" [nzValue]="c.value"></nz-option>
                 }
               </nz-select>
               <input
@@ -66,47 +66,48 @@
           </div>
 
           @if (!config().isLabeled && config().type === 'component') {
-          <h3 class="form-section-title">Настройки текста (Label)</h3>
-          <div class="control-group">
-            <label class="control-label">Текст лейбла:</label>
-            <input
-              nz-input
-              [ngModel]="config().label"
-              (ngModelChange)="updateConfig('label', $event)"
-              placeholder="Enter label text"
-            />
-          </div>
-          <div class="control-row">
+            <h3 class="form-section-title">Настройки текста (Label)</h3>
             <div class="control-group">
-              <label class="control-label">Позиция:</label>
-              <nz-select [ngModel]="config().labelPosition" (ngModelChange)="updateConfig('labelPosition', $event)">
-                @for (p of positions; track p.value) {
-                <nz-option [nzLabel]="p.label" [nzValue]="p.value"></nz-option>
-                }
-              </nz-select>
-            </div>
-            <div class="control-group">
-              <label class="control-label">Размер шрифта:</label>
+              <label class="control-label">Текст лейбла:</label>
               <input
                 nz-input
-                [ngModel]="config().labelSize"
-                (ngModelChange)="updateConfig('labelSize', $event)"
-                placeholder="e.g. 14px"
+                [ngModel]="config().label"
+                (ngModelChange)="updateConfig('label', $event)"
+                placeholder="Enter label text"
               />
             </div>
-          </div>
-          } @if (config().isLabeled) {
-          <h3 class="form-section-title">Метки статуса (Labeled)</h3>
-          <div class="control-row">
-            <div class="control-group">
-              <label class="control-label">Слева (OFF):</label>
-              <input nz-input [ngModel]="config().leftLabel" (ngModelChange)="updateConfig('leftLabel', $event)" />
+            <div class="control-row">
+              <div class="control-group">
+                <label class="control-label">Позиция:</label>
+                <nz-select [ngModel]="config().labelPosition" (ngModelChange)="updateConfig('labelPosition', $event)">
+                  @for (p of positions; track p.value) {
+                    <nz-option [nzLabel]="p.label" [nzValue]="p.value"></nz-option>
+                  }
+                </nz-select>
+              </div>
+              <div class="control-group">
+                <label class="control-label">Размер шрифта:</label>
+                <input
+                  nz-input
+                  [ngModel]="config().labelSize"
+                  (ngModelChange)="updateConfig('labelSize', $event)"
+                  placeholder="e.g. 14px"
+                />
+              </div>
             </div>
-            <div class="control-group">
-              <label class="control-label">Справа (ON):</label>
-              <input nz-input [ngModel]="config().rightLabel" (ngModelChange)="updateConfig('rightLabel', $event)" />
+          }
+          @if (config().isLabeled) {
+            <h3 class="form-section-title">Метки статуса (Labeled)</h3>
+            <div class="control-row">
+              <div class="control-group">
+                <label class="control-label">Слева (OFF):</label>
+                <input nz-input [ngModel]="config().leftLabel" (ngModelChange)="updateConfig('leftLabel', $event)" />
+              </div>
+              <div class="control-group">
+                <label class="control-label">Справа (ON):</label>
+                <input nz-input [ngModel]="config().rightLabel" (ngModelChange)="updateConfig('rightLabel', $event)" />
+              </div>
             </div>
-          </div>
           }
 
           <h3 class="form-section-title">Кастомные габариты</h3>
@@ -119,32 +120,32 @@
           </div>
 
           @if (config().useCustomSize) {
-          <div class="control-row">
+            <div class="control-row">
+              <div class="control-group">
+                <label class="control-label">Ширина (Width):</label>
+                <nz-input-number
+                  [ngModel]="config().width"
+                  (ngModelChange)="updateConfig('width', $event)"
+                  style="width: 100%"
+                ></nz-input-number>
+              </div>
+              <div class="control-group">
+                <label class="control-label">Высота (Height):</label>
+                <nz-input-number
+                  [ngModel]="config().height"
+                  (ngModelChange)="updateConfig('height', $event)"
+                  style="width: 100%"
+                ></nz-input-number>
+              </div>
+            </div>
             <div class="control-group">
-              <label class="control-label">Ширина (Width):</label>
+              <label class="control-label">Радиус (Radius):</label>
               <nz-input-number
-                [ngModel]="config().width"
-                (ngModelChange)="updateConfig('width', $event)"
+                [ngModel]="config().radius"
+                (ngModelChange)="updateConfig('radius', $event)"
                 style="width: 100%"
               ></nz-input-number>
             </div>
-            <div class="control-group">
-              <label class="control-label">Высота (Height):</label>
-              <nz-input-number
-                [ngModel]="config().height"
-                (ngModelChange)="updateConfig('height', $event)"
-                style="width: 100%"
-              ></nz-input-number>
-            </div>
-          </div>
-          <div class="control-group">
-            <label class="control-label">Радиус (Radius):</label>
-            <nz-input-number
-              [ngModel]="config().radius"
-              (ngModelChange)="updateConfig('radius', $event)"
-              style="width: 100%"
-            ></nz-input-number>
-          </div>
           }
 
           <div class="control-group checkbox-group" style="margin-top: 24px">
@@ -197,53 +198,54 @@
       <div class="live-demo-wrapper">
         <!-- Режим Labeled -->
         @if (config().isLabeled) {
-        <av-toggle-labeled
-          [(checked)]="config().checked"
-          [size]="config().size"
-          [color]="config().color"
-          [shape]="config().shape"
-          [leftLabel]="config().leftLabel"
-          [rightLabel]="config().rightLabel"
-          [disabled]="config().disabled"
-        ></av-toggle-labeled>
-        } @else {
-        <!-- Режим Директивы -->
-        @if (config().type === 'directive') {
-        <label class="av-toggle">
-          <input
-            type="checkbox"
-            avToggle
-            [(ngModel)]="config().checked"
-            [avSize]="config().size"
-            [avColor]="config().color"
-            [avShape]="config().shape"
-            [avWidth]="config().width!"
-            [avHeight]="config().height!"
-            [avRadius]="config().radius!"
+          <av-toggle-labeled
+            [(checked)]="config().checked"
+            [size]="config().size"
+            [color]="config().color"
+            [shape]="config().shape"
+            [leftLabel]="config().leftLabel"
+            [rightLabel]="config().rightLabel"
             [disabled]="config().disabled"
-          />
-          <span class="av-toggle__slider"></span>
-        </label>
-        }
+          ></av-toggle-labeled>
+        } @else {
+          <!-- Режим Директивы -->
+          @if (config().type === 'directive') {
+            <label class="av-toggle">
+              <input
+                type="checkbox"
+                avToggle
+                [(ngModel)]="config().checked"
+                [avSize]="config().size"
+                [avColor]="config().color"
+                [avShape]="config().shape"
+                [avWidth]="config().width!"
+                [avHeight]="config().height!"
+                [avRadius]="config().radius!"
+                [disabled]="config().disabled"
+              />
+              <span class="av-toggle__slider"></span>
+            </label>
+          }
 
-        <!-- Режим Компонента -->
-        @if (config().type === 'component') {
-        <av-toggle
-          [(checked)]="config().checked"
-          [size]="config().size"
-          [color]="config().color"
-          [shape]="config().shape"
-          [labelPosition]="config().labelPosition"
-          [labelSize]="config().labelSize"
-          [labelColor]="config().labelColor"
-          [width]="config().width!"
-          [height]="config().height!"
-          [radius]="config().radius!"
-          [disabled]="config().disabled"
-        >
-          {{ config().label }}
-        </av-toggle>
-        } }
+          <!-- Режим Компонента -->
+          @if (config().type === 'component') {
+            <av-toggle
+              [(checked)]="config().checked"
+              [size]="config().size"
+              [color]="config().color"
+              [shape]="config().shape"
+              [labelPosition]="config().labelPosition"
+              [labelSize]="config().labelSize"
+              [labelColor]="config().labelColor"
+              [width]="config().width!"
+              [height]="config().height!"
+              [radius]="config().radius!"
+              [disabled]="config().disabled"
+            >
+              {{ config().label }}
+            </av-toggle>
+          }
+        }
       </div>
     </div>
   </div>

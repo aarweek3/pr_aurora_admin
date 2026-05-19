@@ -140,7 +140,7 @@ export class ImageEditorMainComponent implements OnInit {
 
   // --- ACTIONS ---
 
-  private async doLoad(url: string, fileName: string = 'image.png') {
+  private async doLoad(url: string, fileName = 'image.png') {
     try {
       const img = await this.canvasService.loadImage(url);
       const currentMetadata = this.state().metadata;

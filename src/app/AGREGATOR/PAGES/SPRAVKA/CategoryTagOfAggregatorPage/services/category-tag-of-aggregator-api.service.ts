@@ -49,12 +49,12 @@ export class CategoryTagOfAggregatorApiService {
     );
   }
 
-  delete(id: number, isHard: boolean = false): Observable<void> {
+  delete(id: number, isHard = false): Observable<void> {
     let params = new HttpParams();
     if (isHard) params = params.set('isHard', 'true');
     return this.http.delete<void>(
       `${this.baseUrl}/${CATEGORY_TAG_OF_AGGREGATOR_ENDPOINTS.DELETE(id)}`,
-      { params }
+      { params },
     );
   }
 

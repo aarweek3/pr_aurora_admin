@@ -1,22 +1,24 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
-import { 
-  CategoryOfAggregatorItem, 
-  CategoryOfAggregatorDetail, 
-  CategoryOfAggregatorPageRequest, 
-  CategoryOfAggregatorPagedResponse 
+import {
+  CategoryOfAggregatorItem,
+  CategoryOfAggregatorDetail,
+  CategoryOfAggregatorPageRequest,
+  CategoryOfAggregatorPagedResponse,
 } from '../models/category-of-aggregator.model';
 import { CATEGORY_OF_AGGREGATOR_BASE_URL } from '../end-points';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class CategoryOfAggregatorApiService {
   private http = inject(HttpClient);
   private readonly baseUrl = CATEGORY_OF_AGGREGATOR_BASE_URL;
 
-  getPaged(request: CategoryOfAggregatorPageRequest): Observable<CategoryOfAggregatorPagedResponse> {
+  getPaged(
+    request: CategoryOfAggregatorPageRequest,
+  ): Observable<CategoryOfAggregatorPagedResponse> {
     let params = new HttpParams()
       .set('pageNumber', request.pageNumber.toString())
       .set('pageSize', request.pageSize.toString())
@@ -61,9 +63,10 @@ export class CategoryOfAggregatorApiService {
   }
 
   // Получение дерева (если поддерживается бэкендом)
-  getTree(languageId?: number): Observable<CategoryOfAggregatorItem[]> {
+  getTree(languageId?: number, parentId?: number): Observable<CategoryOfAggregatorItem[]> {
     let params = new HttpParams();
     if (languageId) params = params.set('languageId', languageId.toString());
+    if (parentId) params = params.set('parentId', parentId.toString());
     return this.http.get<CategoryOfAggregatorItem[]>(`${this.baseUrl}/tree`, { params });
   }
 
@@ -74,8 +77,9 @@ export class CategoryOfAggregatorApiService {
       .set('sortBy', 'CanonicalName')
       .set('sortDirection', '0')
       .set('showDeleted', 'false');
-    
-    return this.http.get<CategoryOfAggregatorPagedResponse>(this.baseUrl, { params })
-      .pipe(map(res => res.items));
+
+    return this.http
+      .get<CategoryOfAggregatorPagedResponse>(this.baseUrl, { params })
+      .pipe(map((res) => res.items));
   }
 }

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
 import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { NzGridModule } from 'ng-zorro-antd/grid';
@@ -10,13 +10,23 @@ import { LicenseTypeOfAggregatorFormComponent } from '../license-type-of-aggrega
   selector: 'app-license-type-of-aggregator-inline',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, NzCardModule, NzGridModule, NzDividerModule, LicenseTypeOfAggregatorFormComponent],
+  imports: [
+    CommonModule,
+    NzCardModule,
+    NzGridModule,
+    NzDividerModule,
+    LicenseTypeOfAggregatorFormComponent,
+  ],
   template: `
     @if (state.modalVisible()) {
       <div nz-row [nzGutter]="24" style="margin-top: 24px;">
         <div nz-col nzSpan="24">
           <nz-card
-            [nzTitle]="state.modalMode() === 'add' ? 'Новый тип лицензии (Inline)' : 'Редактирование (Inline)'"
+            [nzTitle]="
+              state.modalMode() === 'add'
+                ? 'Новый тип лицензии (Inline)'
+                : 'Редактирование (Inline)'
+            "
             [nzExtra]="extraTemplate"
           >
             <app-license-type-of-aggregator-form
@@ -29,15 +39,22 @@ import { LicenseTypeOfAggregatorFormComponent } from '../license-type-of-aggrega
           </nz-card>
         </div>
         <ng-template #extraTemplate>
-          <span style="color: #64748b; font-size: 12px; font-weight: 500;">Быстрое редактирование без модального окна</span>
+          <span style="color: #64748b; font-size: 12px; font-weight: 500;"
+            >Быстрое редактирование без модального окна</span
+          >
         </ng-template>
       </div>
     }
   `,
 })
 export class LicenseTypeOfAggregatorInlineComponent {
-  constructor(public state: LicenseTypeOfAggregatorStateService) {}
+  state = inject(LicenseTypeOfAggregatorStateService);
 
-  handleSave(formValue: any): void { this.state.save(formValue); }
-  handleCancel(): void { this.state.closeModal(); }
+
+  handleSave(formValue: any): void {
+    this.state.save(formValue);
+  }
+  handleCancel(): void {
+    this.state.closeModal();
+  }
 }

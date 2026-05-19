@@ -20,7 +20,7 @@ import { SystemRequirementFormComponent } from './components/system-requirement-
     NzEmptyModule,
     NzSpinModule,
     SystemRequirementListComponent,
-    SystemRequirementFormComponent
+    SystemRequirementFormComponent,
   ],
   template: `
     <div class="requirement-manager">
@@ -29,7 +29,7 @@ import { SystemRequirementFormComponent } from './components/system-requirement-
           <i nz-icon nzType="setting" style="margin-right: 8px;"></i>
           Системные требования
         </ng-template>
-        
+
         <ng-template #extraTpl>
           <button nz-button nzType="primary" (click)="onAdd()">
             <i nz-icon nzType="plus"></i> Добавить требование
@@ -38,10 +38,11 @@ import { SystemRequirementFormComponent } from './components/system-requirement-
 
         <nz-spin [nzSpinning]="state.loading()">
           @if (state.requirements().length > 0) {
-            <app-system-requirement-list 
+            <app-system-requirement-list
               [items]="state.requirements()"
               (edit)="onEdit($event)"
-              (delete)="onDelete($event)">
+              (delete)="onDelete($event)"
+            >
             </app-system-requirement-list>
           } @else {
             <nz-empty nzNotFoundImage="simple" nzNotFoundContent="Требования не заданы"></nz-empty>
@@ -53,12 +54,14 @@ import { SystemRequirementFormComponent } from './components/system-requirement-
       <app-system-requirement-form></app-system-requirement-form>
     </div>
   `,
-  styles: [`
-    .requirement-manager {
-      margin-top: 16px;
-    }
-  `],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  styles: [
+    `
+      .requirement-manager {
+        margin-top: 16px;
+      }
+    `,
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SystemRequirementManagerComponent implements OnInit {
   @Input({ required: true }) versionId!: number;

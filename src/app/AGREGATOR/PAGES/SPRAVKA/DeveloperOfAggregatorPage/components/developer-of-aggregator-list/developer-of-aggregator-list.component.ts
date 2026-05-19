@@ -42,7 +42,7 @@ import { ImageServiceUniversal } from '@shared/services/image-service-universal.
     NzSpaceModule,
     NzDropDownModule,
     AvSearchComponent,
-    PaginationComponent
+    PaginationComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -64,7 +64,7 @@ import { ImageServiceUniversal } from '@shared/services/image-service-universal.
               [(value)]="searchTerm"
               [avLoading]="state.loading()"
               avPlaceholder="Поиск по названию или коду..."
-              (onSearch)="onSearchChange($event)"
+              (searchChange)="onSearchChange($event)"
               [showButton]="false"
             ></av-search>
           </div>
@@ -90,7 +90,6 @@ import { ImageServiceUniversal } from '@shared/services/image-service-universal.
             ></nz-switch>
           </div>
         </div>
-
       </div>
 
       @if (state.error(); as error) {
@@ -104,9 +103,9 @@ import { ImageServiceUniversal } from '@shared/services/image-service-universal.
         </div>
       }
 
-      <nz-table 
-        #basicTable 
-        [nzData]="state.items()" 
+      <nz-table
+        #basicTable
+        [nzData]="state.items()"
         [nzLoading]="state.loading() && state.items().length > 0"
         [nzTotal]="state.total()"
         [nzPageIndex]="state.pageNumber()"
@@ -117,30 +116,71 @@ import { ImageServiceUniversal } from '@shared/services/image-service-universal.
       >
         <thead>
           <tr>
-            <th nzWidth="80px"
-                [nzSortFn]="true" 
-                [nzSortOrder]="state.sortBy() === 'Id' ? (state.sortDirection() === 0 ? 'ascend' : 'descend') : null"
-                (nzSortOrderChange)="onSortChange('Id', $event)"
-            >ID</th>
-            <th [nzSortFn]="true" 
-                [nzSortOrder]="state.sortBy() === 'Name' ? (state.sortDirection() === 0 ? 'ascend' : 'descend') : null"
-                (nzSortOrderChange)="onSortChange('Name', $event)">
-                Разработчик
+            <th
+              nzWidth="80px"
+              [nzSortFn]="true"
+              [nzSortOrder]="
+                state.sortBy() === 'Id'
+                  ? state.sortDirection() === 0
+                    ? 'ascend'
+                    : 'descend'
+                  : null
+              "
+              (nzSortOrderChange)="onSortChange('Id', $event)"
+            >
+              ID
             </th>
-            <th [nzSortFn]="true" 
-                [nzSortOrder]="state.sortBy() === 'SystemCode' ? (state.sortDirection() === 0 ? 'ascend' : 'descend') : null"
-                (nzSortOrderChange)="onSortChange('SystemCode', $event)">
-                Код (SystemCode)
+            <th
+              [nzSortFn]="true"
+              [nzSortOrder]="
+                state.sortBy() === 'Name'
+                  ? state.sortDirection() === 0
+                    ? 'ascend'
+                    : 'descend'
+                  : null
+              "
+              (nzSortOrderChange)="onSortChange('Name', $event)"
+            >
+              Разработчик
             </th>
-            <th [nzSortFn]="true" 
-                [nzSortOrder]="state.sortBy() === 'SortOrder' ? (state.sortDirection() === 0 ? 'ascend' : 'descend') : null"
-                (nzSortOrderChange)="onSortChange('SortOrder', $event)">
-                Порядок
+            <th
+              [nzSortFn]="true"
+              [nzSortOrder]="
+                state.sortBy() === 'SystemCode'
+                  ? state.sortDirection() === 0
+                    ? 'ascend'
+                    : 'descend'
+                  : null
+              "
+              (nzSortOrderChange)="onSortChange('SystemCode', $event)"
+            >
+              Код (SystemCode)
             </th>
-            <th [nzSortFn]="true"
-                [nzSortOrder]="state.sortBy() === 'ProgramsCount' ? (state.sortDirection() === 0 ? 'ascend' : 'descend') : null"
-                (nzSortOrderChange)="onSortChange('ProgramsCount', $event)">
-                Программы
+            <th
+              [nzSortFn]="true"
+              [nzSortOrder]="
+                state.sortBy() === 'SortOrder'
+                  ? state.sortDirection() === 0
+                    ? 'ascend'
+                    : 'descend'
+                  : null
+              "
+              (nzSortOrderChange)="onSortChange('SortOrder', $event)"
+            >
+              Порядок
+            </th>
+            <th
+              [nzSortFn]="true"
+              [nzSortOrder]="
+                state.sortBy() === 'ProgramsCount'
+                  ? state.sortDirection() === 0
+                    ? 'ascend'
+                    : 'descend'
+                  : null
+              "
+              (nzSortOrderChange)="onSortChange('ProgramsCount', $event)"
+            >
+              Программы
             </th>
             <th>Сайт</th>
             <th nzWidth="100px">Статус</th>
@@ -152,7 +192,11 @@ import { ImageServiceUniversal } from '@shared/services/image-service-universal.
             @for (skeleton of [1, 2, 3, 4, 5]; track skeleton) {
               <tr>
                 <td colspan="7">
-                  <nz-skeleton [nzActive]="true" [nzTitle]="false" [nzParagraph]="{ rows: 1 }"></nz-skeleton>
+                  <nz-skeleton
+                    [nzActive]="true"
+                    [nzTitle]="false"
+                    [nzParagraph]="{ rows: 1 }"
+                  ></nz-skeleton>
                 </td>
               </tr>
             }
@@ -164,9 +208,9 @@ import { ImageServiceUniversal } from '@shared/services/image-service-universal.
               <td>
                 <div class="developer-info">
                   @if (data.iconPath) {
-                     <img [src]="imgService.getAssetUrl(data.iconPath)" class="developer-icon" />
+                    <img [src]="imgService.getAssetUrl(data.iconPath)" class="developer-icon" />
                   } @else {
-                     <div class="developer-icon-placeholder"><i nz-icon nzType="api"></i></div>
+                    <div class="developer-icon-placeholder"><i nz-icon nzType="api"></i></div>
                   }
                   <div style="display: flex; flex-direction: column;">
                     <span class="tech-name">{{ data.name }}</span>
@@ -198,21 +242,30 @@ import { ImageServiceUniversal } from '@shared/services/image-service-universal.
               <td>
                 <div class="actions">
                   @if (data.isDeleted) {
-                    <button 
-                      nz-button nzType="text" nz-tooltip nzTooltipTitle="Восстановить"
+                    <button
+                      nz-button
+                      nzType="text"
+                      nz-tooltip
+                      nzTooltipTitle="Восстановить"
                       (click)="onRestore(data.id)"
                     >
                       <i nz-icon nzType="undo" class="restore-icon"></i>
                     </button>
-                    <button 
-                      nz-button nzType="text" nz-tooltip nzTooltipTitle="Удалить окончательно"
+                    <button
+                      nz-button
+                      nzType="text"
+                      nz-tooltip
+                      nzTooltipTitle="Удалить окончательно"
                       (click)="onHardDelete(data.id)"
                     >
                       <i nz-icon nzType="fire" class="hard-delete-icon"></i>
                     </button>
                   } @else {
-                    <button 
-                      nz-button nzType="text" nz-tooltip nzTooltipTitle="Просмотр"
+                    <button
+                      nz-button
+                      nzType="text"
+                      nz-tooltip
+                      nzTooltipTitle="Просмотр"
                       class="view-btn"
                       (click)="onView(data.id)"
                     >
@@ -220,29 +273,41 @@ import { ImageServiceUniversal } from '@shared/services/image-service-universal.
                     </button>
 
                     @if (usePageNavigation) {
-                      <button 
-                        nz-button nzType="text" nz-tooltip nzTooltipTitle="Редактировать на странице"
+                      <button
+                        nz-button
+                        nzType="text"
+                        nz-tooltip
+                        nzTooltipTitle="Редактировать на странице"
                         [routerLink]="[data.id, 'edit']"
                       >
                         <i nz-icon nzType="fullscreen" class="edit-icon"></i>
                       </button>
                     } @else {
-                      <button 
-                        nz-button nzType="text" nz-tooltip nzTooltipTitle="Быстрая правка"
+                      <button
+                        nz-button
+                        nzType="text"
+                        nz-tooltip
+                        nzTooltipTitle="Быстрая правка"
                         (click)="onEdit(data.id)"
                       >
                         <i nz-icon nzType="edit" class="edit-icon"></i>
                       </button>
                     }
 
-                    <button 
-                      nz-button nzType="text" nz-tooltip nzTooltipTitle="В корзину"
+                    <button
+                      nz-button
+                      nzType="text"
+                      nz-tooltip
+                      nzTooltipTitle="В корзину"
                       (click)="onDelete(data.id)"
                     >
                       <i nz-icon nzType="rest" class="delete-icon"></i>
                     </button>
-                    <button 
-                      nz-button nzType="text" nz-tooltip nzTooltipTitle="Hard Delete"
+                    <button
+                      nz-button
+                      nzType="text"
+                      nz-tooltip
+                      nzTooltipTitle="Hard Delete"
                       (click)="onHardDelete(data.id)"
                     >
                       <i nz-icon nzType="fire" class="hard-delete-icon"></i>
@@ -301,7 +366,7 @@ export class DeveloperOfAggregatorListComponent {
   }
 
   onAdd(): void {
-    this.state.openAddModal(() => {}); 
+    this.state.openAddModal(() => {});
   }
 
   onView(id: number): void {
@@ -337,7 +402,7 @@ export class DeveloperOfAggregatorListComponent {
       'ВНИМАНИЕ: Это действие безвозвратно удалит разработчика из базы данных.',
       '2 + 2 = ?',
       '4',
-      'Удалить навсегда'
+      'Удалить навсегда',
     );
     if (confirmed) this.state.hardDelete(id);
   }

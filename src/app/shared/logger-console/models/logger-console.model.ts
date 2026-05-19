@@ -31,8 +31,8 @@ export interface InteractionLogDetails {
 /** Детали изменения состояния (Signals) */
 export interface StateLogDetails {
   name: string; // Название сигнала
-  oldValue: any; // Предыдущее значение
-  newValue: any; // Новое значение
+  oldValue: unknown; // Предыдущее значение
+  newValue: unknown; // Новое значение
 }
 
 /** Структура одного лога */
@@ -43,7 +43,7 @@ export interface LogEntry {
   type: LogEntryType; // Тип записи
   prefix: string; // Контекст / Источник (например, [AUTH], [API])
   message: string; // Текстовое сообщение или URL
-  data?: any[]; // Дополнительные данные (тело запроса/ответа)
+  data?: unknown[]; // Дополнительные данные (тело запроса/ответа)
   httpDetails?: HttpLogDetails; // Спец поля для сетевых запросов
   interactionDetails?: InteractionLogDetails; // Детали действий пользователя
   stateDetails?: StateLogDetails; // Детали изменений состояния
@@ -71,9 +71,9 @@ export interface ClientInfo {
 
 /** Интерфейс логгера для использования в компонентах/сервисах */
 export interface ILoggerConsole {
-  log(message: string, ...data: any[]): void;
-  debug(message: string, ...data: any[]): void;
-  info(message: string, ...data: any[]): void;
-  warn(message: string, ...data: any[]): void;
-  error(message: string, ...data: any[]): void;
+  log(message: string, ...data: unknown[]): void;
+  debug(message: string, ...data: unknown[]): void;
+  info(message: string, ...data: unknown[]): void;
+  warn(message: string, ...data: unknown[]): void;
+  error(message: string, ...data: unknown[]): void;
 }

@@ -83,7 +83,7 @@ import { TokenService } from '@auth/services/token.service';
             </nz-descriptions-item>
 
             <nz-descriptions-item nzLabel="Last Checked">
-              {{ tokenService.getCurrentStatus().lastChecked | date : 'HH:mm:ss' }}
+              {{ tokenService.getCurrentStatus().lastChecked | date: 'HH:mm:ss' }}
             </nz-descriptions-item>
           </nz-descriptions>
         </nz-card>

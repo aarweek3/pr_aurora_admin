@@ -14,9 +14,6 @@
     padding-bottom: 2rem;
     border-bottom: 2px solid var(--border-color, #e8e8e8);
 
-    @include dark-theme {
-      border-bottom-color: var(--dark-border-color, #303030);
-    }
 
     .header-content {
       flex: 1;
@@ -27,9 +24,6 @@
         font-weight: 700;
         color: var(--text-primary, #1a1a1a);
 
-        @include dark-theme {
-          color: var(--dark-text-primary, #fff);
-        }
       }
 
       p {
@@ -37,9 +31,6 @@
         font-size: 1rem;
         color: var(--text-secondary, #666);
 
-        @include dark-theme {
-          color: var(--dark-text-secondary, #a0a0a0);
-        }
       }
     }
 
@@ -57,10 +48,6 @@
   border-radius: 12px;
   border: 1px solid var(--border-color, #e8e8e8);
 
-  @include dark-theme {
-    background: var(--dark-bg-container, #1a1a1a);
-    border-color: var(--dark-border-color, #303030);
-  }
 
   &__header {
     display: flex;
@@ -74,9 +61,6 @@
       font-weight: 600;
       color: var(--text-primary, #1a1a1a);
 
-      @include dark-theme {
-        color: var(--dark-text-primary, #fff);
-      }
     }
 
     .code-toggle {
@@ -99,9 +83,6 @@
     margin: 0 0 1.5rem 0;
     color: var(--text-secondary, #666);
 
-    @include dark-theme {
-      color: var(--dark-text-secondary, #a0a0a0);
-    }
   }
 
   &__preview {
@@ -115,9 +96,6 @@
     min-height: 80px;
     align-items: center;
 
-    @include dark-theme {
-      background: rgba(255, 255, 255, 0.03);
-    }
   }
 
   &--playground {
@@ -126,9 +104,6 @@
       padding-bottom: 1rem;
       margin-bottom: 2rem;
 
-      @include dark-theme {
-        border-bottom-color: var(--dark-border-color, #303030);
-      }
     }
   }
 }
@@ -146,10 +121,6 @@
     border-radius: 12px;
     border: 1px solid var(--border-color, #e8e8e8);
 
-    @include dark-theme {
-      background: rgba(255, 255, 255, 0.02);
-      border-color: var(--dark-border-color, #303030);
-    }
 
     h3 {
       margin: 0 0 1.5rem 0;
@@ -157,9 +128,6 @@
       font-weight: 600;
       color: var(--text-primary, #1a1a1a);
 
-      @include dark-theme {
-        color: var(--dark-text-primary, #fff);
-      }
     }
   }
 
@@ -200,15 +168,9 @@
   font-weight: 500;
   color: var(--text-primary, #1a1a1a);
 
-  @include dark-theme {
-    color: var(--dark-text-primary, #fff);
-  }
 
   span {
     color: var(--text-secondary, #666);
-    @include dark-theme {
-      color: var(--dark-text-secondary, #a0a0a0);
-    }
   }
 }
 
@@ -223,11 +185,6 @@
   transition: all 0.2s;
   width: 100%;
 
-  @include dark-theme {
-    background: var(--dark-bg-light, #2a2a2a);
-    border-color: var(--dark-border-base, #404040);
-    color: var(--dark-text-primary, #fff);
-  }
 
   &:hover {
     border-color: var(--color-primary, #1890ff);
@@ -248,9 +205,6 @@
   color: var(--text-primary, #1a1a1a);
   cursor: pointer;
 
-  @include dark-theme {
-    color: var(--dark-text-primary, #fff);
-  }
 
   input[type="checkbox"] {
     width: 18px;
@@ -273,10 +227,6 @@
   align-items: center;
   justify-content: center;
 
-  @include dark-theme {
-    background: rgba(255, 255, 255, 0.03);
-    border-color: var(--dark-border-color, #303030);
-  }
 
   .preview-section {
     width: 100%;
@@ -339,19 +289,12 @@
     border-radius: 6px;
     border: 1px solid var(--border-color, #e8e8e8);
 
-    @include dark-theme {
-      background: var(--dark-bg-elevated, #242424);
-      border-color: var(--dark-border-color, #303030);
-    }
 
     p {
       margin: 0.5rem 0;
       font-size: 0.875rem;
       color: var(--text-secondary, #666);
 
-      @include dark-theme {
-        color: var(--dark-text-secondary, #a0a0a0);
-      }
 
       &:first-child {
         margin-top: 0;
@@ -377,10 +320,6 @@
     border-radius: 8px;
     border: 1px solid var(--border-color, #e8e8e8);
 
-    @include dark-theme {
-      background: var(--dark-bg-elevated, #242424);
-      border-color: var(--dark-border-color, #303030);
-    }
 
     h4 {
       margin: 0 0 1rem 0;
@@ -388,9 +327,6 @@
       font-weight: 600;
       color: var(--text-primary, #1a1a1a);
 
-      @include dark-theme {
-        color: var(--dark-text-primary, #fff);
-      }
     }
 
     .example-tags {

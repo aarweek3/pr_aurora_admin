@@ -31,7 +31,7 @@ export class VSModalRef<TData = any, TResult = any> {
 
   /** История изменений позиции и размеров для отладки */
   readonly debugHistory = signal<
-    Array<{
+    {
       timestamp: number;
       action: 'drag' | 'resize' | 'init' | 'adjust';
       top: number;
@@ -40,7 +40,7 @@ export class VSModalRef<TData = any, TResult = any> {
       height: number;
       right: number;
       bottom: number;
-    }>
+    }[]
   >([]);
 
   private readonly _afterClosed$ = new Subject<TResult | undefined>();
@@ -111,7 +111,14 @@ export class VSModalRef<TData = any, TResult = any> {
    */
   addDebugHistoryEntry(
     action: 'drag' | 'resize' | 'init' | 'adjust',
-    rect: { top: number; left: number; width: number; height: number; right: number; bottom: number },
+    rect: {
+      top: number;
+      left: number;
+      width: number;
+      height: number;
+      right: number;
+      bottom: number;
+    },
   ): void {
     const history = this.debugHistory();
     const newEntry = {

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzModalModule } from 'ng-zorro-antd/modal';
@@ -11,11 +11,11 @@ import { LicenseTypeOfAggregatorDetailsComponent } from './components/license-ty
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    CommonModule, 
-    NzModalModule, 
-    NzButtonModule, 
-    NzIconModule, 
-    LicenseTypeOfAggregatorDetailsComponent
+    CommonModule,
+    NzModalModule,
+    NzButtonModule,
+    NzIconModule,
+    LicenseTypeOfAggregatorDetailsComponent,
   ],
   template: `
     <nz-modal
@@ -27,16 +27,18 @@ import { LicenseTypeOfAggregatorDetailsComponent } from './components/license-ty
     >
       <ng-container *nzModalContent>
         <div class="modal-body-scroll">
-           <app-license-type-of-aggregator-details 
-             [data]="state.viewItem()"
-           ></app-license-type-of-aggregator-details>
+          <app-license-type-of-aggregator-details
+            [data]="state.viewItem()"
+          ></app-license-type-of-aggregator-details>
         </div>
       </ng-container>
 
       <ng-template #modalTitle>
         <div class="modal-header-custom">
           <i nz-icon nzType="eye" class="header-icon"></i>
-          <span>Просмотр типа лицензии: <strong>{{ state.viewItem()?.canonicalName }}</strong></span>
+          <span
+            >Просмотр типа лицензии: <strong>{{ state.viewItem()?.canonicalName }}</strong></span
+          >
         </div>
       </ng-template>
 
@@ -45,14 +47,28 @@ import { LicenseTypeOfAggregatorDetailsComponent } from './components/license-ty
       </ng-template>
     </nz-modal>
   `,
-  styles: [`
-    .modal-header-custom { display: flex; align-items: center; gap: 8px; }
-    .header-icon { color: #1890ff; font-size: 18px; }
-    .modal-body-scroll { max-height: 70vh; overflow-y: auto; padding: 4px; }
-  `]
+  styles: [
+    `
+      .modal-header-custom {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .header-icon {
+        color: #1890ff;
+        font-size: 18px;
+      }
+      .modal-body-scroll {
+        max-height: 70vh;
+        overflow-y: auto;
+        padding: 4px;
+      }
+    `,
+  ],
 })
 export class LicenseTypeOfAggregatorViewModalComponent {
-  constructor(public state: LicenseTypeOfAggregatorStateService) {}
+  state = inject(LicenseTypeOfAggregatorStateService);
+
 
   handleClose(): void {
     this.state.closeViewModal();

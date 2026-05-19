@@ -11,10 +11,10 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class UserRolePipe implements PipeTransform {
   private roleMap: Record<string, string> = {
-    'Admin': 'Администратор',
-    'Moderator': 'Модератор',
-    'User': 'Пользователь',
-    'Guest': 'Гость',
+    Admin: 'Администратор',
+    Moderator: 'Модератор',
+    User: 'Пользователь',
+    Guest: 'Гость',
   };
 
   transform(role: string | null | undefined): string {

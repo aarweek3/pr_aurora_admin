@@ -1,18 +1,12 @@
-// src/styles/components/_input.scss
-// ============================================================================
-// Input Component Styles
-// ============================================================================
-// Стили для input элементов с поддержкой размеров, статусов и вариантов
-// Использует BEM нотацию и CSS переменные
-// ============================================================================
-
 @use "sass:color";
 @use "../abstracts/variables" as *;
 @use "../abstracts/mixins" as *;
 
-// ============================================================================
-// Base Input Styles
-// ============================================================================
+@layer components {
+  /**
+   * Aurora Input Styles
+   * BEM-based styles for form controls
+   */
 
 .av-input {
   width: 100%;
@@ -20,56 +14,38 @@
   padding: 4px 12px;
   font-size: $font-size-base;
   line-height: 1.5;
-  color: $color-text-primary;
-  background-color: $color-white;
-  background-image: none;
-  border: 1px solid $color-border-base;
-  border-radius: $border-radius-base;
-  transition: all $transition-base;
+  color: var(--av-text-primary);
+  background-color: var(--av-color-white);
+  border: 1px solid var(--av-border-color);
+  border-radius: var(--av-radius-base);
+  transition: var(--av-transition-base);
   outline: none;
   box-sizing: border-box;
 
-  // Placeholder
   &::placeholder {
-    color: $color-text-tertiary;
+    color: var(--av-text-tertiary);
     opacity: 1;
   }
 
-  // Focus state
   &:focus {
-    border-color: $color-primary;
-    outline: none;
+    border-color: var(--av-color-primary);
+    box-shadow: 0 0 0 2px var(--av-color-primary-light);
   }
 
-  // Hover state
   &:hover:not(:disabled):not(:focus) {
-    border-color: $color-primary-hover;
+    border-color: var(--av-color-primary-hover);
   }
 
-  // Disabled state
   &:disabled,
   &--disabled {
-    background-color: $color-bg-light;
-    border-color: $color-border-base;
-    color: $color-text-disabled;
+    background-color: var(--av-color-gray-2);
+    border-color: var(--av-border-color);
+    color: var(--av-text-disabled);
     cursor: not-allowed;
     opacity: 0.6;
-
-    &::placeholder {
-      color: $color-text-disabled;
-    }
   }
 
-  // Readonly state
-  &:read-only {
-    background-color: $color-bg-light;
-    cursor: default;
-  }
-
-  // ============================================================================
-  // Sizes
-  // ============================================================================
-
+  // --- Sizes ---
   &--small {
     height: 24px;
     padding: 2px 8px;
@@ -82,204 +58,38 @@
     font-size: $font-size-lg;
   }
 
-  &--x-large {
-    height: 48px;
-    padding: 12px 20px;
-    font-size: $font-size-lg;
-  }
-
-  // ============================================================================
-  // Status (Validation)
-  // ============================================================================
-
+  // --- Status ---
   &--error {
-    border-color: $color-error;
-
-    &:focus {
-      border-color: $color-error;
-      outline: none;
-    }
-
-    &:hover:not(:disabled) {
-      border-color: $color-error-hover;
-    }
+    border-color: var(--av-color-error);
+    &:focus { box-shadow: 0 0 0 2px var(--av-color-error-light); }
   }
 
   &--warning {
-    border-color: $color-warning;
-
-    &:focus {
-      border-color: $color-warning;
-      outline: none;
-    }
-
-    &:hover:not(:disabled) {
-      border-color: $color-warning-hover;
-    }
+    border-color: var(--av-color-warning);
+    &:focus { box-shadow: 0 0 0 2px var(--av-color-warning-light); }
   }
 
   &--success {
-    border-color: $color-success;
-
-    &:focus {
-      border-color: $color-success;
-      outline: none;
-    }
-
-    &:hover:not(:disabled) {
-      border-color: $color-success-hover;
-    }
+    border-color: var(--av-color-success);
+    &:focus { box-shadow: 0 0 0 2px var(--av-color-success-light); }
   }
 
-  // ============================================================================
-  // Shapes & Layout
-  // ============================================================================
-
-  &--rounded {
-    border-radius: 4px;
-  }
-
-  &--rounded-big {
-    border-radius: 100px;
-  }
-
-  &--block {
-    width: 100%;
-    display: block;
-  }
-
-  // ============================================================================
-  // Variants
-  // ============================================================================
-
-  // Filled variant
+  // --- Variants ---
   &--filled {
-    background-color: $color-bg-gray;
+    background-color: var(--av-color-gray-2);
     border-color: transparent;
-
-    &:hover:not(:disabled):not(:focus) {
-      background-color: color.adjust($color-bg-gray, $lightness: -3%);
-    }
-
-    &:focus {
-      background-color: $color-white;
-      border-color: $color-primary;
-    }
+    &:focus { background-color: var(--av-color-white); border-color: var(--av-color-primary); }
   }
 
-  // Borderless variant (underline only)
   &--borderless {
     border: none;
-    border-bottom: 1px solid $color-border-base;
+    border-bottom: 1px solid var(--av-border-color);
     border-radius: 0;
-
-    &:focus {
-      border-bottom-color: $color-primary;
-      box-shadow: 0 1px 0 0 rgba($color-primary, 0.2);
-    }
-
-    &:hover:not(:disabled):not(:focus) {
-      border-bottom-color: $color-primary-hover;
-    }
-  }
-
-  // Dashed modifier
-  &--dashed {
-    border-style: dashed;
-  }
-
-  // ============================================================================
-  // Textarea specific
-  // ============================================================================
-
-  &[rows] {
-    height: auto;
-    min-height: 64px;
-    padding: 8px 12px;
-    line-height: 1.5;
-    resize: vertical;
-
-    &.av-input--small {
-      min-height: 48px;
-      padding: 4px 8px;
-    }
-
-    &.av-input--large {
-      min-height: 80px;
-      padding: 12px 16px;
-    }
-
-    &.av-input--x-large {
-      min-height: 96px;
-      padding: 16px 20px;
-    }
-  }
-
-  // ============================================================================
-  // Dark Theme
-  // ============================================================================
-
-  @include dark-theme {
-    color: $dark-text-primary;
-    background-color: $dark-bg-light;
-    border-color: $dark-border-base;
-
-    &::placeholder {
-      color: $dark-text-tertiary;
-    }
-
-    &:focus {
-      border-color: $color-primary;
-      background-color: $dark-bg-light;
-    }
-
-    &:hover:not(:disabled):not(:focus) {
-      border-color: color.adjust($dark-border-base, $lightness: 10%);
-    }
-
-    &:disabled,
-    &--disabled {
-      background-color: $dark-bg-base;
-      border-color: $dark-border-base;
-      color: $dark-text-tertiary;
-    }
-
-    &:read-only {
-      background-color: $dark-bg-base;
-    }
-
-    // Filled variant in dark theme
-    &--filled {
-      background-color: $dark-bg-base;
-
-      &:hover:not(:disabled):not(:focus) {
-        background-color: color.adjust($dark-bg-base, $lightness: 3%);
-      }
-
-      &:focus {
-        background-color: $dark-bg-gray;
-      }
-    }
-
-    // Borderless variant in dark theme
-    &--borderless {
-      border-bottom-color: $dark-border-base;
-
-      &:focus {
-        border-bottom-color: $color-primary;
-      }
-
-      &:hover:not(:disabled):not(:focus) {
-        border-bottom-color: color.adjust($dark-border-base, $lightness: 10%);
-      }
-    }
+    &:focus { border-bottom-color: var(--av-color-primary); box-shadow: none; }
   }
 }
 
-// ============================================================================
-// Input Group (для prefix/suffix)
-// ============================================================================
-
+// Input Group
 .av-input-group {
   display: inline-flex;
   width: 100%;
@@ -290,47 +100,19 @@
     display: inline-flex;
     align-items: center;
     padding: 0 12px;
-    background-color: $color-bg-gray;
-    border: 1px solid $color-border-base;
-    color: $color-text-secondary;
-    font-size: $font-size-base;
-    white-space: nowrap;
-    transition: all $transition-base;
+    background-color: var(--av-color-gray-2);
+    border: 1px solid var(--av-border-color);
+    color: var(--av-text-secondary);
+    transition: var(--av-transition-base);
   }
 
-  &__prefix {
-    border-right: none;
-    border-radius: $border-radius-base 0 0 $border-radius-base;
-  }
+  &__prefix { border-right: none; border-radius: var(--av-radius-base) 0 0 var(--av-radius-base); }
+  &__suffix { border-left: none; border-radius: 0 var(--av-radius-base) var(--av-radius-base) 0; }
 
-  &__suffix {
-    border-left: none;
-    border-radius: 0 $border-radius-base $border-radius-base 0;
-  }
-
-  // Input в группе
   .av-input {
     flex: 1;
-
-    &:not(:first-child) {
-      border-top-left-radius: 0;
-      border-bottom-left-radius: 0;
-    }
-
-    &:not(:last-child) {
-      border-top-right-radius: 0;
-      border-bottom-right-radius: 0;
-    }
-  }
-
-  // Dark theme для группы
-  @include dark-theme {
-    .av-input-group__prefix,
-    .av-input-group__suffix {
-      background-color: $dark-bg-base;
-      border-color: $dark-border-base;
-      color: $dark-text-tertiary;
-    }
+    &:not(:first-child) { border-top-left-radius: 0; border-bottom-left-radius: 0; }
+    &:not(:last-child) { border-top-right-radius: 0; border-bottom-right-radius: 0; }
   }
 }
 
@@ -377,15 +159,6 @@
   }
 
   // Dark theme
-  @include dark-theme {
-    .av-input-wrapper__label {
-      color: $dark-text-primary;
-    }
-
-    .av-input-wrapper__hint {
-      color: $dark-text-tertiary;
-    }
-  }
 }
 
 // ============================================================================
@@ -448,7 +221,8 @@ input[type="file"].av-input {
     transition: all $transition-base;
 
     &:hover {
-      background-color: color.adjust($color-bg-gray, $lightness: -5%);
+      background-color: color.adjust($color-bg-gray-pure, $lightness: -5%);
     }
   }
+}
 }

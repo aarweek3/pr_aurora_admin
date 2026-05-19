@@ -101,59 +101,59 @@
 
             <!-- 3. Geometry (Manual) - Only visible if Size is Custom -->
             @if (pgSize() === 'custom') {
-            <div
-              style="
-                background: #fffbe6;
-                border: 1px solid #ffe58f;
-                border-radius: 8px;
-                padding: 12px;
-                margin-bottom: 20px;
-              "
-            >
-              <div class="control-item" style="margin-bottom: 0">
-                <div nz-row [nzGutter]="8">
-                  @if (pgShape() === 'circle' || pgShape() === 'square') {
-                  <div nz-col [nzSpan]="24">
-                    <label
-                      nz-tooltip
-                      nzTooltipTitle="Для круга и квадрата ширина и высота равны. Используйте это поле для изменения размера."
-                    >
-                      Размер (W=H): <span class="info-icon">ⓘ</span>
-                    </label>
-                    <input
-                      nz-input
-                      [ngModel]="pgWidth()"
-                      (ngModelChange)="onSizeChange($event)"
-                      placeholder="e.g. 100"
-                    />
+              <div
+                style="
+                  background: #fffbe6;
+                  border: 1px solid #ffe58f;
+                  border-radius: 8px;
+                  padding: 12px;
+                  margin-bottom: 20px;
+                "
+              >
+                <div class="control-item" style="margin-bottom: 0">
+                  <div nz-row [nzGutter]="8">
+                    @if (pgShape() === 'circle' || pgShape() === 'square') {
+                      <div nz-col [nzSpan]="24">
+                        <label
+                          nz-tooltip
+                          nzTooltipTitle="Для круга и квадрата ширина и высота равны. Используйте это поле для изменения размера."
+                        >
+                          Размер (W=H): <span class="info-icon">ⓘ</span>
+                        </label>
+                        <input
+                          nz-input
+                          [ngModel]="pgWidth()"
+                          (ngModelChange)="onSizeChange($event)"
+                          placeholder="e.g. 100"
+                        />
+                      </div>
+                    } @else {
+                      <div nz-col [nzSpan]="12">
+                        <label nz-tooltip nzTooltipTitle="Ручное управление шириной элемента в px или %">
+                          Ширина (W): <span class="info-icon">ⓘ</span>
+                        </label>
+                        <input
+                          nz-input
+                          [ngModel]="pgWidth()"
+                          (ngModelChange)="pgWidth.set($event)"
+                          placeholder="e.g. 200"
+                        />
+                      </div>
+                      <div nz-col [nzSpan]="12">
+                        <label nz-tooltip nzTooltipTitle="Ручное управление высотой элемента в px или %">
+                          Высота (H): <span class="info-icon">ⓘ</span>
+                        </label>
+                        <input
+                          nz-input
+                          [ngModel]="pgHeight()"
+                          (ngModelChange)="pgHeight.set($event)"
+                          placeholder="e.g. 50"
+                        />
+                      </div>
+                    }
                   </div>
-                  } @else {
-                  <div nz-col [nzSpan]="12">
-                    <label nz-tooltip nzTooltipTitle="Ручное управление шириной элемента в px или %">
-                      Ширина (W): <span class="info-icon">ⓘ</span>
-                    </label>
-                    <input
-                      nz-input
-                      [ngModel]="pgWidth()"
-                      (ngModelChange)="pgWidth.set($event)"
-                      placeholder="e.g. 200"
-                    />
-                  </div>
-                  <div nz-col [nzSpan]="12">
-                    <label nz-tooltip nzTooltipTitle="Ручное управление высотой элемента в px или %">
-                      Высота (H): <span class="info-icon">ⓘ</span>
-                    </label>
-                    <input
-                      nz-input
-                      [ngModel]="pgHeight()"
-                      (ngModelChange)="pgHeight.set($event)"
-                      placeholder="e.g. 50"
-                    />
-                  </div>
-                  }
                 </div>
               </div>
-            </div>
             }
 
             <!-- 4. Color Settings -->
@@ -166,13 +166,13 @@
                 <div style="display: flex; flex-direction: column; gap: 10px">
                   <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap">
                     @for (color of colorPresets; track color) {
-                    <div
-                      class="color-preset"
-                      [style.background-color]="color"
-                      [class.active]="pgColor() === color"
-                      (click)="pgColor.set(color)"
-                      [nz-tooltip]="color"
-                    ></div>
+                      <div
+                        class="color-preset"
+                        [style.background-color]="color"
+                        [class.active]="pgColor() === color"
+                        (click)="pgColor.set(color)"
+                        [nz-tooltip]="color"
+                      ></div>
                     }
                     <button
                       av-button
@@ -205,13 +205,13 @@
                 <div style="display: flex; flex-direction: column; gap: 10px">
                   <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap">
                     @for (color of colorPresets; track color) {
-                    <div
-                      class="color-preset"
-                      [style.background-color]="color"
-                      [class.active]="pgTextColor() === color"
-                      (click)="pgTextColor.set(color)"
-                      [nz-tooltip]="color"
-                    ></div>
+                      <div
+                        class="color-preset"
+                        [style.background-color]="color"
+                        [class.active]="pgTextColor() === color"
+                        (click)="pgTextColor.set(color)"
+                        [nz-tooltip]="color"
+                      ></div>
                     }
                     <button
                       av-button
@@ -273,73 +273,73 @@
               </div>
 
               @if (pgIcon() && pgIcon() !== 'undefined' && pgIcon() !== null) {
-              <!-- Icon Size -->
-              <div class="control-item" style="margin-bottom: 12px">
-                <label nz-tooltip nzTooltipTitle="Управление размером встроенной иконки в пикселях">
-                  Размер иконки: <span class="info-icon">ⓘ</span>
-                </label>
-                <div nz-row [nzGutter]="12" nzAlign="middle">
-                  <div nz-col nzFlex="auto">
-                    <nz-slider
-                      [nzMin]="8"
-                      [nzMax]="128"
-                      [ngModel]="pgIconSize()"
-                      (ngModelChange)="pgIconSize.set($event)"
-                    ></nz-slider>
-                  </div>
-                  <div nz-col style="width: 80px">
-                    <nz-input-number
-                      style="width: 100%"
-                      [nzMin]="8"
-                      [nzMax]="128"
-                      [ngModel]="pgIconSize()"
-                      (ngModelChange)="pgIconSize.set($event)"
-                    ></nz-input-number>
+                <!-- Icon Size -->
+                <div class="control-item" style="margin-bottom: 12px">
+                  <label nz-tooltip nzTooltipTitle="Управление размером встроенной иконки в пикселях">
+                    Размер иконки: <span class="info-icon">ⓘ</span>
+                  </label>
+                  <div nz-row [nzGutter]="12" nzAlign="middle">
+                    <div nz-col nzFlex="auto">
+                      <nz-slider
+                        [nzMin]="8"
+                        [nzMax]="128"
+                        [ngModel]="pgIconSize()"
+                        (ngModelChange)="pgIconSize.set($event)"
+                      ></nz-slider>
+                    </div>
+                    <div nz-col style="width: 80px">
+                      <nz-input-number
+                        style="width: 100%"
+                        [nzMin]="8"
+                        [nzMax]="128"
+                        [ngModel]="pgIconSize()"
+                        (ngModelChange)="pgIconSize.set($event)"
+                      ></nz-input-number>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <!-- Icon Color -->
-              <div class="control-item" style="margin-bottom: 0">
-                <label nz-tooltip nzTooltipTitle="Позволяет задать произвольный цвет только иконке">
-                  Цвет иконки (avIconColor): <span class="info-icon">ⓘ</span>
-                </label>
-                <div style="display: flex; flex-direction: column; gap: 8px">
-                  <div style="display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 4px">
-                    @for (color of colorPresets; track color) {
-                    <div
-                      class="color-preset"
-                      [style.background-color]="color"
-                      [class.active]="pgIconColor() === color"
-                      (click)="pgIconColor.set(color)"
-                      [nz-tooltip]="color"
-                    ></div>
-                    }
-                    <button
-                      av-button
-                      avType="text"
-                      avSize="small"
-                      (click)="pgIconColor.set(null)"
-                      style="color: #595959; height: 22px; padding: 0 4px"
-                    >
-                      Сброс
-                    </button>
-                  </div>
-                  <div style="display: flex; gap: 8px; align-items: center">
-                    <nz-color-picker
-                      [ngModel]="pgIconColor()"
-                      (ngModelChange)="pgIconColor.set($event)"
-                    ></nz-color-picker>
-                    <input
-                      nz-input
-                      [ngModel]="pgIconColor()"
-                      (ngModelChange)="pgIconColor.set($event)"
-                      placeholder="HEX, RGB..."
-                      style="flex: 1; height: 32px"
-                    />
+                <!-- Icon Color -->
+                <div class="control-item" style="margin-bottom: 0">
+                  <label nz-tooltip nzTooltipTitle="Позволяет задать произвольный цвет только иконке">
+                    Цвет иконки (avIconColor): <span class="info-icon">ⓘ</span>
+                  </label>
+                  <div style="display: flex; flex-direction: column; gap: 8px">
+                    <div style="display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 4px">
+                      @for (color of colorPresets; track color) {
+                        <div
+                          class="color-preset"
+                          [style.background-color]="color"
+                          [class.active]="pgIconColor() === color"
+                          (click)="pgIconColor.set(color)"
+                          [nz-tooltip]="color"
+                        ></div>
+                      }
+                      <button
+                        av-button
+                        avType="text"
+                        avSize="small"
+                        (click)="pgIconColor.set(null)"
+                        style="color: #595959; height: 22px; padding: 0 4px"
+                      >
+                        Сброс
+                      </button>
+                    </div>
+                    <div style="display: flex; gap: 8px; align-items: center">
+                      <nz-color-picker
+                        [ngModel]="pgIconColor()"
+                        (ngModelChange)="pgIconColor.set($event)"
+                      ></nz-color-picker>
+                      <input
+                        nz-input
+                        [ngModel]="pgIconColor()"
+                        (ngModelChange)="pgIconColor.set($event)"
+                        placeholder="HEX, RGB..."
+                        style="flex: 1; height: 32px"
+                      />
+                    </div>
                   </div>
                 </div>
-              </div>
               }
             </div>
 
@@ -410,31 +410,35 @@
           <nz-card nzTitle="Результат">
             <div class="preview-area" [class.av-style-soft]="pgSystemSoft()">
               @if (refreshTrigger()) {
-              <button
-                av-button
-                [avType]="pgType()"
-                [avSize]="safePgSize()"
-                [avColor]="pgColor()"
-                [avLoading]="pgLoading()"
-                [avBlock]="pgBlock()"
-                [avVisible]="pgVisible()"
-                [avIconOnly]="pgIconOnly()"
-                [avShape]="pgShape()"
-                [avWidth]="pgWidth()"
-                [avHeight]="pgHeight()"
-                [avRadius]="pgRadius()"
-                [avIconSize]="pgIconSize()"
-                [avIconColor]="pgIconColor()"
-                [avTextColor]="pgTextColor()"
-                (clicked)="showMessage('Interactive button clicked!')"
-              >
-                @if(pgIcon()){<av-icon [type]="pgIcon()!" [size]="getIconSize()"></av-icon>@if(!pgIconOnly()){<span
-                  style="margin-left: 8px"
-                  >{{ pgLabel() }}</span
-                >}}@else{{{ pgLabel() }}}
-              </button>
+                <button
+                  av-button
+                  [avType]="pgType()"
+                  [avSize]="safePgSize()"
+                  [avColor]="pgColor()"
+                  [avLoading]="pgLoading()"
+                  [avBlock]="pgBlock()"
+                  [avVisible]="pgVisible()"
+                  [avIconOnly]="pgIconOnly()"
+                  [avShape]="pgShape()"
+                  [avWidth]="pgWidth()"
+                  [avHeight]="pgHeight()"
+                  [avRadius]="pgRadius()"
+                  [avIconSize]="pgIconSize()"
+                  [avIconColor]="pgIconColor()"
+                  [avTextColor]="pgTextColor()"
+                  (clicked)="showMessage('Interactive button clicked!')"
+                >
+                  @if (pgIcon()) {
+                    <av-icon [type]="pgIcon()!" [size]="getIconSize()"></av-icon>
+                    @if (!pgIconOnly()) {
+                      <span style="margin-left: 8px">{{ pgLabel() }}</span>
+                    }
+                  } @else {
+                    {{ pgLabel() }}
+                  }
+                </button>
               } @else {
-              <div style="color: #bfbfbf; font-style: italic">Обновление...</div>
+                <div style="color: #bfbfbf; font-style: italic">Обновление...</div>
               }
             </div>
 
@@ -450,7 +454,11 @@
             <div style="margin-top: 24px; text-align: center; padding: 16px; background: #f0f2f5; border-radius: 8px">
               <p style="margin-bottom: 12px; font-weight: 500">🚀 Пример с задержкой (как в Spinner UI):</p>
               <button av-button avType="primary" [avLoading]="isLoading()" (clicked)="simulateLoading()">
-                @if (isLoading()) { Загрузка... } @else { Запустить симуляцию (2 сек) }
+                @if (isLoading()) {
+                  Загрузка...
+                } @else {
+                  Запустить симуляцию (2 сек)
+                }
               </button>
             </div>
           </nz-card>
@@ -495,7 +503,7 @@
             </div>
           </div>
           @if (showCodePrimary()) {
-          <pre class="code-example"><code>{{ buttonPrimaryCode }}</code></pre>
+            <pre class="code-example"><code>{{ buttonPrimaryCode }}</code></pre>
           }
         </div>
 
@@ -510,7 +518,7 @@
             </div>
           </div>
           @if (showCodeDefault()) {
-          <pre class="code-example"><code>{{ buttonDefaultCode }}</code></pre>
+            <pre class="code-example"><code>{{ buttonDefaultCode }}</code></pre>
           }
         </div>
 
@@ -525,7 +533,7 @@
             </div>
           </div>
           @if (showCodeDashed()) {
-          <pre class="code-example"><code>{{ buttonDashedCode }}</code></pre>
+            <pre class="code-example"><code>{{ buttonDashedCode }}</code></pre>
           }
         </div>
 
@@ -540,7 +548,7 @@
             </div>
           </div>
           @if (showCodeText()) {
-          <pre class="code-example"><code>{{ buttonTextCode }}</code></pre>
+            <pre class="code-example"><code>{{ buttonTextCode }}</code></pre>
           }
         </div>
 
@@ -555,7 +563,7 @@
             </div>
           </div>
           @if (showCodeLink()) {
-          <pre class="code-example"><code>{{ buttonLinkCode }}</code></pre>
+            <pre class="code-example"><code>{{ buttonLinkCode }}</code></pre>
           }
         </div>
 
@@ -570,7 +578,7 @@
             </div>
           </div>
           @if (showCodeDanger()) {
-          <pre class="code-example"><code>{{ buttonDangerCode }}</code></pre>
+            <pre class="code-example"><code>{{ buttonDangerCode }}</code></pre>
           }
         </div>
       </div>
@@ -598,7 +606,7 @@
             </button>
           </div>
           @if (showCodeSharp()) {
-          <pre class="code-example"><code>{{ sharpCode }}</code></pre>
+            <pre class="code-example"><code>{{ sharpCode }}</code></pre>
           }
         </div>
       </div>
@@ -616,15 +624,15 @@
         </button>
       </div>
       @if (showButtonSizesCode()) {
-      <pre class="code-example"><code>{{ buttonSizesCode }}</code></pre>
+        <pre class="code-example"><code>{{ buttonSizesCode }}</code></pre>
       }
     </div>
   </section>
 
   <!-- Message Display -->
   @if (message()) {
-  <div class="message-display">
-    {{ message() }}
-  </div>
+    <div class="message-display">
+      {{ message() }}
+    </div>
   }
 </div>

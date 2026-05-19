@@ -1,6 +1,6 @@
 import { inject, Injectable, OnDestroy } from '@angular/core';
-import { ErrorHandlingService } from '@shared/infrastructure/interceptor/services/error-handling.service';
-import { LoggingService } from '@shared/infrastructure/logging/logging.service';
+import { ErrorHandlingService } from '@core/services/error/error-handling.service';
+import { LoggingService } from '@core/services/logging/logging.service';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { BehaviorSubject, finalize, Observable, Subject, takeUntil } from 'rxjs';
 import {

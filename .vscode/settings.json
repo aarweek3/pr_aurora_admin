@@ -1,190 +1,200 @@
 {
-    // ======================================================
-    // ЯЗЫК И ОРФОГРАФИЯ
-    // ======================================================
-    // Язык проверки для LTeX
-    "ltex.language": "ru-RU",
-    // LTeX включён только для обычного текста
-    "ltex.enabled": [
-        "plaintext"
-    ],
-    // Полностью отключаем cSpell (лишний шум)
-    "cSpell.enabled": false,
-    // ======================================================
-    // ФОРМАТИРОВАНИЕ — ЕДИНЫЙ СТАНДАРТ
-    // ======================================================
-    // Prettier — основной форматтер для всего
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
-    // Форматировать при сохранении
-    "editor.formatOnSave": true,
-    // Форматировать при вставке
-    "editor.formatOnPaste": true,
-    // Действия при сохранении
-    "editor.codeActionsOnSave": {
-        // ESLint фиксы — только явно (не агрессивно)
-        "source.fixAll.eslint": "explicit",
-        // Сортировка импортов
-        "source.organizeImports": "explicit"
-    },
-    // Не требуем .prettierrc — используем глобальные правила
-    "prettier.requireConfig": false,
-    // Принудительно Prettier для всех основных языков
-    "[typescript]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode"
-    },
-    "[typescriptreact]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode"
-    },
-    "[javascript]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode"
-    },
-    "[javascriptreact]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode"
-    },
-    "[html]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode"
-    },
-    // JSON форматируем встроенным форматтером
-    "[json]": {
-        "editor.defaultFormatter": "vscode.json-language-features"
-    },
-    "[jsonc]": {
-        "editor.defaultFormatter": "vscode.json-language-features"
-    },
-    // ======================================================
-    // РЕДАКТОР — ВИЗУАЛ И ЧИТАЕМОСТЬ
-    // ======================================================
-    // Пробелы вместо табов
-    "editor.insertSpaces": true,
-    // 2 пробела — стандарт Angular
-    "editor.tabSize": 2,
-    // Перенос строк после 120 символов
-    "editor.wordWrapColumn": 120,
-    // Миникарта не нужна
-    "editor.minimap.enabled": false,
-    // Sticky scroll отключаем (засоряет экран)
-    "editor.stickyScroll.enabled": false,
-    // Комфортный межстрочный интервал
-    "editor.lineHeight": 22,
-    // Размер шрифта
-    "editor.fontSize": 12,
-    "editor.padding.left": 50,
-    // Лигатуры (=> !== &&)
-    "editor.fontLigatures": true,
-    // Шрифты для кода
-    "editor.fontFamily": "'JetBrains Mono', 'Fira Code', 'Cascadia Code', Consolas, monospace",
-    // ======================================================
-    // ANGULAR + TYPESCRIPT
-    // ======================================================
-    // Автообновление импортов при перемещении файлов
-    "typescript.updateImportsOnFileMove.enabled": "always",
-    // Использовать алиасы вместо ../../..
-    "typescript.preferences.importModuleSpecifier": "non-relative",
-    // Подсказки путей
-    "typescript.suggest.paths": true,
-    "javascript.suggest.paths": true,
-    // Emmet в TS/JS
-    "emmet.includeLanguages": {
-        "javascript": "javascriptreact",
-        "typescript": "typescriptreact"
-    },
-    // Автозакрытие HTML-тегов
-    "html.autoClosingTags": true,
-    // ======================================================
-    // ESLINT + ЧИСТОТА ФАЙЛОВ
-    // ======================================================
-    "eslint.validate": [
-        "javascript",
-        "typescript",
-        "html"
-    ],
-    "eslint.format.enable": true,
-    // Убираем пробелы в конце строк
-    "files.trimTrailingWhitespace": true,
-    // Пустая строка в конце файла
-    "files.insertFinalNewline": true,
-    // LF — стандарт Git
-    "files.eol": "\n",
-    // ======================================================
-    // ПОВЕДЕНИЕ VS CODE
-    // ======================================================
-    "workbench.editor.enablePreview": false,
-    "workbench.editor.enablePreviewFromCodeNavigation": false,
-    // Ограничиваем количество вкладок
-    "workbench.editor.limit.enabled": true,
-    "workbench.editor.limit.value": 50,
-    "explorer.compactFolders": false,
-    "explorer.confirmDelete": true,
-    "explorer.sortOrder": "type",
-    "workbench.tree.expandMode": "singleClick",
-    "workbench.tree.indent": 50,
-    "window.openFoldersInNewWindow": "off",
-    "window.restoreWindows": "all",
-    "workbench.startupEditor": "none",
-    "security.workspace.trust.untrustedFiles": "open",
-    "git.enableSmartCommit": true,
-    "task.allowAutomaticTasks": "on",
-    // ======================================================
-    // 🎨 ЦВЕТА — ГЛОБАЛЬНЫЙ SHELL IDE
-    // ======================================================
-    // Основная тема
-    "workbench.colorTheme": "Dark Modern",
-    // Accent цвет (Peacock)
-    "peacock.color": "#0d445f",
-    "workbench.colorCustomizations": {
-        //"titleBar.activeBackground": "#0d445f",
-        "titleBar.activeForeground": "#e7e7e7",
-        //"titleBar.inactiveBackground": "#0d445f99",
-        "titleBar.inactiveForeground": "#e7e7e799",
-        "statusBar.background": "#0d445f",
-        "statusBar.foreground": "#e7e7e7",
-        // "statusBarItem.hoverBackground": "#13648c",
-        // "statusBarItem.remoteBackground": "#0d445f",
-        "statusBarItem.remoteForeground": "#e7e7e7",
-        "activityBar.background": "#13648c",
-        "activityBar.foreground": "#e7e7e7",
-        "activityBar.activeBackground": "#13648c",
-        "activityBar.inactiveForeground": "#e7e7e799",
-        "activityBarBadge.background": "#e857b8",
-        "activityBarBadge.foreground": "#15202b",
-        "sideBar.background": "#192131",
-        "sideBar.foreground": "#CCCCCC",
-        "sideBarTitle.foreground": "#FFFFFF",
-        "sideBarSectionHeader.background": "#3A3A3A",
-        "sideBarSectionHeader.foreground": "#FFFFFF",
-        "editor.background": "#1E1E1E",
-        "editor.foreground": "#CCCCCC",
-        "editorLineNumber.foreground": "#808080",
-        "editorCursor.foreground": "#CCCCCC",
-        "editor.selectionBackground": "#3A3A3A",
-        "editor.lineHighlightBackground": "#2D2D2D",
-        "tab.activeBackground": "#026123",
-        "tab.activeForeground": "#FFFFFF",
-        "tab.inactiveBackground": "#2D2D2D",
-        "tab.inactiveForeground": "#CCCCCC",
-        "tab.border": "#444444",
-        "list.activeSelectionBackground": "#0b531b",
-        "list.activeSelectionForeground": "#FFFFFF",
-        "list.inactiveSelectionBackground": "#243ee6",
-        "list.inactiveSelectionForeground": "#8E8D8A",
-        "list.hoverBackground": "#0f1316",
-        "list.hoverForeground": "#4682B4",
-        "list.focusBackground": "#085b92",
-        "list.focusForeground": "#f8f7f6",
-        "tree.indentGuidesStroke": "#71a8f5",
-        "terminal.background": "#1E1E1E",
-        "terminal.foreground": "#CCCCCC",
-        "terminalCursor.foreground": "#1daef6",
-        "terminalCursor.background": "#CCCCCC",
-        "commandCenter.border": "#e7e7e799",
-        "sash.hoverBorder": "#13648c"
-    },
-    // ======================================================
-    // TERMINAL — ШРИФТ И НАСТРОЙКИ
-    // ======================================================
-    "terminal.integrated.fontFamily": "'JetBrains Mono', 'Fira Code', monospace",
-    "terminal.integrated.fontSize": 12,
-    "terminal.integrated.lineHeight": 1.2,
-    // Дефолтная директория для терминала
-    "terminal.integrated.cwd": "D:\\_PROGECT\\pr_aurora_admin"
+  // ======================================================
+  // ЯЗЫК И ОРФОГРАФИЯ
+  // ======================================================
+  // Язык проверки для LTeX
+  "ltex.language": "ru-RU",
+  // LTeX включён только для обычного текста
+  "ltex.enabled": [
+    "plaintext"
+  ],
+  // Полностью отключаем cSpell (лишний шум)
+  "cSpell.enabled": false,
+  // ======================================================
+  // ФОРМАТИРОВАНИЕ — ЕДИНЫЙ СТАНДАРТ
+  // ======================================================
+  // Prettier — основной форматтер для всего
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  // Форматировать при сохранении
+  "editor.formatOnSave": true,
+  // Форматировать при вставке
+  "editor.formatOnPaste": true,
+  // Действия при сохранении
+  "editor.codeActionsOnSave": {
+    // ESLint фиксы — только явно (не агрессивно)
+    "source.fixAll.eslint": "explicit",
+    // Сортировка импортов
+    "source.organizeImports": "explicit"
+  },
+  // Не требуем .prettierrc — используем глобальные правила
+  "prettier.requireConfig": false,
+  // Принудительно Prettier для всех основных языков
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[html]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  // JSON форматируем встроенным форматтером
+  "[json]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
+  },
+  // ======================================================
+  // РЕДАКТОР — ВИЗУАЛ И ЧИТАЕМОСТЬ
+  // ======================================================
+  // Пробелы вместо табов
+  "editor.insertSpaces": true,
+  // 2 пробела — стандарт Angular
+  "editor.tabSize": 2,
+  // Не определять отступы автоматически (игнорировать содержимое файла)
+  "editor.detectIndentation": false,
+  // Ширина таба для Prettier
+  "prettier.tabWidth": 2,
+  // Перенос строк после 120 символов
+  "editor.wordWrapColumn": 120,
+  // Миникарта не нужна
+  "editor.minimap.enabled": false,
+  // Sticky scroll отключаем (засоряет экран)
+  "editor.stickyScroll.enabled": false,
+  // Комфортный межстрочный интервал
+  "editor.lineHeight": 22,
+  // Размер шрифта
+  "editor.fontSize": 12,
+  "editor.padding.left": 16,
+  // Лигатуры (=> !== &&)
+  "editor.fontLigatures": true,
+  // Шрифты для кода
+  "editor.fontFamily": "'JetBrains Mono', 'Fira Code', 'Cascadia Code', Consolas, monospace",
+  // ======================================================
+  // ANGULAR + TYPESCRIPT
+  // ======================================================
+  // Автообновление импортов при перемещении файлов
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  // Использовать алиасы вместо ../../..
+  "typescript.preferences.importModuleSpecifier": "non-relative",
+  // Подсказки путей
+  "typescript.suggest.paths": true,
+  "javascript.suggest.paths": true,
+  // Emmet в TS/JS
+  "emmet.includeLanguages": {
+    "javascript": "javascriptreact",
+    "typescript": "typescriptreact"
+  },
+  // Автозакрытие HTML-тегов
+  "html.autoClosingTags": true,
+  // ======================================================
+  // ESLINT + ЧИСТОТА ФАЙЛОВ
+  // ======================================================
+  "eslint.validate": [
+    "javascript",
+    "typescript",
+    "html"
+  ],
+  "eslint.format.enable": true,
+  // Убираем пробелы в конце строк
+  "files.trimTrailingWhitespace": true,
+  // Пустая строка в конце файла
+  "files.insertFinalNewline": true,
+  // LF — стандарт Git
+  "files.eol": "\n",
+  // ======================================================
+  // ПОВЕДЕНИЕ VS CODE
+  // ======================================================
+  "workbench.editor.enablePreview": false,
+  "workbench.editor.enablePreviewFromCodeNavigation": false,
+  // Ограничиваем количество вкладок
+  "workbench.editor.limit.enabled": true,
+  "workbench.editor.limit.value": 50,
+  "explorer.compactFolders": false,
+  "explorer.confirmDelete": true,
+  "explorer.sortOrder": "type",
+  "workbench.tree.expandMode": "singleClick",
+  // отступ слева в проводнике
+  "workbench.tree.indent": 10,
+  "window.openFoldersInNewWindow": "off",
+  "window.restoreWindows": "all",
+  "workbench.startupEditor": "none",
+  "security.workspace.trust.untrustedFiles": "open",
+  "git.enableSmartCommit": true,
+  "task.allowAutomaticTasks": "on",
+  // ======================================================
+  // 🎨 ЦВЕТА — ГЛОБАЛЬНЫЙ SHELL IDE
+  // ======================================================
+  // Основная тема
+  "workbench.colorTheme": "Visual Studio Dark",
+  // Accent цвет (Peacock)
+  "peacock.color": "#0d445f",
+  "workbench.colorCustomizations": {
+    // Верхняя панель (Title Bar)
+    "titleBar.activeBackground": "#094602", // Фон верхней панели (активной)
+    "titleBar.inactiveBackground": "#09460299", // Фон верхней панели (неактивной)
+    // Статус-бар (Нижняя полоса)
+    "statusBar.background": "#094602", // Фон статус-бара
+    "statusBar.foreground": "#e7e7e7", // Цвет текста статус-бара
+    "statusBarItem.remoteForeground": "#e7e7e7", // Цвет текста иконки удаленного подключения (WSL/SSH)
+    // Боковая левая панель с иконками (Activity Bar)
+    "activityBar.background": "#094602", // Фон левой панели иконок
+    "activityBar.foreground": "#e7e7e7", // Цвет активных иконок
+    "activityBar.activeBackground": "#151943", // Фон выделенной иконки
+    "activityBar.inactiveForeground": "#e7e7e799", // Цвет неактивных иконок
+    "activityBarBadge.background": "#e857b8", // Фон индикатора уведомлений (badge)
+    "activityBarBadge.foreground": "#15202b", // Цвет текста индикатора уведомлений
+    // Проводник / Боковое меню (Side Bar)
+    "sideBar.background": "#192131", // Фон бового меню (проводника)
+    "sideBar.foreground": "#CCCCCC", // Цвет текста файлов
+    "sideBarTitle.foreground": "#FFFFFF", // Цвет заголовка боковой панели
+    "sideBarSectionHeader.background": "#3A3A3A", // Фон заголовков разделов (например, "Outline")
+    "sideBarSectionHeader.foreground": "#FFFFFF", // Цвет текста заголовков разделов
+    // Редактор кода (Editor)
+    "editor.background": "#1E1E1E", // Фон редактора кода
+    "editor.foreground": "#CCCCCC", // Основной цвет текста кода
+    "editorLineNumber.foreground": "#808080", // Цвет номеров строк
+    "editorCursor.foreground": "#CCCCCC", // Цвет курсора
+    "editor.selectionBackground": "#3A3A3A", // Цвет выделенного текста
+    "editor.lineHighlightBackground": "#2D2D2D", // Цвет подсветки текущей строки
+    // Вкладки файлов (Tabs)
+    "tab.activeBackground": "#026123", // Фон активной вкладки
+    "tab.activeForeground": "#FFFFFF", // Цвет текста active-вкладки
+    "tab.inactiveBackground": "#2D2D2D", // Фон неактивной вкладки
+    "tab.inactiveForeground": "#CCCCCC", // Цвет текста неактивной вкладки
+    "tab.border": "#444444", // Граница между вкладками
+    // Списки и дерево проводника (Lists & Tree)
+    "list.activeSelectionBackground": "#0b531b", // Фон выбранного элемента в списке (активный фокус)
+    "list.activeSelectionForeground": "#FFFFFF", // Цвет текста выбранного элемента
+    "list.inactiveSelectionBackground": "#243ee6", // Фон выбранного элемента (когда фокус не на списке)
+    "list.inactiveSelectionForeground": "#8E8D8A", // Цвет текста выбранного элемента без фокуса
+    "list.hoverBackground": "#0f1316", // Фон элемента при наведении мыши
+    "list.hoverForeground": "#4682B4", // Цвет текста при наведении
+    "list.focusBackground": "#085b92", // Фон сфокусированного элемента
+    "list.focusForeground": "#f8f7f6", // Цвет текста сфокусированного элемента
+    "tree.indentGuidesStroke": "#71a8f5", // Цвет вертикальных линий отступов в проводнике
+    // Терминал (Terminal)
+    "terminal.background": "#1E1E1E", // Фон встроенного терминала
+    "terminal.foreground": "#CCCCCC", // Цвет текста в терминале
+    "terminalCursor.foreground": "#1daef6", // Цвет курсора в терминале
+    "terminalCursor.background": "#CCCCCC", // Фон под курсором терминала
+    // Прочее
+    "commandCenter.border": "#e7e7e799", // Граница поисковой строки сверху (Command Center)
+    "sash.hoverBorder": "#13648c" // Граница разделителей при наведении мыши
+  },
+  // ======================================================
+  // TERMINAL — ШРИФТ И НАСТРОЙКИ
+  // ======================================================
+  "terminal.integrated.fontFamily": "'JetBrains Mono', 'Fira Code', monospace",
+  "terminal.integrated.fontSize": 12,
+  "terminal.integrated.lineHeight": 1.2,
+  // Дефолтная директория для терминала
+  "terminal.integrated.cwd": "D:\\_PROGECT\\pr_aurora_admin"
 }

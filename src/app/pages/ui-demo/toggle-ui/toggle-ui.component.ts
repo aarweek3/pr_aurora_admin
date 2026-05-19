@@ -9,11 +9,13 @@ import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzSpaceModule } from 'ng-zorro-antd/space';
 import { NzSwitchModule } from 'ng-zorro-antd/switch';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
-import { ButtonDirective } from '../../../shared/components/ui/button/button.directive';
-import { HelpCopyContainerComponent } from '../../../shared/components/ui/container-help-copy-ui';
-import { ToggleLabeledComponent } from '../../../shared/components/ui/toggle/toggle-labeled.component';
-import { ToggleComponent } from '../../../shared/components/ui/toggle/toggle.component';
-import { ToggleDirective } from '../../../shared/components/ui/toggle/toggle.directive';
+import {
+  ButtonDirective,
+  HelpCopyContainerComponent,
+  ToggleLabeledComponent,
+  ToggleComponent,
+  ToggleDirective,
+} from '@shared-ui';
 
 @Component({
   selector: 'app-toggle-ui',

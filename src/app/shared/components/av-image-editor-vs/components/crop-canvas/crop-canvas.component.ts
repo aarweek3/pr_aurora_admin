@@ -356,10 +356,10 @@ export class AvCropCanvasComponent implements OnChanges, OnDestroy, AfterViewIni
   onMouseMove(e: MouseEvent) {
     if (!this.isDragging || !this.dragMode) return;
     const { x, y } = this.getMousePos(e);
-    let dx = x - this.dragStart.x;
-    let dy = y - this.dragStart.y;
+    const dx = x - this.dragStart.x;
+    const dy = y - this.dragStart.y;
 
-    let newRect = { ...this.startCropRect };
+    const newRect = { ...this.startCropRect };
 
     if (this.dragMode === 'move') {
       newRect.x += dx;

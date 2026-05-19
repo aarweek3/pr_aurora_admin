@@ -1,4 +1,4 @@
-import { ErrorResponse } from '../../../../../shared/infrastructure/interceptor/models/error-response.model';
+import { ErrorResponse } from '@core/models/error-response.model';
 
 /**
  * Архитектуры процессоров
@@ -7,7 +7,7 @@ export enum RequirementArchitecture {
   Any = 0,
   X86 = 1,
   X64 = 2,
-  Arm64 = 3
+  Arm64 = 3,
 }
 
 /**
@@ -150,5 +150,5 @@ export const INITIAL_REQUIREMENT_STATE: SystemRequirementState = {
   modalMode: 'add',
   editingItem: null,
   modalLoading: false,
-  error: null
+  error: null,
 };

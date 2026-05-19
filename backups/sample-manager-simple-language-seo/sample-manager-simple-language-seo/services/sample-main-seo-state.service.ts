@@ -1,4 +1,4 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable, OnDestroy, inject } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { LanguageService } from '@assets/languageApp/services/language.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
@@ -25,6 +25,11 @@ import { SampleMainSeoApiService } from './sample-main-seo-api.service';
   providedIn: 'root',
 })
 export class SampleMainSeoStateService implements OnDestroy {
+  private api = inject(SampleMainSeoApiService);
+  private message = inject(NzMessageService);
+  private langService = inject(LanguageService);
+  private errorHandling = inject(ErrorHandlingService);
+
   private destroy$ = new Subject<void>();
 
   // Single Source of Truth
@@ -77,13 +82,6 @@ export class SampleMainSeoStateService implements OnDestroy {
   readonly languages$ = toObservable(this.langService.availableLanguages).pipe(
     shareReplay(1),
   );
-
-  constructor(
-    private api: SampleMainSeoApiService,
-    private message: NzMessageService,
-    private langService: LanguageService,
-    private errorHandling: ErrorHandlingService,
-  ) {}
 
   // ---------- HELPERS ----------
 

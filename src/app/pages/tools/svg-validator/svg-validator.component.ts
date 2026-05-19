@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, signal } from '@angular/core';
+import { Component, signal, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
@@ -13,11 +13,13 @@ import { NzInputModule } from 'ng-zorro-antd/input';
   styleUrl: './svg-validator.component.scss',
 })
 export class SvgValidatorComponent {
+  private sanitizer = inject(DomSanitizer);
+
   svgCode = signal<string>('');
   displayedSvg = signal<SafeHtml | null>(null);
   showPreview = signal<boolean>(false);
 
-  constructor(private sanitizer: DomSanitizer) {
+  constructor() {
     console.log('SvgValidatorComponent initialized');
   }
 

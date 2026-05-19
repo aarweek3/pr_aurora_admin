@@ -53,88 +53,94 @@
   <!-- Список навигации -->
   <div class="trail-list">
     @if (filteredEntries().length === 0) {
-    <div class="empty-state">
-      <p>История навигации пуста</p>
-    </div>
-    } @for (entry of filteredEntries(); track entry.id) {
-    <div class="trail-entry" [class.expanded]="isExpanded(entry.id)" [class]="getStatusClass(entry.success)">
-      <!-- Заголовок записи -->
-      <div class="entry-header" (click)="toggleExpand(entry.id)">
-        <div class="entry-info">
-          <span class="entry-type" [class]="getTypeClass(entry.type)">
-            {{ getTypeIcon(entry.type) }}
-          </span>
-          <span class="entry-time">{{ formatTime(entry.timestamp) }}</span>
-          <span class="entry-url" [title]="entry.route.url">{{ entry.route.path }}</span>
-          @if (entry.duration !== undefined) {
-          <span class="entry-duration">⏱️ {{ formatDuration(entry.duration) }}</span>
-          } @if (!entry.success) {
-          <span class="entry-error">❌ Ошибка</span>
-          }
-        </div>
-
-        <div class="entry-controls">
-          @if (hasParams(entry)) {
-          <span class="badge badge-params">Params</span>
-          }
-          <button class="btn-icon" (click)="navigateToEntry(entry); $event.stopPropagation()" title="Перейти">
-            🔗
-          </button>
-          <span class="expand-icon">{{ isExpanded(entry.id) ? '▼' : '▶' }}</span>
-        </div>
+      <div class="empty-state">
+        <p>История навигации пуста</p>
       </div>
-
-      <!-- Детали записи (раскрываемые) -->
-      @if (isExpanded(entry.id)) {
-      <div class="entry-details">
-        <div class="detail-section">
-          <div class="detail-label">URL:</div>
-          <div class="detail-value code">{{ entry.route.url }}</div>
-        </div>
-
-        @if (entry.previousUrl) {
-        <div class="detail-section">
-          <div class="detail-label">Предыдущий URL:</div>
-          <div class="detail-value code">{{ entry.previousUrl }}</div>
-        </div>
-        } @if (Object.keys(entry.route.params.queryParams).length > 0) {
-        <div class="detail-section">
-          <div class="detail-label">Query Parameters:</div>
-          <div class="detail-value">
-            @for (param of Object.keys(entry.route.params.queryParams); track param) {
-            <div class="param-item">
-              <span class="param-key">{{ param }}:</span>
-              <span class="param-value">{{ entry.route.params.queryParams[param] }}</span>
-            </div>
+    }
+    @for (entry of filteredEntries(); track entry.id) {
+      <div class="trail-entry" [class.expanded]="isExpanded(entry.id)" [class]="getStatusClass(entry.success)">
+        <!-- Заголовок записи -->
+        <div class="entry-header" (click)="toggleExpand(entry.id)">
+          <div class="entry-info">
+            <span class="entry-type" [class]="getTypeClass(entry.type)">
+              {{ getTypeIcon(entry.type) }}
+            </span>
+            <span class="entry-time">{{ formatTime(entry.timestamp) }}</span>
+            <span class="entry-url" [title]="entry.route.url">{{ entry.route.path }}</span>
+            @if (entry.duration !== undefined) {
+              <span class="entry-duration">⏱️ {{ formatDuration(entry.duration) }}</span>
+            }
+            @if (!entry.success) {
+              <span class="entry-error">❌ Ошибка</span>
             }
           </div>
-        </div>
-        } @if (Object.keys(entry.route.params.routeParams).length > 0) {
-        <div class="detail-section">
-          <div class="detail-label">Route Parameters:</div>
-          <div class="detail-value">
-            @for (param of Object.keys(entry.route.params.routeParams); track param) {
-            <div class="param-item">
-              <span class="param-key">{{ param }}:</span>
-              <span class="param-value">{{ entry.route.params.routeParams[param] }}</span>
-            </div>
+
+          <div class="entry-controls">
+            @if (hasParams(entry)) {
+              <span class="badge badge-params">Params</span>
             }
+            <button class="btn-icon" (click)="navigateToEntry(entry); $event.stopPropagation()" title="Перейти">
+              🔗
+            </button>
+            <span class="expand-icon">{{ isExpanded(entry.id) ? '▼' : '▶' }}</span>
           </div>
         </div>
-        } @if (entry.route.params.fragment) {
-        <div class="detail-section">
-          <div class="detail-label">Fragment:</div>
-          <div class="detail-value code">#{{ entry.route.params.fragment }}</div>
-        </div>
-        } @if (entry.error) {
-        <div class="detail-section error-section">
-          <div class="detail-label">Ошибка:</div>
-          <div class="detail-value code error-message">{{ entry.error }}</div>
-        </div>
+
+        <!-- Детали записи (раскрываемые) -->
+        @if (isExpanded(entry.id)) {
+          <div class="entry-details">
+            <div class="detail-section">
+              <div class="detail-label">URL:</div>
+              <div class="detail-value code">{{ entry.route.url }}</div>
+            </div>
+
+            @if (entry.previousUrl) {
+              <div class="detail-section">
+                <div class="detail-label">Предыдущий URL:</div>
+                <div class="detail-value code">{{ entry.previousUrl }}</div>
+              </div>
+            }
+            @if (Object.keys(entry.route.params.queryParams).length > 0) {
+              <div class="detail-section">
+                <div class="detail-label">Query Parameters:</div>
+                <div class="detail-value">
+                  @for (param of Object.keys(entry.route.params.queryParams); track param) {
+                    <div class="param-item">
+                      <span class="param-key">{{ param }}:</span>
+                      <span class="param-value">{{ entry.route.params.queryParams[param] }}</span>
+                    </div>
+                  }
+                </div>
+              </div>
+            }
+            @if (Object.keys(entry.route.params.routeParams).length > 0) {
+              <div class="detail-section">
+                <div class="detail-label">Route Parameters:</div>
+                <div class="detail-value">
+                  @for (param of Object.keys(entry.route.params.routeParams); track param) {
+                    <div class="param-item">
+                      <span class="param-key">{{ param }}:</span>
+                      <span class="param-value">{{ entry.route.params.routeParams[param] }}</span>
+                    </div>
+                  }
+                </div>
+              </div>
+            }
+            @if (entry.route.params.fragment) {
+              <div class="detail-section">
+                <div class="detail-label">Fragment:</div>
+                <div class="detail-value code">#{{ entry.route.params.fragment }}</div>
+              </div>
+            }
+            @if (entry.error) {
+              <div class="detail-section error-section">
+                <div class="detail-label">Ошибка:</div>
+                <div class="detail-value code error-message">{{ entry.error }}</div>
+              </div>
+            }
+          </div>
         }
       </div>
-      }
-    </div>
     }
   </div>
 </div>

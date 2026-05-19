@@ -20,16 +20,16 @@ import { NzModalModule } from 'ng-zorro-antd/modal';
 
 registerLocaleData(ru);
 
-import { LanguageService } from '@assets/languageApp/services/language.service';
+import { LanguageService } from '@language-app/services/language.service';
 import { routes } from './app.routes';
 import { authInterceptor } from '@auth';
-import { GlobalErrorHandler } from './shared/infrastructure/interceptor/services/global-error-handler.service';
-import { HttpErrorInterceptor } from './shared/infrastructure/interceptor/services/http-error.interceptor';
-import { HttpRequestLoggerInterceptor } from './shared/infrastructure/interceptor/services/http-request-logger.interceptor';
+import { GlobalErrorHandler } from '@core/services/error/global-error-handler.service';
+import { HttpErrorInterceptor } from '@core/interceptors/http-error.interceptor';
+import { HttpRequestLoggerInterceptor } from '@core/interceptors/http-request-logger.interceptor';
 import { NavigationTrailService } from './shared/logger-console/services/navigation-trail.service';
 
 // Import all icons (for dev purposes, production should be selective)
-const antDesignIcons = AllIcons as { [key: string]: any };
+const antDesignIcons = AllIcons as Record<string, any>;
 const icons: IconDefinition[] = Object.keys(antDesignIcons)
   .filter((key) => typeof antDesignIcons[key] === 'object' && 'name' in antDesignIcons[key])
   .map((key) => antDesignIcons[key] as IconDefinition);

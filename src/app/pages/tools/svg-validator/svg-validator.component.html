@@ -21,14 +21,14 @@
   </div>
 
   @if (showPreview()) {
-  <div class="svg-preview-section">
-    <h3>Область отображения SVG</h3>
-    <div class="svg-display-area" [innerHTML]="displayedSvg()"></div>
-  </div>
+    <div class="svg-preview-section">
+      <h3>Область отображения SVG</h3>
+      <div class="svg-display-area" [innerHTML]="displayedSvg()"></div>
+    </div>
 
-  <div class="svg-code-section">
-    <h3>Исходный код</h3>
-    <pre class="code-display">{{ svgCode() }}</pre>
-  </div>
+    <div class="svg-code-section">
+      <h3>Исходный код</h3>
+      <pre class="code-display">{{ svgCode() }}</pre>
+    </div>
   }
 </div>

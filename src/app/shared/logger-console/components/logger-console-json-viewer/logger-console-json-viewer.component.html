@@ -3,51 +3,52 @@
   <div class="node-header" (click)="toggleExpand($event)">
     <!-- Иконка раскрытия (только для объектов/массивов) -->
     @if (isExpandable) {
-    <span class="toggle-icon" [class.expanded]="isExpanded()">▶</span>
+      <span class="toggle-icon" [class.expanded]="isExpanded()">▶</span>
     } @else {
-    <span class="toggle-icon empty"></span>
+      <span class="toggle-icon empty"></span>
     }
 
     <!-- Ключ (если есть) -->
     @if (key) {
-    <span class="node-key">{{ key }}:</span>
+      <span class="node-key">{{ key }}:</span>
     }
 
     <!-- Представление значения -->
     <div class="node-value-preview">
       @if (isExpandable) {
-      <span class="type-label">{{ typeLabel }}</span>
-      @if (!isExpanded()) {
-      <span
-        class="collapsed-preview"
-        [class.full-visible]="isPreviewFullyVisible()"
-        (click)="togglePreviewFullText($event)"
-        [title]="isPreviewFullyVisible() ? 'Click to collapse' : 'Click to expand text'"
-      >
-        {{ value | json }}
-      </span>
-      } } @else {
-      <span class="primitive-value" [ngClass]="'type-' + valueType">
-        {{ valueType === 'string' ? '"' + value + '"' : value }}
-      </span>
+        <span class="type-label">{{ typeLabel }}</span>
+        @if (!isExpanded()) {
+          <span
+            class="collapsed-preview"
+            [class.full-visible]="isPreviewFullyVisible()"
+            (click)="togglePreviewFullText($event)"
+            [title]="isPreviewFullyVisible() ? 'Click to collapse' : 'Click to expand text'"
+          >
+            {{ value | json }}
+          </span>
+        }
+      } @else {
+        <span class="primitive-value" [ngClass]="'type-' + valueType">
+          {{ valueType === 'string' ? '"' + value + '"' : value }}
+        </span>
       }
     </div>
 
     <!-- Кнопка копирования пути (появляется при наведении) -->
     @if (path) {
-    <button class="copy-path-btn" (click)="copyPath($event)" title="Copy path: {{ path }}">
-      <span class="copy-icon">📋</span>
-    </button>
+      <button class="copy-path-btn" (click)="copyPath($event)" title="Copy path: {{ path }}">
+        <span class="copy-icon">📋</span>
+      </button>
     }
   </div>
 
   <!-- Рекурсивный вывод детей -->
   @if (isExpandable && isExpanded()) {
-  <div class="node-children">
-    @for (childKey of objectKeys; track childKey) {
-    <app-logger-console-json-viewer [key]="childKey" [value]="value[childKey]" [path]="getChildPath(childKey)">
-    </app-logger-console-json-viewer>
-    }
-  </div>
+    <div class="node-children">
+      @for (childKey of objectKeys; track childKey) {
+        <app-logger-console-json-viewer [key]="childKey" [value]="value[childKey]" [path]="getChildPath(childKey)">
+        </app-logger-console-json-viewer>
+      }
+    </div>
   }
 </div>

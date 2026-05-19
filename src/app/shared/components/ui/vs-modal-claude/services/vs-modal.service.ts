@@ -85,11 +85,7 @@ export class VSModalService {
       backdropClass: 'vs-modal-backdrop',
       panelClass: 'vs-modal-panel',
       scrollStrategy: this.overlay.scrollStrategies.block(),
-      positionStrategy: this.overlay
-        .position()
-        .global()
-        .centerHorizontally()
-        .centerVertically(),
+      positionStrategy: this.overlay.position().global().centerHorizontally().centerVertically(),
     });
 
     return this.overlay.create(overlayConfig);

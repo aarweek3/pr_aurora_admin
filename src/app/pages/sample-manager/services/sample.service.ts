@@ -1,7 +1,7 @@
-﻿import { Injectable, OnDestroy, inject } from '@angular/core';
-import { ErrorResponse } from '@shared/infrastructure/interceptor/models/error-response.model';
-import { ErrorHandlingService } from '@shared/infrastructure/interceptor/services/error-handling.service';
-import { LoggingService } from '@shared/infrastructure/logging/logging.service';
+import { Injectable, OnDestroy, inject } from '@angular/core';
+import { ErrorResponse } from '@core/models/error-response.model';
+import { ErrorHandlingService } from '@core/services/error/error-handling.service';
+import { LoggingService } from '@core/services/logging/logging.service';
 import { Observable, Subject, of } from 'rxjs';
 import { catchError, map, takeUntil, timeout } from 'rxjs/operators';
 import { SampleState } from '../models/sample-state.model';
@@ -16,7 +16,7 @@ import { SampleApiService } from './sample-api.service';
 import { SampleModalService } from './sample-modal.service';
 import { SampleStateService } from './sample-state.service';
 
-// Простой интерфейс родителя для селектора
+// ������� ��������� �������� ��� ���������
 interface Sample {
   id: number;
   name: string;
@@ -32,31 +32,31 @@ export class SampleService implements OnDestroy {
   private destroy$ = new Subject<void>();
 
   constructor() {
-    this.logger.debug('SampleService', 'Инициализация сервиса');
+    this.logger.debug('SampleService', '������������� �������');
   }
 
   ngOnDestroy(): void {
-    this.logger.debug('SampleService', 'Очистка ресурсов');
+    this.logger.debug('SampleService', '������� ��������');
     this.destroy$.next();
     this.destroy$.complete();
     this.stateService.resetState();
   }
 
   /**
-   * Проверить существование родителей
+   * ��������� ������������� ���������
    */
   sampleExists(id: number): Observable<boolean> {
-    this.logger.debug('SampleService', 'Проверка существования родителей', {
+    this.logger.debug('SampleService', '�������� ������������� ���������', {
       id,
     });
     return this.apiService.getSampleById(id).pipe(
       map(() => true),
       catchError((error: ErrorResponse) => {
         if (error.status === 404) {
-          this.logger.debug('SampleService', 'Родитель не найдена', { id });
+          this.logger.debug('SampleService', '�������� �� �������', { id });
           return of(false);
         }
-        this.logger.error('SampleService', 'Ошибка при проверке существования родителей', error);
+        this.logger.error('SampleService', '������ ��� �������� ������������� ���������', error);
         this.errorHandlingService.handleError(error);
         return of(false);
       }),
@@ -65,10 +65,10 @@ export class SampleService implements OnDestroy {
   }
 
   /**
-   * Получить все родителей для селектора (в алфавитном порядке)
+   * �������� ��� ��������� ��� ��������� (� ���������� �������)
    */
   getAllSamplesForSelector(): Observable<Sample[]> {
-    this.logger.debug('SampleService', 'Получение всех родителей для селектора');
+    this.logger.debug('SampleService', '��������� ���� ��������� ��� ���������');
     return this.apiService.getAllSamples().pipe(
       map((samples: SampleDetailDto[]) =>
         samples.map((item) => ({
@@ -77,7 +77,7 @@ export class SampleService implements OnDestroy {
         })),
       ),
       catchError((error: ErrorResponse) => {
-        this.logger.error('SampleService', 'Ошибка при получении всех родителей', error);
+        this.logger.error('SampleService', '������ ��� ��������� ���� ���������', error);
         this.errorHandlingService.handleError(error);
         return of([]);
       }),
@@ -90,7 +90,7 @@ export class SampleService implements OnDestroy {
   }
 
   loadSamples(): void {
-    this.logger.debug('SampleService', 'Запуск загрузки родителей');
+    this.logger.debug('SampleService', '������ �������� ���������');
     this.stateService.updateState({ loading: true });
 
     const state = this.stateService.getCurrentState();
@@ -102,14 +102,14 @@ export class SampleService implements OnDestroy {
       sortDirection: state.ascending,
     };
 
-    this.logger.debug('SampleService', 'Отправка HTTP запроса', request);
+    this.logger.debug('SampleService', '�������� HTTP �������', request);
 
     this.apiService
       .getSamples(request)
       .pipe(timeout(10000), takeUntil(this.destroy$))
       .subscribe({
         next: (response: SamplePagedResponseDto) => {
-          this.logger.debug('SampleService', 'HTTP запрос успешен', {
+          this.logger.debug('SampleService', 'HTTP ������ �������', {
             total: response.total,
             pageNumber: response.pageNumber,
             pageSize: response.pageSize,
@@ -129,7 +129,7 @@ export class SampleService implements OnDestroy {
           if (error.name === 'TimeoutError') {
             errorResponse = ErrorResponse.createNetworkError(
               `${this.apiService['baseUrl']}?pageNumber=${request.pageNumber}&pageSize=${request.pageSize}`,
-              'Запрос занимает слишком много времени. Проверьте подключение.',
+              '������ �������� ������� ����� �������. ��������� �����������.',
             );
           } else {
             errorResponse =
@@ -138,7 +138,7 @@ export class SampleService implements OnDestroy {
                 : ErrorResponse.fromError(error, this.apiService['baseUrl']);
           }
 
-          this.logger.error('SampleService', 'HTTP запрос завершился ошибкой', errorResponse);
+          this.logger.error('SampleService', 'HTTP ������ ���������� �������', errorResponse);
 
           this.stateService.updateState({
             loading: false,
@@ -153,24 +153,24 @@ export class SampleService implements OnDestroy {
   }
 
   refreshSamples(): void {
-    this.logger.debug('SampleService', 'Обновление родителей');
+    this.logger.debug('SampleService', '���������� ���������');
     this.loadSamples();
   }
 
   searchSamples(searchTerm: string): void {
-    this.logger.debug('SampleService', 'Поиск родителей', { searchTerm });
+    this.logger.debug('SampleService', '����� ���������', { searchTerm });
     this.stateService.updateState({ searchTerm });
     this.loadSamples();
   }
 
   changePage(pageNumber: number): void {
-    this.logger.debug('SampleService', 'Изменение страницы', { pageNumber });
+    this.logger.debug('SampleService', '��������� ��������', { pageNumber });
     this.stateService.updateState({ pageNumber });
     this.loadSamples();
   }
 
   changePageSize(pageSize: number): void {
-    this.logger.debug('SampleService', 'Изменение размера страницы', {
+    this.logger.debug('SampleService', '��������� ������� ��������', {
       pageSize,
     });
     this.stateService.updateState({ pageSize, pageNumber: 1 });
@@ -178,7 +178,7 @@ export class SampleService implements OnDestroy {
   }
 
   viewSample(id: number): void {
-    this.logger.debug('SampleService', 'Просмотр родителей', { id });
+    this.logger.debug('SampleService', '�������� ���������', { id });
     const state = this.stateService.getCurrentState();
     const sample = state.items.find((item) => item.id === id);
 
@@ -188,14 +188,14 @@ export class SampleService implements OnDestroy {
         viewModalVisible: true,
       });
     } else {
-      this.logger.warn('SampleService', 'Родитель не найдена для просмотра', {
+      this.logger.warn('SampleService', '�������� �� ������� ��� ���������', {
         id,
       });
     }
   }
 
   createSample(request: SampleCreateRequestDto): void {
-    this.logger.debug('SampleService', 'Создание родителей', request);
+    this.logger.debug('SampleService', '�������� ���������', request);
     this.sampleModalService.setModalOperationState(true, 'create');
 
     this.apiService
@@ -203,7 +203,7 @@ export class SampleService implements OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response: SampleDetailDto) => {
-          this.logger.info('SampleService', 'Родитель успешно создана', {
+          this.logger.info('SampleService', '�������� ������� �������', {
             id: response.id,
             name: response.name,
           });
@@ -212,7 +212,7 @@ export class SampleService implements OnDestroy {
           this.loadSamples();
         },
         error: (error: ErrorResponse) => {
-          this.logger.error('SampleService', 'Ошибка при создании родителей', error);
+          this.logger.error('SampleService', '������ ��� �������� ���������', error);
           this.sampleModalService.setModalOperationState(false, null, error);
           this.errorHandlingService.handleError(error);
         },
@@ -220,7 +220,7 @@ export class SampleService implements OnDestroy {
   }
 
   updateSample(id: number, request: SampleUpdateRequestDto): void {
-    this.logger.debug('SampleService', 'Обновление родителей', {
+    this.logger.debug('SampleService', '���������� ���������', {
       id,
       request,
     });
@@ -231,7 +231,7 @@ export class SampleService implements OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response: SampleDetailDto) => {
-          this.logger.info('SampleService', 'Родитель успешно обновлена', {
+          this.logger.info('SampleService', '�������� ������� ���������', {
             id: response.id,
             name: response.name,
           });
@@ -240,7 +240,7 @@ export class SampleService implements OnDestroy {
           this.loadSamples();
         },
         error: (error: ErrorResponse) => {
-          this.logger.error('SampleService', 'Ошибка при обновлении родителей', error);
+          this.logger.error('SampleService', '������ ��� ���������� ���������', error);
           this.sampleModalService.setModalOperationState(false, null, error);
           this.errorHandlingService.handleError(error);
         },
@@ -252,26 +252,26 @@ export class SampleService implements OnDestroy {
     const sample = state.items.find((item) => item.id === id);
 
     if (!sample) {
-      this.logger.error('SampleService', 'Родитель не найдена для удаления', {
+      this.logger.error('SampleService', '�������� �� ������� ��� ��������', {
         id,
       });
       return;
     }
 
-    const sampleName = sample.name || 'Неизвестная Родитель';
-    this.logger.debug('SampleService', 'Запрос подтверждения удаления', {
+    const sampleName = sample.name || '����������� ��������';
+    this.logger.debug('SampleService', '������ ������������� ��������', {
       id,
       sampleName,
     });
 
     this.sampleModalService.confirm({
-      nzTitle: 'Подтверждение удаления',
-      nzContent: `Вы уверены, что хотите удалить родителя "<strong>${sampleName}</strong>"?`,
-      nzOkText: 'Да',
-      nzCancelText: 'Отмена',
+      nzTitle: '������������� ��������',
+      nzContent: `�� �������, ��� ������ ������� �������� "<strong>${sampleName}</strong>"?`,
+      nzOkText: '��',
+      nzCancelText: '������',
       nzOkDanger: true,
       nzOnOk: () => {
-        this.logger.info('SampleService', 'Подтверждено удаление родителя', {
+        this.logger.info('SampleService', '������������ �������� ��������', {
           id,
           sampleName,
         });
@@ -281,20 +281,20 @@ export class SampleService implements OnDestroy {
           .pipe(takeUntil(this.destroy$))
           .subscribe({
             next: () => {
-              this.logger.info('SampleService', 'Родитель успешно удален', {
+              this.logger.info('SampleService', '�������� ������� ������', {
                 id,
                 sampleName,
               });
               this.loadSamples();
             },
             error: (error: ErrorResponse) => {
-              this.logger.error('SampleService', 'Ошибка при удалении родителя', error);
+              this.logger.error('SampleService', '������ ��� �������� ��������', error);
               this.errorHandlingService.handleError(error);
             },
           });
       },
       nzOnCancel: () => {
-        this.logger.debug('SampleService', 'Отменено удаление родителя', {
+        this.logger.debug('SampleService', '�������� �������� ��������', {
           id,
           sampleName,
         });
@@ -303,20 +303,20 @@ export class SampleService implements OnDestroy {
   }
 
   closeViewModal(): void {
-    this.logger.debug('SampleService', 'Закрытие модального окна просмотра');
+    this.logger.debug('SampleService', '�������� ���������� ���� ���������');
     this.stateService.updateState({
       viewModalVisible: false,
       selectedSample: null,
     });
   }
 
-  // Метод для полной очистки сервиса (может вызываться вручную)
+  // ����� ��� ������ ������� ������� (����� ���������� �������)
   destroy(): void {
     this.ngOnDestroy();
   }
 
   /**
-   * Дополнительный метод для открытия модального окна создания
+   * �������������� ����� ��� �������� ���������� ���� ��������
    */
   showCreateModalForSelector(): void {
     this.sampleModalService.showCreateModal();

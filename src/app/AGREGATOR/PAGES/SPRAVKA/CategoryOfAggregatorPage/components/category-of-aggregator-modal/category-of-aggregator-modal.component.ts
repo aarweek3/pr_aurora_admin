@@ -16,7 +16,7 @@ import { CategoryOfAggregatorStateService } from '../../services/category-of-agg
     NzButtonModule,
     NzIconModule,
     NzToolTipModule,
-    CategoryOfAggregatorFormComponent
+    CategoryOfAggregatorFormComponent,
   ],
   template: `
     <nz-modal
@@ -32,10 +32,10 @@ import { CategoryOfAggregatorStateService } from '../../services/category-of-agg
       <ng-template #modalTitle>
         <div class="modal-header-custom">
           <span>{{ (state.selectedId() ? 'Редактирование' : 'Создание') + ' категории' }}</span>
-          <button 
-            nz-button 
-            nzType="text" 
-            (click)="toggleFullScreen($event)" 
+          <button
+            nz-button
+            nzType="text"
+            (click)="toggleFullScreen($event)"
             class="fullscreen-btn"
             nz-tooltip
             [nzTooltipTitle]="isFullScreen ? 'Свернуть' : 'Развернуть на весь экран'"
@@ -49,16 +49,16 @@ import { CategoryOfAggregatorStateService } from '../../services/category-of-agg
         <app-category-of-aggregator-form
           #categoryForm
           [id]="state.selectedId()"
-          (onSave)="handleSave($event)"
+          (save)="handleSave($event)"
         ></app-category-of-aggregator-form>
       </ng-container>
 
       <ng-template #modalFooter>
         <button nz-button nzType="default" (click)="handleCancel()">Отмена</button>
-        <button 
-          nz-button 
-          nzType="primary" 
-          [nzLoading]="state.modalLoading()" 
+        <button
+          nz-button
+          nzType="primary"
+          [nzLoading]="state.modalLoading()"
           (click)="categoryForm.submit()"
         >
           Сохранить
@@ -66,25 +66,30 @@ import { CategoryOfAggregatorStateService } from '../../services/category-of-agg
       </ng-template>
     </nz-modal>
   `,
-  styles: [`
-    .modal-header-custom {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding-right: 24px;
-      width: 100%;
-    }
-    .fullscreen-btn {
-      color: #64748b;
-      &:hover { color: #1890ff; background: rgba(24, 144, 255, 0.05); }
-    }
-  `]
+  styles: [
+    `
+      .modal-header-custom {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-right: 24px;
+        width: 100%;
+      }
+      .fullscreen-btn {
+        color: #64748b;
+        &:hover {
+          color: #1890ff;
+          background: rgba(24, 144, 255, 0.05);
+        }
+      }
+    `,
+  ],
 })
 export class CategoryOfAggregatorModalComponent {
   state = inject(CategoryOfAggregatorStateService);
 
   @Input() isVisible = false;
-  @Output() onClose = new EventEmitter<void>();
+  @Output() modalClose = new EventEmitter<void>();
 
   @ViewChild('categoryForm') categoryForm!: CategoryOfAggregatorFormComponent;
 
@@ -96,12 +101,12 @@ export class CategoryOfAggregatorModalComponent {
   }
 
   handleCancel(): void {
-    this.onClose.emit();
+    this.modalClose.emit();
   }
 
   handleSave(dto: any): void {
     this.state.save(dto).subscribe(() => {
-      this.onClose.emit();
+      this.modalClose.emit();
     });
   }
 }

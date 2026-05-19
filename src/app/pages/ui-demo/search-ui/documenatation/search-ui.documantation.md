@@ -20,7 +20,7 @@
 | **Focus-стиль**           | Outline: 0 0 0 3px rgba(59, 130, 246, 0.5); (ring синий).                                                                                   | Стандарт доступности, соответствует ng-zorro и современным дизайн-системам.              |
 | **Debounce**              | Реализовать через effect() + timer (setTimeout/clearTimeout) или rxjs debounceTime внутри сервиса/компонента.                               | Signals не имеют встроенного debounce, поэтому нужен небольшой вспомогательный механизм. |
 | **Enter/Esc**             | Обрабатывать в @HostListener('keydown.enter') и 'keydown.escape'. Для Enter — preventDefault() если нужно.                                  | Предотвращает submit формы (если компонент внутри <form>).                               |
-| **Output-событие**        | @Output() search = new EventEmitter<string>(true); // async pipe безопасен                                                                  | Эмиссия только при изменении после debounce или принудительном клике.                    |
+| **Output-событие**        | @Output() searchChange = new EventEmitter<string>(true); // async pipe безопасен                                                                  | Эмиссия только при изменении после debounce или принудительном клике.                    |
 | **Интеграция с таблицей** | Родительский компонент (например, таблица) использует computed(() => filterData(this.searchQuery())).                                       | Полная реактивность без лишних change detection циклов.                                  |
 
 #### 3. Предлагаемая структура компонента (Angular 19 standalone)
@@ -57,7 +57,7 @@ export class StandardLiveSearchComponent {
   @Input() set value(v: string) { this.searchQuery.set(v); }
   @Output() valueChange = new EventEmitter<string>();
 
-  @Output() onSearch = new EventEmitter<string>();
+  @Output() searchChange = new EventEmitter<string>();
 
   private debounceTimer: any;
 
@@ -68,19 +68,19 @@ export class StandardLiveSearchComponent {
 
     clearTimeout(this.debounceTimer);
     this.debounceTimer = setTimeout(() => {
-      this.onSearch.emit(value.trim());
+      this.searchChange.emit(value.trim());
     }, 300);
   }
 
   triggerSearch() {
     clearTimeout(this.debounceTimer);
-    this.onSearch.emit(this.searchQuery().trim());
+    this.searchChange.emit(this.searchQuery().trim());
   }
 
   clear() {
     this.searchQuery.set('');
     this.valueChange.emit('');
-    this.onSearch.emit('');
+    this.searchChange.emit('');
     // Вернуть фокус
     // querySelector('input').focus();
   }

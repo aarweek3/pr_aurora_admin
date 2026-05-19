@@ -6,16 +6,16 @@ export const DEVELOPER_OF_AGGREGATOR_ROUTES: Routes = [
   {
     path: '',
     component: DeveloperOfAggregatorManagerComponent,
-    data: { breadcrumb: 'Разработчики' }
+    data: { breadcrumb: 'Разработчики' },
   },
   {
     path: 'new',
     component: DeveloperOfAggregatorPageFormComponent,
-    data: { breadcrumb: 'Новый разработчик' }
+    data: { breadcrumb: 'Новый разработчик' },
   },
   {
     path: ':id/edit',
     component: DeveloperOfAggregatorPageFormComponent,
-    data: { breadcrumb: 'Редактирование разработчика' }
-  }
+    data: { breadcrumb: 'Редактирование разработчика' },
+  },
 ];

@@ -72,7 +72,7 @@ import { SampleModalService } from '../../services/sample-modal.service';
     <app-sample-view
       [visible]="(state$ | async)?.viewModalVisible || false"
       [sample]="(state$ | async)?.selectedSample || null"
-      (close)="onCloseView()"
+      (modalClose)="onCloseView()"
     >
     </app-sample-view>
     <app-sample-modal
@@ -151,9 +151,7 @@ export class SampleManagerComponent implements OnInit, OnDestroy {
     sample: SampleCreateRequestDto | SampleUpdateRequestDto;
   }): void {
     if (data.mode === 'add') {
-      this.sampleService.createSample(
-        data.sample as SampleCreateRequestDto
-      );
+      this.sampleService.createSample(data.sample as SampleCreateRequestDto);
     } else {
       const updateRequest = data.sample as SampleUpdateRequestDto;
       this.sampleService.updateSample(updateRequest.id, updateRequest);

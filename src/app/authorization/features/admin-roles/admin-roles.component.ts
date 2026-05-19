@@ -206,7 +206,7 @@ export class AdminRolesComponent implements OnInit {
   }
 
   getRoleColor(roleName: string): string {
-    const colors: { [key: string]: string } = {
+    const colors: Record<string, string> = {
       Admin: 'red',
       User: 'blue',
       Moderator: 'orange',
@@ -218,5 +218,3 @@ export class AdminRolesComponent implements OnInit {
     return ['Admin', 'User'].includes(roleName);
   }
 }
-
-

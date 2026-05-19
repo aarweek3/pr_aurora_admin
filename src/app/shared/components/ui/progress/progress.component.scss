@@ -183,26 +183,4 @@
       transform: translateX(100%) scaleX(0.2);
     }
   }
-
-  // === DARK THEME ===
-  @include dark-theme {
-    .av-progress-inner {
-      background-color: #262626;
-    }
-    .av-progress-circle-trail {
-      stroke: #262626;
-    }
-    .av-progress-info {
-      color: $dark-text-secondary;
-    }
-    &--status-success .av-progress-info {
-      color: $dark-success;
-    }
-    &--status-error .av-progress-info {
-      color: $dark-error;
-    }
-    &--status-warning .av-progress-info {
-      color: $dark-warning;
-    }
-  }
 }

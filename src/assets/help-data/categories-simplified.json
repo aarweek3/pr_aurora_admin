@@ -1,0 +1,44 @@
+{
+  "helpId": "categories-simplified",
+  "initialMode": "view",
+  "title": "Реестр файлов модуля",
+  "subtitle": "CategorySimplified (V2 Architecture)",
+  "icon": "📂",
+  "reference": [
+    {
+      "id": "intro",
+      "title": "📂 УПРОЩЕННЫЕ КАТЕГОРИИ (V2)",
+      "type": "standard",
+      "content": "<p><i>Двухуровневая структура: Категория -> Подкатегория. Модуль спроектирован для замены сложной иерархии CategoryOfAggregator.</i></p>"
+    }
+  ],
+  "blocks": [
+    {
+      "id": "frontend",
+      "title": "Frontend (Angular)",
+      "type": "info",
+      "content": "<p>Путь: <code>src/app/AGREGATOR/PAGES/SPRAVKA/CategorySimplifiedPage/</code></p><table><thead><tr><th>№</th><th>Файл</th><th>Описание</th></tr></thead><tbody><tr><td>1</td><td><code>category-simplified-manager.component.ts</code></td><td>Главный контейнер страницы</td></tr><tr><td>2</td><td><code>services/category-simplified-api.service.ts</code></td><td>HTTP-сервис (CRUD операции)</td></tr><tr><td>3</td><td><code>services/category-simplified-state.service.ts</code></td><td>Управление состоянием (Signals)</td></tr><tr><td>4</td><td><code>models/category-simplified.model.ts</code></td><td>Интерфейсы и DTO</td></tr><tr><td>5</td><td><code>components/category-list/category-list.component.ts</code></td><td>Таблица категорий</td></tr><tr><td>6</td><td><code>components/category-modal/category-modal.component.ts</code></td><td>Модальное окно категории</td></tr><tr><td>7</td><td><code>components/subcategory-list/subcategory-list.component.ts</code></td><td>Вложенная таблица подкатегорий</td></tr><tr><td>8</td><td><code>components/subcategory-modal/subcategory-modal.component.ts</code></td><td>Модальное окно подкатегории</td></tr></tbody></table>"
+    },
+    {
+      "id": "backend",
+      "title": "Backend (C# / .NET 8)",
+      "type": "standard",
+      "content": "<p>Путь: <code>Project_Server_Auth/Pages/AGGREGATOR/CategorySimplified/</code></p><table><thead><tr><th>№</th><th>Файл</th><th>Описание</th></tr></thead><tbody><tr><td>9</td><td><code>Services/CategorySimplifiedService.cs</code></td><td>Бизнес-логика модуля</td></tr><tr><td>10</td><td><code>Services/ICategorySimplifiedService.cs</code></td><td>Интерфейс сервиса</td></tr><tr><td>11</td><td><code>Controllers/CategorySimplifiedController.cs</code></td><td>API Контроллер</td></tr><tr><td>12</td><td><code>Mappings/CategorySimplifiedProfile.cs</code></td><td>AutoMapper Profile</td></tr><tr><td>13</td><td><code>Jsons/categories-seed.json</code></td><td>Seed-данные (JSON)</td></tr></tbody></table>"
+    },
+    {
+      "id": "dal",
+      "title": "DAL (Data Access Layer)",
+      "type": "standard",
+      "content": "<p>Путь: <code>DAL/Models/Aggregator/</code></p><table><thead><tr><th>№</th><th>Файл</th><th>Описание</th></tr></thead><tbody><tr><td>14</td><td><code>Category.cs</code></td><td>Таблица: categories_simplified</td></tr><tr><td>15</td><td><code>Subcategory.cs</code></td><td>Таблица: subcategories_simplified</td></tr><tr><td>16</td><td><code>Localizations/CategoryLocalization.cs</code></td><td>Локализация категорий</td></tr><tr><td>17</td><td><code>Localizations/SubcategoryLocalization.cs</code></td><td>Локализация подкатегорий</td></tr></tbody></table>"
+    },
+    {
+      "id": "documentation",
+      "title": "📜 Документация и Стандарты",
+      "type": "info",
+      "content": "<p>Путь: <code>.documentations/</code></p><table><thead><tr><th>№</th><th>Файл</th><th>Описание</th></tr></thead><tbody><tr><td>18</td><td><code>стили.md</code></td><td>Стандарты UI, кнопок и модальных окон</td></tr><tr><td>19</td><td><code>Логика_удаления_и_целостность.md</code></td><td>Подробное описание мягкого и жесткого удаления</td></tr></tbody></table>"
+    }
+  ],
+  "blocks-main": [],
+  "blocks-front": [],
+  "blocks-server": []
+}

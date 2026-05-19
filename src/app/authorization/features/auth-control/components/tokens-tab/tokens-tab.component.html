@@ -26,7 +26,7 @@
           <span>Осталось времени</span>
           <span class="time-value" [style.color]="statusColor()">
             <!-- Format milliseconds to MM:ss approximately -->
-            {{ tokenStatus()?.timeUntilExpiry | date : 'mm:ss' }}
+            {{ tokenStatus()?.timeUntilExpiry | date: 'mm:ss' }}
             <small class="text-muted">({{ tokenStatus()?.timeUntilExpiry | number }} мс)</small>
           </span>
         </div>
@@ -37,7 +37,7 @@
           [nzStatus]="tokenStatus()?.valid ? 'active' : 'exception'"
         >
         </nz-progress>
-        <div class="expiry-date">Истекает в: {{ tokenStatus()?.expiresAt | date : 'mediumTime' }}</div>
+        <div class="expiry-date">Истекает в: {{ tokenStatus()?.expiresAt | date: 'mediumTime' }}</div>
       </div>
 
       <div class="claims-section" *ngIf="tokenStatus() as status">
@@ -120,7 +120,7 @@
         </div>
         <div class="stat-row">
           <span>Последняя проверка:</span>
-          <span>{{ tokenStatus()?.lastChecked | date : 'mediumTime' }}</span>
+          <span>{{ tokenStatus()?.lastChecked | date: 'mediumTime' }}</span>
         </div>
       </div>
 

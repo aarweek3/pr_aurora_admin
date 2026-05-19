@@ -4,8 +4,6 @@ import { Component } from '@angular/core';
   selector: 'app-create-task-modal',
   imports: [],
   templateUrl: './create-task-modal.component.html',
-  styleUrl: './create-task-modal.component.scss'
+  styleUrl: './create-task-modal.component.scss',
 })
-export class CreateTaskModalComponent {
-
-}
+export class CreateTaskModalComponent {}

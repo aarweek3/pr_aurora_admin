@@ -7,12 +7,12 @@ import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
 import { NzSwitchModule } from 'ng-zorro-antd/switch';
-import { 
-  PaginationComponent, 
+import {
+  PaginationComponent,
   PaginationChangeEvent,
   PaginationVariant,
   PaginationSize,
-  PaginationShape
+  PaginationShape,
 } from '@shared/components/ui/pagination';
 import { HelpCopyContainerComponent, HelpPathHeaderComponent } from '@shared/components/ui';
 
@@ -30,7 +30,7 @@ import { HelpCopyContainerComponent, HelpPathHeaderComponent } from '@shared/com
     NzSwitchModule,
     PaginationComponent,
     HelpCopyContainerComponent,
-    HelpPathHeaderComponent
+    HelpPathHeaderComponent,
   ],
   template: `
     <div class="help-container">
@@ -74,7 +74,12 @@ import { HelpCopyContainerComponent, HelpPathHeaderComponent } from '@shared/com
                 <div class="controls-grid">
                   <div class="control-group">
                     <label>Объектов всего:</label>
-                    <nz-input-number [ngModel]="total()" (ngModelChange)="total.set($event)" [nzMin]="0" [nzStep]="10"></nz-input-number>
+                    <nz-input-number
+                      [ngModel]="total()"
+                      (ngModelChange)="total.set($event)"
+                      [nzMin]="0"
+                      [nzStep]="10"
+                    ></nz-input-number>
                   </div>
 
                   <div class="control-group">
@@ -108,12 +113,18 @@ import { HelpCopyContainerComponent, HelpPathHeaderComponent } from '@shared/com
 
                   <div class="control-group">
                     <label>Быстрый переход:</label>
-                    <nz-switch [ngModel]="showQuickJumper()" (ngModelChange)="showQuickJumper.set($event)"></nz-switch>
+                    <nz-switch
+                      [ngModel]="showQuickJumper()"
+                      (ngModelChange)="showQuickJumper.set($event)"
+                    ></nz-switch>
                   </div>
 
                   <div class="control-group">
                     <label>Выбор размера:</label>
-                    <nz-switch [ngModel]="showSizeChanger()" (ngModelChange)="showSizeChanger.set($event)"></nz-switch>
+                    <nz-switch
+                      [ngModel]="showSizeChanger()"
+                      (ngModelChange)="showSizeChanger.set($event)"
+                    ></nz-switch>
                   </div>
                 </div>
               </div>
@@ -141,9 +152,15 @@ import { HelpCopyContainerComponent, HelpPathHeaderComponent } from '@shared/com
                 </thead>
                 <tbody>
                   <tr *ngFor="let data of inputTable.data">
-                    <td><code>{{ data.name }}</code></td>
-                    <td><span class="type-tag">{{ data.type }}</span></td>
-                    <td><code>{{ data.default }}</code></td>
+                    <td>
+                      <code>{{ data.name }}</code>
+                    </td>
+                    <td>
+                      <span class="type-tag">{{ data.type }}</span>
+                    </td>
+                    <td>
+                      <code>{{ data.default }}</code>
+                    </td>
                     <td>{{ data.desc }}</td>
                   </tr>
                 </tbody>
@@ -161,8 +178,12 @@ import { HelpCopyContainerComponent, HelpPathHeaderComponent } from '@shared/com
                 </thead>
                 <tbody>
                   <tr *ngFor="let data of outputTable.data">
-                    <td><code>{{ data.name }}</code></td>
-                    <td><span class="type-tag">{{ data.type }}</span></td>
+                    <td>
+                      <code>{{ data.name }}</code>
+                    </td>
+                    <td>
+                      <span class="type-tag">{{ data.type }}</span>
+                    </td>
                     <td>{{ data.desc }}</td>
                   </tr>
                 </tbody>
@@ -175,17 +196,22 @@ import { HelpCopyContainerComponent, HelpPathHeaderComponent } from '@shared/com
         <nz-tab nzTitle="💡 Кейсы">
           <div class="logic-section">
             <nz-card nzTitle="Интеграция с nz-table">
-              <p>При использовании <code>av-pagination</code> с таблицей Ng-Zorro, необходимо отключить встроенную пагинацию таблицы:</p>
-              <av-help-copy-container 
-                title="Table Integration" 
+              <p>
+                При использовании <code>av-pagination</code> с таблицей Ng-Zorro, необходимо
+                отключить встроенную пагинацию таблицы:
+              </p>
+              <av-help-copy-container
+                title="Table Integration"
                 [content]="tableIntegration"
               ></av-help-copy-container>
             </nz-card>
 
             <nz-card nzTitle="🤖 Prompt для быстрой интеграции">
-              <p class="ai-description">Используйте этот промпт, чтобы ИИ быстро добавил пагинацию в ваш справочник:</p>
-              <av-help-copy-container 
-                title="AI Prompt" 
+              <p class="ai-description">
+                Используйте этот промпт, чтобы ИИ быстро добавил пагинацию в ваш справочник:
+              </p>
+              <av-help-copy-container
+                title="AI Prompt"
                 [content]="aiPrompt"
                 bgColor="#0f172a"
               ></av-help-copy-container>
@@ -195,80 +221,138 @@ import { HelpCopyContainerComponent, HelpPathHeaderComponent } from '@shared/com
       </nz-tabset>
     </div>
   `,
-  styles: [`
-    .help-container { padding: 32px; max-width: 1200px; margin: 0 auto; }
-    
-    .help-header { display: none; }
-    .header-icon { font-size: 56px; }
-    h1 { font-size: 36px; font-weight: 900; margin: 0; color: #166534; letter-spacing: -0.025em; }
-    .subtitle { color: #15803d; font-size: 18px; margin: 8px 0 0 0; font-weight: 500; }
+  styles: [
+    `
+      .help-container {
+        padding: 32px;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
 
-    .help-tabs { margin-top: 24px; }
-    
-    .demo-section, .api-section, .logic-section { 
-      display: flex; 
-      flex-direction: column; 
-      gap: 32px; 
-      padding-top: 24px;
-    }
+      .help-header {
+        display: none;
+      }
+      .header-icon {
+        font-size: 56px;
+      }
+      h1 {
+        font-size: 36px;
+        font-weight: 900;
+        margin: 0;
+        color: #166534;
+        letter-spacing: -0.025em;
+      }
+      .subtitle {
+        color: #15803d;
+        font-size: 18px;
+        margin: 8px 0 0 0;
+        font-weight: 500;
+      }
 
-    .demo-card { border-radius: 20px; border: none; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05); }
-    .pagination-demo-box { 
-      padding: 32px; 
-      background: #f8fafc; 
-      border-radius: 16px; 
-      margin-bottom: 24px;
-      display: flex;
-      justify-content: center;
-      border: 1px dashed #e2e8f0;
-    }
+      .help-tabs {
+        margin-top: 24px;
+      }
 
-    .action-log {
-      background: #0f172a;
-      border-radius: 12px;
-      padding: 16px;
-      margin-bottom: 24px;
-      pre { color: #38bdf8; margin: 0; font-family: 'Fira Code', monospace; font-size: 13px; }
-      .log-header { color: #94a3b8; font-size: 12px; font-weight: 700; text-transform: uppercase; margin-bottom: 8px; }
-    }
+      .demo-section,
+      .api-section,
+      .logic-section {
+        display: flex;
+        flex-direction: column;
+        gap: 32px;
+        padding-top: 24px;
+      }
 
-    .controls-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 24px;
-      padding: 16px 0;
-    }
+      .demo-card {
+        border-radius: 20px;
+        border: none;
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+      }
+      .pagination-demo-box {
+        padding: 32px;
+        background: #f8fafc;
+        border-radius: 16px;
+        margin-bottom: 24px;
+        display: flex;
+        justify-content: center;
+        border: 1px dashed #e2e8f0;
+      }
 
-    .control-group {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      label { font-size: 13px; font-weight: 700; color: #64748b; text-transform: uppercase; }
-      nz-select, nz-input-number { width: 100%; }
-    }
+      .action-log {
+        background: #0f172a;
+        border-radius: 12px;
+        padding: 16px;
+        margin-bottom: 24px;
+        pre {
+          color: #38bdf8;
+          margin: 0;
+          font-family: 'Fira Code', monospace;
+          font-size: 13px;
+        }
+        .log-header {
+          color: #94a3b8;
+          font-size: 12px;
+          font-weight: 700;
+          text-transform: uppercase;
+          margin-bottom: 8px;
+        }
+      }
 
-    .type-tag { 
-      background: #eff6ff; 
-      color: #2563eb; 
-      padding: 2px 8px; 
-      border-radius: 6px; 
-      font-size: 12px; 
-      font-weight: 600;
-      border: 1px solid #dbeafe;
-    }
+      .controls-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 24px;
+        padding: 16px 0;
+      }
 
-    .ai-description { font-size: 15px; color: #475569; margin-bottom: 16px; border-left: 4px solid #10b981; padding-left: 16px; }
+      .control-group {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        label {
+          font-size: 13px;
+          font-weight: 700;
+          color: #64748b;
+          text-transform: uppercase;
+        }
+        nz-select,
+        nz-input-number {
+          width: 100%;
+        }
+      }
 
-    hr { border: 0; border-top: 1px solid #f1f5f9; margin: 24px 0; }
-    
-    code {
-      background: #f1f5f9;
-      padding: 2px 6px;
-      border-radius: 4px;
-      color: #0f172a;
-      font-family: 'Fira Code', monospace;
-    }
-  `]
+      .type-tag {
+        background: #eff6ff;
+        color: #2563eb;
+        padding: 2px 8px;
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: 600;
+        border: 1px solid #dbeafe;
+      }
+
+      .ai-description {
+        font-size: 15px;
+        color: #475569;
+        margin-bottom: 16px;
+        border-left: 4px solid #10b981;
+        padding-left: 16px;
+      }
+
+      hr {
+        border: 0;
+        border-top: 1px solid #f1f5f9;
+        margin: 24px 0;
+      }
+
+      code {
+        background: #f1f5f9;
+        padding: 2px 6px;
+        border-radius: 4px;
+        color: #0f172a;
+        font-family: 'Fira Code', monospace;
+      }
+    `,
+  ],
 })
 export class PaginationHelpComponent {
   // Signals for demo
@@ -290,20 +374,68 @@ export class PaginationHelpComponent {
 
   inputs = [
     { name: 'total', type: 'input<number>', default: '0', desc: 'Общее количество записей' },
-    { name: 'currentPage', type: 'model<number>', default: '1', desc: 'Текущая страница (двустороннее связывание)' },
-    { name: 'pageSize', type: 'model<number>', default: '10', desc: 'Размер страницы (двустороннее связывание)' },
-    { name: 'variant', type: 'PaginationVariant', default: 'default', desc: 'Стиль: default | simple | compact | minimal' },
-    { name: 'size', type: 'PaginationSize', default: 'medium', desc: 'Размер: small | medium | large' },
-    { name: 'shape', type: 'PaginationShape', default: 'rounded', desc: 'Форма кнопок: square | rounded | circle' },
-    { name: 'color', type: 'string', default: 'primary', desc: 'Цвет: primary | success | warning | danger' },
-    { name: 'showQuickJumper', type: 'boolean', default: 'false', desc: 'Показывать поле быстрого перехода' },
-    { name: 'showSizeChanger', type: 'boolean', default: 'true', desc: 'Показывать выбор размера страницы' }
+    {
+      name: 'currentPage',
+      type: 'model<number>',
+      default: '1',
+      desc: 'Текущая страница (двустороннее связывание)',
+    },
+    {
+      name: 'pageSize',
+      type: 'model<number>',
+      default: '10',
+      desc: 'Размер страницы (двустороннее связывание)',
+    },
+    {
+      name: 'variant',
+      type: 'PaginationVariant',
+      default: 'default',
+      desc: 'Стиль: default | simple | compact | minimal',
+    },
+    {
+      name: 'size',
+      type: 'PaginationSize',
+      default: 'medium',
+      desc: 'Размер: small | medium | large',
+    },
+    {
+      name: 'shape',
+      type: 'PaginationShape',
+      default: 'rounded',
+      desc: 'Форма кнопок: square | rounded | circle',
+    },
+    {
+      name: 'color',
+      type: 'string',
+      default: 'primary',
+      desc: 'Цвет: primary | success | warning | danger',
+    },
+    {
+      name: 'showQuickJumper',
+      type: 'boolean',
+      default: 'false',
+      desc: 'Показывать поле быстрого перехода',
+    },
+    {
+      name: 'showSizeChanger',
+      type: 'boolean',
+      default: 'true',
+      desc: 'Показывать выбор размера страницы',
+    },
   ];
 
   outputs = [
-    { name: 'paginationChange', type: 'PaginationChangeEvent', desc: 'Срабатывает при любом изменении (страница или размер)' },
+    {
+      name: 'paginationChange',
+      type: 'PaginationChangeEvent',
+      desc: 'Срабатывает при любом изменении (страница или размер)',
+    },
     { name: 'pageChange', type: 'number', desc: 'Срабатывает только при смене страницы' },
-    { name: 'pageSizeChange', type: 'number', desc: 'Срабатывает только при смене размера страницы' }
+    {
+      name: 'pageSizeChange',
+      type: 'number',
+      desc: 'Срабатывает только при смене размера страницы',
+    },
   ];
 
   basicUsage = `<av-pagination

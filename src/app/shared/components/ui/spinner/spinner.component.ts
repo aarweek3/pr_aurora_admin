@@ -46,13 +46,14 @@ export type SpinnerLabelPosition = 'bottom' | 'right';
         </div>
 
         @if (label() || tip()) {
-        <div class="av-spinner-text">
-          @if (label()) {
-          <span class="av-spinner-label">{{ label() }}</span>
-          } @if (tip()) {
-          <span class="av-spinner-tip">{{ tip() }}</span>
-          }
-        </div>
+          <div class="av-spinner-text">
+            @if (label()) {
+              <span class="av-spinner-label">{{ label() }}</span>
+            }
+            @if (tip()) {
+              <span class="av-spinner-tip">{{ tip() }}</span>
+            }
+          </div>
         }
       </div>
     </div>

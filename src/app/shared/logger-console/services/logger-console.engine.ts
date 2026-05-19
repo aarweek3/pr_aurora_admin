@@ -12,31 +12,31 @@ export class SimpleLoggerConsole implements ILoggerConsole {
   constructor(
     private prefix: string,
     private callback: LogCallback,
-    private enableConsole: boolean = true,
+    private enableConsole = true,
   ) {}
 
-  log(message: string, ...data: any[]): void {
+  log(message: string, ...data: unknown[]): void {
     this.createEntry('log', message, data);
   }
 
-  debug(message: string, ...data: any[]): void {
+  debug(message: string, ...data: unknown[]): void {
     this.createEntry('debug', message, data);
   }
 
-  info(message: string, ...data: any[]): void {
+  info(message: string, ...data: unknown[]): void {
     this.createEntry('info', message, data);
   }
 
-  warn(message: string, ...data: any[]): void {
+  warn(message: string, ...data: unknown[]): void {
     this.createEntry('warn', message, data);
   }
 
-  error(message: string, ...data: any[]): void {
+  error(message: string, ...data: unknown[]): void {
     this.createEntry('error', message, data);
   }
 
   /** Внутренний метод сборки записи */
-  private createEntry(level: LogLevel, message: string, data: any[]): void {
+  private createEntry(level: LogLevel, message: string, data: unknown[]): void {
     const entry: LogEntry = {
       id: btoa(Math.random().toString()).substring(10, 18), // Быстрый короткий ID
       timestamp: new Date(),
@@ -70,13 +70,15 @@ export class SimpleLoggerConsole implements ILoggerConsole {
     const label = `[${entry.prefix}]`;
 
     // Вызываем оригинальный метод console (log, info, warn, error)
-    const method = entry.level === 'debug' ? 'log' : entry.level;
+    const method = (entry.level === 'debug' ? 'log' : entry.level) as keyof Console;
 
-    (console as any)[method](
-      `%c${label} %c${entry.message}`,
-      style,
-      'color: inherit; font-weight: normal;',
-      ...(entry.data || []),
-    );
+    if (typeof console[method] === 'function') {
+      (console[method] as Function)(
+        `%c${label} %c${entry.message}`,
+        style,
+        'color: inherit; font-weight: normal;',
+        ...(entry.data || []),
+      );
+    }
   }
 }

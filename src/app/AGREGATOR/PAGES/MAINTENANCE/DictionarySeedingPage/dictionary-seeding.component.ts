@@ -19,8 +19,8 @@ import { NzSpaceModule } from 'ng-zorro-antd/space';
 import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzTypographyModule } from 'ng-zorro-antd/typography';
 
-import { LanguageApiService } from '@assets/languageApp/services/language-api.service';
-import { LanguageService } from '@assets/languageApp/services/language.service';
+import { LanguageApiService } from '@language-app/services/language-api.service';
+import { LanguageService } from '@language-app/services/language.service';
 import { CategoryOfAggregatorStateService } from '../../SPRAVKA/CategoryOfAggregatorPage/services/category-of-aggregator-state.service';
 import { CategoryTagOfAggregatorStateService } from '../../SPRAVKA/CategoryTagOfAggregatorPage/services/category-tag-of-aggregator-state.service';
 import { DeveloperOfAggregatorStateService } from '../../SPRAVKA/DeveloperOfAggregatorPage/services/developer-of-aggregator-state.service';
@@ -30,8 +30,6 @@ import { LicenseTypeOfAggregatorStateService } from '../../SPRAVKA/LicenseTypeOf
 import { PlatformOfAggregatorStateService } from '../../SPRAVKA/PlatformOfAggregatorPage/services/platform-of-aggregator-state.service';
 import { SystemRequirementStateService } from '../../SPRAVKA/SystemRequirementPage/services/system-requirement-state.service';
 import { TagOfAggregatorStateService } from '../../SPRAVKA/TagOfAggregatorPage/services/tag-of-aggregator-state.service';
-// import { LanguageService } from '../../../../assets/languageApp/services/language.service';
-// import { LanguageApiService } from '../../../../assets/languageApp/services/language-api.service';
 
 interface DictionaryInfo {
   id: string;

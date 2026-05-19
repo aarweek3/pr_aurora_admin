@@ -25,16 +25,16 @@ export class TagComponent {
   clickable = input<boolean>(false);
   icon = input<string | null>(null);
 
-  @Output() clicked = new EventEmitter<MouseEvent>();
-  @Output() removed = new EventEmitter<MouseEvent>();
+  @Output() clicked = new EventEmitter<Event>();
+  @Output() removed = new EventEmitter<Event>();
 
-  onTagClick(event: MouseEvent): void {
+  onTagClick(event: Event): void {
     if (this.clickable()) {
       this.clicked.emit(event);
     }
   }
 
-  onRemoveClick(event: MouseEvent): void {
+  onRemoveClick(event: Event): void {
     event.stopPropagation();
     this.removed.emit(event);
   }

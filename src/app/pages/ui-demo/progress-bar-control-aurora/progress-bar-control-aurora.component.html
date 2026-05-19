@@ -31,7 +31,7 @@
               <label class="control-label">Тип (Type):</label>
               <nz-select [ngModel]="config().type" (ngModelChange)="updateConfig('type', $event)">
                 @for (t of types; track t.value) {
-                <nz-option [nzLabel]="t.label" [nzValue]="t.value"></nz-option>
+                  <nz-option [nzLabel]="t.label" [nzValue]="t.value"></nz-option>
                 }
               </nz-select>
             </div>
@@ -39,7 +39,7 @@
               <label class="control-label">Статус (Status):</label>
               <nz-select [ngModel]="config().status" (ngModelChange)="updateConfig('status', $event)">
                 @for (s of statuses; track s.value) {
-                <nz-option [nzLabel]="s.label" [nzValue]="s.value"></nz-option>
+                  <nz-option [nzLabel]="s.label" [nzValue]="s.value"></nz-option>
                 }
               </nz-select>
             </div>
@@ -51,7 +51,7 @@
             <label class="control-label">Размер (Size):</label>
             <nz-radio-group [ngModel]="config().size" (ngModelChange)="updateConfig('size', $event)">
               @for (sz of sizes; track sz.value) {
-              <label nz-radio [nzValue]="sz.value">{{ sz.label }}</label>
+                <label nz-radio [nzValue]="sz.value">{{ sz.label }}</label>
               }
             </nz-radio-group>
           </div>
@@ -70,16 +70,16 @@
             </div>
 
             @if (useGradient()) {
-            <div class="control-row" style="margin-top: 12px">
-              <div class="control-group">
-                <label class="control-label">От (From):</label>
-                <input type="color" [ngModel]="gradientFrom()" (ngModelChange)="gradientFrom.set($event)" nz-input />
+              <div class="control-row" style="margin-top: 12px">
+                <div class="control-group">
+                  <label class="control-label">От (From):</label>
+                  <input type="color" [ngModel]="gradientFrom()" (ngModelChange)="gradientFrom.set($event)" nz-input />
+                </div>
+                <div class="control-group">
+                  <label class="control-label">До (To):</label>
+                  <input type="color" [ngModel]="gradientTo()" (ngModelChange)="gradientTo.set($event)" nz-input />
+                </div>
               </div>
-              <div class="control-group">
-                <label class="control-label">До (To):</label>
-                <input type="color" [ngModel]="gradientTo()" (ngModelChange)="gradientTo.set($event)" nz-input />
-              </div>
-            </div>
             }
           </div>
 
@@ -99,7 +99,7 @@
               <label class="control-label">Края (Linecap):</label>
               <nz-select [ngModel]="config().strokeLinecap" (ngModelChange)="updateConfig('strokeLinecap', $event)">
                 @for (l of linecaps; track l.value) {
-                <nz-option [nzLabel]="l.label" [nzValue]="l.value"></nz-option>
+                  <nz-option [nzLabel]="l.label" [nzValue]="l.value"></nz-option>
                 }
               </nz-select>
             </div>

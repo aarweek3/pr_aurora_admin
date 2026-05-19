@@ -1,6 +1,6 @@
 // src/app/auth/components/admin-users/user-modal.component.ts
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Output, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzDescriptionsModule } from 'ng-zorro-antd/descriptions';
@@ -46,10 +46,10 @@ import { CreateUserDto, UpdateUserDto, UserDetailDto, UserModalMode } from '@aut
             </span>
           </nz-descriptions-item>
           <nz-descriptions-item nzTitle="Дата создания">
-            {{ user.createdAt | date : 'medium' }}
+            {{ user.createdAt | date: 'medium' }}
           </nz-descriptions-item>
           <nz-descriptions-item nzTitle="Последний вход">
-            {{ user.lastLogin ? (user.lastLogin | date : 'medium') : 'Никогда' }}
+            {{ user.lastLogin ? (user.lastLogin | date: 'medium') : 'Никогда' }}
           </nz-descriptions-item>
           <nz-descriptions-item nzTitle="Внешний аккаунт">
             {{ user.isExternalAccount ? 'Да (' + user.externalProvider + ')' : 'Нет' }}
@@ -124,6 +124,8 @@ import { CreateUserDto, UpdateUserDto, UserDetailDto, UserModalMode } from '@aut
   `,
 })
 export class UserModalComponent {
+  private fb = inject(FormBuilder);
+
   @Output() userCreated = new EventEmitter<CreateUserDto>();
   @Output() userUpdated = new EventEmitter<{ id: string; data: UpdateUserDto }>();
   @Output() cancelled = new EventEmitter<void>();
@@ -133,7 +135,7 @@ export class UserModalComponent {
   user?: UserDetailDto;
   form: FormGroup;
 
-  constructor(private fb: FormBuilder) {
+  constructor() {
     this.form = this.createForm();
   }
 
@@ -224,5 +226,3 @@ export class UserModalComponent {
     this.isVisible = false;
   }
 }
-
-

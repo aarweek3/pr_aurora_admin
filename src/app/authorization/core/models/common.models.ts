@@ -46,14 +46,14 @@ export enum ActivityAction {
   ExternalLogin = 'ExternalLogin',
   LinkExternalAccount = 'LinkExternalAccount',
   UnlinkExternalAccount = 'UnlinkExternalAccount',
-  ExternalRegister = 'ExternalRegister'
+  ExternalRegister = 'ExternalRegister',
 }
 
 export enum DeviceType {
   Unknown = 'Unknown',
   Desktop = 'Desktop',
   Mobile = 'Mobile',
-  Tablet = 'Tablet'
+  Tablet = 'Tablet',
 }
 
 export enum BulkOperationType {
@@ -63,7 +63,7 @@ export enum BulkOperationType {
   ChangeRole = 'ChangeRole',
   ForceLogout = 'ForceLogout',
   ResetPassword = 'ResetPassword',
-  ConfirmEmail = 'ConfirmEmail'
+  ConfirmEmail = 'ConfirmEmail',
 }
 
 export const ACTIVITY_ACTION_LABELS: Record<ActivityAction, string> = {
@@ -84,5 +84,5 @@ export const ACTIVITY_ACTION_LABELS: Record<ActivityAction, string> = {
   [ActivityAction.ExternalLogin]: 'Внешний вход',
   [ActivityAction.LinkExternalAccount]: 'Привязка внешнего аккаунта',
   [ActivityAction.UnlinkExternalAccount]: 'Отвязка внешнего аккаунта',
-  [ActivityAction.ExternalRegister]: 'Внешняя регистрация'
+  [ActivityAction.ExternalRegister]: 'Внешняя регистрация',
 };

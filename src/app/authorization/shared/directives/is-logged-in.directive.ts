@@ -1,7 +1,6 @@
 import { Directive, TemplateRef, ViewContainerRef, inject, effect } from '@angular/core';
 import { AuthService } from '@auth/services/auth.service';
 
-
 /**
  * IsLoggedIn Directive
  *

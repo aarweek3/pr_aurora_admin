@@ -14,7 +14,6 @@ import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { AuthService } from '@auth/services/auth.service';
 
-
 @Component({
   selector: 'app-login',
   standalone: true,

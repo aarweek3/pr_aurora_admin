@@ -1,6 +1,6 @@
-﻿import { Injectable, OnDestroy, inject } from '@angular/core';
-import { ErrorResponse } from '@shared/infrastructure/interceptor/models/error-response.model';
-import { LoggingService } from '@shared/infrastructure/logging/logging.service';
+import { Injectable, OnDestroy, inject } from '@angular/core';
+import { ErrorResponse } from '@core/models/error-response.model';
+import { LoggingService } from '@core/services/logging/logging.service';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { SampleDetailDto } from '../models/sample.dto';
 import { SampleStateService } from './sample-state.service';
@@ -12,14 +12,14 @@ export class SampleModalService implements OnDestroy {
   private readonly logger = inject(LoggingService);
 
   ngOnDestroy(): void {
-    this.logger.debug('SampleModalService', 'Очистка ресурсов');
+    this.logger.debug('SampleModalService', '������� ��������');
   }
 
   /**
-   * Показать модальное окно для создания родителей
+   * �������� ��������� ���� ��� �������� ���������
    */
   showCreateModal(): void {
-    this.logger.debug('SampleModalService', 'Показать модальное окно создания');
+    this.logger.debug('SampleModalService', '�������� ��������� ���� ��������');
     this.stateService.updateState({
       editModalVisible: true,
       editModalMode: 'add',
@@ -31,10 +31,10 @@ export class SampleModalService implements OnDestroy {
   }
 
   /**
-   * Показать модальное окно для редактирования родителей
+   * �������� ��������� ���� ��� �������������� ���������
    */
   showEditModal(sample: SampleDetailDto): void {
-    this.logger.debug('SampleModalService', 'Показать модальное окно редактирования', {
+    this.logger.debug('SampleModalService', '�������� ��������� ���� ��������������', {
       id: sample.id,
     });
     this.stateService.updateState({
@@ -48,10 +48,10 @@ export class SampleModalService implements OnDestroy {
   }
 
   /**
-   * Закрыть модальное окно
+   * ������� ��������� ����
    */
   closeModal(): void {
-    this.logger.debug('SampleModalService', 'Закрытие модального окна');
+    this.logger.debug('SampleModalService', '�������� ���������� ����');
     this.stateService.updateState({
       editModalVisible: false,
       editModalMode: 'add',
@@ -63,7 +63,7 @@ export class SampleModalService implements OnDestroy {
   }
 
   /**
-   * Установить состояние модальной операции
+   * ���������� ��������� ��������� ��������
    */
   setModalOperationState(
     isLoading: boolean,
@@ -78,7 +78,7 @@ export class SampleModalService implements OnDestroy {
   }
 
   /**
-   * Показать модальное окно подтверждения удаления
+   * �������� ��������� ���� ������������� ��������
    */
   confirm(config: {
     nzTitle: string;
@@ -89,7 +89,7 @@ export class SampleModalService implements OnDestroy {
     nzOnOk: () => void;
     nzOnCancel: () => void;
   }): void {
-    this.logger.debug('SampleModalService', 'Показать модальное окно подтверждения', {
+    this.logger.debug('SampleModalService', '�������� ��������� ���� �������������', {
       title: config.nzTitle,
     });
     this.modal.confirm({
@@ -99,11 +99,11 @@ export class SampleModalService implements OnDestroy {
       nzCancelText: config.nzCancelText,
       nzOkDanger: config.nzOkDanger,
       nzOnOk: () => {
-        this.logger.info('SampleModalService', 'Подтверждено действие');
+        this.logger.info('SampleModalService', '������������ ��������');
         config.nzOnOk();
       },
       nzOnCancel: () => {
-        this.logger.debug('SampleModalService', 'Отменено действие');
+        this.logger.debug('SampleModalService', '�������� ��������');
         config.nzOnCancel();
       },
     });

@@ -11,8 +11,8 @@ import {
 } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { AppLanguage } from '@assets/languageApp/models/appLanguage.model';
-import { LanguageService } from '@assets/languageApp/services/language.service';
+import { AppLanguage } from '@language-app/models/appLanguage.model';
+import { LanguageService } from '@language-app/services/language.service';
 import { NzAlertModule } from 'ng-zorro-antd/alert';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzFormModule } from 'ng-zorro-antd/form';
@@ -108,41 +108,41 @@ import {
 
           <nz-tabset [nzType]="'card'" [(nzSelectedIndex)]="selectedTabIndex">
             @for (lang of languages; track lang.id; let i = $index) {
-            <nz-tab [nzTitle]="lang.title">
-              <div [formGroup]="getDescGroup(i)">
-                <nz-form-item>
-                  <nz-form-label nzRequired>Имя ({{ lang.code }})</nz-form-label>
-                  <nz-form-control nzErrorTip="Введите имя на данном языке">
-                    <input
-                      nz-input
-                      formControlName="name"
-                      [placeholder]="'Название на ' + lang.title"
-                      [readonly]="mode === 'view'"
-                    />
-                  </nz-form-control>
-                </nz-form-item>
+              <nz-tab [nzTitle]="lang.title">
+                <div [formGroup]="getDescGroup(i)">
+                  <nz-form-item>
+                    <nz-form-label nzRequired>Имя ({{ lang.code }})</nz-form-label>
+                    <nz-form-control nzErrorTip="Введите имя на данном языке">
+                      <input
+                        nz-input
+                        formControlName="name"
+                        [placeholder]="'Название на ' + lang.title"
+                        [readonly]="mode === 'view'"
+                      />
+                    </nz-form-control>
+                  </nz-form-item>
 
-                <nz-form-item>
-                  <nz-form-label>Описание ({{ lang.code }})</nz-form-label>
-                  <nz-form-control>
-                    <textarea
-                      nz-input
-                      formControlName="description"
-                      [nzAutosize]="{ minRows: 3 }"
-                      [placeholder]="'Описание на ' + lang.title"
-                      [readonly]="mode === 'view'"
-                    ></textarea>
-                  </nz-form-control>
-                </nz-form-item>
+                  <nz-form-item>
+                    <nz-form-label>Описание ({{ lang.code }})</nz-form-label>
+                    <nz-form-control>
+                      <textarea
+                        nz-input
+                        formControlName="description"
+                        [nzAutosize]="{ minRows: 3 }"
+                        [placeholder]="'Описание на ' + lang.title"
+                        [readonly]="mode === 'view'"
+                      ></textarea>
+                    </nz-form-control>
+                  </nz-form-item>
 
-                <h4
-                  style="margin: 24px 0 12px; border-bottom: 1px dashed #e8e8e8; padding-bottom: 4px; font-weight: 500;"
-                >
-                  Разширенные SEO настройки
-                </h4>
-                <app-seo-form [form]="getSeoGroup(i)" [readonly]="mode === 'view'"></app-seo-form>
-              </div>
-            </nz-tab>
+                  <h4
+                    style="margin: 24px 0 12px; border-bottom: 1px dashed #e8e8e8; padding-bottom: 4px; font-weight: 500;"
+                  >
+                    Разширенные SEO настройки
+                  </h4>
+                  <app-seo-form [form]="getSeoGroup(i)" [readonly]="mode === 'view'"></app-seo-form>
+                </div>
+              </nz-tab>
             }
           </nz-tabset>
         </form>

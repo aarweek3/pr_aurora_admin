@@ -1,13 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { Component, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ButtonDirective } from '../../../shared/components/ui/button/button.directive';
-import { HelpCopyContainerComponent } from '../../../shared/components/ui/container-help-copy-ui/container-help-copy-ui.component';
-import { ModalComponent } from '../../../shared/components/ui/modal';
 import {
+  ButtonDirective,
+  HelpCopyContainerComponent,
+  ModalComponent,
   PaginationChangeEvent,
   PaginationComponent,
-} from '../../../shared/components/ui/pagination';
+} from '@shared-ui';
 
 @Component({
   selector: 'app-pagination-ui',

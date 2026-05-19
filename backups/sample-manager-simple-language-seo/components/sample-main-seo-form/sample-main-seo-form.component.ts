@@ -1,13 +1,5 @@
 import { CommonModule } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  EventEmitter,
-  Input,
-  OnInit,
-  Output,
-} from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, inject } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
 import {
   FormArray,
@@ -511,6 +503,12 @@ import { SeoFormComponent } from '@shared/components/ui/seo-form/seo-form.compon
   ],
 })
 export class SampleMainSeoFormComponent implements OnInit {
+  private langService = inject(LanguageService);
+  private fb = inject(FormBuilder);
+  private message = inject(NzMessageService);
+  private cdr = inject(ChangeDetectorRef);
+  private vsModal = inject(VSModalService);
+
   @Input() loading = false;
   @Input() showInlineActions = false;
   @Input() set initialData(item: any) {
@@ -528,13 +526,7 @@ export class SampleMainSeoFormComponent implements OnInit {
   selectedTabIndex = 0;
   languages: AppLanguage[] = [];
 
-  constructor(
-    private langService: LanguageService,
-    private fb: FormBuilder,
-    private message: NzMessageService,
-    private cdr: ChangeDetectorRef,
-    private vsModal: VSModalService,
-  ) {
+  constructor() {
     this.form = this.fb.group({
       id: [0],
       name: ['', Validators.required],

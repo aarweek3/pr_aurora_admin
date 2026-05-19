@@ -38,7 +38,7 @@ import { ImageServiceUniversal } from '@shared/services/image-service-universal.
     NzSelectModule,
     NzSwitchModule,
     AvSearchComponent,
-    PaginationComponent
+    PaginationComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -60,7 +60,7 @@ import { ImageServiceUniversal } from '@shared/services/image-service-universal.
               [(value)]="searchTerm"
               [avLoading]="state.loading()"
               avPlaceholder="Поиск по названию или Slug..."
-              (onSearch)="onSearchChange($event)"
+              (searchChange)="onSearchChange($event)"
               [showButton]="false"
             ></av-search>
           </div>
@@ -99,9 +99,9 @@ import { ImageServiceUniversal } from '@shared/services/image-service-universal.
         </div>
       }
 
-      <nz-table 
-        #basicTable 
-        [nzData]="state.items()" 
+      <nz-table
+        #basicTable
+        [nzData]="state.items()"
         [nzLoading]="state.loading() && state.items().length > 0"
         [nzTotal]="state.total()"
         [nzPageIndex]="state.pageNumber()"
@@ -112,26 +112,15 @@ import { ImageServiceUniversal } from '@shared/services/image-service-universal.
       >
         <thead>
           <tr>
-            <th nzWidth="80px"
-                [nzSortFn]="true" 
-                (nzSortOrderChange)="onSortChange('Id', $event)"
-            >ID</th>
-            <th [nzSortFn]="true" 
-                (nzSortOrderChange)="onSortChange('Name', $event)">
-                Категория
+            <th nzWidth="80px" [nzSortFn]="true" (nzSortOrderChange)="onSortChange('Id', $event)">
+              ID
             </th>
-            <th [nzSortFn]="true" 
-                (nzSortOrderChange)="onSortChange('Slug', $event)">
-                Slug
+            <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('Name', $event)">Категория</th>
+            <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('Slug', $event)">Slug</th>
+            <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('SortOrder', $event)">
+              Порядок
             </th>
-            <th [nzSortFn]="true" 
-                (nzSortOrderChange)="onSortChange('SortOrder', $event)">
-                Порядок
-            </th>
-            <th [nzSortFn]="true"
-                (nzSortOrderChange)="onSortChange('TagsCount', $event)">
-                Теги
-            </th>
+            <th [nzSortFn]="true" (nzSortOrderChange)="onSortChange('TagsCount', $event)">Теги</th>
             <th nzWidth="100px">Статус</th>
             <th nzWidth="150px">Действия</th>
           </tr>
@@ -141,7 +130,11 @@ import { ImageServiceUniversal } from '@shared/services/image-service-universal.
             @for (skeleton of [1, 2, 3, 4, 5]; track skeleton) {
               <tr>
                 <td colspan="7">
-                  <nz-skeleton [nzActive]="true" [nzTitle]="false" [nzParagraph]="{ rows: 1 }"></nz-skeleton>
+                  <nz-skeleton
+                    [nzActive]="true"
+                    [nzTitle]="false"
+                    [nzParagraph]="{ rows: 1 }"
+                  ></nz-skeleton>
                 </td>
               </tr>
             }
@@ -154,10 +147,15 @@ import { ImageServiceUniversal } from '@shared/services/image-service-universal.
                 <div class="category-info">
                   @if (data.iconPath) {
                     <div class="category-icon-wrapper" [style.--category-color]="data.color">
-                      <i nz-icon [nzType]="getIconType(data.iconPath)" [style.color]="data.color" class="category-icon-font"></i>
+                      <i
+                        nz-icon
+                        [nzType]="getIconType(data.iconPath)"
+                        [style.color]="data.color"
+                        class="category-icon-font"
+                      ></i>
                     </div>
                   } @else {
-                     <div class="category-icon-placeholder"><i nz-icon nzType="folder"></i></div>
+                    <div class="category-icon-placeholder"><i nz-icon nzType="folder"></i></div>
                   }
                   <div style="display: flex; flex-direction: column;">
                     <div style="display: flex; align-items: center; gap: 6px;">
@@ -190,21 +188,30 @@ import { ImageServiceUniversal } from '@shared/services/image-service-universal.
               <td>
                 <div class="actions">
                   @if (data.isDeleted) {
-                    <button 
-                      nz-button nzType="text" nz-tooltip nzTooltipTitle="Восстановить"
+                    <button
+                      nz-button
+                      nzType="text"
+                      nz-tooltip
+                      nzTooltipTitle="Восстановить"
                       (click)="onRestore(data.id)"
                     >
                       <i nz-icon nzType="undo" class="restore-icon"></i>
                     </button>
-                    <button 
-                      nz-button nzType="text" nz-tooltip nzTooltipTitle="Удалить окончательно"
+                    <button
+                      nz-button
+                      nzType="text"
+                      nz-tooltip
+                      nzTooltipTitle="Удалить окончательно"
                       (click)="onHardDelete(data.id)"
                     >
                       <i nz-icon nzType="fire" class="hard-delete-icon"></i>
                     </button>
                   } @else {
-                    <button 
-                      nz-button nzType="text" nz-tooltip nzTooltipTitle="Просмотр"
+                    <button
+                      nz-button
+                      nzType="text"
+                      nz-tooltip
+                      nzTooltipTitle="Просмотр"
                       class="view-btn"
                       (click)="onView(data.id)"
                     >
@@ -212,35 +219,47 @@ import { ImageServiceUniversal } from '@shared/services/image-service-universal.
                     </button>
 
                     @if (usePageNavigation) {
-                      <button 
-                        nz-button nzType="text" nz-tooltip nzTooltipTitle="Редактировать на странице"
+                      <button
+                        nz-button
+                        nzType="text"
+                        nz-tooltip
+                        nzTooltipTitle="Редактировать на странице"
                         [routerLink]="[data.id, 'edit']"
                       >
                         <i nz-icon nzType="fullscreen" class="edit-icon"></i>
                       </button>
                     } @else {
-                      <button 
-                        nz-button nzType="text" nz-tooltip nzTooltipTitle="Быстрая правка"
+                      <button
+                        nz-button
+                        nzType="text"
+                        nz-tooltip
+                        nzTooltipTitle="Быстрая правка"
                         (click)="onEdit(data.id)"
                       >
                         <i nz-icon nzType="edit" class="edit-icon"></i>
                       </button>
                     }
 
-                      <button 
-                        nz-button nzType="text" nz-tooltip nzTooltipTitle="В корзину"
-                        (click)="onDelete(data.id)"
-                      >
-                        <i nz-icon nzType="rest" class="delete-icon"></i>
-                      </button>
+                    <button
+                      nz-button
+                      nzType="text"
+                      nz-tooltip
+                      nzTooltipTitle="В корзину"
+                      (click)="onDelete(data.id)"
+                    >
+                      <i nz-icon nzType="rest" class="delete-icon"></i>
+                    </button>
 
-                      <button 
-                        nz-button nzType="text" nz-tooltip nzTooltipTitle="Удалить окончательно"
-                        (click)="onHardDelete(data.id)"
-                      >
-                        <i nz-icon nzType="fire" class="hard-delete-icon"></i>
-                      </button>
-                    }
+                    <button
+                      nz-button
+                      nzType="text"
+                      nz-tooltip
+                      nzTooltipTitle="Удалить окончательно"
+                      (click)="onHardDelete(data.id)"
+                    >
+                      <i nz-icon nzType="fire" class="hard-delete-icon"></i>
+                    </button>
+                  }
                 </div>
               </td>
             </tr>
@@ -294,7 +313,7 @@ export class CategoryTagOfAggregatorListComponent {
   }
 
   /**
-   * Возвращает цвет фона для иконки. 
+   * Возвращает цвет фона для иконки.
    * Если это HEX, добавляет прозрачность. Если var() - возвращает как есть с opacity в CSS.
    */
   getBgColor(color: string | undefined): string {
@@ -346,7 +365,7 @@ export class CategoryTagOfAggregatorListComponent {
       'ВНИМАНИЕ: Это действие безвозвратно удалит категорию из базы данных.',
       '2 + 2 = ?',
       '4',
-      'Удалить навсегда'
+      'Удалить навсегда',
     );
     if (confirmed) this.state.hardDelete(id);
   }

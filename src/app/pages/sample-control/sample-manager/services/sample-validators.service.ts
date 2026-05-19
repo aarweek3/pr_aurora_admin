@@ -72,13 +72,10 @@ export class SampleValidatorsService {
       }
 
       // Проверка длины
-      if (
-        value.length > SampleValidatorsService.SAMPLE_DESCRIPTION_MAX_LENGTH
-      ) {
+      if (value.length > SampleValidatorsService.SAMPLE_DESCRIPTION_MAX_LENGTH) {
         return {
           maxlength: {
-            requiredLength:
-              SampleValidatorsService.SAMPLE_DESCRIPTION_MAX_LENGTH,
+            requiredLength: SampleValidatorsService.SAMPLE_DESCRIPTION_MAX_LENGTH,
             actualLength: value.length,
           },
         };
@@ -137,11 +134,7 @@ export class SampleValidatorsService {
 
       const value = Number(control.value);
 
-      if (
-        isNaN(value) ||
-        value < 1 ||
-        value > SampleValidatorsService.SAMPLE_MAX_PAGE_SIZE
-      ) {
+      if (isNaN(value) || value < 1 || value > SampleValidatorsService.SAMPLE_MAX_PAGE_SIZE) {
         return { invalidPageSize: true };
       }
 
@@ -330,7 +323,7 @@ export class SampleValidatorsService {
    * Получить статус валидации поля для UI
    */
   getFieldValidateStatus(
-    control: AbstractControl | null
+    control: AbstractControl | null,
   ): 'success' | 'warning' | 'error' | 'validating' | '' {
     if (!control) return '';
 

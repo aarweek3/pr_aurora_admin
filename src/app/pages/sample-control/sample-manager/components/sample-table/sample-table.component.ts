@@ -19,14 +19,7 @@ import { Subject } from 'rxjs';
 @Component({
   selector: 'app-sample-table',
   standalone: true,
-  imports: [
-    CommonModule,
-    NzTableModule,
-    NzButtonModule,
-    NzIconModule,
-    NzSpinModule,
-    NzEmptyModule,
-  ],
+  imports: [CommonModule, NzTableModule, NzButtonModule, NzIconModule, NzSpinModule, NzEmptyModule],
   template: `
     <nz-spin [nzSpinning]="loading">
       <nz-table
@@ -115,13 +108,13 @@ import { Subject } from 'rxjs';
 })
 export class SampleTableComponent implements OnChanges, OnDestroy {
   @Input() items: SampleDetailDto[] = [];
-  @Input() loading: boolean = false;
-  @Input() hasError: boolean = false;
+  @Input() loading = false;
+  @Input() hasError = false;
   @Output() view = new EventEmitter<number>();
   @Output() edit = new EventEmitter<SampleDetailDto>();
   @Output() delete = new EventEmitter<number>();
 
-  hoverStates: { [key: string]: string } = {
+  hoverStates: Record<string, string> = {
     view: '#52c41a',
     edit: '#1890ff',
     delete: '#ff4d4f',

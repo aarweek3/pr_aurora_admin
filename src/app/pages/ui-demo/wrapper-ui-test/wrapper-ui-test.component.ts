@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, OnDestroy, signal } from '@angular/core';
+import { Component, computed, OnDestroy, signal, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzCardModule } from 'ng-zorro-antd/card';
@@ -49,7 +49,8 @@ import {
   styleUrl: './wrapper-ui-test.component.scss',
 })
 export class WrapperUiTestComponent implements OnDestroy {
-  constructor(private notification: NzNotificationService) {}
+  private notification = inject(NzNotificationService);
+
   // Конфигурация showcase
   readonly showcaseConfig: ShowcaseConfig = {
     headerConfig: {

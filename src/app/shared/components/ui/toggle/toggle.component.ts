@@ -55,13 +55,13 @@ import { ToggleDirective } from './toggle.directive';
       (click)="onWrapperClick()"
     >
       @if (hasLabel() && (labelPosition() === 'top' || labelPosition() === 'left')) {
-      <span
-        class="av-toggle-wrapper__label"
-        [style.font-size]="labelSize()"
-        [style.color]="labelColor()"
-      >
-        <ng-content></ng-content>
-      </span>
+        <span
+          class="av-toggle-wrapper__label"
+          [style.font-size]="labelSize()"
+          [style.color]="labelColor()"
+        >
+          <ng-content></ng-content>
+        </span>
       }
 
       <label class="av-toggle" [attr.for]="inputId">
@@ -82,23 +82,27 @@ import { ToggleDirective } from './toggle.directive';
         <span class="av-toggle__slider"></span>
 
         @if (checkedIcon()) {
-        <av-icon [type]="checkedIcon()!" class="av-toggle__icon av-toggle__icon--checked"></av-icon>
-        } @if (uncheckedIcon()) {
-        <av-icon
-          [type]="uncheckedIcon()!"
-          class="av-toggle__icon av-toggle__icon--unchecked"
-        ></av-icon>
+          <av-icon
+            [type]="checkedIcon()!"
+            class="av-toggle__icon av-toggle__icon--checked"
+          ></av-icon>
+        }
+        @if (uncheckedIcon()) {
+          <av-icon
+            [type]="uncheckedIcon()!"
+            class="av-toggle__icon av-toggle__icon--unchecked"
+          ></av-icon>
         }
       </label>
 
       @if (hasLabel() && (labelPosition() === 'bottom' || labelPosition() === 'right')) {
-      <span
-        class="av-toggle-wrapper__label"
-        [style.font-size]="labelSize()"
-        [style.color]="labelColor()"
-      >
-        <ng-content></ng-content>
-      </span>
+        <span
+          class="av-toggle-wrapper__label"
+          [style.font-size]="labelSize()"
+          [style.color]="labelColor()"
+        >
+          <ng-content></ng-content>
+        </span>
       }
     </div>
   `,

@@ -118,5 +118,3 @@ export class SessionTabComponent implements OnInit {
     });
   }
 }
-
-

@@ -60,15 +60,18 @@ ${results}
     return this.createResult(
       'failed',
       `Ошибка: ${error.message}
-Статус: ${error.status || 'Unknown'}`
+Статус: ${error.status || 'Unknown'}`,
     );
   }
 
   private getStatusEmoji(status: 'passed' | 'failed' | 'warning'): string {
     switch (status) {
-      case 'passed': return '✅ ПРОЙДЕН';
-      case 'failed': return '❌ НЕ ПРОЙДЕН';
-      case 'warning': return '⚠️ ПРЕДУПРЕЖДЕНИЕ';
+      case 'passed':
+        return '✅ ПРОЙДЕН';
+      case 'failed':
+        return '❌ НЕ ПРОЙДЕН';
+      case 'warning':
+        return '⚠️ ПРЕДУПРЕЖДЕНИЕ';
     }
   }
 }

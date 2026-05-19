@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, effect } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, effect, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NzModalModule } from 'ng-zorro-antd/modal';
@@ -11,8 +11,8 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 import { SystemRequirementStateService } from '../services/system-requirement-state.service';
 import { RequirementArchitecture } from '../models/system-requirement.model';
 import { IconComponent } from '@shared/components/ui/icon/icon.component';
-import { LANGUAGE_ICONS_MAP } from '@assets/languageApp/config/language-icons.config';
-import { AppLanguage } from '@assets/languageApp/models/appLanguage.model';
+import { LANGUAGE_ICONS_MAP } from '@language-app/config/language-icons.config';
+import { AppLanguage } from '@language-app/models/appLanguage.model';
 
 @Component({
   selector: 'app-system-requirement-form',
@@ -27,17 +27,17 @@ import { AppLanguage } from '@assets/languageApp/models/appLanguage.model';
     NzTabsModule,
     NzInputModule,
     NzButtonModule,
-    IconComponent
+    IconComponent,
   ],
   template: `
-    <nz-modal 
-      [nzVisible]="state.modalVisible()" 
+    <nz-modal
+      [nzVisible]="state.modalVisible()"
       [nzTitle]="state.modalMode() === 'add' ? 'Добавить требование' : 'Редактировать требование'"
       (nzOnCancel)="onCancel()"
       (nzOnOk)="onSave()"
       [nzOkLoading]="state.modalLoading()"
-      nzWidth="700px">
-      
+      nzWidth="700px"
+    >
       <ng-container *nzModalContent>
         <form nz-form [formGroup]="validateForm" nzLayout="vertical">
           <div style="display: flex; gap: 16px;">
@@ -68,7 +68,12 @@ import { AppLanguage } from '@assets/languageApp/models/appLanguage.model';
             <nz-form-item style="flex: 1;">
               <nz-form-label>Минимальная ОС</nz-form-label>
               <nz-form-control>
-                <nz-select formControlName="minOsVersionId" nzShowSearch nzAllowClear nzPlaceHolder="Выберите версию">
+                <nz-select
+                  formControlName="minOsVersionId"
+                  nzShowSearch
+                  nzAllowClear
+                  nzPlaceHolder="Выберите версию"
+                >
                   @for (os of state.osVersions(); track os.id) {
                     <nz-option [nzValue]="os.id" [nzLabel]="os.name"></nz-option>
                   }
@@ -80,7 +85,12 @@ import { AppLanguage } from '@assets/languageApp/models/appLanguage.model';
             <nz-form-item style="flex: 1;">
               <nz-form-label>Максимальная ОС</nz-form-label>
               <nz-form-control>
-                <nz-select formControlName="maxOsVersionId" nzShowSearch nzAllowClear nzPlaceHolder="Любая">
+                <nz-select
+                  formControlName="maxOsVersionId"
+                  nzShowSearch
+                  nzAllowClear
+                  nzPlaceHolder="Любая"
+                >
                   @for (os of state.osVersions(); track os.id) {
                     <nz-option [nzValue]="os.id" [nzLabel]="os.name"></nz-option>
                   }
@@ -94,14 +104,25 @@ import { AppLanguage } from '@assets/languageApp/models/appLanguage.model';
             @for (lang of state.languages(); track lang.id) {
               <nz-tab [nzTitle]="titleTpl">
                 <ng-template #titleTpl>
-                  <av-icon [type]="getIconName(lang)" [size]="16" style="margin-right: 8px;"></av-icon>
+                  <av-icon
+                    [type]="getIconName(lang)"
+                    [size]="16"
+                    style="margin-right: 8px;"
+                  ></av-icon>
                   {{ lang.nativeTitle }}
                 </ng-template>
 
                 <nz-form-item>
-                  <nz-form-label>Дополнительные примечания (например: 4GB RAM, DirectX 11)</nz-form-label>
+                  <nz-form-label
+                    >Дополнительные примечания (например: 4GB RAM, DirectX 11)</nz-form-label
+                  >
                   <nz-form-control>
-                    <textarea nz-input rows="3" [placeholder]="'Описание на ' + lang.nativeTitle" (input)="onLocChange(lang.id, $event)"></textarea>
+                    <textarea
+                      nz-input
+                      rows="3"
+                      [placeholder]="'Описание на ' + lang.nativeTitle"
+                      (input)="onLocChange(lang.id, $event)"
+                    ></textarea>
                   </nz-form-control>
                 </nz-form-item>
               </nz-tab>
@@ -111,9 +132,9 @@ import { AppLanguage } from '@assets/languageApp/models/appLanguage.model';
       </ng-container>
     </nz-modal>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SystemRequirementFormComponent {
+export class SystemRequirementFormComponent implements OnInit {
   private fb = inject(FormBuilder);
   readonly state = inject(SystemRequirementStateService);
 
@@ -127,7 +148,7 @@ export class SystemRequirementFormComponent {
     isRecommended: [false],
   });
 
-  localizations: Map<number, string> = new Map();
+  localizations = new Map<number, string>();
 
   constructor() {
     effect(() => {
@@ -135,7 +156,9 @@ export class SystemRequirementFormComponent {
       if (item) {
         this.validateForm.patchValue(item);
         this.localizations.clear();
-        item.localizations?.forEach(l => this.localizations.set(l.languageId, l.additionalNotes || ''));
+        item.localizations?.forEach((l) =>
+          this.localizations.set(l.languageId, l.additionalNotes || ''),
+        );
       } else {
         this.validateForm.reset({ architecture: 0, isRecommended: false });
         this.localizations.clear();
@@ -156,15 +179,15 @@ export class SystemRequirementFormComponent {
       const formValue = this.validateForm.value;
       const locs = Array.from(this.localizations.entries()).map(([langId, notes]) => ({
         languageId: langId,
-        additionalNotes: notes
+        additionalNotes: notes,
       }));
 
       this.state.save({
         ...formValue,
-        localizations: locs
+        localizations: locs,
       });
     } else {
-      Object.values(this.validateForm.controls).forEach(control => {
+      Object.values(this.validateForm.controls).forEach((control) => {
         if (control.invalid) {
           control.markAsDirty();
           control.updateValueAndValidity({ onlySelf: true });

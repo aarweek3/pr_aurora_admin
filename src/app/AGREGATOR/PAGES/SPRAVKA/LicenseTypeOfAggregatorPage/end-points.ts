@@ -1,3 +1,3 @@
 export const LicenseTypeOfAggregatorEndPoints = {
-  Base: 'api/v1/aggregator/license-types'
+  Base: 'api/v1/aggregator/license-types',
 };

@@ -97,21 +97,17 @@ export class VSModalContainerComponent implements AfterViewInit {
   /**
    * Получает стили для окна
    */
-  getWindowStyles(): { [key: string]: string } {
-    const styles: { [key: string]: string } = {};
+  getWindowStyles(): Record<string, string> {
+    const styles: Record<string, string> = {};
 
     if (this.config.width) {
       styles['width'] =
-        typeof this.config.width === 'number'
-          ? `${this.config.width}px`
-          : this.config.width;
+        typeof this.config.width === 'number' ? `${this.config.width}px` : this.config.width;
     }
 
     if (this.config.height) {
       styles['height'] =
-        typeof this.config.height === 'number'
-          ? `${this.config.height}px`
-          : this.config.height;
+        typeof this.config.height === 'number' ? `${this.config.height}px` : this.config.height;
     }
 
     return styles;

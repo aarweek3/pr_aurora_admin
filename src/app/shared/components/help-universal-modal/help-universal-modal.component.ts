@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Inject, Input, OnInit, Optional, signal, inject } from '@angular/core';
+import { Component, Input, OnInit, signal, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HelpPathHeaderComponent } from '@shared/components/ui';
 import { NzButtonModule } from 'ng-zorro-antd/button';
@@ -11,9 +11,9 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzTypographyModule } from 'ng-zorro-antd/typography';
 import { HttpClient } from '@angular/common/http';
 import { Clipboard } from '@angular/cdk/clipboard';
-import { IconLaboratoryService } from '@shared/services/icon-laboratory.service';
+import { IconDataService } from '@core/services/icon/icon-data.service';
 import { animate, style, transition, trigger } from '@angular/animations';
-import { AvTinymceControlComponent } from '../../../../assets/controls/tinymce-control/tinymce-control.component';
+import { AvTinymceControlComponent } from '@controls';
 
 export type HelpModalMode = 'view' | 'edit';
 
@@ -22,6 +22,24 @@ export interface HelpBlock {
   title: string;
   content: string;
   type: 'standard' | 'warning' | 'info' | 'danger';
+}
+
+export interface HelpModalData {
+  helpId?: string;
+  title?: string;
+  subtitle?: string;
+  icon?: string;
+  initialMode?: HelpModalMode;
+  componentPath?: string;
+  docPath?: string;
+  content?: string;
+  reference?: HelpBlock[];
+  blocks?: HelpBlock[];
+  blocksData?: HelpBlock[];
+  'blocks-main'?: HelpBlock[];
+  'blocks-front'?: HelpBlock[];
+  'blocks-server'?: HelpBlock[];
+  width?: string | number;
 }
 
 @Component({
@@ -58,7 +76,7 @@ export interface HelpBlock {
           <div class="title-group">
             <div class="header-icon-box">
               @if (isIconPath(icon)) {
-                <img [src]="icon" class="header-icon-img" (error)="onIconError($event)" />
+                <img [src]="icon" class="header-icon-img" (error)="onIconError()" alt="Иконка справки" />
               } @else if (isAntIcon(icon)) {
                 <span nz-icon [nzType]="icon" class="header-ant-icon"></span>
               } @else if (icon && !iconError) {
@@ -73,11 +91,14 @@ export interface HelpBlock {
                 <p nz-typography nzType="secondary" class="sub-title">{{ subtitle }}</p>
               }
               @if (docPath) {
-                <div 
-                  class="header-path-tag" 
-                  nz-tooltip 
+                <div
+                  class="header-path-tag"
+                  nz-tooltip
                   nzTooltipTitle="Нажмите, чтобы скопировать путь"
                   (click)="copyPath(docPath)"
+                  (keydown.enter)="copyPath(docPath)"
+                  role="button"
+                  tabindex="0"
                 >
                   <span nz-icon nzType="copy"></span>
                   <code>{{ docPath }}</code>
@@ -86,79 +107,83 @@ export interface HelpBlock {
             </div>
           </div>
 
-            <div class="header-actions">
-              <!-- Кнопка Глаз для управления видимостью блоков (только в режиме просмотра) -->
+          <div class="header-actions">
+            <!-- Кнопка Глаз для управления видимостью блоков (только в режиме просмотра) -->
+            @if (mode() === 'view') {
+              <button
+                nz-button
+                nz-tooltip
+                (click)="showBlocks.set(!showBlocks())"
+                [nzTooltipTitle]="showBlocks() ? 'Скрыть подробности' : 'Показать подробности'"
+                [class.active-toggle]="showBlocks()"
+                class="eye-btn"
+              >
+                <span nz-icon [nzType]="showBlocks() ? 'eye' : 'eye-invisible'"></span>
+              </button>
+
+              <div class="header-divider"></div>
+            }
+
+            <!-- Кнопки управления режимом (Редактировать/Сохранить) -->
+            <div class="mode-actions">
               @if (mode() === 'view') {
-                <button
-                  nz-button
-                  nz-tooltip
-                  (click)="showBlocks.set(!showBlocks())"
-                  [nzTooltipTitle]="showBlocks() ? 'Скрыть подробности' : 'Показать подробности'"
-                  [class.active-toggle]="showBlocks()"
-                  class="eye-btn"
-                >
-                  <span nz-icon [nzType]="showBlocks() ? 'eye' : 'eye-invisible'"></span>
+                <button nz-button nzType="default" (click)="toggleMode()" class="action-btn">
+                  <span nz-icon nzType="edit"></span> Редактировать
                 </button>
-
-                <div class="header-divider"></div>
+              } @else {
+                <button nz-button nzType="primary" (click)="save()" class="action-btn">
+                  <span nz-icon nzType="save"></span> Сохранить
+                </button>
+                <button nz-button nzType="default" (click)="toggleMode()" class="action-btn">
+                  Отмена
+                </button>
               }
+            </div>
 
-              <!-- Кнопки управления режимом (Редактировать/Сохранить) -->
-              <div class="mode-actions">
-                @if (mode() === 'view') {
-                  <button nz-button nzType="default" (click)="toggleMode()" class="action-btn">
-                    <span nz-icon nzType="edit"></span> Редактировать
-                  </button>
-                } @else {
-                  <button nz-button nzType="primary" (click)="save()" class="action-btn">
-                    <span nz-icon nzType="save"></span> Сохранить
-                  </button>
-                  <button nz-button nzType="default" (click)="toggleMode()" class="action-btn">Отмена</button>
-                }
-              </div>
+            <!-- Разделитель -->
+            <div class="header-divider"></div>
 
-              <!-- Разделитель -->
-              <div class="header-divider"></div>
+            <!-- Системные контроли размера -->
+            <div class="size-control-group">
+              <button
+                nz-button
+                nz-tooltip
+                (click)="toggleWidthPlus50()"
+                [nzTooltipTitle]="isWidthLarge() ? 'Вернуть ширину' : 'Увеличить ширину (+50%)'"
+                [class.active]="isWidthLarge()"
+              >
+                <span nz-icon nzType="column-width"></span>
+              </button>
 
-              <!-- Системные контроли размера -->
-              <div class="size-control-group">
-                <button
-                  nz-button
-                  nz-tooltip
-                  (click)="toggleWidthPlus50()"
-                  [nzTooltipTitle]="isWidthLarge() ? 'Вернуть ширину' : 'Увеличить ширину (+50%)'"
-                  [class.active]="isWidthLarge()"
-                >
-                  <span nz-icon nzType="column-width"></span>
-                </button>
+              <button
+                nz-button
+                nz-tooltip
+                (click)="toggleHeight30()"
+                [nzTooltipTitle]="isHeight30() ? 'Вернуть высоту' : 'Высота +30%'"
+                [class.active]="isHeight30()"
+              >
+                <span nz-icon nzType="column-height"></span>
+              </button>
 
-                <button
-                  nz-button
-                  nz-tooltip
-                  (click)="toggleHeight30()"
-                  [nzTooltipTitle]="isHeight30() ? 'Вернуть высоту' : 'Высота +30%'"
-                  [class.active]="isHeight30()"
-                >
-                  <span nz-icon nzType="column-height"></span>
-                </button>
-
-                <button
-                  nz-button
-                  nz-tooltip
-                  (click)="toggleFullscreen()"
-                  [nzTooltipTitle]="isFullscreen() ? 'Выйти из полноэкранного режима' : 'На весь экран'"
-                  [class.active]="isFullscreen()"
-                >
-                  <span nz-icon [nzType]="isFullscreen() ? 'fullscreen-exit' : 'fullscreen'"></span>
-                </button>
-              </div>
-
-              <!-- Кнопка закрытия -->
-              <div class="header-divider"></div>
-              <button nz-button nzType="text" (click)="close()" class="close-btn-header">
-                <span nz-icon nzType="close"></span>
+              <button
+                nz-button
+                nz-tooltip
+                (click)="toggleFullscreen()"
+                [nzTooltipTitle]="
+                  isFullscreen() ? 'Выйти из полноэкранного режима' : 'На весь экран'
+                "
+                [class.active]="isFullscreen()"
+              >
+                <span nz-icon [nzType]="isFullscreen() ? 'fullscreen-exit' : 'fullscreen'"></span>
               </button>
             </div>
+
+            <!-- Кнопка закрытия -->
+            <div class="header-divider"></div>
+            <button nz-button nzType="text" (click)="close()" class="close-btn-header">
+              <span nz-icon nzType="close"></span>
+            </button>
+          </div>
         </div>
       </div>
 
@@ -196,7 +221,9 @@ export interface HelpBlock {
                 <!-- Группа: Основной -->
                 @if (blocksMain().length > 0) {
                   <div class="blocks-group-container">
-                    <h2 class="blocks-group-header main"><span nz-icon nzType="appstore"></span> Основной</h2>
+                    <h2 class="blocks-group-header main">
+                      <span nz-icon nzType="appstore"></span> Основной
+                    </h2>
                     @for (block of blocksMain(); track block.id) {
                       <section class="help-block-view" [ngClass]="'block-' + block.type">
                         @if (block.title) {
@@ -211,7 +238,9 @@ export interface HelpBlock {
                 <!-- Группа: Front -->
                 @if (blocksFront().length > 0) {
                   <div class="blocks-group-container">
-                    <h2 class="blocks-group-header front"><span nz-icon nzType="layout"></span> Front</h2>
+                    <h2 class="blocks-group-header front">
+                      <span nz-icon nzType="layout"></span> Front
+                    </h2>
                     @for (block of blocksFront(); track block.id) {
                       <section class="help-block-view" [ngClass]="'block-' + block.type">
                         @if (block.title) {
@@ -226,7 +255,9 @@ export interface HelpBlock {
                 <!-- Группа: Сервер -->
                 @if (blocksServer().length > 0) {
                   <div class="blocks-group-container">
-                    <h2 class="blocks-group-header server"><span nz-icon nzType="database"></span> Сервер</h2>
+                    <h2 class="blocks-group-header server">
+                      <span nz-icon nzType="database"></span> Сервер
+                    </h2>
                     @for (block of blocksServer(); track block.id) {
                       <section class="help-block-view" [ngClass]="'block-' + block.type">
                         @if (block.title) {
@@ -242,26 +273,45 @@ export interface HelpBlock {
 
             @if (reference().length === 0 && (!showBlocks() || blocks().length === 0)) {
               <div class="content-placeholder">
-                <span nz-icon nzType="info-circle" style="font-size: 48px; margin-bottom: 16px; opacity: 0.2;"></span>
+                <span
+                  nz-icon
+                  nzType="info-circle"
+                  style="font-size: 48px; margin-bottom: 16px; opacity: 0.2;"
+                ></span>
                 <p>Документация пуста или основные блоки скрыты.</p>
-                <button nz-button nzType="link" (click)="showBlocks.set(true)">Показать все блоки</button>
+                <button nz-button nzType="link" (click)="showBlocks.set(true)">
+                  Показать все блоки
+                </button>
               </div>
             }
           } @else {
             <div class="edit-mode-container">
               <!-- Редактирование Reference -->
               <div class="edit-section-header">
-                <h3 class="section-title"><span nz-icon nzType="info-circle"></span> Общая справка (Reference)</h3>
-                <p class="section-hint">Этот раздел виден пользователю всегда при открытии справки.</p>
+                <h3 class="section-title">
+                  <span nz-icon nzType="info-circle"></span> Общая справка (Reference)
+                </h3>
+                <p class="section-hint">
+                  Этот раздел виден пользователю всегда при открытии справки.
+                </p>
               </div>
-              
+
               <div class="edit-blocks-list">
                 @for (block of reference(); track block.id; let i = $index) {
-                  <nz-card [nzTitle]="blockTitleTpl" [nzExtra]="blockExtraTpl" class="edit-block-card reference-card">
+                  <nz-card
+                    [nzTitle]="blockTitleTpl"
+                    [nzExtra]="blockExtraTpl"
+                    class="edit-block-card reference-card"
+                  >
                     <ng-template #blockTitleTpl>
                       <div class="block-title-edit">
                         <span class="block-number ref">REF</span>
-                        <input nz-input [(ngModel)]="block.title" placeholder="Заголовок справки" class="title-input" />
+                        <input
+                          nz-input
+                          [(ngModel)]="block.title"
+                          placeholder="Заголовок справки"
+                          class="title-input"
+                        />
                       </div>
                     </ng-template>
                     <ng-template #blockExtraTpl>
@@ -273,11 +323,18 @@ export interface HelpBlock {
                     <av-tinymce-control
                       [(ngModel)]="block.content"
                       [height]="250"
-                      label="Текст справки">
+                      label="Текст справки"
+                    >
                     </av-tinymce-control>
                   </nz-card>
                 }
-                <button nz-button nzType="dashed" nzBlock (click)="addReferenceBlock()" class="add-block-btn">
+                <button
+                  nz-button
+                  nzType="dashed"
+                  nzBlock
+                  (click)="addReferenceBlock()"
+                  class="add-block-btn"
+                >
                   <span nz-icon nzType="plus"></span> Добавить блок в общую справку
                 </button>
               </div>
@@ -286,17 +343,30 @@ export interface HelpBlock {
 
               <!-- Редактирование Blocks -->
               <div class="edit-section-header">
-                <h3 class="section-title"><span nz-icon nzType="appstore"></span> Дополнительные блоки (Blocks)</h3>
-                <p class="section-hint">Эти блоки скрыты по умолчанию и открываются по нажатию на «Глаз».</p>
+                <h3 class="section-title">
+                  <span nz-icon nzType="appstore"></span> Дополнительные блоки (Blocks)
+                </h3>
+                <p class="section-hint">
+                  Эти блоки скрыты по умолчанию и открываются по нажатию на «Глаз».
+                </p>
               </div>
 
               <div class="edit-blocks-list">
                 @for (block of blocks(); track block.id; let i = $index) {
-                  <nz-card [nzTitle]="blockTitleTpl" [nzExtra]="blockExtraTpl" class="edit-block-card">
+                  <nz-card
+                    [nzTitle]="blockTitleTpl"
+                    [nzExtra]="blockExtraTpl"
+                    class="edit-block-card"
+                  >
                     <ng-template #blockTitleTpl>
                       <div class="block-title-edit">
                         <span class="block-number">#{{ i + 1 }}</span>
-                        <input nz-input [(ngModel)]="block.title" placeholder="Заголовок блока" class="title-input" />
+                        <input
+                          nz-input
+                          [(ngModel)]="block.title"
+                          placeholder="Заголовок блока"
+                          class="title-input"
+                        />
                       </div>
                     </ng-template>
                     <ng-template #blockExtraTpl>
@@ -308,12 +378,19 @@ export interface HelpBlock {
                     <av-tinymce-control
                       [(ngModel)]="block.content"
                       [height]="250"
-                      label="Контент блока">
+                      label="Контент блока"
+                    >
                     </av-tinymce-control>
                   </nz-card>
                 }
 
-                <button nz-button nzType="dashed" nzBlock (click)="addBlock()" class="add-block-btn">
+                <button
+                  nz-button
+                  nzType="dashed"
+                  nzBlock
+                  (click)="addBlock()"
+                  class="add-block-btn"
+                >
                   <span nz-icon nzType="plus"></span> Добавить дополнительный блок
                 </button>
               </div>
@@ -499,7 +576,7 @@ export interface HelpBlock {
           &.active {
             background: #fff !important;
             color: #1890ff;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
           }
 
           span {
@@ -740,7 +817,7 @@ export interface HelpBlock {
           background: transparent;
           font-weight: 600;
           font-size: 16px;
-          
+
           &:focus {
             background: #fff;
             box-shadow: none;
@@ -793,13 +870,18 @@ export interface HelpBlock {
   ],
 })
 export class HelpUniversalModalComponent implements OnInit {
-  @Input() title: string = 'Справка';
-  @Input() subtitle: string = 'Универсальный справочный модуль';
-  @Input() icon: string = '📘';
+  private modalRef = inject(NzModalRef, { optional: true });
+  private modalData = inject<HelpModalData>(NZ_MODAL_DATA, { optional: true });
+  private http = inject(HttpClient);
+  private clipboard = inject(Clipboard);
+
+  @Input() title = 'Справка';
+  @Input() subtitle = 'Универсальный справочный модуль';
+  @Input() icon = '📘';
   @Input() initialMode: HelpModalMode = 'view';
-  @Input() componentPath: string = '';
-  @Input() docPath: string = '';
-  @Input() content: string = '';
+  @Input() componentPath = '';
+  @Input() docPath = '';
+  @Input() content = '';
   @Input() blocksData: HelpBlock[] = [];
   @Input() width: string | number = 1000;
 
@@ -810,13 +892,13 @@ export class HelpUniversalModalComponent implements OnInit {
   blocksServer = signal<HelpBlock[]>([]);
   reference = signal<HelpBlock[]>([]);
   showBlocks = signal<boolean>(false);
-  
+
   isFullscreen = signal<boolean>(false);
   isWidthLarge = signal<boolean>(false);
   isHeight30 = signal<boolean>(false);
   iconError = false;
 
-  private iconLab = inject(IconLaboratoryService);
+  private iconLab = inject(IconDataService);
   private message = inject(NzMessageService);
 
   private isResizing = false;
@@ -829,14 +911,6 @@ export class HelpUniversalModalComponent implements OnInit {
   private modalOffsetX = 0;
   private modalOffsetY = 0;
 
-
-  constructor(
-    @Optional() private modalRef: NzModalRef,
-    @Optional() @Inject(NZ_MODAL_DATA) private modalData: any,
-    private http: HttpClient,
-    private clipboard: Clipboard
-  ) {}
-
   ngOnInit(): void {
     if (this.modalData) {
       // Если передан helpId, загружаем данные из JSON
@@ -846,24 +920,24 @@ export class HelpUniversalModalComponent implements OnInit {
         this.applyModalData(this.modalData);
       }
     }
-    
+
     this.mode.set(this.initialMode);
   }
 
   private loadHelpById(helpId: string): void {
     const path = `assets/help-data/${helpId}.json`;
-    this.http.get(path).subscribe({
-      next: (data: any) => {
+    this.http.get<HelpModalData>(path).subscribe({
+      next: (data) => {
         this.applyModalData(data);
       },
       error: (err) => {
         console.error('Error loading help file by ID:', helpId, err);
         this.message.error(`Не удалось загрузить справку: ${helpId}`);
-      }
+      },
     });
   }
 
-  private applyModalData(data: any): void {
+  private applyModalData(data: Partial<HelpModalData>): void {
     if (!data) return;
     this.title = data.title || this.title;
     this.subtitle = data.subtitle || this.subtitle;
@@ -883,12 +957,14 @@ export class HelpUniversalModalComponent implements OnInit {
 
     // Если передана старая строка контента, превращаем её в первый блок reference
     if (this.content && this.reference().length === 0) {
-      this.reference.set([{
-        id: 'legacy-root',
-        title: 'Основная информация',
-        content: this.content,
-        type: 'standard'
-      }]);
+      this.reference.set([
+        {
+          id: 'legacy-root',
+          title: 'Основная информация',
+          content: this.content,
+          type: 'standard',
+        },
+      ]);
     }
   }
 
@@ -922,8 +998,9 @@ export class HelpUniversalModalComponent implements OnInit {
     this.isWidthLarge.update((v) => !v);
     if (this.modalRef) {
       // Базовая ширина из инпута (число или парсим строку)
-      const baseWidth = typeof this.width === 'number' ? this.width : parseInt(this.width as string) || 1000;
-      
+      const baseWidth =
+        typeof this.width === 'number' ? this.width : parseInt(this.width as string) || 1000;
+
       // Если увеличиваем, ставим 1.5 от базы, иначе возвращаем базу
       const targetWidth = this.isWidthLarge() ? Math.floor(baseWidth * 1.5) : baseWidth;
 
@@ -942,13 +1019,13 @@ export class HelpUniversalModalComponent implements OnInit {
       id: `block_${Date.now()}`,
       title: '',
       content: '',
-      type: 'standard'
+      type: 'standard',
     };
-    this.blocks.update(b => [...b, newBlock]);
+    this.blocks.update((b) => [...b, newBlock]);
   }
 
   removeBlock(index: number): void {
-    this.blocks.update(b => b.filter((_, i) => i !== index));
+    this.blocks.update((b) => b.filter((_, i) => i !== index));
   }
 
   addReferenceBlock(): void {
@@ -956,13 +1033,13 @@ export class HelpUniversalModalComponent implements OnInit {
       id: `ref_${Date.now()}`,
       title: '',
       content: '',
-      type: 'standard'
+      type: 'standard',
     };
-    this.reference.update(r => [...r, newBlock]);
+    this.reference.update((r) => [...r, newBlock]);
   }
 
   removeReferenceBlock(index: number): void {
-    this.reference.update(r => r.filter((_, i) => i !== index));
+    this.reference.update((r) => r.filter((_, i) => i !== index));
   }
 
   toggleMode(): void {
@@ -980,12 +1057,13 @@ export class HelpUniversalModalComponent implements OnInit {
     return !this.isIconPath(icon) && icon.length > 2;
   }
 
-  onIconError(event: any): void {
+  onIconError(): void {
     this.iconError = true;
   }
 
   // --- Ресайз ---
   onResizeStart(event: MouseEvent): void {
+    if (!this.modalRef) return;
     event.preventDefault();
     this.isResizing = true;
     this.startX = event.clientX;
@@ -1001,7 +1079,7 @@ export class HelpUniversalModalComponent implements OnInit {
   }
 
   private onResizing = (event: MouseEvent): void => {
-    if (!this.isResizing) return;
+    if (!this.isResizing || !this.modalRef) return;
 
     const deltaX = event.clientX - this.startX;
     const newWidth = Math.max(400, this.startWidth + deltaX * 2); // Умножаем на 2, т.к. модалка центрирована
@@ -1021,6 +1099,7 @@ export class HelpUniversalModalComponent implements OnInit {
 
   // --- Драг (Перемещение) ---
   onDragStart(event: MouseEvent): void {
+    if (!this.modalRef) return;
     // Не запускаем драг, если нажали на кнопки действий или если мы в полноэкранном режиме
     if ((event.target as HTMLElement).closest('.header-actions') || this.isFullscreen()) {
       return;
@@ -1031,16 +1110,16 @@ export class HelpUniversalModalComponent implements OnInit {
     this.dragStartY = event.clientY;
 
     // Получаем текущие смещения из стилей (если они есть)
-    const currentStyle: any = this.modalRef.getConfig().nzStyle || {};
-    this.modalOffsetX = parseInt(currentStyle?.left || '0');
-    this.modalOffsetY = parseInt(currentStyle?.top || '100'); // 100 - дефолтный top
+    const currentStyle = (this.modalRef.getConfig().nzStyle as Record<string, string>) || {};
+    this.modalOffsetX = parseInt(currentStyle['left'] || '0');
+    this.modalOffsetY = parseInt(currentStyle['top'] || '100'); // 100 - дефолтный top
 
     document.addEventListener('mousemove', this.onDragging);
     document.addEventListener('mouseup', this.onDragEnd);
   }
 
   private onDragging = (event: MouseEvent): void => {
-    if (!this.isDragging) return;
+    if (!this.isDragging || !this.modalRef) return;
 
     const deltaX = event.clientX - this.dragStartX;
     const deltaY = event.clientY - this.dragStartY;
@@ -1060,10 +1139,12 @@ export class HelpUniversalModalComponent implements OnInit {
     document.removeEventListener('mousemove', this.onDragging);
     document.removeEventListener('mouseup', this.onDragEnd);
 
-    // Сохраняем финальные координаты для следующего драга
-    const currentStyle: any = this.modalRef.getConfig().nzStyle || {};
-    this.modalOffsetX = parseInt(currentStyle?.left || '0');
-    this.modalOffsetY = parseInt(currentStyle?.top || '0');
+    if (this.modalRef) {
+      // Сохраняем финальные координаты для следующего драга
+      const currentStyle = (this.modalRef.getConfig().nzStyle as Record<string, string>) || {};
+      this.modalOffsetX = parseInt(currentStyle['left'] || '0');
+      this.modalOffsetY = parseInt(currentStyle['top'] || '0');
+    }
   };
 
   save(): void {
@@ -1084,7 +1165,7 @@ export class HelpUniversalModalComponent implements OnInit {
       blocks: this.blocks(),
       'blocks-main': this.blocksMain(),
       'blocks-front': this.blocksFront(),
-      'blocks-server': this.blocksServer()
+      'blocks-server': this.blocksServer(),
     };
 
     this.iconLab.saveToDisk(fileName, folderPath, JSON.stringify(updatedData, null, 2)).subscribe({
@@ -1099,11 +1180,13 @@ export class HelpUniversalModalComponent implements OnInit {
       error: (err) => {
         console.error('Save error', err);
         this.message.error('Ошибка при сохранении файла на диск');
-      }
+      },
     });
   }
 
   close(): void {
-    this.modalRef.destroy();
+    if (this.modalRef) {
+      this.modalRef.destroy();
+    }
   }
 }

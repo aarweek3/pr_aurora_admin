@@ -35,6 +35,27 @@ export interface LanguageAggregator {
 
   /** Ключ иконки или флага (например, 'flag_ru') */
   iconKey?: string;
+
+  /** Флаг мягкого удаления */
+  isDeleted: boolean;
+
+  /** Дата создания */
+  createdAt: string;
+
+  /** Дата последнего обновления */
+  updatedAt: string;
+}
+
+/**
+ * Параметры фильтрации для получения списка языков
+ */
+export interface LanguageFilterParams {
+  /** Включая отключенные */
+  includeDisabled: boolean;
+  /** Включая удаленные (в корзине) */
+  includeDeleted: boolean;
+  /** Поисковый запрос */
+  searchTerm?: string;
 }
 
 /**

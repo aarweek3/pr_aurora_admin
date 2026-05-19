@@ -25,7 +25,7 @@
               style="width: 100%"
             >
               @for (variant of variants; track variant.value) {
-              <nz-option [nzValue]="variant.value" [nzLabel]="variant.label"></nz-option>
+                <nz-option [nzValue]="variant.value" [nzLabel]="variant.label"></nz-option>
               }
             </nz-select>
           </div>
@@ -34,7 +34,7 @@
             <label class="control-label">Размер:</label>
             <nz-select [ngModel]="config().size" (ngModelChange)="updateConfig('size', $event)" style="width: 100%">
               @for (size of sizes; track size.value) {
-              <nz-option [nzValue]="size.value" [nzLabel]="size.label"></nz-option>
+                <nz-option [nzValue]="size.value" [nzLabel]="size.label"></nz-option>
               }
             </nz-select>
           </div>
@@ -43,7 +43,7 @@
             <label class="control-label">Форма углов:</label>
             <nz-select [ngModel]="config().shape" (ngModelChange)="updateConfig('shape', $event)" style="width: 100%">
               @for (shape of shapes; track shape.value) {
-              <nz-option [nzValue]="shape.value" [nzLabel]="shape.label"></nz-option>
+                <nz-option [nzValue]="shape.value" [nzLabel]="shape.label"></nz-option>
               }
             </nz-select>
           </div>

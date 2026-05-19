@@ -1,0 +1,344 @@
+<!-- 2.2 ЛОКАЛИЗАЦИЯ И SEO -->
+<nz-card
+  class="step-card form-card loc-card mt-24"
+  [class.completed-step]="locsArray.controls.length > 0 && locsArray.controls[0].get('name')?.value"
+  [class.active-step]="!(locsArray.controls.length > 0 && locsArray.controls[0].get('name')?.value)"
+>
+  <div class="loc-section-header">
+    <nz-divider
+      nzText="ШАГ 3: ЛОКАЛИЗАЦИЯ И SEO"
+      nzOrientation="center"
+    ></nz-divider>
+  </div>
+
+  <nz-tabset
+    [nzSelectedIndex]="selectedLangIndex"
+    [nzAnimated]="false"
+    nzSize="large"
+    class="premium-tabs"
+  >
+    @for (lang of languages; track lang.id; let i = $index) {
+      <nz-tab [nzTitle]="tabTitleTpl" (nzClick)="onTabClick(lang.id)">
+        <ng-template #tabTitleTpl>
+          <span [class.text-danger]="isTabInvalid(lang.id)">
+            {{ lang.nativeTitle || lang.code }}
+            @if (isTabInvalid(lang.id)) {
+              <i
+                nz-icon
+                nzType="exclamation-circle"
+                style="margin-left: 4px;"
+              ></i>
+            }
+          </span>
+        </ng-template>
+        <ng-template nz-tab>
+          @if (getLocGroup(lang.id); as locGroup) {
+            <div class="loc-form-content" [formGroup]="locGroup">
+              <nz-form-item>
+                <nz-form-label nzRequired>
+                  Отображаемое название ({{ lang.code }})
+                  <i
+                    nz-icon
+                    nzType="question-circle"
+                    nzTheme="outline"
+                    class="info-icon"
+                    nz-tooltip
+                    [nzTooltipTitle]="tooltips.step3.name"
+                  ></i>
+                </nz-form-label>
+                <nz-form-control>
+                  <input
+                    nz-input
+                    formControlName="name"
+                    [placeholder]="'Название на ' + lang.nativeTitle"
+                    (input)="onLocalizedNameInput(lang.id)"
+                  />
+                </nz-form-control>
+              </nz-form-item>
+
+              <div nz-row [nzGutter]="24">
+                <div nz-col [nzSpan]="24">
+                  <nz-form-item>
+                    <nz-form-label>
+                      Краткое описание
+                      <i
+                        nz-icon
+                        nzType="question-circle"
+                        nzTheme="outline"
+                        class="info-icon"
+                        nz-tooltip
+                        [nzTooltipTitle]="tooltips.step3.shortDescription"
+                      ></i>
+                    </nz-form-label>
+                    <nz-form-control>
+                      @defer (on idle) {
+                        <av-tinymce-control
+                          formControlName="shortDescription"
+                          [height]="180"
+                        ></av-tinymce-control>
+                      } @placeholder {
+                        <div class="editor-loader-placeholder">
+                          <nz-spin nzSimple></nz-spin>
+                          <span>Загрузка редактора описания...</span>
+                        </div>
+                      }
+                    </nz-form-control>
+                  </nz-form-item>
+                </div>
+                <div nz-col [nzSpan]="24">
+                  <nz-form-item>
+                    <nz-form-label>
+                      Полное описание
+                      <i
+                        nz-icon
+                        nzType="question-circle"
+                        nzTheme="outline"
+                        class="info-icon"
+                        nz-tooltip
+                        [nzTooltipTitle]="tooltips.step3.fullDescription"
+                      ></i>
+                    </nz-form-label>
+                    <nz-form-control>
+                      @defer (on idle) {
+                        <av-tinymce-control
+                          formControlName="fullDescription"
+                          [height]="300"
+                        ></av-tinymce-control>
+                      } @placeholder {
+                        <div class="editor-loader-placeholder">
+                          <nz-spin nzSimple></nz-spin>
+                          <span>Загрузка редактора полного описания...</span>
+                        </div>
+                      }
+                    </nz-form-control>
+                  </nz-form-item>
+                </div>
+              </div>
+
+              <div class="localized-tags-section mt-16">
+                <nz-card
+                  nzType="inner"
+                  nzTitle="Теги и характеристики (для этой локализации)"
+                  class="inner-step-card"
+                >
+                  <div nz-row [nzGutter]="16" nzAlign="middle">
+                    <div nz-col [nzSpan]="18">
+                      <nz-form-item style="margin-bottom: 0;">
+                        <nz-form-label>
+                          Теги программы
+                          <i
+                            nz-icon
+                            nzType="question-circle"
+                            nzTheme="outline"
+                            class="info-icon"
+                            nz-tooltip
+                            [nzTooltipTitle]="tooltips.step3.tags"
+                          ></i>
+                        </nz-form-label>
+                        <nz-form-control>
+                          <nz-select
+                            [formControl]="$any(form.get('tagIds'))"
+                            nzMode="multiple"
+                            [nzLoading]="tagsLoading"
+                            nzPlaceHolder="Выберите теги..."
+                            style="width: 100%"
+                          >
+                            @for (t of tags; track t.id) {
+                              <nz-option
+                                [nzValue]="t.id"
+                                [nzLabel]="
+                                  t.localizedName ||
+                                  t.slug ||
+                                  'ID: ' + t.id
+                                "
+                              ></nz-option>
+                            }
+                          </nz-select>
+                        </nz-form-control>
+                      </nz-form-item>
+                    </div>
+                    <div nz-col [nzSpan]="6">
+                      <nz-form-item style="margin-bottom: 0;">
+                        <nz-form-label>
+                          Язык тегов
+                          <i
+                            nz-icon
+                            nzType="question-circle"
+                            nzTheme="outline"
+                            class="info-icon"
+                            nz-tooltip
+                            [nzTooltipTitle]="tooltips.step3.tagLanguage"
+                          ></i>
+                        </nz-form-label>
+                        <nz-form-control>
+                          <nz-select
+                            [formControl]="tagLangControl"
+                            style="width: 100%"
+                          >
+                            <nz-option
+                              [nzValue]="null"
+                              nzLabel="Системный (Slug)"
+                            ></nz-option>
+                            @for (l of languages; track l.id) {
+                              <nz-option
+                                [nzValue]="l.id"
+                                [nzLabel]="l.code.toUpperCase()"
+                              ></nz-option>
+                            }
+                          </nz-select>
+                        </nz-form-control>
+                      </nz-form-item>
+                    </div>
+                  </div>
+                </nz-card>
+              </div>
+
+              <div nz-row [nzGutter]="24" class="mt-16">
+                <div nz-col [nzSpan]="12">
+                  <nz-form-item>
+                    <nz-form-label>
+                      YouTube Video ({{ lang.code }})
+                      <i
+                        nz-icon
+                        nzType="question-circle"
+                        nzTheme="outline"
+                        class="info-icon"
+                        nz-tooltip
+                        [nzTooltipTitle]="tooltips.step3.youtubeVideo"
+                      ></i>
+                    </nz-form-label>
+                    <nz-form-control>
+                      <input
+                        nz-input
+                        formControlName="youtubeVideoUrl"
+                        placeholder="Локальная ссылка на YouTube"
+                      />
+                    </nz-form-control>
+                  </nz-form-item>
+                </div>
+                <div nz-col [nzSpan]="12">
+                  <nz-form-item>
+                    <nz-form-label>
+                      Custom Video ({{ lang.code }})
+                      <i
+                        nz-icon
+                        nzType="question-circle"
+                        nzTheme="outline"
+                        class="info-icon"
+                        nz-tooltip
+                        [nzTooltipTitle]="tooltips.step3.customVideo"
+                      ></i>
+                    </nz-form-label>
+                    <nz-form-control>
+                      <input
+                        nz-input
+                        formControlName="customVideoUrl"
+                        placeholder="Локальная ссылка на файл"
+                      />
+                    </nz-form-control>
+                  </nz-form-item>
+                </div>
+              </div>
+
+              <div nz-row [nzGutter]="24">
+                <div nz-col [nzSpan]="12">
+                  <nz-card [nzTitle]="prosTitle" nzSize="small">
+                    <ng-template #prosTitle>
+                      <span>
+                        Плюсы (Pros)
+                        <i
+                          nz-icon
+                          nzType="question-circle"
+                          nzTheme="outline"
+                          class="info-icon"
+                          nz-tooltip
+                          [nzTooltipTitle]="tooltips.step3.pros"
+                        ></i>
+                      </span>
+                    </ng-template>
+                    <div formArrayName="pros" class="dynamic-list">
+                      @for (pro of getProsArray(lang.id).controls; track $index) {
+                        <div class="list-item">
+                          <input nz-input [formControlName]="$index" />
+                          <button
+                            nz-button
+                            nzType="text"
+                            nzDanger
+                            (click)="removePro(lang.id, $index)"
+                          >
+                            <i nz-icon nzType="delete"></i>
+                          </button>
+                        </div>
+                      }
+                      <button
+                        nz-button
+                        nzType="dashed"
+                        nzBlock
+                        (click)="addPro(lang.id)"
+                      >
+                        <i nz-icon nzType="plus"></i> Добавить
+                      </button>
+                    </div>
+                  </nz-card>
+                </div>
+                <div nz-col [nzSpan]="12">
+                  <nz-card [nzTitle]="consTitle" nzSize="small">
+                    <ng-template #consTitle>
+                      <span>
+                        Минусы (Cons)
+                        <i
+                          nz-icon
+                          nzType="question-circle"
+                          nzTheme="outline"
+                          class="info-icon"
+                          nz-tooltip
+                          [nzTooltipTitle]="tooltips.step3.cons"
+                        ></i>
+                      </span>
+                    </ng-template>
+                    <div formArrayName="cons" class="dynamic-list">
+                      @for (con of getConsArray(lang.id).controls; track $index) {
+                        <div class="list-item">
+                          <input nz-input [formControlName]="$index" />
+                          <button
+                            nz-button
+                            nzType="text"
+                            nzDanger
+                            (click)="removeCons(lang.id, $index)"
+                          >
+                            <i nz-icon nzType="delete"></i>
+                          </button>
+                        </div>
+                      }
+                      <button
+                        nz-button
+                        nzType="dashed"
+                        nzBlock
+                        (click)="addCons(lang.id)"
+                      >
+                        <i nz-icon nzType="plus"></i> Добавить
+                      </button>
+                    </div>
+                  </nz-card>
+                </div>
+              </div>
+
+              <nz-divider
+                nzText="SEO Оптимизация"
+                nzOrientation="left"
+              ></nz-divider>
+              @if (getSeoGroup(lang.id); as seoGroup) {
+                <app-seo-form
+                  [form]="seoGroup"
+                  [sourceName]="
+                    locGroup.get('name')?.value || form.get('canonicalName')?.value
+                  "
+                ></app-seo-form>
+              }
+            </div>
+          }
+        </ng-template>
+      </nz-tab>
+    }
+  </nz-tabset>
+</nz-card>

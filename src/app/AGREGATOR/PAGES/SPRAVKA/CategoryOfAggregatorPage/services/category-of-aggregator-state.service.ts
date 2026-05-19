@@ -1,21 +1,21 @@
 import { Injectable, OnDestroy, computed, inject, signal } from '@angular/core';
-import { 
-  CategoryOfAggregatorState, 
+import {
+  CategoryOfAggregatorState,
   initialCategoryOfAggregatorState,
   CategoryOfAggregatorItem,
-  CategoryOfAggregatorDetail
+  CategoryOfAggregatorDetail,
 } from '../models/category-of-aggregator.model';
 import { CategoryOfAggregatorApiService } from './category-of-aggregator-api.service';
 import { Observable, Subject, finalize, takeUntil, tap } from 'rxjs';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { ModalService } from '@shared/components/ui/modal/services/modal.service';
-import { LanguageService } from '@assets/languageApp/services/language.service';
-import { AppLanguage } from '@assets/languageApp/models/appLanguage.model';
-import { ErrorResponse } from '../../../../../shared/infrastructure/interceptor/models/error-response.model';
+import { LanguageService } from '@language-app/services/language.service';
+import { AppLanguage } from '@language-app/models/appLanguage.model';
+import { ErrorResponse } from '@core/models/error-response.model';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class CategoryOfAggregatorStateService implements OnDestroy {
   private api = inject(CategoryOfAggregatorApiService);
@@ -46,39 +46,100 @@ export class CategoryOfAggregatorStateService implements OnDestroy {
   viewItem = computed(() => this.state().viewItem);
   itemMap = computed(() => {
     const map = new Map<number, CategoryOfAggregatorItem>();
-    this.state().items.forEach(item => map.set(item.id, item));
+    this.state().items.forEach((item) => map.set(item.id, item));
     return map;
   });
 
+  visibleItems = computed(() => {
+    const s = this.state();
+    if (s.searchTerm || s.showDeleted) return s.items;
+    return this.flattenVisible(s.items);
+  });
+
   updateState(partial: Partial<CategoryOfAggregatorState>): void {
-    this.state.update(s => ({ ...s, ...partial }));
+    this.state.update((s) => ({ ...s, ...partial }));
   }
 
   loadItems(checkEmpty = false): void {
     const s = this.state();
-    
+
     // Если есть поиск или мы в корзине - используем обычный пагинированный список
     if (s.searchTerm || s.showDeleted) {
       this.loadPagedItems(checkEmpty);
       return;
     }
 
-    // В обычном режиме загружаем дерево для Tree Table
+    // В обычном режиме загружаем только корни (Level 0) для Lazy Loading
     this.executeWithLoading(this.api.getTree(s.languageId)).subscribe({
-      next: (tree) => {
-        const flattenedItems = this.flattenTree(tree);
-        this.updateState({ 
-          items: flattenedItems, 
-          total: flattenedItems.length, // Для дерева тотал = общее кол-во узлов
-          error: null
+      next: (roots) => {
+        // Инициализируем дерево корнями
+        this.updateState({
+          items: roots,
+          total: roots.length,
+          error: null,
         });
 
-        if (checkEmpty && flattenedItems.length === 0) {
+        if (checkEmpty && roots.length === 0) {
           this.showEmptyAlert();
         }
       },
-      error: (err) => this.handleError(err, 'LoadTree')
+      error: (err) => this.handleError(err, 'LoadRoots'),
     });
+  }
+
+  /**
+   * Раскрывает/скрывает узел. Если дети еще не загружены - загружает их.
+   */
+  toggleExpand(item: CategoryOfAggregatorItem, expand: boolean): void {
+    item.expand = expand;
+
+    if (expand && (!item.children || item.children.length === 0) && item.childrenCount > 0) {
+      this.loadChildren(item);
+    } else {
+      // Просто обновляем состояние для пересчета computed полей
+      this.updateState({ items: [...this.state().items] });
+    }
+  }
+
+  private loadChildren(parent: CategoryOfAggregatorItem): void {
+    const s = this.state();
+    parent.loading = true; // Можно добавить поле loading в модель если нужно визуализировать
+
+    this.api.getTree(s.languageId, parent.id).subscribe({
+      next: (children) => {
+        parent.children = children;
+        parent.loading = false;
+        // Обновляем состояние
+        this.updateState({ items: [...this.state().items] });
+      },
+      error: (err) => {
+        parent.loading = false;
+        this.handleError(err, 'LoadChildren');
+      },
+    });
+  }
+
+  /**
+   * Генерирует плоский список для таблицы, учитывая только раскрытые узлы.
+   * Это значительно ускоряет рендеринг и работу Virtual Scroll.
+   */
+  getVisibleItems(): CategoryOfAggregatorItem[] {
+    const s = this.state();
+    if (s.searchTerm || s.showDeleted) return s.items;
+    
+    return this.flattenVisible(s.items);
+  }
+
+  private flattenVisible(items: CategoryOfAggregatorItem[], level = 0): CategoryOfAggregatorItem[] {
+    const result: CategoryOfAggregatorItem[] = [];
+    items.forEach((item) => {
+      item.level = level;
+      result.push(item);
+      if (item.expand && item.children && item.children.length > 0) {
+        result.push(...this.flattenVisible(item.children, level + 1));
+      }
+    });
+    return result;
   }
 
   private loadPagedItems(checkEmpty: boolean): void {
@@ -91,47 +152,34 @@ export class CategoryOfAggregatorStateService implements OnDestroy {
       sortBy: s.sortBy,
       sortDirection: s.sortDirection,
       showDeleted: s.showDeleted,
-      parentId: s.parentId
+      parentId: s.parentId,
     };
 
     this.executeWithLoading(this.api.getPaged(request)).subscribe({
       next: (response) => {
-        this.updateState({ 
-          items: response.items, 
+        this.updateState({
+          items: response.items,
           total: response.total,
-          error: null
+          error: null,
         });
 
         if (checkEmpty && response.total === 0) {
           this.showEmptyAlert();
         }
       },
-      error: (err) => this.handleError(err, 'LoadPaged')
+      error: (err) => this.handleError(err, 'LoadPaged'),
     });
   }
 
-  private flattenTree(items: CategoryOfAggregatorItem[], level = 0): CategoryOfAggregatorItem[] {
-    const result: CategoryOfAggregatorItem[] = [];
-    [...items]
-      .sort((a, b) => (a.localizedName || a.canonicalName || '').localeCompare(b.localizedName || b.canonicalName || ''))
-      .forEach(item => {
-        item.level = level;
-        item.expand = item.expand ?? false;
-        result.push(item);
-        if (item.children && item.children.length > 0) {
-          result.push(...this.flattenTree(item.children, level + 1));
-        }
-      });
-    return result;
-  }
 
   private showEmptyAlert(): void {
     this.modalService.alert({
       title: 'База данных пуста!',
-      message: 'В базе данных \'DbNames\' (таблица \'categories_of_aggregator\') нет категорий для отображения.',
+      message:
+        "В базе данных 'DbNames' (таблица 'categories_of_aggregator') нет категорий для отображения.",
       alertType: 'info',
       centered: true,
-      icon: 'system/av_info'
+      icon: 'system/av_info',
     });
   }
 
@@ -191,7 +239,7 @@ export class CategoryOfAggregatorStateService implements OnDestroy {
       next: (item) => {
         this.updateState({ viewItem: item, viewModalVisible: true });
       },
-      error: (err) => this.handleError(err, 'OpenView')
+      error: (err) => this.handleError(err, 'OpenView'),
     });
   }
 
@@ -208,8 +256,8 @@ export class CategoryOfAggregatorStateService implements OnDestroy {
           this.message.success(dto.id ? 'Категория обновлена' : 'Категория создана');
           this.loadItems();
         },
-        error: (err) => this.handleError(err, 'Save')
-      })
+        error: (err) => this.handleError(err, 'Save'),
+      }),
     );
   }
 
@@ -219,7 +267,7 @@ export class CategoryOfAggregatorStateService implements OnDestroy {
         this.message.success('Категория помечена как удаленная');
         this.loadItems();
       },
-      error: (err) => this.handleError(err, 'Delete')
+      error: (err) => this.handleError(err, 'Delete'),
     });
   }
 
@@ -229,7 +277,7 @@ export class CategoryOfAggregatorStateService implements OnDestroy {
         this.message.success('Категория полностью удалена');
         this.loadItems();
       },
-      error: (err) => this.handleError(err, 'HardDelete')
+      error: (err) => this.handleError(err, 'HardDelete'),
     });
   }
 
@@ -239,7 +287,7 @@ export class CategoryOfAggregatorStateService implements OnDestroy {
         this.message.success('Категория восстановлена');
         this.loadItems();
       },
-      error: (err) => this.handleError(err, 'Restore')
+      error: (err) => this.handleError(err, 'Restore'),
     });
   }
 
@@ -254,7 +302,7 @@ export class CategoryOfAggregatorStateService implements OnDestroy {
       error: (err) => {
         this.message.remove(msgId);
         this.handleError(err, 'Seed');
-      }
+      },
     });
   }
 
@@ -268,8 +316,8 @@ export class CategoryOfAggregatorStateService implements OnDestroy {
       },
       error: (err) => {
         this.message.remove(msgId);
-        this.handleError(err, 'Clear')
-      }
+        this.handleError(err, 'Clear');
+      },
     });
   }
 
@@ -281,18 +329,21 @@ export class CategoryOfAggregatorStateService implements OnDestroy {
 
   private applyEnglishFallbacks(dto: any): void {
     if (!dto.localizations || dto.localizations.length === 0) return;
-    const enLang = this.langService.availableLanguages().find(l => l.code === 'en-US');
+    const enLang = this.langService.availableLanguages().find((l) => l.code === 'en-US');
     const enId = enLang?.id;
-    const enLoc = enId ? dto.localizations.find((l: any) => l.languageOfAggregatorId === enId) : null;
+    const enLoc = enId
+      ? dto.localizations.find((l: any) => l.languageOfAggregatorId === enId)
+      : null;
     const masterName = dto.canonicalName;
-    
+
     dto.localizations.forEach((loc: any) => {
       const isEn = enId && loc.languageOfAggregatorId === enId;
-      if (!loc.name?.trim()) loc.name = isEn ? masterName : (enLoc?.name || masterName);
+      if (!loc.name?.trim()) loc.name = isEn ? masterName : enLoc?.name || masterName;
       if (!isEn && enLoc) {
         if (!loc.description?.trim() && enLoc.description) loc.description = enLoc.description;
         if (!loc.metaTitle?.trim() && enLoc.metaTitle) loc.metaTitle = enLoc.metaTitle;
-        if (!loc.metaDescription?.trim() && enLoc.metaDescription) loc.metaDescription = enLoc.metaDescription;
+        if (!loc.metaDescription?.trim() && enLoc.metaDescription)
+          loc.metaDescription = enLoc.metaDescription;
       }
     });
   }
@@ -302,7 +353,7 @@ export class CategoryOfAggregatorStateService implements OnDestroy {
     this.updateState({ [key]: true, error: null } as any);
     return obs.pipe(
       takeUntil(this.destroy$),
-      finalize(() => this.updateState({ [key]: false } as any))
+      finalize(() => this.updateState({ [key]: false } as any)),
     );
   }
 

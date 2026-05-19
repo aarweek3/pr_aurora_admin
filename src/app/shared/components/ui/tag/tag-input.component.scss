@@ -50,13 +50,3 @@
 }
 
 // Dark mode support
-:host-context(.dark-theme) {
-  .av-tag-input {
-    background-color: var(--color-bg-input-dark, #1e293b);
-    border-color: var(--color-border-dark, #334155);
-
-    &__field {
-      color: var(--color-text-dark, #f8fafc);
-    }
-  }
-}

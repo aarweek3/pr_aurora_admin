@@ -59,10 +59,13 @@ export class NavigationTrailService {
     const allEntries = this._entries();
     const uniqueRoutes = new Set(allEntries.map((e) => e.route.path));
 
-    const routeCounts = allEntries.reduce((acc, entry) => {
-      acc[entry.route.path] = (acc[entry.route.path] || 0) + 1;
-      return acc;
-    }, {} as Record<string, number>);
+    const routeCounts = allEntries.reduce(
+      (acc, entry) => {
+        acc[entry.route.path] = (acc[entry.route.path] || 0) + 1;
+        return acc;
+      },
+      {} as Record<string, number>,
+    );
 
     const mostVisited = Object.entries(routeCounts).sort(([, a], [, b]) => b - a)[0];
 

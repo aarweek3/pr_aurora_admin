@@ -4,6 +4,7 @@ import {
   ChangeDetectorRef,
   Component,
   EventEmitter,
+  inject,
   Input,
   OnInit,
   Output,
@@ -17,11 +18,13 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { AvTinymceControlComponent } from '@assets/controls/tinymce-control/tinymce-control.component';
-import { AppLanguage } from '@assets/languageApp/models/appLanguage.model';
-import { LanguageService } from '@assets/languageApp/services/language.service';
+import { environment } from '@environments/environment';
+import { LanguageService } from '@language-app';
+import { AppLanguage } from '@language-app/models/appLanguage.model';
 import { ImageEditorMainComponent } from '@shared/components/av-image-editor-vs/components/image-editor-main/image-editor-main.component';
 import { ImageEditorConfig } from '@shared/components/av-image-editor-vs/models/editor-config.model';
+import { AvTinymceControlComponent } from '@shared/components/controls';
+import { SeoFormComponent } from '@shared/components/ui/seo-form/seo-form.component';
 import { VSModalService } from '@shared/components/ui/vs-modal-compromise';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzCollapseModule } from 'ng-zorro-antd/collapse';
@@ -34,9 +37,6 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { NzSwitchModule } from 'ng-zorro-antd/switch';
 import { NzTabsModule } from 'ng-zorro-antd/tabs';
-
-import { environment } from '@environments/environment';
-import { SeoFormComponent } from '../../../../shared/components/ui/seo-form/seo-form.component';
 
 @Component({
   selector: 'app-sample-main-seo-form',
@@ -521,6 +521,12 @@ import { SeoFormComponent } from '../../../../shared/components/ui/seo-form/seo-
   ],
 })
 export class SampleMainSeoFormComponent implements OnInit {
+  private fb = inject(FormBuilder);
+  private message = inject(NzMessageService);
+  private cdr = inject(ChangeDetectorRef);
+  private vsModal = inject(VSModalService);
+  private langService = inject(LanguageService);
+
   @Input() loading = false;
   @Input() showInlineActions = false;
   @Input() set initialData(item: any) {
@@ -538,13 +544,7 @@ export class SampleMainSeoFormComponent implements OnInit {
   selectedTabIndex = 0;
   languages: AppLanguage[] = [];
 
-  constructor(
-    private langService: LanguageService,
-    private fb: FormBuilder,
-    private message: NzMessageService,
-    private cdr: ChangeDetectorRef,
-    private vsModal: VSModalService,
-  ) {
+  constructor() {
     console.log('[FormComponent] Конструктор вызван');
 
     this.form = this.fb.group({

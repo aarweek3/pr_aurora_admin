@@ -1,0 +1,603 @@
+<div class="premium-wizard-container">
+  <!-- 1. STICKY HEADER -->
+  <nz-page-header
+    class="sticky-header"
+    (nzBack)="goBack()"
+    nzBackIcon
+    nzTitle="Добавление программы"
+    nzSubtitle="Создание новой записи в каталоге агрегатора"
+  >
+    <nz-breadcrumb nz-page-header-breadcrumb>
+      <nz-breadcrumb-item>Агрегатор</nz-breadcrumb-item>
+      <nz-breadcrumb-item
+        ><a [routerLink]="['/agregator/pages/program']">Программы</a></nz-breadcrumb-item
+      >
+      <nz-breadcrumb-item>Добавить</nz-breadcrumb-item>
+    </nz-breadcrumb>
+    <nz-page-header-extra>
+      <nz-space>
+        <button *nzSpaceItem nz-button (click)="goBack()">Отмена</button>
+        <button
+          *nzSpaceItem
+          nz-button
+          class="premium-save-btn"
+          [disabled]="!form.valid || !programId"
+          (click)="save()"
+          [nzLoading]="loading"
+        >
+          <i nz-icon nzType="save"></i> СОХРАНИТЬ КАРТОЧКУ ПРОГРАММЫ В БД
+        </button>
+      </nz-space>
+    </nz-page-header-extra>
+  </nz-page-header>
+
+  <div class="wizard-layout">
+    <nz-spin [nzSpinning]="loading" nzTip="Загрузка...">
+      <!-- БЛОК 1: ИДЕНТИФИКАЦИЯ (ТЕПЕРЬ ТУТ ТОЛЬКО БАЗА) -->
+      <div nz-row [nzGutter]="[24, 24]">
+        <div nz-col [nzSpan]="24">
+          <nz-card
+            nzTitle="Шаг 1: Базовая информация"
+            class="step-card"
+            [class.active-step]="!programId"
+            [class.completed-step]="programId"
+          >
+            <form [formGroup]="form" nzLayout="vertical">
+              <div nz-row [nzGutter]="16" nzAlign="bottom">
+                <div nz-col [nzXs]="24" [nzLg]="7">
+                  <nz-form-item style="margin-bottom: 0;">
+                    <nz-form-label nzRequired>
+                      Каноническое название
+                      <i
+                        nz-icon
+                        nzType="question-circle"
+                        nzTheme="outline"
+                        class="info-icon"
+                        nz-tooltip
+                        [nzTooltipTitle]="tooltips.step1.canonicalName"
+                      ></i>
+                    </nz-form-label>
+                    <nz-form-control nzErrorTip="Введите название программы">
+                      <input
+                        nz-input
+                        nzSize="large"
+                        formControlName="canonicalName"
+                        placeholder="Adobe Photoshop"
+                        [readonly]="programId"
+                      />
+                    </nz-form-control>
+                  </nz-form-item>
+                </div>
+                <div nz-col [nzXs]="24" [nzLg]="7">
+                  <nz-form-item style="margin-bottom: 0;">
+                    <nz-form-label [nzSpan]="24" nzRequired>
+                      Основная платформа
+                      <i
+                        nz-icon
+                        nzType="question-circle"
+                        nzTheme="outline"
+                        class="info-icon"
+                        nz-tooltip
+                        [nzTooltipTitle]="tooltips.step1.mainPlatform"
+                      ></i>
+                    </nz-form-label>
+                    <nz-form-control [nzSpan]="24" nzErrorTip="Выберите платформу">
+                      <nz-select
+                        nzSize="large"
+                        formControlName="mainPlatformId"
+                        nzPlaceHolder="Windows..."
+                        [nzDisabled]="!!programId"
+                        style="width: 100%;"
+                      >
+                        @for (p of platforms; track p.id) {
+                          <nz-option
+                            [nzValue]="p.id"
+                            [nzLabel]="
+                              p.localizedName || p.name || p.systemCode || 'ID: ' + p.id
+                            "
+                          ></nz-option>
+                        }
+                      </nz-select>
+                    </nz-form-control>
+                  </nz-form-item>
+                </div>
+                <div nz-col [nzXs]="24" [nzLg]="6">
+                  <nz-form-item style="margin-bottom: 0;">
+                    <nz-form-label nzRequired>
+                      Slug (URL)
+                      <i
+                        nz-icon
+                        nzType="question-circle"
+                        nzTheme="outline"
+                        nz-tooltip
+                        [nzTooltipTitle]="slugTooltipTpl"
+                        style="cursor: help; margin-left: 6px; color: #8c8c8c;"
+                      ></i>
+                      <i
+                        nz-icon
+                        [nzType]="slugLocked ? 'lock' : 'unlock'"
+                        class="lock-badge"
+                        [class.locked]="slugLocked"
+                        [class.unlocked]="!slugLocked"
+                        nz-tooltip
+                        [nzTooltipTitle]="slugLocked ? 'Автогенерация URL включена. Нажмите для ручного редактирования.' : 'Ручной ввод URL активен. Нажмите для автогенерации на основе названия.'"
+                        (click)="toggleSlugLock()"
+                        (keydown.enter)="toggleSlugLock()"
+                        (keydown.space)="toggleSlugLock(); $event.preventDefault()"
+                        tabindex="0"
+                        role="button"
+                        aria-label="Переключить блокировку URL"
+                      ></i>
+                    </nz-form-label>
+                    <nz-form-control [nzErrorTip]="slugErrorTpl">
+                      <input
+                        nz-input
+                        nzSize="large"
+                        formControlName="slug"
+                        placeholder="adobe-photoshop"
+                        [readonly]="slugLocked || programId"
+                      />
+                      <ng-template #slugTooltipTpl>
+                        <div style="padding: 6px; font-size: 0.9em; line-height: 1.5; max-width: 280px;">
+                          <b style="color: #52c41a; font-size: 1.05em; display: block; margin-bottom: 6px;">Правила формирования URL:</b>
+                          <ul style="padding-left: 14px; margin: 0 0 12px 0; color: rgba(255,255,255,0.85);">
+                            <li>Только <b>строчные латинские буквы</b> (a-z)</li>
+                            <li>Цифры (0-9) и дефисы (-)</li>
+                            <li>Автоматическая очистка спецсимволов</li>
+                            <li>Максимальная длина — <b>255 символов</b></li>
+                          </ul>
+                          
+                          <div style="border-top: 1px solid rgba(255,255,255,0.15); padding-top: 8px;">
+                            <b style="color: #1890ff; display: block; margin-bottom: 4px;">Зачем нужен замочек?</b>
+                            <p style="margin: 0; color: rgba(255,255,255,0.75); font-size: 0.95em;">
+                              <span style="color: #ff4d4f;">●</span> <b>Закрыт:</b> URL генерируется автоматически на основе Канонического названия.<br>
+                              <span style="color: #52c41a;">●</span> <b>Открыт:</b> Автогенерация отключена. Вы можете ввести собственный URL вручную.
+                            </p>
+                          </div>
+                        </div>
+                      </ng-template>
+                      <ng-template #slugErrorTpl>
+                        @if (form.get('slug')?.hasError('required')) {
+                          Введите Slug
+                        }
+                        @if (form.get('slug')?.hasError('pattern')) {
+                          Только латиница, цифры и дефис
+                        }
+                        @if (form.get('slug')?.hasError('maxlength')) {
+                          Максимум 255 символов
+                        }
+                      </ng-template>
+                    </nz-form-control>
+                  </nz-form-item>
+                </div>
+                <div nz-col [nzXs]="24" [nzLg]="4">
+                  @if (!programId) {
+                    <button
+                      nz-button
+                      nzType="primary"
+                      nzBlock
+                      nzSize="large"
+                      (click)="createBase()"
+                      [nzLoading]="loading"
+                      [disabled]="
+                        form.get('canonicalName')?.invalid ||
+                        form.get('slug')?.invalid ||
+                        form.get('mainPlatformId')?.invalid
+                      "
+                    >
+                      <i nz-icon nzType="plus"></i> Создать
+                    </button>
+                  } @else {
+                    <div
+                      class="success-badge"
+                      style="height: 40px; display: flex; align-items: center;"
+                    >
+                      <i
+                        nz-icon
+                        nzType="check-circle"
+                        nzTheme="twotone"
+                        nzTwotoneColor="#52c41a"
+                      ></i>
+                      Создано
+                    </div>
+                  }
+                </div>
+              </div>
+            </form>
+          </nz-card>
+        </div>
+      </div>
+
+      <!-- БЛОК 2: ПОЛНОЕ НАПОЛНЕНИЕ (ВСЯ ШИРИНА, ПОЯВЛЯЕТСЯ ПОСЛЕ ШАГА 1) -->
+      @if (programId) {
+        <div nz-row [nzGutter]="[24, 24]" class="fade-in mt-24">
+          <div nz-col [nzSpan]="24">
+            <!-- 2.1 СПРАВОЧНИКИ (ТЕПЕРЬ ПЕРВЫЕ ВО ВТОРОМ БЛОКЕ) -->
+            <nz-card
+              nzTitle="ШАГ 2: КАТЕГОРИИ И СПРАВОЧНИКИ"
+              [nzExtra]="testBtn"
+              class="step-card"
+              [class.completed-step]="form.get('categoryOfAggregatorId')?.valid"
+              [class.active-step]="!form.get('categoryOfAggregatorId')?.valid"
+            >
+              <ng-template #testBtn>
+                <button nz-button nzType="dashed" nzSize="small" (click)="fillTestData()">
+                  <i nz-icon nzType="experiment"></i> Заполнить тест
+                </button>
+              </ng-template>
+              <form [formGroup]="form" nzLayout="vertical">
+                <div nz-row [nzGutter]="[16, 16]">
+                  <div nz-col [nzXs]="24" [nzLg]="8">
+                    <nz-card nzType="inner" nzTitle="Разработчик" class="inner-step-card">
+                      <nz-form-item>
+                        <nz-form-label>
+                          Разработчик
+                          <i
+                            nz-icon
+                            nzType="question-circle"
+                            nzTheme="outline"
+                            class="info-icon"
+                            nz-tooltip
+                            [nzTooltipTitle]="tooltips.step2.developer"
+                          ></i>
+                        </nz-form-label>
+                        <nz-form-control>
+                          <nz-select
+                            formControlName="developerOfAggregatorId"
+                            nzShowSearch
+                            nzAllowClear
+                            nzPlaceHolder="Выберите вендора (необязательно)"
+                          >
+                            @for (dev of developers; track dev.id) {
+                              <nz-option
+                                [nzValue]="dev.id"
+                                [nzLabel]="
+                                  dev.localizedName ||
+                                  dev.name ||
+                                  dev.systemCode ||
+                                  'ID: ' + dev.id
+                                "
+                              ></nz-option>
+                            }
+                          </nz-select>
+                        </nz-form-control>
+                      </nz-form-item>
+                    </nz-card>
+                  </div>
+
+                  <div nz-col [nzXs]="24" [nzLg]="8">
+                    <nz-card
+                      nzType="inner"
+                      nzTitle="Категория (Иерархия)"
+                      class="inner-step-card"
+                    >
+                      <nz-form-item style="margin-bottom: 0;">
+                        <nz-form-label nzRequired>
+                          Иерархическая Категория
+                          <i
+                            nz-icon
+                            nzType="question-circle"
+                            nzTheme="outline"
+                            class="info-icon"
+                            nz-tooltip
+                            [nzTooltipTitle]="tooltips.step2.categoryOfAggregator"
+                          ></i>
+                        </nz-form-label>
+                        <nz-form-control nzErrorTip="Пожалуйста, выберите категорию">
+                          <nz-tree-select
+                            style="width: 100%"
+                            [nzNodes]="categoryTree"
+                            formControlName="categoryOfAggregatorId"
+                            nzPlaceHolder="Выберите категорию (иерархически)"
+                            nzShowSearch
+                            nzAllowClear
+                            [nzDropdownStyle]="{ 'max-height': '350px' }"
+                          >
+                          </nz-tree-select>
+                        </nz-form-control>
+                      </nz-form-item>
+                    </nz-card>
+                  </div>
+
+                  <div nz-col [nzXs]="24" [nzLg]="8">
+                    <nz-card
+                      nzType="inner"
+                      nzTitle="Упрощенные категории"
+                      class="inner-step-card"
+                    >
+                      <nz-form-item>
+                        <nz-form-label>
+                          Категория (Родительская)
+                          <i
+                            nz-icon
+                            nzType="question-circle"
+                            nzTheme="outline"
+                            class="info-icon"
+                            nz-tooltip
+                            [nzTooltipTitle]="tooltips.step2.parentCategory"
+                          ></i>
+                        </nz-form-label>
+                        <nz-form-control>
+                          <nz-select
+                            formControlName="categoryId"
+                            nzShowSearch
+                            nzAllowClear
+                            nzPlaceHolder="Выберите категорию"
+                            (ngModelChange)="onSimplifiedCategoryChange($event)"
+                          >
+                            @for (cat of simplifiedCategories; track cat.id) {
+                              <nz-option
+                                [nzValue]="cat.id"
+                                [nzLabel]="cat.localizedName || cat.canonicalName"
+                              ></nz-option>
+                            }
+                          </nz-select>
+                        </nz-form-control>
+                      </nz-form-item>
+                      <nz-form-item>
+                        <nz-form-label>
+                          Подкатегория
+                          <i
+                            nz-icon
+                            nzType="question-circle"
+                            nzTheme="outline"
+                            class="info-icon"
+                            nz-tooltip
+                            [nzTooltipTitle]="tooltips.step2.subcategory"
+                          ></i>
+                        </nz-form-label>
+                        <nz-form-control>
+                          <nz-select
+                            formControlName="subcategoryId"
+                            nzShowSearch
+                            nzAllowClear
+                            nzPlaceHolder="Выберите подкатегорию"
+                            [nzLoading]="subcategoriesLoading"
+                            [nzDisabled]="!form.get('categoryId')?.value"
+                          >
+                            @for (sub of subcategories; track sub.id) {
+                              <nz-option
+                                [nzValue]="sub.id"
+                                [nzLabel]="sub.localizedName || sub.canonicalName"
+                              ></nz-option>
+                            }
+                          </nz-select>
+                        </nz-form-control>
+                      </nz-form-item>
+                    </nz-card>
+                  </div>
+
+                  <div nz-col [nzXs]="24" [nzLg]="16">
+                    <nz-card nzType="inner" nzTitle="Поддерживаемые ОС" class="inner-step-card">
+                      <nz-form-item style="margin-bottom: 0;">
+                        <nz-form-label>
+                          Операционные системы
+                          <i
+                            nz-icon
+                            nzType="question-circle"
+                            nzTheme="outline"
+                            class="info-icon"
+                            nz-tooltip
+                            [nzTooltipTitle]="tooltips.step2.supportedOs"
+                          ></i>
+                        </nz-form-label>
+                        <nz-form-control>
+                          <nz-select
+                            formControlName="platformIds"
+                            nzMode="multiple"
+                            nzPlaceHolder="Выберите платформы"
+                            style="width: 100%"
+                          >
+                            @for (p of platforms; track p.id) {
+                              <nz-option
+                                [nzValue]="p.id"
+                                [nzLabel]="p.localizedName || p.name"
+                              ></nz-option>
+                            }
+                          </nz-select>
+                        </nz-form-control>
+                      </nz-form-item>
+                    </nz-card>
+                  </div>
+
+                  <div nz-col [nzXs]="24" [nzLg]="8">
+                    <nz-card
+                      nzType="inner"
+                      nzTitle="Статус и активность"
+                      class="inner-step-card"
+                    >
+                      <nz-form-item style="margin-bottom: 8px;">
+                        <nz-form-label>
+                          Статус публикации
+                          <i
+                            nz-icon
+                            nzType="question-circle"
+                            nzTheme="outline"
+                            class="info-icon"
+                            nz-tooltip
+                            [nzTooltipTitle]="tooltips.step2.status"
+                          ></i>
+                        </nz-form-label>
+                        <nz-form-control>
+                          <nz-select formControlName="status" style="width: 100%">
+                            <nz-option [nzValue]="0" nzLabel="Черновик"></nz-option>
+                            <nz-option [nzValue]="1" nzLabel="Опубликовано"></nz-option>
+                            <nz-option [nzValue]="2" nzLabel="В архиве"></nz-option>
+                          </nz-select>
+                        </nz-form-control>
+                      </nz-form-item>
+                      <div class="mt-8 flex-between">
+                        <span>
+                          Активен:
+                          <i
+                            nz-icon
+                            nzType="question-circle"
+                            nzTheme="outline"
+                            class="info-icon"
+                            nz-tooltip
+                            [nzTooltipTitle]="tooltips.step2.isActive"
+                          ></i>
+                        </span>
+                        <nz-switch formControlName="isActive"></nz-switch>
+                      </div>
+                    </nz-card>
+                  </div>
+                </div>
+
+                <div nz-row [nzGutter]="[16, 16]" class="mt-16">
+                  <div nz-col [nzXs]="24" [nzLg]="12">
+                    <nz-card nzType="inner" nzTitle="Ссылки и Видео" class="inner-step-card">
+                      <nz-form-item style="margin-bottom: 12px;">
+                        <nz-form-label>
+                          Официальный сайт
+                          <i
+                            nz-icon
+                            nzType="question-circle"
+                            nzTheme="outline"
+                            class="info-icon"
+                            nz-tooltip
+                            [nzTooltipTitle]="tooltips.step2.website"
+                          ></i>
+                        </nz-form-label>
+                        <nz-form-control>
+                          <input
+                            nz-input
+                            formControlName="website"
+                            placeholder="https://example.com"
+                          />
+                        </nz-form-control>
+                      </nz-form-item>
+                      <nz-form-item style="margin-bottom: 0;">
+                        <nz-form-label>
+                          YouTube Video (Ссылка)
+                          <i
+                            nz-icon
+                            nzType="question-circle"
+                            nzTheme="outline"
+                            class="info-icon"
+                            nz-tooltip
+                            [nzTooltipTitle]="tooltips.step2.youtubeVideo"
+                          ></i>
+                        </nz-form-label>
+                        <nz-form-control>
+                          <input
+                            nz-input
+                            formControlName="youtubeVideoUrl"
+                            placeholder="https://www.youtube.com/watch?v=..."
+                          />
+                        </nz-form-control>
+                      </nz-form-item>
+                    </nz-card>
+                  </div>
+                  <div nz-col [nzXs]="24" [nzLg]="12">
+                    <nz-card nzType="inner" nzTitle="Дополнительно" class="inner-step-card">
+                      <nz-form-item style="margin-bottom: 0;">
+                        <nz-form-label>
+                          Custom Video URL (наш плеер)
+                          <i
+                            nz-icon
+                            nzType="question-circle"
+                            nzTheme="outline"
+                            class="info-icon"
+                            nz-tooltip
+                            [nzTooltipTitle]="tooltips.step2.customVideo"
+                          ></i>
+                        </nz-form-label>
+                        <nz-form-control>
+                          <input
+                            nz-input
+                            formControlName="customVideoUrl"
+                            placeholder="https://cdn.example.com/video.mp4"
+                          />
+                        </nz-form-control>
+                      </nz-form-item>
+                    </nz-card>
+                  </div>
+                </div>
+              </form>
+            </nz-card>
+
+            <!-- 2.2 ЛОКАЛИЗАЦИЯ И SEO -->
+            <app-program-localization-form
+              [form]="form"
+              [languages]="languages"
+            ></app-program-localization-form>
+
+            <!-- 2.3 МЕДИА И ИКОНКА -->
+            <nz-card
+              nzTitle="ШАГ 4: МЕДИА И ИКОНКА"
+              class="step-card mt-24"
+              [class.completed-step]="form.get('iconPath')?.value"
+              [class.active-step]="!form.get('iconPath')?.value"
+            >
+              <form [formGroup]="form" nzLayout="vertical">
+                <div nz-row [nzGutter]="24">
+                  <div nz-col [nzSpan]="24">
+                    <nz-card [nzTitle]="iconTitle" nzSize="small" class="inner-card">
+                      <ng-template #iconTitle>
+                        <span>
+                          Иконка программы
+                          <i
+                            nz-icon
+                            nzType="question-circle"
+                            nzTheme="outline"
+                            class="info-icon"
+                            nz-tooltip
+                            [nzTooltipTitle]="tooltips.step4.icon"
+                          ></i>
+                        </span>
+                      </ng-template>
+                      <div class="icon-upload-container">
+                        <div class="icon-preview">
+                          <img
+                            [src]="imgService.getAssetUrl(form.get('iconPath')?.value)"
+                            (error)="imgService.getPlaceholder()"
+                            alt="Иконка программы"
+                          />
+                        </div>
+                        <button nz-button (click)="openIconUploadModal()">
+                          <i nz-icon nzType="upload"></i> Выбрать файл
+                        </button>
+                        <input type="hidden" formControlName="iconPath" />
+                      </div>
+                    </nz-card>
+                  </div>
+                </div>
+              </form>
+            </nz-card>
+
+            <!-- 2.4 ВЕРСИИ -->
+            <nz-card
+              nzTitle="ШАГ 5: ВЕРСИИ ПРОГРАММЫ"
+              class="step-card mt-24 active-step"
+            >
+              <div class="versions-inner-container">
+                <app-program-version-manager
+                  [programId]="+programId"
+                  [mainPlatformId]="form.get('mainPlatformId')?.value"
+                >
+                </app-program-version-manager>
+              </div>
+            </nz-card>
+
+            <!-- 2.5 СКРИНШОТЫ -->
+            <nz-card
+              nzTitle="ШАГ 6: УПРАВЛЕНИЕ СКРИНШОТАМИ"
+              class="step-card mt-24 active-step"
+            >
+              <div class="screenshots-inner-container">
+                <app-program-screenshot-manager
+                  [screenshots]="form.get('screenshots')?.value || []"
+                  [languages]="languages"
+                  [programSlug]="form.get('slug')?.value"
+                  (onScreenshotsChange)="onScreenshotsChanged($event)"
+                >
+                </app-program-screenshot-manager>
+              </div>
+            </nz-card>
+          </div>
+        </div>
+      }
+    </nz-spin>
+  </div>
+</div>

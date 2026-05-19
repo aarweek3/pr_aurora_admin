@@ -50,17 +50,15 @@ import { Subject } from 'rxjs';
     </div>
   `,
 })
-export class SamplePaginationComponent
-  implements OnInit, OnChanges, OnDestroy
-{
-  @Input() total: number = 0;
-  @Input() pageNumber: number = 1;
-  @Input() pageSize: number = 10;
+export class SamplePaginationComponent implements OnInit, OnChanges, OnDestroy {
+  @Input() total = 0;
+  @Input() pageNumber = 1;
+  @Input() pageSize = 10;
   @Output() pageChange = new EventEmitter<number>();
   @Output() pageSizeChange = new EventEmitter<number>();
 
   pageSizeOptions = [10, 20, 50, 100];
-  currentPageSize: number = 10;
+  currentPageSize = 10;
   private destroy$ = new Subject<void>();
 
   ngOnInit(): void {
@@ -72,10 +70,7 @@ export class SamplePaginationComponent
     // Синхронизация currentPageSize при изменении pageSize извне
     if (changes['pageSize'] && !changes['pageSize'].firstChange) {
       this.currentPageSize = this.pageSize;
-      console.log(
-        'SamplePagination - синхронизация pageSize:',
-        this.pageSize
-      );
+      console.log('SamplePagination - синхронизация pageSize:', this.pageSize);
     }
   }
 

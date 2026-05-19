@@ -87,22 +87,9 @@ import { AuthService } from '@auth';
       }
 
       /* Dark theme support (basic) */
-      :host-context([data-theme='dark']) .callback-container {
-        background-color: #141414; /* $dark-bg-base */
-      }
 
-      :host-context([data-theme='dark']) .loading-content {
-        background: #1f1f1f; /* $dark-bg-light */
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-      }
 
-      :host-context([data-theme='dark']) .title {
-        color: rgba(255, 255, 255, 0.85); /* $dark-text-primary */
-      }
 
-      :host-context([data-theme='dark']) .subtitle {
-        color: rgba(255, 255, 255, 0.45); /* $dark-text-tertiary */
-      }
     `,
   ],
 })
@@ -145,4 +132,3 @@ export class ExternalLoginCallbackComponent implements OnInit {
     this.router.navigate(['/auth/login']);
   }
 }
-

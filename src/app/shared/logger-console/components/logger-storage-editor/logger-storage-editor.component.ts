@@ -26,7 +26,7 @@ export class LoggerStorageEditorComponent implements OnInit {
 
   refresh() {
     const type = this.activeType();
-    let data: StorageItem[] = [];
+    const data: StorageItem[] = [];
 
     if (type === 'local') {
       for (let i = 0; i < localStorage.length; i++) {

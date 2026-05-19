@@ -1,4 +1,4 @@
-import { ErrorResponse } from '../../../../../shared/infrastructure/interceptor/models/error-response.model';
+import { ErrorResponse } from '@core/models/error-response.model';
 
 export interface CategoryOfAggregatorLocalization {
   languageOfAggregatorId: number;
@@ -30,6 +30,7 @@ export interface CategoryOfAggregatorItem {
   // Для Tree Table (Ng-Zorro)
   expand?: boolean;
   level?: number;
+  loading?: boolean;
   children?: CategoryOfAggregatorItem[];
 }
 
@@ -93,5 +94,5 @@ export const initialCategoryOfAggregatorState: CategoryOfAggregatorState = {
   selectedId: null,
   viewMode: 'modal',
   viewModalVisible: false,
-  viewItem: null
+  viewItem: null,
 };

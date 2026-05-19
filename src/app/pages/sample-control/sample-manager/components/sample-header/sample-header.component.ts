@@ -1,10 +1,4 @@
-﻿import {
-  Component,
-  Input,
-  Output,
-  EventEmitter,
-  ChangeDetectionStrategy,
-} from '@angular/core';
+﻿import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NzGridModule } from 'ng-zorro-antd/grid';
 import { NzButtonModule } from 'ng-zorro-antd/button';
@@ -14,20 +8,12 @@ import { NzTypographyModule } from 'ng-zorro-antd/typography';
 @Component({
   selector: 'app-sample-header',
   standalone: true,
-  imports: [
-    CommonModule,
-    NzGridModule,
-    NzButtonModule,
-    NzIconModule,
-    NzTypographyModule,
-  ],
+  imports: [CommonModule, NzGridModule, NzButtonModule, NzIconModule, NzTypographyModule],
   template: `
     <div class="header-container" nz-row [nzGutter]="16">
       <div nz-col nzSpan="12" class="header-left">
         <h2 nz-typography>Родитель</h2>
-        <p nz-typography nzType="secondary" class="total-text">
-          Всего: {{ total }}
-        </p>
+        <p nz-typography nzType="secondary" class="total-text">Всего: {{ total }}</p>
       </div>
       <div nz-col nzSpan="12" class="header-right">
         <button
@@ -78,7 +64,7 @@ import { NzTypographyModule } from 'ng-zorro-antd/typography';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SampleHeaderComponent {
-  @Input() total: number = 0;
+  @Input() total = 0;
   @Output() refresh = new EventEmitter<void>();
   @Output() create = new EventEmitter<void>();
 }

@@ -1,0 +1,97 @@
+// src/styles/abstracts/_ant-override.scss
+// =============================================================================
+// NG-ZORRO (Ant Design) CSS Variables Override
+// Связываем токены Aurora с внутренними переменными Ant Design
+// =============================================================================
+
+@layer vendor {
+  :root {
+    // --- Core Colors ---
+    --ant-primary-color: var(--av-color-primary);
+    --ant-primary-color-hover: color-mix(in srgb, var(--av-color-primary), white 15%);
+    --ant-primary-color-active: color-mix(in srgb, var(--av-color-primary), black 10%);
+    --ant-primary-color-outline: rgba(var(--av-color-primary-rgb), 0.2);
+
+    --ant-success-color: var(--av-color-success);
+    --ant-error-color: var(--av-color-error);
+    --ant-warning-color: var(--av-color-warning);
+
+    // --- Text & Background ---
+    --ant-color-text: var(--av-text-primary);
+    --ant-color-text-secondary: var(--av-text-secondary);
+    --ant-color-bg-base: var(--av-bg-base);
+    --ant-color-bg-container: var(--av-bg-container);
+
+    // --- Borders & Radius ---
+    --ant-border-radius-base: var(--av-radius-base);
+    --ant-border-color-base: var(--av-border-color);
+  }
+
+  // Специфичные фиксы для Ant компонентов в слое вендора
+  .ant-card {
+    border-radius: var(--av-radius-lg);
+    border-color: var(--av-border-color-split);
+    
+    &-hoverable:hover {
+      box-shadow: var(--av-elevation-2);
+    }
+  }
+
+  .ant-btn {
+    border-radius: var(--av-radius-base);
+    box-shadow: none;
+  }
+
+  .ant-input, .ant-input-number, .ant-select-selector {
+    border-radius: var(--av-radius-base) !important;
+  }
+
+  /* Prevent clipping of the circular button and its shadow globally */
+  .ant-page-header-back,
+  .ant-page-header-heading-left {
+    overflow: visible !important;
+    display: flex !important;
+    align-items: center !important;
+  }
+
+  /* Premium Back Button: Saturated green with white arrow, gets lighter on hover */
+  .ant-page-header-back-button {
+    overflow: visible !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 32px !important;
+    height: 32px !important;
+    background-color: #2eb85c !important;
+    border: none !important;
+    color: #ffffff !important;
+    border-radius: 50% !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease-in-out !important;
+    box-shadow: 0 2px 6px rgba(46, 184, 92, 0.2) !important;
+    padding: 0 !important;
+    margin-right: 12px !important;
+
+    &:hover {
+      background-color: #4cd97b !important;
+      box-shadow: 0 4px 10px rgba(46, 184, 92, 0.4) !important;
+      transform: scale(1.08) !important;
+    }
+
+    &:active {
+      background-color: #22994c !important;
+      transform: scale(0.96) !important;
+    }
+
+    .anticon {
+      color: #ffffff !important;
+      font-size: 14px !important;
+      font-weight: bold !important;
+      transition: transform 0.2s ease-in-out !important;
+    }
+
+    &:hover .anticon {
+      transform: translateX(-2px) !important;
+    }
+  }
+}

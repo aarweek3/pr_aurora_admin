@@ -94,7 +94,7 @@ import { SampleSimpleDto } from '../../models/sample-simple.model';
 })
 export class SimpleTableComponent {
   @Input() items: SampleSimpleDto[] = [];
-  @Input() loading: boolean = false;
+  @Input() loading = false;
 
   @Output() view = new EventEmitter<SampleSimpleDto>();
   @Output() edit = new EventEmitter<SampleSimpleDto>();

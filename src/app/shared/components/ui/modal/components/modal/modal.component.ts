@@ -13,12 +13,13 @@ import {
   OnDestroy,
   OnInit,
   Output,
+  TemplateRef,
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
 import { IconComponent } from '../../../icon/icon.component';
 import { modalAnimation } from '../../animations/modal.animations';
-import { ModalPosition, ModalSize } from '../../models/modal-config.model';
+import { ModalPosition, ModalSize, ModalConfig } from '../../models/modal-config.model';
 import { MODAL_DATA } from '../../tokens/modal-tokens';
 
 /**
@@ -54,7 +55,7 @@ import { MODAL_DATA } from '../../tokens/modal-tokens';
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class ModalComponent implements OnInit, OnDestroy {
+export class ModalComponent<TResult = unknown> implements OnInit, OnDestroy {
   private cdr = inject(ChangeDetectorRef);
   private ngZone = inject(NgZone);
 
@@ -111,7 +112,7 @@ export class ModalComponent implements OnInit, OnDestroy {
   @Input() mobileBreakpoint = 768;
 
   /** Hook перед закрытием */
-  @Input() beforeClose?: (result?: any) => boolean | Promise<boolean>;
+  @Input() beforeClose?: (result?: TResult) => boolean | Promise<boolean>;
 
   /** Состояние загрузки */
   @Input() loading = false;
@@ -150,7 +151,7 @@ export class ModalComponent implements OnInit, OnDestroy {
   @Output() isOpenChange = new EventEmitter<boolean>();
 
   /** Событие закрытия с результатом */
-  @Output() closed = new EventEmitter<any>();
+  @Output() modalClosed = new EventEmitter<TResult>();
 
   /** Событие открытия */
   @Output() opened = new EventEmitter<void>();
@@ -199,7 +200,7 @@ export class ModalComponent implements OnInit, OnDestroy {
   }
 
   /** Стили для контейнера */
-  get containerStyles(): { [key: string]: any } {
+  get containerStyles(): Record<string, string | number> {
     if (this.isFullscreen) {
       return {
         width: '100vw',
@@ -210,7 +211,7 @@ export class ModalComponent implements OnInit, OnDestroy {
       };
     }
 
-    const styles: { [key: string]: any } = {};
+    const styles: Record<string, string | number> = {};
 
     if (this.avWidth) {
       styles['width'] = this.getSafeDimension(this.avWidth, 100, 'width');
@@ -275,7 +276,7 @@ export class ModalComponent implements OnInit, OnDestroy {
   /**
    * Закрыть модал
    */
-  async close(result?: any): Promise<void> {
+  async close(result?: TResult): Promise<void> {
     // Вызываем beforeClose если есть
     if (this.beforeClose) {
       const canClose = await this.beforeClose(result);
@@ -286,7 +287,7 @@ export class ModalComponent implements OnInit, OnDestroy {
 
     this.isOpen = false;
     this.isOpenChange.emit(false);
-    this.closed.emit(result);
+    this.modalClosed.emit(result);
     this.removeBodyScrollLock();
   }
 
@@ -375,8 +376,8 @@ export class ModalComponent implements OnInit, OnDestroy {
           const maxW = screenWidth * 0.98;
           const maxH = screenHeight * 0.98;
 
-          let newWidth = startWidth + (e.clientX - startX);
-          let newHeight = startHeight + (e.clientY - startY);
+          const newWidth = startWidth + (e.clientX - startX);
+          const newHeight = startHeight + (e.clientY - startY);
 
           this.avWidth = Math.min(Math.max(newWidth, 100), maxW);
           this.avHeight = Math.min(Math.max(newHeight, 50), maxH);
@@ -411,44 +412,58 @@ export class ModalComponent implements OnInit, OnDestroy {
   template: `
     <div class="modal-content-wrapper">
       <!-- Header -->
-      <div class="modal-header" *ngIf="data?.title || data?.showCloseButton !== false">
-        <div class="modal-header__content">
-          <h2 *ngIf="data?.title" class="modal-header__title">{{ data.title }}</h2>
-          <p *ngIf="data?.subtitle" class="modal-header__subtitle">{{ data.subtitle }}</p>
+      @if (modalData.title || modalData.showCloseButton !== false) {
+        <div class="modal-header">
+          <div class="modal-header__content">
+            @if (modalData.title) {
+              <h2 class="modal-header__title">{{ modalData.title }}</h2>
+            }
+            @if (modalData.subtitle) {
+              <p class="modal-header__subtitle">{{ modalData.subtitle }}</p>
+            }
+          </div>
+          @if (modalData.showCloseButton !== false) {
+            <button
+              type="button"
+              class="modal-header__close"
+              (click)="closeModal()"
+              aria-label="Закрыть"
+            >
+              ×
+            </button>
+          }
         </div>
-        <button
-          *ngIf="data?.showCloseButton !== false"
-          type="button"
-          class="modal-header__close"
-          (click)="closeModal()"
-          aria-label="Закрыть"
-        >
-          ×
-        </button>
-      </div>
+      }
 
       <!-- Body -->
       <div class="modal-body">
-        <ng-container
-          *ngIf="data?.template"
-          [ngTemplateOutlet]="data.template"
-          [ngTemplateOutletContext]="data.context || {}"
-        ></ng-container>
+        @if (modalData.template) {
+          <ng-container
+            [ngTemplateOutlet]="modalData.template || null"
+            [ngTemplateOutletContext]="modalData.context || {}"
+          ></ng-container>
+        }
       </div>
 
       <!-- Footer -->
-      <div class="modal-footer" *ngIf="data?.footerTemplate">
-        <ng-container
-          [ngTemplateOutlet]="data.footerTemplate"
-          [ngTemplateOutletContext]="data.context || {}"
-        ></ng-container>
-      </div>
+      @if (modalData.footerTemplate) {
+        <div class="modal-footer">
+          <ng-container
+            [ngTemplateOutlet]="modalData.footerTemplate || null"
+            [ngTemplateOutletContext]="modalData.context || {}"
+          ></ng-container>
+        </div>
+      }
     </div>
   `,
   encapsulation: ViewEncapsulation.None,
 })
 export class ModalContentComponent {
-  data = inject(MODAL_DATA, { optional: true });
+  protected modalData = inject(MODAL_DATA, { optional: true }) as ModalConfig & {
+    template?: TemplateRef<unknown>;
+    context?: unknown;
+    footerTemplate?: TemplateRef<unknown>;
+  };
 
   closeModal(): void {
     // ModalRef будет инжектирован в родительском компоненте

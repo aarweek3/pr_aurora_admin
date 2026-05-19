@@ -4,6 +4,7 @@ import {
   ChangeDetectorRef,
   Component,
   EventEmitter,
+  inject,
   Input,
   OnInit,
   Output,
@@ -17,10 +18,10 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { AvTinymceControlComponent } from '@assets/controls/tinymce-control/tinymce-control.component';
-import { AppLanguage } from '@assets/languageApp/models/appLanguage.model';
-import { LanguageService } from '@assets/languageApp/services/language.service';
-import { SeoFormComponent } from '@shared/components/ui/seo-form/seo-form.component';
+import { AvTinymceControlComponent } from '@controls';
+import { AppLanguage } from '@language-app/models/appLanguage.model';
+import { LanguageService } from '@language-app';
+import { SeoFormComponent } from '@shared-ui';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzCollapseModule } from 'ng-zorro-antd/collapse';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
@@ -216,6 +217,11 @@ import { NzTabsModule } from 'ng-zorro-antd/tabs';
   styleUrls: ['./platform-of-aggregator-form.component.scss'],
 })
 export class PlatformOfAggregatorFormComponent implements OnInit {
+  private langService = inject(LanguageService);
+  private fb = inject(FormBuilder);
+  private cdr = inject(ChangeDetectorRef);
+  private message = inject(NzMessageService);
+
   @Input() loading = false;
   @Input() showInlineActions = false;
   @Input() set initialData(item: any) {
@@ -230,12 +236,7 @@ export class PlatformOfAggregatorFormComponent implements OnInit {
   selectedTabIndex = 0;
   languages: AppLanguage[] = [];
 
-  constructor(
-    private langService: LanguageService,
-    private fb: FormBuilder,
-    private cdr: ChangeDetectorRef,
-    private message: NzMessageService,
-  ) {
+  constructor() {
     this.form = this.fb.group({
       id: [0],
       name: ['', Validators.required],

@@ -15,9 +15,7 @@ interface Sample {
   template: `
     <div style="padding: 24px;">
       <h1>Тестирование компонента SampleControl</h1>
-      <app-sample-control
-        (sampleSelected)="onSampleSelected($event)"
-      ></app-sample-control>
+      <app-sample-control (sampleSelected)="onSampleSelected($event)"></app-sample-control>
       <div
         *ngIf="selectedSample"
         style="margin-top: 24px; padding: 16px; border: 1px solid #ddd; border-radius: 8px;"

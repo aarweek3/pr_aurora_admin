@@ -26,5 +26,4 @@ export class UserNamePipe implements PipeTransform {
 
     return user.fullName || user.email;
   }
-
 }

@@ -60,7 +60,7 @@ export class SimulatorTabComponent {
   isBruteForcing = signal(false);
   concurrencyProgress = signal(0);
   rateLimitProgress = signal(0);
-  rateLimitHistory = signal<Array<{ id: number; status: number; success: boolean }>>([]);
+  rateLimitHistory = signal<{ id: number; status: number; success: boolean }[]>([]);
 
   lastResult = signal<{
     status: number;
@@ -420,7 +420,7 @@ export class SimulatorTabComponent {
     label: string,
     requestFn: (options?: any) => any,
     verdictFn: (res: any, isError: boolean) => { success: boolean; text: string },
-    description: string = '',
+    description = '',
   ): void {
     this.trace.clear();
     this.isLoading.set(true);
@@ -461,4 +461,3 @@ export class SimulatorTabComponent {
     this.rateLimitHistory.set([]);
   }
 }
-

@@ -4,6 +4,7 @@ import {
   ChangeDetectorRef,
   Component,
   EventEmitter,
+  inject,
   Input,
   OnInit,
   Output,
@@ -17,10 +18,10 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { AvTinymceControlComponent } from '@assets/controls/tinymce-control/tinymce-control.component';
-import { AppLanguage } from '@assets/languageApp/models/appLanguage.model';
-import { LanguageService } from '@assets/languageApp/services/language.service';
-import { SeoFormComponent } from '@shared/components/ui/seo-form/seo-form.component';
+import { AvTinymceControlComponent } from '@controls';
+import { AppLanguage } from '@language-app/models/appLanguage.model';
+import { LanguageService } from '@language-app';
+import { SeoFormComponent } from '@shared-ui';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzCollapseModule } from 'ng-zorro-antd/collapse';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
@@ -70,7 +71,11 @@ import { NzTabsModule } from 'ng-zorro-antd/tabs';
             <nz-form-item>
               <nz-form-label nzRequired>Каноническое название</nz-form-label>
               <nz-form-control nzErrorTip="Введите название">
-                <input nz-input formControlName="canonicalName" placeholder="Напр: Free, Licensed, Open Source" />
+                <input
+                  nz-input
+                  formControlName="canonicalName"
+                  placeholder="Напр: Free, Licensed, Open Source"
+                />
               </nz-form-control>
             </nz-form-item>
           </div>
@@ -132,7 +137,11 @@ import { NzTabsModule } from 'ng-zorro-antd/tabs';
                             <nz-form-item>
                               <nz-form-label>Иконка/Картинка</nz-form-label>
                               <nz-form-control>
-                                <input nz-input formControlName="urlPicture" placeholder="URL или путь"/>
+                                <input
+                                  nz-input
+                                  formControlName="urlPicture"
+                                  placeholder="URL или путь"
+                                />
                               </nz-form-control>
                             </nz-form-item>
                           </div>
@@ -203,6 +212,11 @@ import { NzTabsModule } from 'ng-zorro-antd/tabs';
   styleUrls: ['./license-type-of-aggregator-form.component.scss'],
 })
 export class LicenseTypeOfAggregatorFormComponent implements OnInit {
+  private langService = inject(LanguageService);
+  private fb = inject(FormBuilder);
+  private cdr = inject(ChangeDetectorRef);
+  private message = inject(NzMessageService);
+
   @Input() loading = false;
   @Input() showInlineActions = false;
   @Input() set initialData(item: any) {
@@ -217,12 +231,7 @@ export class LicenseTypeOfAggregatorFormComponent implements OnInit {
   selectedTabIndex = 0;
   languages: AppLanguage[] = [];
 
-  constructor(
-    private langService: LanguageService,
-    private fb: FormBuilder,
-    private cdr: ChangeDetectorRef,
-    private message: NzMessageService,
-  ) {
+  constructor() {
     this.form = this.fb.group({
       id: [0],
       canonicalName: ['', Validators.required],

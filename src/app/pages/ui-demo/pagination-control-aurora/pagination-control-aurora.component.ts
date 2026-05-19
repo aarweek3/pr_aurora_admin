@@ -167,7 +167,7 @@ displayedItems = computed(() => {
   // 7. Code Generation
   generatedCode = computed(() => {
     const c = this.config();
-    let props: string[] = [];
+    const props: string[] = [];
 
     props.push(`[total]="${c.total}"`);
     props.push(`[(currentPage)]="currentPage"`);

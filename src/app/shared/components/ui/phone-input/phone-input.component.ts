@@ -1,6 +1,15 @@
 // src/app/shared/components/ui/phone-input/phone-input.component.ts
 import { CommonModule } from '@angular/common';
-import { Component, forwardRef, Injector, Input, OnInit, signal } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  forwardRef,
+  inject,
+  Injector,
+  Input,
+  OnInit,
+  signal,
+} from '@angular/core';
 import {
   AbstractControl,
   ControlValueAccessor,
@@ -28,291 +37,43 @@ import { Country, getSortedCountries } from './phone-input.models';
       multi: true,
     },
   ],
-  template: `
-    <div
-      class="av-phone-input"
-      [class.av-phone-input--disabled]="disabled"
-      [class.av-phone-input--invalid]="isInvalid()"
-      [class.av-phone-input--valid]="isValid()"
-      (click)="onComponentClick($event)"
-    >
-      <!-- Country Selector -->
-      <div class="av-phone-input__country-selector" (click)="toggleDropdown($event)">
-        <span class="av-phone-input__flag">{{ selectedCountry().flag }}</span>
-        <span class="av-phone-input__dial-code">{{ selectedCountry().dialCode }}</span>
-        <svg
-          class="av-phone-input__arrow"
-          [class.av-phone-input__arrow--open]="dropdownOpen()"
-          width="12"
-          height="12"
-          viewBox="0 0 12 12"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M2.5 4.5L6 8L9.5 4.5"
-            stroke="currentColor"
-            stroke-width="1.5"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
-        </svg>
-      </div>
-
-      <!-- Phone Number Input -->
-      <input
-        type="tel"
-        class="av-phone-input__input"
-        [placeholder]="selectedCountry().placeholder"
-        [disabled]="disabled"
-        [value]="phoneNumber()"
-        (input)="onPhoneInput($event)"
-        (blur)="onTouched()"
-      />
-
-      <!-- Country Dropdown -->
-      @if (dropdownOpen()) {
-      <div class="av-phone-input__dropdown" (click)="$event.stopPropagation()">
-        <div class="av-phone-input__search">
-          <input
-            type="text"
-            class="av-phone-input__search-input"
-            placeholder="Поиск страны..."
-            [value]="searchQuery()"
-            (input)="onSearchInput($event)"
-          />
-        </div>
-        <div class="av-phone-input__dropdown-list">
-          @for (country of filteredCountries(); track country.code) {
-          <div
-            class="av-phone-input__country-item"
-            [class.av-phone-input__country-item--selected]="country.code === selectedCountry().code"
-            (click)="selectCountry(country)"
-          >
-            <span class="av-phone-input__country-flag">{{ country.flag }}</span>
-            <span class="av-phone-input__country-name">{{ country.name }}</span>
-            <span class="av-phone-input__country-dial-code">{{ country.dialCode }}</span>
-          </div>
-          }
-          @if (filteredCountries().length === 0) {
-          <div class="av-phone-input__no-results">Країн не знайдено</div>
-          }
-        </div>
-      </div>
-      }
-    </div>
-  `,
-  styles: [
-    `
-      .av-phone-input {
-        position: relative;
-        display: flex;
-        align-items: center;
-        width: 100%;
-        border: 1px solid #d9d9d9;
-        border-radius: 4px;
-        background: white;
-        transition: all 0.2s;
-
-        // Ховер - только для не-disabled и не-invalid
-        &:hover:not(&--disabled):not(&--invalid) {
-          border-color: #b5b5b5;
-        }
-
-        // Фокус по умолчанию - серая рамка
-        &:focus-within {
-          border-color: #b5b5b5;
-          outline: none;
-        }
-
-        &--disabled {
-          background-color: #f5f5f5;
-          cursor: not-allowed;
-          opacity: 0.6;
-        }
-
-        // Валидное поле - синяя рамка при фокусе
-        &--valid {
-          &:focus-within {
-            border-color: #1890ff;
-            box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
-          }
-        }
-
-        // Невалидное поле - красная рамка всегда
-        &--invalid {
-          border-color: #ff4d4f !important;
-
-          &:hover {
-            border-color: #ff4d4f !important;
-          }
-
-          &:focus-within {
-            border-color: #ff4d4f !important;
-            box-shadow: 0 0 0 2px rgba(255, 77, 79, 0.2) !important;
-          }
-        }
-      }
-
-      .av-phone-input__country-selector {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        padding: 4px 12px;
-        cursor: pointer;
-        user-select: none;
-        border-right: 1px solid #d9d9d9;
-        transition: background-color 0.2s;
-        min-width: 90px;
-
-        &:hover {
-          background-color: #f5f5f5;
-        }
-      }
-
-      .av-phone-input__flag {
-        font-size: 20px;
-        line-height: 1;
-      }
-
-      .av-phone-input__dial-code {
-        font-size: 14px;
-        color: rgba(0, 0, 0, 0.85);
-        font-weight: 500;
-      }
-
-      .av-phone-input__arrow {
-        color: rgba(0, 0, 0, 0.45);
-        transition: transform 0.2s;
-
-        &--open {
-          transform: rotate(180deg);
-        }
-      }
-
-      .av-phone-input__input {
-        flex: 1;
-        border: none;
-        outline: none;
-        padding: 4px 12px;
-        font-size: 14px;
-        line-height: 1.5;
-        color: rgba(0, 0, 0, 0.85);
-        background: transparent;
-        height: 32px;
-
-        &::placeholder {
-          color: rgba(0, 0, 0, 0.45);
-        }
-
-        &:disabled {
-          cursor: not-allowed;
-        }
-      }
-
-      .av-phone-input__dropdown {
-        position: absolute;
-        top: calc(100% + 4px);
-        left: 0;
-        right: 0;
-        background: white;
-        border: 1px solid #d9d9d9;
-        border-radius: 4px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-        z-index: 1000;
-        max-height: 300px;
-        display: flex;
-        flex-direction: column;
-      }
-
-      .av-phone-input__search {
-        padding: 8px;
-        border-bottom: 1px solid #f0f0f0;
-      }
-
-      .av-phone-input__search-input {
-        width: 100%;
-        padding: 4px 8px;
-        border: 1px solid #d9d9d9;
-        border-radius: 4px;
-        font-size: 14px;
-        outline: none;
-
-        &:focus {
-          border-color: #1890ff;
-          box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
-        }
-      }
-
-      .av-phone-input__dropdown-list {
-        overflow-y: auto;
-        max-height: 250px;
-      }
-
-      .av-phone-input__country-item {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        padding: 8px 12px;
-        cursor: pointer;
-        transition: background-color 0.2s;
-
-        &:hover {
-          background-color: #f5f5f5;
-        }
-
-        &--selected {
-          background-color: #e6f7ff;
-        }
-      }
-
-      .av-phone-input__country-flag {
-        font-size: 20px;
-        line-height: 1;
-      }
-
-      .av-phone-input__country-name {
-        flex: 1;
-        font-size: 14px;
-        color: rgba(0, 0, 0, 0.85);
-      }
-
-      .av-phone-input__country-dial-code {
-        font-size: 14px;
-        color: rgba(0, 0, 0, 0.45);
-      }
-
-      .av-phone-input__no-results {
-        padding: 16px;
-        text-align: center;
-        color: rgba(0, 0, 0, 0.45);
-        font-size: 14px;
-      }
-
-    `,
-  ],
+  templateUrl: './phone-input.component.html',
+  styleUrl: './phone-input.component.scss',
 })
 export class PhoneInputComponent implements ControlValueAccessor, Validator, OnInit {
+  private injector = inject(Injector);
+
   @Input() disabled = false;
   @Input() defaultCountry = 'UA'; // Код страны по умолчанию
 
   // Signals
   selectedCountry = signal<Country>(
-    getSortedCountries().find((c) => c.code === this.defaultCountry) || getSortedCountries()[0]
+    getSortedCountries().find((c) => c.code === this.defaultCountry) || getSortedCountries()[0],
   );
   phoneNumber = signal('');
   dropdownOpen = signal(false);
   searchQuery = signal('');
   filteredCountries = signal<Country[]>(getSortedCountries());
 
+  @Input() id = '';
+  private el = inject(ElementRef);
+
+  get inputId(): string {
+    return this.id || this.el.nativeElement.id;
+  }
+
   // Form control reference
   public ngControl: NgControl | null = null;
 
   // ControlValueAccessor
-  private onChange: (value: string) => void = () => {};
-  onTouched: () => void = () => {};
+  private onChange: (value: string) => void = () => {
+    /* no-op */
+  };
+  onTouched: () => void = () => {
+    /* no-op */
+  };
 
-  constructor(private injector: Injector) {
+  constructor() {
     // Close dropdown when clicking outside
     if (typeof document !== 'undefined') {
       document.addEventListener('click', (event: MouseEvent) => {
@@ -331,19 +92,27 @@ export class PhoneInputComponent implements ControlValueAccessor, Validator, OnI
 
   // Check if control is invalid and touched
   isInvalid(): boolean {
-    return !!(this.ngControl?.control && this.ngControl.control.invalid && this.ngControl.control.touched);
+    return !!(
+      this.ngControl?.control &&
+      this.ngControl.control.invalid &&
+      this.ngControl.control.touched
+    );
   }
 
   // Check if control is valid and has value
   isValid(): boolean {
-    return !!(this.ngControl?.control && this.ngControl.control.valid && this.ngControl.control.value);
+    return !!(
+      this.ngControl?.control &&
+      this.ngControl.control.valid &&
+      this.ngControl.control.value
+    );
   }
 
-  onComponentClick(event: MouseEvent): void {
+  onComponentClick(event: Event): void {
     event.stopPropagation();
   }
 
-  toggleDropdown(event: MouseEvent): void {
+  toggleDropdown(event: Event): void {
     event.stopPropagation();
     if (!this.disabled) {
       this.dropdownOpen.update((v) => !v);
@@ -370,7 +139,7 @@ export class PhoneInputComponent implements ControlValueAccessor, Validator, OnI
         country.name.toLowerCase().includes(query) ||
         country.nameEn.toLowerCase().includes(query) ||
         country.dialCode.includes(query) ||
-        country.code.toLowerCase().includes(query)
+        country.code.toLowerCase().includes(query),
     );
 
     this.filteredCountries.set(filtered);

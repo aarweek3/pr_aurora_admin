@@ -5,9 +5,11 @@ import { HealthPanelDetailsComponent } from '@shared/components/health/component
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzPopoverModule } from 'ng-zorro-antd/popover';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
-import { ContextService } from '../../../../core/services/context/context.service';
-import { ErrorRegistryService } from '../../../../core/services/error-registry/error-registry.service';
-import { EventBusService } from '../../../../core/services/event-bus/event-bus.service';
+import { ContextService } from '@core/services/context/context.service';
+import { ErrorRegistryService } from '@core/services/error-registry/error-registry.service';
+import { EventBusService } from '@core/services/event-bus/event-bus.service';
+import { AppContext } from '@core/models/context.model';
+import { ErrorSummary } from '@core/models/error-registry.model';
 
 /**
  * Status Indicator Interface
@@ -235,7 +237,7 @@ export class GlobalStatusBarComponent implements OnInit {
     });
   }
 
-  private updateIndicators(context: any): void {
+  private updateIndicators(context: AppContext): void {
     const indicators: StatusIndicator[] = [
       {
         id: 'system',
@@ -272,14 +274,14 @@ export class GlobalStatusBarComponent implements OnInit {
     this.indicators.set(indicators);
   }
 
-  private updateErrorIndicator(summary: any): void {
-    if (summary.totalCount > 0) {
+  private updateErrorIndicator(summary: ErrorSummary): void {
+    if (summary.total > 0) {
       const currentIndicators = this.indicators();
       const operationsIndicator: StatusIndicator = {
         id: 'operations',
         label: 'Операции',
         status: 'error',
-        message: `Ошибок: ${summary.totalCount}`,
+        message: `Ошибок: ${summary.total}`,
         icon: 'exclamation-circle',
       };
 
@@ -289,13 +291,13 @@ export class GlobalStatusBarComponent implements OnInit {
     }
   }
 
-  private getDataStatus(context: any): 'healthy' | 'warning' | 'loading' {
+  private getDataStatus(context: AppContext): 'healthy' | 'warning' | 'loading' {
     if (context.dataState.loading) return 'loading';
     if (context.dataState.dirty) return 'warning';
     return 'healthy';
   }
 
-  private getDataMessage(context: any): string {
+  private getDataMessage(context: AppContext): string {
     if (context.dataState.loading) return 'Загрузка данных...';
     if (context.dataState.dirty) return 'Есть несохраненные изменения';
     return 'Данные актуальны';

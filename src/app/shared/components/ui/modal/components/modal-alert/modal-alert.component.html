@@ -7,7 +7,7 @@
   [closeOnBackdrop]="config.closeOnBackdrop !== false"
   [closeOnEsc]="config.closeOnEsc !== false"
   [showCloseButton]="config.centered ? false : config.showCloseButton !== false"
-  (closed)="onOk()"
+  (modalClosed)="onOk()"
 >
   <div modal-body class="alert-body" [class.alert-body--centered]="config.centered">
     <div class="alert-content">
@@ -25,10 +25,8 @@
 
   <div modal-footer [class.modal-footer--centered]="config.centered">
     <button
-      av-button
-      [avType]="config.okType || (config.alertType === 'error' ? 'danger' : 'primary')"
-      [avSize]="config.centered ? 'large' : 'default'"
-      (clicked)="onOk()"
+      class="btn-primary-premium"
+      (click)="onOk()"
     >
       {{ config.okText || 'OK' }}
     </button>

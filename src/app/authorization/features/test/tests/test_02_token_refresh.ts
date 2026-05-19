@@ -35,5 +35,3 @@ export class Test02TokenRefresh extends BaseTest {
     );
   }
 }
-
-

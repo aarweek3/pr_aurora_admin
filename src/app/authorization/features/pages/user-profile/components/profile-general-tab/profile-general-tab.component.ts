@@ -117,9 +117,9 @@ import { AuthService } from '@auth';
               <nz-form-label>Роли в системе</nz-form-label>
               <div class="roles-list">
                 @for (role of user()?.roles; track role) {
-                <nz-tag [nzColor]="'blue'">{{ role }}</nz-tag>
+                  <nz-tag [nzColor]="'blue'">{{ role }}</nz-tag>
                 } @empty {
-                <span nz-typography nzType="secondary">Роли не назначены</span>
+                  <span nz-typography nzType="secondary">Роли не назначены</span>
                 }
               </div>
             </nz-form-item>
@@ -365,5 +365,3 @@ export class ProfileGeneralTabComponent implements OnInit {
     }
   }
 }
-
-

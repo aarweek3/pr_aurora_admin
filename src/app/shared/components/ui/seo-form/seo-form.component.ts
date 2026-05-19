@@ -8,6 +8,9 @@ import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
 import { NzSwitchModule } from 'ng-zorro-antd/switch';
 import { NzTabsModule } from 'ng-zorro-antd/tabs';
+import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import tooltips from '../../../../AGREGATOR/PAGES/SPRAVKA/ProgramOfAggregatorPage/components/program-add-wizard/program-tooltips.json';
 
 @Component({
   selector: 'app-seo-form',
@@ -22,6 +25,8 @@ import { NzTabsModule } from 'ng-zorro-antd/tabs';
     NzSwitchModule,
     NzInputNumberModule,
     NzGridModule,
+    NzToolTipModule,
+    NzIconModule,
   ],
   template: `
     <div *ngIf="form" [formGroup]="form" class="seo-form-container">
@@ -30,7 +35,7 @@ import { NzTabsModule } from 'ng-zorro-antd/tabs';
         <div class="preview-header">
           <span>Google Search Preview</span>
           <button nz-button nzType="link" nzSize="small" (click)="autoFill()" *ngIf="!readonly">
-            <i nz-icon nzType="magic" nzTheme="outline"></i> Волшебная палочка
+            <i nz-icon nzType="highlight" nzTheme="outline"></i> Волшебная палочка
           </button>
         </div>
         <div class="google-preview">
@@ -56,6 +61,14 @@ import { NzTabsModule } from 'ng-zorro-antd/tabs';
               <nz-form-item>
                 <nz-form-label [nzNoColon]="true">
                   Meta Title
+                  <i
+                    nz-icon
+                    nzType="question-circle"
+                    nzTheme="outline"
+                    class="info-icon"
+                    nz-tooltip
+                    [nzTooltipTitle]="tooltips.seo.metaTitle"
+                  ></i>
                   <span
                     class="char-counter"
                     [class.warning]="
@@ -89,6 +102,14 @@ import { NzTabsModule } from 'ng-zorro-antd/tabs';
               <nz-form-item>
                 <nz-form-label [nzNoColon]="true">
                   Meta Description
+                  <i
+                    nz-icon
+                    nzType="question-circle"
+                    nzTheme="outline"
+                    class="info-icon"
+                    nz-tooltip
+                    [nzTooltipTitle]="tooltips.seo.metaDescription"
+                  ></i>
                   <span
                     class="char-counter"
                     [class.warning]="
@@ -123,6 +144,14 @@ import { NzTabsModule } from 'ng-zorro-antd/tabs';
               <nz-form-item>
                 <nz-form-label [nzNoColon]="true">
                   Meta Keywords
+                  <i
+                    nz-icon
+                    nzType="question-circle"
+                    nzTheme="outline"
+                    class="info-icon"
+                    nz-tooltip
+                    [nzTooltipTitle]="tooltips.seo.metaKeywords"
+                  ></i>
                   <span
                     class="char-counter"
                     [class.warning]="(form.get('metaKeywords')?.value?.length || 0) > 200"
@@ -147,7 +176,17 @@ import { NzTabsModule } from 'ng-zorro-antd/tabs';
             </div>
             <div nz-col nzSpan="24">
               <nz-form-item>
-                <nz-form-label>Url Slug (ЧПУ)</nz-form-label>
+                <nz-form-label>
+                  Url Slug (ЧПУ)
+                  <i
+                    nz-icon
+                    nzType="question-circle"
+                    nzTheme="outline"
+                    class="info-icon"
+                    nz-tooltip
+                    [nzTooltipTitle]="tooltips.seo.urlSlug"
+                  ></i>
+                </nz-form-label>
                 <nz-form-control [nzErrorTip]="urlSlugError">
                   <ng-template #urlSlugError>
                     <span *ngIf="form.get('urlSlug')?.hasError('pattern')"
@@ -173,13 +212,33 @@ import { NzTabsModule } from 'ng-zorro-antd/tabs';
           <nz-tabset nzSize="small">
             <nz-tab nzTitle="Open Graph (FB/VK)">
               <nz-form-item>
-                <nz-form-label>OG Title</nz-form-label>
+                <nz-form-label>
+                  OG Title
+                  <i
+                    nz-icon
+                    nzType="question-circle"
+                    nzTheme="outline"
+                    class="info-icon"
+                    nz-tooltip
+                    [nzTooltipTitle]="tooltips.seo.ogTitle"
+                  ></i>
+                </nz-form-label>
                 <nz-form-control>
                   <input nz-input formControlName="ogTitle" [readonly]="readonly" />
                 </nz-form-control>
               </nz-form-item>
               <nz-form-item>
-                <nz-form-label>OG Description</nz-form-label>
+                <nz-form-label>
+                  OG Description
+                  <i
+                    nz-icon
+                    nzType="question-circle"
+                    nzTheme="outline"
+                    class="info-icon"
+                    nz-tooltip
+                    [nzTooltipTitle]="tooltips.seo.ogDescription"
+                  ></i>
+                </nz-form-label>
                 <nz-form-control>
                   <textarea
                     nz-input
@@ -190,7 +249,17 @@ import { NzTabsModule } from 'ng-zorro-antd/tabs';
                 </nz-form-control>
               </nz-form-item>
               <nz-form-item>
-                <nz-form-label>OG Image URL</nz-form-label>
+                <nz-form-label>
+                  OG Image URL
+                  <i
+                    nz-icon
+                    nzType="question-circle"
+                    nzTheme="outline"
+                    class="info-icon"
+                    nz-tooltip
+                    [nzTooltipTitle]="tooltips.seo.ogImage"
+                  ></i>
+                </nz-form-label>
                 <nz-form-control>
                   <input nz-input formControlName="ogImage" [readonly]="readonly" />
                 </nz-form-control>
@@ -198,13 +267,33 @@ import { NzTabsModule } from 'ng-zorro-antd/tabs';
             </nz-tab>
             <nz-tab nzTitle="Twitter Card">
               <nz-form-item>
-                <nz-form-label>Twitter Title</nz-form-label>
+                <nz-form-label>
+                  Twitter Title
+                  <i
+                    nz-icon
+                    nzType="question-circle"
+                    nzTheme="outline"
+                    class="info-icon"
+                    nz-tooltip
+                    [nzTooltipTitle]="tooltips.seo.twitterTitle"
+                  ></i>
+                </nz-form-label>
                 <nz-form-control>
                   <input nz-input formControlName="twitterTitle" [readonly]="readonly" />
                 </nz-form-control>
               </nz-form-item>
               <nz-form-item>
-                <nz-form-label>Twitter Description</nz-form-label>
+                <nz-form-label>
+                  Twitter Description
+                  <i
+                    nz-icon
+                    nzType="question-circle"
+                    nzTheme="outline"
+                    class="info-icon"
+                    nz-tooltip
+                    [nzTooltipTitle]="tooltips.seo.twitterDescription"
+                  ></i>
+                </nz-form-label>
                 <nz-form-control>
                   <textarea
                     nz-input
@@ -222,7 +311,17 @@ import { NzTabsModule } from 'ng-zorro-antd/tabs';
           <div nz-row [nzGutter]="16">
             <div nz-col nzSpan="24">
               <nz-form-item>
-                <nz-form-label>Image Alt Text</nz-form-label>
+                <nz-form-label>
+                  Image Alt Text
+                  <i
+                    nz-icon
+                    nzType="question-circle"
+                    nzTheme="outline"
+                    class="info-icon"
+                    nz-tooltip
+                    [nzTooltipTitle]="tooltips.seo.imageAltText"
+                  ></i>
+                </nz-form-label>
                 <nz-form-control>
                   <input nz-input formControlName="imageAltText" [readonly]="readonly" />
                 </nz-form-control>
@@ -230,7 +329,17 @@ import { NzTabsModule } from 'ng-zorro-antd/tabs';
             </div>
             <div nz-col nzSpan="24">
               <nz-form-item>
-                <nz-form-label>Image Caption</nz-form-label>
+                <nz-form-label>
+                  Image Caption
+                  <i
+                    nz-icon
+                    nzType="question-circle"
+                    nzTheme="outline"
+                    class="info-icon"
+                    nz-tooltip
+                    [nzTooltipTitle]="tooltips.seo.imageCaption"
+                  ></i>
+                </nz-form-label>
                 <nz-form-control>
                   <input nz-input formControlName="imageCaption" [readonly]="readonly" />
                 </nz-form-control>
@@ -243,7 +352,17 @@ import { NzTabsModule } from 'ng-zorro-antd/tabs';
           <div nz-row [nzGutter]="16">
             <div nz-col nzSpan="8">
               <nz-form-item>
-                <nz-form-label>Не индексировать</nz-form-label>
+                <nz-form-label>
+                  Не индексировать
+                  <i
+                    nz-icon
+                    nzType="question-circle"
+                    nzTheme="outline"
+                    class="info-icon"
+                    nz-tooltip
+                    [nzTooltipTitle]="tooltips.seo.noIndex"
+                  ></i>
+                </nz-form-label>
                 <nz-form-control>
                   <nz-switch formControlName="noIndex" [nzDisabled]="readonly"></nz-switch>
                 </nz-form-control>
@@ -251,7 +370,17 @@ import { NzTabsModule } from 'ng-zorro-antd/tabs';
             </div>
             <div nz-col nzSpan="8">
               <nz-form-item>
-                <nz-form-label>Не переходить</nz-form-label>
+                <nz-form-label>
+                  Не переходить
+                  <i
+                    nz-icon
+                    nzType="question-circle"
+                    nzTheme="outline"
+                    class="info-icon"
+                    nz-tooltip
+                    [nzTooltipTitle]="tooltips.seo.noFollow"
+                  ></i>
+                </nz-form-label>
                 <nz-form-control>
                   <nz-switch formControlName="noFollow" [nzDisabled]="readonly"></nz-switch>
                 </nz-form-control>
@@ -259,7 +388,17 @@ import { NzTabsModule } from 'ng-zorro-antd/tabs';
             </div>
             <div nz-col nzSpan="8">
               <nz-form-item>
-                <nz-form-label>Приоритет (0-10)</nz-form-label>
+                <nz-form-label>
+                  Приоритет (0-10)
+                  <i
+                    nz-icon
+                    nzType="question-circle"
+                    nzTheme="outline"
+                    class="info-icon"
+                    nz-tooltip
+                    [nzTooltipTitle]="tooltips.seo.priority"
+                  ></i>
+                </nz-form-label>
                 <nz-form-control>
                   <nz-input-number
                     formControlName="priority"
@@ -340,10 +479,21 @@ import { NzTabsModule } from 'ng-zorro-antd/tabs';
       .char-counter.warning {
         color: #ff4d4f;
       }
+      .info-icon {
+        margin-left: 4px;
+        color: #8c8c8c;
+        cursor: help;
+        transition: color 0.3s;
+      }
+      .info-icon:hover {
+        color: #1890ff;
+      }
     `,
   ],
 })
 export class SeoFormComponent {
+  public tooltips = tooltips;
+
   @Input() form!: FormGroup;
   @Input() readonly = false;
   @Input() sourceName = '';
@@ -393,32 +543,21 @@ export class SeoFormComponent {
 
   static createSeoForm(fb: FormBuilder): FormGroup {
     return fb.group({
-      metaTitle: ['', [Validators.minLength(5), Validators.maxLength(70)]],
-      metaDescription: ['', [Validators.minLength(10), Validators.maxLength(160)]],
+      metaTitle: ['', [Validators.maxLength(70)]],
+      metaDescription: ['', [Validators.maxLength(160)]],
       metaKeywords: ['', [Validators.maxLength(200)]],
       urlSlug: ['', [Validators.maxLength(200), Validators.pattern(/^[a-z0-9-]+$/)]],
       canonicalUrl: [''],
       ogTitle: [''],
       ogDescription: [''],
       ogImage: [''],
-      ogType: ['article'],
-      ogUrl: [''],
-      twitterCard: ['summary_large_image'],
       twitterTitle: [''],
       twitterDescription: [''],
-      twitterImage: [''],
-      imageUrl: [''],
       imageAltText: [''],
       imageCaption: [''],
-      schemaType: ['Article'],
-      schemaJsonLd: [null],
-      authorName: [''],
-      publisherName: [''],
-      publishedDate: [null],
       noIndex: [false],
       noFollow: [false],
       priority: [5],
-      region: [''],
     });
   }
 }

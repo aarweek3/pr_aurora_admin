@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzCardModule } from 'ng-zorro-antd/card';
@@ -73,15 +73,13 @@ import { SampleMainSeoFormComponent } from '../sample-main-seo-form/sample-main-
   ],
 })
 export class SampleMainSeoPageComponent implements OnInit {
+  private state = inject(SampleMainSeoStateService);
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
+
   editingItem$ = this.state.editingItem$;
   isLoading$ = this.state.modalLoading$;
   mode: 'add' | 'edit' = 'add';
-
-  constructor(
-    private state: SampleMainSeoStateService,
-    private route: ActivatedRoute,
-    private router: Router,
-  ) {}
 
   get title(): string {
     return this.mode === 'add' ? 'Создание новой записи' : 'Редактирование записи';

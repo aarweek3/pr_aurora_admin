@@ -1,5 +1,15 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, forwardRef, input, model, Output, signal } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  forwardRef,
+  inject,
+  input,
+  model,
+  Output,
+  signal,
+} from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IconComponent } from '../icon/icon.component';
 import { InputDirective } from './input.directive';
@@ -22,7 +32,7 @@ import { InputDirective } from './input.directive';
       [style.display]="visible() ? null : 'none'"
     >
       @if (label()) {
-      <label [for]="inputId" class="av-input-wrapper__label">{{ label() }}</label>
+        <label [for]="effectiveId" class="av-input-wrapper__label">{{ label() }}</label>
       }
 
       <div
@@ -36,17 +46,17 @@ import { InputDirective } from './input.directive';
         [style.--av-suffix-icon-color]="iconColor() || suffixIconColor()"
       >
         @if (prefixIcon()) {
-        <div class="av-input-prefix">
-          <av-icon
-            [type]="prefixIcon()!"
-            [size]="getPrefixIconSize()"
-            [color]="iconColor() || prefixIconColor()"
-          ></av-icon>
-        </div>
+          <div class="av-input-prefix">
+            <av-icon
+              [type]="prefixIcon()!"
+              [size]="getPrefixIconSize()"
+              [color]="iconColor() || prefixIconColor()"
+            ></av-icon>
+          </div>
         }
 
         <input
-          [id]="inputId"
+          [id]="effectiveId"
           [type]="getInputType()"
           avInput
           [avSize]="size()"
@@ -79,59 +89,61 @@ import { InputDirective } from './input.directive';
         />
 
         @if (suffixIcon() && !(type() === 'password' && showPasswordToggle())) {
-        <div class="av-input-suffix">
-          <av-icon
-            [type]="suffixIcon()!"
-            [size]="getSuffixIconSize()"
-            [color]="iconColor() || suffixIconColor()"
-          ></av-icon>
-        </div>
-        } @if (type() === 'password' && showPasswordToggle()) {
-        <button
-          type="button"
-          class="av-input-toggle"
-          [class.av-input-toggle--small]="size() === 'small'"
-          [class.av-input-toggle--large]="size() === 'large'"
-          [class.av-input-toggle--x-large]="size() === 'x-large'"
-          (click)="togglePasswordVisibility()"
-          [disabled]="disabled()"
-          [attr.aria-label]="passwordVisible() ? 'Скрыть пароль' : 'Показать пароль'"
-        >
-          @if (passwordVisible()) {
-          <svg
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
+          <div class="av-input-suffix">
+            <av-icon
+              [type]="suffixIcon()!"
+              [size]="getSuffixIconSize()"
+              [color]="iconColor() || suffixIconColor()"
+            ></av-icon>
+          </div>
+        }
+        @if (type() === 'password' && showPasswordToggle()) {
+          <button
+            type="button"
+            class="av-input-toggle"
+            [class.av-input-toggle--small]="size() === 'small'"
+            [class.av-input-toggle--large]="size() === 'large'"
+            [class.av-input-toggle--x-large]="size() === 'x-large'"
+            (click)="togglePasswordVisibility()"
+            [disabled]="disabled()"
+            [attr.aria-label]="passwordVisible() ? 'Скрыть пароль' : 'Показать пароль'"
           >
-            <path
-              d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"
-            />
-            <line x1="1" y1="1" x2="23" y2="23" />
-          </svg>
-          } @else {
-          <svg
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-          >
-            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-            <circle cx="12" cy="12" r="3" />
-          </svg>
-          }
-        </button>
+            @if (passwordVisible()) {
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path
+                  d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"
+                />
+                <line x1="1" y1="1" x2="23" y2="23" />
+              </svg>
+            } @else {
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                <circle cx="12" cy="12" r="3" />
+              </svg>
+            }
+          </button>
         }
       </div>
 
       @if (hint() && !errorMessage()) {
-      <span class="av-input-wrapper__hint">{{ hint() }}</span>
-      } @if (errorMessage() && status() === 'error') {
-      <span class="av-input-wrapper__error">{{ errorMessage() }}</span>
+        <span class="av-input-wrapper__hint">{{ hint() }}</span>
+      }
+      @if (errorMessage() && status() === 'error') {
+        <span class="av-input-wrapper__error">{{ errorMessage() }}</span>
       }
     </div>
   `,
@@ -356,11 +368,15 @@ export class InputComponent implements ControlValueAccessor {
   /** Цвет суффиксной иконки */
   suffixIconColor = input<string | null>(null);
 
-  inputId = `av-input-${Math.random().toString(36).substring(2, 9)}`;
-  passwordVisible = signal(false);
+  private el = inject(ElementRef);
+  generatedId = `av-input-${Math.random().toString(36).substring(2, 9)}`;
 
-  private onChange: (value: string) => void = () => {};
-  private onTouched: () => void = () => {};
+  get effectiveId(): string {
+    return this.el.nativeElement.id || this.generatedId;
+  }
+  passwordVisible = signal(false);
+  private onChange?: (value: string) => void;
+  private onTouched?: () => void;
 
   getInputType(): string {
     if (this.type() === 'password' && this.passwordVisible()) {
@@ -378,7 +394,7 @@ export class InputComponent implements ControlValueAccessor {
     const value = (event.target as HTMLInputElement).value;
     this.value.set(value);
     this.valueChange.emit(value);
-    this.onChange(value);
+    this.onChange?.(value);
   }
 
   writeValue(value: string): void {
@@ -393,9 +409,7 @@ export class InputComponent implements ControlValueAccessor {
     this.onTouched = fn;
   }
 
-  setDisabledState(isDisabled: boolean): void {
-    // Readonly with signals
-  }
+
 
   getPrefixIconSize(): number {
     return this.prefixIconSize() || this.iconSize() || this.getEffectiveIconSize();

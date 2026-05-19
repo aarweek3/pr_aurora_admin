@@ -34,4 +34,7 @@ export const LANGUAGE_AGGREGATOR_ENDPOINTS = {
 
   /** Initialize */
   INITIALIZE: 'v1/aggregator/languages/initialize',
+
+  /** Восстановить */
+  RESTORE: (id: number) => `v1/aggregator/languages/${id}/restore`,
 };

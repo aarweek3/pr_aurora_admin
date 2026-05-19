@@ -1,4 +1,4 @@
-﻿import { CommonModule } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -18,7 +18,7 @@ import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzModalModule } from 'ng-zorro-antd/modal';
 import { Subject, takeUntil } from 'rxjs';
-import { LoggingService } from '../../../../shared/infrastructure/logging/logging.service';
+import { LoggingService } from '@core/services/logging/logging.service';
 import { SampleState } from '../../models/sample-state.model';
 import {
   SampleCreateRequestDto,
@@ -42,7 +42,7 @@ import { SampleService } from '../../services/sample.service';
   template: `
     <nz-modal
       [nzVisible]="visible"
-      [nzTitle]="mode === 'add' ? 'Добавить' : 'Редактировать'"
+      [nzTitle]="mode === 'add' ? '��������' : '�������������'"
       [nzWidth]="600"
       [nzFooter]="null"
       (nzOnCancel)="onCancel()"
@@ -50,7 +50,7 @@ import { SampleService } from '../../services/sample.service';
       <ng-container *nzModalContent>
         <form nz-form [formGroup]="form" (ngSubmit)="onSubmit()">
           <nz-form-item>
-            <nz-form-label [nzRequired]="true">Название</nz-form-label>
+            <nz-form-label [nzRequired]="true">��������</nz-form-label>
             <nz-form-control
               [nzErrorTip]="getNameErrorMessage()"
               [nzValidateStatus]="validators.getFieldValidateStatus(form.get('name'))"
@@ -58,7 +58,7 @@ import { SampleService } from '../../services/sample.service';
               <input
                 nz-input
                 formControlName="name"
-                placeholder="Введите название"
+                placeholder="������� ��������"
                 [maxlength]="SampleValidatorsService.SAMPLE_NAME_MAX_LENGTH"
                 (input)="onNameInput($event)"
                 (blur)="onNameBlur()"
@@ -87,7 +87,7 @@ import { SampleService } from '../../services/sample.service';
             </nz-form-control>
           </nz-form-item>
           <nz-form-item>
-            <nz-form-label>Описание</nz-form-label>
+            <nz-form-label>��������</nz-form-label>
             <nz-form-control
               [nzErrorTip]="getDescriptionErrorMessage()"
               [nzValidateStatus]="validators.getFieldValidateStatus(form.get('description'))"
@@ -95,7 +95,7 @@ import { SampleService } from '../../services/sample.service';
               <textarea
                 nz-input
                 formControlName="description"
-                placeholder="Введите описание"
+                placeholder="������� ��������"
                 [nzAutosize]="{ minRows: 3, maxRows: 6 }"
                 [maxlength]="SampleValidatorsService.SAMPLE_DESCRIPTION_MAX_LENGTH"
                 (input)="onDescriptionInput($event)"
@@ -119,7 +119,7 @@ import { SampleService } from '../../services/sample.service';
                 (click)="onCancel()"
                 [disabled]="currentLoading"
               >
-                Отмена
+                ������
               </button>
               <button
                 nz-button
@@ -128,7 +128,7 @@ import { SampleService } from '../../services/sample.service';
                 [disabled]="form.invalid || currentLoading"
                 [nzLoading]="currentLoading"
               >
-                {{ mode === 'add' ? 'Создать' : 'Сохранить' }}
+                {{ mode === 'add' ? '�������' : '���������' }}
               </button>
             </nz-form-control>
           </nz-form-item>
@@ -139,7 +139,7 @@ import { SampleService } from '../../services/sample.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SampleModalComponent implements OnInit, OnChanges, OnDestroy {
-  @Input() visible: boolean = false;
+  @Input() visible = false;
   @Input() mode: 'add' | 'edit' = 'add';
   @Input() sample: SampleDetailDto | null = null;
 
@@ -150,10 +150,10 @@ export class SampleModalComponent implements OnInit, OnChanges, OnDestroy {
   @Output() cancel = new EventEmitter<void>();
 
   form: FormGroup;
-  nameInputMessage: string = '';
-  descriptionInputMessage: string = '';
-  currentLoading: boolean = false;
-  currentServerError: string = '';
+  nameInputMessage = '';
+  descriptionInputMessage = '';
+  currentLoading = false;
+  currentServerError = '';
 
   private destroy$ = new Subject<void>();
   readonly SampleValidatorsService = SampleValidatorsService;
@@ -168,12 +168,12 @@ export class SampleModalComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.logger.debug('SampleModalComponent', 'Инициализация компонента');
+    this.logger.debug('SampleModalComponent', '������������� ����������');
     this.sampleService
       .getState()
       .pipe(takeUntil(this.destroy$))
       .subscribe((state: SampleState) => {
-        this.logger.debug('SampleModalComponent', 'Получено состояние операции', {
+        this.logger.debug('SampleModalComponent', '�������� ��������� ��������', {
           modalIsLoading: state.modalIsLoading,
           modalOperation: state.modalOperation,
           modalError: state.modalError,
@@ -183,8 +183,8 @@ export class SampleModalComponent implements OnInit, OnChanges, OnDestroy {
 
         if (state.modalError) {
           this.currentServerError =
-            state.modalError.detail || state.modalError.title || 'Произошла ошибка при сохранении';
-          this.logger.error('SampleModalComponent', 'Ошибка сервера', {
+            state.modalError.detail || state.modalError.title || '��������� ������ ��� ����������';
+          this.logger.error('SampleModalComponent', '������ �������', {
             error: this.currentServerError,
           });
         } else {
@@ -207,7 +207,7 @@ export class SampleModalComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.logger.debug('SampleModalComponent', 'Очистка ресурсов');
+    this.logger.debug('SampleModalComponent', '������� ��������');
     this.destroy$.next();
     this.destroy$.complete();
   }
@@ -216,7 +216,7 @@ export class SampleModalComponent implements OnInit, OnChanges, OnDestroy {
     const input = event.target as HTMLInputElement;
     const value = input.value;
     this.nameInputMessage = this.validators.hasInvalidCharacters(value)
-      ? 'Введен недопустимый символ'
+      ? '������ ������������ ������'
       : '';
 
     if (this.currentServerError) {
@@ -241,7 +241,7 @@ export class SampleModalComponent implements OnInit, OnChanges, OnDestroy {
     const value = input.value;
     this.descriptionInputMessage =
       value.length > SampleValidatorsService.SAMPLE_DESCRIPTION_MAX_LENGTH
-        ? `Превышена максимальная длина (${SampleValidatorsService.SAMPLE_DESCRIPTION_MAX_LENGTH} символов)`
+        ? `��������� ������������ ����� (${SampleValidatorsService.SAMPLE_DESCRIPTION_MAX_LENGTH} ��������)`
         : '';
     this.form.get('description')?.updateValueAndValidity();
     this.cdr.markForCheck();
@@ -251,7 +251,7 @@ export class SampleModalComponent implements OnInit, OnChanges, OnDestroy {
     const descControl = this.form.get('description');
     if (descControl) {
       descControl.markAsTouched();
-      // Не обрезаем пробелы для description
+      // �� �������� ������� ��� description
       // this.validators.trimControlValue(descControl);
     }
     this.cdr.markForCheck();
@@ -322,7 +322,7 @@ export class SampleModalComponent implements OnInit, OnChanges, OnDestroy {
 
   onSubmit(): void {
     this.currentServerError = '';
-    this.logger.debug('SampleModalComponent', 'Отправка формы');
+    this.logger.debug('SampleModalComponent', '�������� �����');
 
     if (this.form.valid) {
       const formValue = this.form.value;
@@ -330,15 +330,15 @@ export class SampleModalComponent implements OnInit, OnChanges, OnDestroy {
         this.mode === 'add'
           ? {
               name: formValue.name?.trim(),
-              description: formValue.description || undefined, // Убрано .trim() для description
+              description: formValue.description || undefined, // ������ .trim() ��� description
             }
           : {
               id: this.sample!.id,
               name: formValue.name?.trim(),
-              description: formValue.description || undefined, // Убрано .trim() для description
+              description: formValue.description || undefined, // ������ .trim() ��� description
             };
 
-      this.logger.debug('SampleModalComponent', 'Отправка данных', {
+      this.logger.debug('SampleModalComponent', '�������� ������', {
         payload,
       });
       this.save.emit({ mode: this.mode, sample: payload });
@@ -354,7 +354,7 @@ export class SampleModalComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   onCancel(): void {
-    this.logger.debug('SampleModalComponent', 'Отмена операции');
+    this.logger.debug('SampleModalComponent', '������ ��������');
     this.cancel.emit();
   }
 }

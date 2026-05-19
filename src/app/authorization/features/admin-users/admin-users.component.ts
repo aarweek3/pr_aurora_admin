@@ -11,14 +11,9 @@ import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzTagModule } from 'ng-zorro-antd/tag';
 import { Subject, takeUntil } from 'rxjs';
 
-import { LoggingService } from '@shared/infrastructure/logging/logging.service';
+import { LoggingService } from '@core/services/logging/logging.service';
 import { RoleDto } from '@auth/models';
-import {
-  CreateUserDto,
-  UpdateUserDto,
-  UserDetailDto,
-  UserFilterDto,
-} from '@auth/models';
+import { CreateUserDto, UpdateUserDto, UserDetailDto, UserFilterDto } from '@auth/models';
 import { RoleService } from '@auth';
 import { RoleAssignModalComponent } from './role-assign-modal.component';
 import { UserApiService } from './user-api.service';
@@ -105,8 +100,8 @@ import { UserModalComponent } from './user-modal.component';
                 {{ user.isActive ? 'Активен' : 'Неактивен' }}
               </nz-tag>
             </td>
-            <td>{{ user.createdAt | date : 'short' }}</td>
-            <td>{{ user.lastLogin ? (user.lastLogin | date : 'short') : 'Никогда' }}</td>
+            <td>{{ user.createdAt | date: 'short' }}</td>
+            <td>{{ user.lastLogin ? (user.lastLogin | date: 'short') : 'Никогда' }}</td>
             <td>
               <button nz-button nzType="link" nzSize="small" (click)="viewUser(user)">
                 <span nz-icon nzType="eye"></span>
@@ -324,7 +319,7 @@ export class AdminUsersComponent implements OnInit, OnDestroy {
   }
 
   getRoleColor(roleName: string): string {
-    const colors: { [key: string]: string } = {
+    const colors: Record<string, string> = {
       Admin: 'red',
       User: 'blue',
       Moderator: 'orange',
@@ -430,5 +425,3 @@ export class AdminUsersComponent implements OnInit, OnDestroy {
     this.logger.info('AdminUsersComponent', 'Модальное окно закрыто');
   }
 }
-
-

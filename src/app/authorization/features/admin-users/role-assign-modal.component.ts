@@ -76,7 +76,7 @@ export class RoleAssignModalComponent implements OnInit {
   private message = inject(NzMessageService);
 
   allRoles: RoleDto[] = [];
-  selectedRoles: { [key: string]: boolean } = {};
+  selectedRoles: Record<string, boolean> = {};
   saving = false;
 
   ngOnInit() {
@@ -120,5 +120,3 @@ export class RoleAssignModalComponent implements OnInit {
     this.modal.close({ success: false });
   }
 }
-
-

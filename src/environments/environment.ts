@@ -62,6 +62,6 @@ export const environment: Environment = {
 
   help: {
     storagePath: 'src/assets/help-data',
-    assetsPath: 'assets/help-data'
-  }
+    assetsPath: 'assets/help-data',
+  },
 };

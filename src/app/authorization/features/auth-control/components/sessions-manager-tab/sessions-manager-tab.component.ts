@@ -105,12 +105,12 @@ import { AuthService } from '@auth';
 
               <!-- Login Time -->
               <td>
-                {{ data.createdAt | date : 'medium' }}
+                {{ data.createdAt | date: 'medium' }}
               </td>
 
               <!-- Expiry / Activity -->
               <td>
-                <span class="sub-text">Истекает: {{ data.expiresAt | date : 'mediumDate' }}</span>
+                <span class="sub-text">Истекает: {{ data.expiresAt | date: 'mediumDate' }}</span>
               </td>
 
               <!-- Status -->
@@ -307,5 +307,3 @@ export class SessionsManagerTabComponent implements OnInit {
     return 'clean-device';
   }
 }
-
-

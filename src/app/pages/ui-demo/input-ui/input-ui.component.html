@@ -81,38 +81,38 @@
                 </nz-select>
 
                 @if (pgSize() === 'custom') {
-                <div class="custom-size-row">
-                  <div class="compact-field">
-                    <span class="field-label">W</span>
-                    <input
-                      type="number"
-                      nz-input
-                      [ngModel]="pgWidth()"
-                      (ngModelChange)="pgWidth.set($event)"
-                      placeholder="Auto"
-                    />
+                  <div class="custom-size-row">
+                    <div class="compact-field">
+                      <span class="field-label">W</span>
+                      <input
+                        type="number"
+                        nz-input
+                        [ngModel]="pgWidth()"
+                        (ngModelChange)="pgWidth.set($event)"
+                        placeholder="Auto"
+                      />
+                    </div>
+                    <div class="compact-field">
+                      <span class="field-label">H</span>
+                      <input
+                        type="number"
+                        nz-input
+                        [ngModel]="pgHeight()"
+                        (ngModelChange)="pgHeight.set($event)"
+                        placeholder="Auto"
+                      />
+                    </div>
+                    <div class="compact-field">
+                      <span class="field-label">R</span>
+                      <input
+                        type="number"
+                        nz-input
+                        [ngModel]="pgRadius()"
+                        (ngModelChange)="pgRadius.set($event)"
+                        placeholder="0"
+                      />
+                    </div>
                   </div>
-                  <div class="compact-field">
-                    <span class="field-label">H</span>
-                    <input
-                      type="number"
-                      nz-input
-                      [ngModel]="pgHeight()"
-                      (ngModelChange)="pgHeight.set($event)"
-                      placeholder="Auto"
-                    />
-                  </div>
-                  <div class="compact-field">
-                    <span class="field-label">R</span>
-                    <input
-                      type="number"
-                      nz-input
-                      [ngModel]="pgRadius()"
-                      (ngModelChange)="pgRadius.set($event)"
-                      placeholder="0"
-                    />
-                  </div>
-                </div>
                 }
               </div>
             </div>
@@ -162,96 +162,99 @@
             </div>
 
             @if (pgType() === 'component') {
-            <div class="control-item">
-              <label>Label</label>
-              <input nz-input [ngModel]="pgLabel()" (ngModelChange)="pgLabel.set($event)" />
-            </div>
-            <div class="control-item">
-              <label>Hint (Подсказка)</label>
-              <input nz-input [ngModel]="pgHint()" (ngModelChange)="pgHint.set($event)" />
-            </div>
-            @if (pgStatus() === 'error') {
-            <div class="control-item">
-              <label>Error Message</label>
-              <input nz-input [ngModel]="pgErrorMessage()" (ngModelChange)="pgErrorMessage.set($event)" />
-            </div>
-            }
-
-            <div
-              style="
-                background: #f9f9f9;
-                border: 1px solid #e8e8e8;
-                border-radius: 8px;
-                padding: 12px;
-                margin-top: 16px;
-              "
-            >
-              <p style="margin-bottom: 12px; font-weight: 500; font-size: 13px; color: #1890ff">
-                ✨ Настройка иконок (Component only)
-              </p>
-
-              <div class="control-item" style="margin-bottom: 12px">
-                <label nz-tooltip nzTooltipTitle="Иконка в начале поля">
-                  Prefix Icon: <span class="info-icon">ⓘ</span>
-                </label>
-                <nz-select
-                  [ngModel]="pgPrefixIcon()"
-                  (ngModelChange)="pgPrefixIcon.set($event)"
-                  nzAllowClear
-                  nzPlaceHolder="Без иконки"
-                  style="width: 100%"
-                >
-                  <nz-option nzValue="search" nzLabel="Search"></nz-option>
-                  <nz-option nzValue="email" nzLabel="Email"></nz-option>
-                  <nz-option nzValue="user" nzLabel="User"></nz-option>
-                  <nz-option nzValue="lock" nzLabel="Lock"></nz-option>
-                </nz-select>
+              <div class="control-item">
+                <label>Label</label>
+                <input nz-input [ngModel]="pgLabel()" (ngModelChange)="pgLabel.set($event)" />
               </div>
-
-              <div class="control-item" style="margin-bottom: 12px">
-                <label nz-tooltip nzTooltipTitle="Иконка в конце поля (скрывается, если это пароль)">
-                  Suffix Icon: <span class="info-icon">ⓘ</span>
-                </label>
-                <nz-select
-                  [ngModel]="pgSuffixIcon()"
-                  (ngModelChange)="pgSuffixIcon.set($event)"
-                  nzAllowClear
-                  nzPlaceHolder="Без иконки"
-                  style="width: 100%"
-                >
-                  <nz-option nzValue="check" nzLabel="Check"></nz-option>
-                  <nz-option nzValue="close" nzLabel="Close"></nz-option>
-                  <nz-option nzValue="info" nzLabel="Info"></nz-option>
-                </nz-select>
+              <div class="control-item">
+                <label>Hint (Подсказка)</label>
+                <input nz-input [ngModel]="pgHint()" (ngModelChange)="pgHint.set($event)" />
               </div>
+              @if (pgStatus() === 'error') {
+                <div class="control-item">
+                  <label>Error Message</label>
+                  <input nz-input [ngModel]="pgErrorMessage()" (ngModelChange)="pgErrorMessage.set($event)" />
+                </div>
+              }
 
-              <div class="control-item" style="margin-bottom: 0">
-                <label nz-tooltip nzTooltipTitle="Размер иконок в пикселях. Если не задан, подбирается автоматически.">
-                  Размер иконок: <span class="info-icon">ⓘ</span>
-                </label>
-                <div nz-row [nzGutter]="12" nzAlign="middle">
-                  <div nz-col nzFlex="auto">
-                    <nz-slider
-                      [nzMin]="12"
-                      [nzMax]="32"
-                      [ngModel]="pgPrefixIconSize() || pgSuffixIconSize() || 16"
-                      (ngModelChange)="pgPrefixIconSize.set($event); pgSuffixIconSize.set($event)"
-                    ></nz-slider>
-                  </div>
-                  <div nz-col style="width: 60px">
-                    <button
-                      av-button
-                      avType="text"
-                      avSize="small"
-                      (click)="pgPrefixIconSize.set(null); pgSuffixIconSize.set(null)"
-                      style="color: #ff4d4f; padding: 0"
-                    >
-                      Reset
-                    </button>
+              <div
+                style="
+                  background: #f9f9f9;
+                  border: 1px solid #e8e8e8;
+                  border-radius: 8px;
+                  padding: 12px;
+                  margin-top: 16px;
+                "
+              >
+                <p style="margin-bottom: 12px; font-weight: 500; font-size: 13px; color: #1890ff">
+                  ✨ Настройка иконок (Component only)
+                </p>
+
+                <div class="control-item" style="margin-bottom: 12px">
+                  <label nz-tooltip nzTooltipTitle="Иконка в начале поля">
+                    Prefix Icon: <span class="info-icon">ⓘ</span>
+                  </label>
+                  <nz-select
+                    [ngModel]="pgPrefixIcon()"
+                    (ngModelChange)="pgPrefixIcon.set($event)"
+                    nzAllowClear
+                    nzPlaceHolder="Без иконки"
+                    style="width: 100%"
+                  >
+                    <nz-option nzValue="search" nzLabel="Search"></nz-option>
+                    <nz-option nzValue="email" nzLabel="Email"></nz-option>
+                    <nz-option nzValue="user" nzLabel="User"></nz-option>
+                    <nz-option nzValue="lock" nzLabel="Lock"></nz-option>
+                  </nz-select>
+                </div>
+
+                <div class="control-item" style="margin-bottom: 12px">
+                  <label nz-tooltip nzTooltipTitle="Иконка в конце поля (скрывается, если это пароль)">
+                    Suffix Icon: <span class="info-icon">ⓘ</span>
+                  </label>
+                  <nz-select
+                    [ngModel]="pgSuffixIcon()"
+                    (ngModelChange)="pgSuffixIcon.set($event)"
+                    nzAllowClear
+                    nzPlaceHolder="Без иконки"
+                    style="width: 100%"
+                  >
+                    <nz-option nzValue="check" nzLabel="Check"></nz-option>
+                    <nz-option nzValue="close" nzLabel="Close"></nz-option>
+                    <nz-option nzValue="info" nzLabel="Info"></nz-option>
+                  </nz-select>
+                </div>
+
+                <div class="control-item" style="margin-bottom: 0">
+                  <label
+                    nz-tooltip
+                    nzTooltipTitle="Размер иконок в пикселях. Если не задан, подбирается автоматически."
+                  >
+                    Размер иконок: <span class="info-icon">ⓘ</span>
+                  </label>
+                  <div nz-row [nzGutter]="12" nzAlign="middle">
+                    <div nz-col nzFlex="auto">
+                      <nz-slider
+                        [nzMin]="12"
+                        [nzMax]="32"
+                        [ngModel]="pgPrefixIconSize() || pgSuffixIconSize() || 16"
+                        (ngModelChange)="pgPrefixIconSize.set($event); pgSuffixIconSize.set($event)"
+                      ></nz-slider>
+                    </div>
+                    <div nz-col style="width: 60px">
+                      <button
+                        av-button
+                        avType="text"
+                        avSize="small"
+                        (click)="pgPrefixIconSize.set(null); pgSuffixIconSize.set(null)"
+                        style="color: #ff4d4f; padding: 0"
+                      >
+                        Reset
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
             }
 
             <!-- 5. Status Switches -->
@@ -276,13 +279,13 @@
               </div>
 
               @if (pgInputType() === 'password') {
-              <div class="switch-item">
-                <label>Password Toggle</label>
-                <nz-switch
-                  [ngModel]="pgShowPasswordToggle()"
-                  (ngModelChange)="pgShowPasswordToggle.set($event)"
-                ></nz-switch>
-              </div>
+                <div class="switch-item">
+                  <label>Password Toggle</label>
+                  <nz-switch
+                    [ngModel]="pgShowPasswordToggle()"
+                    (ngModelChange)="pgShowPasswordToggle.set($event)"
+                  ></nz-switch>
+                </div>
               }
             </div>
           </nz-card>
@@ -299,50 +302,52 @@
 
             <div class="preview-area">
               <div style="width: 100%; max-width: 400px">
-                @if (refreshTrigger()) { @if (pgType() === 'directive') {
-                <input
-                  avInput
-                  [type]="pgInputType()"
-                  [avSize]="appliedSize()"
-                  [avVariant]="pgVariant()"
-                  [avStatus]="pgStatus()"
-                  [avWidth]="pgSize() === 'custom' ? pgWidth() : null"
-                  [avHeight]="pgSize() === 'custom' ? pgHeight() : null"
-                  [avRadius]="pgSize() === 'custom' ? pgRadius() : null"
-                  [avVisible]="pgVisible()"
-                  [avBlock]="pgBlock()"
-                  [avShape]="pgShape()"
-                  [placeholder]="pgPlaceholder()"
-                  [disabled]="pgDisabled()"
-                  [(ngModel)]="pgValue"
-                />
-                } @else {
-                <av-input
-                  [(value)]="pgValue"
-                  [label]="pgLabel()"
-                  [placeholder]="pgPlaceholder()"
-                  [type]="pgInputType()"
-                  [size]="appliedSize()"
-                  [variant]="pgVariant()"
-                  [status]="pgStatus()"
-                  [hint]="pgHint()"
-                  [errorMessage]="pgErrorMessage()"
-                  [width]="pgSize() === 'custom' ? pgWidth() : null"
-                  [height]="pgSize() === 'custom' ? pgHeight() : null"
-                  [radius]="pgSize() === 'custom' ? pgRadius() : null"
-                  [visible]="pgVisible()"
-                  [block]="pgBlock()"
-                  [shape]="pgShape()"
-                  [disabled]="pgDisabled()"
-                  [showPasswordToggle]="pgShowPasswordToggle()"
-                  [prefixIcon]="pgPrefixIcon()"
-                  [suffixIcon]="pgSuffixIcon()"
-                  [prefixIconSize]="pgPrefixIconSize()"
-                  [suffixIconSize]="pgSuffixIconSize()"
-                  [prefixIconColor]="pgPrefixIconColor()"
-                  [suffixIconColor]="pgSuffixIconColor()"
-                ></av-input>
-                } }
+                @if (refreshTrigger()) {
+                  @if (pgType() === 'directive') {
+                    <input
+                      avInput
+                      [type]="pgInputType()"
+                      [avSize]="appliedSize()"
+                      [avVariant]="pgVariant()"
+                      [avStatus]="pgStatus()"
+                      [avWidth]="pgSize() === 'custom' ? pgWidth() : null"
+                      [avHeight]="pgSize() === 'custom' ? pgHeight() : null"
+                      [avRadius]="pgSize() === 'custom' ? pgRadius() : null"
+                      [avVisible]="pgVisible()"
+                      [avBlock]="pgBlock()"
+                      [avShape]="pgShape()"
+                      [placeholder]="pgPlaceholder()"
+                      [disabled]="pgDisabled()"
+                      [(ngModel)]="pgValue"
+                    />
+                  } @else {
+                    <av-input
+                      [(value)]="pgValue"
+                      [label]="pgLabel()"
+                      [placeholder]="pgPlaceholder()"
+                      [type]="pgInputType()"
+                      [size]="appliedSize()"
+                      [variant]="pgVariant()"
+                      [status]="pgStatus()"
+                      [hint]="pgHint()"
+                      [errorMessage]="pgErrorMessage()"
+                      [width]="pgSize() === 'custom' ? pgWidth() : null"
+                      [height]="pgSize() === 'custom' ? pgHeight() : null"
+                      [radius]="pgSize() === 'custom' ? pgRadius() : null"
+                      [visible]="pgVisible()"
+                      [block]="pgBlock()"
+                      [shape]="pgShape()"
+                      [disabled]="pgDisabled()"
+                      [showPasswordToggle]="pgShowPasswordToggle()"
+                      [prefixIcon]="pgPrefixIcon()"
+                      [suffixIcon]="pgSuffixIcon()"
+                      [prefixIconSize]="pgPrefixIconSize()"
+                      [suffixIconSize]="pgSuffixIconSize()"
+                      [prefixIconColor]="pgPrefixIconColor()"
+                      [suffixIconColor]="pgSuffixIconColor()"
+                    ></av-input>
+                  }
+                }
               </div>
             </div>
 
@@ -361,8 +366,8 @@
 
   <!-- Message Display -->
   @if (message()) {
-  <div class="message-display">
-    {{ message() }}
-  </div>
+    <div class="message-display">
+      {{ message() }}
+    </div>
   }
 </div>

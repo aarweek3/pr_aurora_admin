@@ -1,7 +1,14 @@
 import { CdkDragEnd, CdkDragMove, DragDropModule } from '@angular/cdk/drag-drop';
 import { ComponentPortal, PortalModule } from '@angular/cdk/portal';
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, Pipe, PipeTransform, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  Pipe,
+  PipeTransform,
+  signal,
+} from '@angular/core';
 import { VSModalConfig } from '../../models/vs-modal-config.model';
 import { VS_MODAL_CONFIG } from '../../models/vs-modal-data.token';
 import { VSModalRef } from '../../models/vs-modal-ref.model';
@@ -69,7 +76,10 @@ export class VSModalContainerComponent {
   /**
    * Обновить debug info для текущего элемента
    */
-  private updateDebugInfo(element?: HTMLElement, action: 'drag' | 'resize' | 'init' | 'adjust' = 'init'): void {
+  private updateDebugInfo(
+    element?: HTMLElement,
+    action: 'drag' | 'resize' | 'init' | 'adjust' = 'init',
+  ): void {
     if (!this.showDebug()) return;
 
     const container = element || (document.querySelector('.vs-modal-shell') as HTMLElement);
@@ -176,7 +186,7 @@ export class VSModalContainerComponent {
 
     const hasOverflow = Object.values(overflows).some((v) => v);
 
-    let text = `Position: top: ${info.top}px, left: ${info.left}px
+    const text = `Position: top: ${info.top}px, left: ${info.left}px
 Size: ${info.width}×${info.height}px
 Bounds: right: ${info.right}px, bottom: ${info.bottom}px
 Viewport: ${window.innerWidth}×${window.innerHeight}px

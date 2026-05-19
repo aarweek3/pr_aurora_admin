@@ -357,7 +357,9 @@
             height: 100%;
             background: #1890ff;
             border-radius: 3px;
-            transition: width 1s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.5s ease;
+            transition:
+              width 1s cubic-bezier(0.16, 1, 0.3, 1),
+              background-color 0.5s ease;
 
             &.latency-good {
               background: #52c41a;

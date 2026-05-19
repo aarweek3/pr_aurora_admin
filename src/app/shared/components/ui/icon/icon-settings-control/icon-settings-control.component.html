@@ -1,7 +1,7 @@
 <div class="av-icon-settings-control" [class.compact]="compact()">
   <!-- Message Feedback -->
   @if (message()) {
-  <div class="message-feedback">{{ message() }}</div>
+    <div class="message-feedback">{{ message() }}</div>
   }
 
   <!-- Block A: Selection & Reset -->
@@ -17,15 +17,15 @@
         class="icon-select"
       >
         @for (preset of presets(); track preset.value) {
-        <nz-option nzCustomContent [nzValue]="preset.value" [nzLabel]="preset.label">
-          <div class="icon-option">
-            <av-icon [type]="preset.value" [size]="16"></av-icon>
-            <div class="icon-option-text">
-              <span class="icon-label">{{ preset.label }}</span>
-              <span class="icon-category">{{ preset.category }}</span>
+          <nz-option nzCustomContent [nzValue]="preset.value" [nzLabel]="preset.label">
+            <div class="icon-option">
+              <av-icon [type]="preset.value" [size]="16"></av-icon>
+              <div class="icon-option-text">
+                <span class="icon-label">{{ preset.label }}</span>
+                <span class="icon-category">{{ preset.category }}</span>
+              </div>
             </div>
-          </div>
-        </nz-option>
+          </nz-option>
         }
       </nz-select>
 
@@ -68,16 +68,16 @@
       ></nz-input-number>
       <div class="size-preset-buttons">
         @for (size of sizePresets; track size) {
-        <button
-          av-button
-          avType="text"
-          avSize="small"
-          (click)="selectSizePreset(size)"
-          [class.active]="value().size === size"
-          class="preset-btn"
-        >
-          {{ size }}
-        </button>
+          <button
+            av-button
+            avType="text"
+            avSize="small"
+            (click)="selectSizePreset(size)"
+            [class.active]="value().size === size"
+            class="preset-btn"
+          >
+            {{ size }}
+          </button>
         }
       </div>
     </div>
@@ -92,19 +92,20 @@
       ></nz-color-picker>
       <div class="color-preset-grid all-colors">
         @for (color of colorPresets; track $index) {
-        <button
-          class="color-preset-btn"
-          [style.background-color]="color"
-          [class.active]="value().color === color"
-          (click)="selectColorPreset(color)"
-        ></button>
-        } @for (color of neutralColorPresets; track $index) {
-        <button
-          class="color-preset-btn neutral"
-          [style.background-color]="color"
-          [class.active]="value().color === color"
-          (click)="selectColorPreset(color)"
-        ></button>
+          <button
+            class="color-preset-btn"
+            [style.background-color]="color"
+            [class.active]="value().color === color"
+            (click)="selectColorPreset(color)"
+          ></button>
+        }
+        @for (color of neutralColorPresets; track $index) {
+          <button
+            class="color-preset-btn neutral"
+            [style.background-color]="color"
+            [class.active]="value().color === color"
+            (click)="selectColorPreset(color)"
+          ></button>
         }
       </div>
       <button av-button avType="text" avSize="small" (click)="resetColor()" class="reset-color-btn">Сброс</button>
@@ -268,44 +269,44 @@
 
     <!-- Border Settings (conditional) -->
     @if (value().borderShow) {
-    <div class="border-settings">
-      <div nz-row [nzGutter]="12">
-        <div nz-col [nzSpan]="8">
-          <div class="control-item-mini">
-            <label>Цвет:</label>
-            <nz-color-picker
-              [ngModel]="value().borderColor"
-              (ngModelChange)="updateProperty('borderColor', $event)"
-              nzSize="small"
-            ></nz-color-picker>
+      <div class="border-settings">
+        <div nz-row [nzGutter]="12">
+          <div nz-col [nzSpan]="8">
+            <div class="control-item-mini">
+              <label>Цвет:</label>
+              <nz-color-picker
+                [ngModel]="value().borderColor"
+                (ngModelChange)="updateProperty('borderColor', $event)"
+                nzSize="small"
+              ></nz-color-picker>
+            </div>
           </div>
-        </div>
-        <div nz-col [nzSpan]="8">
-          <div class="control-item-mini">
-            <label>Толщина:</label>
-            <nz-slider
-              [ngModel]="value().borderWidth"
-              (ngModelChange)="updateProperty('borderWidth', $event)"
-              [nzMin]="1"
-              [nzMax]="10"
-              [nzStep]="1"
-            ></nz-slider>
+          <div nz-col [nzSpan]="8">
+            <div class="control-item-mini">
+              <label>Толщина:</label>
+              <nz-slider
+                [ngModel]="value().borderWidth"
+                (ngModelChange)="updateProperty('borderWidth', $event)"
+                [nzMin]="1"
+                [nzMax]="10"
+                [nzStep]="1"
+              ></nz-slider>
+            </div>
           </div>
-        </div>
-        <div nz-col [nzSpan]="8">
-          <div class="control-item-mini">
-            <label>Радиус:</label>
-            <nz-slider
-              [ngModel]="value().borderRadius"
-              (ngModelChange)="updateProperty('borderRadius', $event)"
-              [nzMin]="0"
-              [nzMax]="24"
-              [nzStep]="2"
-            ></nz-slider>
+          <div nz-col [nzSpan]="8">
+            <div class="control-item-mini">
+              <label>Радиус:</label>
+              <nz-slider
+                [ngModel]="value().borderRadius"
+                (ngModelChange)="updateProperty('borderRadius', $event)"
+                [nzMin]="0"
+                [nzMax]="24"
+                [nzStep]="2"
+              ></nz-slider>
+            </div>
           </div>
         </div>
       </div>
-    </div>
     }
   </av-field-group>
 </div>

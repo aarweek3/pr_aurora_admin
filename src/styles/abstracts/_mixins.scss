@@ -6,6 +6,11 @@
 @use "sass:map";
 @use "./variables" as *;
 
+// Abandoned Dark Theme mixin (empty to avoid errors)
+@mixin dark-theme {
+  // We abandoned dark-theme, so this mixin does nothing
+}
+
 // =============================================================================
 // 1. RESPONSIVE / MEDIA QUERIES
 // =============================================================================
@@ -54,6 +59,21 @@
     }
   } @else {
     @warn "One or both breakpoints not found in $breakpoints map.";
+  }
+}
+
+/// Переключение flex-контейнера в колонку на мобильных (до md)
+@mixin stack-on-mobile {
+  @include media-down(md) {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+/// Скрытие элемента на мобильных (до md)
+@mixin hide-on-mobile {
+  @include media-down(md) {
+    display: none !important;
   }
 }
 
@@ -416,21 +436,56 @@
 }
 
 // =============================================================================
-// 11. DARK THEME MIXIN
+// 12. PREMIUM AURORA EFFECTS
 // =============================================================================
 
-/// Применить стили для dark theme
-/// ВАЖНО: Используйте ТОЛЬКО внутри селектора, не на верхнем уровне!
-/// @example
-///   .button {
-///     background: white;
-///
-///     @include dark-theme {
-///       background: black;
-///     }
-///   }
-@mixin dark-theme {
-  :global([data-theme="dark"]) & {
-    @content;
+/// Эффект матового стекла (Glassmorphism)
+/// @param {Number} $blur - Радиус размытия
+/// @param {Color} $bg - Цвет фона (полупрозрачный)
+/// @param {Color} $border - Цвет границы
+@mixin av-glass($blur: 10px, $bg: rgba(255, 255, 255, 0.7), $border: rgba(255, 255, 255, 0.3)) {
+  background: $bg;
+  backdrop-filter: blur($blur);
+  -webkit-backdrop-filter: blur($blur);
+  border: 1px solid $border;
+}
+
+/// Многослойная "мягкая" тень (Premium Look)
+@mixin av-soft-shadow {
+  box-shadow: var(--av-shadow-premium);
+}
+
+/// Уровни вложенности (Elevation)
+/// @param {Number} $level - Уровень от 1 до 4
+@mixin av-elevation($level: 1) {
+  box-shadow: var(--av-shadow-l#{$level});
+}
+
+/// Фирменный мягкий градиент
+/// @param {Color} $start-color - Начальный цвет
+/// @param {Color} $end-color - Конечный цвет
+/// @param {String} $deg - Угол
+@mixin av-premium-gradient($start-color: $color-primary, $end-color: $color-secondary, $deg: 135deg) {
+  background: linear-gradient($deg, $start-color, $end-color);
+}
+
+/// Анимация скелетона (Loading state)
+@mixin av-skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--av-color-gray-1) 25%,
+    var(--av-color-gray-2) 37%,
+    var(--av-color-gray-1) 63%
+  );
+  background-size: 400% 100%;
+  animation: av-skeleton-loading 1.4s ease infinite;
+}
+
+@keyframes av-skeleton-loading {
+  0% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
   }
 }

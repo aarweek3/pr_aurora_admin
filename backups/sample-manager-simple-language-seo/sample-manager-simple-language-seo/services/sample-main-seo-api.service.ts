@@ -1,5 +1,5 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { finalize, shareReplay } from 'rxjs/operators';
 import { environment } from '../../../../environments/environment';
@@ -15,10 +15,10 @@ import {
   providedIn: 'root',
 })
 export class SampleMainSeoApiService {
+  private http = inject(HttpClient);
+
   private readonly baseUrl = `${environment.apiUrl}/api/v1/samples-main-seo`;
   private cache = new Map<string, Observable<SampleMainSeoPagedResponse>>();
-
-  constructor(private http: HttpClient) {}
 
   getPaged(request: SampleMainSeoPageRequest): Observable<SampleMainSeoPagedResponse> {
     // Формируем ключ для кеша на основе параметров запроса

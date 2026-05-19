@@ -18,7 +18,7 @@ import { SystemRequirementDto, RequirementArchitecture } from '../models/system-
     NzButtonModule,
     NzIconModule,
     NzPopconfirmModule,
-    NzToolTipModule
+    NzToolTipModule,
   ],
   template: `
     <nz-table #basicTable [nzData]="items" [nzFrontPagination]="false" nzSize="small">
@@ -51,18 +51,27 @@ import { SystemRequirementDto, RequirementArchitecture } from '../models/system-
             </td>
             <td>
               @if (data.localizations && data.localizations.length > 0) {
-                <i nz-icon nzType="info-circle" 
-                   nz-tooltip 
-                   [nzTooltipTitle]="data.localizations[0].additionalNotes"></i>
+                <i
+                  nz-icon
+                  nzType="info-circle"
+                  nz-tooltip
+                  [nzTooltipTitle]="data.localizations[0].additionalNotes"
+                ></i>
               }
             </td>
             <td nzRight>
               <button nz-button nzType="text" nzShape="circle" (click)="edit.emit(data)">
                 <i nz-icon nzType="edit"></i>
               </button>
-              <button nz-button nzType="text" nzDanger nzShape="circle"
-                      nz-popconfirm nzPopconfirmTitle="Удалить требование?"
-                      (nzOnConfirm)="delete.emit(data.id)">
+              <button
+                nz-button
+                nzType="text"
+                nzDanger
+                nzShape="circle"
+                nz-popconfirm
+                nzPopconfirmTitle="Удалить требование?"
+                (nzOnConfirm)="delete.emit(data.id)"
+              >
                 <i nz-icon nzType="delete"></i>
               </button>
             </td>
@@ -71,7 +80,7 @@ import { SystemRequirementDto, RequirementArchitecture } from '../models/system-
       </tbody>
     </nz-table>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SystemRequirementListComponent {
   @Input() items: SystemRequirementDto[] = [];
@@ -80,20 +89,29 @@ export class SystemRequirementListComponent {
 
   getArchName(arch: RequirementArchitecture): string {
     switch (arch) {
-      case RequirementArchitecture.Any: return 'Any';
-      case RequirementArchitecture.X86: return 'x86';
-      case RequirementArchitecture.X64: return 'x64';
-      case RequirementArchitecture.Arm64: return 'ARM64';
-      default: return 'Unknown';
+      case RequirementArchitecture.Any:
+        return 'Any';
+      case RequirementArchitecture.X86:
+        return 'x86';
+      case RequirementArchitecture.X64:
+        return 'x64';
+      case RequirementArchitecture.Arm64:
+        return 'ARM64';
+      default:
+        return 'Unknown';
     }
   }
 
   getArchColor(arch: RequirementArchitecture): string {
     switch (arch) {
-      case RequirementArchitecture.Any: return 'blue';
-      case RequirementArchitecture.X64: return 'geekblue';
-      case RequirementArchitecture.Arm64: return 'purple';
-      default: return 'default';
+      case RequirementArchitecture.Any:
+        return 'blue';
+      case RequirementArchitecture.X64:
+        return 'geekblue';
+      case RequirementArchitecture.Arm64:
+        return 'purple';
+      default:
+        return 'default';
     }
   }
 }

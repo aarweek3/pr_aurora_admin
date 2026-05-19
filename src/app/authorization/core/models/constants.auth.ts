@@ -9,7 +9,7 @@ export const API_CONFIG = {
       LOGOUT: '/api/auth/logout',
       REFRESH: '/api/auth/refresh',
       CHANGE_PASSWORD: '/api/auth/change-password',
-      PROFILE: '/api/auth/profile'
+      PROFILE: '/api/auth/profile',
     },
     USERS: {
       BASE: '/api/users',
@@ -18,7 +18,7 @@ export const API_CONFIG = {
       ACTIVATE: (id: string) => `/api/users/${id}/activate`,
       DEACTIVATE: (id: string) => `/api/users/${id}/deactivate`,
       STATISTICS: '/api/users/statistics',
-      SEARCH: '/api/users/search'
+      SEARCH: '/api/users/search',
     },
     SESSIONS: {
       BASE: '/api/sessions',
@@ -27,7 +27,7 @@ export const API_CONFIG = {
       REVOKE_ALL: '/api/sessions/revoke-all',
       UPDATE: (id: number) => `/api/sessions/${id}`,
       CLEANUP: '/api/sessions/cleanup',
-      VALIDATE: (token: string) => `/api/sessions/${token}/validate`
+      VALIDATE: (token: string) => `/api/sessions/${token}/validate`,
     },
     ACTIVITY_LOGS: {
       BASE: '/api/activitylogs',
@@ -36,7 +36,7 @@ export const API_CONFIG = {
       MY: '/api/activitylogs/my',
       RECENT: '/api/activitylogs/recent',
       STATISTICS: '/api/activitylogs/statistics',
-      CLEANUP: '/api/activitylogs/cleanup'
+      CLEANUP: '/api/activitylogs/cleanup',
     },
     ADMIN: {
       USERS: '/api/admin-panel/users',
@@ -50,14 +50,12 @@ export const API_CONFIG = {
       SESSIONS: '/api/admin-panel/sessions',
       SESSION_REVOKE: (id: number) => `/api/admin-panel/sessions/${id}/revoke`,
       ACTIVITY_LOGS: '/api/admin-panel/activity-logs',
-      STATISTICS: '/api/admin-panel/statistics'
-    }
-  }
+      STATISTICS: '/api/admin-panel/statistics',
+    },
+  },
 };
-
-
 
 export const PAGINATION_DEFAULTS = {
   PAGE_NUMBER: 1,
-  PAGE_SIZE: 20
+  PAGE_SIZE: 20,
 };

@@ -15,7 +15,7 @@ export class AvImageMetadataService {
   slugify(text: string): string {
     if (!text) return '';
 
-    const trans: { [key: string]: string } = {
+    const trans: Record<string, string> = {
       а: 'a',
       б: 'b',
       в: 'v',

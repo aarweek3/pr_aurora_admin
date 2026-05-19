@@ -209,8 +209,8 @@ export const UI_DEMO_ROUTES: Routes = [
   {
     path: 'logger-console',
     loadComponent: () =>
-      import(
-        '../../shared/logger-console/components/logger-console-demo/logger-console-demo.component'
-      ).then((m) => m.LoggerConsoleDemoComponent),
+      import('../../shared/logger-console/components/logger-console-demo/logger-console-demo.component').then(
+        (m) => m.LoggerConsoleDemoComponent,
+      ),
   },
 ];

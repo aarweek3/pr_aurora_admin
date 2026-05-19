@@ -71,7 +71,7 @@ import { TokenService, TokenStatus } from '@auth/services/token.service';
             </nz-descriptions-item>
 
             <nz-descriptions-item nzTitle="Истекает в" *ngIf="status.expiresAt">
-              {{ status.expiresAt | date : 'dd.MM.yyyy HH:mm:ss' }}
+              {{ status.expiresAt | date: 'dd.MM.yyyy HH:mm:ss' }}
             </nz-descriptions-item>
 
             <nz-descriptions-item nzTitle="Осталось времени" *ngIf="status.isValid">
@@ -81,7 +81,7 @@ import { TokenService, TokenStatus } from '@auth/services/token.service';
             </nz-descriptions-item>
 
             <nz-descriptions-item nzTitle="Последняя проверка">
-              {{ status.lastChecked | date : 'dd.MM.yyyy HH:mm:ss' }}
+              {{ status.lastChecked | date: 'dd.MM.yyyy HH:mm:ss' }}
             </nz-descriptions-item>
           </nz-descriptions>
 
@@ -366,5 +366,3 @@ ${error.message}
     });
   }
 }
-
-

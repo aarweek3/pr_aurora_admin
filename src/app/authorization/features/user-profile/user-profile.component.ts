@@ -1,7 +1,14 @@
 // src/app/auth/components/user-profile/user-profile.component.ts
 import { Component, inject, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+  AbstractControl,
+  ValidationErrors,
+} from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzFormModule } from 'ng-zorro-antd/form';
@@ -29,7 +36,7 @@ import { UserProfileDto } from '@auth/models';
     NzTabsModule,
     NzAvatarModule,
     NzDividerModule,
-    NzDescriptionsModule
+    NzDescriptionsModule,
   ],
   template: `
     <div class="profile-container">
@@ -61,10 +68,10 @@ import { UserProfileDto } from '@auth/models';
                 {{ currentUser.isActive ? 'Активен' : 'Неактивен' }}
               </nz-descriptions-item>
               <nz-descriptions-item nzTitle="Дата регистрации">
-                {{ currentUser.createdAt | date:'medium' }}
+                {{ currentUser.createdAt | date: 'medium' }}
               </nz-descriptions-item>
               <nz-descriptions-item nzTitle="Последний вход">
-                {{ currentUser.lastLogin ? (currentUser.lastLogin | date:'medium') : 'Никогда' }}
+                {{ currentUser.lastLogin ? (currentUser.lastLogin | date: 'medium') : 'Никогда' }}
               </nz-descriptions-item>
             </nz-descriptions>
           </nz-tab>
@@ -95,9 +102,9 @@ import { UserProfileDto } from '@auth/models';
 
               <nz-form-item>
                 <nz-form-control [nzOffset]="6" [nzSpan]="18">
-                  <button 
-                    nz-button 
-                    nzType="primary" 
+                  <button
+                    nz-button
+                    nzType="primary"
                     type="submit"
                     [nzLoading]="loadingProfile"
                     [disabled]="!profileForm.valid"
@@ -115,11 +122,11 @@ import { UserProfileDto } from '@auth/models';
               <nz-form-item>
                 <nz-form-label [nzSpan]="6">Текущий пароль</nz-form-label>
                 <nz-form-control [nzSpan]="18" nzErrorTip="Введите текущий пароль">
-                  <input 
-                    nz-input 
-                    type="password" 
-                    formControlName="currentPassword" 
-                    placeholder="Текущий пароль" 
+                  <input
+                    nz-input
+                    type="password"
+                    formControlName="currentPassword"
+                    placeholder="Текущий пароль"
                   />
                 </nz-form-control>
               </nz-form-item>
@@ -127,15 +134,19 @@ import { UserProfileDto } from '@auth/models';
               <nz-form-item>
                 <nz-form-label [nzSpan]="6">Новый пароль</nz-form-label>
                 <nz-form-control [nzSpan]="18" [nzErrorTip]="newPasswordError">
-                  <input 
-                    nz-input 
-                    type="password" 
-                    formControlName="newPassword" 
-                    placeholder="Минимум 6 символов" 
+                  <input
+                    nz-input
+                    type="password"
+                    formControlName="newPassword"
+                    placeholder="Минимум 6 символов"
                   />
                   <ng-template #newPasswordError let-control>
-                    <ng-container *ngIf="control.hasError('required')">Введите новый пароль</ng-container>
-                    <ng-container *ngIf="control.hasError('minlength')">Минимум 6 символов</ng-container>
+                    <ng-container *ngIf="control.hasError('required')"
+                      >Введите новый пароль</ng-container
+                    >
+                    <ng-container *ngIf="control.hasError('minlength')"
+                      >Минимум 6 символов</ng-container
+                    >
                   </ng-template>
                 </nz-form-control>
               </nz-form-item>
@@ -143,24 +154,28 @@ import { UserProfileDto } from '@auth/models';
               <nz-form-item>
                 <nz-form-label [nzSpan]="6">Подтвердите пароль</nz-form-label>
                 <nz-form-control [nzSpan]="18" [nzErrorTip]="confirmPasswordError">
-                  <input 
-                    nz-input 
-                    type="password" 
-                    formControlName="confirmPassword" 
-                    placeholder="Повторите пароль" 
+                  <input
+                    nz-input
+                    type="password"
+                    formControlName="confirmPassword"
+                    placeholder="Повторите пароль"
                   />
                   <ng-template #confirmPasswordError let-control>
-                    <ng-container *ngIf="control.hasError('required')">Подтвердите пароль</ng-container>
-                    <ng-container *ngIf="control.hasError('passwordMismatch')">Пароли не совпадают</ng-container>
+                    <ng-container *ngIf="control.hasError('required')"
+                      >Подтвердите пароль</ng-container
+                    >
+                    <ng-container *ngIf="control.hasError('passwordMismatch')"
+                      >Пароли не совпадают</ng-container
+                    >
                   </ng-template>
                 </nz-form-control>
               </nz-form-item>
 
               <nz-form-item>
                 <nz-form-control [nzOffset]="6" [nzSpan]="18">
-                  <button 
-                    nz-button 
-                    nzType="primary" 
+                  <button
+                    nz-button
+                    nzType="primary"
                     nzDanger
                     type="submit"
                     [nzLoading]="loadingPassword"
@@ -176,40 +191,42 @@ import { UserProfileDto } from '@auth/models';
       </nz-card>
     </div>
   `,
-  styles: [`
-    .profile-container {
-      padding: 24px;
-      max-width: 1200px;
-      margin: 0 auto;
-    }
+  styles: [
+    `
+      .profile-container {
+        padding: 24px;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
 
-    .profile-card {
-      background: #fff;
-      border-radius: 8px;
-    }
+      .profile-card {
+        background: #fff;
+        border-radius: 8px;
+      }
 
-    .profile-header {
-      display: flex;
-      align-items: center;
-      gap: 24px;
-      margin-bottom: 24px;
-    }
+      .profile-header {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+        margin-bottom: 24px;
+      }
 
-    .profile-info h2 {
-      margin: 0 0 8px;
-      font-size: 24px;
-      font-weight: 600;
-    }
+      .profile-info h2 {
+        margin: 0 0 8px;
+        font-size: 24px;
+        font-weight: 600;
+      }
 
-    .profile-info p {
-      margin: 0;
-      color: #666;
-    }
+      .profile-info p {
+        margin: 0;
+        color: #666;
+      }
 
-    nz-form-item {
-      margin-bottom: 24px;
-    }
-  `]
+      nz-form-item {
+        margin-bottom: 24px;
+      }
+    `,
+  ],
 })
 export class UserProfileComponent implements OnInit, OnDestroy {
   private readonly destroy$ = new Subject<void>();
@@ -228,14 +245,17 @@ export class UserProfileComponent implements OnInit, OnDestroy {
     this.profileForm = this.fb.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
-      department: ['']
+      department: [''],
     });
 
-    this.passwordForm = this.fb.group({
-      currentPassword: ['', Validators.required],
-      newPassword: ['', [Validators.required, Validators.minLength(6)]],
-      confirmPassword: ['', Validators.required]
-    }, { validators: this.passwordMatchValidator });
+    this.passwordForm = this.fb.group(
+      {
+        currentPassword: ['', Validators.required],
+        newPassword: ['', [Validators.required, Validators.minLength(6)]],
+        confirmPassword: ['', Validators.required],
+      },
+      { validators: this.passwordMatchValidator },
+    );
   }
 
   ngOnInit(): void {
@@ -248,7 +268,8 @@ export class UserProfileComponent implements OnInit, OnDestroy {
   }
 
   loadProfile(): void {
-    this.profileService.getProfile()
+    this.profileService
+      .getProfile()
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response) => {
@@ -257,7 +278,7 @@ export class UserProfileComponent implements OnInit, OnDestroy {
         },
         error: () => {
           this.message.error('Ошибка загрузки профиля');
-        }
+        },
       });
   }
 
@@ -268,7 +289,7 @@ export class UserProfileComponent implements OnInit, OnDestroy {
     this.profileForm.patchValue({
       firstName: firstName || '',
       lastName: lastNameParts.join(' ') || '',
-      department: this.currentUser.department || ''
+      department: this.currentUser.department || '',
     });
   }
 
@@ -277,14 +298,15 @@ export class UserProfileComponent implements OnInit, OnDestroy {
 
     this.loadingProfile = true;
     const currentUserData = this.authService.getCurrentUser();
-    
+
     if (!currentUserData) {
       this.message.error('Пользователь не найден');
       this.loadingProfile = false;
       return;
     }
 
-    this.profileService.updateProfile(currentUserData.email, this.profileForm.value)
+    this.profileService
+      .updateProfile(currentUserData.email, this.profileForm.value)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: () => {
@@ -295,7 +317,7 @@ export class UserProfileComponent implements OnInit, OnDestroy {
         error: () => {
           this.message.error('Ошибка обновления профиля');
           this.loadingProfile = false;
-        }
+        },
       });
   }
 
@@ -303,7 +325,8 @@ export class UserProfileComponent implements OnInit, OnDestroy {
     if (!this.passwordForm.valid) return;
 
     this.loadingPassword = true;
-    this.profileService.changePassword(this.passwordForm.value)
+    this.profileService
+      .changePassword(this.passwordForm.value)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: () => {
@@ -314,19 +337,19 @@ export class UserProfileComponent implements OnInit, OnDestroy {
         error: (error) => {
           this.message.error(error.error?.message || 'Ошибка смены пароля');
           this.loadingPassword = false;
-        }
+        },
       });
   }
 
   passwordMatchValidator(control: AbstractControl): ValidationErrors | null {
     const password = control.get('newPassword')?.value;
     const confirm = control.get('confirmPassword')?.value;
-    
+
     if (password !== confirm) {
       control.get('confirmPassword')?.setErrors({ passwordMismatch: true });
       return { passwordMismatch: true };
     }
-    
+
     return null;
   }
 
@@ -336,4 +359,3 @@ export class UserProfileComponent implements OnInit, OnDestroy {
     return ((names[0]?.charAt(0) || '') + (names[1]?.charAt(0) || '')).toUpperCase();
   }
 }
-

@@ -164,7 +164,7 @@
             <nz-tag [nzColor]="res.ok ? 'success' : 'error'" class="status-tag">
               Статус: {{ res.status }} {{ res.statusText }}
             </nz-tag>
-            <span class="timestamp">{{ res.timestamp | date : 'HH:mm:ss.SSS' }}</span>
+            <span class="timestamp">{{ res.timestamp | date: 'HH:mm:ss.SSS' }}</span>
           </div>
 
           <nz-tabset nzSize="small" [nzAnimated]="false">
@@ -178,7 +178,7 @@
                 <nz-descriptions-item nzTitle="Успешно">{{ res.ok ? 'Да' : 'Нет' }}</nz-descriptions-item>
                 <nz-descriptions-item nzTitle="Код статуса">{{ res.status }}</nz-descriptions-item>
                 <nz-descriptions-item nzTitle="Сообщение">{{ res.statusText }}</nz-descriptions-item>
-                <nz-descriptions-item nzTitle="Время">{{ res.timestamp | date : 'medium' }}</nz-descriptions-item>
+                <nz-descriptions-item nzTitle="Время">{{ res.timestamp | date: 'medium' }}</nz-descriptions-item>
               </nz-descriptions>
             </nz-tab>
           </nz-tabset>

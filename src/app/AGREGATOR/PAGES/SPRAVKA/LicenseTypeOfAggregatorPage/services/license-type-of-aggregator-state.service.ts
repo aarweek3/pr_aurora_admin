@@ -1,12 +1,12 @@
-import { computed, Injectable, OnDestroy, signal } from '@angular/core';
+import { computed, inject, Injectable, OnDestroy, signal } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
-import { LanguageService } from '@assets/languageApp/services/language.service';
+import { LanguageService } from '@language-app';
 import { ModalService } from '@shared/components/ui/modal/services/modal.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { Observable, Subject } from 'rxjs';
 import { finalize, shareReplay, takeUntil } from 'rxjs/operators';
-import { ErrorResponse } from '../../../../../shared/infrastructure/interceptor/models/error-response.model';
+import { ErrorResponse } from '@core/models/error-response.model';
 import {
   INITIAL_LICENSE_TYPE_STATE,
   LicenseTypeOfAggregatorCreateDto,
@@ -44,19 +44,19 @@ export class LicenseTypeOfAggregatorStateService implements OnDestroy {
   readonly viewItem = computed(() => this.state().viewItem);
   readonly viewModalVisible = computed(() => this.state().viewModalVisible);
 
+  private api = inject(LicenseTypeOfAggregatorApiService);
+  private message = inject(NzMessageService);
+  private langService = inject(LanguageService);
+  private modal = inject(NzModalService);
+  private modalService = inject(ModalService);
+
   // Языки из LanguageService (через toSignal для реактивности)
   readonly languages = toSignal(
     toObservable(this.langService.availableLanguages).pipe(shareReplay(1)),
     { initialValue: [] },
   );
 
-  constructor(
-    private api: LicenseTypeOfAggregatorApiService,
-    private message: NzMessageService,
-    private langService: LanguageService,
-    private modal: NzModalService,
-    private modalService: ModalService,
-  ) {}
+  constructor() {}
 
   private checkLanguagesAvailable(): boolean {
     const langs = this.langService.availableLanguages();
@@ -108,7 +108,7 @@ export class LicenseTypeOfAggregatorStateService implements OnDestroy {
             this.modalService.alert({
               title: 'База данных пуста!',
               message:
-                'В базе данных \'DbNames\' (таблица \'license_types_of_aggregator\') нет записей для отображения. Вы можете инициализировать данные из JSON файла в блоке обслуживания.',
+                "В базе данных 'DbNames' (таблица 'license_types_of_aggregator') нет записей для отображения. Вы можете инициализировать данные из JSON файла в блоке обслуживания.",
               alertType: 'info',
               centered: true,
               icon: 'system/av_info',
@@ -117,8 +117,7 @@ export class LicenseTypeOfAggregatorStateService implements OnDestroy {
             this.modalService.alert({
               title: 'Обновление завершено',
               message:
-                'Данные из БД считаны, таблица обновлена. Всего загружено записей: ' +
-                res.total,
+                'Данные из БД считаны, таблица обновлена. Всего загружено записей: ' + res.total,
               alertType: 'success',
               centered: true,
               icon: 'general/av_check-circle',
@@ -166,8 +165,7 @@ export class LicenseTypeOfAggregatorStateService implements OnDestroy {
     if (direction === 'descend') dirNum = 1;
 
     if (direction === null) {
-      if (this.state().sortBy === 'CanonicalName' && this.state().sortDirection === 0)
-        return;
+      if (this.state().sortBy === 'CanonicalName' && this.state().sortDirection === 0) return;
       this.updateState({ sortBy: 'CanonicalName', sortDirection: 0, pageNumber: 1 });
     } else {
       if (this.state().sortBy === column && this.state().sortDirection === dirNum) return;
@@ -262,7 +260,7 @@ export class LicenseTypeOfAggregatorStateService implements OnDestroy {
     });
   }
 
-  delete(id: number, isHard: boolean = false): void {
+  delete(id: number, isHard = false): void {
     this.updateState({ deletingId: id });
     this.api
       .delete(id, isHard)

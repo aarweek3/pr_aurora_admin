@@ -2,16 +2,13 @@
 @use "../abstracts/variables" as *;
 @use "../abstracts/mixins" as *;
 
-/**
- * Button Directive Styles
- *
- * BEM-based styles for av-button directive
- * Follows SOW requirements: no direct .ant-* overrides
- * Глобальные стили для всего проекта
- */
+@layer components {
+  /**
+   * Aurora Button Styles
+   * BEM-based styles for av-button directive
+   */
 
 .av-btn {
-  // Base styles
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -24,150 +21,112 @@
   user-select: none;
   cursor: pointer;
   border: 1px solid transparent;
-  transition: all $transition-base;
+  transition: var(--av-transition-base);
   outline: none;
 
-  // Default size and geometry
-  --av-btn-radius: 0px; // Default sharp style
-
+  // Geometry
   height: $button-height-base;
-  padding: 0 $spacing-md;
+  padding: 0 var(--av-spacing-md);
   font-size: $font-size-base;
-  line-height: 1.5;
-  border-radius: var(--av-btn-radius);
+  border-radius: var(--av-radius-base);
 
-  // Disabled state
   &:disabled,
   &[disabled] {
     cursor: not-allowed;
-    opacity: 0.6;
+    opacity: 0.5;
   }
 
-  // Focus state
   &:focus-visible {
     @include focus-ring($color-primary);
   }
 
-  // Types
+  // --- Types ---
+  
   &--primary {
-    background-color: $color-primary;
-    border-color: $color-primary;
-    color: #fff;
+    background-color: var(--av-color-primary);
+    border-color: var(--av-color-primary);
+    color: var(--av-color-white);
 
     &:hover:not(:disabled) {
-      background-color: $color-primary-hover;
-      border-color: $color-primary-hover;
-      transform: translateY(-2px);
+      background-color: var(--av-color-primary-hover);
+      border-color: var(--av-color-primary-hover);
+      @include av-soft-shadow;
+      transform: translateY(-1px);
     }
 
     &:active:not(:disabled) {
-      background-color: $color-primary-active;
-      border-color: $color-primary-active;
+      background-color: var(--av-color-primary-active);
+      border-color: var(--av-color-primary-active);
+      transform: translateY(0);
     }
   }
 
   &--default {
-    background-color: #fff;
-    border-color: $color-border-base;
-    color: $color-text-primary;
+    background-color: var(--av-color-white);
+    border-color: var(--av-border-color);
+    color: var(--av-text-primary);
 
     &:hover:not(:disabled) {
-      border-color: $color-primary;
-      color: $color-primary;
-    }
-
-    &:active:not(:disabled) {
-      border-color: $color-primary-active;
-      color: $color-primary-active;
+      border-color: var(--av-color-primary);
+      color: var(--av-color-primary);
+      background-color: var(--av-color-primary-light);
     }
   }
 
   &--dashed {
-    background-color: #fff;
-    border-color: $color-border-base;
+    background-color: var(--av-color-white);
+    border-color: var(--av-border-color);
     border-style: dashed;
-    color: $color-text-primary;
+    color: var(--av-text-primary);
 
     &:hover:not(:disabled) {
-      border-color: $color-primary;
-      color: $color-primary;
-    }
-
-    &:active:not(:disabled) {
-      border-color: $color-primary-active;
-      color: $color-primary-active;
+      border-color: var(--av-color-primary);
+      color: var(--av-color-primary);
     }
   }
 
   &--text {
     background-color: transparent;
     border-color: transparent;
-    color: $color-text-primary;
+    color: var(--av-text-primary);
 
     &:hover:not(:disabled) {
-      background-color: rgba($color-primary, 0.1);
-      color: $color-primary;
-    }
-
-    &:active:not(:disabled) {
-      color: $color-primary-active;
-    }
-  }
-
-  &--link {
-    background-color: transparent;
-    border-color: transparent;
-    color: $color-primary;
-    text-decoration: none;
-
-    &:hover:not(:disabled) {
-      color: $color-primary-hover;
-      text-decoration: underline;
-    }
-
-    &:active:not(:disabled) {
-      color: $color-primary-active;
+      background-color: var(--av-color-gray-1);
     }
   }
 
   &--danger {
-    background-color: $color-error;
-    border-color: $color-error;
-    color: #fff;
+    background-color: var(--av-color-error);
+    border-color: var(--av-color-error);
+    color: var(--av-color-white);
 
     &:hover:not(:disabled) {
-      background-color: $color-error-hover;
-      border-color: $color-error-hover;
-      transform: translateY(-2px);
-    }
-
-    &:active:not(:disabled) {
-      background-color: $color-error-active;
-      border-color: $color-error-active;
+      background-color: var(--av-color-error-hover);
+      border-color: var(--av-color-error-hover);
+      transform: translateY(-1px);
     }
   }
 
-  // Sizes
+  // --- Sizes ---
   &--small {
     height: $button-height-sm;
-    padding: 0 $spacing-sm;
+    padding: 0 var(--av-spacing-sm);
     font-size: $font-size-sm;
   }
 
   &--large {
     height: $button-height-lg;
-    padding: 0 $spacing-lg;
+    padding: 0 var(--av-spacing-lg);
     font-size: $font-size-lg;
   }
 
-  // States
+  // --- States ---
   &--loading {
     cursor: wait;
-    position: relative;
-
+    opacity: 0.8;
+    pointer-events: none;
     &::before {
       content: "";
-      display: inline-block;
       width: 14px;
       height: 14px;
       margin-right: 8px;
@@ -183,422 +142,125 @@
     width: 100%;
   }
 
-  // Icon only button - квадратная форма
-  &--icon-only {
-    width: $button-height-base;
-    height: $button-height-base;
-    padding: 0 !important;
-    flex-shrink: 0;
-    justify-content: center;
-    align-items: center;
-    gap: 0;
-
-    // Ensure icon is perfectly centered
-    av-icon,
-    .anticon,
-    nz-icon {
-      flex-shrink: 0;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      line-height: 0; // Fixes baseline anchoring
-
-      svg {
-        display: block;
-      }
-    }
-  }
-
+  // --- Shapes ---
   &--shape-circle {
-    border-radius: 50% !important;
+    border-radius: 50%;
+    padding: 0;
     width: $button-height-base;
-    height: $button-height-base;
-    padding: 0 !important;
-    min-width: 0;
-    aspect-ratio: 1 / 1;
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    line-height: 0;
-    font-size: 0;
-
-    &.av-btn--small {
-      width: $button-height-sm;
-      height: $button-height-sm;
-    }
-
-    &.av-btn--large {
-      width: $button-height-lg;
-      height: $button-height-lg;
-    }
-
-    // Ensure icon and text (if any) are centered
-    av-icon,
-    .anticon,
-    nz-icon {
-      flex-shrink: 0;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-    }
-  }
-
-  &--shape-square {
-    border-radius: 0 !important;
-    width: $button-height-base;
-    height: $button-height-base;
-    padding: 0 !important;
-    min-width: 0;
-    aspect-ratio: 1 / 1;
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    line-height: 0;
-    font-size: 0;
-
-    &.av-btn--small {
-      width: $button-height-sm;
-      height: $button-height-sm;
-    }
-
-    &.av-btn--large {
-      width: $button-height-lg;
-      height: $button-height-lg;
-    }
-
-    &::before,
-    &::after {
-      border-radius: 0 !important;
-    }
-
-    av-icon,
-    .anticon,
-    nz-icon {
-      flex-shrink: 0;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-    }
-  }
-
-  &--shape-rounded {
-    border-radius: 4px !important; // Reduced from 8px
-    &::before,
-    &::after {
-      border-radius: 4px !important;
-    }
+    &.av-btn--small { width: $button-height-sm; }
+    &.av-btn--large { width: $button-height-lg; }
   }
 
   &--shape-round {
-    border-radius: $border-radius-pill !important;
-    padding-left: $spacing-md * 1.5;
-    padding-right: $spacing-md * 1.5;
-  }
-
-  &--shape-rounded-big {
-    border-radius: 100px !important;
-    &::before,
-    &::after {
-      border-radius: 100px !important;
-    }
-  }
-}
-
-// Global Soft Style Modifier
-.av-style-soft {
-  --av-btn-radius: 8px;
-
-  .av-btn {
-    border-radius: var(--av-btn-radius);
-    &::before,
-    &::after {
-      border-radius: var(--av-btn-radius);
-    }
-  }
-
-  &.av-btn {
-    border-radius: var(--av-btn-radius);
-    &::before,
-    &::after {
-      border-radius: var(--av-btn-radius);
-    }
+    border-radius: 100px;
+    padding-left: var(--av-spacing-lg);
+    padding-right: var(--av-spacing-lg);
   }
 }
 
 @keyframes av-btn-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+  to { transform: rotate(360deg); }
 }
 
-// Dark theme support
-[data-theme="dark"] {
-  .av-btn {
-    &--default,
-    &--dashed {
-      background-color: $dark-bg-light;
-      border-color: $dark-border-base;
-      color: $dark-text-primary;
-
-      &:hover:not(:disabled) {
-        border-color: $color-primary;
-        color: $color-primary;
-      }
-    }
-
-    &--text {
-      color: $dark-text-primary;
-
-      &:hover:not(:disabled) {
-        background-color: rgba($color-primary, 0.2);
-      }
-    }
-  }
-}
-
-/**
- * Расширенные варианты кнопок
- * Перенесено из button-control-aurora.component.scss для устранения дублирования
- */
-
-// Primary - Default (обводка)
-.av-btn--primary.av-btn--variant-default {
-  background: transparent;
-  border: 2px solid #1890ff;
-  color: #1890ff;
-
-  av-icon {
-    color: #1890ff;
-  }
-
-  &:hover:not(:disabled) {
-    background: rgba(24, 144, 255, 0.1);
-    border-color: #40a9ff;
-    color: #40a9ff;
-
-    av-icon {
-      color: #40a9ff;
-    }
-  }
-
-  &:active:not(:disabled) {
-    background: rgba(24, 144, 255, 0.2);
-    border-color: #096dd9;
-    color: #096dd9;
-
-    av-icon {
-      color: #096dd9;
-    }
-  }
-}
-
-// Danger - Default (обводка)
-.av-btn--danger.av-btn--variant-default {
-  background: transparent;
-  border: 2px solid #ff4d4f;
-  color: #ff4d4f;
-
-  av-icon {
-    color: #ff4d4f;
-  }
-
-  &:hover:not(:disabled) {
-    background: rgba(255, 77, 79, 0.1);
-    border-color: #ff7875;
-    color: #ff7875;
-
-    av-icon {
-      color: #ff7875;
-    }
-  }
-
-  &:active:not(:disabled) {
-    background: rgba(255, 77, 79, 0.2);
-    border-color: #d9363e;
-    color: #d9363e;
-
-    av-icon {
-      color: #d9363e;
-    }
-  }
-}
-
-// Primary - Dashed (пунктирная обводка)
-.av-btn--primary.av-btn--variant-dashed {
-  background: transparent;
-  border: 2px dashed #1890ff;
-  color: #1890ff;
-
-  av-icon {
-    color: #1890ff;
-  }
-
-  &:hover:not(:disabled) {
-    background: rgba(24, 144, 255, 0.1);
-    border-color: #40a9ff;
-    color: #40a9ff;
-
-    av-icon {
-      color: #40a9ff;
-    }
-  }
-
-  &:active:not(:disabled) {
-    background: rgba(24, 144, 255, 0.2);
-    border-color: #096dd9;
-    color: #096dd9;
-
-    av-icon {
-      color: #096dd9;
-    }
-  }
-}
-
-// Danger - Dashed (пунктирная обводка)
-.av-btn--danger.av-btn--variant-dashed {
-  background: transparent;
-  border: 2px dashed #ff4d4f;
-  color: #ff4d4f;
-
-  av-icon {
-    color: #ff4d4f;
-  }
-
-  &:hover:not(:disabled) {
-    background: rgba(255, 77, 79, 0.1);
-    border-color: #ff7875;
-    color: #ff7875;
-
-    av-icon {
-      color: #ff7875;
-    }
-  }
-
-  &:active:not(:disabled) {
-    background: rgba(255, 77, 79, 0.2);
-    border-color: #d9363e;
-    color: #d9363e;
-
-    av-icon {
-      color: #d9363e;
-    }
-  }
-}
-
-// Primary - Ghost (прозрачный)
-.av-btn--primary.av-btn--variant-ghost {
-  background: transparent;
+// PREMIUM HERO & SECONDARY STYLES (Used for main actions and modals)
+.av-btn-hero {
+  height: 48px;
+  padding: 0 var(--av-spacing-lg);
+  font-weight: var(--av-font-weight-bold);
+  font-size: var(--av-font-size-sm);
+  letter-spacing: 0.03em;
   border: none;
-  color: #40a9ff; // Средняя яркость
-
-  av-icon {
-    color: #40a9ff;
-  }
-
-  &:hover:not(:disabled) {
-    background: rgba(24, 144, 255, 0.08);
-    color: #1890ff; // Полная яркость при наведении
-
-    av-icon {
-      color: #1890ff;
-    }
-  }
-
-  &:active:not(:disabled) {
-    background: rgba(24, 144, 255, 0.15);
-    color: #096dd9; // Тёмный при нажатии
-
-    av-icon {
-      color: #096dd9;
-    }
-  }
-}
-
-// Danger - Ghost (прозрачный)
-.av-btn--danger.av-btn--variant-ghost {
-  background: transparent;
-  border: none;
-  color: #ff7875; // Средняя яркость
-
-  av-icon {
-    color: #ff7875;
-  }
-
-  &:hover:not(:disabled) {
-    background: rgba(255, 77, 79, 0.08);
-    color: #ff4d4f; // Полная яркость при наведении
-
-    av-icon {
-      color: #ff4d4f;
-    }
-  }
-
-  &:active:not(:disabled) {
-    background: rgba(255, 77, 79, 0.15);
-    color: #d9363e; // Тёмный при нажатии
-
-    av-icon {
-      color: #d9363e;
-    }
-  }
-}
-
-// Адаптация размеров иконок для разных размеров кнопок
-.av-btn {
-  // Базовый gap между текстом и иконкой
+  border-radius: var(--av-radius-lg);
+  cursor: pointer;
+  text-transform: uppercase;
+  background: var(--av-color-primary); 
+  color: var(--av-color-white);
+  box-shadow: 0 4px 12px rgba(var(--av-color-primary-rgb), 0.2);
+  transition: all 0.3s var(--av-motion-ease);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   gap: 8px;
 
-  av-icon {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
+  &:hover:not(:disabled) {
+    background: var(--av-color-primary-hover, #40a9ff);
+    box-shadow: 0 6px 20px rgba(var(--av-color-primary-rgb), 0.3);
+    transform: translateY(-2px);
   }
 
-  // Маленькие кнопки
-  &--small {
-    gap: 6px;
-
-    av-icon {
-      font-size: 14px;
-    }
-
-    // Но для circle/square - без gap
-    &.av-btn--shape-circle,
-    &.av-btn--shape-square,
-    &.av-btn--icon-only {
-      gap: 0;
-    }
+  &:active:not(:disabled) {
+    transform: translateY(0);
   }
 
-  // Большие кнопки
-  &--large {
-    gap: 10px;
+  &:disabled {
+    background: var(--av-neutral-3);
+    color: var(--av-text-disabled);
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+}
 
-    av-icon {
-      font-size: 20px;
-    }
+.av-btn-secondary {
+  height: 48px;
+  padding: 0 var(--av-spacing-lg);
+  background: var(--av-color-white);
+  border: 1px solid var(--av-border-color);
+  border-radius: var(--av-radius-lg);
+  color: var(--av-text-secondary);
+  font-weight: var(--av-font-weight-bold);
+  font-size: var(--av-font-size-sm);
+  cursor: pointer;
+  transition: all 0.25s var(--av-motion-ease);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 
-    // Но для circle/square - без gap
-    &.av-btn--shape-circle,
-    &.av-btn--shape-square,
-    &.av-btn--icon-only {
-      gap: 0;
-    }
+  &:hover {
+    background: var(--av-neutral-1);
+    color: var(--av-color-primary);
+    border-color: var(--av-color-primary);
+    box-shadow: 0 4px 12px rgba(var(--av-color-primary-rgb), 0.08);
   }
 
-  // Переопределение для кнопок только с иконкой
-  &--shape-circle,
-  &--shape-square,
-  &--icon-only {
-    gap: 0;
-    padding: 0;
-
-    av-icon {
-      margin: 0 !important;
-    }
+  &:active {
+    transform: translateY(1px);
   }
+}
+
+/* Reusable class matching user's requested style name */
+.arrow-back-green {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background-color: #2eb85c;
+  color: #ffffff;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  box-shadow: 0 2px 6px rgba(46, 184, 92, 0.2);
+
+  &:hover {
+    background-color: #4cd97b;
+    box-shadow: 0 4px 10px rgba(46, 184, 92, 0.4);
+    transform: scale(1.08);
+  }
+
+  &:active {
+    background-color: #22994c;
+    transform: scale(0.96);
+  }
+
+  .anticon, av-icon {
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: bold;
+    transition: transform 0.2s ease-in-out;
+  }
+
+  &:hover .anticon, &:hover av-icon {
+    transform: translateX(-2px);
+  }
+}
 }

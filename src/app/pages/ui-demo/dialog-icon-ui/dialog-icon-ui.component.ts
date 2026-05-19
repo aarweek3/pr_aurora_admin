@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, signal } from '@angular/core';
+import { Component, computed, signal, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzColorPickerModule } from 'ng-zorro-antd/color-picker';
@@ -39,7 +39,8 @@ import { ModalComponent, ModalService } from '../../../shared/components/ui/moda
   styleUrl: './dialog-icon-ui.component.scss',
 })
 export class DialogIconUiComponent {
-  constructor(private modalService: ModalService) {}
+  private modalService = inject(ModalService);
+
 
   // Playground State
   pgTitle = signal('Подтверждение');

@@ -191,7 +191,7 @@ export class TokensTabComponent implements OnInit, OnDestroy {
     });
   }
 
-  checkConsistency(email?: string, roles?: string[], silent: boolean = false): void {
+  checkConsistency(email?: string, roles?: string[], silent = false): void {
     // Use current status if args not provided
     const currentStatus = this.tokenStatus();
     const checkEmail = email ?? currentStatus?.userEmail;
@@ -274,4 +274,3 @@ export class TokensTabComponent implements OnInit, OnDestroy {
     this.message.success('Data exported successfully');
   }
 }
-

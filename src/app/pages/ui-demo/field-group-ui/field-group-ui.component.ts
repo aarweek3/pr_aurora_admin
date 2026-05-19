@@ -1,18 +1,20 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ButtonDirective } from '@shared/components/ui/button/button.directive';
-import { InputDirective } from '@shared/components/ui/input/input.directive';
+import {
+  ButtonDirective,
+  InputDirective,
+  HelpCopyContainerComponent,
+  FieldGroupComponent,
+  IconComponent,
+  PickerComponent,
+} from '@shared-ui';
 import { ContainerUiHelpBaseComponent } from '@shared/containers/ui-help/container-ui-help-base/container-ui-help-base.component';
 import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzGridModule } from 'ng-zorro-antd/grid';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzSwitchModule } from 'ng-zorro-antd/switch';
-import { HelpCopyContainerComponent } from '../../../shared/components/ui/container-help-copy-ui/container-help-copy-ui.component';
-import { FieldGroupComponent } from '../../../shared/components/ui/field-group';
-import { IconComponent } from '../../../shared/components/ui/icon/icon.component';
-import { PickerComponent } from '../../../shared/components/ui/picker/picker.component';
 
 @Component({
   selector: 'app-field-group-ui',

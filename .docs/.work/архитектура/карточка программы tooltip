@@ -1,0 +1,129 @@
+# 🧠 Архитектура динамических тултипов (подсказок) карточки программы
+
+Все подсказки (tooltips) для полей карточки программы и формы SEO-оптимизации были полностью перенесены из статического HTML-кода в единую динамическую JSON-структуру. Это обеспечивает простоту поддержки, чистоту разметки и готовность системы к многоязычной локализации.
+
+---
+
+## 📂 Расположение JSON-файла с подсказками
+Центральный файл конфигурации подсказок расположен по следующему пути:
+👉 **[program-tooltips.json](file:///d:/_PROGECT/pr_aurora_admin/src/app/AGREGATOR/PAGES/SPRAVKA/ProgramOfAggregatorPage/components/program-add-wizard/program-tooltips.json)**
+
+---
+
+## 🏛️ Архитектурный подход и преимущества
+
+1. **Разделение обязанностей (Separation of Concerns):** HTML-шаблоны больше не загромождены длинными русскими строками подсказок. В шаблонах используются только лаконичные привязки к свойствам JSON.
+2. **Единый источник правды (Single Source of Truth):** Любое изменение формулировки подсказки теперь делается в одном файле `program-tooltips.json` и автоматически применяется везде.
+3. **Готовность к локализации (i18n):** Файл структурирован по шагам мастера создания программы. При необходимости добавления английской (или любой другой) локализации достаточно создать аналогичную структуру и переключать её в зависимости от выбранного языка интерфейса.
+4. **Компиляционная безопасность:** В конфигурации TypeScript (`tsconfig.json`) включены опции `"resolveJsonModule": true` и `"allowSyntheticDefaultImports": true`, что позволяет безопасно импортировать JSON-файлы напрямую в TypeScript как типизированные ESM-модули:
+   ```typescript
+   import tooltips from './program-tooltips.json';
+   ```
+
+---
+
+## 🧬 Структура JSON-файла (`program-tooltips.json`)
+
+Файл разделён на логические шаги мастера добавления программы:
+
+```json
+{
+  "step1": {
+    "canonicalName": "Внутреннее системное имя программы...",
+    "mainPlatform": "Главная операционная система для этой программы..."
+  },
+  "step2": {
+    "developer": "Вендор/создатель программного обеспечения...",
+    "categoryOfAggregator": "Категория в древовидном иерархическом каталоге...",
+    "parentCategory": "Корневой раздел упрощённого каталога...",
+    "subcategory": "Дочерний подраздел упрощённого каталога...",
+    "supportedOs": "Список всех операционных систем...",
+    "status": "Текущий статус карточки...",
+    "isActive": "Глобальный переключатель отображения...",
+    "website": "Главная веб-страница программы...",
+    "youtubeVideo": "Ссылка на видеообзор или трейлер...",
+    "customVideo": "Прямая ссылка на медиа-файл..."
+  },
+  "step3": {
+    "name": "Название программы на выбранном языке...",
+    "shortDescription": "Краткая аннотация (1-2 предложения)...",
+    "fullDescription": "Детальный обзор программы...",
+    "tags": "Метки для быстрой фильтрации и поиска...",
+    "tagLanguage": "Фильтр для удобного отображения тегов...",
+    "youtubeVideo": "Локализованный видеообзор на выбранном языке...",
+    "customVideo": "Прямая ссылка на локализованный видеофайл...",
+    "pros": "Сильные стороны программы...",
+    "cons": "Недостатки или слабые стороны программы..."
+  },
+  "step4": {
+    "icon": "Официальный логотип программы в формате PNG или SVG..."
+  },
+  "seo": {
+    "title": "Уникальный заголовок страницы (до 60-70 символов)...",
+    "titleTemplate": "Шаблон для генерации SEO заголовка...",
+    "description": "Краткое описание содержимого страницы (до 150-160 символов)...",
+    "descriptionTemplate": "Шаблон для генерации SEO описания...",
+    "keywords": "Ключевые слова и фразы для индексации...",
+    "h1": "Главный заголовок первого уровня на странице...",
+    "h1Template": "Шаблон для генерации H1 заголовка...",
+    "breadcrumbsName": "Название элемента в навигационной цепочке 'хлебных крошек'...",
+    "slug": "Человекопонятный URL (ЧПУ)...",
+    "metaRobots": "Инструкции для поисковых роботов (индексация/переходы)...",
+    "canonicalUrl": "Канонический URL для исключения дублирования...",
+    "ogTitle": "Заголовок для социальных сетей (Open Graph)...",
+    "ogDescription": "Описание для социальных сетей (Open Graph)...",
+    "ogImage": "Ссылка на изображение-превью для соцсетей..."
+  }
+}
+```
+
+---
+
+## 🛠️ Детали реализации в компонентах
+
+### 1. Компонент Мастера Добавления Программы
+* **Класс контроллера:** [program-add-wizard.component.ts](file:///d:/_PROGECT/pr_aurora_admin/src/app/AGREGATOR/PAGES/SPRAVKA/ProgramOfAggregatorPage/components/program-add-wizard/program-add-wizard.component.ts)
+  * JSON импортируется напрямую в контроллер:
+    ```typescript
+    import tooltips from './program-tooltips.json';
+    ```
+  * Предоставляется шаблону как публичное свойство класса:
+    ```typescript
+    public tooltips = tooltips;
+    ```
+  * В HTML-шаблоне все статические значения `nzTooltipTitle="..."` заменены на динамические:
+    ```html
+    <i
+      nz-icon
+      nzType="question-circle"
+      nzTheme="outline"
+      class="info-icon"
+      nz-tooltip
+      [nzTooltipTitle]="tooltips.step1.canonicalName"
+    ></i>
+    ```
+
+### 2. Компонент SEO Формы (Переиспользуемый компонент)
+* **Класс контроллера:** [seo-form.component.ts](file:///d:/_PROGECT/pr_aurora_admin/src/app/shared/components/ui/seo-form/seo-form.component.ts)
+  * Позволяет централизованно подгружать этот же JSON-файл через относительный путь:
+    ```typescript
+    import tooltips from '../../../../AGREGATOR/PAGES/SPRAVKA/ProgramOfAggregatorPage/components/program-add-wizard/program-tooltips.json';
+    ```
+  * Предоставляет свойство шаблону:
+    ```typescript
+    public tooltips = tooltips;
+    ```
+  * Все 14 полей SEO-формы биндятся динамически, например:
+    ```html
+    [nzTooltipTitle]="tooltips.seo.title"
+    ```
+
+---
+
+## ✍️ Инструкция по обновлению и расширению подсказок
+
+1. **Редактирование текста:** 
+   Если необходимо скорректировать формулировку подсказки, просто откройте [program-tooltips.json](file:///d:/_PROGECT/pr_aurora_admin/src/app/AGREGATOR/PAGES/SPRAVKA/ProgramOfAggregatorPage/components/program-add-wizard/program-tooltips.json) и отредактируйте соответствующее значение. Изменения вступят в силу немедленно.
+2. **Добавление новой подсказки:**
+   * Добавьте новое поле в нужную секцию в [program-tooltips.json](file:///d:/_PROGECT/pr_aurora_admin/src/app/AGREGATOR/PAGES/SPRAVKA/ProgramOfAggregatorPage/components/program-add-wizard/program-tooltips.json).
+   * В HTML-шаблоне компонента привяжите её через `[nzTooltipTitle]="tooltips.stepX.yourNewProperty"`.

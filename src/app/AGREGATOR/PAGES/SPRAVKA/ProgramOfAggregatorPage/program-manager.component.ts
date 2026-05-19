@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, inject, OnInit } from '@angular/core';
 import { HelpUniversalModalComponent } from '@shared/components/help-universal-modal/help-universal-modal.component';
 import { ModalService } from '@shared/components/ui/modal/services/modal.service';
-import { ButtonControlJsonBlockComponent } from '@shared/controls/button-control-json-block/button-control-json-block.component';
+import { ButtonControlJsonBlockComponent } from '@controls';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzModalService } from 'ng-zorro-antd/modal';
@@ -74,11 +74,11 @@ import { ProgramOfAggregatorStateService } from './services/program-of-aggregato
         *ngIf="showMaintenance"
         [loading]="(state.loading$ | async) || false"
         [total]="(state.total$ | async) || 0"
-        (onClear)="handleClearDatabase()"
-        (onRead)="handleReadFromDb()"
-        (onSeed)="handleSeedFromJson()"
-        (onSyncIcons)="handleSyncIcons()"
-        (onSyncScreenshots)="handleSyncScreenshots()"
+        (clear)="handleClearDatabase()"
+        (read)="handleReadFromDb()"
+        (seed)="handleSeedFromJson()"
+        (syncIcons)="handleSyncIcons()"
+        (syncScreenshots)="handleSyncScreenshots()"
       ></app-button-control-json-block>
 
       <!-- Основной список -->
@@ -206,7 +206,7 @@ export class ProgramManagerComponent implements OnInit {
       nzTitle: undefined,
       nzContent: HelpUniversalModalComponent,
       nzData: {
-        helpId: 'агрегатор-пути',
+        helpId: 'aggregator-paths',
         initialMode: 'view',
       },
       nzFooter: null,

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms'; // Важно для ngModel
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzCardModule } from 'ng-zorro-antd/card';
@@ -7,12 +7,12 @@ import { NzGridModule } from 'ng-zorro-antd/grid';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzTypographyModule } from 'ng-zorro-antd/typography';
 
-import { AvImagePickerComponent } from '../../../shared/components/av-image-uploader/av-image-picker.component';
-import { AvImageProcessingService } from '../../../shared/components/av-image-uploader/av-image-processing.service';
+import { AvImagePickerComponent } from '@shared/components/av-image-uploader/av-image-picker.component';
+import { AvImageProcessingService } from '@shared/components/av-image-uploader/av-image-processing.service';
 import {
   AvExportSettings,
   AvImageUploadResult,
-} from '../../../shared/components/av-image-uploader/av-image.model';
+} from '@shared/components/av-image-uploader/av-image.model';
 
 @Component({
   selector: 'app-test-av-image',
@@ -44,7 +44,7 @@ import {
             <div class="debug-val" *ngIf="pickerUrl">
               <strong>Model Value:</strong>
               <div class="code">
-                {{ pickerUrl | slice : 0 : 50 }}... (Base64 Length: {{ pickerUrl.length }})
+                {{ pickerUrl | slice: 0 : 50 }}... (Base64 Length: {{ pickerUrl.length }})
               </div>
             </div>
           </nz-card>
@@ -158,13 +158,15 @@ import {
   ],
 })
 export class TestAvImageComponent {
+  private imageService = inject(AvImageProcessingService);
+
   logs: string[] = [];
   pickerUrl: string | null = null; // Для ngModel
 
   originalImage: HTMLImageElement | null = null;
   result: AvImageUploadResult | null = null;
 
-  constructor(private imageService: AvImageProcessingService) {
+  constructor() {
     this.addLog('Test Component Ready.');
   }
 

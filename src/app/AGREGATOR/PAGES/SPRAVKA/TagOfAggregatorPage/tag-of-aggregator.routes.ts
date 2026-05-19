@@ -5,5 +5,5 @@ export const TAG_OF_AGGREGATOR_ROUTES: Routes = [
   {
     path: '',
     component: TagOfAggregatorManagerComponent,
-  }
+  },
 ];

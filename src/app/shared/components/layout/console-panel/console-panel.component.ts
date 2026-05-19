@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { NzIconModule } from 'ng-zorro-antd/icon';
-import { EventBusService } from '../../../../core/services/event-bus/event-bus.service';
+import { EventBusService } from '@core/services/event-bus/event-bus.service';
 import { LoggerConsoleService } from '../../../logger-console/services/logger-console.service';
 import { LoggerConsoleComponent } from '../../../logger-console/components/logger-console/logger-console.component';
 
@@ -16,11 +16,20 @@ import { LoggerConsoleComponent } from '../../../logger-console/components/logge
   standalone: true,
   imports: [CommonModule, NzIconModule, LoggerConsoleComponent],
   template: `
-    <aside class="console-panel" 
-      [class.is-open]="isOpen()" 
+    <aside
+      class="console-panel"
+      [class.is-open]="isOpen()"
       [class.is-collapsed]="loggerService.isCollapsed()"
       [class.is-fullscreen]="loggerService.isFullScreen()"
-      [style.width]="loggerService.isFullScreen() ? '100vw' : loggerService.isCollapsed() ? '48px' : (isOpen() ? loggerService.loggerWidth() + 'px' : '0')"
+      [style.width]="
+        loggerService.isFullScreen()
+          ? '100vw'
+          : loggerService.isCollapsed()
+            ? '48px'
+            : isOpen()
+              ? loggerService.loggerWidth() + 'px'
+              : '0'
+      "
     >
       <div class="console-panel__header">
         <h3 class="title">System Console</h3>

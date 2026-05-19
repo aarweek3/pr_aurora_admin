@@ -9,9 +9,9 @@
 
   <!-- Alert for messages -->
   @if (formMessage()) {
-  <av-alert [type]="formMessage().includes('✅') ? 'success' : 'info'">
-    {{ formMessage() }}
-  </av-alert>
+    <av-alert [type]="formMessage().includes('✅') ? 'success' : 'info'">
+      {{ formMessage() }}
+    </av-alert>
   }
 
   <!-- Basic Example -->
@@ -35,10 +35,10 @@
       </div>
 
       @if (showBasicCode()) {
-      <div class="demo-item__code">
-        <button class="copy-btn" (click)="copyCode(basicCodeExample)">📋 Copy</button>
-        <pre><code>{{ basicCodeExample }}</code></pre>
-      </div>
+        <div class="demo-item__code">
+          <button class="copy-btn" (click)="copyCode(basicCodeExample)">📋 Copy</button>
+          <pre><code>{{ basicCodeExample }}</code></pre>
+        </div>
       }
     </div>
   </section>
@@ -78,10 +78,10 @@
     </div>
 
     @if (showCountriesCode()) {
-    <div class="demo-item__code">
-      <button class="copy-btn" (click)="copyCode(countriesCodeExample)">📋 Copy</button>
-      <pre><code>{{ countriesCodeExample }}</code></pre>
-    </div>
+      <div class="demo-item__code">
+        <button class="copy-btn" (click)="copyCode(countriesCodeExample)">📋 Copy</button>
+        <pre><code>{{ countriesCodeExample }}</code></pre>
+      </div>
     }
   </section>
 
@@ -132,10 +132,10 @@
     </div>
 
     @if (showValidationCode()) {
-    <div class="demo-item__code">
-      <button class="copy-btn" (click)="copyCode(validationCodeExample)">📋 Copy</button>
-      <pre><code>{{ validationCodeExample }}</code></pre>
-    </div>
+      <div class="demo-item__code">
+        <button class="copy-btn" (click)="copyCode(validationCodeExample)">📋 Copy</button>
+        <pre><code>{{ validationCodeExample }}</code></pre>
+      </div>
     }
   </section>
 
@@ -182,10 +182,10 @@
       </div>
 
       @if (showFormCode()) {
-      <div class="demo-item__code">
-        <button class="copy-btn" (click)="copyCode(formCodeExample)">📋 Copy</button>
-        <pre><code>{{ formCodeExample }}</code></pre>
-      </div>
+        <div class="demo-item__code">
+          <button class="copy-btn" (click)="copyCode(formCodeExample)">📋 Copy</button>
+          <pre><code>{{ formCodeExample }}</code></pre>
+        </div>
       }
     </div>
   </section>
@@ -242,10 +242,10 @@
     </div>
 
     @if (showImplementationCode()) {
-    <div class="demo-item__code">
-      <button class="copy-btn" (click)="copyCode(implementationCodeExample)">📋 Copy</button>
-      <pre><code>{{ implementationCodeExample }}</code></pre>
-    </div>
+      <div class="demo-item__code">
+        <button class="copy-btn" (click)="copyCode(implementationCodeExample)">📋 Copy</button>
+        <pre><code>{{ implementationCodeExample }}</code></pre>
+      </div>
     }
   </section>
 

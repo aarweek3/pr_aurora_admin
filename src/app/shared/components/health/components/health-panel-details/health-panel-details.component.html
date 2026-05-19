@@ -21,16 +21,16 @@
       </span>
       <!-- Loader "Slider" at the bottom of button -->
       @if (healthService.refreshing()) {
-      <div class="btn-loader-slider"></div>
+        <div class="btn-loader-slider"></div>
       }
     </button>
   </header>
 
   <nav class="panel-tabs">
     @for (tab of tabs; track tab) {
-    <div class="tab-item" [class.active]="activeTab() === tab" (click)="setActiveTab(tab)">
-      {{ tab }}
-    </div>
+      <div class="tab-item" [class.active]="activeTab() === tab" (click)="setActiveTab(tab)">
+        {{ tab }}
+      </div>
     }
   </nav>
 
@@ -38,148 +38,151 @@
     <div class="tab-content-wrapper">
       <!-- OVERVIEW TAB -->
       @if (activeTab() === 'Обзор') {
-      <div class="tab-pane overview">
-        <div class="overview-grid">
-          <div class="main-card-row" [class.danger]="healthService.status().overallStatus !== 'Healthy'">
-            <div class="card-icon">
-              <span
-                nz-icon
-                [nzType]="healthService.status().isOnline ? 'check-circle' : 'close-circle'"
-                nzTheme="outline"
-              ></span>
+        <div class="tab-pane overview">
+          <div class="overview-grid">
+            <div class="main-card-row" [class.danger]="healthService.status().overallStatus !== 'Healthy'">
+              <div class="card-icon">
+                <span
+                  nz-icon
+                  [nzType]="healthService.status().isOnline ? 'check-circle' : 'close-circle'"
+                  nzTheme="outline"
+                ></span>
+              </div>
+              <div class="card-info">
+                <h4>Приложение {{ healthService.status().isOnline ? 'в Сети' : 'Оффлайн' }}</h4>
+                <p>Сигнал Heartbeat: Активен</p>
+              </div>
+              <div class="card-meta">
+                <label>Последняя проверка</label>
+                <span>{{ healthService.status().lastCheck | date: 'HH:mm:ss' }}</span>
+              </div>
             </div>
-            <div class="card-info">
-              <h4>Приложение {{ healthService.status().isOnline ? 'в Сети' : 'Оффлайн' }}</h4>
-              <p>Сигнал Heartbeat: Активен</p>
-            </div>
-            <div class="card-meta">
-              <label>Последняя проверка</label>
-              <span>{{ healthService.status().lastCheck | date : 'HH:mm:ss' }}</span>
-            </div>
-          </div>
 
-          <div class="stats-row">
-            <div class="stat-box">
-              <div class="stat-header">
-                <span nz-icon nzType="dashboard" nzTheme="outline"></span>
-                <label>ЗАДЕРЖКА API</label>
-                <div class="latency-indicator-wrapper">
-                  <span class="dot" [class]="getLatencyClass(healthService.status().responseTime)"></span>
-                  <span class="status-text">{{ getLatencyStatus(healthService.status().responseTime) }}</span>
+            <div class="stats-row">
+              <div class="stat-box">
+                <div class="stat-header">
+                  <span nz-icon nzType="dashboard" nzTheme="outline"></span>
+                  <label>ЗАДЕРЖКА API</label>
+                  <div class="latency-indicator-wrapper">
+                    <span class="dot" [class]="getLatencyClass(healthService.status().responseTime)"></span>
+                    <span class="status-text">{{ getLatencyStatus(healthService.status().responseTime) }}</span>
+                  </div>
+                </div>
+                <div class="stat-value">{{ healthService.status().responseTime }}<small>мс</small></div>
+                <div class="stat-progress">
+                  <div
+                    class="progress-bar"
+                    [class]="getLatencyClass(healthService.status().responseTime)"
+                    [style.width.%]="(healthService.status().responseTime / 500) * 100"
+                  ></div>
                 </div>
               </div>
-              <div class="stat-value">{{ healthService.status().responseTime }}<small>мс</small></div>
-              <div class="stat-progress">
-                <div
-                  class="progress-bar"
-                  [class]="getLatencyClass(healthService.status().responseTime)"
-                  [style.width.%]="(healthService.status().responseTime / 500) * 100"
-                ></div>
-              </div>
-            </div>
 
-            <div class="stat-box">
-              <div class="stat-header">
-                <span nz-icon nzType="cluster" nzTheme="outline"></span>
-                <label>ПОДСИСТЕМЫ</label>
-              </div>
-              <div class="stat-value">{{ healthService.status().checks.length }} <small>в сети</small></div>
-              <div class="stat-progress">
-                <div class="progress-bar" [style.width.%]="(healthService.status().checks.length / 5) * 100"></div>
+              <div class="stat-box">
+                <div class="stat-header">
+                  <span nz-icon nzType="cluster" nzTheme="outline"></span>
+                  <label>ПОДСИСТЕМЫ</label>
+                </div>
+                <div class="stat-value">{{ healthService.status().checks.length }} <small>в сети</small></div>
+                <div class="stat-progress">
+                  <div class="progress-bar" [style.width.%]="(healthService.status().checks.length / 5) * 100"></div>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
       }
 
       <!-- NETWORK TAB (Specialized for Timings) -->
       @if (activeTab() === 'Сеть') {
-      <div class="tab-pane">
-        <div class="network-header">
-          <h5>График сетевого взаимодействия Клиент-Сервер</h5>
-          <p>Детальный анализ времени загрузки ресурсов для текущей сессии API</p>
+        <div class="tab-pane">
+          <div class="network-header">
+            <h5>График сетевого взаимодействия Клиент-Сервер</h5>
+            <p>Детальный анализ времени загрузки ресурсов для текущей сессии API</p>
+          </div>
+          <div class="table-container">
+            <table class="health-table">
+              <thead>
+                <tr>
+                  <th width="40%">Сетевая фаза</th>
+                  <th width="20%">Статус</th>
+                  <th width="15%">Длительность</th>
+                  <th width="25%">Описание</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (metric of healthService.networkMetrics(); track metric.name) {
+                  <tr>
+                    <td>
+                      <strong>{{ metric.name }}</strong>
+                    </td>
+                    <td>
+                      <span class="status-badge-pill Healthy">
+                        <span class="status-dot"></span>
+                        Активен
+                      </span>
+                    </td>
+                    <td>
+                      <span class="duration-tag">{{ metric.duration }}мс</span>
+                    </td>
+                    <td><span class="details-text">Сетевая метрика уровня браузера</span></td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
         </div>
-        <div class="table-container">
-          <table class="health-table">
-            <thead>
-              <tr>
-                <th width="40%">Сетевая фаза</th>
-                <th width="20%">Статус</th>
-                <th width="15%">Длительность</th>
-                <th width="25%">Описание</th>
-              </tr>
-            </thead>
-            <tbody>
-              @for (metric of healthService.networkMetrics(); track metric.name) {
-              <tr>
-                <td>
-                  <strong>{{ metric.name }}</strong>
-                </td>
-                <td>
-                  <span class="status-badge-pill Healthy">
-                    <span class="status-dot"></span>
-                    Активен
-                  </span>
-                </td>
-                <td>
-                  <span class="duration-tag">{{ metric.duration }}мс</span>
-                </td>
-                <td><span class="details-text">Сетевая метрика уровня браузера</span></td>
-              </tr>
-              }
-            </tbody>
-          </table>
-        </div>
-      </div>
       }
 
       <!-- INFRA & AUTH TABS (Health-Check Based) -->
       @if (activeTab() === 'Инфраструктура' || activeTab() === 'Авторизация') {
-      <div class="tab-pane">
-        <div class="table-container">
-          <table class="health-table">
-            <thead>
-              <tr>
-                <th width="40%">Название сервиса</th>
-                <th width="20%">Статус</th>
-                <th width="15%">Ответ</th>
-                <th width="25%">Диагностика</th>
-              </tr>
-            </thead>
-            <tbody>
-              @for (check of filteredChecks(); track check.name) {
-              <tr>
-                <td>
-                  <strong>{{ check.name }}</strong>
-                </td>
-                <td>
-                  <span class="status-badge-pill" [class]="check.status">
-                    <span class="status-dot"></span>
-                    {{ translateStatus(check.status) }}
-                  </span>
-                </td>
-                <td>
-                  <span class="duration-tag">{{ check.duration }}мс</span>
-                </td>
-                <td>
-                  <span class="details-text">{{ check.description || 'Система сообщает о нормальной работе' }}</span>
-                </td>
-              </tr>
-              } @if (filteredChecks().length === 0) {
-              <tr>
-                <td colspan="4" class="empty-state">
-                  <div class="empty-content">
-                    <span nz-icon nzType="inbox" nzTheme="outline"></span>
-                    <p>На данный момент диагностические данные для вклаки {{ activeTab() }} отсутствуют</p>
-                  </div>
-                </td>
-              </tr>
-              }
-            </tbody>
-          </table>
+        <div class="tab-pane">
+          <div class="table-container">
+            <table class="health-table">
+              <thead>
+                <tr>
+                  <th width="40%">Название сервиса</th>
+                  <th width="20%">Статус</th>
+                  <th width="15%">Ответ</th>
+                  <th width="25%">Диагностика</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (check of filteredChecks(); track check.name) {
+                  <tr>
+                    <td>
+                      <strong>{{ check.name }}</strong>
+                    </td>
+                    <td>
+                      <span class="status-badge-pill" [class]="check.status">
+                        <span class="status-dot"></span>
+                        {{ translateStatus(check.status) }}
+                      </span>
+                    </td>
+                    <td>
+                      <span class="duration-tag">{{ check.duration }}мс</span>
+                    </td>
+                    <td>
+                      <span class="details-text">{{
+                        check.description || 'Система сообщает о нормальной работе'
+                      }}</span>
+                    </td>
+                  </tr>
+                }
+                @if (filteredChecks().length === 0) {
+                  <tr>
+                    <td colspan="4" class="empty-state">
+                      <div class="empty-content">
+                        <span nz-icon nzType="inbox" nzTheme="outline"></span>
+                        <p>На данный момент диагностические данные для вклаки {{ activeTab() }} отсутствуют</p>
+                      </div>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
         </div>
-      </div>
       }
     </div>
   </main>

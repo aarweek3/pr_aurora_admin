@@ -8,24 +8,24 @@ import {
 
 export interface ProgressValidationResult {
   isValid: boolean;
-  errors: Array<{
+  errors: {
     field: string;
     message: string;
     value: unknown;
-  }>;
-  warnings: Array<{
+  }[];
+  warnings: {
     field: string;
     message: string;
     value: unknown;
-  }>;
+  }[];
 }
 
 /**
  * Функция валидации конфигурации
  */
 export function validateProgressConfig(config: ProgressBarConfig): ProgressValidationResult {
-  const errors: Array<{ field: string; message: string; value: unknown }> = [];
-  const warnings: Array<{ field: string; message: string; value: unknown }> = [];
+  const errors: { field: string; message: string; value: unknown }[] = [];
+  const warnings: { field: string; message: string; value: unknown }[] = [];
 
   // Валидация percent
   if (

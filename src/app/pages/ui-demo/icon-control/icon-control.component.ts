@@ -46,9 +46,11 @@ import { ContainerUiHelpBaseComponent } from '../../../shared/containers/ui-help
   styleUrl: './icon-control.component.scss',
 })
 export class IconControlComponent {
+  private http = inject(HttpClient);
+
   private iconService = inject(IconGetService);
 
-  constructor(private http: HttpClient) {
+  constructor() {
     // Effect to fetch raw SVG source
     effect(() => {
       const iconPath = this.pgConfig().type;

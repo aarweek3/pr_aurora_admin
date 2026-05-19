@@ -2,12 +2,14 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ThemeService } from '../../core/services/theme/theme.service';
-import { AlertComponent } from '../../shared/components/ui/alert/alert.component';
-import { ButtonDirective } from '../../shared/components/ui/button/button.directive';
-import { FormFieldComponent } from '../../shared/components/ui/form-field/form-field.component';
-import { IconComponent } from '../../shared/components/ui/icon/icon.component';
-import { PhoneInputComponent } from '../../shared/components/ui/phone-input/phone-input.component';
+import { ThemeService } from '@core/services/theme/theme.service';
+import {
+  AlertComponent,
+  ButtonDirective,
+  FormFieldComponent,
+  IconComponent,
+  PhoneInputComponent,
+} from '@shared-ui';
 
 /**
  * UI Demo Component
@@ -46,7 +48,11 @@ import { PhoneInputComponent } from '../../shared/components/ui/phone-input/phon
         <div style="margin-top: 16px;">
           <button av-button avType="default" (clicked)="toggleTheme()">
             <av-icon type="bulb" [size]="16" style="margin-right: 8px;"></av-icon>
-            @if (currentTheme() === 'light') { Тёмная тема } @else { Светлая тема }
+            @if (currentTheme() === 'light') {
+              Тёмная тема
+            } @else {
+              Светлая тема
+            }
           </button>
         </div>
       </div>
@@ -59,57 +65,60 @@ import { PhoneInputComponent } from '../../shared/components/ui/phone-input/phon
         <!-- Help Button -->
         <div class="help-section">
           <button av-button avType="primary" avSize="small" (click)="toggleHelp()">
-            @if (showHelp()) { ❌ Скрыть инструкцию } @else { ℹ️ Показать инструкцию по подключению
+            @if (showHelp()) {
+              ❌ Скрыть инструкцию
+            } @else {
+              ℹ️ Показать инструкцию по подключению
             }
           </button>
 
           @if (showHelp()) {
-          <div class="help-content">
-            <h4>Как подключить кнопки в проекте</h4>
+            <div class="help-content">
+              <h4>Как подключить кнопки в проекте</h4>
 
-            <div class="help-step">
-              <strong>1. Импортируйте директиву в компонент:</strong>
-              <pre
-                class="code-example"
-              ><code>import {{ '{' }} ButtonDirective {{ '}' }} from '&#64;shared/components/ui/button';</code></pre>
-            </div>
+              <div class="help-step">
+                <strong>1. Импортируйте директиву в компонент:</strong>
+                <pre
+                  class="code-example"
+                ><code>import {{ '{' }} ButtonDirective {{ '}' }} from '&#64;shared/components/ui/button';</code></pre>
+              </div>
 
-            <div class="help-step">
-              <strong>2. Добавьте в imports компонента:</strong>
-              <pre class="code-example"><code>&#64;Component({{ '{' }}
+              <div class="help-step">
+                <strong>2. Добавьте в imports компонента:</strong>
+                <pre class="code-example"><code>&#64;Component({{ '{' }}
   selector: 'app-my-component',
   standalone: true,
   imports: [ButtonDirective],
   ...
 {{ '}' }})</code></pre>
-            </div>
+              </div>
 
-            <div class="help-step">
-              <strong>3. Используйте в шаблоне:</strong>
-              <pre
-                class="code-example"
-              ><code>&lt;button av-button avType="primary" (click)="handleClick()"&gt;
+              <div class="help-step">
+                <strong>3. Используйте в шаблоне:</strong>
+                <pre
+                  class="code-example"
+                ><code>&lt;button av-button avType="primary" (click)="handleClick()"&gt;
   Click Me
 &lt;/button&gt;</code></pre>
-            </div>
+              </div>
 
-            <div class="help-step">
-              <strong>Доступные параметры:</strong>
-              <ul>
-                <li>
-                  <code>avType</code> - тип кнопки: primary | default | dashed | text | link |
-                  danger
-                </li>
-                <li><code>avSize</code> - размер: small | default | large</li>
-                <li><code>avLoading</code> - состояние загрузки (boolean)</li>
-                <li><code>avBlock</code> - на всю ширину (boolean)</li>
-                <li><code>(click)</code> - событие клика</li>
-              </ul>
-            </div>
+              <div class="help-step">
+                <strong>Доступные параметры:</strong>
+                <ul>
+                  <li>
+                    <code>avType</code> - тип кнопки: primary | default | dashed | text | link |
+                    danger
+                  </li>
+                  <li><code>avSize</code> - размер: small | default | large</li>
+                  <li><code>avLoading</code> - состояние загрузки (boolean)</li>
+                  <li><code>avBlock</code> - на всю ширину (boolean)</li>
+                  <li><code>(click)</code> - событие клика</li>
+                </ul>
+              </div>
 
-            <div class="help-step">
-              <strong>Управление размерами кнопок:</strong>
-              <pre class="code-example"><code>&lt;!-- Маленькая кнопка --&gt;
+              <div class="help-step">
+                <strong>Управление размерами кнопок:</strong>
+                <pre class="code-example"><code>&lt;!-- Маленькая кнопка --&gt;
 &lt;button av-button avType="primary" avSize="small"&gt;Small&lt;/button&gt;
 
 &lt;!-- Обычная кнопка (по умолчанию) --&gt;
@@ -117,11 +126,11 @@ import { PhoneInputComponent } from '../../shared/components/ui/phone-input/phon
 
 &lt;!-- Большая кнопка --&gt;
 &lt;button av-button avType="primary" avSize="large"&gt;Large&lt;/button&gt;</code></pre>
-            </div>
+              </div>
 
-            <div class="help-step">
-              <strong>Кнопки с иконками:</strong>
-              <pre class="code-example"><code>&lt;!-- Импортируйте IconComponent --&gt;
+              <div class="help-step">
+                <strong>Кнопки с иконками:</strong>
+                <pre class="code-example"><code>&lt;!-- Импортируйте IconComponent --&gt;
 import {{ '{' }} IconComponent {{ '}' }} from '&#64;shared/components/ui/icon';
 
 &lt;!-- Кнопка с иконкой и текстом --&gt;
@@ -146,8 +155,8 @@ import {{ '{' }} IconComponent {{ '}' }} from '&#64;shared/components/ui/icon';
 
 &lt;!-- Доступные типы иконок --&gt;
 &lt;!-- download, upload, delete, search, plus, settings, close, copy, code, chevron-up, chevron-down, info --&gt;</code></pre>
+              </div>
             </div>
-          </div>
           }
         </div>
 
@@ -163,10 +172,14 @@ import {{ '{' }} IconComponent {{ '}' }} from '&#64;shared/components/ui/icon';
               � Копировать
             </button>
             <button av-button avType="text" avSize="small" (click)="toggleCodePrimary()">
-              @if (showCodePrimary()) { � Скрыть код } @else { 🔽 Показать код }
+              @if (showCodePrimary()) {
+                � Скрыть код
+              } @else {
+                🔽 Показать код
+              }
             </button>
             @if (showCodePrimary()) {
-            <pre class="code-example"><code>{{ buttonPrimaryCode }}</code></pre>
+              <pre class="code-example"><code>{{ buttonPrimaryCode }}</code></pre>
             }
           </div>
 
@@ -179,10 +192,14 @@ import {{ '{' }} IconComponent {{ '}' }} from '&#64;shared/components/ui/icon';
               � Копировать
             </button>
             <button av-button avType="text" avSize="small" (click)="toggleCodeDefault()">
-              @if (showCodeDefault()) { � Скрыть код } @else { 🔽 Показать код }
+              @if (showCodeDefault()) {
+                � Скрыть код
+              } @else {
+                🔽 Показать код
+              }
             </button>
             @if (showCodeDefault()) {
-            <pre class="code-example"><code>{{ buttonDefaultCode }}</code></pre>
+              <pre class="code-example"><code>{{ buttonDefaultCode }}</code></pre>
             }
           </div>
 
@@ -195,10 +212,14 @@ import {{ '{' }} IconComponent {{ '}' }} from '&#64;shared/components/ui/icon';
               � Копировать
             </button>
             <button av-button avType="text" avSize="small" (click)="toggleCodeDashed()">
-              @if (showCodeDashed()) { � Скрыть код } @else { 🔽 Показать код }
+              @if (showCodeDashed()) {
+                � Скрыть код
+              } @else {
+                🔽 Показать код
+              }
             </button>
             @if (showCodeDashed()) {
-            <pre class="code-example"><code>{{ buttonDashedCode }}</code></pre>
+              <pre class="code-example"><code>{{ buttonDashedCode }}</code></pre>
             }
           </div>
 
@@ -209,10 +230,14 @@ import {{ '{' }} IconComponent {{ '}' }} from '&#64;shared/components/ui/icon';
               � Копировать
             </button>
             <button av-button avType="text" avSize="small" (click)="toggleCodeText()">
-              @if (showCodeText()) { � Скрыть код } @else { 🔽 Показать код }
+              @if (showCodeText()) {
+                � Скрыть код
+              } @else {
+                🔽 Показать код
+              }
             </button>
             @if (showCodeText()) {
-            <pre class="code-example"><code>{{ buttonTextCode }}</code></pre>
+              <pre class="code-example"><code>{{ buttonTextCode }}</code></pre>
             }
           </div>
 
@@ -223,10 +248,14 @@ import {{ '{' }} IconComponent {{ '}' }} from '&#64;shared/components/ui/icon';
               � Копировать
             </button>
             <button av-button avType="text" avSize="small" (click)="toggleCodeLink()">
-              @if (showCodeLink()) { � Скрыть код } @else { 🔽 Показать код }
+              @if (showCodeLink()) {
+                � Скрыть код
+              } @else {
+                🔽 Показать код
+              }
             </button>
             @if (showCodeLink()) {
-            <pre class="code-example"><code>{{ buttonLinkCode }}</code></pre>
+              <pre class="code-example"><code>{{ buttonLinkCode }}</code></pre>
             }
           </div>
 
@@ -239,10 +268,14 @@ import {{ '{' }} IconComponent {{ '}' }} from '&#64;shared/components/ui/icon';
               � Копировать
             </button>
             <button av-button avType="text" avSize="small" (click)="toggleCodeDanger()">
-              @if (showCodeDanger()) { � Скрыть код } @else { 🔽 Показать код }
+              @if (showCodeDanger()) {
+                � Скрыть код
+              } @else {
+                🔽 Показать код
+              }
             </button>
             @if (showCodeDanger()) {
-            <pre class="code-example"><code>{{ buttonDangerCode }}</code></pre>
+              <pre class="code-example"><code>{{ buttonDangerCode }}</code></pre>
             }
           </div>
         </div>
@@ -256,53 +289,57 @@ import {{ '{' }} IconComponent {{ '}' }} from '&#64;shared/components/ui/icon';
         <!-- Help Button -->
         <div class="help-section">
           <button av-button avType="default" avSize="small" (click)="toggleHelp()">
-            @if (showHelp()) { ❌ Hide Help } @else { ℹ️ Show Help }
+            @if (showHelp()) {
+              ❌ Hide Help
+            } @else {
+              ℹ️ Show Help
+            }
           </button>
 
           @if (showHelp()) {
-          <div class="help-content">
-            <h4>Как подключить кнопки в проекте</h4>
+            <div class="help-content">
+              <h4>Как подключить кнопки в проекте</h4>
 
-            <div class="help-step">
-              <strong>1. Импортируйте директиву в компонент:</strong>
-              <pre
-                class="code-example"
-              ><code>import {{ '{' }} ButtonDirective {{ '}' }} from '&#64;shared/components/ui/button';</code></pre>
-            </div>
+              <div class="help-step">
+                <strong>1. Импортируйте директиву в компонент:</strong>
+                <pre
+                  class="code-example"
+                ><code>import {{ '{' }} ButtonDirective {{ '}' }} from '&#64;shared/components/ui/button';</code></pre>
+              </div>
 
-            <div class="help-step">
-              <strong>2. Добавьте в imports компонента:</strong>
-              <pre class="code-example"><code>&#64;Component({{ '{' }}
+              <div class="help-step">
+                <strong>2. Добавьте в imports компонента:</strong>
+                <pre class="code-example"><code>&#64;Component({{ '{' }}
   selector: 'app-my-component',
   standalone: true,
   imports: [ButtonDirective],
   ...
 {{ '}' }})</code></pre>
-            </div>
+              </div>
 
-            <div class="help-step">
-              <strong>3. Используйте в шаблоне:</strong>
-              <pre
-                class="code-example"
-              ><code>&lt;button av-button avType="primary" (clicked)="handleClick()"&gt;
+              <div class="help-step">
+                <strong>3. Используйте в шаблоне:</strong>
+                <pre
+                  class="code-example"
+                ><code>&lt;button av-button avType="primary" (clicked)="handleClick()"&gt;
   Click Me
 &lt;/button&gt;</code></pre>
-            </div>
+              </div>
 
-            <div class="help-step">
-              <strong>Доступные параметры:</strong>
-              <ul>
-                <li>
-                  <code>avType</code> - тип кнопки: primary | default | dashed | text | link |
-                  danger
-                </li>
-                <li><code>avSize</code> - размер: small | default | large</li>
-                <li><code>avLoading</code> - состояние загрузки (boolean)</li>
-                <li><code>avBlock</code> - на всю ширину (boolean)</li>
-                <li><code>(clicked)</code> - событие клика</li>
-              </ul>
+              <div class="help-step">
+                <strong>Доступные параметры:</strong>
+                <ul>
+                  <li>
+                    <code>avType</code> - тип кнопки: primary | default | dashed | text | link |
+                    danger
+                  </li>
+                  <li><code>avSize</code> - размер: small | default | large</li>
+                  <li><code>avLoading</code> - состояние загрузки (boolean)</li>
+                  <li><code>avBlock</code> - на всю ширину (boolean)</li>
+                  <li><code>(clicked)</code> - событие клика</li>
+                </ul>
+              </div>
             </div>
-          </div>
           }
         </div>
 
@@ -367,14 +404,18 @@ import {{ '{' }} IconComponent {{ '}' }} from '&#64;shared/components/ui/icon';
 
           <div class="code-actions">
             <button av-button avType="default" avSize="small" (click)="toggleCode('types')">
-              @if (showButtonTypesCode()) { Hide All Code } @else { Show All Code }
+              @if (showButtonTypesCode()) {
+                Hide All Code
+              } @else {
+                Show All Code
+              }
             </button>
             <button av-button avType="default" avSize="small" (click)="copyCode(buttonTypesCode)">
               📋 Copy All
             </button>
           </div>
           @if (showButtonTypesCode()) {
-          <pre class="code-example"><code>{{ buttonTypesCode }}</code></pre>
+            <pre class="code-example"><code>{{ buttonTypesCode }}</code></pre>
           }
         </div>
 
@@ -388,10 +429,14 @@ import {{ '{' }} IconComponent {{ '}' }} from '&#64;shared/components/ui/icon';
               📋 Копировать
             </button>
             <button av-button avType="text" avSize="small" (click)="toggleCodeSmall()">
-              @if (showCodeSmall()) { 🔼 Скрыть код } @else { 🔽 Показать код }
+              @if (showCodeSmall()) {
+                🔼 Скрыть код
+              } @else {
+                🔽 Показать код
+              }
             </button>
             @if (showCodeSmall()) {
-            <pre class="code-example"><code>{{ buttonSmallCode }}</code></pre>
+              <pre class="code-example"><code>{{ buttonSmallCode }}</code></pre>
             }
           </div>
 
@@ -402,10 +447,14 @@ import {{ '{' }} IconComponent {{ '}' }} from '&#64;shared/components/ui/icon';
               📋 Копировать
             </button>
             <button av-button avType="text" avSize="small" (click)="toggleCodeMedium()">
-              @if (showCodeMedium()) { 🔼 Скрыть код } @else { 🔽 Показать код }
+              @if (showCodeMedium()) {
+                🔼 Скрыть код
+              } @else {
+                🔽 Показать код
+              }
             </button>
             @if (showCodeMedium()) {
-            <pre class="code-example"><code>{{ buttonMediumCode }}</code></pre>
+              <pre class="code-example"><code>{{ buttonMediumCode }}</code></pre>
             }
           </div>
 
@@ -416,10 +465,14 @@ import {{ '{' }} IconComponent {{ '}' }} from '&#64;shared/components/ui/icon';
               📋 Копировать
             </button>
             <button av-button avType="text" avSize="small" (click)="toggleCodeLarge()">
-              @if (showCodeLarge()) { 🔼 Скрыть код } @else { 🔽 Показать код }
+              @if (showCodeLarge()) {
+                🔼 Скрыть код
+              } @else {
+                🔽 Показать код
+              }
             </button>
             @if (showCodeLarge()) {
-            <pre class="code-example"><code>{{ buttonLargeCode }}</code></pre>
+              <pre class="code-example"><code>{{ buttonLargeCode }}</code></pre>
             }
           </div>
         </div>
@@ -430,16 +483,24 @@ import {{ '{' }} IconComponent {{ '}' }} from '&#64;shared/components/ui/icon';
           <!-- Loading Button -->
           <div class="button-demo-item">
             <button av-button avType="primary" [avLoading]="isLoading()">
-              @if (isLoading()) { Loading... } @else { Click to Load }
+              @if (isLoading()) {
+                Loading...
+              } @else {
+                Click to Load
+              }
             </button>
             <button av-button avType="text" avSize="small" (click)="copyCode(buttonLoadingCode)">
               📋 Копировать
             </button>
             <button av-button avType="text" avSize="small" (click)="toggleCodeLoading()">
-              @if (showCodeLoading()) { 🔼 Скрыть код } @else { 🔽 Показать код }
+              @if (showCodeLoading()) {
+                🔼 Скрыть код
+              } @else {
+                🔽 Показать код
+              }
             </button>
             @if (showCodeLoading()) {
-            <pre class="code-example"><code>{{ buttonLoadingCode }}</code></pre>
+              <pre class="code-example"><code>{{ buttonLoadingCode }}</code></pre>
             }
           </div>
 
@@ -450,10 +511,14 @@ import {{ '{' }} IconComponent {{ '}' }} from '&#64;shared/components/ui/icon';
               📋 Копировать
             </button>
             <button av-button avType="text" avSize="small" (click)="toggleCodeDisabled()">
-              @if (showCodeDisabled()) { 🔼 Скрыть код } @else { 🔽 Показать код }
+              @if (showCodeDisabled()) {
+                🔼 Скрыть код
+              } @else {
+                🔽 Показать код
+              }
             </button>
             @if (showCodeDisabled()) {
-            <pre class="code-example"><code>{{ buttonDisabledCode }}</code></pre>
+              <pre class="code-example"><code>{{ buttonDisabledCode }}</code></pre>
             }
           </div>
 
@@ -464,10 +529,14 @@ import {{ '{' }} IconComponent {{ '}' }} from '&#64;shared/components/ui/icon';
               📋 Копировать
             </button>
             <button av-button avType="text" avSize="small" (click)="toggleCodeBlock()">
-              @if (showCodeBlock()) { 🔼 Скрыть код } @else { 🔽 Показать код }
+              @if (showCodeBlock()) {
+                🔼 Скрыть код
+              } @else {
+                🔽 Показать код
+              }
             </button>
             @if (showCodeBlock()) {
-            <pre class="code-example"><code>{{ buttonBlockCode }}</code></pre>
+              <pre class="code-example"><code>{{ buttonBlockCode }}</code></pre>
             }
           </div>
 
@@ -494,13 +563,15 @@ import {{ '{' }} IconComponent {{ '}' }} from '&#64;shared/components/ui/icon';
             </button>
             <button av-button avType="text" avSize="small" (click)="toggleCodeIconTextPrimary()">
               @if (showCodeIconTextPrimary()) {
-              <av-icon type="chevron-up" [size]="14"></av-icon>
-              Скрыть код } @else {
-              <av-icon type="chevron-down" [size]="14"></av-icon>
-              Показать код }
+                <av-icon type="chevron-up" [size]="14"></av-icon>
+                Скрыть код
+              } @else {
+                <av-icon type="chevron-down" [size]="14"></av-icon>
+                Показать код
+              }
             </button>
             @if (showCodeIconTextPrimary()) {
-            <pre class="code-example"><code>{{ buttonIconTextPrimaryCode }}</code></pre>
+              <pre class="code-example"><code>{{ buttonIconTextPrimaryCode }}</code></pre>
             }
           </div>
 
@@ -521,13 +592,15 @@ import {{ '{' }} IconComponent {{ '}' }} from '&#64;shared/components/ui/icon';
             </button>
             <button av-button avType="text" avSize="small" (click)="toggleCodeIconTextDefault()">
               @if (showCodeIconTextDefault()) {
-              <av-icon type="chevron-up" [size]="14"></av-icon>
-              Скрыть код } @else {
-              <av-icon type="chevron-down" [size]="14"></av-icon>
-              Показать код }
+                <av-icon type="chevron-up" [size]="14"></av-icon>
+                Скрыть код
+              } @else {
+                <av-icon type="chevron-down" [size]="14"></av-icon>
+                Показать код
+              }
             </button>
             @if (showCodeIconTextDefault()) {
-            <pre class="code-example"><code>{{ buttonIconTextDefaultCode }}</code></pre>
+              <pre class="code-example"><code>{{ buttonIconTextDefaultCode }}</code></pre>
             }
           </div>
 
@@ -548,13 +621,15 @@ import {{ '{' }} IconComponent {{ '}' }} from '&#64;shared/components/ui/icon';
             </button>
             <button av-button avType="text" avSize="small" (click)="toggleCodeIconTextDanger()">
               @if (showCodeIconTextDanger()) {
-              <av-icon type="chevron-up" [size]="14"></av-icon>
-              Скрыть код } @else {
-              <av-icon type="chevron-down" [size]="14"></av-icon>
-              Показать код }
+                <av-icon type="chevron-up" [size]="14"></av-icon>
+                Скрыть код
+              } @else {
+                <av-icon type="chevron-down" [size]="14"></av-icon>
+                Показать код
+              }
             </button>
             @if (showCodeIconTextDanger()) {
-            <pre class="code-example"><code>{{ buttonIconTextDangerCode }}</code></pre>
+              <pre class="code-example"><code>{{ buttonIconTextDangerCode }}</code></pre>
             }
           </div>
         </div>
@@ -583,13 +658,15 @@ import {{ '{' }} IconComponent {{ '}' }} from '&#64;shared/components/ui/icon';
             </button>
             <button av-button avType="text" avSize="small" (click)="toggleCodeIconOnlyPrimary()">
               @if (showCodeIconOnlyPrimary()) {
-              <av-icon type="chevron-up" [size]="14"></av-icon>
-              Скрыть код } @else {
-              <av-icon type="chevron-down" [size]="14"></av-icon>
-              Показать код }
+                <av-icon type="chevron-up" [size]="14"></av-icon>
+                Скрыть код
+              } @else {
+                <av-icon type="chevron-down" [size]="14"></av-icon>
+                Показать код
+              }
             </button>
             @if (showCodeIconOnlyPrimary()) {
-            <pre class="code-example"><code>{{ buttonIconOnlyPrimaryCode }}</code></pre>
+              <pre class="code-example"><code>{{ buttonIconOnlyPrimaryCode }}</code></pre>
             }
           </div>
 
@@ -615,13 +692,15 @@ import {{ '{' }} IconComponent {{ '}' }} from '&#64;shared/components/ui/icon';
             </button>
             <button av-button avType="text" avSize="small" (click)="toggleCodeIconOnlySmall()">
               @if (showCodeIconOnlySmall()) {
-              <av-icon type="chevron-up" [size]="14"></av-icon>
-              Скрыть код } @else {
-              <av-icon type="chevron-down" [size]="14"></av-icon>
-              Показать код }
+                <av-icon type="chevron-up" [size]="14"></av-icon>
+                Скрыть код
+              } @else {
+                <av-icon type="chevron-down" [size]="14"></av-icon>
+                Показать код
+              }
             </button>
             @if (showCodeIconOnlySmall()) {
-            <pre class="code-example"><code>{{ buttonIconOnlySmallCode }}</code></pre>
+              <pre class="code-example"><code>{{ buttonIconOnlySmallCode }}</code></pre>
             }
           </div>
 
@@ -647,13 +726,15 @@ import {{ '{' }} IconComponent {{ '}' }} from '&#64;shared/components/ui/icon';
             </button>
             <button av-button avType="text" avSize="small" (click)="toggleCodeIconOnlyLarge()">
               @if (showCodeIconOnlyLarge()) {
-              <av-icon type="chevron-up" [size]="14"></av-icon>
-              Скрыть код } @else {
-              <av-icon type="chevron-down" [size]="14"></av-icon>
-              Показать код }
+                <av-icon type="chevron-up" [size]="14"></av-icon>
+                Скрыть код
+              } @else {
+                <av-icon type="chevron-down" [size]="14"></av-icon>
+                Показать код
+              }
             </button>
             @if (showCodeIconOnlyLarge()) {
-            <pre class="code-example"><code>{{ buttonIconOnlyLargeCode }}</code></pre>
+              <pre class="code-example"><code>{{ buttonIconOnlyLargeCode }}</code></pre>
             }
           </div>
 
@@ -678,13 +759,15 @@ import {{ '{' }} IconComponent {{ '}' }} from '&#64;shared/components/ui/icon';
             </button>
             <button av-button avType="text" avSize="small" (click)="toggleCodeIconOnlyDanger()">
               @if (showCodeIconOnlyDanger()) {
-              <av-icon type="chevron-up" [size]="14"></av-icon>
-              Скрыть код } @else {
-              <av-icon type="chevron-down" [size]="14"></av-icon>
-              Показать код }
+                <av-icon type="chevron-up" [size]="14"></av-icon>
+                Скрыть код
+              } @else {
+                <av-icon type="chevron-down" [size]="14"></av-icon>
+                Показать код
+              }
             </button>
             @if (showCodeIconOnlyDanger()) {
-            <pre class="code-example"><code>{{ buttonIconOnlyDangerCode }}</code></pre>
+              <pre class="code-example"><code>{{ buttonIconOnlyDangerCode }}</code></pre>
             }
           </div>
         </div>
@@ -807,9 +890,9 @@ import {{ '{' }} IconComponent {{ '}' }} from '&#64;shared/components/ui/icon';
 
       <!-- Message Display -->
       @if (message()) {
-      <div class="message-display">
-        {{ message() }}
-      </div>
+        <div class="message-display">
+          {{ message() }}
+        </div>
       }
     </div>
   `,
@@ -969,59 +1052,6 @@ import {{ '{' }} IconComponent {{ '}' }} from '&#64;shared/components/ui/icon';
         }
       }
 
-      [data-theme='dark'] {
-        .ui-demo__header {
-          border-bottom-color: #434343;
-        }
-
-        .demo-group h3 {
-          color: rgba(255, 255, 255, 0.65);
-        }
-
-        .button-demo-item {
-          background: #1f1f1f;
-          border-color: #434343;
-
-          &:hover {
-            background: #262626;
-          }
-        }
-
-        .help-section {
-          background: #1f1f1f;
-          border-color: #434343;
-        }
-
-        .help-content {
-          h4 {
-            color: rgba(255, 255, 255, 0.85);
-          }
-        }
-
-        .help-step {
-          strong {
-            color: rgba(255, 255, 255, 0.65);
-          }
-
-          ul li {
-            color: rgba(255, 255, 255, 0.65);
-
-            code {
-              background: #141414;
-              color: #40a9ff;
-            }
-          }
-        }
-
-        .code-example {
-          background: #1f1f1f;
-          border-color: #434343;
-
-          code {
-            color: #e0e0e0;
-          }
-        }
-      }
 
       /* Button Demo Item */
       .button-demo-item {

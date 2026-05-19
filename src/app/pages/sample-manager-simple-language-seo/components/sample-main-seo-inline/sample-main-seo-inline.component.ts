@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { NzGridModule } from 'ng-zorro-antd/grid';
@@ -38,12 +38,12 @@ import { SampleMainSeoFormComponent } from '../sample-main-seo-form/sample-main-
   `,
 })
 export class SampleMainSeoInlineComponent implements OnInit {
+  private state = inject(SampleMainSeoStateService);
+
   isVisible$ = this.state.modalVisible$;
   editingItem$ = this.state.editingItem$;
   isLoading$ = this.state.modalLoading$;
   mode$ = this.state.modalMode$;
-
-  constructor(private state: SampleMainSeoStateService) {}
 
   ngOnInit(): void {}
 

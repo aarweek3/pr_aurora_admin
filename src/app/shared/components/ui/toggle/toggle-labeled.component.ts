@@ -21,8 +21,12 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
       [class.av-toggle-labeled--square]="shape() === 'square'"
       [style.--av-toggle-color]="thumbColor()"
       [style.width]="width() ? (typeof width() === 'number' ? width() + 'px' : width()) : null"
-      [style.--av-labeled-h]="height() ? (typeof height() === 'number' ? height() + 'px' : height()) : null"
-      [style.--av-labeled-r]="radius() ? (typeof radius() === 'number' ? radius() + 'px' : radius()) : null"
+      [style.--av-labeled-h]="
+        height() ? (typeof height() === 'number' ? height() + 'px' : height()) : null
+      "
+      [style.--av-labeled-r]="
+        radius() ? (typeof radius() === 'number' ? radius() + 'px' : radius()) : null
+      "
       [style.--av-labeled-off]="offset() + 'px'"
     >
       <input
@@ -90,7 +94,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
     /* Checked state translation: move by its own width */
     .av-toggle-labeled__input:checked + .av-toggle-labeled__track .av-toggle-labeled__thumb {
-       transform: translateX(100%);
+      transform: translateX(100%);
     }
 
     /* Size Presets */
@@ -98,24 +102,39 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
       --av-labeled-h: 44px;
       --av-labeled-r: 22px;
       --av-labeled-off: 3px;
-      .av-toggle-labeled__track { width: 140px; }
-      .av-toggle-labeled__label { font-size: 14px; font-weight: 500; }
+      .av-toggle-labeled__track {
+        width: 140px;
+      }
+      .av-toggle-labeled__label {
+        font-size: 14px;
+        font-weight: 500;
+      }
     }
 
     .av-toggle-labeled--small {
       --av-labeled-h: 30px;
       --av-labeled-r: 15px;
       --av-labeled-off: 2px;
-      .av-toggle-labeled__track { width: 100px; }
-      .av-toggle-labeled__label { font-size: 11px; font-weight: 500; }
+      .av-toggle-labeled__track {
+        width: 100px;
+      }
+      .av-toggle-labeled__label {
+        font-size: 11px;
+        font-weight: 500;
+      }
     }
 
     .av-toggle-labeled--large {
       --av-labeled-h: 56px;
       --av-labeled-r: 28px;
       --av-labeled-off: 4px;
-      .av-toggle-labeled__track { width: 180px; }
-      .av-toggle-labeled__label { font-size: 18px; font-weight: 600; }
+      .av-toggle-labeled__track {
+        width: 180px;
+      }
+      .av-toggle-labeled__label {
+        font-size: 18px;
+        font-weight: 600;
+      }
     }
     /* Track colors - unchecked state */
     .av-toggle-labeled__track {
@@ -167,36 +186,6 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
     }
 
     /* Dark theme support */
-    [data-theme='dark'] {
-      .av-toggle-labeled__track {
-        background: #333;
-        border-color: #555;
-      }
-
-      .av-toggle-labeled__label {
-        color: #999;
-      }
-
-      .av-toggle-labeled__label--left {
-        color: #fff;
-      }
-
-      .av-toggle-labeled__input:checked + .av-toggle-labeled__track {
-        background: #333;
-      }
-
-      .av-toggle-labeled__input:checked + .av-toggle-labeled__track .av-toggle-labeled__label--left {
-        color: #999;
-      }
-
-      .av-toggle-labeled__input:checked + .av-toggle-labeled__track .av-toggle-labeled__label--right {
-        color: #fff;
-      }
-
-      .av-toggle-labeled__input:disabled + .av-toggle-labeled__track {
-        background: #1a1a1a;
-      }
-    }
 
     /* Animation for reduced motion */
     @media (prefers-reduced-motion: reduce) {

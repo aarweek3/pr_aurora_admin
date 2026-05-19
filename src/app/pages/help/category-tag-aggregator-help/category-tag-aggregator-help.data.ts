@@ -4,14 +4,14 @@ export const CORE_FIELDS = [
   { name: 'IconPath', type: 'string?', desc: 'Относительный путь к иконке.' },
   { name: 'Color', type: 'string?', desc: 'Hex-код цвета для UI.' },
   { name: 'IsActive', type: 'bool', desc: 'Статус активности.' },
-  { name: 'SortOrder', type: 'int', desc: 'Приоритет сортировки.' }
+  { name: 'SortOrder', type: 'int', desc: 'Приоритет сортировки.' },
 ];
 
 export const LOC_FIELDS = [
   { name: 'Name', type: 'string(200)', desc: 'Локализованное имя (Витрина).' },
   { name: 'Description', type: 'string?', desc: 'Описание категории.' },
   { name: 'MetaTitle', type: 'string?', desc: 'SEO Title.' },
-  { name: 'MetaDescription', type: 'string?', desc: 'SEO Description.' }
+  { name: 'MetaDescription', type: 'string?', desc: 'SEO Description.' },
 ];
 
 export const SERVER_SEARCH_CODE = `query = query.Where(x => 

@@ -10,11 +10,11 @@ export const LICENSE_TYPE_OF_AGGREGATOR_ROUTES: Routes = [
   {
     path: 'new',
     component: LicenseTypeOfAggregatorPageFormComponent,
-    data: { mode: 'add' }
+    data: { mode: 'add' },
   },
   {
     path: ':id/edit',
     component: LicenseTypeOfAggregatorPageFormComponent,
-    data: { mode: 'edit' }
-  }
+    data: { mode: 'edit' },
+  },
 ];

@@ -5,5 +5,5 @@ export const CATEGORY_TAG_OF_AGGREGATOR_ROUTES: Routes = [
   {
     path: '',
     component: CategoryTagOfAggregatorManagerComponent,
-  }
+  },
 ];

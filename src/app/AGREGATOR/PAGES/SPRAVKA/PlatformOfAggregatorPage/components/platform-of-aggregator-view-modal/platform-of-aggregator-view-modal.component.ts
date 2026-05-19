@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzModalModule } from 'ng-zorro-antd/modal';
@@ -11,11 +11,11 @@ import { PlatformOfAggregatorDetailsComponent } from '../platform-of-aggregator-
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    CommonModule, 
-    NzModalModule, 
-    NzButtonModule, 
-    NzIconModule, 
-    PlatformOfAggregatorDetailsComponent
+    CommonModule,
+    NzModalModule,
+    NzButtonModule,
+    NzIconModule,
+    PlatformOfAggregatorDetailsComponent,
   ],
   template: `
     <nz-modal
@@ -27,16 +27,18 @@ import { PlatformOfAggregatorDetailsComponent } from '../platform-of-aggregator-
     >
       <ng-container *nzModalContent>
         <div class="modal-body-scroll">
-           <app-platform-of-aggregator-details 
-             [data]="state.viewItem()"
-           ></app-platform-of-aggregator-details>
+          <app-platform-of-aggregator-details
+            [data]="state.viewItem()"
+          ></app-platform-of-aggregator-details>
         </div>
       </ng-container>
 
       <ng-template #modalTitle>
         <div class="modal-header-custom">
           <i nz-icon nzType="eye" class="header-icon"></i>
-          <span>Просмотр информации о платформе: <strong>{{ state.viewItem()?.name }}</strong></span>
+          <span
+            >Просмотр информации о платформе: <strong>{{ state.viewItem()?.name }}</strong></span
+          >
         </div>
       </ng-template>
 
@@ -45,10 +47,11 @@ import { PlatformOfAggregatorDetailsComponent } from '../platform-of-aggregator-
       </ng-template>
     </nz-modal>
   `,
-  styleUrls: ['./platform-of-aggregator-view-modal.component.scss']
+  styleUrls: ['./platform-of-aggregator-view-modal.component.scss'],
 })
 export class PlatformOfAggregatorViewModalComponent {
-  constructor(public state: PlatformOfAggregatorStateService) {}
+  state = inject(PlatformOfAggregatorStateService);
+
 
   handleClose(): void {
     this.state.closeViewModal();

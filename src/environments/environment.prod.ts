@@ -62,6 +62,6 @@ export const environment: Environment = {
 
   help: {
     storagePath: '/var/www/aurora-admin/data/help-universal', // Внешний путь на сервере
-    assetsPath: 'assets/help-data' // Виртуальный путь (через Nginx/IIS)
-  }
+    assetsPath: 'assets/help-data', // Виртуальный путь (через Nginx/IIS)
+  },
 };

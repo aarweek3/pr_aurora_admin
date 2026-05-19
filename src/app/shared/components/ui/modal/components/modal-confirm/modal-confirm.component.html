@@ -7,7 +7,7 @@
   [closeOnBackdrop]="config.closeOnBackdrop !== false"
   [closeOnEsc]="config.closeOnEsc !== false"
   [showCloseButton]="config.centered ? false : config.showCloseButton !== false"
-  (closed)="onCancel()"
+  (modalClosed)="onCancel()"
 >
   <div modal-body class="confirm-body" [class.confirm-body--centered]="config.centered">
     <div class="confirm-content">
@@ -28,23 +28,24 @@
   <div modal-footer [class.modal-footer--centered]="config.centered">
     <ng-container *ngIf="config.centered; else standardFooter">
       <button
-        av-button
-        [avType]="config.confirmType === 'danger' ? 'danger' : 'primary'"
-        avSize="large"
-        (clicked)="onConfirm()"
+        [class]="config.confirmType === 'danger' ? 'btn-danger-premium' : 'btn-primary-premium'"
+        (click)="onConfirm()"
       >
         {{ config.confirmText || 'Подтвердить' }}
       </button>
-      <button av-button avType="default" avSize="large" (clicked)="onCancel()">
+      <button class="btn-cancel-premium" (click)="onCancel()">
         {{ config.cancelText || 'Отмена' }}
       </button>
     </ng-container>
 
     <ng-template #standardFooter>
-      <button av-button avType="default" (clicked)="onCancel()">
+      <button class="btn-cancel-premium" (click)="onCancel()">
         {{ config.cancelText || 'Отмена' }}
       </button>
-      <button av-button [avType]="config.confirmType === 'danger' ? 'danger' : 'primary'" (clicked)="onConfirm()">
+      <button
+        [class]="config.confirmType === 'danger' ? 'btn-danger-premium' : 'btn-primary-premium'"
+        (click)="onConfirm()"
+      >
         {{ config.confirmText || 'Подтвердить' }}
       </button>
     </ng-template>

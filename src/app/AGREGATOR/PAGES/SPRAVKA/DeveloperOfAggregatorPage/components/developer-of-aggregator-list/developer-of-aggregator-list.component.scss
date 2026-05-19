@@ -1,9 +1,11 @@
 .page-card {
   border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+  box-shadow:
+    0 10px 25px -5px rgba(0, 0, 0, 0.05),
+    0 8px 10px -6px rgba(0, 0, 0, 0.05);
   border: 1px solid rgba(226, 232, 240, 0.8);
-  
+
   :ng-deep .ant-card-body {
     padding: 20px;
   }
@@ -39,18 +41,18 @@
   border: 1px solid #e2e8f0;
   transition: all 0.3s;
   cursor: pointer;
-  
+
   &:hover {
     border-color: #cbd5e1;
   }
-  
+
   &.active {
     background: #fef2f2;
     color: #ef4444;
     border-color: #fee2e2;
     box-shadow: 0 2px 4px rgba(239, 68, 68, 0.1);
   }
-  
+
   .label {
     font-size: 11px;
     text-transform: uppercase;
@@ -104,11 +106,22 @@
   align-items: center;
 }
 
-.edit-icon { color: #3b82f6; }
-.view-icon { color: #8b5cf6; }
-.delete-icon { color: #faad14; }
-.hard-delete-icon { color: #ef4444; }
-.restore-icon { color: #10b981; font-size: 18px; }
+.edit-icon {
+  color: #3b82f6;
+}
+.view-icon {
+  color: #8b5cf6;
+}
+.delete-icon {
+  color: #faad14;
+}
+.hard-delete-icon {
+  color: #ef4444;
+}
+.restore-icon {
+  color: #10b981;
+  font-size: 18px;
+}
 
 .error-container {
   margin-bottom: 24px;
@@ -116,7 +129,7 @@
 
 .trash-alert {
   margin-bottom: 20px;
-  
+
   :ng-deep .ant-alert {
     border-radius: 12px;
   }
@@ -124,15 +137,15 @@
 
 .deleted-row {
   background-color: #f8fafc;
-  
+
   td {
     color: #94a3b8 !important;
-    
+
     .tech-name {
       color: #94a3b8 !important;
       text-decoration: line-through;
     }
-    
+
     nz-tag {
       opacity: 0.5;
     }
@@ -157,7 +170,7 @@
     letter-spacing: 0.05em;
     border-bottom: 1px solid #f1f5f9;
   }
-  
+
   .ant-table-tbody > tr > td {
     border-bottom: 1px solid #f1f5f9;
     padding: 16px;

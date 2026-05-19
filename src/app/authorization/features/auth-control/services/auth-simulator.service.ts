@@ -26,5 +26,3 @@ export class AuthSimulatorService {
     this.activeSimulation.set(null);
   }
 }
-
-

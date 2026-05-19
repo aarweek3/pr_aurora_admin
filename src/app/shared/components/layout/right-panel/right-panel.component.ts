@@ -3,9 +3,9 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { NzEmptyModule } from 'ng-zorro-antd/empty';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzTabsModule } from 'ng-zorro-antd/tabs';
-import { ContextService } from '../../../../core/services/context/context.service';
-import { ErrorRegistryService } from '../../../../core/services/error-registry/error-registry.service';
-import { EventBusService } from '../../../../core/services/event-bus/event-bus.service';
+import { ContextService } from '@core/services/context/context.service';
+import { ErrorRegistryService } from '@core/services/error-registry/error-registry.service';
+import { EventBusService } from '@core/services/event-bus/event-bus.service';
 
 /**
  * Right Panel Component
@@ -29,18 +29,18 @@ import { EventBusService } from '../../../../core/services/event-bus/event-bus.s
         <!-- Context Zone (динамическая зона) -->
         <div class="right-panel__context-zone">
           @if (hasContextData()) {
-          <div class="context-properties">
-            <h3 class="context-properties__title">{{ contextTitle() }}</h3>
-            <div class="context-properties__content">
-              <p>Детали записи: {{ contextTitle() }}</p>
+            <div class="context-properties">
+              <h3 class="context-properties__title">{{ contextTitle() }}</h3>
+              <div class="context-properties__content">
+                <p>Детали записи: {{ contextTitle() }}</p>
+              </div>
             </div>
-          </div>
           } @else {
-          <nz-empty
-            nzNotFoundContent="Выберите элемент для просмотра деталей"
-            [nzNotFoundImage]="'simple'"
-          >
-          </nz-empty>
+            <nz-empty
+              nzNotFoundContent="Выберите элемент для просмотра деталей"
+              [nzNotFoundImage]="'simple'"
+            >
+            </nz-empty>
           }
         </div>
 
@@ -50,19 +50,19 @@ import { EventBusService } from '../../../../core/services/event-bus/event-bus.s
             <nz-tab nzTitle="Действия">
               <div class="panel-tab-content">
                 @if (availableActions().length > 0) {
-                <div class="actions-list">
-                  @for (action of availableActions(); track action.id) {
-                  <button class="action-btn" (click)="executeAction(action.id)">
-                    <span nz-icon [nzType]="action.icon"></span>
-                    {{ action.label }}
-                  </button>
-                  }
-                </div>
+                  <div class="actions-list">
+                    @for (action of availableActions(); track action.id) {
+                      <button class="action-btn" (click)="executeAction(action.id)">
+                        <span nz-icon [nzType]="action.icon"></span>
+                        {{ action.label }}
+                      </button>
+                    }
+                  </div>
                 } @else {
-                <nz-empty
-                  nzNotFoundContent="Нет доступных действий"
-                  [nzNotFoundImage]="'simple'"
-                ></nz-empty>
+                  <nz-empty
+                    nzNotFoundContent="Нет доступных действий"
+                    [nzNotFoundImage]="'simple'"
+                  ></nz-empty>
                 }
               </div>
             </nz-tab>
@@ -70,19 +70,19 @@ import { EventBusService } from '../../../../core/services/event-bus/event-bus.s
             <nz-tab [nzTitle]="errorsTabTitle()">
               <div class="panel-tab-content">
                 @if (errors().length > 0) {
-                <div class="errors-list">
-                  @for (error of errors(); track error.id) {
-                  <div class="error-item" [class]="'error-item--' + error.level">
-                    <div class="error-item__header">
-                      <span class="error-item__level">{{ getLevelLabel(error.level) }}</span>
-                      <span class="error-item__time">{{ formatTime(error.timestamp) }}</span>
-                    </div>
-                    <div class="error-item__message">{{ error.title }}</div>
+                  <div class="errors-list">
+                    @for (error of errors(); track error.id) {
+                      <div class="error-item" [class]="'error-item--' + error.level">
+                        <div class="error-item__header">
+                          <span class="error-item__level">{{ getLevelLabel(error.level) }}</span>
+                          <span class="error-item__time">{{ formatTime(error.timestamp) }}</span>
+                        </div>
+                        <div class="error-item__message">{{ error.title }}</div>
+                      </div>
+                    }
                   </div>
-                  }
-                </div>
                 } @else {
-                <nz-empty nzNotFoundContent="Ошибок нет" [nzNotFoundImage]="'simple'"></nz-empty>
+                  <nz-empty nzNotFoundContent="Ошибок нет" [nzNotFoundImage]="'simple'"></nz-empty>
                 }
               </div>
             </nz-tab>
@@ -94,11 +94,11 @@ import { EventBusService } from '../../../../core/services/event-bus/event-bus.s
             </nz-tab>
 
             @if (isDevMode()) {
-            <nz-tab nzTitle="Debug">
-              <div class="panel-tab-content">
-                <pre class="debug-info">{{ getDebugInfo() }}</pre>
-              </div>
-            </nz-tab>
+              <nz-tab nzTitle="Debug">
+                <div class="panel-tab-content">
+                  <pre class="debug-info">{{ getDebugInfo() }}</pre>
+                </div>
+              </nz-tab>
             }
           </nz-tabset>
         </div>
@@ -290,7 +290,7 @@ export class RightPanelComponent implements OnInit {
   contextTitle = signal('');
   errors = signal<any[]>([]);
 
-  availableActions = signal<Array<{ id: string; label: string; icon: string }>>([
+  availableActions = signal<{ id: string; label: string; icon: string }[]>([
     { id: 'edit', label: 'Редактировать', icon: 'edit' },
     { id: 'delete', label: 'Удалить', icon: 'delete' },
     { id: 'duplicate', label: 'Дублировать', icon: 'copy' },

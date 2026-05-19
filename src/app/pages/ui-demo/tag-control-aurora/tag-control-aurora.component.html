@@ -22,7 +22,7 @@
               <label class="control-label">Стиль (Variant):</label>
               <nz-select [ngModel]="config().variant" (ngModelChange)="updateConfig('variant', $event)">
                 @for (v of variants; track v.value) {
-                <nz-option [nzLabel]="v.label" [nzValue]="v.value"></nz-option>
+                  <nz-option [nzLabel]="v.label" [nzValue]="v.value"></nz-option>
                 }
               </nz-select>
             </div>
@@ -30,7 +30,7 @@
               <label class="control-label">Размер (Size):</label>
               <nz-select [ngModel]="config().size" (ngModelChange)="updateConfig('size', $event)">
                 @for (s of sizes; track s.value) {
-                <nz-option [nzLabel]="s.label" [nzValue]="s.value"></nz-option>
+                  <nz-option [nzLabel]="s.label" [nzValue]="s.value"></nz-option>
                 }
               </nz-select>
             </div>
@@ -41,7 +41,7 @@
               <label class="control-label">Форма (Shape):</label>
               <nz-radio-group [ngModel]="config().shape" (ngModelChange)="updateConfig('shape', $event)">
                 @for (sh of shapes; track sh.value) {
-                <label nz-radio [nzValue]="sh.value">{{ sh.label }}</label>
+                  <label nz-radio [nzValue]="sh.value">{{ sh.label }}</label>
                 }
               </nz-radio-group>
             </div>
@@ -54,7 +54,7 @@
             <div class="color-picker-row">
               <nz-select [ngModel]="config().color" (ngModelChange)="updateConfig('color', $event)" style="flex: 1">
                 @for (c of colors; track c.value) {
-                <nz-option [nzLabel]="c.label" [nzValue]="c.value"></nz-option>
+                  <nz-option [nzLabel]="c.label" [nzValue]="c.value"></nz-option>
                 }
               </nz-select>
               <input
@@ -76,7 +76,7 @@
               nzAllowClear
             >
               @for (i of icons; track i.value) {
-              <nz-option [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
+                <nz-option [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
               }
             </nz-select>
           </div>

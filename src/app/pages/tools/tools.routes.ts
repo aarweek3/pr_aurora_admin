@@ -24,35 +24,35 @@ export const TOOLS_ROUTES: Routes = [
   {
     path: 'language-manager',
     loadComponent: () =>
-      import('../../../assets/languageApp/components/language-manager.component').then(
+      import('@language-app/components/language-manager.component').then(
         (m) => m.LanguageManagerComponent,
       ),
   },
   {
     path: 'test-language-app',
     loadComponent: () =>
-      import('../../../assets/tests/test-languageApp/test-language-app.component').then(
+      import('../debug-tools/test-languageApp/test-language-app.component').then(
         (m) => m.TestLanguageAppComponent,
       ),
   },
   {
     path: 'test-mexico-flag',
     loadComponent: () =>
-      import(
-        '@assets/tests/test-languageApp/test-language-app-get-massiv-icon-from-db.component'
-      ).then((m) => m.TestLanguageAppGetMassivIconFromDbComponent),
+      import('../debug-tools/test-languageApp/test-language-app-get-massiv-icon-from-db.component').then(
+        (m) => m.TestLanguageAppGetMassivIconFromDbComponent,
+      ),
   },
   {
     path: 'test-file-browser',
     loadComponent: () =>
-      import('../../../assets/tests/test-file-browser/test-file-browser.component').then(
+      import('../debug-tools/test-file-browser/test-file-browser.component').then(
         (m) => m.TestFileBrowserComponent,
       ),
   },
   {
     path: 'test-tinymce',
     loadComponent: () =>
-      import('../../../assets/tests/test-tinymce/test-tinymce.component').then(
+      import('../debug-tools/test-tinymce/test-tinymce.component').then(
         (m) => m.TestTinymceComponent,
       ),
   },
@@ -98,7 +98,6 @@ export const TOOLS_ROUTES: Routes = [
   },
   {
     path: 'icon-sync',
-    loadComponent: () =>
-      import('./icon-sync/icon-sync.component').then((m) => m.IconSyncComponent),
+    loadComponent: () => import('./icon-sync/icon-sync.component').then((m) => m.IconSyncComponent),
   },
 ];

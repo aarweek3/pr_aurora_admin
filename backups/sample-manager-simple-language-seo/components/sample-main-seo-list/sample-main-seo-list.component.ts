@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { SampleMainSeoItemDto } from '@pages/sample-manager-simple-language-seo/models/sample-main-seo.model';
@@ -243,6 +243,8 @@ import { SampleMainSeoStateService } from '../../services/sample-main-seo-state.
   ],
 })
 export class SampleMainSeoListComponent implements OnInit, OnDestroy {
+  private state = inject(SampleMainSeoStateService);
+
   private destroy$ = new Subject<void>();
   private searchSubject = new Subject<string>();
 
@@ -257,8 +259,6 @@ export class SampleMainSeoListComponent implements OnInit, OnDestroy {
   searchTerm = '';
 
   @Input() usePageNavigation = false;
-
-  constructor(private state: SampleMainSeoStateService) {}
 
   ngOnInit(): void {
     this.state.loadItems();

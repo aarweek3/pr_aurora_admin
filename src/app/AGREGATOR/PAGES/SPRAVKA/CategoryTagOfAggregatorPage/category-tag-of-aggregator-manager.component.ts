@@ -7,7 +7,7 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzRadioModule } from 'ng-zorro-antd/radio';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 
-import { ButtonControlJsonBlockComponent } from '@shared/controls/button-control-json-block/button-control-json-block.component';
+import { ButtonControlJsonBlockComponent } from '@controls';
 import { CategoryTagOfAggregatorListComponent } from './components/category-tag-of-aggregator-list/category-tag-of-aggregator-list.component';
 import { CategoryTagOfAggregatorModalComponent } from './components/category-tag-of-aggregator-modal/category-tag-of-aggregator-modal.component';
 import { CategoryTagOfAggregatorViewModalComponent } from './components/category-tag-of-aggregator-view-modal/category-tag-of-aggregator-view-modal.component';
@@ -69,11 +69,7 @@ import { ModalService } from '@shared/components/ui/modal/services/modal.service
             </nz-radio-group>
 
             <ng-container *ngIf="!state.showDeleted()">
-               <button 
-                nz-button 
-                nzType="primary" 
-                (click)="handleAdd()"
-              >
+              <button nz-button nzType="primary" (click)="handleAdd()">
                 <i nz-icon nzType="plus"></i>
                 Добавить категорию
               </button>
@@ -87,9 +83,9 @@ import { ModalService } from '@shared/components/ui/modal/services/modal.service
         *ngIf="showMaintenance"
         [loading]="state.loading()"
         [total]="state.total() || 0"
-        (onClear)="handleClearDatabase()"
-        (onRead)="handleReadFromDb()"
-        (onSeed)="handleSeedFromJson()"
+        (clear)="handleClearDatabase()"
+        (read)="handleReadFromDb()"
+        (seed)="handleSeedFromJson()"
       ></app-button-control-json-block>
 
       <!-- Основной список -->
@@ -103,11 +99,13 @@ import { ModalService } from '@shared/components/ui/modal/services/modal.service
       <app-category-tag-of-aggregator-modal
         *ngIf="isModalVisible && viewMode() === 'modal'"
         [isVisible]="isModalVisible"
-        (onClose)="closeModal()"
+        (modalClose)="closeModal()"
       ></app-category-tag-of-aggregator-modal>
 
       <!-- Модальное окно просмотра -->
-      <app-category-tag-of-aggregator-view-modal #viewModal></app-category-tag-of-aggregator-view-modal>
+      <app-category-tag-of-aggregator-view-modal
+        #viewModal
+      ></app-category-tag-of-aggregator-view-modal>
 
       <!-- Закрепленная строка статуса -->
       <div class="sticky-status-bar">
@@ -126,9 +124,7 @@ import { ModalService } from '@shared/components/ui/modal/services/modal.service
           <span class="status-item" *ngIf="state.loading()">
             <i nz-icon nzType="loading"></i> Обновление...
           </span>
-          <span class="status-item version-tag">
-            v3.5.0
-          </span>
+          <span class="status-item version-tag"> v3.5.0 </span>
         </div>
       </div>
     </div>
@@ -166,7 +162,7 @@ export class CategoryTagOfAggregatorManagerComponent implements OnInit {
   }
 
   onAdd(): void {
-    this.state.openAddModal(() => this.isModalVisible = true);
+    this.state.openAddModal(() => (this.isModalVisible = true));
   }
 
   closeModal(): void {
@@ -182,7 +178,7 @@ export class CategoryTagOfAggregatorManagerComponent implements OnInit {
       cancelText: 'Нет',
       confirmType: 'primary',
       centered: true,
-      icon: 'system/av_info'
+      icon: 'system/av_info',
     });
 
     if (confirmed) {
@@ -199,7 +195,7 @@ export class CategoryTagOfAggregatorManagerComponent implements OnInit {
       'Вы действительно хотите СТЕРЕТЬ ВСЕ ДАННЫЕ из таблицы категорий?',
       '2 + 2 * 2 = ?',
       '6',
-      'Критическое действие'
+      'Критическое действие',
     );
 
     if (confirmed) {

@@ -16,7 +16,7 @@ export class LoggerConsoleJsonViewerComponent {
   @Input() value: any;
 
   /** Путь до текущего ключа (для копирования) */
-  @Input() path: string = '';
+  @Input() path = '';
 
   /** Состояние развернутости */
   isExpanded = signal(false);

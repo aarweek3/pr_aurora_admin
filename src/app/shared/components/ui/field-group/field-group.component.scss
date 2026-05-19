@@ -45,13 +45,6 @@
         opacity: 1;
       }
     }
-
-    // В темной теме линия должна быть соответствующего цвета
-    @include dark-theme {
-      .av-field-group__header::after {
-        background: var(--dark-border-base, #434343);
-      }
-    }
   }
 
   &:hover {
@@ -72,10 +65,6 @@
     border-radius: 4px;
     z-index: 2;
 
-    @include dark-theme {
-      background: var(--av-fg-header-bg, #1f1f1f);
-    }
-
     &.is-clickable {
       cursor: pointer;
       &:hover {
@@ -83,10 +72,6 @@
           color: var(--av-fg-label-color-hover, var(--color-primary, #1890ff));
         }
         background: var(--av-fg-header-bg-hover, var(--av-fg-header-bg, #ffffff));
-
-        @include dark-theme {
-          background: var(--av-fg-header-bg-hover, var(--av-fg-header-bg, #1f1f1f));
-        }
       }
     }
 
@@ -167,34 +152,6 @@
 
     &:hover {
       background: rgba(255, 255, 255, 0.6);
-    }
-  }
-}
-
-// Темная тема (через хост или глобально)
-:host-context([data-theme="dark"]) {
-  .av-field-group {
-    border-color: var(--dark-border-base, #434343);
-    background: rgba(24, 144, 255, 0.05);
-
-    &:hover {
-      border-color: var(--color-primary, #1890ff);
-      box-shadow: 0 2px 4px rgba(24, 144, 255, 0.2);
-    }
-
-    &__header {
-      background: var(--dark-bg-container, #1f1f1f);
-      color: var(--dark-text-secondary, #bfbfbf);
-    }
-
-    &__toggle {
-      background: transparent;
-      border: none;
-      color: var(--dark-text-secondary, #bfbfbf);
-
-      &:hover {
-        color: var(--color-primary, #1890ff);
-      }
     }
   }
 }

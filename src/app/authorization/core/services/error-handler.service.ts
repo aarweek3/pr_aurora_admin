@@ -3,7 +3,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { NzMessageService } from 'ng-zorro-antd/message';
-import { LoggingService } from '@shared/infrastructure/logging/logging.service';
+import { LoggingService } from '@core/services/logging/logging.service';
 
 export interface AuthError {
   code: string;
@@ -13,7 +13,7 @@ export interface AuthError {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthErrorHandlerService {
   private router = inject(Router);
@@ -27,12 +27,12 @@ export class AuthErrorHandlerService {
    */
   handleHttpError(error: HttpErrorResponse, context?: string): AuthError {
     const authError = this.mapHttpErrorToAuthError(error);
-    
+
     this.logger.error(this.context, `HTTP Error in ${context || 'Unknown'}`, {
       status: error.status,
       message: error.message,
       url: error.url,
-      authError
+      authError,
     });
 
     this.executeErrorAction(authError);
@@ -44,7 +44,7 @@ export class AuthErrorHandlerService {
    */
   handleValidationError(error: any, context?: string): void {
     this.logger.warn(this.context, `Validation error in ${context || 'Unknown'}`, error);
-    
+
     if (error.errors && typeof error.errors === 'object') {
       // Показываем первую ошибку валидации
       const firstError = Object.values(error.errors)[0];
@@ -72,28 +72,28 @@ export class AuthErrorHandlerService {
         return {
           code: 'BAD_REQUEST',
           message: error.error?.message || 'Неверный запрос',
-          action: 'ignore'
+          action: 'ignore',
         };
 
       case 401:
         return {
           code: 'UNAUTHORIZED',
           message: 'Необходима авторизация',
-          action: 'redirect'
+          action: 'redirect',
         };
 
       case 403:
         return {
           code: 'FORBIDDEN',
           message: 'Недостаточно прав доступа',
-          action: 'ignore'
+          action: 'ignore',
         };
 
       case 404:
         return {
           code: 'NOT_FOUND',
           message: 'Ресурс не найден',
-          action: 'ignore'
+          action: 'ignore',
         };
 
       case 422:
@@ -101,35 +101,35 @@ export class AuthErrorHandlerService {
           code: 'VALIDATION_ERROR',
           message: error.error?.message || 'Ошибка валидации',
           details: error.error?.errors,
-          action: 'ignore'
+          action: 'ignore',
         };
 
       case 429:
         return {
           code: 'RATE_LIMIT',
           message: 'Слишком много запросов, попробуйте позже',
-          action: 'retry'
+          action: 'retry',
         };
 
       case 500:
         return {
           code: 'INTERNAL_ERROR',
           message: 'Внутренняя ошибка сервера',
-          action: 'retry'
+          action: 'retry',
         };
 
       case 0:
         return {
           code: 'NETWORK_ERROR',
           message: 'Ошибка подключения к серверу',
-          action: 'retry'
+          action: 'retry',
         };
 
       default:
         return {
           code: 'UNKNOWN_ERROR',
           message: error.message || 'Неизвестная ошибка',
-          action: 'ignore'
+          action: 'ignore',
         };
     }
   }

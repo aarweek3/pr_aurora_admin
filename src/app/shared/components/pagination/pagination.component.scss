@@ -33,11 +33,6 @@
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     outline: none;
 
-    @include dark-theme {
-      color: var(--dark-text-primary, #fff);
-      background: var(--dark-bg-elevated, #242424);
-      border-color: var(--dark-border-base, #404040);
-    }
 
     // Hover состояние
     &:hover:not(:disabled):not(.av-pagination__button--active) {
@@ -45,9 +40,6 @@
       border-color: var(--color-primary, #1890ff);
       background: var(--bg-container, #fff);
 
-      @include dark-theme {
-        background: var(--dark-bg-elevated, #242424);
-      }
     }
 
     // Active (текущая страница)
@@ -59,9 +51,6 @@
       cursor: default;
       z-index: 1;
 
-      @include dark-theme {
-        background: var(--dark-bg-elevated, #242424);
-      }
     }
 
     // Disabled состояние
@@ -71,11 +60,6 @@
       border-color: var(--border-color, #d9d9d9);
       cursor: not-allowed;
 
-      @include dark-theme {
-        color: var(--dark-text-disabled, rgba(255, 255, 255, 0.3));
-        background: var(--dark-bg-disabled, #1f1f1f);
-        border-color: var(--dark-border-base, #404040);
-      }
     }
 
     // Focus состояние (для accessibility)
@@ -116,9 +100,6 @@
     cursor: default;
     user-select: none;
 
-    @include dark-theme {
-      color: var(--dark-text-secondary, #a0a0a0);
-    }
 
     &:hover {
       color: var(--color-primary, #1890ff);
@@ -164,9 +145,6 @@
       font-size: 14px;
       color: var(--text-primary, #1a1a1a);
 
-      @include dark-theme {
-        color: var(--dark-text-primary, #fff);
-      }
     }
   }
 
@@ -185,11 +163,6 @@
       border: 1px solid var(--border-color, #d9d9d9);
       border-radius: 2px;
 
-      @include dark-theme {
-        color: var(--dark-text-primary, #fff);
-        background: var(--dark-bg-elevated, #242424);
-        border-color: var(--dark-border-base, #404040);
-      }
     }
   }
 
@@ -226,9 +199,6 @@
     font-size: 14px;
     color: var(--text-secondary, #666);
 
-    @include dark-theme {
-      color: var(--dark-text-secondary, #a0a0a0);
-    }
   }
 
   // Селектор размера страницы
@@ -242,9 +212,6 @@
       font-size: 14px;
       color: var(--text-secondary, #666);
 
-      @include dark-theme {
-        color: var(--dark-text-secondary, #a0a0a0);
-      }
     }
 
     select {
@@ -264,12 +231,6 @@
       background-repeat: no-repeat;
       background-position: right 8px center;
 
-      @include dark-theme {
-        color: var(--dark-text-primary, #fff);
-        background-color: var(--dark-bg-elevated, #242424);
-        border-color: var(--dark-border-base, #404040);
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23a0a0a0' d='M6 8L2 4h8z'/%3E%3C/svg%3E");
-      }
 
       &:hover {
         border-color: var(--color-primary, #1890ff);
@@ -293,9 +254,6 @@
       font-size: 14px;
       color: var(--text-secondary, #666);
 
-      @include dark-theme {
-        color: var(--dark-text-secondary, #a0a0a0);
-      }
     }
 
     input {
@@ -311,11 +269,6 @@
       outline: none;
       transition: all 0.2s;
 
-      @include dark-theme {
-        color: var(--dark-text-primary, #fff);
-        background: var(--dark-bg-elevated, #242424);
-        border-color: var(--dark-border-base, #404040);
-      }
 
       &:hover {
         border-color: var(--color-primary, #1890ff);
@@ -356,9 +309,6 @@
       cursor: pointer;
       transition: all 0.2s;
 
-      @include dark-theme {
-        background: var(--dark-bg-elevated, #242424);
-      }
 
       &:hover:not(:disabled) {
         color: #fff;
@@ -371,11 +321,6 @@
         border-color: var(--border-color, #d9d9d9);
         cursor: not-allowed;
 
-        @include dark-theme {
-          color: var(--dark-text-disabled, rgba(255, 255, 255, 0.3));
-          background: var(--dark-bg-disabled, #1f1f1f);
-          border-color: var(--dark-border-base, #404040);
-        }
       }
     }
 
@@ -387,9 +332,6 @@
       font-size: 14px;
       color: var(--text-secondary, #666);
 
-      @include dark-theme {
-        color: var(--dark-text-secondary, #a0a0a0);
-      }
     }
 
     .av-pagination__no-more {
@@ -397,9 +339,6 @@
       font-size: 14px;
       color: var(--text-secondary, #666);
 
-      @include dark-theme {
-        color: var(--dark-text-secondary, #a0a0a0);
-      }
     }
   }
 

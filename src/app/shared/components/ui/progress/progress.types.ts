@@ -52,7 +52,7 @@ export interface ProgressGradient {
    * Промежуточные цвета градиента с позициями
    * Пример: [{ color: '#ff0000', position: 25 }, { color: '#00ff00', position: 75 }]
    */
-  stops?: Array<{ color: string; position: number }>;
+  stops?: { color: string; position: number }[];
 }
 
 /**

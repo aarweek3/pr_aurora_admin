@@ -30,7 +30,7 @@
       flex: 1;
       height: 100%;
       border-bottom: none;
-      
+
       .toolbar-row {
         flex-direction: column;
         height: auto;
@@ -38,13 +38,13 @@
         padding-top: 10px;
         gap: 12px;
       }
-      
+
       .toolbar-right {
         flex-direction: column;
         gap: 12px;
       }
     }
-    
+
     .resize-handle {
       display: none;
     }
@@ -103,10 +103,16 @@
   /* Apply Vars */
   background: var(--lc-bg-main);
   color: var(--lc-text-main);
-  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+  font-family:
+    "Segoe UI",
+    system-ui,
+    -apple-system,
+    sans-serif;
   border-radius: 8px;
   border: 1px solid var(--lc-border-main);
-  transition: background 0.3s, color 0.3s;
+  transition:
+    background 0.3s,
+    color 0.3s;
 }
 
 /* Light Theme Overrides applied to container */

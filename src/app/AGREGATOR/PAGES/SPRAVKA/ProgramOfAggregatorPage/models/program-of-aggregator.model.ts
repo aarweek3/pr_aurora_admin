@@ -1,4 +1,16 @@
-import { VersionStatus } from "./version-status.enum";
+import { VersionStatus } from './version-status.enum';
+import { WindowsTechSpecDto, MacOsTechSpecDto, LinuxTechSpecDto, AndroidTechSpecDto, IosTechSpecDto } from '../../../TechSpec/tech-spec.model';
+import { LanguageAggregator } from '../../LanguageOfAggregator/models/language-aggregator.model';
+import { DeveloperOfAggregatorItem } from '../../DeveloperOfAggregatorPage/models/developer-of-aggregator.model';
+import { PlatformOfAggregatorItemDto } from '../../PlatformOfAggregatorPage/models/platform-of-aggregator.model';
+import { ErrorResponse } from '@core/models/error-response.model';
+
+export interface CategoryTreeNode {
+  title: string;
+  key: string;
+  isLeaf: boolean;
+  children: CategoryTreeNode[];
+}
 
 export interface ProgramOfAggregatorLocalization {
   languageOfAggregatorId: number;
@@ -14,6 +26,8 @@ export interface ProgramOfAggregatorLocalization {
   licenseTypeId?: number;
   metaTitle?: string;
   metaDescription?: string;
+  youtubeVideoUrl?: string;
+  customVideoUrl?: string;
 }
 
 export interface ProgramOfAggregatorItem {
@@ -22,6 +36,8 @@ export interface ProgramOfAggregatorItem {
   slug: string;
   iconPath?: string;
   categoryName?: string;
+  simplifiedCategoryName?: string;
+  simplifiedSubcategoryName?: string;
   mainPlatformName?: string;
   mainPlatformId?: number;
   developerName?: string;
@@ -38,13 +54,18 @@ export interface ProgramOfAggregatorItem {
 export interface ProgramOfAggregatorDetail {
   id: number;
   categoryOfAggregatorId: number;
-  subCategoryOfAggregatorId?: number;
+  categoryId?: number;
+  subcategoryId?: number;
+  simplifiedCategoryName?: string;
+  simplifiedSubcategoryName?: string;
   developerOfAggregatorId: number;
   canonicalName: string;
   slug: string;
   mainPlatformId: number;
   iconPath?: string;
   website?: string;
+  youtubeVideoUrl?: string;
+  customVideoUrl?: string;
   status: number;
   sortOrder: number;
   totalDownloads: number;
@@ -57,6 +78,8 @@ export interface ProgramOfAggregatorDetail {
   tags: TagInfo[];
   screenshots: ScreenshotOfAggregator[];
   versions: VersionOfAggregatorDetail[];
+  createdAt: string;
+  updatedAt?: string;
 }
 
 export interface TagInfo {
@@ -77,13 +100,16 @@ export interface ScreenshotOfAggregator {
 
 export interface ProgramOfAggregatorCreate {
   categoryOfAggregatorId: number;
-  subCategoryOfAggregatorId?: number;
+  categoryId?: number;
+  subcategoryId?: number;
   developerOfAggregatorId: number;
   canonicalName: string;
   slug: string;
   mainPlatformId: number;
   iconPath?: string;
   website?: string;
+  youtubeVideoUrl?: string;
+  customVideoUrl?: string;
   status: number;
   sortOrder: number;
   isActive: boolean;
@@ -139,6 +165,13 @@ export interface VersionOfAggregatorDetail {
   status: VersionStatus;
   localizations: VersionOfAggregatorLocalization[];
   downloadLinks: DownloadLinkOfAggregator[];
+
+  // --- TechSpecs v2 ---
+  windowsSpec?: WindowsTechSpecDto | null;
+  macOsSpec?: MacOsTechSpecDto | null;
+  iosSpec?: IosTechSpecDto | null;
+  androidSpec?: AndroidTechSpecDto | null;
+  linuxSpec?: LinuxTechSpecDto | null;
 }
 
 export interface VersionOfAggregatorCreate {
@@ -150,6 +183,13 @@ export interface VersionOfAggregatorCreate {
   externalChangelogUrl?: string;
   status: VersionStatus;
   localizations: VersionOfAggregatorLocalization[];
+
+  // --- TechSpecs v2 ---
+  windowsSpec?: WindowsTechSpecDto | null;
+  macOsSpec?: MacOsTechSpecDto | null;
+  iosSpec?: IosTechSpecDto | null;
+  androidSpec?: AndroidTechSpecDto | null;
+  linuxSpec?: LinuxTechSpecDto | null;
 }
 
 export interface VersionOfAggregatorUpdate extends VersionOfAggregatorCreate {
@@ -187,11 +227,11 @@ export interface ProgramOfAggregatorState {
   viewModalMaximized: boolean;
   deletingId: number | null;
   prerequisites: ProgramPrerequisites | null;
-  languages: any[];
-  categories: any[];
-  developers: any[];
-  platforms: any[];
-  error: any | null;
+  languages: LanguageAggregator[];
+  categories: CategoryTreeNode[];
+  developers: DeveloperOfAggregatorItem[];
+  platforms: PlatformOfAggregatorItemDto[];
+  error: ErrorResponse | null;
 }
 
 export const INITIAL_PROGRAM_STATE: ProgramOfAggregatorState = {
@@ -220,5 +260,26 @@ export const INITIAL_PROGRAM_STATE: ProgramOfAggregatorState = {
   categories: [],
   developers: [],
   platforms: [],
-  error: null
+  error: null,
 };
+
+export interface ProgramOfAggregatorPageRequest {
+  pageNumber: number;
+  pageSize: number;
+  searchTerm?: string;
+  languageId?: number | null;
+  categoryId?: number | null;
+  platformId?: number | null;
+  developerId?: number | null;
+  status?: number | null;
+  sortBy?: string;
+  sortDirection?: number;
+  showDeleted?: boolean;
+}
+
+export interface ProgramOfAggregatorPagedResponse {
+  items: ProgramOfAggregatorItem[];
+  total: number;
+  pageNumber: number;
+  pageSize: number;
+}

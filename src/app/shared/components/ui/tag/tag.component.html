@@ -5,9 +5,13 @@
   [class.av-tag--custom]="isCustomColor"
   [ngStyle]="tagStyles"
   (click)="onTagClick($event)"
+  (keydown.enter)="onTagClick($event)"
+  (keydown.space)="onTagClick($event)"
+  [attr.tabindex]="clickable() ? 0 : null"
+  [attr.role]="clickable() ? 'button' : null"
 >
   @if (icon()) {
-  <av-icon [type]="icon()!" class="av-tag__icon"></av-icon>
+    <av-icon [type]="icon()!" class="av-tag__icon"></av-icon>
   }
 
   <span class="av-tag__label">
@@ -15,8 +19,8 @@
   </span>
 
   @if (removable()) {
-  <button type="button" class="av-tag__remove" (click)="onRemoveClick($event)">
-    <av-icon type="actions/av_close" class="av-tag__remove-icon"></av-icon>
-  </button>
+    <button type="button" class="av-tag__remove" (click)="onRemoveClick($event)">
+      <av-icon type="actions/av_close" class="av-tag__remove-icon"></av-icon>
+    </button>
   }
 </div>

@@ -31,6 +31,22 @@ import { AvImageUploadResult, AvRect } from './models/av-image-studio-modal.mode
 import { AvImageStudioIngestionService } from './services/av-image-studio-ingestion.service';
 import { AvImageStudioPersistenceService } from './services/av-image-studio-persistence.service';
 
+export interface AvImageStudioData {
+  imageUrl?: string;
+  metadata?: {
+    altText?: string;
+    titleText?: string;
+    caption?: string;
+  };
+}
+
+export interface AvImageStudioPreset {
+  icon: string;
+  label: string;
+  size: string;
+  ratio: number;
+}
+
 @Component({
   selector: 'app-av-image-studio-v2',
   standalone: true,
@@ -58,7 +74,7 @@ import { AvImageStudioPersistenceService } from './services/av-image-studio-pers
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AvImageStudioV2Component implements OnInit {
-  public readonly modalRef = inject(ModalRef<AvImageUploadResult>);
+  public readonly modalRef = inject(ModalRef<AvImageUploadResult, AvImageStudioData>);
   public readonly cdr = inject(ChangeDetectorRef);
   public readonly loader = inject(AvImageStudioIngestionService);
   public readonly persistence = inject(AvImageStudioPersistenceService);
@@ -94,6 +110,8 @@ export class AvImageStudioV2Component implements OnInit {
   // Настройки
   exportFormat: 'image/jpeg' | 'image/png' | 'image/webp' = 'image/jpeg';
   quality = 85;
+  isProgressive = true;
+  isOptimized = true;
   cropShape: 'rectangle' | 'circle' = 'rectangle';
   align: 'left' | 'center' | 'right' = 'center';
 
@@ -142,7 +160,7 @@ export class AvImageStudioV2Component implements OnInit {
     }
   }
 
-  presets = [
+  presets: AvImageStudioPreset[] = [
     { icon: '📷', label: 'Instagram Post', size: '1080 × 1080', ratio: 1 },
     { icon: '📱', label: 'Instagram Story', size: '1080 × 1920', ratio: 9 / 16 },
     { icon: '▶️', label: 'YouTube Thumb', size: '1280 × 720', ratio: 16 / 9 },
@@ -188,8 +206,9 @@ export class AvImageStudioV2Component implements OnInit {
     this.updateManualCrop();
   }
 
-  onFileChange(event: any) {
-    const file = event.target.files[0];
+  onFileChange(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
     if (file) {
       this.loader.loadFromFile(file);
     }
@@ -333,7 +352,7 @@ export class AvImageStudioV2Component implements OnInit {
     this.updateManualCrop(type, value);
   }
 
-  applyPreset(preset: any) {
+  applyPreset(preset: AvImageStudioPreset) {
     const [w, h] = preset.size.split(' × ').map(Number);
     this.targetWidth = w;
     this.targetHeight = h;

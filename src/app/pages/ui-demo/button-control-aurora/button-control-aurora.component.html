@@ -7,7 +7,7 @@
         <div class="demo-form">
           <!-- Сообщения пользователю -->
           @if (message()) {
-          <div class="message-toast">{{ message() }}</div>
+            <div class="message-toast">{{ message() }}</div>
           }
 
           <!-- Контролы для настройки кнопки -->
@@ -372,32 +372,32 @@
           [style]="buttonStyle()"
         >
           @if (iconConfig().type) {
-          <av-icon
-            [type]="iconConfig().type!"
-            [size]="iconConfig().size"
-            [color]="iconConfig().color"
-            [style.transform]="
-              'rotate(' +
-              iconConfig().rotation +
-              'deg) ' +
-              'scale(' +
-              iconConfig().scale +
-              ') ' +
-              'scaleX(' +
-              (iconConfig().flipX ? -1 : 1) +
-              ') ' +
-              'scaleY(' +
-              (iconConfig().flipY ? -1 : 1) +
-              ')'
-            "
-            [style.opacity]="iconConfig().opacity"
-            [style.padding.px]="iconConfig().padding"
-            [style.background]="iconConfig().background"
-            [style.border]="
-              iconConfig().borderShow ? iconConfig().borderWidth + 'px solid ' + iconConfig().borderColor : 'none'
-            "
-            [style.border-radius.px]="iconConfig().borderRadius"
-          ></av-icon>
+            <av-icon
+              [type]="iconConfig().type!"
+              [size]="iconConfig().size"
+              [color]="iconConfig().color"
+              [style.transform]="
+                'rotate(' +
+                iconConfig().rotation +
+                'deg) ' +
+                'scale(' +
+                iconConfig().scale +
+                ') ' +
+                'scaleX(' +
+                (iconConfig().flipX ? -1 : 1) +
+                ') ' +
+                'scaleY(' +
+                (iconConfig().flipY ? -1 : 1) +
+                ')'
+              "
+              [style.opacity]="iconConfig().opacity"
+              [style.padding.px]="iconConfig().padding"
+              [style.background]="iconConfig().background"
+              [style.border]="
+                iconConfig().borderShow ? iconConfig().borderWidth + 'px solid ' + iconConfig().borderColor : 'none'
+              "
+              [style.border-radius.px]="iconConfig().borderRadius"
+            ></av-icon>
           }
           {{ buttonConfig().text }}
         </button>
@@ -413,17 +413,20 @@
           <li><strong>Вариант:</strong> {{ buttonConfig().variant }}</li>
           <li><strong>Текст:</strong> {{ buttonConfig().text }}</li>
           @if (iconConfig().type) {
-          <li><strong>Иконка:</strong> {{ iconConfig().type }}</li>
-          <li><strong>Размер иконки:</strong> {{ iconConfig().size }}px</li>
-          @if (iconConfig().color) {
-          <li>
-            <strong>Цвет иконки:</strong> <span [style.color]="iconConfig().color">{{ iconConfig().color }}</span>
-          </li>
-          } @if (iconConfig().rotation !== 0) {
-          <li><strong>Поворот:</strong> {{ iconConfig().rotation }}°</li>
-          } @if (iconConfig().scale !== 1) {
-          <li><strong>Масштаб:</strong> {{ iconConfig().scale }}</li>
-          } }
+            <li><strong>Иконка:</strong> {{ iconConfig().type }}</li>
+            <li><strong>Размер иконки:</strong> {{ iconConfig().size }}px</li>
+            @if (iconConfig().color) {
+              <li>
+                <strong>Цвет иконки:</strong> <span [style.color]="iconConfig().color">{{ iconConfig().color }}</span>
+              </li>
+            }
+            @if (iconConfig().rotation !== 0) {
+              <li><strong>Поворот:</strong> {{ iconConfig().rotation }}°</li>
+            }
+            @if (iconConfig().scale !== 1) {
+              <li><strong>Масштаб:</strong> {{ iconConfig().scale }}</li>
+            }
+          }
           <li><strong>Отключена:</strong> {{ buttonConfig().disabled ? 'Да' : 'Нет' }}</li>
           <li><strong>Загрузка:</strong> {{ buttonConfig().loading ? 'Да' : 'Нет' }}</li>
           <li><strong>Block:</strong> {{ buttonConfig().block ? 'Да' : 'Нет' }}</li>
@@ -473,10 +476,10 @@
           <span class="config-value">{{ buttonConfig().text }}</span>
         </div>
         @if (buttonConfig().icon) {
-        <div class="config-item">
-          <span class="config-label">Иконка:</span>
-          <span class="config-value">{{ buttonConfig().icon }}</span>
-        </div>
+          <div class="config-item">
+            <span class="config-label">Иконка:</span>
+            <span class="config-value">{{ buttonConfig().icon }}</span>
+          </div>
         }
         <div class="config-item">
           <span class="config-label">Отключена:</span>

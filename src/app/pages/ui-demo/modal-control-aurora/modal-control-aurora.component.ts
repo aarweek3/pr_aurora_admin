@@ -161,7 +161,7 @@ export class ModalControlAuroraComponent implements OnInit {
   // 6. Code Generation
   generatedCode = computed(() => {
     const c = this.config();
-    let props: string[] = [];
+    const props: string[] = [];
 
     // Основные параметры
     if (c.title) props.push(`  title="${c.title}"`);

@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { computed, effect, Injectable, signal } from '@angular/core';
+import { computed, effect, Injectable, signal, inject } from '@angular/core';
 import { ApiEndpoints } from '@environments/api-endpoints';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { catchError, finalize, map, tap } from 'rxjs/operators';
@@ -28,6 +28,8 @@ import {
   providedIn: 'root',
 })
 export class UserSettingsService {
+  private http = inject(HttpClient);
+
   // ==========================================
   // SIGNALS (Реактивное состояние)
   // ==========================================
@@ -97,7 +99,7 @@ export class UserSettingsService {
   // CONSTRUCTOR
   // ==========================================
 
-  constructor(private http: HttpClient) {
+  constructor() {
     // Effect для автоматического применения настроек при изменении
     effect(() => {
       const currentSettings = this.settings();
@@ -374,5 +376,3 @@ export class UserSettingsService {
     this.error.set(null);
   }
 }
-
-

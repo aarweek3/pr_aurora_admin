@@ -3,7 +3,8 @@
   [cdkDragDisabled]="!config.draggable"
   cdkDrag
   [ngStyle]="getWindowStyles()"
-  [class.resizing]="isResizing()">
+  [class.resizing]="isResizing()"
+>
   <!-- Header (Title Bar) -->
   <div class="vs-modal-header" cdkDragHandle>
     <div class="vs-modal-title">
@@ -26,8 +27,5 @@
   </div>
 
   <!-- Resize Handle (Corner) -->
-  <div
-    *ngIf="config.resizable"
-    class="vs-modal-resize-handle"
-    (mousedown)="onResizeStart($event)"></div>
+  <div *ngIf="config.resizable" class="vs-modal-resize-handle" (mousedown)="onResizeStart($event)"></div>
 </div>

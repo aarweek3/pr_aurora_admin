@@ -13,7 +13,11 @@
   height: 100%;
   background: #1e1e1e;
   color: #cccccc;
-  font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family:
+    "Segoe UI",
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
 }
 
 // =============================================================================
@@ -127,7 +131,11 @@
       border-radius: 2px;
       color: #cccccc;
       font-size: 13px;
-      font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-family:
+        "Segoe UI",
+        -apple-system,
+        BlinkMacSystemFont,
+        sans-serif;
       outline: none;
       transition: all 0.15s ease;
 
@@ -179,7 +187,11 @@
     font-weight: 500;
     cursor: pointer;
     transition: all 0.15s ease;
-    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-family:
+      "Segoe UI",
+      -apple-system,
+      BlinkMacSystemFont,
+      sans-serif;
 
     &.btn-secondary {
       background: #3c3c3c;

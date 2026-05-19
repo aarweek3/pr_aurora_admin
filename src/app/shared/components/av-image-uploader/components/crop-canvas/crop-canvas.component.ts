@@ -99,7 +99,8 @@ import { AvPoint, AvRect } from '../../av-image.model';
         position: absolute;
         pointer-events: none;
         opacity: 0.4;
-        background-image: linear-gradient(to right, rgba(255, 255, 255, 0.5) 1px, transparent 1px),
+        background-image:
+          linear-gradient(to right, rgba(255, 255, 255, 0.5) 1px, transparent 1px),
           linear-gradient(to bottom, rgba(255, 255, 255, 0.5) 1px, transparent 1px);
         background-size: 33.3% 33.3%;
       }
@@ -288,7 +289,7 @@ export class CropCanvasComponent implements OnInit, OnDestroy, OnChanges {
     e.preventDefault();
     const dx = e.clientX - this.startPoint.x;
     const dy = e.clientY - this.startPoint.y;
-    let newRect = { ...this.startRect };
+    const newRect = { ...this.startRect };
 
     if (this.dragMode === 'move') {
       newRect.x += dx;

@@ -1,4 +1,4 @@
-import { ErrorResponse } from '../../../../../shared/infrastructure/interceptor/models/error-response.model';
+import { ErrorResponse } from '@core/models/error-response.model';
 
 export interface DeveloperOfAggregatorLocalization {
   languageOfAggregatorId: number;
@@ -84,5 +84,5 @@ export const initialDeveloperOfAggregatorState: DeveloperOfAggregatorState = {
   selectedId: null,
   viewMode: 'modal',
   viewModalVisible: false,
-  viewItem: null
+  viewItem: null,
 };

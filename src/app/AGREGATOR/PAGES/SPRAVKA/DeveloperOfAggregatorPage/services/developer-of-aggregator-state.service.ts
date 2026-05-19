@@ -1,20 +1,20 @@
 import { Injectable, OnDestroy, computed, inject, signal } from '@angular/core';
-import { 
-  DeveloperOfAggregatorState, 
+import {
+  DeveloperOfAggregatorState,
   initialDeveloperOfAggregatorState,
   DeveloperOfAggregatorItem,
-  DeveloperOfAggregatorDetail
+  DeveloperOfAggregatorDetail,
 } from '../models/developer-of-aggregator.model';
 import { DeveloperOfAggregatorApiService } from './developer-of-aggregator-api.service';
 import { Observable, Subject, finalize, takeUntil, tap } from 'rxjs';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { ModalService } from '@shared/components/ui/modal/services/modal.service';
-import { LanguageService } from '@assets/languageApp/services/language.service';
-import { ErrorResponse } from '../../../../../shared/infrastructure/interceptor/models/error-response.model';
+import { LanguageService } from '@language-app/services/language.service';
+import { ErrorResponse } from '@core/models/error-response.model';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class DeveloperOfAggregatorStateService implements OnDestroy {
   private api = inject(DeveloperOfAggregatorApiService);
@@ -46,7 +46,7 @@ export class DeveloperOfAggregatorStateService implements OnDestroy {
   viewItem = computed(() => this.state().viewItem);
 
   updateState(partial: Partial<DeveloperOfAggregatorState>): void {
-    this.state.update(s => ({ ...s, ...partial }));
+    this.state.update((s) => ({ ...s, ...partial }));
   }
 
   private checkLanguagesAvailable(): boolean {
@@ -63,25 +63,26 @@ export class DeveloperOfAggregatorStateService implements OnDestroy {
       languageId: s.languageId,
       sortBy: s.sortBy,
       sortDirection: s.sortDirection,
-      showDeleted: s.showDeleted
+      showDeleted: s.showDeleted,
     };
 
     this.executeWithLoading(this.api.getPaged(request)).subscribe({
       next: (response) => {
-        this.updateState({ 
-          items: response.items, 
+        this.updateState({
+          items: response.items,
           total: response.total,
-          error: null
+          error: null,
         });
 
         if (checkEmpty && !s.showDeleted) {
           if (response.total === 0) {
             this.modalService.alert({
               title: 'База данных пуста!',
-              message: 'В базе данных \'DbNames\' (таблица \'developers_of_aggregator\') нет записей для отображения. Вы можете инициализировать данные из JSON файла.',
+              message:
+                "В базе данных 'DbNames' (таблица 'developers_of_aggregator') нет записей для отображения. Вы можете инициализировать данные из JSON файла.",
               alertType: 'info',
               centered: true,
-              icon: 'system/av_info'
+              icon: 'system/av_info',
             });
           } else {
             this.modalService.alert({
@@ -89,12 +90,12 @@ export class DeveloperOfAggregatorStateService implements OnDestroy {
               message: `Данные из БД считаны. Всего загружено записей: ${response.total}`,
               alertType: 'success',
               centered: true,
-              icon: 'general/av_check-circle'
+              icon: 'general/av_check-circle',
             });
           }
         }
       },
-      error: (err) => this.handleError(err, 'LoadItems')
+      error: (err) => this.handleError(err, 'LoadItems'),
     });
   }
 
@@ -155,7 +156,7 @@ export class DeveloperOfAggregatorStateService implements OnDestroy {
       next: (item) => {
         this.updateState({ viewItem: item, viewModalVisible: true });
       },
-      error: (err) => this.handleError(err, 'OpenView')
+      error: (err) => this.handleError(err, 'OpenView'),
     });
   }
 
@@ -173,8 +174,8 @@ export class DeveloperOfAggregatorStateService implements OnDestroy {
           this.message.success(dto.id ? 'Разработчик обновлен' : 'Разработчик создан');
           this.loadItems();
         },
-        error: (err) => this.handleError(err, 'Save')
-      })
+        error: (err) => this.handleError(err, 'Save'),
+      }),
     );
   }
 
@@ -184,7 +185,7 @@ export class DeveloperOfAggregatorStateService implements OnDestroy {
         this.message.success('Разработчик помечен как удаленный');
         this.loadItems();
       },
-      error: (err) => this.handleError(err, 'Delete')
+      error: (err) => this.handleError(err, 'Delete'),
     });
   }
 
@@ -194,7 +195,7 @@ export class DeveloperOfAggregatorStateService implements OnDestroy {
         this.message.success('Разработчик полностью удален из базы');
         this.loadItems();
       },
-      error: (err) => this.handleError(err, 'HardDelete')
+      error: (err) => this.handleError(err, 'HardDelete'),
     });
   }
 
@@ -204,19 +205,19 @@ export class DeveloperOfAggregatorStateService implements OnDestroy {
         this.message.success('Разработчик успешно восстановлен');
         this.loadItems();
       },
-      error: (err) => this.handleError(err, 'Restore')
+      error: (err) => this.handleError(err, 'Restore'),
     });
   }
 
   seedFromJson(): void {
     const s = this.state();
     if (s.total > 0 && !s.showDeleted) {
-       this.modalService.alert({
+      this.modalService.alert({
         title: 'Перенос невозможен',
         message: 'В БД уже есть записи. Для нового переноса очистите базу данных.',
         alertType: 'warning',
         centered: true,
-        icon: 'system/av_info'
+        icon: 'system/av_info',
       });
       return;
     }
@@ -231,7 +232,7 @@ export class DeveloperOfAggregatorStateService implements OnDestroy {
       error: (err) => {
         this.message.remove(msgId);
         this.handleError(err, 'Seed');
-      }
+      },
     });
   }
 
@@ -245,8 +246,8 @@ export class DeveloperOfAggregatorStateService implements OnDestroy {
       },
       error: (err) => {
         this.message.remove(msgId);
-        this.handleError(err, 'Clear')
-      }
+        this.handleError(err, 'Clear');
+      },
     });
   }
 
@@ -262,29 +263,32 @@ export class DeveloperOfAggregatorStateService implements OnDestroy {
    */
   private applyEnglishFallbacks(dto: any): void {
     if (!dto.localizations || dto.localizations.length === 0) return;
-    
+
     // 1. Находим английский язык динамически через сервис
-    const enLang = this.langService.availableLanguages().find(l => l.code === 'en-US');
+    const enLang = this.langService.availableLanguages().find((l) => l.code === 'en-US');
     const enId = enLang?.id;
-    
+
     // 2. Ищем английскую локализацию как основной источник
-    const enLoc = enId ? dto.localizations.find((l: any) => l.languageOfAggregatorId === enId) : null;
+    const enLoc = enId
+      ? dto.localizations.find((l: any) => l.languageOfAggregatorId === enId)
+      : null;
     const masterName = dto.name; // Техническое название
-    
+
     // 3. Синхронизируем пустые поля
     dto.localizations.forEach((loc: any) => {
       const isEn = enId && loc.languageOfAggregatorId === enId;
 
       // Название
       if (!loc.name?.trim()) {
-        loc.name = isEn ? masterName : (enLoc?.name || masterName);
+        loc.name = isEn ? masterName : enLoc?.name || masterName;
       }
-      
+
       // Остальные поля для не-английских локализаций
       if (!isEn && enLoc) {
         if (!loc.description?.trim() && enLoc.description) loc.description = enLoc.description;
         if (!loc.metaTitle?.trim() && enLoc.metaTitle) loc.metaTitle = enLoc.metaTitle;
-        if (!loc.metaDescription?.trim() && enLoc.metaDescription) loc.metaDescription = enLoc.metaDescription;
+        if (!loc.metaDescription?.trim() && enLoc.metaDescription)
+          loc.metaDescription = enLoc.metaDescription;
       }
     });
   }
@@ -294,7 +298,7 @@ export class DeveloperOfAggregatorStateService implements OnDestroy {
     this.updateState({ [key]: true, error: null } as any);
     return obs.pipe(
       takeUntil(this.destroy$),
-      finalize(() => this.updateState({ [key]: false } as any))
+      finalize(() => this.updateState({ [key]: false } as any)),
     );
   }
 
@@ -303,5 +307,3 @@ export class DeveloperOfAggregatorStateService implements OnDestroy {
     this.destroy$.complete();
   }
 }
-
-

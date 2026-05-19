@@ -1,0 +1,21 @@
+# Aurora Admin AI Instructions
+
+## 1. Стек и Архитектура
+- **Core:** Angular 17+ (Admin Panel).
+- **Style:** Vanilla CSS / SCSS.
+- **UI Libs:** NG-ZORRO (v17+).
+- **Prefix:** `av-`.
+
+## 2. Современный синтаксис Angular (Control Flow)
+- `@if`, `@for`, `@switch` вместо `*ngIf`, `*ngFor`, `*ngSwitch`.
+- Удаление `CommonModule`, если он больше не нужен.
+- В `@for` всегда указывать `track`.
+
+## 3. Обновления библиотек
+- `nz-tabs` вместо `nz-tabset`.
+
+## 4. Zero A11y Policy
+- Удалять/не добавлять `role`, `aria-*`, `tabindex`.
+
+## 5. Взаимосвязь
+- Этот проект является частью системы Aurora (Admin UI). Основные библиотеки находятся в `d:\AURORA\aggregator-web\libs`.

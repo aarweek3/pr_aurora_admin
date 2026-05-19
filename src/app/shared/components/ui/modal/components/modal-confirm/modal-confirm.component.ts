@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, Inject } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import { ButtonDirective } from '../../../button/button.directive';
 import { IconComponent } from '../../../icon/icon.component';
 import { ConfirmConfig } from '../../models/modal-config.model';
 import { ModalRef } from '../../models/modal-ref.model';
@@ -11,20 +10,21 @@ import { ModalComponent } from '../modal/modal.component';
 @Component({
   selector: 'av-modal-confirm',
   standalone: true,
-  imports: [CommonModule, ButtonDirective, IconComponent, ModalComponent],
+  imports: [CommonModule, IconComponent, ModalComponent],
   templateUrl: './modal-confirm.component.html',
   styleUrls: ['./modal-confirm.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ModalConfirmComponent {
   private sanitizer = inject(DomSanitizer);
+  public config = inject<ConfirmConfig>(MODAL_DATA);
+  private modalRef = inject<ModalRef<boolean>>(ModalRef);
   public safeMessage: SafeHtml;
 
-  constructor(
-    @Inject(MODAL_DATA) public config: ConfirmConfig,
-    private modalRef: ModalRef<boolean>,
-  ) {
-    this.safeMessage = this.sanitizer.bypassSecurityTrustHtml(this.config.message || 'Вы уверены, что хотите продолжить?');
+  constructor() {
+    this.safeMessage = this.sanitizer.bypassSecurityTrustHtml(
+      this.config.message || 'Вы уверены, что хотите продолжить?',
+    );
   }
 
   onConfirm(): void {

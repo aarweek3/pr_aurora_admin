@@ -4,8 +4,6 @@ import { Component } from '@angular/core';
   selector: 'app-result-detail',
   imports: [],
   templateUrl: './result-detail.component.html',
-  styleUrl: './result-detail.component.scss'
+  styleUrl: './result-detail.component.scss',
 })
-export class ResultDetailComponent {
-
-}
+export class ResultDetailComponent {}

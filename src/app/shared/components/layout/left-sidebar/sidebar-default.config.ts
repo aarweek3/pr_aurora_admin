@@ -38,6 +38,12 @@ export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
               route: '/admin/roles',
             },
             {
+              id: 'ref-languages',
+              label: 'Языки',
+              route: '/tools/language-manager',
+              icon: 'global',
+            },
+            {
               id: 'dictionary-seeding',
               icon: 'cloud-upload',
               label: 'Наполнение справочников',
@@ -382,44 +388,6 @@ export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
           type: 'submenu',
           submenu: [
             {
-              id: 'reference-data',
-              icon: 'book',
-              label: 'СПРАВОЧНИКИ',
-              type: 'submenu',
-              submenu: [
-                {
-                  id: 'ref-platforms',
-                  label: 'Операционные системы (платформы)',
-                  route: '/platforms',
-                  icon: 'windows',
-                },
-                {
-                  id: 'ref-categories',
-                  label: 'Категории',
-                  route: '/catalogs/categories',
-                  icon: 'folder',
-                },
-                {
-                  id: 'ref-subcategories',
-                  label: 'Подкатегории',
-                  route: '/catalogs/subcategories',
-                  icon: 'folder-open',
-                },
-                {
-                  id: 'ref-developers',
-                  label: 'Разработчики',
-                  route: '/developer',
-                  icon: 'code',
-                },
-                {
-                  id: 'ref-languages',
-                  label: 'Языки',
-                  route: '/tools/language-manager',
-                  icon: 'global',
-                },
-              ],
-            },
-            {
               id: 'test-language-app',
               label: 'Test languageApp',
               route: '/tools/test-language-app',
@@ -573,6 +541,16 @@ export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
                   icon: 'folder',
                 },
                 {
+                  id: 'agregator-ref-categories-v2',
+                  label: 'Категории (V2)',
+                  route: '/agregator/references/categories-v2',
+                  icon: 'folder-open',
+                  badge: {
+                    value: 'V2',
+                    intent: 'success',
+                  },
+                },
+                {
                   id: 'agregator-ref-tag-categories',
                   label: 'Категории тегов',
                   route: '/agregator/references/tag-categories',
@@ -599,19 +577,10 @@ export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
               ],
             },
             {
-              id: 'agregator-pages',
-              label: 'Страницы',
-              icon: 'file-text',
-              intent: 'orange',
-              type: 'submenu',
-              submenu: [
-                {
-                  id: 'agregator-pages-programs',
-                  label: 'Программы',
-                  route: '/agregator/pages/program',
-                  icon: 'appstore',
-                },
-              ],
+              id: 'agregator-pages-programs',
+              label: 'Программы',
+              route: '/agregator/pages/program',
+              icon: 'appstore',
             },
           ],
         },

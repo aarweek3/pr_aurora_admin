@@ -12,10 +12,12 @@ import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzSliderModule } from 'ng-zorro-antd/slider';
 import { NzSwitchModule } from 'ng-zorro-antd/switch';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
-import { ButtonDirective } from '../../../shared/components/ui/button/button.directive';
-import { HelpCopyContainerComponent } from '../../../shared/components/ui/container-help-copy-ui';
-import { InputComponent } from '../../../shared/components/ui/input/input.component';
-import { InputDirective } from '../../../shared/components/ui/input/input.directive';
+import {
+  ButtonDirective,
+  HelpCopyContainerComponent,
+  InputComponent,
+  InputDirective,
+} from '@shared-ui';
 
 @Component({
   selector: 'app-input-ui',

@@ -3,15 +3,15 @@
     <!-- SIDEBAR -->
     <div class="test-sidebar">
       @for (item of menuItems; track item.id) {
-      <div
-        class="sidebar-item"
-        [class.active]="activeTab() === item.id"
-        (click)="activeTab.set(item.id)"
-        [title]="item.title"
-      >
-        <div class="icon-wrap" [innerHTML]="item.icon"></div>
-        <span class="sidebar-label">{{ item.title }}</span>
-      </div>
+        <div
+          class="sidebar-item"
+          [class.active]="activeTab() === item.id"
+          (click)="activeTab.set(item.id)"
+          [title]="item.title"
+        >
+          <div class="icon-wrap" [innerHTML]="item.icon"></div>
+          <span class="sidebar-label">{{ item.title }}</span>
+        </div>
       }
     </div>
 
@@ -23,190 +23,192 @@
 
       <div class="panel-scroll">
         <!-- Генерируем контент для активного модуля -->
-        @for (item of menuItems; track item.id; let i = $index) { @if (activeTab() === item.id) {
-        <section class="control-block">
-          <h4 class="block-title">{{ item.title }} Блок {{ i + 1 }}-1</h4>
+        @for (item of menuItems; track item.id; let i = $index) {
+          @if (activeTab() === item.id) {
+            <section class="control-block">
+              <h4 class="block-title">{{ item.title }} Блок {{ i + 1 }}-1</h4>
 
-          @if (item.id === 'item1') {
-          <!-- МОДУЛЬ: НАСТРОЙКИ ФОРМАТА (ИЗ STUDIO) -->
-          <div class="ui-container">
-            <div class="ui-row gap-8">
-              <select class="ui-select flex-1">
-                <option value="image/jpeg">JPEG</option>
-                <option value="image/png">PNG-24</option>
-                <option value="image/webp">WebP</option>
-              </select>
-              <select class="ui-select" style="width: 100px">
-                <option>Максимум</option>
-                <option>Высокое</option>
-              </select>
-            </div>
+              @if (item.id === 'item1') {
+                <!-- МОДУЛЬ: НАСТРОЙКИ ФОРМАТА (ИЗ STUDIO) -->
+                <div class="ui-container">
+                  <div class="ui-row gap-8">
+                    <select class="ui-select flex-1">
+                      <option value="image/jpeg">JPEG</option>
+                      <option value="image/png">PNG-24</option>
+                      <option value="image/webp">WebP</option>
+                    </select>
+                    <select class="ui-select" style="width: 100px">
+                      <option>Максимум</option>
+                      <option>Высокое</option>
+                    </select>
+                  </div>
 
-            <div class="ui-row between" style="margin-top: 8px">
-              <span class="ui-label">Качество:</span>
-              <input type="text" class="ui-input ui-input-mini" [value]="item1Quality() + '%'" readonly />
-            </div>
+                  <div class="ui-row between" style="margin-top: 8px">
+                    <span class="ui-label">Качество:</span>
+                    <input type="text" class="ui-input ui-input-mini" [value]="item1Quality() + '%'" readonly />
+                  </div>
 
-            <div class="ps-slider-container">
-              <div class="ps-slider" (click)="item1Quality.set(item1Quality() === 80 ? 95 : 80)">
-                <div class="ps-slider-fill" [style.width.%]="item1Quality()"></div>
-                <div class="ps-slider-thumb" [style.left.%]="item1Quality()"></div>
-              </div>
-            </div>
+                  <div class="ps-slider-container">
+                    <div class="ps-slider" (click)="item1Quality.set(item1Quality() === 80 ? 95 : 80)">
+                      <div class="ps-slider-fill" [style.width.%]="item1Quality()"></div>
+                      <div class="ps-slider-thumb" [style.left.%]="item1Quality()"></div>
+                    </div>
+                  </div>
 
-            <div class="ui-row" style="margin-top: 10px">
-              <label class="vs-checkbox">
-                <input type="checkbox" checked />
-                <span class="check-mark"></span>
-                <span class="ui-label" style="margin-left: 8px">Прогрессивный</span>
-              </label>
-            </div>
-          </div>
-          } @else if (item.id === 'item6') {
-          <!-- СПЕЦИАЛЬНЫЙ UI МОДУЛЬ -->
-          <div class="ui-container">
-            <!-- Ряд 1: 1 кнопка -->
-            <div class="ui-row">
-              <button class="ui-btn primary">Действие 1</button>
-            </div>
-
-            <!-- Ряд 2: 2 кнопки -->
-            <div class="ui-row gap-8">
-              <button class="ui-btn">Кнопка A</button>
-              <button class="ui-btn">Кнопка B</button>
-            </div>
-
-            <!-- Ряд 3: Подпись и чекбокс -->
-            <div class="ui-row between">
-              <span class="ui-label">Активировать:</span>
-              <label class="vs-checkbox">
-                <input type="checkbox" />
-                <span class="check-mark"></span>
-              </label>
-            </div>
-
-            <!-- Ряд 4: чекбокс Подпись -->
-            <div class="ui-row">
-              <label class="vs-checkbox">
-                <input type="checkbox" />
-                <span class="check-mark"></span>
-                <span class="ui-label" style="margin-left: 8px">Согласие с условиями</span>
-              </label>
-            </div>
-
-            <!-- Ряд 5: Подпись input -->
-            <div class="ui-row between gap-12">
-              <span class="ui-label no-shrink">Название:</span>
-              <input type="text" class="ui-input" placeholder="Введите текст..." />
-            </div>
-
-            <!-- Ряд 6: Подпись input + подпись input -->
-            <div class="ui-row gap-8">
-              <div class="ui-col flex-1">
-                <span class="ui-label">X:</span>
-                <input type="text" class="ui-input" value="100" />
-              </div>
-              <div class="ui-col flex-1">
-                <span class="ui-label">Y:</span>
-                <input type="text" class="ui-input" value="200" />
-              </div>
-            </div>
-
-            <!-- Ряд 7: Кастомный ползунок (Прозрачность) -->
-            <div class="ui-row column gap-4">
-              <span class="ui-label">Прозрачность: {{ transparency() }}%</span>
-              <div class="ps-slider-container">
-                <div class="ps-slider" (click)="transparency.set(50)">
-                  <div class="ps-slider-fill" [style.width.%]="transparency()"></div>
-                  <div class="ps-slider-thumb" [style.left.%]="transparency()"></div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Ряд 8: Кастомный ползунок (Масштаб) -->
-            <div class="ui-row column gap-4">
-              <span class="ui-label">Масштаб (Zoom):</span>
-              <div class="ui-row gap-8">
-                <div class="ps-slider-container flex-1">
-                  <div class="ps-slider" (click)="zoom.set(75)">
-                    <div class="ps-slider-fill" [style.width.%]="zoom()"></div>
-                    <div class="ps-slider-thumb" [style.left.%]="zoom()"></div>
+                  <div class="ui-row" style="margin-top: 10px">
+                    <label class="vs-checkbox">
+                      <input type="checkbox" checked />
+                      <span class="check-mark"></span>
+                      <span class="ui-label" style="margin-left: 8px">Прогрессивный</span>
+                    </label>
                   </div>
                 </div>
-                <input type="text" class="ui-input ui-input-mini" [value]="zoom() + '%'" />
-              </div>
-            </div>
+              } @else if (item.id === 'item6') {
+                <!-- СПЕЦИАЛЬНЫЙ UI МОДУЛЬ -->
+                <div class="ui-container">
+                  <!-- Ряд 1: 1 кнопка -->
+                  <div class="ui-row">
+                    <button class="ui-btn primary">Действие 1</button>
+                  </div>
 
-            <!-- Ряд 9: Подпись + Выпадающий список -->
-            <div class="ui-row between gap-12">
-              <span class="ui-label">Формат:</span>
-              <select class="ui-select flex-1">
-                <option>JPEG High Quality</option>
-                <option>PNG Transparent</option>
-                <option>WebP Optimized</option>
-              </select>
-            </div>
+                  <!-- Ряд 2: 2 кнопки -->
+                  <div class="ui-row gap-8">
+                    <button class="ui-btn">Кнопка A</button>
+                    <button class="ui-btn">Кнопка B</button>
+                  </div>
 
-            <!-- Ряд 10: Выравнивание -->
-            <div class="ui-row between">
-              <span class="ui-label">Выравнивание:</span>
-              <div class="ps-align-group">
-                <button class="ps-align-btn">←</button>
-                <button class="ps-align-btn active">■</button>
-                <button class="ps-align-btn">→</button>
-              </div>
-            </div>
+                  <!-- Ряд 3: Подпись и чекбокс -->
+                  <div class="ui-row between">
+                    <span class="ui-label">Активировать:</span>
+                    <label class="vs-checkbox">
+                      <input type="checkbox" />
+                      <span class="check-mark"></span>
+                    </label>
+                  </div>
 
-            <!-- Ряд 11: Кнопка синяя с иконкой -->
-            <button class="ui-btn primary gap-8">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path
-                  d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z"
-                />
-              </svg>
-              ОБРЕЗАТЬ И ПОСМОТРЕТЬ
-            </button>
+                  <!-- Ряд 4: чекбокс Подпись -->
+                  <div class="ui-row">
+                    <label class="vs-checkbox">
+                      <input type="checkbox" />
+                      <span class="check-mark"></span>
+                      <span class="ui-label" style="margin-left: 8px">Согласие с условиями</span>
+                    </label>
+                  </div>
 
-            <!-- Ряд 12: Кнопка серая с иконкой -->
-            <button class="ui-btn gap-8">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" />
-                <path d="M18.5 2.5a2.121 2.121 0 113 3L12 15l-4 1 1-4 9.5-9.5z" />
-              </svg>
-              Изменить размер...
-            </button>
+                  <!-- Ряд 5: Подпись input -->
+                  <div class="ui-row between gap-12">
+                    <span class="ui-label no-shrink">Название:</span>
+                    <input type="text" class="ui-input" placeholder="Введите текст..." />
+                  </div>
 
-            <!-- Ряд 13: Пресеты -->
-            <div class="presets-container">
-              <span class="ui-label" style="display: block; margin-bottom: 8px">Пресеты:</span>
-              <div class="presets-grid">
-                <div class="preset-item">
-                  <span class="p-icon">📷</span>
-                  <span class="p-name">Insta</span>
+                  <!-- Ряд 6: Подпись input + подпись input -->
+                  <div class="ui-row gap-8">
+                    <div class="ui-col flex-1">
+                      <span class="ui-label">X:</span>
+                      <input type="text" class="ui-input" value="100" />
+                    </div>
+                    <div class="ui-col flex-1">
+                      <span class="ui-label">Y:</span>
+                      <input type="text" class="ui-input" value="200" />
+                    </div>
+                  </div>
+
+                  <!-- Ряд 7: Кастомный ползунок (Прозрачность) -->
+                  <div class="ui-row column gap-4">
+                    <span class="ui-label">Прозрачность: {{ transparency() }}%</span>
+                    <div class="ps-slider-container">
+                      <div class="ps-slider" (click)="transparency.set(50)">
+                        <div class="ps-slider-fill" [style.width.%]="transparency()"></div>
+                        <div class="ps-slider-thumb" [style.left.%]="transparency()"></div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Ряд 8: Кастомный ползунок (Масштаб) -->
+                  <div class="ui-row column gap-4">
+                    <span class="ui-label">Масштаб (Zoom):</span>
+                    <div class="ui-row gap-8">
+                      <div class="ps-slider-container flex-1">
+                        <div class="ps-slider" (click)="zoom.set(75)">
+                          <div class="ps-slider-fill" [style.width.%]="zoom()"></div>
+                          <div class="ps-slider-thumb" [style.left.%]="zoom()"></div>
+                        </div>
+                      </div>
+                      <input type="text" class="ui-input ui-input-mini" [value]="zoom() + '%'" />
+                    </div>
+                  </div>
+
+                  <!-- Ряд 9: Подпись + Выпадающий список -->
+                  <div class="ui-row between gap-12">
+                    <span class="ui-label">Формат:</span>
+                    <select class="ui-select flex-1">
+                      <option>JPEG High Quality</option>
+                      <option>PNG Transparent</option>
+                      <option>WebP Optimized</option>
+                    </select>
+                  </div>
+
+                  <!-- Ряд 10: Выравнивание -->
+                  <div class="ui-row between">
+                    <span class="ui-label">Выравнивание:</span>
+                    <div class="ps-align-group">
+                      <button class="ps-align-btn">←</button>
+                      <button class="ps-align-btn active">■</button>
+                      <button class="ps-align-btn">→</button>
+                    </div>
+                  </div>
+
+                  <!-- Ряд 11: Кнопка синяя с иконкой -->
+                  <button class="ui-btn primary gap-8">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path
+                        d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z"
+                      />
+                    </svg>
+                    ОБРЕЗАТЬ И ПОСМОТРЕТЬ
+                  </button>
+
+                  <!-- Ряд 12: Кнопка серая с иконкой -->
+                  <button class="ui-btn gap-8">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" />
+                      <path d="M18.5 2.5a2.121 2.121 0 113 3L12 15l-4 1 1-4 9.5-9.5z" />
+                    </svg>
+                    Изменить размер...
+                  </button>
+
+                  <!-- Ряд 13: Пресеты -->
+                  <div class="presets-container">
+                    <span class="ui-label" style="display: block; margin-bottom: 8px">Пресеты:</span>
+                    <div class="presets-grid">
+                      <div class="preset-item">
+                        <span class="p-icon">📷</span>
+                        <span class="p-name">Insta</span>
+                      </div>
+                      <div class="preset-item">
+                        <span class="p-icon">📱</span>
+                        <span class="p-name">Story</span>
+                      </div>
+                      <div class="preset-item active">
+                        <span class="p-icon">📺</span>
+                        <span class="p-name">Full</span>
+                      </div>
+                      <div class="preset-item">
+                        <span class="p-icon">▶️</span>
+                        <span class="p-name">YT</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div class="preset-item">
-                  <span class="p-icon">📱</span>
-                  <span class="p-name">Story</span>
+              } @else {
+                <!-- Стандартный пустой блок -->
+                <div class="placeholder-slot">
+                  <div class="empty-hint">Пустой блок для кастомизации...</div>
                 </div>
-                <div class="preset-item active">
-                  <span class="p-icon">📺</span>
-                  <span class="p-name">Full</span>
-                </div>
-                <div class="preset-item">
-                  <span class="p-icon">▶️</span>
-                  <span class="p-name">YT</span>
-                </div>
-              </div>
-            </div>
-          </div>
-          } @else {
-          <!-- Стандартный пустой блок -->
-          <div class="placeholder-slot">
-            <div class="empty-hint">Пустой блок для кастомизации...</div>
-          </div>
+              }
+            </section>
           }
-        </section>
-        } }
+        }
       </div>
     </aside>
 

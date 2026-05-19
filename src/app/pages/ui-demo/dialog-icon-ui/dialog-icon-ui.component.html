@@ -60,24 +60,24 @@
                 <!-- Icon Presets -->
                 <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 12px">
                   @for (preset of iconPresets; track preset.value) {
-                  <button
-                    av-button
-                    avType="default"
-                    avSize="small"
-                    [avBlock]="true"
-                    (click)="selectIconPreset(preset)"
-                    [style.border-color]="pgIcon() === preset.value ? preset.color : undefined"
-                    [style.background]="pgIcon() === preset.value ? preset.color + '15' : undefined"
-                  >
-                    <av-icon [type]="preset.value" [size]="16" [color]="preset.color"></av-icon>
-                    <span style="margin-left: 8px; font-size: 11px">{{ preset.label.split(' ')[0] }}</span>
-                  </button>
+                    <button
+                      av-button
+                      avType="default"
+                      avSize="small"
+                      [avBlock]="true"
+                      (click)="selectIconPreset(preset)"
+                      [style.border-color]="pgIcon() === preset.value ? preset.color : undefined"
+                      [style.background]="pgIcon() === preset.value ? preset.color + '15' : undefined"
+                    >
+                      <av-icon [type]="preset.value" [size]="16" [color]="preset.color"></av-icon>
+                      <span style="margin-left: 8px; font-size: 11px">{{ preset.label.split(' ')[0] }}</span>
+                    </button>
                   }
                 </div>
 
                 <nz-select [ngModel]="pgIcon()" (ngModelChange)="pgIcon.set($event)" style="width: 100%">
                   @for (preset of iconPresets; track preset.value) {
-                  <nz-option [nzValue]="preset.value" [nzLabel]="preset.label"></nz-option>
+                    <nz-option [nzValue]="preset.value" [nzLabel]="preset.label"></nz-option>
                   }
                 </nz-select>
               </div>
@@ -114,13 +114,13 @@
                 <div style="display: flex; flex-direction: column; gap: 10px">
                   <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap">
                     @for (color of colorPresets; track color) {
-                    <div
-                      class="color-preset"
-                      [style.background-color]="color"
-                      [class.active]="pgIconColor() === color"
-                      (click)="pgIconColor.set(color)"
-                      [nz-tooltip]="color"
-                    ></div>
+                      <div
+                        class="color-preset"
+                        [style.background-color]="color"
+                        [class.active]="pgIconColor() === color"
+                        (click)="pgIconColor.set(color)"
+                        [nz-tooltip]="color"
+                      ></div>
                     }
                   </div>
                   <div style="display: flex; gap: 8px; align-items: center">
@@ -283,7 +283,7 @@
               <p class="dialog-preview__message">{{ pgMessage() }}</p>
               <div class="dialog-preview__buttons">
                 @if (pgShowCancelButton()) {
-                <button av-button avType="default" disabled>{{ pgCancelText() }}</button>
+                  <button av-button avType="default" disabled>{{ pgCancelText() }}</button>
                 }
                 <button av-button [avType]="pgConfirmType()" disabled>{{ pgConfirmText() }}</button>
               </div>
@@ -378,41 +378,41 @@
 
   <!-- Actual Modal Component -->
   @if (refreshTrigger()) {
-  <av-modal
-    [(isOpen)]="isOpen"
-    [size]="pgSize()"
-    [avWidth]="pgWidth()"
-    [showBackdrop]="pgShowBackdrop()"
-    [closeOnBackdrop]="pgCloseOnBackdrop()"
-    [closeOnEsc]="pgCloseOnEsc()"
-    [showCloseButton]="pgShowCloseButton()"
-    [draggable]="pgDraggable()"
-    [centered]="true"
-  >
-    <div modal-body>
-      <div style="text-align: center; padding: 24px">
-        <div style="margin-bottom: 16px">
-          <av-icon [type]="pgIcon()" [size]="pgIconSize()" [color]="pgIconColor()"></av-icon>
+    <av-modal
+      [(isOpen)]="isOpen"
+      [size]="pgSize()"
+      [avWidth]="pgWidth()"
+      [showBackdrop]="pgShowBackdrop()"
+      [closeOnBackdrop]="pgCloseOnBackdrop()"
+      [closeOnEsc]="pgCloseOnEsc()"
+      [showCloseButton]="pgShowCloseButton()"
+      [draggable]="pgDraggable()"
+      [centered]="true"
+    >
+      <div modal-body>
+        <div style="text-align: center; padding: 24px">
+          <div style="margin-bottom: 16px">
+            <av-icon [type]="pgIcon()" [size]="pgIconSize()" [color]="pgIconColor()"></av-icon>
+          </div>
+          <h3 style="margin: 16px 0 8px; font-size: 20px; font-weight: 600">{{ pgTitle() }}</h3>
+          <p style="color: #8c8c8c; margin: 0">{{ pgMessage() }}</p>
         </div>
-        <h3 style="margin: 16px 0 8px; font-size: 20px; font-weight: 600">{{ pgTitle() }}</h3>
-        <p style="color: #8c8c8c; margin: 0">{{ pgMessage() }}</p>
       </div>
-    </div>
-    <div modal-footer style="text-align: center; justify-content: center; gap: 12px">
-      @if (pgShowCancelButton()) {
-      <button av-button avType="default" (click)="isOpen.set(false)">{{ pgCancelText() }}</button>
-      }
-      <button av-button [avType]="pgConfirmType()" (click)="isOpen.set(false); showMessage('Действие подтверждено!')">
-        {{ pgConfirmText() }}
-      </button>
-    </div>
-  </av-modal>
+      <div modal-footer style="text-align: center; justify-content: center; gap: 12px">
+        @if (pgShowCancelButton()) {
+          <button av-button avType="default" (click)="isOpen.set(false)">{{ pgCancelText() }}</button>
+        }
+        <button av-button [avType]="pgConfirmType()" (click)="isOpen.set(false); showMessage('Действие подтверждено!')">
+          {{ pgConfirmText() }}
+        </button>
+      </div>
+    </av-modal>
   }
 
   <!-- Toast Notification -->
   @if (message()) {
-  <div class="message-display">
-    {{ message() }}
-  </div>
+    <div class="message-display">
+      {{ message() }}
+    </div>
   }
 </div>

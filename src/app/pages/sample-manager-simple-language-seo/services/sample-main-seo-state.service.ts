@@ -1,12 +1,12 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { inject, Injectable, OnDestroy } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
-import { LanguageService } from '@assets/languageApp/services/language.service';
+import { LanguageService } from '@language-app';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { distinctUntilChanged, finalize, map, shareReplay, takeUntil } from 'rxjs/operators';
-import { ErrorResponse } from '../../../shared/infrastructure/interceptor/models/error-response.model';
-import { ErrorHandlingService } from '../../../shared/infrastructure/interceptor/services/error-handling.service';
+import { ErrorResponse } from '@core/models/error-response.model';
+import { ErrorHandlingService } from '@core/services/error/error-handling.service';
 import {
   INITIAL_SAMPLE_MAIN_SEO_STATE,
   SampleMainSeoCreateDto,
@@ -19,6 +19,12 @@ import { SampleMainSeoApiService } from './sample-main-seo-api.service';
   providedIn: 'root',
 })
 export class SampleMainSeoStateService implements OnDestroy {
+  private api = inject(SampleMainSeoApiService);
+  private message = inject(NzMessageService);
+  private langService = inject(LanguageService);
+  private errorHandling = inject(ErrorHandlingService);
+  private modal = inject(NzModalService);
+
   private destroy$ = new Subject<void>();
 
   // Single Source of Truth
@@ -68,13 +74,7 @@ export class SampleMainSeoStateService implements OnDestroy {
 
   readonly languages$ = toObservable(this.langService.availableLanguages).pipe(shareReplay(1));
 
-  constructor(
-    private api: SampleMainSeoApiService,
-    private message: NzMessageService,
-    private langService: LanguageService,
-    private errorHandling: ErrorHandlingService,
-    private modal: NzModalService,
-  ) {}
+  constructor() {}
 
   private checkLanguagesAvailable(): boolean {
     const langs = this.langService.availableLanguages();

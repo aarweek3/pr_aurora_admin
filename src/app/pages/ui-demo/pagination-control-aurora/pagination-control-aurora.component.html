@@ -34,7 +34,7 @@
             <label class="control-label">Вариант (Variant):</label>
             <nz-radio-group [ngModel]="config().variant" (ngModelChange)="updateConfig('variant', $event)">
               @for (v of variants; track v.value) {
-              <label nz-radio [nzValue]="v.value">{{ v.label }}</label>
+                <label nz-radio [nzValue]="v.value">{{ v.label }}</label>
               }
             </nz-radio-group>
           </div>
@@ -43,7 +43,7 @@
             <label class="control-label">Размер (Size):</label>
             <nz-radio-group [ngModel]="config().size" (ngModelChange)="updateConfig('size', $event)">
               @for (s of sizes; track s.value) {
-              <label nz-radio [nzValue]="s.value">{{ s.label }}</label>
+                <label nz-radio [nzValue]="s.value">{{ s.label }}</label>
               }
             </nz-radio-group>
           </div>
@@ -52,7 +52,7 @@
             <label class="control-label">Форма кнопок (Shape):</label>
             <nz-radio-group [ngModel]="config().shape" (ngModelChange)="updateConfig('shape', $event)">
               @for (sh of shapes; track sh.value) {
-              <label nz-radio [nzValue]="sh.value">{{ sh.label }}</label>
+                <label nz-radio [nzValue]="sh.value">{{ sh.label }}</label>
               }
             </nz-radio-group>
           </div>
@@ -61,7 +61,7 @@
             <label class="control-label">Цвет (Color):</label>
             <nz-radio-group [ngModel]="config().color" (ngModelChange)="updateConfig('color', $event)">
               @for (c of colors; track c.value) {
-              <label nz-radio [nzValue]="c.value">{{ c.label }}</label>
+                <label nz-radio [nzValue]="c.value">{{ c.label }}</label>
               }
             </nz-radio-group>
           </div>
@@ -315,7 +315,7 @@
           <div class="example-preview client-example">
             <div class="items-list-mini">
               @for (item of displayedItems(); track item.id) {
-              <div class="item-mini">#{{ item.id }} - {{ item.name }}</div>
+                <div class="item-mini">#{{ item.id }} - {{ item.name }}</div>
               }
             </div>
             <av-pagination

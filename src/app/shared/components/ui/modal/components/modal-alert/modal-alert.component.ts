@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, Inject } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import { ButtonDirective } from '../../../button/button.directive';
 import { IconComponent } from '../../../icon/icon.component';
 import { AlertConfig } from '../../models/modal-config.model';
 import { ModalRef } from '../../models/modal-ref.model';
@@ -11,16 +10,18 @@ import { ModalComponent } from '../modal/modal.component';
 @Component({
   selector: 'av-modal-alert',
   standalone: true,
-  imports: [CommonModule, ButtonDirective, IconComponent, ModalComponent],
+  imports: [CommonModule, IconComponent, ModalComponent],
   templateUrl: './modal-alert.component.html',
   styleUrls: ['./modal-alert.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ModalAlertComponent {
   private sanitizer = inject(DomSanitizer);
+  public config = inject<AlertConfig>(MODAL_DATA);
+  private modalRef = inject<ModalRef<void>>(ModalRef);
   public safeMessage: SafeHtml;
 
-  constructor(@Inject(MODAL_DATA) public config: AlertConfig, private modalRef: ModalRef<void>) {
+  constructor() {
     this.safeMessage = this.sanitizer.bypassSecurityTrustHtml(this.config.message);
   }
 

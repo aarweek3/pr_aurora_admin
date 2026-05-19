@@ -1,11 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import {
-  AvSearchComponent,
-  PaginationComponent,
-} from '@shared/components/ui';
+import { AvSearchComponent, PaginationComponent } from '@shared/components/ui';
 import { ModalService } from '@shared/components/ui/modal/services/modal.service';
 import { PaginationChangeEvent } from '@shared/components/ui/pagination/pagination.component';
 
@@ -67,7 +64,7 @@ import { LicenseTypeOfAggregatorStateService } from '../../services/license-type
               [value]="searchTerm"
               [avLoading]="state.loading()"
               avPlaceholder="Поиск по названию или slug..."
-              (onSearch)="onSearchChange($event)"
+              (searchChange)="onSearchChange($event)"
               [showButton]="false"
             ></av-search>
           </div>
@@ -127,29 +124,61 @@ import { LicenseTypeOfAggregatorStateService } from '../../services/license-type
       >
         <thead>
           <tr>
-            <th 
-              nzWidth="100px" 
+            <th
+              nzWidth="100px"
               [nzSortFn]="true"
-              [nzSortOrder]="state.sortBy() === 'Id' ? (state.sortDirection() === 0 ? 'ascend' : 'descend') : null"
+              [nzSortOrder]="
+                state.sortBy() === 'Id'
+                  ? state.sortDirection() === 0
+                    ? 'ascend'
+                    : 'descend'
+                  : null
+              "
               (nzSortOrderChange)="onSortChange('Id', $event)"
-            >ID</th>
-            <th 
+            >
+              ID
+            </th>
+            <th
               [nzSortFn]="true"
-              [nzSortOrder]="state.sortBy() === 'CanonicalName' ? (state.sortDirection() === 0 ? 'ascend' : 'descend') : null"
+              [nzSortOrder]="
+                state.sortBy() === 'CanonicalName'
+                  ? state.sortDirection() === 0
+                    ? 'ascend'
+                    : 'descend'
+                  : null
+              "
               (nzSortOrderChange)="onSortChange('CanonicalName', $event)"
-            >Название (Master)</th>
-            <th 
+            >
+              Название (Master)
+            </th>
+            <th
               [nzSortFn]="true"
-              [nzSortOrder]="state.sortBy() === 'Slug' ? (state.sortDirection() === 0 ? 'ascend' : 'descend') : null"
+              [nzSortOrder]="
+                state.sortBy() === 'Slug'
+                  ? state.sortDirection() === 0
+                    ? 'ascend'
+                    : 'descend'
+                  : null
+              "
               (nzSortOrderChange)="onSortChange('Slug', $event)"
-            >Slug</th>
+            >
+              Slug
+            </th>
             <th>Локализации</th>
-            <th 
-              nzWidth="100px" 
+            <th
+              nzWidth="100px"
               [nzSortFn]="true"
-              [nzSortOrder]="state.sortBy() === 'SortOrder' ? (state.sortDirection() === 0 ? 'ascend' : 'descend') : null"
+              [nzSortOrder]="
+                state.sortBy() === 'SortOrder'
+                  ? state.sortDirection() === 0
+                    ? 'ascend'
+                    : 'descend'
+                  : null
+              "
               (nzSortOrderChange)="onSortChange('SortOrder', $event)"
-            >Порядок</th>
+            >
+              Порядок
+            </th>
             <th nzWidth="100px">Статус</th>
             <th nzWidth="120px">Действия</th>
           </tr>
@@ -275,14 +304,12 @@ import { LicenseTypeOfAggregatorStateService } from '../../services/license-type
   styleUrls: ['./license-type-of-aggregator-list.component.scss'],
 })
 export class LicenseTypeOfAggregatorListComponent {
+  state = inject(LicenseTypeOfAggregatorStateService);
+  private modalService = inject(ModalService);
+
   searchTerm = '';
 
   @Input() usePageNavigation = false;
-
-  constructor(
-    public state: LicenseTypeOfAggregatorStateService,
-    private modalService: ModalService,
-  ) {}
 
   onSearchChange(term: string): void {
     this.searchTerm = term;
@@ -318,7 +345,6 @@ export class LicenseTypeOfAggregatorListComponent {
     this.state.openViewModal(id);
   }
 
-
   async onRestore(id: number): Promise<void> {
     const confirmed = await this.modalService.confirm({
       title: 'Восстановить тип лицензии?',
@@ -335,8 +361,7 @@ export class LicenseTypeOfAggregatorListComponent {
   async onDelete(id: number): Promise<void> {
     const confirmed = await this.modalService.confirm({
       title: 'Удалить тип лицензии?',
-      message:
-        'Запись будет перемещена в корзину. Её можно будет восстановить позже.',
+      message: 'Запись будет перемещена в корзину. Её можно будет восстановить позже.',
       confirmText: 'Удалить',
       confirmType: 'danger',
     });

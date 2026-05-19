@@ -3,17 +3,17 @@ import { Injectable, inject } from '@angular/core';
 import { Observable, of, throwError } from 'rxjs';
 import { catchError, delay, map, shareReplay, tap } from 'rxjs/operators';
 
-import { HARDCODED_FLAGS } from '@assets/languageApp/config/language-flags.const';
+import { HARDCODED_FLAGS } from '@language-app/config/language-flags.const';
 import { ApiEndpoints } from '@environments/api-endpoints';
 
 interface IconCategory {
   category: string;
-  icons: Array<{
+  icons: {
     name: string;
     type: string;
     category: string;
     svgContent?: string;
-  }>;
+  }[];
 }
 
 @Injectable({

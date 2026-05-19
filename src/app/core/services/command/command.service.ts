@@ -1,5 +1,5 @@
 // src/app/core/services/command/command.service.ts
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { from, Observable, of, throwError } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { CommandHandler, CommandResult, ICommandService } from '../../models/command.model';
@@ -10,11 +10,12 @@ import { EventBusService } from '../event-bus/event-bus.service';
   providedIn: 'root',
 })
 export class CommandService implements ICommandService {
+  private contextService = inject(ContextService);
+  private eventBus = inject(EventBusService);
+
   private readonly handlers = new Map<string, CommandHandler>();
   // LoggingService пока пропустим, будем использовать console
   private readonly contextName = 'CommandService';
-
-  constructor(private contextService: ContextService, private eventBus: EventBusService) {}
 
   register<T = any, R = any>(commandId: string, handler: CommandHandler<T, R>): void {
     if (this.handlers.has(commandId)) {
@@ -50,7 +51,7 @@ export class CommandService implements ICommandService {
 
     // 5. Выполнить команду
     const result$ = from(handler(payload, context)).pipe(
-      map((data) => ({ success: true, data } as CommandResult<R>)),
+      map((data) => ({ success: true, data }) as CommandResult<R>),
       catchError((error) => {
         // Опубликовать событие ошибки
         this.eventBus.publish({

@@ -3,16 +3,19 @@
   [class.av-tag-input--focused]="isFocused()"
   [class.av-tag-input--disabled]="disabled()"
   (click)="focusInput()"
+  (keydown.enter)="focusInput()"
+  (keydown.space)="focusInput()"
+  tabindex="0"
 >
   <div class="av-tag-input__container">
     @for (tag of tags(); track $index) {
-    <av-tag
-      [label]="tag"
-      [variant]="variant()"
-      [color]="color()"
-      [removable]="!disabled()"
-      (removed)="removeTag($index)"
-    ></av-tag>
+      <av-tag
+        [label]="tag"
+        [variant]="variant()"
+        [color]="color()"
+        [removable]="!disabled()"
+        (removed)="removeTag($index)"
+      ></av-tag>
     }
 
     <input

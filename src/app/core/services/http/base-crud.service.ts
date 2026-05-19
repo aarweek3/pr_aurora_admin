@@ -22,7 +22,7 @@ export interface QueryParams {
   sortBy?: string;
   sortOrder?: 'asc' | 'desc';
   search?: string;
-  filters?: { [key: string]: any };
+  filters?: Record<string, any>;
 }
 
 /**
@@ -112,7 +112,11 @@ export abstract class BaseCrudService<T> {
   /**
    * Поиск записей
    */
-  search(query: string, params?: QueryParams, options?: HttpRequestOptions): Observable<PaginatedResponse<T>> {
+  search(
+    query: string,
+    params?: QueryParams,
+    options?: HttpRequestOptions,
+  ): Observable<PaginatedResponse<T>> {
     const httpParams = this.buildQueryParams({ ...params, search: query });
     return this.baseHttp.get<PaginatedResponse<T>>(`${this.endpoint}/search`, {
       ...options,
@@ -123,10 +127,10 @@ export abstract class BaseCrudService<T> {
   /**
    * Построение query параметров из объекта QueryParams
    */
-  protected buildQueryParams(params?: QueryParams): { [key: string]: any } {
+  protected buildQueryParams(params?: QueryParams): Record<string, any> {
     if (!params) return {};
 
-    const httpParams: { [key: string]: any } = {};
+    const httpParams: Record<string, any> = {};
 
     if (params.page !== undefined) httpParams['page'] = params.page.toString();
     if (params.pageSize !== undefined) httpParams['pageSize'] = params.pageSize.toString();
@@ -149,7 +153,11 @@ export abstract class BaseCrudService<T> {
   /**
    * Экспорт данных в CSV/Excel (опционально)
    */
-  export(format: 'csv' | 'excel', params?: QueryParams, options?: HttpRequestOptions): Observable<Blob> {
+  export(
+    format: 'csv' | 'excel',
+    params?: QueryParams,
+    options?: HttpRequestOptions,
+  ): Observable<Blob> {
     const httpParams = this.buildQueryParams(params);
     return this.baseHttp.get<Blob>(`${this.endpoint}/export/${format}`, {
       ...options,

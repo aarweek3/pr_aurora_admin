@@ -1,15 +1,15 @@
 @if (showWrapper()) {
-<div class="av-picker-host" [class.av-picker-host--with-title]="avTitle()">
-  @if (avTitle()) {
-  <div class="av-picker-host__header">
-    <h4 class="av-picker-host__title">{{ avTitle() }}</h4>
-  </div>
-  }
+  <div class="av-picker-host" [class.av-picker-host--with-title]="avTitle()">
+    @if (avTitle()) {
+      <div class="av-picker-host__header">
+        <h4 class="av-picker-host__title">{{ avTitle() }}</h4>
+      </div>
+    }
 
-  <ng-container *ngTemplateOutlet="pickerTpl"></ng-container>
-</div>
+    <ng-container *ngTemplateOutlet="pickerTpl"></ng-container>
+  </div>
 } @else {
-<ng-container *ngTemplateOutlet="pickerTpl"></ng-container>
+  <ng-container *ngTemplateOutlet="pickerTpl"></ng-container>
 }
 
 <ng-template #pickerTpl>
@@ -21,57 +21,58 @@
   >
     <!-- Секция 1: Палитра (6 цветов + прозрачный) -->
     @if (shouldShowCustomColors()) {
-    <div class="av-picker__palette-section">
-      @for (color of customColors(); track color.value) {
-      <button
-        class="av-picker__swatch"
-        [class.av-picker__swatch--selected]="isColorSelected(color.value)"
-        [style.backgroundColor]="color.value"
-        [title]="color.name"
-        (click)="onColorSelect(color.value)"
-        type="button"
-      >
-        @if (isColorSelected(color.value)) {
-        <span class="av-picker__check">✓</span>
+      <div class="av-picker__palette-section">
+        @for (color of customColors(); track color.value) {
+          <button
+            class="av-picker__swatch"
+            [class.av-picker__swatch--selected]="isColorSelected(color.value)"
+            [style.backgroundColor]="color.value"
+            [title]="color.name"
+            (click)="onColorSelect(color.value)"
+            type="button"
+          >
+            @if (isColorSelected(color.value)) {
+              <span class="av-picker__check">✓</span>
+            }
+          </button>
         }
-      </button>
-      } @if (allowTransparent()) {
-      <button
-        class="av-picker__swatch av-picker__swatch--transparent"
-        [class.av-picker__swatch--selected]="selectedColor() === 'transparent'"
-        (click)="onColorSelect('transparent')"
-        title="Прозрачный"
-        type="button"
-      >
-        <span class="av-picker__transparent-pattern"></span>
-        @if (selectedColor() === 'transparent') {
-        <span class="av-picker__check">✓</span>
+        @if (allowTransparent()) {
+          <button
+            class="av-picker__swatch av-picker__swatch--transparent"
+            [class.av-picker__swatch--selected]="selectedColor() === 'transparent'"
+            (click)="onColorSelect('transparent')"
+            title="Прозрачный"
+            type="button"
+          >
+            <span class="av-picker__transparent-pattern"></span>
+            @if (selectedColor() === 'transparent') {
+              <span class="av-picker__check">✓</span>
+            }
+          </button>
         }
-      </button>
-      }
-    </div>
+      </div>
     }
 
     <!-- Секция 2: Color Picker + Input -->
     @if (shouldShowPicker()) {
-    <div class="av-picker__picker-section">
-      <nz-color-picker
-        [(ngModel)]="selectedColor"
-        [nzShowText]="false"
-        [nzDisabledAlpha]="!showAlpha()"
-        (ngModelChange)="onPickerChange($event)"
-      ></nz-color-picker>
+      <div class="av-picker__picker-section">
+        <nz-color-picker
+          [(ngModel)]="selectedColor"
+          [nzShowText]="false"
+          [nzDisabledAlpha]="!showAlpha()"
+          (ngModelChange)="onPickerChange($event)"
+        ></nz-color-picker>
 
-      @if (showInput()) {
-      <input
-        type="text"
-        class="av-picker__input"
-        [(ngModel)]="selectedColor"
-        (ngModelChange)="onPickerChange($event)"
-        placeholder="#FFFFFF"
-      />
-      }
-    </div>
+        @if (showInput()) {
+          <input
+            type="text"
+            class="av-picker__input"
+            [(ngModel)]="selectedColor"
+            (ngModelChange)="onPickerChange($event)"
+            placeholder="#FFFFFF"
+          />
+        }
+      </div>
     }
 
     <!-- Секция 3: Кнопка Сброс (текстовая) -->

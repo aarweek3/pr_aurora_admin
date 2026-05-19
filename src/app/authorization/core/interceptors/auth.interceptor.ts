@@ -53,7 +53,7 @@ export const authInterceptor: HttpInterceptorFn = (
   // не затирая существующие (такие как X-Skip-Error-Handler)
   const additionalHeaders: Record<string, string> = {};
 
-  if (!req.headers.has('Content-Type')) {
+  if (!req.headers.has('Content-Type') && !(req.body instanceof FormData)) {
     additionalHeaders['Content-Type'] = 'application/json';
   }
 
@@ -126,8 +126,9 @@ export const authInterceptor: HttpInterceptorFn = (
         return throwError(() => error);
       }
 
-      // Для остальных ошибок используем handleError
-      return throwError(() => handleError(error));
+      // Для остальных ошибок пробрасываем оригинальный HttpErrorResponse,
+      // чтобы GlobalErrorHandler мог его проигнорировать, а HttpErrorInterceptor - обработать.
+      return throwError(() => error);
     }),
   );
 };
@@ -331,18 +332,24 @@ function isNoisyRequest(url: string): boolean {
  */
 function handleError(error: HttpErrorResponse): Error {
   let errorMessage = 'Произошла неизвестная ошибка';
-  const serverError = error.error as { message?: string; error?: string; errors?: any };
+  const serverError = error.error as {
+    message?: string;
+    error?: string;
+    errors?: any;
+    detail?: string;
+    userMessage?: string;
+  };
 
   console.log('DEBUG: auth.interceptor.ts handleError caught:', error);
   // Пытаемся получить сообщение об ошибке от сервера или из объекта ErrorResponse
-  if (serverError?.message) {
+  if (serverError?.detail) {
+    errorMessage = serverError.detail;
+  } else if (serverError?.userMessage) {
+    errorMessage = serverError.userMessage;
+  } else if (serverError?.message) {
     errorMessage = serverError.message;
-  } else if (serverError?.error) {
+  } else if (serverError?.error && typeof serverError.error === 'string') {
     errorMessage = serverError.error;
-  } else if ((error as any).detail) {
-    errorMessage = (error as any).detail;
-  } else if ((error as any).userMessage) {
-    errorMessage = (error as any).userMessage;
   } else if (serverError?.errors) {
     // Обрабатываем ошибки валидации
     const validationErrors = Object.values(serverError.errors).flat();

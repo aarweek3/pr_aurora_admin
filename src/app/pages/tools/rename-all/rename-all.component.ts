@@ -14,7 +14,7 @@ import { NzRadioModule } from 'ng-zorro-antd/radio';
 import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzTagModule } from 'ng-zorro-antd/tag';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
-import { IconLaboratoryService } from '../../../shared/services/icon-laboratory.service';
+import { IconDataService } from '@core/services/icon/icon-data.service';
 
 interface FileSystemItem {
   name: string;
@@ -72,8 +72,8 @@ interface FileSystemItem {
             <div class="breadcrumb-mini">
               <span (click)="browse('')" class="crumb">Диски</span>
               @for (part of pathParts(); track $index) {
-              <span class="sep">/</span>
-              <span (click)="browseToPart($index)" class="crumb">{{ part }}</span>
+                <span class="sep">/</span>
+                <span (click)="browseToPart($index)" class="crumb">{{ part }}</span>
               }
             </div>
           </div>
@@ -81,64 +81,66 @@ interface FileSystemItem {
           <div class="explorer-list">
             <nz-list [nzLoading]="loading()" nzSize="small">
               @for (item of items(); track item.path) {
-              <nz-list-item class="item-row" (click)="onItemClick(item)">
-                <div class="item-main">
-                  @if (isDrive(item)) {
-                  <span nz-icon nzType="hdd" nzTheme="outline" style="color: #60a5fa"></span>
-                  } @else if (item.type === 'folder') {
-                  <span nz-icon nzType="folder" nzTheme="outline" style="color: #fbbf24"></span>
-                  } @else {
-                  <span nz-icon nzType="file-image" nzTheme="outline"></span>
-                  }
-                  <span class="name">{{ item.name }}</span>
-                </div>
-                <div class="item-actions">
-                  @if (item.type === 'folder') {
-                  <button
-                    nz-button
-                    nzSize="small"
-                    nzType="text"
-                    (click)="setAsSource(item); $event.stopPropagation()"
-                    nz-tooltip
-                    nzTooltipTitle="Источник (ОТКУДА)"
-                  >
-                    <span
-                      nz-icon
-                      nzType="logout"
-                      nzTheme="outline"
-                      style="transform: rotate(-90deg)"
-                    ></span>
-                  </button>
-                  <button
-                    nz-button
-                    nzSize="small"
-                    nzType="text"
-                    (click)="setAsTarget(item); $event.stopPropagation()"
-                    nz-tooltip
-                    nzTooltipTitle="Цель (КУДА)"
-                  >
-                    <span
-                      nz-icon
-                      nzType="login"
-                      nzTheme="outline"
-                      style="transform: rotate(90deg)"
-                    ></span>
-                  </button>
-                  } @else { @if (!copyAll()) {
-                  <label
-                    nz-checkbox
-                    [ngModel]="isSelected(item)"
-                    (ngModelChange)="toggleFile(item)"
-                    (click)="$event.stopPropagation()"
-                  ></label>
-                  } }
-                </div>
-              </nz-list-item>
+                <nz-list-item class="item-row" (click)="onItemClick(item)">
+                  <div class="item-main">
+                    @if (isDrive(item)) {
+                      <span nz-icon nzType="hdd" nzTheme="outline" style="color: #60a5fa"></span>
+                    } @else if (item.type === 'folder') {
+                      <span nz-icon nzType="folder" nzTheme="outline" style="color: #fbbf24"></span>
+                    } @else {
+                      <span nz-icon nzType="file-image" nzTheme="outline"></span>
+                    }
+                    <span class="name">{{ item.name }}</span>
+                  </div>
+                  <div class="item-actions">
+                    @if (item.type === 'folder') {
+                      <button
+                        nz-button
+                        nzSize="small"
+                        nzType="text"
+                        (click)="setAsSource(item); $event.stopPropagation()"
+                        nz-tooltip
+                        nzTooltipTitle="Источник (ОТКУДА)"
+                      >
+                        <span
+                          nz-icon
+                          nzType="logout"
+                          nzTheme="outline"
+                          style="transform: rotate(-90deg)"
+                        ></span>
+                      </button>
+                      <button
+                        nz-button
+                        nzSize="small"
+                        nzType="text"
+                        (click)="setAsTarget(item); $event.stopPropagation()"
+                        nz-tooltip
+                        nzTooltipTitle="Цель (КУДА)"
+                      >
+                        <span
+                          nz-icon
+                          nzType="login"
+                          nzTheme="outline"
+                          style="transform: rotate(90deg)"
+                        ></span>
+                      </button>
+                    } @else {
+                      @if (!copyAll()) {
+                        <label
+                          nz-checkbox
+                          [ngModel]="isSelected(item)"
+                          (ngModelChange)="toggleFile(item)"
+                          (click)="$event.stopPropagation()"
+                        ></label>
+                      }
+                    }
+                  </div>
+                </nz-list-item>
               } @empty {
-              <nz-empty
-                nzNotFoundImage="simple"
-                nzNotFoundContent="Пусто или доступ запрещен"
-              ></nz-empty>
+                <nz-empty
+                  nzNotFoundImage="simple"
+                  nzNotFoundContent="Пусто или доступ запрещен"
+                ></nz-empty>
               }
             </nz-list>
           </div>
@@ -244,42 +246,48 @@ interface FileSystemItem {
               ЗАПУСТИТЬ КОПИРОВАНИЕ
             </button>
             @if (isSamePath()) {
-            <div style="color: #f87171; font-size: 11px; margin-top: 8px; text-align: center;">
-              ⚠️ Папки источника и цели должны различаться
-            </div>
+              <div style="color: #f87171; font-size: 11px; margin-top: 8px; text-align: center;">
+                ⚠️ Папки источника и цели должны различаться
+              </div>
             }
           </div>
 
           @if (!copyAll()) {
-          <div class="preview-mini">
-            Выбрано файлов: <strong>{{ selectedFiles().length }}</strong>
-            @if (selectedFiles().length > 0) {
-            <button nz-button nzSize="small" nzType="text" nzDanger (click)="selectedFiles.set([])">
-              Сбросить выбор
-            </button>
-            }
-          </div>
+            <div class="preview-mini">
+              Выбрано файлов: <strong>{{ selectedFiles().length }}</strong>
+              @if (selectedFiles().length > 0) {
+                <button
+                  nz-button
+                  nzSize="small"
+                  nzType="text"
+                  nzDanger
+                  (click)="selectedFiles.set([])"
+                >
+                  Сбросить выбор
+                </button>
+              }
+            </div>
           }
         </div>
       </div>
 
       <!-- Results log -->
       @if (results().length > 0) {
-      <div class="results-panel">
-        <div class="log-header">
-          <h3>Журнал операций</h3>
-          <button nz-button nzSize="small" nzType="text" (click)="results.set([])">
-            Очистить лог
-          </button>
-        </div>
-        <div class="log-scroll">
-          @for (res of results(); track $index) {
-          <div class="log-line" [class.err]="!res.success">
-            {{ res.message }}
+        <div class="results-panel">
+          <div class="log-header">
+            <h3>Журнал операций</h3>
+            <button nz-button nzSize="small" nzType="text" (click)="results.set([])">
+              Очистить лог
+            </button>
           </div>
-          }
+          <div class="log-scroll">
+            @for (res of results(); track $index) {
+              <div class="log-line" [class.err]="!res.success">
+                {{ res.message }}
+              </div>
+            }
+          </div>
         </div>
-      </div>
       }
     </div>
   `,
@@ -516,7 +524,7 @@ interface FileSystemItem {
   ],
 })
 export class RenameAllComponent implements OnInit {
-  private iconDataService = inject(IconLaboratoryService);
+  private iconDataService = inject(IconDataService);
   private message = inject(NzMessageService);
   private modal = inject(NzModalService);
 

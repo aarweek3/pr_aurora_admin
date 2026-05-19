@@ -1,0 +1,21 @@
+<div class="migration-front-container">
+  <div style="background: #e6f7ff; padding: 24px; border-radius: 8px; border: 1px solid #91d5ff; margin-bottom: 24px">
+    <h2 style="color: #1890ff; margin: 0"><span nz-icon nzType="rocket"></span> Стратегия переезда Front-end</h2>
+    <p style="margin: 8px 0 0 0; color: #595959">
+      Инструкция по выносу логики авторизации в общую библиотеку (Shared Library).
+    </p>
+  </div>
+
+  <h3>1. Выделение Shared модуля</h3>
+  <p>Создайте новый модуль <code>@shared/auth</code> для хранения глобальных сервисов и интерцепторов.</p>
+
+  <h3>2. Перенос сервисов</h3>
+  <ul>
+    <li><code>AuthService</code>: Перенос логики управления сигналами.</li>
+    <li><code>TokenService</code>: Перенос логики работы с куками.</li>
+  </ul>
+
+  <div style="background: #fff7e6; padding: 15px; border-radius: 8px; border: 1px solid #ffd591; margin-top: 20px">
+    <strong>Важно:</strong> Убедитесь, что все импорты в других модулях обновлены на новый путь.
+  </div>
+</div>

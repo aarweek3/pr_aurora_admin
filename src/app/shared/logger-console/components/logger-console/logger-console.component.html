@@ -4,22 +4,62 @@
     <!-- Row 1: Controls (Width, Font, FullScreen, Collapse, Actions) - Left Aligned -->
     <div class="toolbar-row width-presets-row">
       <div class="width-presets">
-        <button class="action-btn preset-btn" [class.active]="loggerService.loggerWidth() === 500" (click)="setWidth(500)">500</button>
-        <button class="action-btn preset-btn" [class.active]="loggerService.loggerWidth() === 750" (click)="setWidth(750)">750</button>
-        <button class="action-btn preset-btn" [class.active]="loggerService.loggerWidth() === 1200" (click)="setWidth(1200)">1200</button>
+        <button
+          class="action-btn preset-btn"
+          [class.active]="loggerService.loggerWidth() === 500"
+          (click)="setWidth(500)"
+        >
+          500
+        </button>
+        <button
+          class="action-btn preset-btn"
+          [class.active]="loggerService.loggerWidth() === 750"
+          (click)="setWidth(750)"
+        >
+          750
+        </button>
+        <button
+          class="action-btn preset-btn"
+          [class.active]="loggerService.loggerWidth() === 1200"
+          (click)="setWidth(1200)"
+        >
+          1200
+        </button>
       </div>
 
       <div class="divider"></div>
 
       <div class="width-presets font-presets">
-        <button class="action-btn preset-btn" [class.active]="loggerService.loggerFontSize() === 11" (click)="setFontSize(11)">11</button>
-        <button class="action-btn preset-btn" [class.active]="loggerService.loggerFontSize() === 12" (click)="setFontSize(12)">12</button>
-        <button class="action-btn preset-btn" [class.active]="loggerService.loggerFontSize() === 13" (click)="setFontSize(13)">13</button>
+        <button
+          class="action-btn preset-btn"
+          [class.active]="loggerService.loggerFontSize() === 11"
+          (click)="setFontSize(11)"
+        >
+          11
+        </button>
+        <button
+          class="action-btn preset-btn"
+          [class.active]="loggerService.loggerFontSize() === 12"
+          (click)="setFontSize(12)"
+        >
+          12
+        </button>
+        <button
+          class="action-btn preset-btn"
+          [class.active]="loggerService.loggerFontSize() === 13"
+          (click)="setFontSize(13)"
+        >
+          13
+        </button>
       </div>
 
       <div class="divider"></div>
 
-      <button class="action-btn control-btn" (click)="toggleFullScreen()" [title]="loggerService.isFullScreen() ? 'Minimize' : 'Full Screen'">
+      <button
+        class="action-btn control-btn"
+        (click)="toggleFullScreen()"
+        [title]="loggerService.isFullScreen() ? 'Minimize' : 'Full Screen'"
+      >
         {{ loggerService.isFullScreen() ? '🗗' : '🗖' }}
       </button>
       <button class="action-btn control-btn" (click)="toggleCollapsed()" title="Collapse/Expand">
@@ -67,60 +107,60 @@
         </div>
 
         @if (activeTab() === 'logs') {
-        <div class="search-box">
-          <span class="search-icon">🔍</span>
-          <input
-            type="text"
-            placeholder="Filter messages or prefixes..."
-            [ngModel]="searchQuery()"
-            (ngModelChange)="searchQuery.set($event)"
-          />
-        </div>
+          <div class="search-box">
+            <span class="search-icon">🔍</span>
+            <input
+              type="text"
+              placeholder="Filter messages or prefixes..."
+              [ngModel]="searchQuery()"
+              (ngModelChange)="searchQuery.set($event)"
+            />
+          </div>
         }
       </div>
     </div>
 
     <!-- Bottom Row: Filters (Only for Logs tab) -->
     @if (activeTab() === 'logs') {
-    <div class="toolbar-row bottom-row">
-      <div class="level-filters">
-        <button
-          class="filter-btn state-filter"
-          [class.active]="showState()"
-          (click)="toggleState()"
-          title="Toggle Signal changes"
-        >
-          <span class="level-name">STATE</span>
-        </button>
-        <button
-          class="filter-btn action-filter"
-          [class.active]="showActions()"
-          (click)="toggleActions()"
-          title="Toggle User Actions"
-        >
-          <span class="level-name">ACTION</span>
-        </button>
-        <button
-          class="filter-btn http-filter"
-          [class.active]="showHttp()"
-          (click)="toggleHttp()"
-          title="Toggle HTTP requests"
-        >
-          <span class="level-name">HTTP</span>
-        </button>
-        @for (level of levels; track level) {
-        <button
-          class="filter-btn"
-          [class.active]="activeLevels()[level]"
-          [ngClass]="'btn-' + level"
-          (click)="toggleLevel(level)"
-        >
-          <span class="level-name">{{ level }}</span>
-          <span class="level-count">{{ counters()[level] }}</span>
-        </button>
-        }
+      <div class="toolbar-row bottom-row">
+        <div class="level-filters">
+          <button
+            class="filter-btn state-filter"
+            [class.active]="showState()"
+            (click)="toggleState()"
+            title="Toggle Signal changes"
+          >
+            <span class="level-name">STATE</span>
+          </button>
+          <button
+            class="filter-btn action-filter"
+            [class.active]="showActions()"
+            (click)="toggleActions()"
+            title="Toggle User Actions"
+          >
+            <span class="level-name">ACTION</span>
+          </button>
+          <button
+            class="filter-btn http-filter"
+            [class.active]="showHttp()"
+            (click)="toggleHttp()"
+            title="Toggle HTTP requests"
+          >
+            <span class="level-name">HTTP</span>
+          </button>
+          @for (level of levels; track level) {
+            <button
+              class="filter-btn"
+              [class.active]="activeLevels()[level]"
+              [ngClass]="'btn-' + level"
+              (click)="toggleLevel(level)"
+            >
+              <span class="level-name">{{ level }}</span>
+              <span class="level-count">{{ counters()[level] }}</span>
+            </button>
+          }
+        </div>
       </div>
-    </div>
     }
   </header>
 
@@ -164,64 +204,72 @@
   <main class="logger-viewport" #scrollContainer (scroll)="onScroll($event)">
     <div class="logs-list">
       @for (log of filteredLogs(); track log.id) {
-      <div class="log-entry" [ngClass]="['level-' + log.level, 'type-' + log.type]">
-        <div class="log-main">
-          @if (log.type === 'http' && log.httpDetails) {
-          <!-- HTTP LOG LAYOUT -->
-          <span class="http-method" [attr.data-method]="log.httpDetails.method">{{ log.httpDetails.method }}</span>
-          <span class="http-status" [class.status-error]="log.httpDetails.statusCode >= 400">{{
-            log.httpDetails.statusCode
-          }}</span>
-          <span class="log-message http-url" [title]="log.httpDetails.url">{{ getUrlPath(log.httpDetails.url) }}</span>
-          <span class="http-duration">{{ log.httpDetails.duration }}ms</span>
-          } @else if (log.type === 'interaction' && log.interactionDetails) {
-          <!-- INTERACTION LOG LAYOUT -->
-          <span class="interaction-icon">🖱️</span>
-          <span class="log-prefix">{{ log.prefix }}</span>
-          <span class="log-message">
-            <span class="interaction-tag">{{ log.interactionDetails.element }}</span>
-            <span class="interaction-text">{{ log.interactionDetails.text }}</span>
-          </span>
-          } @else if (log.type === 'state' && log.stateDetails) {
-          <!-- STATE LOG LAYOUT -->
-          <span class="state-icon">🔄</span>
-          <span class="log-prefix">{{ log.prefix }}</span>
-          <span class="log-message">
-            <span class="state-name">{{ log.stateDetails.name }}</span>
-            <span class="state-change">
-              <span class="old-value">{{ log.stateDetails.oldValue | json }}</span>
-              <span class="arrow">→</span>
-              <span class="new-value">{{ log.stateDetails.newValue | json }}</span>
-            </span>
-          </span>
-          } @else {
-          <!-- STANDARD LOG LAYOUT -->
-          <span class="log-prefix">{{ log.prefix }}</span>
-          <span class="log-message">{{ log.message }}</span>
-          } @if (log.type === 'http') {
-          <button class="copy-entry-btn curl-btn" (click)="copyAsCurl(log)" title="Copy as cURL">cURL</button>
-          }
-          <button class="copy-entry-btn" [class.success]="copyStates()[log.id]" (click)="copyMessage(log.id, log.message)" title="Copy message">
-            {{ copyStates()[log.id] ? '✅' : '📋' }}
-          </button>
+        <div class="log-entry" [ngClass]="['level-' + log.level, 'type-' + log.type]">
+          <div class="log-main">
+            @if (log.type === 'http' && log.httpDetails) {
+              <!-- HTTP LOG LAYOUT -->
+              <span class="http-method" [attr.data-method]="log.httpDetails.method">{{ log.httpDetails.method }}</span>
+              <span class="http-status" [class.status-error]="log.httpDetails.statusCode >= 400">{{
+                log.httpDetails.statusCode
+              }}</span>
+              <span class="log-message http-url" [title]="log.httpDetails.url">{{
+                getUrlPath(log.httpDetails.url)
+              }}</span>
+              <span class="http-duration">{{ log.httpDetails.duration }}ms</span>
+            } @else if (log.type === 'interaction' && log.interactionDetails) {
+              <!-- INTERACTION LOG LAYOUT -->
+              <span class="interaction-icon">🖱️</span>
+              <span class="log-prefix">{{ log.prefix }}</span>
+              <span class="log-message">
+                <span class="interaction-tag">{{ log.interactionDetails.element }}</span>
+                <span class="interaction-text">{{ log.interactionDetails.text }}</span>
+              </span>
+            } @else if (log.type === 'state' && log.stateDetails) {
+              <!-- STATE LOG LAYOUT -->
+              <span class="state-icon">🔄</span>
+              <span class="log-prefix">{{ log.prefix }}</span>
+              <span class="log-message">
+                <span class="state-name">{{ log.stateDetails.name }}</span>
+                <span class="state-change">
+                  <span class="old-value">{{ log.stateDetails.oldValue | json }}</span>
+                  <span class="arrow">→</span>
+                  <span class="new-value">{{ log.stateDetails.newValue | json }}</span>
+                </span>
+              </span>
+            } @else {
+              <!-- STANDARD LOG LAYOUT -->
+              <span class="log-prefix">{{ log.prefix }}</span>
+              <span class="log-message">{{ log.message }}</span>
+            }
+            @if (log.type === 'http') {
+              <button class="copy-entry-btn curl-btn" (click)="copyAsCurl(log)" title="Copy as cURL">cURL</button>
+            }
+            <button
+              class="copy-entry-btn"
+              [class.success]="copyStates()[log.id]"
+              (click)="copyMessage(log.id, log.message)"
+              title="Copy message"
+            >
+              {{ copyStates()[log.id] ? '✅' : '📋' }}
+            </button>
 
-          <div class="log-time">
-            <span class="time-base">{{ log.timestamp | date : 'HH:mm' }}</span>
-            <span class="time-ms">{{ log.timestamp | date : ':ss.SSS' }}</span>
+            <div class="log-time">
+              <span class="time-base">{{ log.timestamp | date: 'HH:mm' }}</span>
+              <span class="time-ms">{{ log.timestamp | date: ':ss.SSS' }}</span>
+            </div>
           </div>
-        </div>
 
-        <!-- JSON Viewer for detailed data (if present) -->
-        @if (log.data && log.data.length > 0) {
-        <div class="log-details">
-          @for (item of log.data; track $index) {
-          <app-logger-console-json-viewer [value]="item" [path]="''"></app-logger-console-json-viewer>
+          <!-- JSON Viewer for detailed data (if present) -->
+          @if (log.data && log.data.length > 0) {
+            <div class="log-details">
+              @for (item of log.data; track $index) {
+                <app-logger-console-json-viewer [value]="item" [path]="''"></app-logger-console-json-viewer>
+              }
+            </div>
           }
         </div>
-        }
-      </div>
       } @empty {
-      <div class="empty-state">No logs match your filter</div>
+        <div class="empty-state">No logs match your filter</div>
       }
     </div>
   </main>
@@ -234,103 +282,105 @@
 
   <!-- Help Overlay -->
   @if (showHelp()) {
-  <div class="help-overlay" (click)="toggleHelp()">
-    <div class="help-content" (click)="$event.stopPropagation()">
-      <div class="help-header">
-        <h3>🚀 Справка Logger Console</h3>
-        <button class="close-help" (click)="toggleHelp()">×</button>
-      </div>
+    <div class="help-overlay" (click)="toggleHelp()">
+      <div class="help-content" (click)="$event.stopPropagation()">
+        <div class="help-header">
+          <h3>🚀 Справка Logger Console</h3>
+          <button class="close-help" (click)="toggleHelp()">×</button>
+        </div>
 
-      <div class="help-grid">
-        <section>
-          <h4>🔄 История Сигналов (Signals)</h4>
-          <p>Отслеживание изменений Angular Signals в реальном времени. В коде:</p>
-          <code>this.loggerService.trackSignal(mySignal, 'ИмяСигнала');</code>
-          <p>Отображает переход от старого значения к новому. Фильтр: кнопка <strong>STATE</strong>.</p>
-        </section>
+        <div class="help-grid">
+          <section>
+            <h4>🔄 История Сигналов (Signals)</h4>
+            <p>Отслеживание изменений Angular Signals в реальном времени. В коде:</p>
+            <code>this.loggerService.trackSignal(mySignal, 'ИмяСигнала');</code>
+            <p>Отображает переход от старого значения к новому. Фильтр: кнопка <strong>STATE</strong>.</p>
+          </section>
 
-        <section>
-          <h4>🖱️ Действия пользователя</h4>
-          <p>
-            Автоматическая запись всех кликов на кнопки и ссылки. Позволяет восстановить путь пользователя к ошибке.
-            Фильтр: кнопка <strong>ACTION</strong>.
-          </p>
-        </section>
+          <section>
+            <h4>🖱️ Действия пользователя</h4>
+            <p>
+              Автоматическая запись всех кликов на кнопки и ссылки. Позволяет восстановить путь пользователя к ошибке.
+              Фильтр: кнопка <strong>ACTION</strong>.
+            </p>
+          </section>
 
-        <section>
-          <h4>🔌 Сеть и Окружение</h4>
-          <p>
-            <strong>HTTP:</strong> Логирование всех API-запросов, их статусов и длительности. Фильтр: кнопка
-            <strong>HTTP</strong>.
-          </p>
-          <p>
-            <strong>Инфо:</strong> В верхней панели отображается разрешение экрана, тема и статус сети (Online/Offline).
-          </p>
-        </section>
+          <section>
+            <h4>🔌 Сеть и Окружение</h4>
+            <p>
+              <strong>HTTP:</strong> Логирование всех API-запросов, их статусов и длительности. Фильтр: кнопка
+              <strong>HTTP</strong>.
+            </p>
+            <p>
+              <strong>Инфо:</strong> В верхней панели отображается разрешение экрана, тема и статус сети
+              (Online/Offline).
+            </p>
+          </section>
 
-        <section>
-          <h4>📦 Сервис и Экспорт</h4>
-          <ul>
-            <li><strong>Export:</strong> Скачать логи в формате JSON для анализа.</li>
-            <li><strong>Clear:</strong> Полная очистка текущего буфера (лимит 1000 записей).</li>
-          </ul>
-        </section>
+          <section>
+            <h4>📦 Сервис и Экспорт</h4>
+            <ul>
+              <li><strong>Export:</strong> Скачать логи в формате JSON для анализа.</li>
+              <li><strong>Clear:</strong> Полная очистка текущего буфера (лимит 1000 записей).</li>
+            </ul>
+          </section>
 
-        <section>
-          <h4>🗄️ Storage Editor</h4>
-          <p>
-            Просмотр и редактирование <strong>LocalStorage</strong>, <strong>SessionStorage</strong> и
-            <strong>Cookies</strong> прямо в консоли.
-          </p>
-          <p>
-            Вкладка <strong>📦 Storage</strong>. Значения можно редактировать на лету — просто измените текст и нажмите
-            Enter или кликните вне поля.
-          </p>
-        </section>
+          <section>
+            <h4>🗄️ Storage Editor</h4>
+            <p>
+              Просмотр и редактирование <strong>LocalStorage</strong>, <strong>SessionStorage</strong> и
+              <strong>Cookies</strong> прямо в консоли.
+            </p>
+            <p>
+              Вкладка <strong>📦 Storage</strong>. Значения можно редактировать на лету — просто измените текст и
+              нажмите Enter или кликните вне поля.
+            </p>
+          </section>
 
-        <section>
-          <h4>⌨️ Terminal (CLI)</h4>
-          <p>Выполнение команд внутри приложения. Вкладка <strong>💻 Terminal</strong>.</p>
-          <p>Примеры: <code>clear-cache</code>, <code>help</code>, <code>echo hello</code>.</p>
-        </section>
+          <section>
+            <h4>⌨️ Terminal (CLI)</h4>
+            <p>Выполнение команд внутри приложения. Вкладка <strong>💻 Terminal</strong>.</p>
+            <p>Примеры: <code>clear-cache</code>, <code>help</code>, <code>echo hello</code>.</p>
+          </section>
 
-        <section>
-          <h4>🧭 Navigation Trail</h4>
-          <p>Визуализация пути переходов пользователя по страницам (роутам).</p>
-          <p>
-            Вкладка <strong>🧭 Navigation</strong> показывает историю переходов с параметрами и временем пребывания на
-            странице.
-          </p>
-        </section>
+          <section>
+            <h4>🧭 Navigation Trail</h4>
+            <p>Визуализация пути переходов пользователя по страницам (роутам).</p>
+            <p>
+              Вкладка <strong>🧭 Navigation</strong> показывает историю переходов с параметрами и временем пребывания на
+              странице.
+            </p>
+          </section>
 
-        <section class="help-sandbox-info">
-          <h4>🏗️ Где проверить? (Песочница)</h4>
-          <p>Страница «Песочницы» для проверки всех функций доступна в боковом меню:</p>
-          <p>Раздел <strong>UI Demo</strong> → <strong>Logger Console 🛠️</strong></p>
-          <p>
-            Прямая ссылка:
-            <a href="http://localhost:4200/ui-demo/logger-console" target="_blank"
-              >http://localhost:4200/ui-demo/logger-console</a
-            >
-          </p>
-        </section>
+          <section class="help-sandbox-info">
+            <h4>🏗️ Где проверить? (Песочница)</h4>
+            <p>Страница «Песочницы» для проверки всех функций доступна в боковом меню:</p>
+            <p>Раздел <strong>UI Demo</strong> → <strong>Logger Console 🛠️</strong></p>
+            <p>
+              Прямая ссылка:
+              <a href="http://localhost:4200/ui-demo/logger-console" target="_blank"
+                >http://localhost:4200/ui-demo/logger-console</a
+              >
+            </p>
+          </section>
+        </div>
       </div>
     </div>
-  </div>
-  } @if (activeTab() === 'navigation') {
-  <!-- Navigation Trail Component -->
-  <div class="navigation-tab-content">
-    <app-navigation-trail />
-  </div>
+  }
+  @if (activeTab() === 'navigation') {
+    <!-- Navigation Trail Component -->
+    <div class="navigation-tab-content">
+      <app-navigation-trail />
+    </div>
   } @else if (activeTab() === 'storage') {
-  <!-- Storage Editor Component -->
-  <div class="storage-tab-content">
-    <app-logger-storage-editor />
-  </div>
+    <!-- Storage Editor Component -->
+    <div class="storage-tab-content">
+      <app-logger-storage-editor />
+    </div>
   } @else if (activeTab() === 'terminal') {
-  <!-- Terminal Component -->
-  <div class="terminal-tab-content">
-    <app-logger-terminal />
-  </div>
+    <!-- Terminal Component -->
+    <div class="terminal-tab-content">
+      <app-logger-terminal />
+    </div>
   }
 </div>

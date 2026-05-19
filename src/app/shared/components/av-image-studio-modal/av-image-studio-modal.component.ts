@@ -522,8 +522,8 @@ import { AvImageStudioPersistenceService } from './services/av-image-studio-pers
         min-height: 700px;
         position: relative;
         z-index: 100;
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial,
-          sans-serif;
+        font-family:
+          -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
         color: #d9d9d9;
         background: #262626;
         overflow: hidden;
@@ -544,7 +544,9 @@ import { AvImageStudioPersistenceService } from './services/av-image-studio-pers
         justify-content: center;
         color: #666;
         background: linear-gradient(135deg, transparent 50%, rgba(255, 255, 255, 0.05) 50%);
-        transition: color 0.2s, background 0.2s;
+        transition:
+          color 0.2s,
+          background 0.2s;
       }
 
       .resize-handle:hover {
@@ -606,12 +608,17 @@ import { AvImageStudioPersistenceService } from './services/av-image-studio-pers
         left: 0;
         right: 0;
         bottom: 0;
-        background-image: linear-gradient(45deg, #222 25%, transparent 25%),
+        background-image:
+          linear-gradient(45deg, #222 25%, transparent 25%),
           linear-gradient(-45deg, #222 25%, transparent 25%),
           linear-gradient(45deg, transparent 75%, #222 75%),
           linear-gradient(-45deg, transparent 75%, #222 75%);
         background-size: 20px 20px;
-        background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+        background-position:
+          0 0,
+          0 10px,
+          10px -10px,
+          -10px 0px;
       }
 
       .preview-wrap {

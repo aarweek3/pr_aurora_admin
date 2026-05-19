@@ -37,32 +37,40 @@
     <div class="col-left" [class.dragging]="isDragging" (dragover)="onDragOver($event)" (drop)="onDrop($event)">
       <div class="checkerboard"></div>
 
-      <div class="preview-wrap" *ngIf="imageUrl">
-        <app-crop-canvas
-          *ngIf="isCropEnabled"
+      @if (imageUrl) {
+        <div class="preview-wrap">
+          @if (isCropEnabled) {
+            <app-crop-canvas
           [imageSrc]="imageUrl"
           [aspectRatio]="targetLocked ? targetWidth / targetHeight : null"
           [isCircle]="cropShape === 'circle'"
           [externalCrop]="externalCrop"
           (cropChange)="onCropChange($event)"
           (ready)="onCanvasReady()"
-        ></app-crop-canvas>
+          ></app-crop-canvas>
+          } @else {
 
-        <div *ngIf="!isCropEnabled" class="preview-image-simple-container">
-          <img [src]="imageUrl" class="preview-image-simple" />
+            <div class="preview-image-simple-container">
+              <img [src]="imageUrl" [alt]="seoAlt" class="preview-image-simple" />
+            </div>
+          }
         </div>
-      </div>
+      }
 
-      <div class="preview-mock" *ngIf="!imageUrl && !loader.isLoading()">
-        <span nz-icon nzType="picture" style="font-size: 64px; color: #333"></span>
-        <p>Перетащите изображение</p>
-      </div>
+      @if (!imageUrl && !loader.isLoading()) {
+        <div class="preview-mock">
+          <span nz-icon nzType="picture" style="font-size: 64px; color: #333"></span>
+          <p>Перетащите изображение</p>
+        </div>
+      }
 
-      <!-- Bottom Toggle in Preview -->
-      <div class="preview-tabs" *ngIf="imageUrl">
-        <button class="p-tab active">Редактор</button>
-        <button class="p-tab">Результат</button>
-      </div>
+      @if (imageUrl) {
+        <!-- Bottom Toggle in Preview -->
+        <div class="preview-tabs">
+          <button class="p-tab active">Редактор</button>
+          <button class="p-tab">Результат</button>
+        </div>
+      }
 
       <av-spinner
         [visible]="loader.isLoading() || (!!imageUrl && isCropEnabled && !isCanvasReady)"
@@ -99,11 +107,10 @@
         </div>
       </div>
 
-      <!-- Section: Optimization -->
       <div class="ps-section">
         <div class="ps-row" style="gap: 20px">
-          <label nz-checkbox [ngModel]="true" class="ps-checkbox">Прогрессивный</label>
-          <label nz-checkbox [ngModel]="true" class="ps-checkbox">Оптимизировать</label>
+          <span nz-checkbox [(ngModel)]="isProgressive" class="ps-checkbox">Прогрессивный</span>
+          <span nz-checkbox [(ngModel)]="isOptimized" class="ps-checkbox">Оптимизировать</span>
         </div>
         <div class="ps-label-row" style="margin-top: 10px">
           <span>Выравнивание:</span>
@@ -131,147 +138,155 @@
               Рамка
             </label>
             <!-- Mini tabs for shape -->
-            <div class="ps-tab-mini" *ngIf="isCropEnabled">
-              <button [class.active]="cropShape === 'rectangle'" (click)="setCropShape('rectangle')">■</button>
-              <button [class.active]="cropShape === 'circle'" (click)="setCropShape('circle')">●</button>
-            </div>
+            @if (isCropEnabled) {
+              <div class="ps-tab-mini">
+                <button [class.active]="cropShape === 'rectangle'" (click)="setCropShape('rectangle')">■</button>
+                <button [class.active]="cropShape === 'circle'" (click)="setCropShape('circle')">●</button>
+              </div>
+            }
           </div>
         </div>
 
         <!-- Rectangle Settings (Only if Enabled) -->
-        <div *ngIf="cropShape === 'rectangle' && isCropEnabled">
-          <div style="display: flex; gap: 8px; align-items: flex-end; margin-bottom: 12px">
-            <div style="flex: 1">
-              <div class="ps-label" style="font-size: 9px">Ширина:</div>
-              <input
-                type="number"
-                class="ps-input"
-                style="width: 100%"
-                [ngModel]="targetWidth"
-                (ngModelChange)="updateTargetSize('width', $event)"
-              />
-            </div>
-            <button class="ps-btn" (click)="toggleTargetLock()" style="height: 22px; padding: 0 4px">
-              {{ targetLocked ? '🔒' : '🔓' }}
-            </button>
-            <div style="flex: 1">
-              <div class="ps-label" style="font-size: 9px">Высота:</div>
-              <input
-                type="number"
-                class="ps-input"
-                style="width: 100%"
-                [ngModel]="targetHeight"
-                (ngModelChange)="updateTargetSize('height', $event)"
-              />
+        @if (cropShape === 'rectangle' && isCropEnabled) {
+          <div>
+            <div style="display: flex; gap: 8px; align-items: flex-end; margin-bottom: 12px">
+              <div style="flex: 1">
+                <div class="ps-label" style="font-size: 9px">Ширина:</div>
+                <input
+                  type="number"
+                  class="ps-input"
+                  style="width: 100%"
+                  [ngModel]="targetWidth"
+                  (ngModelChange)="updateTargetSize('width', $event)"
+                />
+              </div>
+              <button class="ps-btn" (click)="toggleTargetLock()" style="height: 22px; padding: 0 4px">
+                {{ targetLocked ? '🔒' : '🔓' }}
+              </button>
+              <div style="flex: 1">
+                <div class="ps-label" style="font-size: 9px">Высота:</div>
+                <input
+                  type="number"
+                  class="ps-input"
+                  style="width: 100%"
+                  [ngModel]="targetHeight"
+                  (ngModelChange)="updateTargetSize('height', $event)"
+                />
+              </div>
             </div>
           </div>
-        </div>
+        }
 
         <!-- Circle Settings -->
-        <div *ngIf="cropShape === 'circle'">
-          <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 4px; margin-bottom: 12px">
-            <div>
-              <div class="ps-label" style="font-size: 9px">Радиус:</div>
-              <input
-                type="number"
-                class="ps-input"
-                style="width: 100%"
-                [(ngModel)]="circleRadius"
-                (ngModelChange)="updateCircleCrop()"
-              />
-            </div>
-            <div>
-              <div class="ps-label" style="font-size: 9px">X:</div>
-              <input
-                type="number"
-                class="ps-input"
-                style="width: 100%"
-                [(ngModel)]="circleX"
-                (ngModelChange)="updateCircleCrop()"
-              />
-            </div>
-            <div>
-              <div class="ps-label" style="font-size: 9px">Y:</div>
-              <input
-                type="number"
-                class="ps-input"
-                style="width: 100%"
-                [(ngModel)]="circleY"
-                (ngModelChange)="updateCircleCrop()"
-              />
+        @if (cropShape === 'circle') {
+          <div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 4px; margin-bottom: 12px">
+              <div>
+                <div class="ps-label" style="font-size: 9px">Радиус:</div>
+                <input
+                  type="number"
+                  class="ps-input"
+                  style="width: 100%"
+                  [(ngModel)]="circleRadius"
+                  (ngModelChange)="updateCircleCrop()"
+                />
+              </div>
+              <div>
+                <div class="ps-label" style="font-size: 9px">X:</div>
+                <input
+                  type="number"
+                  class="ps-input"
+                  style="width: 100%"
+                  [(ngModel)]="circleX"
+                  (ngModelChange)="updateCircleCrop()"
+                />
+              </div>
+              <div>
+                <div class="ps-label" style="font-size: 9px">Y:</div>
+                <input
+                  type="number"
+                  class="ps-input"
+                  style="width: 100%"
+                  [(ngModel)]="circleY"
+                  (ngModelChange)="updateCircleCrop()"
+                />
+              </div>
             </div>
           </div>
-        </div>
+        }
 
         <div class="ps-label" style="margin-bottom: 6px">Пресеты:</div>
         <div class="presets-grid">
-          <div class="preset-item" *ngFor="let preset of presets" (click)="applyPreset(preset)">
-            <div class="preset-icon">{{ preset.icon }}</div>
-            <div class="preset-label">{{ preset.label.split(' ')[0] }}</div>
-            <div class="preset-size">{{ preset.size.split(' ')[0] }}</div>
-          </div>
+          @for (preset of presets; track preset.label) {
+            <button type="button" class="preset-item" (click)="applyPreset(preset)">
+              <div class="preset-icon">{{ preset.icon }}</div>
+              <div class="preset-label">{{ preset.label.split(' ')[0] }}</div>
+              <div class="preset-size">{{ preset.size.split(' ')[0] }}</div>
+            </button>
+          }
         </div>
         <!-- Image Resizing Panel (New) -->
-        <div
-          *ngIf="showResizePanel"
-          class="ps-panel"
-          style="margin-top: 8px; border-color: #00d9ff; background: #2a2a2a"
-        >
-          <div class="ps-panel-title" style="color: #fff; border-bottom: none; margin: 0">
-            Увеличить размер изображения
-          </div>
-          <div class="ps-label" style="margin-bottom: 8px">Текущий: {{ targetWidth }} × {{ targetHeight }}</div>
-
-          <div style="display: flex; gap: 8px; align-items: flex-end; margin-bottom: 8px">
-            <div style="flex: 1">
-              <div class="ps-label" style="font-size: 9px">Новая ширина:</div>
-              <input
-                type="number"
-                class="ps-input"
-                style="width: 100%; border-color: #555"
-                [(ngModel)]="resizeWidth"
-                (ngModelChange)="onResizeWidthChange()"
-              />
+        @if (showResizePanel) {
+          <div
+            class="ps-panel"
+            style="margin-top: 8px; border-color: #00d9ff; background: #2a2a2a"
+          >
+            <div class="ps-panel-title" style="color: #fff; border-bottom: none; margin: 0">
+              Увеличить размер изображения
             </div>
-            <button
-              class="ps-btn"
-              (click)="resizeLocked = !resizeLocked"
-              style="height: 22px; padding: 0 4px; background: #444"
-            >
-              {{ resizeLocked ? '🔒' : '🔓' }}
-            </button>
-            <div style="flex: 1">
-              <div class="ps-label" style="font-size: 9px">Новая высота:</div>
-              <input
-                type="number"
-                class="ps-input"
-                style="width: 100%; border-color: #555"
-                [(ngModel)]="resizeHeight"
-                (ngModelChange)="onResizeHeightChange()"
-              />
+            <div class="ps-label" style="margin-bottom: 8px">Текущий: {{ targetWidth }} × {{ targetHeight }}</div>
+
+            <div style="display: flex; gap: 8px; align-items: flex-end; margin-bottom: 8px">
+              <div style="flex: 1">
+                <div class="ps-label" style="font-size: 9px">Новая ширина:</div>
+                <input
+                  type="number"
+                  class="ps-input"
+                  style="width: 100%; border-color: #555"
+                  [(ngModel)]="resizeWidth"
+                  (ngModelChange)="onResizeWidthChange()"
+                />
+              </div>
+              <button
+                class="ps-btn"
+                (click)="resizeLocked = !resizeLocked"
+                style="height: 22px; padding: 0 4px; background: #444"
+              >
+                {{ resizeLocked ? '🔒' : '🔓' }}
+              </button>
+              <div style="flex: 1">
+                <div class="ps-label" style="font-size: 9px">Новая высота:</div>
+                <input
+                  type="number"
+                  class="ps-input"
+                  style="width: 100%; border-color: #555"
+                  [(ngModel)]="resizeHeight"
+                  (ngModelChange)="onResizeHeightChange()"
+                />
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 4px">
+              <button
+                class="ps-btn ps-btn-primary"
+                style="flex: 2; height: 26px; font-weight: 700"
+                (click)="applyResize()"
+              >
+                ПРИМЕНИТЬ
+              </button>
+              <button class="ps-btn" style="flex: 1; height: 26px" (click)="showResizePanel = false">ОТМЕНА</button>
             </div>
           </div>
-
-          <div style="display: flex; gap: 4px">
-            <button
-              class="ps-btn ps-btn-primary"
-              style="flex: 2; height: 26px; font-weight: 700"
-              (click)="applyResize()"
-            >
-              ПРИМЕНИТЬ
-            </button>
-            <button class="ps-btn" style="flex: 1; height: 26px" (click)="showResizePanel = false">ОТМЕНА</button>
-          </div>
-        </div>
-
-        <button
-          class="ps-btn"
-          style="width: 100%; margin-top: 8px; height: 26px; border: 1px dashed #555"
-          (click)="toggleResizePanel()"
-          *ngIf="!showResizePanel"
-        >
-          Изменить размер изображения...
-        </button>
+        } @else {
+          <button
+            class="ps-btn"
+            style="width: 100%; margin-top: 8px; height: 26px; border: 1px dashed #555"
+            (click)="toggleResizePanel()"
+          >
+            Изменить размер изображения...
+          </button>
+        }
 
         <button class="ps-action-btn" (click)="isCropEnabled = true">✨ ОБРЕЗАТЬ И ПОСМОТРЕТЬ</button>
       </div>
@@ -306,26 +321,27 @@
           </div>
 
           <div style="margin-top: 4px; display: flex; align-items: center; gap: 10px; padding-left: 76px">
-            <label nz-checkbox class="ps-checkbox" [(ngModel)]="linkClickable" style="font-size: 10px"
-              >Кликабельная ссылка</label
+            <span nz-checkbox class="ps-checkbox" [(ngModel)]="linkClickable" style="font-size: 10px"
+              >Кликабельная ссылка</span
             >
           </div>
 
           <!-- Link Details -->
-          <div
-            *ngIf="linkClickable"
-            style="margin-top: 2px; padding: 6px; background: rgba(255, 255, 255, 0.03); border-radius: 2px"
-          >
-            <div style="display: flex; align-items: center; gap: 6px">
-              <div class="ps-label" style="width: 30px; margin: 0; flex-shrink: 0">URL:</div>
-              <input class="ps-input-dark" style="flex: 1" [(ngModel)]="linkUrl" placeholder="https://..." />
+          @if (linkClickable) {
+            <div
+              style="margin-top: 2px; padding: 6px; background: rgba(255, 255, 255, 0.03); border-radius: 2px"
+            >
+              <div style="display: flex; align-items: center; gap: 6px">
+                <div class="ps-label" style="width: 30px; margin: 0; flex-shrink: 0">URL:</div>
+                <input class="ps-input-dark" style="flex: 1" [(ngModel)]="linkUrl" placeholder="https://..." />
+              </div>
+              <div style="margin-top: 4px">
+                <span nz-checkbox class="ps-checkbox" [(ngModel)]="linkInNewWindow" style="font-size: 10px"
+                  >Открывать в новом окне</span
+                >
+              </div>
             </div>
-            <div style="margin-top: 4px">
-              <label nz-checkbox class="ps-checkbox" [(ngModel)]="linkInNewWindow" style="font-size: 10px"
-                >Открывать в новом окне</label
-              >
-            </div>
-          </div>
+          }
         </div>
       </div>
     </div>

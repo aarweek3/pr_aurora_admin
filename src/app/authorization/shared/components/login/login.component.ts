@@ -4,7 +4,6 @@ import { Router } from '@angular/router';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { AuthService } from '@auth/services/auth.service';
 
-
 /**
  * Login Component
  *
@@ -24,15 +23,35 @@ import { AuthService } from '@auth/services/auth.service';
       </form>
     </div>
   `,
-  styles: [`
-    .login-container { max-width: 400px; margin: 100px auto; padding: 20px; border: 1px solid #ddd; }
-    input { display: block; width: 100%; margin-bottom: 10px; padding: 8px; }
-    button { width: 100%; padding: 10px; background: #1890ff; color: white; border: none; cursor: pointer; }
-    button:disabled { background: #ccc; }
-  `]
+  styles: [
+    `
+      .login-container {
+        max-width: 400px;
+        margin: 100px auto;
+        padding: 20px;
+        border: 1px solid #ddd;
+      }
+      input {
+        display: block;
+        width: 100%;
+        margin-bottom: 10px;
+        padding: 8px;
+      }
+      button {
+        width: 100%;
+        padding: 10px;
+        background: #1890ff;
+        color: white;
+        border: none;
+        cursor: pointer;
+      }
+      button:disabled {
+        background: #ccc;
+      }
+    `,
+  ],
 })
 export class AuthSharedLoginComponent {
-
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
 
@@ -53,7 +72,6 @@ export class AuthSharedLoginComponent {
 
       this.authService.login({ email: email!, password: password! }).subscribe({
         next: (response: any) => {
-
           if (response.success) {
             this.message.success('Вход выполнен успешно');
             this.router.navigate(['/']);
@@ -65,7 +83,7 @@ export class AuthSharedLoginComponent {
         error: () => {
           this.message.error('Ошибка сети или сервера');
           this.isLoading.set(false);
-        }
+        },
       });
     }
   }

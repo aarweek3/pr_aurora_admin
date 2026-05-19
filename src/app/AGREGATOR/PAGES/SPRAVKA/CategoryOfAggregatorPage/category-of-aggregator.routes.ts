@@ -7,8 +7,8 @@ export const CATEGORY_OF_AGGREGATOR_ROUTES: Routes = [
     component: CategoryOfAggregatorManagerComponent,
     children: [
       // Можно добавить дочерние маршруты для режима 'page' если потребуется
-    ]
-  }
+    ],
+  },
 ];
 
 export default CATEGORY_OF_AGGREGATOR_ROUTES;

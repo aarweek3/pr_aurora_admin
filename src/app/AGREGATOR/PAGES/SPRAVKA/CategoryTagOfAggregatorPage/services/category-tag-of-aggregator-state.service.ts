@@ -3,18 +3,18 @@ import { Observable, Subject, finalize, takeUntil, tap } from 'rxjs';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { ModalService } from '@shared/components/ui/modal/services/modal.service';
-import { 
-  CategoryTagOfAggregatorState, 
+import {
+  CategoryTagOfAggregatorState,
   initialCategoryTagOfAggregatorState,
   CategoryTagOfAggregatorItem,
-  CategoryTagOfAggregatorDetail
+  CategoryTagOfAggregatorDetail,
 } from '../models/category-tag-of-aggregator.model';
 import { CategoryTagOfAggregatorApiService } from './category-tag-of-aggregator-api.service';
-import { ErrorResponse } from '../../../../../shared/infrastructure/interceptor/models/error-response.model';
+import { ErrorResponse } from '@core/models/error-response.model';
 import { LanguageAggregatorService } from '../../LanguageOfAggregator/services/language-aggregator.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class CategoryTagOfAggregatorStateService implements OnDestroy {
   private api = inject(CategoryTagOfAggregatorApiService);
@@ -41,7 +41,7 @@ export class CategoryTagOfAggregatorStateService implements OnDestroy {
   languages = computed(() => this.langService.availableLanguages());
 
   updateState(partial: Partial<CategoryTagOfAggregatorState>): void {
-    this.state.update(s => ({ ...s, ...partial }));
+    this.state.update((s) => ({ ...s, ...partial }));
   }
 
   loadItems(checkEmpty = false): void {
@@ -58,22 +58,22 @@ export class CategoryTagOfAggregatorStateService implements OnDestroy {
       languageId: s.languageId,
       sortBy: s.sortBy,
       sortDirection: s.sortDirection,
-      showDeleted: s.showDeleted
+      showDeleted: s.showDeleted,
     };
 
     this.executeWithLoading(this.api.getPaged(request)).subscribe({
       next: (response) => {
-        this.updateState({ 
-          items: response.items, 
+        this.updateState({
+          items: response.items,
           total: response.total,
-          error: null
+          error: null,
         });
 
         if (checkEmpty && response.total === 0 && !s.showDeleted) {
           this.showEmptyWarning();
         }
       },
-      error: (err) => this.handleError(err, 'LoadItems')
+      error: (err) => this.handleError(err, 'LoadItems'),
     });
   }
 
@@ -109,18 +109,20 @@ export class CategoryTagOfAggregatorStateService implements OnDestroy {
   }
 
   resetFilters(): void {
-    this.updateState({ 
-      searchTerm: '', 
+    this.updateState({
+      searchTerm: '',
       languageId: null,
       pageNumber: 1,
-      showDeleted: false
+      showDeleted: false,
     });
     this.loadItems();
   }
 
   openAddModal(callback?: () => void): void {
     if (this.langService.availableLanguages().length === 0) {
-      this.message.warning('Для создания категории необходимо наличие хотя бы одного активного языка в агрегаторе.');
+      this.message.warning(
+        'Для создания категории необходимо наличие хотя бы одного активного языка в агрегаторе.',
+      );
       return;
     }
     this.updateState({ selectedId: null });
@@ -139,9 +141,7 @@ export class CategoryTagOfAggregatorStateService implements OnDestroy {
   save(dto: any): Observable<CategoryTagOfAggregatorDetail> {
     this.applyEnglishFallbacks(dto);
     const operation = dto.id ? this.api.update(dto) : this.api.create(dto);
-    return this.executeWithLoading(operation, true).pipe(
-      tap(() => this.loadItems())
-    );
+    return this.executeWithLoading(operation, true).pipe(tap(() => this.loadItems()));
   }
 
   /**
@@ -150,15 +150,17 @@ export class CategoryTagOfAggregatorStateService implements OnDestroy {
    */
   private applyEnglishFallbacks(dto: any): void {
     if (!dto.localizations || dto.localizations.length === 0) return;
-    
+
     // 1. Находим английский язык через сервис
-    const enLang = this.langService.availableLanguages().find(l => l.code === 'en-US');
+    const enLang = this.langService.availableLanguages().find((l) => l.code === 'en-US');
     const enId = enLang?.id;
-    
+
     // 2. Ищем английскую локализацию как основной источник
-    const enLoc = enId ? dto.localizations.find((l: any) => l.languageOfAggregatorId === enId) : null;
+    const enLoc = enId
+      ? dto.localizations.find((l: any) => l.languageOfAggregatorId === enId)
+      : null;
     const masterName = enLoc?.name || dto.slug;
-    
+
     // 3. Синхронизируем пустые поля
     dto.localizations.forEach((loc: any) => {
       const isEn = enId && loc.languageOfAggregatorId === enId;
@@ -167,34 +169,40 @@ export class CategoryTagOfAggregatorStateService implements OnDestroy {
       if (!loc.name?.trim()) {
         loc.name = masterName;
       }
-      
+
       // Остальные поля для не-английских локализаций
       if (!isEn && enLoc) {
         if (!loc.description?.trim() && enLoc.description) loc.description = enLoc.description;
-        
+
         // SEO данные
         if (enLoc.seoData) {
           if (!loc.seoData) {
             const { id, ...seoRest } = enLoc.seoData;
-            loc.seoData = { ...seoRest, noIndex: enLoc.seoData.noIndex, noFollow: enLoc.seoData.noFollow } as any;
+            loc.seoData = {
+              ...seoRest,
+              noIndex: enLoc.seoData.noIndex,
+              noFollow: enLoc.seoData.noFollow,
+            } as any;
           } else {
             if (!loc.seoData.metaTitle?.trim()) loc.seoData.metaTitle = enLoc.seoData.metaTitle;
-            if (!loc.seoData.metaDescription?.trim()) loc.seoData.metaDescription = enLoc.seoData.metaDescription;
-            if (!loc.seoData.metaKeywords?.trim()) loc.seoData.metaKeywords = enLoc.seoData.metaKeywords;
+            if (!loc.seoData.metaDescription?.trim())
+              loc.seoData.metaDescription = enLoc.seoData.metaDescription;
+            if (!loc.seoData.metaKeywords?.trim())
+              loc.seoData.metaKeywords = enLoc.seoData.metaKeywords;
           }
         }
       }
     });
   }
 
-  delete(id: number, soft: boolean = true): void {
+  delete(id: number, soft = true): void {
     const operation = soft ? this.api.delete(id) : this.api.hardDelete(id);
     this.executeWithLoading(operation).subscribe({
       next: () => {
         this.message.success(soft ? 'Запись перемещена в корзину' : 'Запись окончательно удалена');
         this.loadItems();
       },
-      error: (err) => this.handleError(err, soft ? 'Delete' : 'HardDelete')
+      error: (err) => this.handleError(err, soft ? 'Delete' : 'HardDelete'),
     });
   }
 
@@ -208,7 +216,7 @@ export class CategoryTagOfAggregatorStateService implements OnDestroy {
         this.message.success('Категория успешно восстановлена');
         this.loadItems();
       },
-      error: (err) => this.handleError(err, 'Restore')
+      error: (err) => this.handleError(err, 'Restore'),
     });
   }
 
@@ -229,7 +237,7 @@ export class CategoryTagOfAggregatorStateService implements OnDestroy {
       error: (err) => {
         this.message.remove(msgId);
         this.handleError(err, 'Seed');
-      }
+      },
     });
   }
 
@@ -243,18 +251,19 @@ export class CategoryTagOfAggregatorStateService implements OnDestroy {
       },
       error: (err) => {
         this.message.remove(msgId);
-        this.handleError(err, 'Clear')
-      }
+        this.handleError(err, 'Clear');
+      },
     });
   }
 
   private showEmptyWarning(): void {
     this.modalService.alert({
       title: 'База данных пуста!',
-      message: 'В базе данных \'DbNames\' (таблица \'category_tags_of_aggregator\') нет категорий. Вы можете инициализировать данные из JSON.',
+      message:
+        "В базе данных 'DbNames' (таблица 'category_tags_of_aggregator') нет категорий. Вы можете инициализировать данные из JSON.",
       alertType: 'info',
       centered: true,
-      icon: 'system/av_info'
+      icon: 'system/av_info',
     });
   }
 
@@ -269,7 +278,7 @@ export class CategoryTagOfAggregatorStateService implements OnDestroy {
     this.updateState({ [key]: true, error: null } as any);
     return obs.pipe(
       takeUntil(this.destroy$),
-      finalize(() => this.updateState({ [key]: false } as any))
+      finalize(() => this.updateState({ [key]: false } as any)),
     );
   }
 

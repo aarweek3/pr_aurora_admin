@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, inject } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzCardModule } from 'ng-zorro-antd/card';
@@ -22,10 +22,18 @@ import { PlatformOfAggregatorFormComponent } from '../platform-of-aggregator-for
   ],
   template: `
     <div class="page-form-container">
-      <nz-page-header (nzBack)="handleCancel()" [nzTitle]="state.modalMode() === 'add' ? 'Новая платформа' : 'Редактирование платформы'">
+      <nz-page-header
+        (nzBack)="handleCancel()"
+        [nzTitle]="state.modalMode() === 'add' ? 'Новая платформа' : 'Редактирование платформы'"
+      >
         <nz-page-header-extra>
           <button nz-button (click)="handleCancel()">Отмена</button>
-          <button nz-button nzType="primary" (click)="platformForm.submitForm()" [nzLoading]="state.modalLoading()">
+          <button
+            nz-button
+            nzType="primary"
+            (click)="platformForm.submitForm()"
+            [nzLoading]="state.modalLoading()"
+          >
             Сохранить изменения
           </button>
         </nz-page-header-extra>
@@ -42,17 +50,21 @@ import { PlatformOfAggregatorFormComponent } from '../platform-of-aggregator-for
       </nz-card>
     </div>
   `,
-  styles: [` .page-form-container { padding: 24px; padding-top: 0; } `],
+  styles: [
+    `
+      .page-form-container {
+        padding: 24px;
+        padding-top: 0;
+      }
+    `,
+  ],
 })
 export class PlatformOfAggregatorPageFormComponent implements OnInit {
+  state = inject(PlatformOfAggregatorStateService);
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
+
   @ViewChild('platformForm') platformForm!: PlatformOfAggregatorFormComponent;
-
-  constructor(
-    public state: PlatformOfAggregatorStateService,
-    private route: ActivatedRoute,
-    private router: Router
-  ) {}
-
 
   ngOnInit(): void {
     const id = this.route.snapshot.params['id'];

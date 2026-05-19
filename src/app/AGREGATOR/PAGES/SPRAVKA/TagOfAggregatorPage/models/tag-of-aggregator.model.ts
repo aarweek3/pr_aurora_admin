@@ -1,4 +1,4 @@
-import { ErrorResponse } from "../../../../../shared/infrastructure/interceptor/models/error-response.model";
+import { ErrorResponse } from '@core/models/error-response.model';
 
 export enum TagType {
   Functional = 0,
@@ -6,7 +6,7 @@ export enum TagType {
   OS = 2,
   Hardware = 3,
   License = 4,
-  Other = 5
+  Other = 5,
 }
 
 export interface TagOfAggregatorLocalization {
@@ -93,5 +93,5 @@ export const initialTagOfAggregatorState: TagOfAggregatorState = {
   categories: [],
   viewItem: null,
   viewModalVisible: false,
-  editModalVisible: false
+  editModalVisible: false,
 };

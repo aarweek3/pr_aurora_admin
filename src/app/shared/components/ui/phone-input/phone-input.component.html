@@ -1,0 +1,94 @@
+<div
+  class="av-phone-input"
+  [class.av-phone-input--disabled]="disabled"
+  [class.av-phone-input--invalid]="isInvalid()"
+  [class.av-phone-input--valid]="isValid()"
+  (click)="onComponentClick($event)"
+  (keydown.enter)="onComponentClick($event)"
+  (keydown.space)="onComponentClick($event)"
+>
+  <!-- Country Selector -->
+  <div
+    class="av-phone-input__country-selector"
+    (click)="toggleDropdown($event)"
+    (keydown.enter)="toggleDropdown($event)"
+    (keydown.space)="toggleDropdown($event)"
+    tabindex="0"
+    role="button"
+    aria-haspopup="listbox"
+    [attr.aria-expanded]="dropdownOpen()"
+  >
+    <span class="av-phone-input__flag">{{ selectedCountry().flag }}</span>
+    <span class="av-phone-input__dial-code">{{ selectedCountry().dialCode }}</span>
+    <svg
+      class="av-phone-input__arrow"
+      [class.av-phone-input__arrow--open]="dropdownOpen()"
+      width="12"
+      height="12"
+      viewBox="0 0 12 12"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M2.5 4.5L6 8L9.5 4.5"
+        stroke="currentColor"
+        stroke-width="1.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </svg>
+  </div>
+
+  <input
+    type="tel"
+    class="av-phone-input__input"
+    [id]="inputId"
+    [placeholder]="selectedCountry().placeholder"
+    [disabled]="disabled"
+    [value]="phoneNumber()"
+    (input)="onPhoneInput($event)"
+    (blur)="onTouched()"
+  />
+
+  <!-- Country Dropdown -->
+  @if (dropdownOpen()) {
+    <div
+      class="av-phone-input__dropdown"
+      (click)="$event.stopPropagation()"
+      (keydown)="$event.stopPropagation()"
+    >
+      <div class="av-phone-input__search">
+        <input
+          type="text"
+          class="av-phone-input__search-input"
+          placeholder="Поиск страны..."
+          [value]="searchQuery()"
+          (input)="onSearchInput($event)"
+        />
+      </div>
+      <div class="av-phone-input__dropdown-list" role="listbox">
+        @for (country of filteredCountries(); track country.code) {
+          <div
+            class="av-phone-input__country-item"
+            [class.av-phone-input__country-item--selected]="
+              country.code === selectedCountry().code
+            "
+            (click)="selectCountry(country)"
+            (keydown.enter)="selectCountry(country)"
+            (keydown.space)="selectCountry(country)"
+            tabindex="0"
+            role="option"
+            [attr.aria-selected]="country.code === selectedCountry().code"
+          >
+            <span class="av-phone-input__country-flag">{{ country.flag }}</span>
+            <span class="av-phone-input__country-name">{{ country.name }}</span>
+            <span class="av-phone-input__country-dial-code">{{ country.dialCode }}</span>
+          </div>
+        }
+        @if (filteredCountries().length === 0) {
+          <div class="av-phone-input__no-results">Країн не знайдено</div>
+        }
+      </div>
+    </div>
+  }
+</div>

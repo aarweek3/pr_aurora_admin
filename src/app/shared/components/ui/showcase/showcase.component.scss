@@ -7,7 +7,9 @@
   border: 1px solid $color-border-light !important;
   border-radius: $border-radius-xl !important;
   box-shadow: $shadow-sm !important;
-  transition: border-color $transition-duration-fast ease, box-shadow $transition-duration-fast ease !important;
+  transition:
+    border-color $transition-duration-fast ease,
+    box-shadow $transition-duration-fast ease !important;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -15,7 +17,7 @@
 
   &:hover {
     border-color: $color-primary !important;
-    box-shadow: 0 8px 24px rgba($color-primary, 0.08) !important;
+    box-shadow: 0 8px 24px rgba($color-primary-pure, 0.08) !important;
   }
 }
 
@@ -30,7 +32,7 @@
   transition: background $transition-duration-base ease;
 
   &:hover {
-    background: rgba($color-black, 0.02);
+    background: rgba($color-black-pure, 0.02);
   }
 
   h2 {
@@ -328,109 +330,4 @@
   margin-top: $spacing-sm;
 }
 
-// Dark Theme Support
-:host-context(.dark-theme) {
-  .playground-container {
-    background: $dark-bg-base;
-    border-color: $dark-border-base;
-  }
 
-  .control-card-tabs,
-  .result-card {
-    background: $dark-bg-card !important;
-    border-color: $dark-border-base !important;
-  }
-
-  // Темная тема для блоков результата
-  .result-block {
-    &--preview {
-      background: $dark-bg-gray;
-    }
-
-    &--code {
-      background: $dark-bg-card;
-      border-color: $dark-border-base;
-    }
-
-    &--description {
-      background: rgba($color-primary, 0.08);
-    }
-
-    &__header {
-      background: rgba($color-white, 0.05);
-      border-bottom-color: $dark-border-base;
-
-      h4 {
-        color: $dark-text-primary;
-      }
-    }
-  }
-
-  // Темная тема для кнопки копирования кода
-  .copy-code-btn {
-    border-color: $dark-border-base;
-    color: $dark-text-secondary;
-
-    &:hover {
-      background: $color-primary;
-      color: $color-white;
-      border-color: $color-primary;
-    }
-  }
-
-  // Темная тема для блока кода
-  .code-content {
-    background: $dark-bg-gray;
-    border-color: $dark-border-base;
-    color: $dark-text-primary;
-  }
-
-  .auto-params {
-    border-color: $dark-border-base;
-    color: $dark-text-tertiary;
-    background: rgba($color-primary, 0.08);
-  }
-
-  .examples-section,
-  .documentation-section {
-    border-top-color: $dark-border-base;
-
-    h2,
-    h3 {
-      color: $dark-text-primary;
-    }
-
-    .section-header:hover {
-      background: rgba($color-white, 0.05);
-    }
-
-    .collapse-btn {
-      color: $dark-text-tertiary;
-      &:hover {
-        color: $dark-text-primary;
-      }
-    }
-
-    pre {
-      background: $dark-bg-gray;
-    }
-
-    code {
-      background-color: $dark-bg-gray;
-      color: $dark-error;
-    }
-
-    .example-description {
-      color: $dark-text-secondary;
-    }
-
-    ul li {
-      color: $dark-text-secondary;
-
-      code {
-        background-color: $dark-bg-gray;
-        color: $dark-error;
-      }
-    }
-  }
-}

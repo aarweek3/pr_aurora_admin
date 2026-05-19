@@ -6,16 +6,14 @@
 // Использует BEM нотацию и CSS переменные
 // ============================================================================
 
-@use "../abstracts/variables" as *;
-@use "../abstracts/mixins" as *;
+@layer components {
+  // ============================================================================
+  // Base Toggle Styles
+  // ============================================================================
 
-// ============================================================================
-// Base Toggle Styles
-// ============================================================================
-
-.av-toggle {
-  // Resolved variables for internal use
-  --w: var(--av-toggle-width, 44px);
+  .av-toggle {
+    // Resolved variables for internal use
+    --w: var(--av-toggle-width, 44px);
   --h: var(--av-toggle-height, 22px);
   --r: var(--av-toggle-radius, 100px);
   --off: var(--av-toggle-inner-offset, 2px);
@@ -26,34 +24,20 @@
   height: var(--h);
   cursor: pointer;
   flex-shrink: 0;
-  box-sizing: border-box;
 
-  * {
-    box-sizing: border-box;
+  input { 
+    position: absolute; 
+    opacity: 0; 
+    width: 0; 
+    height: 0; 
   }
 
-  // Hide native checkbox
-  input {
-    position: absolute;
-    opacity: 0;
-    width: 0;
-    height: 0;
-    margin: 0;
-    padding: 0;
-
-    &:focus {
-      outline: none;
-    }
-  }
-
-  // Slider (background track)
   &__slider {
     position: absolute;
     inset: 0;
-    background-color: rgba(0, 0, 0, 0.25);
+    background-color: var(--av-color-gray-4);
     border-radius: var(--r);
-    transition: all $transition-base;
-    cursor: pointer;
+    transition: var(--av-transition-base);
 
     &::before {
       content: "";
@@ -62,253 +46,37 @@
       width: calc(var(--h) - (var(--off) * 2));
       left: var(--off);
       top: var(--off);
-      background-color: $color-white;
-      border-radius: var(--r, 50%);
-      transition: all $transition-base;
-      box-shadow: $shadow-sm;
-      z-index: 1;
+      background-color: var(--av-color-white);
+      border-radius: 50%;
+      transition: var(--av-transition-base);
+      box-shadow: var(--av-shadow-sm);
     }
   }
 
-  &__icon {
-    position: absolute;
-    height: calc(var(--h) - (var(--off) * 2));
-    width: calc(var(--h) - (var(--off) * 2));
-    left: var(--off);
-    top: var(--off);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 2;
-    pointer-events: none;
-    transition: all $transition-base;
-    color: var(--av-toggle-color, $color-primary);
-    font-size: calc(var(--h) * 0.5);
-
-    &--unchecked {
-      opacity: 1;
-      color: rgba(0, 0, 0, 0.45);
-    }
-    &--checked {
-      opacity: 0;
-      transform: translateX(0);
-    }
-  }
-
-  // ============================================================================
-  // States
-  // ============================================================================
-
-  // Checked state
   input:checked + &__slider {
-    background-color: $color-primary;
-
-    &::before {
-      transform: translateX(calc(var(--w) - var(--h)));
-    }
+    background-color: var(--av-color-primary);
+    &::before { transform: translateX(calc(var(--w) - var(--h))); }
   }
 
-  input:checked ~ .av-toggle__icon--checked {
-    opacity: 1;
-    transform: translateX(calc(var(--w) - var(--h)));
-  }
-
-  input:checked ~ .av-toggle__icon--unchecked {
-    opacity: 0;
-    transform: translateX(calc(var(--w) - var(--h)));
-  }
-
-  // Focus state
-  input:focus + &__slider {
-    box-shadow: 0 0 0 3px rgba($color-primary, 0.1);
-  }
-
-  // Disabled state
-  input:disabled + &__slider {
-    opacity: 0.4;
-    cursor: not-allowed;
-  }
-
-  &.av-toggle--disabled {
-    opacity: 0.4;
-    cursor: not-allowed;
-
-    .av-toggle__slider {
-      cursor: not-allowed;
-    }
-  }
-
-  // Hover state
-  &:hover input:not(:disabled):not(:checked) + &__slider {
-    background-color: rgba(0, 0, 0, 0.35);
-  }
-
-  &:hover input:checked:not(:disabled) + &__slider {
-    background-color: $color-primary-hover;
-  }
-
-  // Active state (expansion effect)
-  &:active input:not(:disabled) + &__slider::before {
-    width: calc(var(--h) + 4px - (var(--off) * 2));
-  }
-
-  // ============================================================================
-  // Sizes
-  // ============================================================================
-
-  &--small {
-    --av-toggle-height: 16px;
-    --av-toggle-width: 32px;
-    --av-toggle-inner-offset: 2px;
-
-    &:active input:not(:disabled) + .av-toggle__slider::before {
-      width: calc(var(--av-toggle-height) + 4px - (var(--av-toggle-inner-offset) * 2));
-    }
-  }
-
-  &--large {
-    --av-toggle-height: 30px;
-    --av-toggle-width: 60px;
-    --av-toggle-inner-offset: 3px;
-
-    &:active input:not(:disabled) + .av-toggle__slider::before {
-      width: calc(var(--av-toggle-height) + 4px - (var(--av-toggle-inner-offset) * 2));
-    }
-  }
-
-  // ============================================================================
-  // Shapes
-  // ============================================================================
-
-  &--shape-square {
-    --av-toggle-radius: 4px;
-  }
-
-  // ============================================================================
-  // Colors
-  // ============================================================================
-
-  &--primary {
-    input:checked + .av-toggle__slider {
-      background-color: $color-primary;
-    }
-
-    input:focus + .av-toggle__slider {
-      box-shadow: 0 0 0 3px rgba($color-primary, 0.1);
-    }
-
-    &:hover input:checked:not(:disabled) + .av-toggle__slider {
-      background-color: $color-primary-hover;
-    }
-  }
-
-  &--success {
-    input:checked + .av-toggle__slider {
-      background-color: $color-success;
-    }
-
-    input:focus + .av-toggle__slider {
-      box-shadow: 0 0 0 3px rgba($color-success, 0.1);
-    }
-
-    &:hover input:checked:not(:disabled) + .av-toggle__slider {
-      background-color: $color-success-hover;
-    }
-  }
-
-  &--warning {
-    input:checked + .av-toggle__slider {
-      background-color: $color-warning;
-    }
-
-    input:focus + .av-toggle__slider {
-      box-shadow: 0 0 0 3px rgba($color-warning, 0.1);
-    }
-
-    &:hover input:checked:not(:disabled) + .av-toggle__slider {
-      background-color: $color-warning-hover;
-    }
-  }
-
-  &--danger {
-    input:checked + .av-toggle__slider {
-      background-color: $color-error;
-    }
-
-    input:focus + .av-toggle__slider {
-      box-shadow: 0 0 0 3px rgba($color-error, 0.1);
-    }
-
-    &:hover input:checked:not(:disabled) + .av-toggle__slider {
-      background-color: $color-error-hover;
-    }
-  }
-
-  // ============================================================================
-  // Dark Theme
-  // ============================================================================
-
-  @include dark-theme {
-    &__slider {
-      background-color: rgba(255, 255, 255, 0.3);
-
-      &::before {
-        background-color: #f0f0f0;
-      }
-    }
-
-    &:hover input:not(:disabled):not(:checked) + &__slider {
-      background-color: rgba(255, 255, 255, 0.4);
-    }
-  }
+  &:hover input:checked:not(:disabled) + &__slider { background-color: var(--av-color-primary-hover); }
+  input:disabled + &__slider { opacity: 0.4; cursor: not-allowed; }
 }
-
-// ============================================================================
-// Toggle with Label (Optional helper)
-// ============================================================================
 
 .av-toggle-wrapper {
   display: inline-flex;
   align-items: center;
-  gap: $spacing-sm;
+  gap: var(--av-spacing-sm);
   cursor: pointer;
 
-  &__label {
-    font-size: $font-size-base;
-    color: $color-text-primary;
-    user-select: none;
-  }
-
-  &--disabled {
-    opacity: 0.4;
-    cursor: not-allowed;
-
-    .av-toggle-wrapper__label {
-      cursor: not-allowed;
-    }
-  }
-
-  @include dark-theme {
-    .av-toggle-wrapper__label {
-      color: $dark-text-primary;
-    }
-  }
-}
-
-// ============================================================================
-// Accessibility
-// ============================================================================
-
-// Keyboard focus для accessibility
-.av-toggle input:focus-visible + .av-toggle__slider {
-  outline: 2px solid $color-primary;
-  outline-offset: 2px;
+  &__label { font-size: var(--av-font-size-sm); color: var(--av-text-primary); user-select: none; }
+  &--disabled { opacity: 0.5; cursor: not-allowed; }
 }
 
 // Prefers reduced motion
 @media (prefers-reduced-motion: reduce) {
   .av-toggle__slider,
-  .av-toggle__slider::before {
-    transition: none;
+    .av-toggle__slider::before {
+      transition: none;
+    }
   }
 }

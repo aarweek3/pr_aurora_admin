@@ -1,14 +1,15 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { LANGUAGE_ICONS_MAP } from '@assets/languageApp/config/language-icons.config';
+import { LANGUAGE_ICONS_MAP } from '@language-app/config/language-icons.config';
+import { NzAlertModule } from 'ng-zorro-antd/alert';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
 import { NzMessageService } from 'ng-zorro-antd/message';
-import { NZ_MODAL_DATA, NzModalRef } from 'ng-zorro-antd/modal';
+import { NZ_MODAL_DATA, NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
 import { LanguageAggregator } from '../models/language-aggregator.model';
 import { LanguageAggregatorApiService } from '../services/language-aggregator-api.service';
 
@@ -23,8 +24,25 @@ import { LanguageAggregatorApiService } from '../services/language-aggregator-ap
     NzCheckboxModule,
     NzInputNumberModule,
     NzButtonModule,
+    NzAlertModule,
   ],
   template: `
+    @if (data.language?.isDeleted) {
+      <nz-alert
+        nzType="warning"
+        nzMessage="Внимание! Вы редактируете удаленную запись."
+        nzDescription="Чтобы она появилась на сайте, нажмите кнопку 'Восстановить'."
+        nzShowIcon
+        style="margin-bottom: 24px;"
+        [nzAction]="restoreAction"
+      ></nz-alert>
+      <ng-template #restoreAction>
+        <button nz-button nzSize="small" nzType="primary" (click)="restore()" [nzLoading]="isLoading">
+          Восстановить
+        </button>
+      </ng-template>
+    }
+
     <form nz-form [formGroup]="validateForm" (ngSubmit)="submitForm()" nzLayout="vertical">
       <div class="form-row">
         <nz-form-item>
@@ -139,6 +157,7 @@ export class LanguageOfAggregatorModalComponent implements OnInit {
   private fb = inject(FormBuilder);
   private apiService = inject(LanguageAggregatorApiService);
   private message = inject(NzMessageService);
+  private modalService = inject(NzModalService);
   modalRef = inject(NzModalRef);
   data = inject(NZ_MODAL_DATA);
 
@@ -153,17 +172,19 @@ export class LanguageOfAggregatorModalComponent implements OnInit {
 
   getIconName(iconKey?: string): string {
     const code = this.validateForm?.get('code')?.value;
-    
+
     // 1. По ключу
     let mapped = iconKey ? LANGUAGE_ICONS_MAP[iconKey] : null;
-    
+
     // 2. По коду
     if (!mapped && code) {
       mapped = LANGUAGE_ICONS_MAP[code];
     }
-    
+
     const final = mapped || LANGUAGE_ICONS_MAP['default'];
-    console.log(`[LanguageAggregator Modal] Preview Mapping: "${iconKey}" (code: ${code}) -> "${final}"`);
+    console.log(
+      `[LanguageAggregator Modal] Preview Mapping: "${iconKey}" (code: ${code}) -> "${final}"`,
+    );
     return final;
   }
 
@@ -201,8 +222,12 @@ export class LanguageOfAggregatorModalComponent implements OnInit {
           this.message.success('Обновлено');
           this.modalRef.close(true);
         },
-        error: () => {
-          this.message.error('Ошибка при обновлении');
+        error: (err) => {
+          if (err.status === 409) {
+            this.message.error('Язык с таким кодом уже существует');
+          } else {
+            this.message.error('Ошибка при обновлении');
+          }
           this.isLoading = false;
         },
       });
@@ -212,11 +237,52 @@ export class LanguageOfAggregatorModalComponent implements OnInit {
           this.message.success('Создано');
           this.modalRef.close(true);
         },
-        error: () => {
-          this.message.error('Ошибка при создании');
+        error: (err) => {
+          if (err.status === 409) {
+            this.showRestoreModal(body.code);
+          } else {
+            this.message.error('Ошибка при создании');
+          }
           this.isLoading = false;
         },
       });
     }
+  }
+
+  restore(): void {
+    this.isLoading = true;
+    this.apiService.restore(this.data.language.id).subscribe({
+      next: () => {
+        this.message.success('Язык успешно восстановлен');
+        this.modalRef.close(true);
+      },
+      error: () => {
+        this.message.error('Ошибка при восстановлении');
+        this.isLoading = false;
+      },
+    });
+  }
+
+  private showRestoreModal(code: string): void {
+    this.modalService.confirm({
+      nzTitle: 'Язык уже существует',
+      nzContent: `Язык с кодом "${code}" уже был создан ранее, но сейчас находится в корзине. Восстановить его?`,
+      nzOkText: 'Да, восстановить и открыть',
+      nzCancelText: 'Отмена',
+      nzOnOk: () => {
+        // Здесь нужно найти ID по коду, или сервер должен возвращать ID в ошибке 409.
+        // Поскольку у нас поиск по коду может быть долгим, 
+        // предположим, что мы можем просто получить список и найти.
+        this.apiService.getAll(true, true).subscribe(langs => {
+          const lang = langs.find(l => l.code === code);
+          if (lang) {
+            this.apiService.restore(lang.id).subscribe(() => {
+              this.message.success('Язык восстановлен');
+              this.modalRef.close(true);
+            });
+          }
+        });
+      }
+    });
   }
 }

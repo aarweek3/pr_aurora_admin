@@ -5,15 +5,16 @@
 
 @use "../abstracts/variables" as *;
 
-// =============================================================================
-// 1. BOX SIZING
-// =============================================================================
+@layer base {
+  // =============================================================================
+  // 1. BOX SIZING
+  // =============================================================================
 
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
 
 // =============================================================================
 // 2. ROOT & BODY
@@ -225,7 +226,7 @@ select {
   &:focus {
     outline: none;
     border-color: $color-primary;
-    box-shadow: 0 0 0 2px rgba($color-primary, 0.1);
+    box-shadow: 0 0 0 2px rgba($color-primary-pure, 0.1);
   }
 
   &:disabled {
@@ -363,11 +364,12 @@ summary {
 // =============================================================================
 
 ::selection {
-  background: rgba($color-primary, 0.2);
+  background: rgba($color-primary-pure, 0.2);
   color: $color-text-primary;
 }
 
-::-moz-selection {
-  background: rgba($color-primary, 0.2);
-  color: $color-text-primary;
+  ::-moz-selection {
+    background: rgba($color-primary-pure, 0.2);
+    color: $color-text-primary;
+  }
 }

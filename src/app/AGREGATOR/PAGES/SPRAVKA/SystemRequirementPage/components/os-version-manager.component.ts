@@ -12,7 +12,7 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzSwitchModule } from 'ng-zorro-antd/switch';
 import { SystemRequirementStateService } from '../services/system-requirement-state.service';
-import { ButtonControlJsonBlockComponent } from '@shared/controls/button-control-json-block/button-control-json-block.component';
+import { ButtonControlJsonBlockComponent } from '@controls';
 import { ModalService } from '@shared/components/ui/modal/services/modal.service';
 import { AvSearchComponent } from '@shared/components/ui/search';
 import { PlatformOfAggregatorStateService } from '../../PlatformOfAggregatorPage/services/platform-of-aggregator-state.service';
@@ -37,7 +37,7 @@ import { PaginationComponent } from '@shared/components/ui';
     ButtonControlJsonBlockComponent,
     AvSearchComponent,
     OsVersionFormComponent,
-    PaginationComponent
+    PaginationComponent,
   ],
   template: `
     <div class="page-container">
@@ -86,9 +86,9 @@ import { PaginationComponent } from '@shared/components/ui';
         *ngIf="showMaintenance"
         [loading]="state.osVersionsLoading()"
         [total]="state.osVersionsTotal()"
-        (onClear)="handleClearDatabase()"
-        (onRead)="handleReadFromDb()"
-        (onSeed)="handleSeedFromJson()"
+        (clear)="handleClearDatabase()"
+        (read)="handleReadFromDb()"
+        (seed)="handleSeedFromJson()"
       ></app-button-control-json-block>
 
       <!-- Инструменты управления (Поиск и Фильтры) -->
@@ -99,7 +99,7 @@ import { PaginationComponent } from '@shared/components/ui';
               [value]="state.osSearchTerm()"
               [avLoading]="state.osVersionsLoading()"
               avPlaceholder="Поиск..."
-              (onSearch)="onSearchChange($event)"
+              (searchChange)="onSearchChange($event)"
               [showButton]="false"
             ></av-search>
           </div>
@@ -142,11 +142,11 @@ import { PaginationComponent } from '@shared/components/ui';
 
       <!-- Основной список -->
       <div class="manager-content">
-        <nz-table 
-          #basicTable 
-          [nzData]="state.osVersions()" 
-          [nzLoading]="state.osVersionsLoading() && state.osVersions().length > 0" 
-          nzSize="small" 
+        <nz-table
+          #basicTable
+          [nzData]="state.osVersions()"
+          [nzLoading]="state.osVersionsLoading() && state.osVersions().length > 0"
+          nzSize="small"
           [nzBordered]="true"
           [nzShowPagination]="false"
         >
@@ -165,7 +165,11 @@ import { PaginationComponent } from '@shared/components/ui';
               @for (skeleton of [1, 2, 3, 4, 5]; track skeleton) {
                 <tr>
                   <td colspan="6">
-                    <nz-skeleton [nzActive]="true" [nzTitle]="false" [nzParagraph]="{ rows: 1 }"></nz-skeleton>
+                    <nz-skeleton
+                      [nzActive]="true"
+                      [nzTitle]="false"
+                      [nzParagraph]="{ rows: 1 }"
+                    ></nz-skeleton>
                   </td>
                 </tr>
               }
@@ -173,18 +177,32 @@ import { PaginationComponent } from '@shared/components/ui';
 
             @for (data of basicTable.data; track data.id) {
               <tr [class.deleted-row]="data.isDeleted">
-                <td><span class="id-tag">{{ data.id }}</span></td>
                 <td>
-                   <div style="display: flex; align-items: center; gap: 8px;">
-                     <ng-container *ngIf="getPlatformIcon(data.platformId) as icon">
-                        <img *ngIf="icon.includes('/') || icon.includes('.')" [src]="icon" style="width: 16px; height: 16px; object-fit: contain;" />
-                        <i *ngIf="!icon.includes('/') && !icon.includes('.')" nz-icon [nzType]="icon"></i>
-                     </ng-container>
-                     {{ getPlatformName(data.platformId) }}
-                   </div>
+                  <span class="id-tag">{{ data.id }}</span>
                 </td>
-                <td><strong>{{ data.name }}</strong></td>
-                <td><code>{{ data.systemCode }}</code></td>
+                <td>
+                  <div style="display: flex; align-items: center; gap: 8px;">
+                    <ng-container *ngIf="getPlatformIcon(data.platformId) as icon">
+                      <img
+                        *ngIf="icon.includes('/') || icon.includes('.')"
+                        [src]="icon"
+                        style="width: 16px; height: 16px; object-fit: contain;"
+                      />
+                      <i
+                        *ngIf="!icon.includes('/') && !icon.includes('.')"
+                        nz-icon
+                        [nzType]="icon"
+                      ></i>
+                    </ng-container>
+                    {{ getPlatformName(data.platformId) }}
+                  </div>
+                </td>
+                <td>
+                  <strong>{{ data.name }}</strong>
+                </td>
+                <td>
+                  <code>{{ data.systemCode }}</code>
+                </td>
                 <td>
                   <nz-tag [nzColor]="data.isActive ? 'success' : 'default'">
                     {{ data.isActive ? 'Активен' : 'Отключен' }}
@@ -192,27 +210,43 @@ import { PaginationComponent } from '@shared/components/ui';
                 </td>
                 <td>
                   <div class="actions">
-                    <button 
-                      nz-button nzType="text" nz-tooltip nzTooltipTitle="Просмотр"
-                      class="view-btn" (click)="onView(data.id)"
+                    <button
+                      nz-button
+                      nzType="text"
+                      nz-tooltip
+                      nzTooltipTitle="Просмотр"
+                      class="view-btn"
+                      (click)="onView(data.id)"
                     >
                       <i nz-icon nzType="eye" class="view-icon"></i>
                     </button>
-                    <button 
-                      nz-button nzType="text" nz-tooltip nzTooltipTitle="Редактировать"
-                      class="edit-btn" (click)="onEdit(data.id)"
+                    <button
+                      nz-button
+                      nzType="text"
+                      nz-tooltip
+                      nzTooltipTitle="Редактировать"
+                      class="edit-btn"
+                      (click)="onEdit(data.id)"
                     >
                       <i nz-icon nzType="edit" class="edit-icon"></i>
                     </button>
-                    <button 
-                      nz-button nzType="text" nz-tooltip nzTooltipTitle="В корзину"
-                      class="delete-btn" (click)="onDelete(data.id)"
+                    <button
+                      nz-button
+                      nzType="text"
+                      nz-tooltip
+                      nzTooltipTitle="В корзину"
+                      class="delete-btn"
+                      (click)="onDelete(data.id)"
                     >
                       <i nz-icon nzType="rest" class="delete-icon"></i>
                     </button>
-                    <button 
-                      nz-button nzType="text" nz-tooltip nzTooltipTitle="Удалить навсегда"
-                      class="hard-delete-btn" (click)="onHardDelete(data.id)"
+                    <button
+                      nz-button
+                      nzType="text"
+                      nz-tooltip
+                      nzTooltipTitle="Удалить навсегда"
+                      class="hard-delete-btn"
+                      (click)="onHardDelete(data.id)"
                     >
                       <i nz-icon nzType="fire" class="hard-delete-icon"></i>
                     </button>
@@ -250,222 +284,234 @@ import { PaginationComponent } from '@shared/components/ui';
           <span class="status-item" *ngIf="state.osVersionsLoading()">
             <i nz-icon nzType="loading"></i> Обновление...
           </span>
-          <span class="status-item version-tag">
-            v3.5.0
-          </span>
+          <span class="status-item version-tag"> v3.5.0 </span>
         </div>
       </div>
     </div>
   `,
-  styles: [`
-    .page-container {
-      padding: 32px;
-      padding-top: 16px;
-      max-width: 1600px;
-      margin: 0 auto;
-    }
+  styles: [
+    `
+      .page-container {
+        padding: 32px;
+        padding-top: 16px;
+        max-width: 1600px;
+        margin: 0 auto;
+      }
 
-    .page-header {
-      margin-bottom: 24px;
-    }
+      .page-header {
+        margin-bottom: 24px;
+      }
 
-    .header-main {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      padding: 20px 0;
-    }
-
-    .title-section {
-      .title-with-settings {
+      .header-main {
         display: flex;
-        align-items: center;
-        gap: 12px;
+        justify-content: space-between;
+        align-items: flex-start;
+        padding: 20px 0;
+      }
 
-        h1 {
-          font-size: 32px;
-          font-weight: 800;
-          margin-bottom: 0;
-          color: #0f172a;
-          letter-spacing: -0.025em;
+      .title-section {
+        .title-with-settings {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+
+          h1 {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 0;
+            color: #0f172a;
+            letter-spacing: -0.025em;
+          }
         }
-      }
 
-      .subtitle {
-        color: #64748b;
-        margin-top: 8px;
-        font-size: 15px;
-        font-weight: 500;
-      }
-    }
-
-    .manager-tools {
-      margin-bottom: 24px;
-      display: flex;
-      justify-content: flex-start;
-
-      .left-tools {
-        display: flex;
-        align-items: center;
-        gap: 16px;
-      }
-
-      .search-box {
-        width: 400px;
-      }
-
-      .trash-toggle {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        padding: 4px 16px;
-        background: #f8fafc;
-        border: 1px solid #e2e8f0;
-        border-radius: 8px;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-
-        .label {
-          font-size: 11px;
-          font-weight: 800;
-          letter-spacing: 0.1em;
+        .subtitle {
           color: #64748b;
-        }
-
-        &.active {
-          background: #fff1f2;
-          border-color: #fecaca;
-          box-shadow: 0 4px 12px rgba(239, 68, 68, 0.1);
-
-          .label { color: #ef4444; }
+          margin-top: 8px;
+          font-size: 15px;
+          font-weight: 500;
         }
       }
-    }
 
-    .deleted-row {
-      opacity: 0.6;
-      background-color: #fff1f2 !important;
-      
-      td {
-        text-decoration: line-through rgba(239, 68, 68, 0.3);
-      }
-    }
-
-    .pagination-container {
-      display: flex;
-      justify-content: flex-end;
-      padding: 16px 24px;
-      background: #ffffff;
-      border-top: 1px solid #f0f0f0;
-      border-radius: 0 0 16px 16px;
-    }
-
-    .actions {
-      display: flex;
-      gap: 4px;
-
-      button {
+      .manager-tools {
+        margin-bottom: 24px;
         display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 32px;
-        height: 32px;
-        transition: all 0.2s;
+        justify-content: flex-start;
 
-        &:hover {
-          background: rgba(0,0,0,0.05);
-          transform: translateY(-1px);
+        .left-tools {
+          display: flex;
+          align-items: center;
+          gap: 16px;
         }
 
-        i { font-size: 16px; }
+        .search-box {
+          width: 400px;
+        }
+
+        .trash-toggle {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          padding: 4px 16px;
+          background: #f8fafc;
+          border: 1px solid #e2e8f0;
+          border-radius: 8px;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+          .label {
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 0.1em;
+            color: #64748b;
+          }
+
+          &.active {
+            background: #fff1f2;
+            border-color: #fecaca;
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.1);
+
+            .label {
+              color: #ef4444;
+            }
+          }
+        }
       }
 
-      .view-icon { color: #10b981; }
-      .edit-icon { color: #3b82f6; }
-      .delete-icon { color: #f59e0b; }
-      .hard-delete-icon { color: #ef4444; }
-    }
+      .deleted-row {
+        opacity: 0.6;
+        background-color: #fff1f2 !important;
 
-    .count-badge {
-      color: #2563eb;
-      font-size: 13px;
-      margin-left: 8px;
-      background: #eff6ff;
-      padding: 4px 12px;
-      border-radius: 99px;
-      border: 1px solid #dbeafe;
-      font-weight: 700;
-
-      b {
-        color: #1d4ed8;
+        td {
+          text-decoration: line-through rgba(239, 68, 68, 0.3);
+        }
       }
-    }
 
-    .id-tag {
-      background: #f1f5f9;
-      padding: 2px 8px;
-      border-radius: 4px;
-      font-weight: 600;
-      color: #64748b;
-      font-size: 12px;
-      border: 1px solid #e2e8f0;
-    }
-
-    .sticky-status-bar {
-      position: sticky;
-      bottom: 0;
-      margin: 32px -32px -32px -32px;
-      padding: 10px 32px;
-      background: rgba(255, 255, 255, 0.85);
-      backdrop-filter: blur(12px);
-      border-top: 1px solid rgba(226, 232, 240, 0.8);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      z-index: 1000;
-      box-shadow: 0 -10px 15px -3px rgba(0, 0, 0, 0.05);
-
-      .status-group {
+      .pagination-container {
         display: flex;
-        align-items: center;
-        gap: 24px;
+        justify-content: flex-end;
+        padding: 16px 24px;
+        background: #ffffff;
+        border-top: 1px solid #f0f0f0;
+        border-radius: 0 0 16px 16px;
       }
 
-      .status-item {
-        font-size: 13px;
-        color: #475569;
+      .actions {
         display: flex;
-        align-items: center;
-        gap: 8px;
-        font-weight: 500;
+        gap: 4px;
 
-        i {
+        button {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 32px;
+          height: 32px;
+          transition: all 0.2s;
+
+          &:hover {
+            background: rgba(0, 0, 0, 0.05);
+            transform: translateY(-1px);
+          }
+
+          i {
+            font-size: 16px;
+          }
+        }
+
+        .view-icon {
+          color: #10b981;
+        }
+        .edit-icon {
           color: #3b82f6;
-          font-size: 16px;
         }
+        .delete-icon {
+          color: #f59e0b;
+        }
+        .hard-delete-icon {
+          color: #ef4444;
+        }
+      }
+
+      .count-badge {
+        color: #2563eb;
+        font-size: 13px;
+        margin-left: 8px;
+        background: #eff6ff;
+        padding: 4px 12px;
+        border-radius: 99px;
+        border: 1px solid #dbeafe;
+        font-weight: 700;
 
         b {
-          color: #1e293b;
-        }
-
-        &.version-tag {
-          background: #f1f5f9;
-          padding: 2px 10px;
-          border-radius: 6px;
-          border: 1px solid #e2e8f0;
-          font-family: 'Fira Code', monospace;
-          color: #64748b;
-          font-size: 11px;
+          color: #1d4ed8;
         }
       }
 
-      .status-divider {
-        width: 1px;
-        height: 16px;
-        background: #e2e8f0;
+      .id-tag {
+        background: #f1f5f9;
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-weight: 600;
+        color: #64748b;
+        font-size: 12px;
+        border: 1px solid #e2e8f0;
       }
-    }
-  `],
-  changeDetection: ChangeDetectionStrategy.OnPush
+
+      .sticky-status-bar {
+        position: sticky;
+        bottom: 0;
+        margin: 32px -32px -32px -32px;
+        padding: 10px 32px;
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(12px);
+        border-top: 1px solid rgba(226, 232, 240, 0.8);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        z-index: 1000;
+        box-shadow: 0 -10px 15px -3px rgba(0, 0, 0, 0.05);
+
+        .status-group {
+          display: flex;
+          align-items: center;
+          gap: 24px;
+        }
+
+        .status-item {
+          font-size: 13px;
+          color: #475569;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          font-weight: 500;
+
+          i {
+            color: #3b82f6;
+            font-size: 16px;
+          }
+
+          b {
+            color: #1e293b;
+          }
+
+          &.version-tag {
+            background: #f1f5f9;
+            padding: 2px 10px;
+            border-radius: 6px;
+            border: 1px solid #e2e8f0;
+            font-family: 'Fira Code', monospace;
+            color: #64748b;
+            font-size: 11px;
+          }
+        }
+
+        .status-divider {
+          width: 1px;
+          height: 16px;
+          background: #e2e8f0;
+        }
+      }
+    `,
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OsVersionManagerComponent implements OnInit {
   readonly state = inject(SystemRequirementStateService);
@@ -475,12 +521,20 @@ export class OsVersionManagerComponent implements OnInit {
 
   showMaintenance = false;
   selectedPlatformId = signal<number | null>(null);
-  
-  get currentPageModel(): number { return this.state.osPageNumber(); }
-  set currentPageModel(v: number) { this.state.setOsPageNumber(v); }
 
-  get pageSizeModel(): number { return this.state.osPageSize(); }
-  set pageSizeModel(v: number) { this.state.setOsPageSize(v); }
+  get currentPageModel(): number {
+    return this.state.osPageNumber();
+  }
+  set currentPageModel(v: number) {
+    this.state.setOsPageNumber(v);
+  }
+
+  get pageSizeModel(): number {
+    return this.state.osPageSize();
+  }
+  set pageSizeModel(v: number) {
+    this.state.setOsPageSize(v);
+  }
 
   ngOnInit(): void {
     this.state.loadOsVersions();
@@ -517,8 +571,8 @@ export class OsVersionManagerComponent implements OnInit {
 
   onEdit(id: number): void {
     this.state.loadOsVersionDetail(id);
-    // Для редактирования нужно будет переключить режим после загрузки, 
-    // но loadOsVersionDetail пока ставит 'view'. 
+    // Для редактирования нужно будет переключить режим после загрузки,
+    // но loadOsVersionDetail пока ставит 'view'.
     // В будущем: this.state.loadOsVersionDetail(id, 'edit');
   }
 
@@ -527,9 +581,9 @@ export class OsVersionManagerComponent implements OnInit {
       title: 'Удалить версию ОС?',
       message: 'Запись будет перемещена в корзину.',
       confirmText: 'Удалить',
-      confirmType: 'danger'
+      confirmType: 'danger',
     });
-    
+
     if (confirmed) {
       this.state.deleteOsVersion(id);
     }
@@ -540,7 +594,7 @@ export class OsVersionManagerComponent implements OnInit {
       'ВНИМАНИЕ: Это действие безвозвратно удалит версию ОС из базы данных.',
       '2 + 2 = ?',
       '4',
-      'Удалить навсегда'
+      'Удалить навсегда',
     );
 
     if (confirmed) {
@@ -560,7 +614,7 @@ export class OsVersionManagerComponent implements OnInit {
       cancelText: 'Нет',
       confirmType: 'primary',
       centered: true,
-      icon: 'system/av_info'
+      icon: 'system/av_info',
     });
 
     if (confirmed) {
@@ -573,7 +627,7 @@ export class OsVersionManagerComponent implements OnInit {
       'Вы действительно хотите СТЕРЕТЬ ВСЕ ДАННЫЕ из таблицы версий ОС?',
       '2 + 2 * 2 = ?',
       '6',
-      'Критическое действие'
+      'Критическое действие',
     );
 
     if (confirmed) {
@@ -582,12 +636,12 @@ export class OsVersionManagerComponent implements OnInit {
   }
 
   getPlatformName(id: number): string {
-    const platform = this.platformState.items().find(p => p.id === id);
+    const platform = this.platformState.items().find((p) => p.id === id);
     return platform ? platform.name : `ID: ${id}`;
   }
 
   getPlatformIcon(id: number): string {
-    const platform = this.platformState.items().find(p => p.id === id);
+    const platform = this.platformState.items().find((p) => p.id === id);
     return platform ? platform.iconPath || 'desktop' : 'question-circle';
   }
 }

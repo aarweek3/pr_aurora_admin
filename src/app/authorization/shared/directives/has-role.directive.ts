@@ -1,7 +1,6 @@
 import { Directive, Input, TemplateRef, ViewContainerRef, inject, effect } from '@angular/core';
 import { AuthService } from '@auth/services/auth.service';
 
-
 /**
  * HasRole Directive
  *
@@ -23,7 +22,7 @@ export class HasRoleDirective {
   private roles: string[] = [];
   private isViewCreated = false;
 
-  @Input('avHasRole') set avHasRole(value: string | string[]) {
+  @Input() set avHasRole(value: string | string[]) {
     this.roles = Array.isArray(value) ? value : [value];
     this.updateView();
   }

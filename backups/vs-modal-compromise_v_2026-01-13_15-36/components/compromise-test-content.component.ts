@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { VS_MODAL_DATA } from '../models/vs-modal-data.token';
 import { VSModalRef } from '../models/vs-modal-ref.model';
 
@@ -155,10 +155,9 @@ import { VSModalRef } from '../models/vs-modal-ref.model';
   ],
 })
 export class CompromiseTestContentComponent implements OnInit {
-  constructor(
-    @Inject(VS_MODAL_DATA) public data: any,
-    @Inject(VSModalRef) private modalRef: VSModalRef,
-  ) {}
+  data = inject(VS_MODAL_DATA);
+  private modalRef = inject<VSModalRef>(VSModalRef);
+
 
   ngOnInit() {
     console.log('Test Content Initialized with data:', this.data);

@@ -64,7 +64,7 @@ import { NzTypographyModule } from 'ng-zorro-antd/typography';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SampleHeaderComponent {
-  @Input() total: number = 0;
+  @Input() total = 0;
   @Output() refresh = new EventEmitter<void>();
   @Output() create = new EventEmitter<void>();
 }

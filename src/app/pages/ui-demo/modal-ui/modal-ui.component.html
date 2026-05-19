@@ -54,7 +54,7 @@
     </div>
 
     @if (showCode['basic']) {
-    <av-help-copy-container [content]="basicCode" title="Базовый шаблон"></av-help-copy-container>
+      <av-help-copy-container [content]="basicCode" title="Базовый шаблон"></av-help-copy-container>
     }
 
     <!-- Базовый модал -->
@@ -98,7 +98,7 @@
     </div>
 
     @if (showCode['sizes']) {
-    <av-help-copy-container [content]="sizesCode" title="Размеры (Template)"></av-help-copy-container>
+      <av-help-copy-container [content]="sizesCode" title="Размеры (Template)"></av-help-copy-container>
     }
 
     <av-modal [(isOpen)]="showSizeModal" [title]="'Modal ' + currentSize" [size]="currentSize">
@@ -131,7 +131,7 @@
     </div>
 
     @if (showCode['position']) {
-    <av-help-copy-container [content]="positionCode" title="Позиционирование (Template)"></av-help-copy-container>
+      <av-help-copy-container [content]="positionCode" title="Позиционирование (Template)"></av-help-copy-container>
     }
 
     <av-modal [(isOpen)]="showPositionModal" [title]="'Position: ' + currentPosition" [position]="currentPosition">
@@ -163,7 +163,7 @@
     </div>
 
     @if (showCode['config']) {
-    <av-help-copy-container [content]="configCode" title="Конфигурация (Template)"></av-help-copy-container>
+      <av-help-copy-container [content]="configCode" title="Конфигурация (Template)"></av-help-copy-container>
     }
 
     <!-- Без backdrop -->
@@ -222,10 +222,10 @@
     </div>
 
     @if (showCode['centered']) {
-    <av-help-copy-container
-      [content]="centeredCode"
-      title="Центрированные диалоги (TypeScript)"
-    ></av-help-copy-container>
+      <av-help-copy-container
+        [content]="centeredCode"
+        title="Центрированные диалоги (TypeScript)"
+      ></av-help-copy-container>
     }
   </section>
 
@@ -251,7 +251,7 @@
     </div>
 
     @if (showCode['service']) {
-    <av-help-copy-container [content]="serviceCode" title="ModalService API (TypeScript)"></av-help-copy-container>
+      <av-help-copy-container [content]="serviceCode" title="ModalService API (TypeScript)"></av-help-copy-container>
     }
 
     <p class="info-text">Открыто модалов: {{ modalService.getOpenModalsCount() }}</p>

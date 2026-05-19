@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { AuthService } from '@auth/services/auth.service';
 import { UserNamePipe } from '../../pipes/user-name.pipe';
 
-
 /**
  * User Profile Component
  *
@@ -19,14 +18,24 @@ import { UserNamePipe } from '../../pipes/user-name.pipe';
       <span class="user-role" *ngIf="roles().length">{{ roles()[0] }}</span>
     </div>
   `,
-  styles: [`
-    .user-profile { display: flex; flex-direction: column; align-items: flex-end; }
-    .user-name { font-weight: bold; }
-    .user-role { font-size: 0.8em; color: #888; }
-  `]
+  styles: [
+    `
+      .user-profile {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+      }
+      .user-name {
+        font-weight: bold;
+      }
+      .user-role {
+        font-size: 0.8em;
+        color: #888;
+      }
+    `,
+  ],
 })
 export class AuthSharedUserProfileComponent {
-
   private authService = inject(AuthService);
 
   user = computed(() => this.authService.getCurrentUser());

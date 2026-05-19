@@ -12,7 +12,7 @@
               <label class="control-label">Размер (Size):</label>
               <nz-select [ngModel]="config().size" (ngModelChange)="updateConfig('size', $event)">
                 @for (s of sizes; track s.value) {
-                <nz-option [nzLabel]="s.label" [nzValue]="s.value"></nz-option>
+                  <nz-option [nzLabel]="s.label" [nzValue]="s.value"></nz-option>
                 }
                 <nz-option [nzLabel]="'Custom (120px)'" [nzValue]="120"></nz-option>
               </nz-select>
@@ -21,7 +21,7 @@
               <label class="control-label">Анимация:</label>
               <nz-select [ngModel]="config().animation" (ngModelChange)="updateConfig('animation', $event)">
                 @for (a of animations; track a.value) {
-                <nz-option [nzLabel]="a.label" [nzValue]="a.value"></nz-option>
+                  <nz-option [nzLabel]="a.label" [nzValue]="a.value"></nz-option>
                 }
               </nz-select>
             </div>
@@ -32,7 +32,7 @@
             <div class="color-picker-row">
               <nz-select [ngModel]="config().color" (ngModelChange)="updateConfig('color', $event)" style="flex: 1">
                 @for (c of colors; track c.value) {
-                <nz-option [nzLabel]="c.label" [nzValue]="c.value"></nz-option>
+                  <nz-option [nzLabel]="c.label" [nzValue]="c.value"></nz-option>
                 }
               </nz-select>
               <input
@@ -75,7 +75,7 @@
                 (ngModelChange)="updateConfig('labelPosition', $event)"
               >
                 @for (p of positions; track p.value) {
-                <label nz-radio [nzValue]="p.value">{{ p.label }}</label>
+                  <label nz-radio [nzValue]="p.value">{{ p.label }}</label>
                 }
               </nz-radio-group>
             </div>
@@ -99,27 +99,27 @@
           </div>
 
           @if (config().overlay) {
-          <div class="control-row">
-            <div class="control-group">
-              <label class="control-label">Размытие (Blur): {{ config().backdropBlur }}px</label>
-              <nz-slider
-                [nzMin]="0"
-                [nzMax]="20"
-                [ngModel]="config().backdropBlur"
-                (ngModelChange)="updateConfig('backdropBlur', $event)"
-              ></nz-slider>
+            <div class="control-row">
+              <div class="control-group">
+                <label class="control-label">Размытие (Blur): {{ config().backdropBlur }}px</label>
+                <nz-slider
+                  [nzMin]="0"
+                  [nzMax]="20"
+                  [ngModel]="config().backdropBlur"
+                  (ngModelChange)="updateConfig('backdropBlur', $event)"
+                ></nz-slider>
+              </div>
+              <div class="control-group">
+                <label class="control-label">Прозрачность (Opacity): {{ config().backdropOpacity }}</label>
+                <nz-slider
+                  [nzMin]="0"
+                  [nzMax]="1"
+                  [nzStep]="0.1"
+                  [ngModel]="config().backdropOpacity"
+                  (ngModelChange)="updateConfig('backdropOpacity', $event)"
+                ></nz-slider>
+              </div>
             </div>
-            <div class="control-group">
-              <label class="control-label">Прозрачность (Opacity): {{ config().backdropOpacity }}</label>
-              <nz-slider
-                [nzMin]="0"
-                [nzMax]="1"
-                [nzStep]="0.1"
-                [ngModel]="config().backdropOpacity"
-                (ngModelChange)="updateConfig('backdropOpacity', $event)"
-              ></nz-slider>
-            </div>
-          </div>
           }
 
           <div class="control-group checkbox-group" style="margin-top: 16px">
@@ -192,13 +192,13 @@
         ></av-spinner>
 
         @if (config().overlay) {
-        <div class="overlay-dummy-content">
-          <h4>Контент под оверлеем</h4>
-          <p>
-            Этот текст блокируется спиннером при включении режима Overlay. Вы можете настраивать размытие и прозрачность
-            фона в Playground.
-          </p>
-        </div>
+          <div class="overlay-dummy-content">
+            <h4>Контент под оверлеем</h4>
+            <p>
+              Этот текст блокируется спиннером при включении режима Overlay. Вы можете настраивать размытие и
+              прозрачность фона в Playground.
+            </p>
+          </div>
         }
       </div>
 
@@ -304,10 +304,10 @@
 
 <!-- FullScreen Demo Overlay -->
 @if (showFullScreenDemo()) {
-<av-spinner
-  [fullScreen]="true"
-  label="Симуляция полноэкранной загрузки..."
-  tip="Автоматически закроется через 3 секунды"
-  [backdropBlur]="10"
-></av-spinner>
+  <av-spinner
+    [fullScreen]="true"
+    label="Симуляция полноэкранной загрузки..."
+    tip="Автоматически закроется через 3 секунды"
+    [backdropBlur]="10"
+  ></av-spinner>
 }

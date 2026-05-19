@@ -122,7 +122,7 @@ export const HELP_ROUTES: Routes = [
     component: HelpDocumentationComponent,
     data: {
       title: 'Настройка бокового меню (EasyMDE)',
-      fileName: 'боковое меню side-bar основное/боковое меню-md.md',
+      fileName: 'sidebar/sidebar-md.md',
       editorType: 'markdown',
     },
   },
@@ -131,7 +131,7 @@ export const HELP_ROUTES: Routes = [
     component: HelpDocumentationComponent,
     data: {
       title: 'Подключение TinyMCE к проекту',
-      fileName: 'tinyMCE/подключение TinyMCE/подключение TinyMCE.html',
+      fileName: 'tinymce/study/study-tinymce.html',
       editorType: 'tinymce',
     },
   },
@@ -140,7 +140,7 @@ export const HELP_ROUTES: Routes = [
     component: HelpDocumentationComponent,
     data: {
       title: 'Сохранение файлов TinyMCE на диск',
-      fileName: 'tinyMCE/tinyMCE сохранение файлов/tinyMCE сохранение файлов.html',
+      fileName: 'tinymce/save-files/save-files.html',
       editorType: 'tinymce',
     },
   },
@@ -149,7 +149,7 @@ export const HELP_ROUTES: Routes = [
     component: HelpDocumentationComponent,
     data: {
       title: 'Руководство: Sample Multi-Lang',
-      fileName: 'sample/Test Sample Multi-Lang.html',
+      fileName: 'samples/test-multi-lang.html',
       editorType: 'tinymce',
     },
   },
@@ -158,7 +158,7 @@ export const HELP_ROUTES: Routes = [
     component: HelpDocumentationComponent,
     data: {
       title: 'Sample Язык + SEO',
-      fileName: 'sample/Образцовая модель Многоязычность + SEO.html',
+      fileName: 'samples/form-local-seo-sample.html',
       editorType: 'tinymce',
     },
   },
@@ -167,7 +167,7 @@ export const HELP_ROUTES: Routes = [
     component: HelpDocumentationComponent,
     data: {
       title: 'Сравнение моделей: Basic vs SEO',
-      fileName: 'sample/Сравнение базовой и продвинутой SEO-моделей.html',
+      fileName: 'samples/simple-seo-form-help.html',
       editorType: 'tinymce',
     },
   },
@@ -176,7 +176,7 @@ export const HELP_ROUTES: Routes = [
     component: HelpDocumentationComponent,
     data: {
       title: 'Logger Console 🛠️',
-      fileName: 'Logger-console мой/Logger-console мой.html',
+      fileName: 'logger-console/logger-console.html',
       editorType: 'tinymce',
     },
   },
@@ -189,7 +189,7 @@ export const HELP_ROUTES: Routes = [
     component: HelpDocumentationComponent,
     data: {
       title: 'Simplified Manager ⚡ (Базовый шаблон)',
-      fileName: 'sample/sample simple комонент.html',
+      fileName: 'samples/simple-sample.html',
       editorType: 'tinymce',
     },
   },

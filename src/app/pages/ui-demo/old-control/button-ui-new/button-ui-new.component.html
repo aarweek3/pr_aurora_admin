@@ -17,17 +17,17 @@
         <h2>{{ section1Title() }}</h2>
       </div>
       @if (isSection1Visible()) {
-      <div class="section-content">
-        <div class="content-block no-style">
-          <av-help-copy-container
-            [title]="section1Title()"
-            [content]="section1Content()"
-            [bgColor]="section1BgColor()"
-            [showHelpButton]="true"
-            [helpContent]="section1HelpContent()"
-          ></av-help-copy-container>
+        <div class="section-content">
+          <div class="content-block no-style">
+            <av-help-copy-container
+              [title]="section1Title()"
+              [content]="section1Content()"
+              [bgColor]="section1BgColor()"
+              [showHelpButton]="true"
+              [helpContent]="section1HelpContent()"
+            ></av-help-copy-container>
+          </div>
         </div>
-      </div>
       }
     </div>
 
@@ -43,178 +43,184 @@
         <h2>{{ section2Title() }}</h2>
       </div>
       @if (isSection2Visible()) {
-      <div class="playground-container">
-        <div nz-row [nzGutter]="[24, 24]">
-          <!-- Left: Controls -->
-          <div nz-col [nzXs]="24" [nzLg]="12">
-            <nz-card nzTitle="Настройки" [nzExtra]="resetTpl" class="control-card">
-              <ng-template #resetTpl>
-                <button av-button avType="text" avTextColor="#f43f5e" (click)="resetAllSettings()">Сбросить всё</button>
-              </ng-template>
+        <div class="playground-container">
+          <div nz-row [nzGutter]="[24, 24]">
+            <!-- Left: Controls -->
+            <div nz-col [nzXs]="24" [nzLg]="12">
+              <nz-card nzTitle="Настройки" [nzExtra]="resetTpl" class="control-card">
+                <ng-template #resetTpl>
+                  <button av-button avType="text" avTextColor="#f43f5e" (click)="resetAllSettings()">
+                    Сбросить всё
+                  </button>
+                </ng-template>
 
-              <div class="control-panel-grid">
-                <!-- Основные настройки -->
-                <av-field-group label="Основные" [collapsible]="true">
-                  <div nz-row [nzGutter]="16">
-                    <div nz-col [nzSpan]="12">
-                      <div class="control-item">
-                        <label>Тип (avType):</label>
-                        <nz-select [ngModel]="pgType()" (ngModelChange)="pgType.set($event)" style="width: 100%">
-                          <nz-option nzValue="primary" nzLabel="Primary"></nz-option>
-                          <nz-option nzValue="default" nzLabel="Default"></nz-option>
-                          <nz-option nzValue="dashed" nzLabel="Dashed"></nz-option>
-                          <nz-option nzValue="text" nzLabel="Text"></nz-option>
-                          <nz-option nzValue="link" nzLabel="Link"></nz-option>
-                          <nz-option nzValue="danger" nzLabel="Danger"></nz-option>
-                        </nz-select>
+                <div class="control-panel-grid">
+                  <!-- Основные настройки -->
+                  <av-field-group label="Основные" [collapsible]="true">
+                    <div nz-row [nzGutter]="16">
+                      <div nz-col [nzSpan]="12">
+                        <div class="control-item">
+                          <label>Тип (avType):</label>
+                          <nz-select [ngModel]="pgType()" (ngModelChange)="pgType.set($event)" style="width: 100%">
+                            <nz-option nzValue="primary" nzLabel="Primary"></nz-option>
+                            <nz-option nzValue="default" nzLabel="Default"></nz-option>
+                            <nz-option nzValue="dashed" nzLabel="Dashed"></nz-option>
+                            <nz-option nzValue="text" nzLabel="Text"></nz-option>
+                            <nz-option nzValue="link" nzLabel="Link"></nz-option>
+                            <nz-option nzValue="danger" nzLabel="Danger"></nz-option>
+                          </nz-select>
+                        </div>
+                      </div>
+                      <div nz-col [nzSpan]="12">
+                        <div class="control-item">
+                          <label>Размер (avSize):</label>
+                          <nz-select [ngModel]="pgSize()" (ngModelChange)="pgSize.set($event)" style="width: 100%">
+                            <nz-option nzValue="small" nzLabel="Small"></nz-option>
+                            <nz-option nzValue="default" nzLabel="Default"></nz-option>
+                            <nz-option nzValue="large" nzLabel="Large"></nz-option>
+                            <nz-option nzValue="square" nzLabel="Square"></nz-option>
+                            <nz-option nzValue="custom" nzLabel="Custom"></nz-option>
+                          </nz-select>
+                        </div>
                       </div>
                     </div>
-                    <div nz-col [nzSpan]="12">
-                      <div class="control-item">
-                        <label>Размер (avSize):</label>
-                        <nz-select [ngModel]="pgSize()" (ngModelChange)="pgSize.set($event)" style="width: 100%">
-                          <nz-option nzValue="small" nzLabel="Small"></nz-option>
-                          <nz-option nzValue="default" nzLabel="Default"></nz-option>
-                          <nz-option nzValue="large" nzLabel="Large"></nz-option>
-                          <nz-option nzValue="square" nzLabel="Square"></nz-option>
-                          <nz-option nzValue="custom" nzLabel="Custom"></nz-option>
-                        </nz-select>
+
+                    <div class="control-item">
+                      <label>Форма (avShape):</label>
+                      <nz-select [ngModel]="pgShape()" (ngModelChange)="pgShape.set($event)" style="width: 100%">
+                        <nz-option nzValue="default" nzLabel="Default"></nz-option>
+                        <nz-option nzValue="rounded" nzLabel="Rounded"></nz-option>
+                        <nz-option nzValue="rounded-big" nzLabel="Rounded Big"></nz-option>
+                        <nz-option nzValue="round" nzLabel="Round (Pill)"></nz-option>
+                        <nz-option nzValue="circle" nzLabel="Circle"></nz-option>
+                        <nz-option nzValue="square" nzLabel="Square"></nz-option>
+                      </nz-select>
+                    </div>
+
+                    <div class="control-item">
+                      <label>Текст кнопки:</label>
+                      <input nz-input [ngModel]="pgLabel()" (ngModelChange)="pgLabel.set($event)" placeholder="Label" />
+                    </div>
+                  </av-field-group>
+
+                  <!-- Состояние -->
+                  <av-field-group label="Состояние" [collapsible]="true">
+                    <div style="display: flex; gap: 24px; padding-top: 8px">
+                      <div style="display: flex; align-items: center; gap: 8px">
+                        <nz-switch [ngModel]="pgLoading()" (ngModelChange)="pgLoading.set($event)"></nz-switch>
+                        <span style="font-size: 13px">Loading</span>
+                      </div>
+                      <div style="display: flex; align-items: center; gap: 8px">
+                        <nz-switch [ngModel]="pgBlock()" (ngModelChange)="pgBlock.set($event)"></nz-switch>
+                        <span style="font-size: 13px">Block</span>
+                      </div>
+                      <div style="display: flex; align-items: center; gap: 8px">
+                        <nz-switch [ngModel]="pgVisible()" (ngModelChange)="pgVisible.set($event)"></nz-switch>
+                        <span style="font-size: 13px">Visible</span>
                       </div>
                     </div>
-                  </div>
+                  </av-field-group>
 
-                  <div class="control-item">
-                    <label>Форма (avShape):</label>
-                    <nz-select [ngModel]="pgShape()" (ngModelChange)="pgShape.set($event)" style="width: 100%">
-                      <nz-option nzValue="default" nzLabel="Default"></nz-option>
-                      <nz-option nzValue="rounded" nzLabel="Rounded"></nz-option>
-                      <nz-option nzValue="rounded-big" nzLabel="Rounded Big"></nz-option>
-                      <nz-option nzValue="round" nzLabel="Round (Pill)"></nz-option>
-                      <nz-option nzValue="circle" nzLabel="Circle"></nz-option>
-                      <nz-option nzValue="square" nzLabel="Square"></nz-option>
-                    </nz-select>
-                  </div>
-
-                  <div class="control-item">
-                    <label>Текст кнопки:</label>
-                    <input nz-input [ngModel]="pgLabel()" (ngModelChange)="pgLabel.set($event)" placeholder="Label" />
-                  </div>
-                </av-field-group>
-
-                <!-- Состояние -->
-                <av-field-group label="Состояние" [collapsible]="true">
-                  <div style="display: flex; gap: 24px; padding-top: 8px">
-                    <div style="display: flex; align-items: center; gap: 8px">
-                      <nz-switch [ngModel]="pgLoading()" (ngModelChange)="pgLoading.set($event)"></nz-switch>
-                      <span style="font-size: 13px">Loading</span>
+                  <!-- Цвета -->
+                  <av-field-group label="Цвета" [collapsible]="true">
+                    <div class="control-item">
+                      <av-picker
+                        avTitle="Фон кнопки"
+                        [(selectedColor)]="pgColor"
+                        [showInput]="true"
+                        [allowTransparent]="true"
+                      ></av-picker>
                     </div>
-                    <div style="display: flex; align-items: center; gap: 8px">
-                      <nz-switch [ngModel]="pgBlock()" (ngModelChange)="pgBlock.set($event)"></nz-switch>
-                      <span style="font-size: 13px">Block</span>
+                    <div class="control-item">
+                      <av-picker
+                        avTitle="Цвет текста"
+                        [(selectedColor)]="pgTextColor"
+                        [showInput]="true"
+                        [allowTransparent]="true"
+                      ></av-picker>
                     </div>
-                    <div style="display: flex; align-items: center; gap: 8px">
-                      <nz-switch [ngModel]="pgVisible()" (ngModelChange)="pgVisible.set($event)"></nz-switch>
-                      <span style="font-size: 13px">Visible</span>
-                    </div>
-                  </div>
-                </av-field-group>
+                  </av-field-group>
 
-                <!-- Цвета -->
-                <av-field-group label="Цвета" [collapsible]="true">
-                  <div class="control-item">
-                    <av-picker
-                      avTitle="Фон кнопки"
-                      [(selectedColor)]="pgColor"
-                      [showInput]="true"
-                      [allowTransparent]="true"
-                    ></av-picker>
-                  </div>
-                  <div class="control-item">
-                    <av-picker
-                      avTitle="Цвет текста"
-                      [(selectedColor)]="pgTextColor"
-                      [showInput]="true"
-                      [allowTransparent]="true"
-                    ></av-picker>
-                  </div>
-                </av-field-group>
+                  <!-- Иконка (ADVANCED CONTROL) -->
+                  <av-field-group label="Иконка (Advanced)" [collapsible]="true">
+                    <av-icon-settings-control
+                      [(value)]="pgIconConfig"
+                      [presets]="iconPresets"
+                    ></av-icon-settings-control>
+                  </av-field-group>
+                </div>
+              </nz-card>
+            </div>
 
-                <!-- Иконка (ADVANCED CONTROL) -->
-                <av-field-group label="Иконка (Advanced)" [collapsible]="true">
-                  <av-icon-settings-control [(value)]="pgIconConfig" [presets]="iconPresets"></av-icon-settings-control>
-                </av-field-group>
-              </div>
-            </nz-card>
-          </div>
-
-          <!-- Right: Preview & Code -->
-          <div nz-col [nzXs]="24" [nzLg]="12">
-            <nz-card nzTitle="Результат" class="result-card" style="margin-bottom: 24px">
-              <div
-                style="
-                  display: flex;
-                  justify-content: center;
-                  align-items: center;
-                  padding: 80px 32px;
-                  background: #fafafa;
-                  border-radius: 12px;
-                  border: 1px dashed #d9d9d9;
-                  min-height: 200px;
-                "
-              >
-                <button
-                  av-button
-                  [avType]="pgType()"
-                  [avSize]="safePgSize()"
-                  [avShape]="pgShape()"
-                  [avColor]="pgColor()"
-                  [avTextColor]="pgTextColor()"
-                  [avIconColor]="pgIconConfig().color"
-                  [avLoading]="pgLoading()"
-                  [avBlock]="pgBlock()"
-                  [avVisible]="pgVisible()"
-                  [avWidth]="pgWidth()"
-                  [avHeight]="pgHeight()"
-                  [avRadius]="pgRadius()"
-                  [avIconSize]="pgIconConfig().size"
+            <!-- Right: Preview & Code -->
+            <div nz-col [nzXs]="24" [nzLg]="12">
+              <nz-card nzTitle="Результат" class="result-card" style="margin-bottom: 24px">
+                <div
+                  style="
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    padding: 80px 32px;
+                    background: #fafafa;
+                    border-radius: 12px;
+                    border: 1px dashed #d9d9d9;
+                    min-height: 200px;
+                  "
                 >
-                  @if (pgIconConfig().type) {
-                  <av-icon
-                    [type]="pgIconConfig().type!"
-                    [size]="pgIconConfig().size"
-                    [color]="pgIconConfig().color"
-                    [rotation]="pgIconConfig().rotation"
-                    [scale]="pgIconConfig().scale"
-                    [opacity]="pgIconConfig().opacity"
-                    [flipX]="pgIconConfig().flipX"
-                    [flipY]="pgIconConfig().flipY"
-                    [padding]="pgIconConfig().padding"
-                    [background]="pgIconConfig().background"
-                    [border]="
-                      pgIconConfig().borderShow
-                        ? pgIconConfig().borderWidth + 'px solid ' + pgIconConfig().borderColor
-                        : null
-                    "
-                    [radius]="pgIconConfig().borderRadius"
-                  ></av-icon>
-                  @if (pgLabel()) {
-                  <span style="margin-left: 8px">{{ pgLabel() }}</span>
-                  } } @else {
-                  {{ pgLabel() }}
-                  }
-                </button>
-              </div>
-            </nz-card>
+                  <button
+                    av-button
+                    [avType]="pgType()"
+                    [avSize]="safePgSize()"
+                    [avShape]="pgShape()"
+                    [avColor]="pgColor()"
+                    [avTextColor]="pgTextColor()"
+                    [avIconColor]="pgIconConfig().color"
+                    [avLoading]="pgLoading()"
+                    [avBlock]="pgBlock()"
+                    [avVisible]="pgVisible()"
+                    [avWidth]="pgWidth()"
+                    [avHeight]="pgHeight()"
+                    [avRadius]="pgRadius()"
+                    [avIconSize]="pgIconConfig().size"
+                  >
+                    @if (pgIconConfig().type) {
+                      <av-icon
+                        [type]="pgIconConfig().type!"
+                        [size]="pgIconConfig().size"
+                        [color]="pgIconConfig().color"
+                        [rotation]="pgIconConfig().rotation"
+                        [scale]="pgIconConfig().scale"
+                        [opacity]="pgIconConfig().opacity"
+                        [flipX]="pgIconConfig().flipX"
+                        [flipY]="pgIconConfig().flipY"
+                        [padding]="pgIconConfig().padding"
+                        [background]="pgIconConfig().background"
+                        [border]="
+                          pgIconConfig().borderShow
+                            ? pgIconConfig().borderWidth + 'px solid ' + pgIconConfig().borderColor
+                            : null
+                        "
+                        [radius]="pgIconConfig().borderRadius"
+                      ></av-icon>
+                      @if (pgLabel()) {
+                        <span style="margin-left: 8px">{{ pgLabel() }}</span>
+                      }
+                    } @else {
+                      {{ pgLabel() }}
+                    }
+                  </button>
+                </div>
+              </nz-card>
 
-            <av-help-copy-container
-              title="Сгенерированный код"
-              [content]="pgGeneratedCode()"
-              [defaultCollapsed]="false"
-              bgColor="#1e293b"
-            ></av-help-copy-container>
+              <av-help-copy-container
+                title="Сгенерированный код"
+                [content]="pgGeneratedCode()"
+                [defaultCollapsed]="false"
+                bgColor="#1e293b"
+              ></av-help-copy-container>
+            </div>
           </div>
         </div>
-      </div>
       }
     </div>
 
@@ -230,11 +236,11 @@
         <h2>{{ section3Title() }}</h2>
       </div>
       @if (isSection3Visible()) {
-      <div class="section-content">
-        <div class="content-block">
-          <div class="block-placeholder">{{ placeholderText1() }}</div>
+        <div class="section-content">
+          <div class="content-block">
+            <div class="block-placeholder">{{ placeholderText1() }}</div>
+          </div>
         </div>
-      </div>
       }
     </div>
 
@@ -249,11 +255,11 @@
         <h2>{{ section4Title() }}</h2>
       </div>
       @if (isSection4Visible()) {
-      <div class="section-content">
-        <div class="content-block">
-          <div class="block-placeholder">{{ placeholderText2() }}</div>
+        <div class="section-content">
+          <div class="content-block">
+            <div class="block-placeholder">{{ placeholderText2() }}</div>
+          </div>
         </div>
-      </div>
       }
     </div>
 
@@ -268,11 +274,11 @@
         <h2>{{ section5Title() }}</h2>
       </div>
       @if (isSection5Visible()) {
-      <div class="section-content">
-        <div class="content-block">
-          <div class="block-placeholder">{{ placeholderText3() }}</div>
+        <div class="section-content">
+          <div class="content-block">
+            <div class="block-placeholder">{{ placeholderText3() }}</div>
+          </div>
         </div>
-      </div>
       }
     </div>
   </div>

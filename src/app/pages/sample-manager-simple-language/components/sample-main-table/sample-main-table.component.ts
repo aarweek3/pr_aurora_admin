@@ -113,7 +113,7 @@ import { SampleMainItemDto } from '../../models/sample-main.model';
 })
 export class SampleMainTableComponent {
   @Input() items: SampleMainItemDto[] = [];
-  @Input() loading: boolean = false;
+  @Input() loading = false;
 
   @Output() view = new EventEmitter<SampleMainItemDto>();
   @Output() edit = new EventEmitter<SampleMainItemDto>();

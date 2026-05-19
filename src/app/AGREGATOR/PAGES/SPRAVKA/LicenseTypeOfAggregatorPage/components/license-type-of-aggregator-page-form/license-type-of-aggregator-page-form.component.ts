@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, inject } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzCardModule } from 'ng-zorro-antd/card';
@@ -22,10 +22,20 @@ import { LicenseTypeOfAggregatorFormComponent } from '../license-type-of-aggrega
   ],
   template: `
     <div class="page-form-container">
-      <nz-page-header (nzBack)="handleCancel()" [nzTitle]="state.modalMode() === 'add' ? 'Новый тип лицензии' : 'Редактирование типа лицензии'">
+      <nz-page-header
+        (nzBack)="handleCancel()"
+        [nzTitle]="
+          state.modalMode() === 'add' ? 'Новый тип лицензии' : 'Редактирование типа лицензии'
+        "
+      >
         <nz-page-header-extra>
           <button nz-button (click)="handleCancel()">Отмена</button>
-          <button nz-button nzType="primary" (click)="licenseForm.submitForm()" [nzLoading]="state.modalLoading()">
+          <button
+            nz-button
+            nzType="primary"
+            (click)="licenseForm.submitForm()"
+            [nzLoading]="state.modalLoading()"
+          >
             Сохранить изменения
           </button>
         </nz-page-header-extra>
@@ -42,16 +52,21 @@ import { LicenseTypeOfAggregatorFormComponent } from '../license-type-of-aggrega
       </nz-card>
     </div>
   `,
-  styles: [` .page-form-container { padding: 24px; padding-top: 0; } `],
+  styles: [
+    `
+      .page-form-container {
+        padding: 24px;
+        padding-top: 0;
+      }
+    `,
+  ],
 })
 export class LicenseTypeOfAggregatorPageFormComponent implements OnInit {
-  @ViewChild('licenseForm') licenseForm!: LicenseTypeOfAggregatorFormComponent;
+  state = inject(LicenseTypeOfAggregatorStateService);
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
 
-  constructor(
-    public state: LicenseTypeOfAggregatorStateService,
-    private route: ActivatedRoute,
-    private router: Router
-  ) {}
+  @ViewChild('licenseForm') licenseForm!: LicenseTypeOfAggregatorFormComponent;
 
   ngOnInit(): void {
     const id = this.route.snapshot.params['id'];

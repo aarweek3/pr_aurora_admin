@@ -46,13 +46,12 @@ export class TagOfAggregatorApiService {
     );
   }
 
-  delete(id: number, isHard: boolean = false): Observable<void> {
+  delete(id: number, isHard = false): Observable<void> {
     let params = new HttpParams();
     if (isHard) params = params.set('isHard', 'true');
-    return this.http.delete<void>(
-      `${this.baseUrl}/${TAG_OF_AGGREGATOR_ENDPOINTS.DELETE(id)}`,
-      { params }
-    );
+    return this.http.delete<void>(`${this.baseUrl}/${TAG_OF_AGGREGATOR_ENDPOINTS.DELETE(id)}`, {
+      params,
+    });
   }
 
   hardDelete(id: number): Observable<void> {
@@ -60,10 +59,7 @@ export class TagOfAggregatorApiService {
   }
 
   restore(id: number): Observable<void> {
-    return this.http.post<void>(
-      `${this.baseUrl}/${TAG_OF_AGGREGATOR_ENDPOINTS.RESTORE(id)}`,
-      {},
-    );
+    return this.http.post<void>(`${this.baseUrl}/${TAG_OF_AGGREGATOR_ENDPOINTS.RESTORE(id)}`, {});
   }
 
   updateSortOrder(id: number, newSortOrder: number): Observable<any> {

@@ -24,19 +24,19 @@ import { DeveloperOfAggregatorFormComponent } from '../developer-of-aggregator-f
   ],
   template: `
     <div class="page-form-container">
-      <nz-page-header 
-        (nzBack)="handleCancel()" 
+      <nz-page-header
+        (nzBack)="handleCancel()"
         [nzTitle]="isAddMode ? 'Новый разработчик' : 'Редактирование разработчика'"
         [nzSubtitle]="!isAddMode ? 'ID: ' + id : ''"
       >
         <nz-page-header-extra>
           <nz-space>
             <button *nzSpaceItem nz-button (click)="handleCancel()">Отмена</button>
-            <button 
+            <button
               *nzSpaceItem
-              nz-button 
-              nzType="primary" 
-              (click)="devForm.submit()" 
+              nz-button
+              nzType="primary"
+              (click)="devForm.submit()"
               [nzLoading]="state.modalLoading()"
             >
               {{ isAddMode ? 'Создать' : 'Сохранить' }}
@@ -49,20 +49,18 @@ import { DeveloperOfAggregatorFormComponent } from '../developer-of-aggregator-f
         <app-developer-of-aggregator-form
           #devForm
           [id]="id"
-          (onSave)="handleSave($event)"
+          (save)="handleSave($event)"
         ></app-developer-of-aggregator-form>
 
         <div class="form-footer-actions">
           <nz-space>
-            <button *nzSpaceItem nz-button nzSize="large" (click)="handleCancel()">
-              Отмена
-            </button>
-            <button 
+            <button *nzSpaceItem nz-button nzSize="large" (click)="handleCancel()">Отмена</button>
+            <button
               *nzSpaceItem
-              nz-button 
-              nzType="primary" 
+              nz-button
+              nzType="primary"
               nzSize="large"
-              (click)="devForm.submit()" 
+              (click)="devForm.submit()"
               [nzLoading]="state.modalLoading()"
             >
               <i nz-icon nzType="save"></i>
@@ -73,34 +71,36 @@ import { DeveloperOfAggregatorFormComponent } from '../developer-of-aggregator-f
       </nz-card>
     </div>
   `,
-  styles: [`
-    .page-form-container {
-      padding: 24px;
-      padding-top: 0;
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-    .form-card {
-      margin-top: 24px;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-      
-      ::ng-deep .ant-card-body {
+  styles: [
+    `
+      .page-form-container {
         padding: 24px;
+        padding-top: 0;
+        max-width: 1200px;
+        margin: 0 auto;
       }
-    }
-    .form-footer-actions {
-      margin-top: 32px;
-      padding-top: 24px;
-      border-top: 1px solid #f0f0f0;
-      display: flex;
-      justify-content: flex-end;
-    }
-  `],
+      .form-card {
+        margin-top: 24px;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+
+        ::ng-deep .ant-card-body {
+          padding: 24px;
+        }
+      }
+      .form-footer-actions {
+        margin-top: 32px;
+        padding-top: 24px;
+        border-top: 1px solid #f0f0f0;
+        display: flex;
+        justify-content: flex-end;
+      }
+    `,
+  ],
 })
 export class DeveloperOfAggregatorPageFormComponent implements OnInit {
   @ViewChild('devForm') devForm!: DeveloperOfAggregatorFormComponent;
-  
+
   public state = inject(DeveloperOfAggregatorStateService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
@@ -124,7 +124,7 @@ export class DeveloperOfAggregatorPageFormComponent implements OnInit {
     this.state.save(formValue).subscribe({
       next: () => {
         this.goBack();
-      }
+      },
     });
   }
 

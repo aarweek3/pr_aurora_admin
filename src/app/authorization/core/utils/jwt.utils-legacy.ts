@@ -40,7 +40,7 @@ export class JwtUtils {
       // Добавляем паддинг если необходимо
       const paddedPayload = payload.replace(/-/g, '+').replace(/_/g, '/');
       const decoded = atob(paddedPayload);
-      
+
       return JSON.parse(decoded) as JwtPayload;
     } catch (error) {
       console.error('JWT Utils: Ошибка декодирования токена:', error);
@@ -59,8 +59,8 @@ export class JwtUtils {
 
     const now = Math.floor(Date.now() / 1000);
     const bufferTime = 30; // 30 секунд буфера
-    
-    return payload.exp < (now + bufferTime);
+
+    return payload.exp < now + bufferTime;
   }
 
   /**
@@ -78,7 +78,7 @@ export class JwtUtils {
     const rolesClaim = payload['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
     if (rolesClaim) {
       if (Array.isArray(rolesClaim)) {
-        roles.push(...rolesClaim.filter(role => typeof role === 'string' && role.trim()));
+        roles.push(...rolesClaim.filter((role) => typeof role === 'string' && role.trim()));
       } else if (typeof rolesClaim === 'string' && rolesClaim.trim()) {
         roles.push(rolesClaim);
       }
@@ -87,12 +87,13 @@ export class JwtUtils {
     // 2. Проверяем поле roles (строка через запятую или массив)
     if (payload.roles) {
       if (typeof payload.roles === 'string' && payload.roles.trim()) {
-        const rolesArray = payload.roles.split(',')
-          .map(role => role.trim())
-          .filter(role => role.length > 0);
+        const rolesArray = payload.roles
+          .split(',')
+          .map((role) => role.trim())
+          .filter((role) => role.length > 0);
         roles.push(...rolesArray);
       } else if (Array.isArray(payload.roles)) {
-        const validRoles = payload.roles.filter(role => typeof role === 'string' && role.trim());
+        const validRoles = payload.roles.filter((role) => typeof role === 'string' && role.trim());
         roles.push(...validRoles);
       }
     }
@@ -103,7 +104,7 @@ export class JwtUtils {
     }
 
     // Убираем дубликаты и пустые значения
-    return Array.from(new Set(roles.filter(role => role && role.trim().length > 0)));
+    return Array.from(new Set(roles.filter((role) => role && role.trim().length > 0)));
   }
 
   /**
@@ -115,9 +116,7 @@ export class JwtUtils {
     }
 
     const userRoles = this.getUserRoles(token);
-    return userRoles.some(userRole => 
-      userRole.toLowerCase() === role.toLowerCase()
-    );
+    return userRoles.some((userRole) => userRole.toLowerCase() === role.toLowerCase());
   }
 
   /**
@@ -125,12 +124,12 @@ export class JwtUtils {
    */
   static isAdmin(token: string): boolean {
     const payload = this.decodeToken(token);
-    
+
     // Быстрая проверка через булевый флаг
     if (payload?.isAdmin === 'true') {
       return true;
     }
-    
+
     // Резервная проверка через роли
     return this.hasRole(token, 'Admin');
   }
@@ -140,12 +139,12 @@ export class JwtUtils {
    */
   static isModerator(token: string): boolean {
     const payload = this.decodeToken(token);
-    
+
     // Быстрая проверка через булевый флаг
     if (payload?.isModerator === 'true') {
       return true;
     }
-    
+
     // Резервная проверка через роли
     return this.hasRole(token, 'Moderator');
   }
@@ -155,7 +154,11 @@ export class JwtUtils {
    */
   static getUserId(token: string): string | null {
     const payload = this.decodeToken(token);
-    return payload?.sub || payload?.['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'] || null;
+    return (
+      payload?.sub ||
+      payload?.['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'] ||
+      null
+    );
   }
 
   /**
@@ -163,7 +166,11 @@ export class JwtUtils {
    */
   static getUserEmail(token: string): string | null {
     const payload = this.decodeToken(token);
-    return payload?.email || payload?.['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress'] || null;
+    return (
+      payload?.email ||
+      payload?.['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress'] ||
+      null
+    );
   }
 
   /**
@@ -171,9 +178,11 @@ export class JwtUtils {
    */
   static getUserName(token: string): string | null {
     const payload = this.decodeToken(token);
-    return payload?.name || 
-           payload?.['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'] ||
-           (payload?.FirstName && payload?.LastName ? `${payload.FirstName} ${payload.LastName}` : null);
+    return (
+      payload?.name ||
+      payload?.['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'] ||
+      (payload?.FirstName && payload?.LastName ? `${payload.FirstName} ${payload.LastName}` : null)
+    );
   }
 
   /**
@@ -220,14 +229,14 @@ export class JwtUtils {
   static shouldRefreshToken(token: string): boolean {
     const ttl = this.getTokenTimeToLive(token);
     const refreshThreshold = 5 * 60; // 5 минут в секундах
-    
+
     return ttl <= refreshThreshold;
   }
 
   /**
    * Получает все claims пользователя из токена
    */
-  static getAllClaims(token: string): { [key: string]: any } | null {
+  static getAllClaims(token: string): Record<string, any> | null {
     const payload = this.decodeToken(token);
     if (!payload) {
       return null;
@@ -259,7 +268,7 @@ export class JwtUtils {
       expiresAt: this.getTokenExpiration(token)?.toLocaleString('ru-RU'),
       timeToLive: `${this.getTokenTimeToLive(token)} секунд`,
       shouldRefresh: this.shouldRefreshToken(token),
-      isExpired: this.isTokenExpired(token)
+      isExpired: this.isTokenExpired(token),
     };
   }
 }

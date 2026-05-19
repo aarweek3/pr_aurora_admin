@@ -105,7 +105,7 @@ export const DOCUMENTATION: ControlDocumentationConfig = {
       description: 'Простой поиск с дефолтными настройками (debounce 300ms)',
       htmlCode: `<av-search
   [(value)]="searchQuery"
-  (onSearch)="handleSearch($event)">
+  (searchChange)="handleSearch($event)">
 </av-search>`,
       tsCode: `searchQuery = signal('');
 
@@ -164,7 +164,7 @@ handleSearch(query: string) {
       htmlCode: `<av-search
   [avDebounceTime]="800"
   [(value)]="query"
-  (onSearch)="onSearch($event)">
+  (searchChange)="onSearch($event)">
 </av-search>`,
     },
   ],
@@ -182,7 +182,7 @@ handleSearch(query: string) {
   avShape="rounded"
   avStatus="default"
   [avDebounceTime]="500"
-  (onSearch)="performSearch($event)">
+  (searchChange)="performSearch($event)">
 </av-search>`,
       tsCode: `import { Component, signal } from '@angular/core';
 import { SearchInputComponent } from '@shared/components/ui/search';
@@ -191,7 +191,7 @@ import { SearchInputComponent } from '@shared/components/ui/search';
   selector: 'app-users-search',
   standalone: true,
   imports: [SearchInputComponent],
-  template: \`<av-search [(value)]="searchQuery" (onSearch)="performSearch($event)"></av-search>\`
+  template: \`<av-search [(value)]="searchQuery" (searchChange)="performSearch($event)"></av-search>\`
 })
 export class UsersSearchComponent {
   searchQuery = signal('');

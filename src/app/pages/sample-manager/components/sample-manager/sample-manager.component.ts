@@ -79,7 +79,7 @@ import { SampleViewComponent } from '../sample-view/sample-view.component';
     <app-sample-view
       [visible]="(state$ | async)?.viewModalVisible || false"
       [sample]="(state$ | async)?.selectedSample || null"
-      (close)="onCloseView()"
+      (modalClose)="onCloseView()"
     ></app-sample-view>
     <app-sample-modal
       [visible]="(state$ | async)?.editModalVisible || false"

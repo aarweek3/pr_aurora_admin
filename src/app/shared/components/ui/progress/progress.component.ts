@@ -41,71 +41,77 @@ import { ProgressUtils } from './progress.utils';
       [attr.aria-label]="a11y().ariaLabel"
     >
       @if (type() === 'line') {
-      <!-- LINE TYPE -->
-      <div class="av-progress-outer" [class.av-progress-outer--with-info]="showInfo()">
+        <!-- LINE TYPE -->
+        <div class="av-progress-outer" [class.av-progress-outer--with-info]="showInfo()">
+          <div
+            class="av-progress-inner"
+            [style.height.px]="strokeWidthPx()"
+            [style.background-color]="trailColor()"
+          >
+            <div
+              class="av-progress-bg"
+              [style.width.%]="percent()"
+              [style.height.px]="strokeWidthPx()"
+              [style.background]="strokeColorComputed()"
+            ></div>
+          </div>
+        </div>
+        @if (showInfo()) {
+          <span class="av-progress-info">
+            @if (status() === 'success') {
+              <span nz-icon nzType="check-circle" nzTheme="fill"></span>
+            } @else if (status() === 'error') {
+              <span nz-icon nzType="close-circle" nzTheme="fill"></span>
+            } @else {
+              {{ formatComputed()(percent()) }}
+            }
+          </span>
+        }
+      } @else {
+        <!-- CIRCLE / DASHBOARD TYPE -->
         <div
           class="av-progress-inner"
-          [style.height.px]="strokeWidthPx()"
-          [style.background-color]="trailColor()"
+          [style.width.px]="pixelSize()"
+          [style.height.px]="pixelSize()"
         >
-          <div
-            class="av-progress-bg"
-            [style.width.%]="percent()"
-            [style.height.px]="strokeWidthPx()"
-            [style.background]="strokeColorComputed()"
-          ></div>
-        </div>
-      </div>
-      @if (showInfo()) {
-      <span class="av-progress-info">
-        @if (status() === 'success') {
-        <span nz-icon nzType="check-circle" nzTheme="fill"></span>
-        } @else if (status() === 'error') {
-        <span nz-icon nzType="close-circle" nzTheme="fill"></span>
-        } @else {
-        {{ formatComputed()(percent()) }}
-        }
-      </span>
-      } } @else {
-      <!-- CIRCLE / DASHBOARD TYPE -->
-      <div class="av-progress-inner" [style.width.px]="pixelSize()" [style.height.px]="pixelSize()">
-        <svg [attr.viewBox]="'0 0 ' + pixelSize() + ' ' + pixelSize()">
-          <!-- Trail Path -->
-          <path
-            class="av-progress-circle-trail"
-            [attr.d]="pathString()"
-            [attr.stroke]="trailColor()"
-            [attr.stroke-width]="strokeWidthPx()"
-            [attr.stroke-linecap]="strokeLinecap()"
-            fill-opacity="0"
-          ></path>
-          <!-- Progress Path -->
-          <path
-            class="av-progress-circle-path"
-            [attr.d]="pathString()"
-            [attr.stroke]="strokeColorComputed()"
-            [attr.stroke-width]="strokeWidthPx()"
-            [attr.stroke-linecap]="strokeLinecap()"
-            fill-opacity="0"
-            [style.stroke-dasharray]="strokeDashArray()"
-            [style.stroke-dashoffset]="strokeDashOffset()"
-            [style.transition]="'stroke-dashoffset 0.3s ease 0s, stroke 0.3s ease'"
-          ></path>
-        </svg>
-        @if (showInfo()) {
-        <span class="av-progress-info">
-          @if (status() === 'success') {
-          <span nz-icon nzType="check" [style.font-size.px]="pixelSize() * 0.2"></span>
-          } @else if (status() === 'error') {
-          <span nz-icon nzType="close" [style.font-size.px]="pixelSize() * 0.2"></span>
-          } @else {
-          {{ formatComputed()(percent()) }}
+          <svg [attr.viewBox]="'0 0 ' + pixelSize() + ' ' + pixelSize()">
+            <!-- Trail Path -->
+            <path
+              class="av-progress-circle-trail"
+              [attr.d]="pathString()"
+              [attr.stroke]="trailColor()"
+              [attr.stroke-width]="strokeWidthPx()"
+              [attr.stroke-linecap]="strokeLinecap()"
+              fill-opacity="0"
+            ></path>
+            <!-- Progress Path -->
+            <path
+              class="av-progress-circle-path"
+              [attr.d]="pathString()"
+              [attr.stroke]="strokeColorComputed()"
+              [attr.stroke-width]="strokeWidthPx()"
+              [attr.stroke-linecap]="strokeLinecap()"
+              fill-opacity="0"
+              [style.stroke-dasharray]="strokeDashArray()"
+              [style.stroke-dashoffset]="strokeDashOffset()"
+              [style.transition]="'stroke-dashoffset 0.3s ease 0s, stroke 0.3s ease'"
+            ></path>
+          </svg>
+          @if (showInfo()) {
+            <span class="av-progress-info">
+              @if (status() === 'success') {
+                <span nz-icon nzType="check" [style.font-size.px]="pixelSize() * 0.2"></span>
+              } @else if (status() === 'error') {
+                <span nz-icon nzType="close" [style.font-size.px]="pixelSize() * 0.2"></span>
+              } @else {
+                {{ formatComputed()(percent()) }}
+              }
+            </span>
           }
-        </span>
-        }
-      </div>
-      } @if (label()) {
-      <div class="av-progress-label">{{ label() }}</div>
+        </div>
+      }
+      @if (label()) {
+        <div class="av-progress-label">{{ label() }}</div>
       }
     </div>
   `,

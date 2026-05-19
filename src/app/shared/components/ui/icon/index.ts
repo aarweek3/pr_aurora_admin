@@ -57,3 +57,10 @@ export interface AvIconConfig extends AvIconProps {
   borderWidth: number;
   borderRadius: number;
 }
+
+/** Интерфейс пресета иконки для выбора в списке */
+export interface IconPreset {
+  value: string;
+  label: string;
+  category: string;
+}

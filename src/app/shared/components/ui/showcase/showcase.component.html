@@ -45,19 +45,19 @@
 
             <!-- Блок 3: Описание (если есть контент) -->
             @if (hasDescriptionContent()) {
-            <div class="result-block result-block--description">
-              <div class="result-block__header">
-                <h4>{{ descriptionBlockTitle() }}</h4>
-              </div>
-              <div class="result-block__content">
-                @if (autoParams()) {
-                <div class="auto-params">
-                  <p>Автогенерированные параметры будут здесь</p>
+              <div class="result-block result-block--description">
+                <div class="result-block__header">
+                  <h4>{{ descriptionBlockTitle() }}</h4>
                 </div>
-                }
-                <ng-content select="[showcase-description]"></ng-content>
+                <div class="result-block__content">
+                  @if (autoParams()) {
+                    <div class="auto-params">
+                      <p>Автогенерированные параметры будут здесь</p>
+                    </div>
+                  }
+                  <ng-content select="[showcase-description]"></ng-content>
+                </div>
               </div>
-            </div>
             }
           </div>
         </div>
@@ -66,34 +66,34 @@
 
     <!-- 📚 Examples Section (опционально) -->
     @if (showExamples()) {
-    <div class="examples-section">
-      <div class="section-header" (click)="toggleExamples()">
-        <h2>📚 Примеры использования</h2>
-        <button class="collapse-btn">
-          <av-icon [type]="examplesCollapsed() ? 'chevron-down' : 'chevron-up'" [size]="20"></av-icon>
-        </button>
-      </div>
+      <div class="examples-section">
+        <div class="section-header" (click)="toggleExamples()">
+          <h2>📚 Примеры использования</h2>
+          <button class="collapse-btn">
+            <av-icon [type]="examplesCollapsed() ? 'chevron-down' : 'chevron-up'" [size]="20"></av-icon>
+          </button>
+        </div>
 
-      <div class="section-content" [class.section-content--collapsed]="examplesCollapsed()">
-        <ng-content select="[showcase-examples]"></ng-content>
+        <div class="section-content" [class.section-content--collapsed]="examplesCollapsed()">
+          <ng-content select="[showcase-examples]"></ng-content>
+        </div>
       </div>
-    </div>
     }
 
     <!-- 📖 Documentation Section (опционально) -->
     @if (showDocs()) {
-    <div class="documentation-section">
-      <div class="section-header" (click)="toggleDocs()">
-        <h2>📖 Документация</h2>
-        <button class="collapse-btn">
-          <av-icon [type]="docsCollapsed() ? 'chevron-down' : 'chevron-up'" [size]="20"></av-icon>
-        </button>
-      </div>
+      <div class="documentation-section">
+        <div class="section-header" (click)="toggleDocs()">
+          <h2>📖 Документация</h2>
+          <button class="collapse-btn">
+            <av-icon [type]="docsCollapsed() ? 'chevron-down' : 'chevron-up'" [size]="20"></av-icon>
+          </button>
+        </div>
 
-      <div class="section-content" [class.section-content--collapsed]="docsCollapsed()">
-        <ng-content select="[showcase-docs]"></ng-content>
+        <div class="section-content" [class.section-content--collapsed]="docsCollapsed()">
+          <ng-content select="[showcase-docs]"></ng-content>
+        </div>
       </div>
-    </div>
     }
   </div>
 </av-wrapper-ui>

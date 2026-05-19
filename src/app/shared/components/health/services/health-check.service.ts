@@ -178,7 +178,7 @@ export class HealthCheckService {
     );
   }
 
-  async getHealthLogs(count: number = 50, from?: Date, to?: Date): Promise<void> {
+  async getHealthLogs(count = 50, from?: Date, to?: Date): Promise<void> {
     try {
       let params = new HttpParams().set('count', count.toString());
       if (from) params = params.set('from', from.toISOString());

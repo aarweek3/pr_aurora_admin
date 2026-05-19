@@ -1,9 +1,6 @@
 ﻿import { Injectable, OnDestroy, inject } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import {
-  SampleState,
-  INITIAL_STATE_SAMPLE,
-} from '../models/sample-state.model';
+import { SampleState, INITIAL_STATE_SAMPLE } from '../models/sample-state.model';
 
 @Injectable({
   providedIn: 'root',

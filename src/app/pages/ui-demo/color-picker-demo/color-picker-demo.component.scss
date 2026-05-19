@@ -95,7 +95,9 @@
 }
 
 .control-card {
-  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1) !important;
+  box-shadow:
+    0 4px 6px -1px rgb(0 0 0 / 0.1),
+    0 2px 4px -2px rgb(0 0 0 / 0.1) !important;
   border: 1px solid #e2e8f0 !important;
   border-radius: 12px !important;
 }
@@ -149,45 +151,3 @@
 }
 
 // Dark Theme Support
-:host-context([data-theme="dark"]) {
-  .ui-help-header h1 {
-    background: linear-gradient(135deg, #3b82f6 0%, #a855f7 100%);
-    background-clip: text;
-    -webkit-background-clip: text;
-  }
-
-  .ui-help-header .text-secondary {
-    color: #94a3b8;
-  }
-  .ui-help-section .section-header {
-    border-bottom-color: #334155;
-    h2 {
-      color: #f1f5f9;
-    }
-  }
-  .playground-container {
-    background: #0f172a;
-    border-color: #334155;
-  }
-  .control-card {
-    background: #1e293b !important;
-    border-color: #334155 !important;
-  }
-  .control-item label {
-    color: #94a3b8;
-  }
-  .result-card {
-    border-color: #334155 !important;
-    background: #1e293b;
-  }
-  .result-card ::ng-deep .ant-card-head {
-    background: #1e293b;
-    border-bottom-color: #334155;
-    color: #f1f5f9;
-  }
-  .block-placeholder {
-    background: #1e293b;
-    border-color: #334155;
-    color: #475569;
-  }
-}

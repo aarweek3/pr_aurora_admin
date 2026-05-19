@@ -65,6 +65,27 @@
       "@assets/*": [
         "./src/assets/*"
       ],
+      "@language-app": [
+        "./src/app/features/language-app/index.ts"
+      ],
+      "@language-app/*": [
+        "./src/app/features/language-app/*"
+      ],
+      "@controls": [
+        "./src/app/shared/components/controls/index.ts"
+      ],
+      "@controls/*": [
+        "./src/app/shared/components/controls/*"
+      ],
+      "@core-constants/*": [
+        "./src/app/core/constants/*"
+      ],
+      "@shared-ui": [
+        "./src/app/shared/components/ui/index.ts"
+      ],
+      "@shared-ui/*": [
+        "./src/app/shared/components/ui/*"
+      ],
       "@editor/*": [
         "./src/assets/editor/*"
       ]

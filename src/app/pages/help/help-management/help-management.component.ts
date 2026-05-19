@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Component, Inject, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -10,7 +10,7 @@ import {
 } from '@angular/forms';
 import { environment } from '@environments/environment';
 import { HelpUniversalModalComponent } from '@shared/components/help-universal-modal/help-universal-modal.component';
-import { IconLaboratoryService } from '@shared/services/icon-laboratory.service';
+import { IconDataService } from '@core/services/icon/icon-data.service';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
@@ -267,14 +267,14 @@ export class HelpCreateModalComponent {
   `,
 })
 export class HelpRenameModalComponent {
+  private modalRef = inject(NzModalRef);
+  private data = inject(NZ_MODAL_DATA);
+
   oldName: string;
   oldId: string;
   newNameControl: FormControl;
 
-  constructor(
-    private modalRef: NzModalRef,
-    @Inject(NZ_MODAL_DATA) private data: any,
-  ) {
+  constructor() {
     this.oldName = this.data.oldName;
     this.oldId = this.oldName.replace('.json', '');
 
@@ -721,7 +721,7 @@ openHelp() &lcub;
   ],
 })
 export class HelpManagementComponent implements OnInit {
-  private iconLab = inject(IconLaboratoryService);
+  private iconLab = inject(IconDataService);
   private modal = inject(NzModalService);
   private message = inject(NzMessageService);
   private http = inject(HttpClient);
@@ -1019,7 +1019,8 @@ export class HelpManagementComponent implements OnInit {
     if (data.reference) text += processBlocks(data.reference, 'БАЗОВАЯ СПРАВКА / REFERENCE');
     if (data['blocks-main']) text += processBlocks(data['blocks-main'], 'ОСНОВНЫЕ РАЗДЕЛЫ (MAIN)');
     if (data['blocks-front']) text += processBlocks(data['blocks-front'], 'ФРОНТЕНД (FRONT)');
-    if (data['blocks-server']) text += processBlocks(data['blocks-server'], 'СЕРВЕР / БЭКЕНД (SERVER)');
+    if (data['blocks-server'])
+      text += processBlocks(data['blocks-server'], 'СЕРВЕР / БЭКЕНД (SERVER)');
 
     // Если есть старый формат блоков
     if (data.blocks) text += processBlocks(data.blocks, 'ДОПОЛНИТЕЛЬНЫЕ БЛОКИ');

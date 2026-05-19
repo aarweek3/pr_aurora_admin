@@ -3,19 +3,19 @@ import { Observable, Subject, finalize, takeUntil, tap } from 'rxjs';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { ModalService } from '@shared/components/ui/modal/services/modal.service';
-import { 
-  TagOfAggregatorState, 
+import {
+  TagOfAggregatorState,
   initialTagOfAggregatorState,
   TagOfAggregatorItem,
-  TagOfAggregatorDetail
+  TagOfAggregatorDetail,
 } from '../models/tag-of-aggregator.model';
 import { TagOfAggregatorApiService } from './tag-of-aggregator-api.service';
 import { CategoryTagOfAggregatorApiService } from '../../CategoryTagOfAggregatorPage/services/category-tag-of-aggregator-api.service';
-import { ErrorResponse } from '../../../../../shared/infrastructure/interceptor/models/error-response.model';
+import { ErrorResponse } from '@core/models/error-response.model';
 import { LanguageAggregatorService } from '../../LanguageOfAggregator/services/language-aggregator.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class TagOfAggregatorStateService implements OnDestroy {
   private api = inject(TagOfAggregatorApiService);
@@ -51,7 +51,7 @@ export class TagOfAggregatorStateService implements OnDestroy {
   pageSize = computed(() => this.state().pageSize);
 
   updateState(partial: Partial<TagOfAggregatorState>): void {
-    this.state.update(s => ({ ...s, ...partial }));
+    this.state.update((s) => ({ ...s, ...partial }));
   }
 
   loadItems(checkEmpty = false): void {
@@ -67,22 +67,22 @@ export class TagOfAggregatorStateService implements OnDestroy {
       languageId: s.languageId,
       sortBy: s.sortBy,
       sortDirection: s.sortDirection,
-      showDeleted: s.showDeleted
+      showDeleted: s.showDeleted,
     };
 
     this.executeWithLoading(this.api.getPaged(request)).subscribe({
       next: (response) => {
-        this.updateState({ 
-          items: response.items, 
+        this.updateState({
+          items: response.items,
           total: response.total,
-          error: null
+          error: null,
         });
 
         if (checkEmpty && response.total === 0 && !s.showDeleted) {
           this.showEmptyWarning();
         }
       },
-      error: (err) => this.handleError(err, 'LoadItems')
+      error: (err) => this.handleError(err, 'LoadItems'),
     });
   }
 
@@ -93,7 +93,7 @@ export class TagOfAggregatorStateService implements OnDestroy {
   loadCategories(): void {
     this.categoryApi.getPaged({ pageNumber: 1, pageSize: 100 }).subscribe({
       next: (res) => this.updateState({ categories: res.items }),
-      error: (err) => this.handleError(err, 'LoadCategories')
+      error: (err) => this.handleError(err, 'LoadCategories'),
     });
   }
 
@@ -141,12 +141,12 @@ export class TagOfAggregatorStateService implements OnDestroy {
   }
 
   resetFilters(): void {
-    this.updateState({ 
-      categoryTagId: undefined, 
+    this.updateState({
+      categoryTagId: undefined,
       languageId: undefined,
-      searchTerm: '', 
+      searchTerm: '',
       pageNumber: 1,
-      showDeleted: false
+      showDeleted: false,
     });
     this.loadItems();
   }
@@ -161,8 +161,8 @@ export class TagOfAggregatorStateService implements OnDestroy {
           this.message.success(dto.id ? 'Тег обновлен' : 'Тег создан');
           this.loadItems();
         },
-        error: (err) => this.handleError(err, 'Save')
-      })
+        error: (err) => this.handleError(err, 'Save'),
+      }),
     );
   }
 
@@ -172,7 +172,7 @@ export class TagOfAggregatorStateService implements OnDestroy {
         this.message.success(hard ? 'Тег полностью удален' : 'Тег помещен в корзину');
         this.loadItems();
       },
-      error: (err) => this.handleError(err, 'Delete')
+      error: (err) => this.handleError(err, 'Delete'),
     });
   }
 
@@ -186,7 +186,7 @@ export class TagOfAggregatorStateService implements OnDestroy {
         this.message.success('Тег успешно восстановлен');
         this.loadItems();
       },
-      error: (err) => this.handleError(err, 'Restore')
+      error: (err) => this.handleError(err, 'Restore'),
     });
   }
 
@@ -194,12 +194,12 @@ export class TagOfAggregatorStateService implements OnDestroy {
     this.executeWithLoading(this.api.getById(id)).subscribe({
       next: (item) => {
         if (!item.categoryName) {
-          const cat = this.state().categories.find(c => c.id === item.categoryTagId);
+          const cat = this.state().categories.find((c) => c.id === item.categoryTagId);
           item.categoryName = cat?.localizedName || cat?.name;
         }
         this.updateState({ viewItem: item, viewModalVisible: true });
       },
-      error: (err) => this.handleError(err, 'OpenView')
+      error: (err) => this.handleError(err, 'OpenView'),
     });
   }
 
@@ -213,7 +213,7 @@ export class TagOfAggregatorStateService implements OnDestroy {
         next: (item) => {
           this.updateState({ selectedId: id, editModalVisible: true });
         },
-        error: (err) => this.handleError(err, 'OpenEditModal')
+        error: (err) => this.handleError(err, 'OpenEditModal'),
       });
     } else {
       this.updateState({ selectedId: null, editModalVisible: true });
@@ -241,7 +241,7 @@ export class TagOfAggregatorStateService implements OnDestroy {
       error: (err) => {
         this.message.remove(msgId);
         this.handleError(err, 'Seed');
-      }
+      },
     });
   }
 
@@ -255,18 +255,19 @@ export class TagOfAggregatorStateService implements OnDestroy {
       },
       error: (err) => {
         this.message.remove(msgId);
-        this.handleError(err, 'Clear')
-      }
+        this.handleError(err, 'Clear');
+      },
     });
   }
 
   private showEmptyWarning(): void {
     this.modalService.alert({
       title: 'База данных пуста!',
-      message: 'В базе данных \'DbNames\' (таблица \'tags_of_aggregator\') нет тегов. Вы можете инициализировать данные из JSON.',
+      message:
+        "В базе данных 'DbNames' (таблица 'tags_of_aggregator') нет тегов. Вы можете инициализировать данные из JSON.",
       alertType: 'info',
       centered: true,
-      icon: 'system/av_info'
+      icon: 'system/av_info',
     });
   }
 
@@ -278,21 +279,24 @@ export class TagOfAggregatorStateService implements OnDestroy {
 
   private applyEnglishFallbacks(dto: any): void {
     if (!dto.localizations || dto.localizations.length === 0) return;
-    
+
     // Using availableLanguages() signal from LanguageAggregatorService
-    const enLang = this.langService.availableLanguages().find(l => l.code === 'en-US');
+    const enLang = this.langService.availableLanguages().find((l) => l.code === 'en-US');
     const enId = enLang?.id;
-    const enLoc = enId ? dto.localizations.find((l: any) => l.languageOfAggregatorId === enId) : null;
-    
+    const enLoc = enId
+      ? dto.localizations.find((l: any) => l.languageOfAggregatorId === enId)
+      : null;
+
     dto.localizations.forEach((loc: any) => {
       const isEn = enId && loc.languageOfAggregatorId === enId;
       if (!loc.name?.trim()) {
-        loc.name = isEn ? dto.slug : (enLoc?.name || dto.slug);
+        loc.name = isEn ? dto.slug : enLoc?.name || dto.slug;
       }
       if (!isEn && enLoc) {
         if (!loc.description?.trim() && enLoc.description) loc.description = enLoc.description;
         if (!loc.metaTitle?.trim() && enLoc.metaTitle) loc.metaTitle = enLoc.metaTitle;
-        if (!loc.metaDescription?.trim() && enLoc.metaDescription) loc.metaDescription = enLoc.metaDescription;
+        if (!loc.metaDescription?.trim() && enLoc.metaDescription)
+          loc.metaDescription = enLoc.metaDescription;
       }
     });
   }
@@ -302,7 +306,7 @@ export class TagOfAggregatorStateService implements OnDestroy {
     this.updateState({ [key]: true, error: null } as any);
     return obs.pipe(
       takeUntil(this.destroy$),
-      finalize(() => this.updateState({ [key]: false } as any))
+      finalize(() => this.updateState({ [key]: false } as any)),
     );
   }
 

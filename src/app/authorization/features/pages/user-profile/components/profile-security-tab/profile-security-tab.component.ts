@@ -75,8 +75,12 @@ import { AuthService } from '@auth';
                   <input nz-input type="password" formControlName="confirmPassword" />
                 </nz-input-group>
                 <ng-template #passwordErrorTpl let-control>
-                  @if (control.hasError('required')) { Пожалуйста, подтвердите пароль } @if
-                  (control.hasError('confirm')) { Пароли не совпадают }
+                  @if (control.hasError('required')) {
+                    Пожалуйста, подтвердите пароль
+                  }
+                  @if (control.hasError('confirm')) {
+                    Пароли не совпадают
+                  }
                 </ng-template>
               </nz-form-control>
             </nz-form-item>
@@ -97,23 +101,25 @@ import { AuthService } from '@auth';
                   <span class="provider-name">Google</span>
                   <span class="provider-status">
                     @if (user()?.externalProvider?.toLowerCase() === 'google') {
-                    <nz-typography nzType="success">Подключено ({{ user()?.email }})</nz-typography>
+                      <nz-typography nzType="success"
+                        >Подключено ({{ user()?.email }})</nz-typography
+                      >
                     } @else {
-                    <nz-typography nzType="secondary">Не подключено</nz-typography>
+                      <nz-typography nzType="secondary">Не подключено</nz-typography>
                     }
                   </span>
                 </div>
               </div>
               @if (user()?.externalProvider?.toLowerCase() === 'google') {
-              <button
-                nz-button
-                nzDanger
-                nz-popconfirm
-                nzPopconfirmTitle="Вы уверены, что хотите отвязать аккаунт Google?"
-                (nzOnConfirm)="unlink('google')"
-              >
-                Отвязать
-              </button>
+                <button
+                  nz-button
+                  nzDanger
+                  nz-popconfirm
+                  nzPopconfirmTitle="Вы уверены, что хотите отвязать аккаунт Google?"
+                  (nzOnConfirm)="unlink('google')"
+                >
+                  Отвязать
+                </button>
               }
             </div>
 
@@ -202,7 +208,7 @@ export class ProfileSecurityTabComponent implements OnInit {
     });
   }
 
-  confirmationValidator = (control: any): { [s: string]: boolean } => {
+  confirmationValidator = (control: any): Record<string, boolean> => {
     if (!this.passwordForm) return {};
     if (!control.value) {
       return { required: true };
@@ -247,5 +253,3 @@ export class ProfileSecurityTabComponent implements OnInit {
     });
   }
 }
-
-

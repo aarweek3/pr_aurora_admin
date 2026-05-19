@@ -22,7 +22,7 @@ import { NzDividerModule } from 'ng-zorro-antd/divider';
     NzCardModule,
     NzTypographyModule,
     NzSpaceModule,
-    NzDividerModule
+    NzDividerModule,
   ],
   template: `
     <div class="not-found-container">
@@ -107,13 +107,7 @@ import { NzDividerModule } from 'ng-zorro-antd/divider';
               <span nz-icon nzType="dashboard" nzTheme="outline"></span>
               Панель управления
             </button>
-            <button
-              nz-button
-              nzType="link"
-              nzSize="large"
-              routerLink="/profile"
-              class="quick-link"
-            >
+            <button nz-button nzType="link" nzSize="large" routerLink="/profile" class="quick-link">
               <span nz-icon nzType="user" nzTheme="outline"></span>
               Профиль
             </button>
@@ -127,13 +121,7 @@ import { NzDividerModule } from 'ng-zorro-antd/divider';
               <span nz-icon nzType="setting" nzTheme="outline"></span>
               Настройки
             </button>
-            <button
-              nz-button
-              nzType="link"
-              nzSize="large"
-              routerLink="/help"
-              class="quick-link"
-            >
+            <button nz-button nzType="link" nzSize="large" routerLink="/help" class="quick-link">
               <span nz-icon nzType="question-circle" nzTheme="outline"></span>
               Помощь
             </button>
@@ -144,9 +132,7 @@ import { NzDividerModule } from 'ng-zorro-antd/divider';
         <div class="contact-info">
           <p nz-typography nzType="secondary" class="contact-text">
             Если проблема повторяется, обратитесь в
-            <a href="mailto:support@example.com" class="contact-link">
-              службу поддержки
-            </a>
+            <a href="mailto:support@example.com" class="contact-link"> службу поддержки </a>
           </p>
         </div>
       </div>
@@ -159,305 +145,308 @@ import { NzDividerModule } from 'ng-zorro-antd/divider';
       </div>
     </div>
   `,
-  styles: [`
-    .not-found-container {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 24px;
-      background: linear-gradient(135deg, #f0f2f5 0%, #e6f7ff 50%, #f6ffed 100%);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .not-found-content {
-      width: 100%;
-      max-width: 800px;
-      z-index: 10;
-      animation: fadeInUp 0.8s ease-out;
-    }
-
-    .main-result {
-      background: white;
-      border-radius: 16px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-      margin-bottom: 24px;
-      padding: 24px;
-    }
-
-    .action-button {
-      min-width: 120px;
-      height: 44px;
-      border-radius: 8px;
-      font-weight: 500;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .action-button:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    }
-
-    .help-card,
-    .quick-links-card {
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
-      margin-bottom: 20px;
-      overflow: hidden;
-    }
-
-    .help-content {
-      padding: 8px 0;
-    }
-
-    .help-section {
-      margin-bottom: 16px;
-    }
-
-    .help-title {
-      margin-bottom: 12px !important;
-      font-size: 16px !important;
-      font-weight: 600 !important;
-      color: #262626 !important;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .help-list {
-      margin: 0;
-      padding-left: 24px;
-      list-style: none;
-    }
-
-    .help-list li {
-      margin-bottom: 8px;
-      padding-left: 16px;
-      position: relative;
-      color: #595959;
-      line-height: 1.6;
-    }
-
-    .help-list li::before {
-      content: '•';
-      position: absolute;
-      left: 0;
-      color: #1890ff;
-      font-weight: bold;
-    }
-
-    .quick-link {
-      height: 40px;
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      padding: 0 16px;
-      transition: all 0.3s;
-    }
-
-    .quick-link:hover {
-      background: #f0f0f0;
-      transform: translateY(-1px);
-    }
-
-    .contact-info {
-      text-align: center;
-      margin-top: 16px;
-    }
-
-    .contact-text {
-      margin: 0 !important;
-      font-size: 14px;
-    }
-
-    .contact-link {
-      color: #1890ff;
-      text-decoration: none;
-      font-weight: 500;
-      transition: color 0.3s;
-    }
-
-    .contact-link:hover {
-      color: #40a9ff;
-      text-decoration: underline;
-    }
-
-    /* Декоративные элементы */
-    .background-decoration {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: 1;
-      overflow: hidden;
-    }
-
-    .decoration-shape {
-      position: absolute;
-      border-radius: 50%;
-      background: rgba(24, 144, 255, 0.05);
-      animation: float 6s ease-in-out infinite;
-    }
-
-    .shape-1 {
-      width: 200px;
-      height: 200px;
-      top: 10%;
-      left: -5%;
-      animation-delay: 0s;
-    }
-
-    .shape-2 {
-      width: 150px;
-      height: 150px;
-      top: 60%;
-      right: -3%;
-      animation-delay: 2s;
-      background: rgba(82, 196, 26, 0.05);
-    }
-
-    .shape-3 {
-      width: 120px;
-      height: 120px;
-      bottom: 15%;
-      left: 8%;
-      animation-delay: 4s;
-      background: rgba(250, 173, 20, 0.05);
-    }
-
-    /* Анимации */
-    @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(30px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    @keyframes float {
-      0%, 100% {
-        transform: translateY(0px) rotate(0deg);
-      }
-      50% {
-        transform: translateY(-20px) rotate(180deg);
-      }
-    }
-
-    /* Переопределения Ng Zorro */
-    ::ng-deep .ant-result-title {
-      font-size: 48px !important;
-      font-weight: 700 !important;
-      color: #ff4d4f !important;
-      margin-bottom: 16px !important;
-    }
-
-    ::ng-deep .ant-result-subtitle {
-      font-size: 18px !important;
-      color: #8c8c8c !important;
-      margin-bottom: 32px !important;
-    }
-
-    ::ng-deep .ant-result-icon > .anticon {
-      font-size: 72px !important;
-      color: #ff4d4f !important;
-    }
-
-    ::ng-deep .ant-card-head-title {
-      font-size: 18px !important;
-      font-weight: 600 !important;
-      color: #262626 !important;
-    }
-
-    ::ng-deep .ant-divider {
-      margin: 16px 0 !important;
-    }
-
-    /* Responsive дизайн */
-    @media (max-width: 768px) {
+  styles: [
+    `
       .not-found-container {
-        padding: 16px;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+        background: linear-gradient(135deg, #f0f2f5 0%, #e6f7ff 50%, #f6ffed 100%);
+        position: relative;
+        overflow: hidden;
       }
 
       .not-found-content {
-        max-width: 100%;
+        width: 100%;
+        max-width: 800px;
+        z-index: 10;
+        animation: fadeInUp 0.8s ease-out;
       }
 
       .main-result {
-        padding: 20px;
-        margin-bottom: 16px;
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        margin-bottom: 24px;
+        padding: 24px;
       }
 
       .action-button {
-        min-width: 100px;
-        height: 40px;
+        min-width: 120px;
+        height: 44px;
+        border-radius: 8px;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       }
 
-      .help-list {
-        padding-left: 16px;
-      }
-
-      .decoration-shape {
-        display: none;
-      }
-
-      ::ng-deep .ant-result-title {
-        font-size: 36px !important;
-      }
-
-      ::ng-deep .ant-result-subtitle {
-        font-size: 16px !important;
-      }
-
-      ::ng-deep .ant-result-icon > .anticon {
-        font-size: 56px !important;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .not-found-container {
-        padding: 12px;
-      }
-
-      .main-result {
-        padding: 16px;
+      .action-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
       }
 
       .help-card,
       .quick-links-card {
-        margin-bottom: 12px;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+        margin-bottom: 20px;
+        overflow: hidden;
       }
 
-      .action-button {
-        width: 100%;
+      .help-content {
+        padding: 8px 0;
+      }
+
+      .help-section {
+        margin-bottom: 16px;
+      }
+
+      .help-title {
+        margin-bottom: 12px !important;
+        font-size: 16px !important;
+        font-weight: 600 !important;
+        color: #262626 !important;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .help-list {
+        margin: 0;
+        padding-left: 24px;
+        list-style: none;
+      }
+
+      .help-list li {
         margin-bottom: 8px;
+        padding-left: 16px;
+        position: relative;
+        color: #595959;
+        line-height: 1.6;
       }
 
-      ::ng-deep .ant-space-horizontal {
-        flex-direction: column;
+      .help-list li::before {
+        content: '•';
+        position: absolute;
+        left: 0;
+        color: #1890ff;
+        font-weight: bold;
+      }
+
+      .quick-link {
+        height: 40px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 0 16px;
+        transition: all 0.3s;
+      }
+
+      .quick-link:hover {
+        background: #f0f0f0;
+        transform: translateY(-1px);
+      }
+
+      .contact-info {
+        text-align: center;
+        margin-top: 16px;
+      }
+
+      .contact-text {
+        margin: 0 !important;
+        font-size: 14px;
+      }
+
+      .contact-link {
+        color: #1890ff;
+        text-decoration: none;
+        font-weight: 500;
+        transition: color 0.3s;
+      }
+
+      .contact-link:hover {
+        color: #40a9ff;
+        text-decoration: underline;
+      }
+
+      /* Декоративные элементы */
+      .background-decoration {
+        position: absolute;
+        top: 0;
+        left: 0;
         width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 1;
+        overflow: hidden;
       }
 
+      .decoration-shape {
+        position: absolute;
+        border-radius: 50%;
+        background: rgba(24, 144, 255, 0.05);
+        animation: float 6s ease-in-out infinite;
+      }
+
+      .shape-1 {
+        width: 200px;
+        height: 200px;
+        top: 10%;
+        left: -5%;
+        animation-delay: 0s;
+      }
+
+      .shape-2 {
+        width: 150px;
+        height: 150px;
+        top: 60%;
+        right: -3%;
+        animation-delay: 2s;
+        background: rgba(82, 196, 26, 0.05);
+      }
+
+      .shape-3 {
+        width: 120px;
+        height: 120px;
+        bottom: 15%;
+        left: 8%;
+        animation-delay: 4s;
+        background: rgba(250, 173, 20, 0.05);
+      }
+
+      /* Анимации */
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0px) rotate(0deg);
+        }
+        50% {
+          transform: translateY(-20px) rotate(180deg);
+        }
+      }
+
+      /* Переопределения Ng Zorro */
       ::ng-deep .ant-result-title {
-        font-size: 32px !important;
+        font-size: 48px !important;
+        font-weight: 700 !important;
+        color: #ff4d4f !important;
+        margin-bottom: 16px !important;
       }
 
       ::ng-deep .ant-result-subtitle {
-        font-size: 15px !important;
+        font-size: 18px !important;
+        color: #8c8c8c !important;
+        margin-bottom: 32px !important;
       }
-    }
-  `]
+
+      ::ng-deep .ant-result-icon > .anticon {
+        font-size: 72px !important;
+        color: #ff4d4f !important;
+      }
+
+      ::ng-deep .ant-card-head-title {
+        font-size: 18px !important;
+        font-weight: 600 !important;
+        color: #262626 !important;
+      }
+
+      ::ng-deep .ant-divider {
+        margin: 16px 0 !important;
+      }
+
+      /* Responsive дизайн */
+      @media (max-width: 768px) {
+        .not-found-container {
+          padding: 16px;
+        }
+
+        .not-found-content {
+          max-width: 100%;
+        }
+
+        .main-result {
+          padding: 20px;
+          margin-bottom: 16px;
+        }
+
+        .action-button {
+          min-width: 100px;
+          height: 40px;
+        }
+
+        .help-list {
+          padding-left: 16px;
+        }
+
+        .decoration-shape {
+          display: none;
+        }
+
+        ::ng-deep .ant-result-title {
+          font-size: 36px !important;
+        }
+
+        ::ng-deep .ant-result-subtitle {
+          font-size: 16px !important;
+        }
+
+        ::ng-deep .ant-result-icon > .anticon {
+          font-size: 56px !important;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .not-found-container {
+          padding: 12px;
+        }
+
+        .main-result {
+          padding: 16px;
+        }
+
+        .help-card,
+        .quick-links-card {
+          margin-bottom: 12px;
+        }
+
+        .action-button {
+          width: 100%;
+          margin-bottom: 8px;
+        }
+
+        ::ng-deep .ant-space-horizontal {
+          flex-direction: column;
+          width: 100%;
+        }
+
+        ::ng-deep .ant-result-title {
+          font-size: 32px !important;
+        }
+
+        ::ng-deep .ant-result-subtitle {
+          font-size: 15px !important;
+        }
+      }
+    `,
+  ],
 })
 export class NotFoundComponent {
   private router = inject(Router);

@@ -875,5 +875,3 @@ export class AdminPanelComponent implements OnInit, OnDestroy {
     });
   }
 }
-
-

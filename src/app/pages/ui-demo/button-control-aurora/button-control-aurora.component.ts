@@ -14,7 +14,7 @@ import { ControlDocumentationComponent } from '@shared/components/ui/control-doc
 import { NzRadioModule } from 'ng-zorro-antd/radio';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzTabsModule } from 'ng-zorro-antd/tabs';
-import { ICON_PRESETS } from '../../../../assets/constants/icon-presets.const';
+import { ICON_PRESETS } from '@core-constants/icon-presets.const';
 import {
   ButtonDirective,
   ButtonSize,

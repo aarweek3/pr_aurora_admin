@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, ViewChild, input, model, output } from '@angular/core';
+import { Component, ElementRef, ViewChild, inject, input, model, output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { ButtonDirective } from '../button/button.directive';
@@ -40,6 +40,7 @@ import { InputDirective } from '../input/input.directive';
 
         <input
           #searchInput
+          [id]="effectiveId"
           type="text"
           avInput
           [avSize]="avSize()"
@@ -164,22 +165,6 @@ import { InputDirective } from '../input/input.directive';
         &__button {
           flex-shrink: 0;
         }
-
-        @include dark-theme {
-          &__icon {
-            color: rgba(255, 255, 255, 0.45);
-          }
-          &__clear {
-            color: rgba(255, 255, 255, 0.25);
-            &:hover {
-              color: rgba(255, 255, 255, 0.45);
-              background-color: rgba(255, 255, 255, 0.1);
-            }
-          }
-          &__spinner {
-            color: #177ddc;
-          }
-        }
       }
     `,
   ],
@@ -209,11 +194,17 @@ export class AvSearchComponent {
   value = model<string>('');
 
   // Search event
-  onSearch = output<string>();
+  searchChange = output<string>();
 
   @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
+  private el = inject(ElementRef);
+  generatedId = `av-search-${Math.random().toString(36).substring(2, 9)}`;
 
-  private debounceTimer: any;
+  get effectiveId(): string {
+    return this.el.nativeElement.id || this.generatedId;
+  }
+
+  private debounceTimer: ReturnType<typeof setTimeout> | undefined;
 
   onInputChange(event: Event): void {
     const val = (event.target as HTMLInputElement).value;
@@ -222,19 +213,19 @@ export class AvSearchComponent {
     // Live search with debounce
     this.resetTimer();
     this.debounceTimer = setTimeout(() => {
-      this.onSearch.emit(this.value().trim());
+      this.searchChange.emit(this.value().trim());
     }, this.avDebounceTime());
   }
 
   onSearchClick(): void {
     this.resetTimer();
-    this.onSearch.emit(this.value().trim());
+    this.searchChange.emit(this.value().trim());
   }
 
   onClearClick(): void {
     this.resetTimer();
     this.value.set('');
-    this.onSearch.emit('');
+    this.searchChange.emit('');
     this.searchInput.nativeElement.focus();
   }
 

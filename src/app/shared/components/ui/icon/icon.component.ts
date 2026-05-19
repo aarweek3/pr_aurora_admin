@@ -139,6 +139,7 @@ export class IconComponent {
     'chevron-up': 'arrows/av_chevron-up.svg',
     'chevron-down': 'arrows/av_chevron-down.svg',
     info: 'system/av_info.svg',
+    warning: 'system/av_warning.svg',
     email: 'communication/av_mail.svg',
     user: 'users/av_user.svg',
     lock: 'security/av_lock.svg',
@@ -158,20 +159,15 @@ export class IconComponent {
     }
 
     const mappedName = this.iconFileMap[type];
+    const iconToFetch = mappedName || type;
+    
     let iconName = type;
-
     if (mappedName) {
       const parts = mappedName.split('/');
       iconName = parts[parts.length - 1].replace('.svg', '');
-    } else {
-      if (iconName.includes('/')) {
-        const parts = iconName.split('/');
-        iconName = parts[parts.length - 1];
-      }
-      iconName = iconName.replace('.svg', '');
     }
 
-    this.iconService.getIcon(iconName).subscribe({
+    this.iconService.getIcon(iconToFetch).subscribe({
       next: (svgText: string) => {
         // 1. Определение многоцветности (ищем HEX, RGB(a) и все цветовые атрибуты)
         const colors = new Set<string>();

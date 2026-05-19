@@ -339,7 +339,7 @@
         <nz-timeline nzMode="left">
           <nz-timeline-item *ngFor="let step of traceSteps()" [nzColor]="getTimelineColor(step.type)">
             <div class="trace-step">
-              <span class="trace-time">{{ step.timestamp | date : 'HH:mm:ss.SSS' }}</span>
+              <span class="trace-time">{{ step.timestamp | date: 'HH:mm:ss.SSS' }}</span>
               <span class="trace-label"
                 ><b>{{ step.label }}</b></span
               >

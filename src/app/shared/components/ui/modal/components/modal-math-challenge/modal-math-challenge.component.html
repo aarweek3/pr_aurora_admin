@@ -4,26 +4,26 @@
   [showCloseButton]="true"
   [centered]="true"
   size="small"
-  (closed)="onCancel()"
+  (modalClosed)="onCancel()"
 >
-  <div modal-body class="challenge-body">
+  <div modal-body class="challenge-body" [class.warning-mode]="config.type === 'warning'">
     <div class="icon-header">
-      <av-icon type="actions/av_trash" [size]="64" class="danger-icon"></av-icon>
+      <av-icon [type]="config.type === 'warning' ? 'actions/av_trash' : 'actions/av_trash'" [size]="64" [class.danger-icon]="config.type !== 'warning'" [class.warning-icon]="config.type === 'warning'"></av-icon>
     </div>
 
     <div class="message-section">
-      <h3>ВНИМАНИЕ! КРИТИЧЕСКОЕ ДЕЙСТВИЕ</h3>
+      <h3 [style.color]="config.type === 'warning' ? '#faad14' : '#b91c1c'">{{ config.title || 'ВНИМАНИЕ! КРИТИЧЕСКОЕ ДЕЙСТВИЕ' }}</h3>
       <p>{{ config.message || 'Это действие приведет к полному стиранию записи. Данное действие необратимо.' }}</p>
     </div>
 
-    <div class="math-challenge">
+    <div class="math-challenge" [class.warning-border]="config.type === 'warning'">
       <p class="challenge-label">Решите пример для подтверждения:</p>
-      <div class="challenge-math">{{ config.question }}</div>
-      
+      <div class="challenge-math" [innerHTML]="config.question"></div>
+
       <div class="answer-field">
-        <input 
-          type="text" 
-          placeholder="Ваш ответ..." 
+        <input
+          type="text"
+          placeholder="Ваш ответ..."
           [ngModel]="userAnswer()"
           (ngModelChange)="userAnswer.set($event)"
           (keyup.enter)="onConfirm()"
@@ -34,19 +34,10 @@
   </div>
 
   <div modal-footer class="challenge-footer">
-    <button 
-      av-button 
-      avType="text" 
-      (click)="onCancel()"
-    >
+    <button class="btn-cancel-premium" (click)="onCancel()">
       {{ config.cancelText || 'Отмена' }}
     </button>
-    <button 
-      av-button 
-      avType="danger" 
-      [disabled]="!isAnswerCorrect"
-      (click)="onConfirm()"
-    >
+    <button [class]="config.type === 'warning' ? 'btn-primary-premium' : 'btn-danger-premium'" [disabled]="!isAnswerCorrect" (click)="onConfirm()">
       {{ config.confirmText || 'Стереть полностью (Hard)' }}
     </button>
   </div>

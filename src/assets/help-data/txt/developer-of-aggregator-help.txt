@@ -188,7 +188,7 @@ Frontend Implementation ProgressОтслеживание реализации к
 ------------------------------------------
 Универсальный компонент поиска (AvSearchComponent)Реактивный Debounce: Автоматическая задержка в 300мс.
 Two-way Signals: Использование model signal.
-Техническая интеграция:<av-search [(value)]="searchTerm" (onSearch)="onSearchChange($event)"></av-search>💎 Нюансы реализации поиска (Standard Hero)Frontend: Reactive UI: Model Signals: Используйте searchTerm = '' в компоненте и this.state.setSearch(term) для триггера загрузки данных.
+Техническая интеграция:<av-search [(value)]="searchTerm" (searchChange)="onSearchChange($event)"></av-search>💎 Нюансы реализации поиска (Standard Hero)Frontend: Reactive UI: Model Signals: Используйте searchTerm = '' в компоненте и this.state.setSearch(term) для триггера загрузки данных.
 Debounce 300ms: Встроен в av-search. Срабатывает автоматически при наборе.
 Sync: Двустороннее связывание [(value)] критически важно для корректной очистки строки поиска.
 

@@ -128,7 +128,7 @@ import { TokenService } from '@auth/services/token.service';
             </div>
             <div class="debug-item">
               <strong>Last Token Check:</strong>
-              {{ tokenService.getCurrentStatus().lastChecked | date : 'HH:mm:ss' }}
+              {{ tokenService.getCurrentStatus().lastChecked | date: 'HH:mm:ss' }}
             </div>
           </div>
           <nz-divider></nz-divider>

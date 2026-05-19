@@ -5,11 +5,14 @@ import { ModalConfig } from './modal-config.model';
 /**
  * Класс для управления экземпляром модального окна
  */
-export class ModalRef<TResult = any> {
+export class ModalRef<TResult = unknown, TData = unknown> {
   private readonly afterClosedSubject = new Subject<TResult | undefined>();
   private result: TResult | undefined;
 
-  constructor(public overlayRef: OverlayRef, public config: ModalConfig) {}
+  constructor(
+    public overlayRef: OverlayRef,
+    public config: ModalConfig<TData, TResult>,
+  ) {}
 
   /**
    * Закрыть модал с результатом
@@ -58,7 +61,7 @@ export class ModalRef<TResult = any> {
   /**
    * Обновить конфигурацию модала
    */
-  updateConfig(config: Partial<ModalConfig>): void {
+  updateConfig(config: Partial<ModalConfig<TData, TResult>>): void {
     this.config = { ...this.config, ...config };
   }
 

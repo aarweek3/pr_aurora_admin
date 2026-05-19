@@ -108,10 +108,10 @@ export const PLATFORM_OS_SEED_JSON = `[
 ]`;
 
 export const VERSION_SPEC_EXAMPLE_DATA = [
-    { platform: 'Windows', arch: 'x64', minOs: 'Windows 10', isRec: false, notes: 'Requires .NET 6' },
-    { platform: 'Windows', arch: 'x86', minOs: 'Windows 7', isRec: false, notes: '' },
-    { platform: 'macOS', arch: 'Arm64', minOs: 'macOS 11', isRec: false, notes: 'Apple M1/M2' },
-    { platform: 'Android', arch: 'Any', minOs: 'Android 5.0', isRec: false, notes: '' },
+  { platform: 'Windows', arch: 'x64', minOs: 'Windows 10', isRec: false, notes: 'Requires .NET 6' },
+  { platform: 'Windows', arch: 'x86', minOs: 'Windows 7', isRec: false, notes: '' },
+  { platform: 'macOS', arch: 'Arm64', minOs: 'macOS 11', isRec: false, notes: 'Apple M1/M2' },
+  { platform: 'Android', arch: 'Any', minOs: 'Android 5.0', isRec: false, notes: '' },
 ];
 
 export const SERVER_SEARCH_CODE = `if (!string.IsNullOrWhiteSpace(request.SearchTerm))

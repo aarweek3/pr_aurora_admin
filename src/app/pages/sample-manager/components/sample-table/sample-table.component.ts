@@ -123,8 +123,8 @@ import { SampleDetailDto } from '../../models/sample.dto';
 })
 export class SampleTableComponent implements OnChanges, OnDestroy {
   @Input() items: SampleDetailDto[] = [];
-  @Input() loading: boolean = false;
-  @Input() hasError: boolean = false;
+  @Input() loading = false;
+  @Input() hasError = false;
   @Output() view = new EventEmitter<number>();
   @Output() edit = new EventEmitter<SampleDetailDto>();
   @Output() delete = new EventEmitter<number>();

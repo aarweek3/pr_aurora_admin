@@ -1,0 +1,98 @@
+<h1>Руководство: Кнопки «Скопировать путь» и «Открыть в редакторе»</h1>
+
+<p>
+  Данный функционал предназначен для ускорения разработки и отладки. Он позволяет разработчику мгновенно скопировать
+  путь к файлу или открыть его в IDE прямо из браузера.
+</p>
+
+<div
+  style="background-color: #f6ffed; border: 1px solid #b7eb8f; padding: 16px; border-radius: 8px; margin-bottom: 24px"
+>
+  <strong>Зачем это нужно?</strong>
+  <ul>
+    <li>Не нужно искать файл вручную в дереве проекта.</li>
+    <li>Исключаются ошибки при ручном вводе путей.</li>
+    <li>Мгновенный переход к редактированию документации или кода компонента.</li>
+  </ul>
+</div>
+
+<h2>1. Как это работает (Frontend)</h2>
+<p>
+  Для реализации используется метод <code>openFile(path: string)</code> в сервисе <code>IconLaboratoryService</code>. Он
+  отправляет POST-запрос на бэкенд с путем к файлу.
+</p>
+
+<pre style="background: #f0f2f5; padding: 12px; border-radius: 4px"><code>// Пример вызова в компоненте
+this.iconLabService.openFile('src/assets/documentation/sample.html').subscribe();</code></pre>
+
+<h2>2. Как это работает (Backend)</h2>
+<p>
+  Бэкенд принимает путь, проверяет его на безопасность (разрешены только пути внутри <code>d:\_PROGECT\</code>) и
+  запускает процесс через стандартную оболочку Windows:
+</p>
+
+<pre style="background: #f0f2f5; padding: 12px; border-radius: 4px"><code>Process.Start(new ProcessStartInfo { 
+    FileName = fullPath, 
+    UseShellExecute = true 
+});</code></pre>
+
+<div
+  style="background-color: #fff2e8; border: 1px solid #ffbb96; padding: 16px; border-radius: 8px; margin-bottom: 24px"
+>
+  <strong>⚠️ Важно:</strong> Если файл не открывается, убедитесь, что расширение файла (.ts, .html, .md) ассоциировано в
+  Windows с вашим редактором (например, VS Code).
+</div>
+
+<h2>3. Пример использования</h2>
+<p>Ниже представлен живой пример блока, который автоматически добавляется в низ страницы справки:</p>
+
+<div style="border: 1px solid #d9d9d9; padding: 16px; border-radius: 8px; background: #fafafa">
+  <div style="display: flex; align-items: center; margin-bottom: 8px">
+    <span style="width: 150px; font-weight: bold">Файл справки:</span>
+    <code
+      style="
+        background: #fff;
+        padding: 2px 8px;
+        border: 1px solid #d9d9d9;
+        border-radius: 4px;
+        flex-grow: 1;
+        color: #1890ff;
+      "
+      >src/assets/documentation/кнопки/скопировать путь открыть файл/скопировать путь открыть файл.html</code
+    >
+    <span style="margin-left: 8px; color: #8c8c8c">[Копировать] [Открыть]</span>
+  </div>
+</div>
+
+<h2>4. Промпты для AI-ассистента (Antigravity)</h2>
+<p>Скопируйте и используйте эти промпты, когда вам нужно будет внедрить аналогичные кнопки в новые части проекта:</p>
+
+<div
+  style="background-color: #e6f7ff; border: 1px solid #91d5ff; padding: 16px; border-radius: 8px; margin-bottom: 12px"
+>
+  <strong>Для Angular-компонента:</strong><br />
+  <em
+    >«Добавь блок технической информации (отладки) в этот компонент по аналогии с HelpDocumentationComponent
+    (src/app/pages/help/help-documentation/help-documentation.component.ts). Нужно вывести путь к файлу текущего
+    компонента и путь к [название/описание файла], добавить кнопки «Скопировать путь» и «Открыть в редакторе». Используй
+    IconLaboratoryService.openFile(), иконки copy и folder-open, и добавь тултипы. Стилизуй кнопки (синий ховер для
+    копирования, зеленый для открытия) и упакуй блок в класс debug-info-block.»</em
+  >
+</div>
+
+<div
+  style="background-color: #f9f0ff; border: 1px solid #d3adf7; padding: 16px; border-radius: 8px; margin-bottom: 24px"
+>
+  <strong>Для HTML-файла документации:</strong><br />
+  <em
+    >«Вставь в этот HTML-файл блок с кнопками открытия и копирования пути. Путь должен указывать на [указать путь,
+    например: src/assets/documentation/...]. Оформи это как визуальный пример в рамке, используя IconLaboratoryService для
+    открытия. Добавь иконки и тултипы в стиле Aurora Admin.»</em
+  >
+</div>
+
+<p>&nbsp;</p>
+<hr />
+<p style="color: #8c8c8c; font-size: 12px">
+  Документация создана автоматически системой Antigravity для проекта Aurora Admin.
+</p>

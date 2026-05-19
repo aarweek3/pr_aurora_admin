@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, inject } from '@angular/core';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzModalModule } from 'ng-zorro-antd/modal';
 import { LicenseTypeOfAggregatorStateService } from '../services/license-type-of-aggregator-state.service';
@@ -74,9 +74,9 @@ import { LicenseTypeOfAggregatorFormComponent } from './license-type-of-aggregat
   ],
 })
 export class LicenseTypeOfAggregatorModalComponent {
-  @ViewChild('licenseForm') licenseForm!: LicenseTypeOfAggregatorFormComponent;
+  state = inject(LicenseTypeOfAggregatorStateService);
 
-  constructor(public state: LicenseTypeOfAggregatorStateService) {}
+  @ViewChild('licenseForm') licenseForm!: LicenseTypeOfAggregatorFormComponent;
 
   handleSave(formValue: any): void {
     this.state.save(formValue);

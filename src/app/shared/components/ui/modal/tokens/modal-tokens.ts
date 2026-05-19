@@ -11,7 +11,7 @@ import { ModalRef } from '../models';
  * }
  * ```
  */
-export const MODAL_DATA = new InjectionToken<any>('ModalData');
+export const MODAL_DATA = new InjectionToken<unknown>('ModalData');
 
 /**
  * Injection token для получения ссылки на текущий ModalRef
@@ -27,4 +27,4 @@ export const MODAL_DATA = new InjectionToken<any>('ModalData');
  * }
  * ```
  */
-export const MODAL_REF = new InjectionToken<ModalRef<any>>('ModalRef');
+export const MODAL_REF = new InjectionToken<ModalRef<unknown>>('ModalRef');

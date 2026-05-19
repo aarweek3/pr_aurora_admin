@@ -1,11 +1,11 @@
-import { 
-  Component, 
-  OnInit, 
-  inject, 
-  input, 
-  output, 
-  ChangeDetectionStrategy, 
-  ChangeDetectorRef 
+import {
+  Component,
+  OnInit,
+  inject,
+  input,
+  output,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, FormArray } from '@angular/forms';
@@ -28,9 +28,9 @@ import { AvUniversalUploadModalComponent } from '@shared/components/av-universal
 
 import { DeveloperOfAggregatorApiService } from '../../services/developer-of-aggregator-api.service';
 import { ImageServiceUniversal } from '@shared/services/image-service-universal.service';
-import { LanguageService } from '@assets/languageApp/services/language.service';
+import { LanguageService } from '@language-app/services/language.service';
 import { SeoFormComponent } from '@shared/components/ui/seo-form/seo-form.component';
-import { AppLanguage } from '@assets/languageApp/models/appLanguage.model';
+import { AppLanguage } from '@language-app/models/appLanguage.model';
 
 @Component({
   selector: 'app-developer-of-aggregator-form',
@@ -48,14 +48,18 @@ import { AppLanguage } from '@assets/languageApp/models/appLanguage.model';
     NzCollapseModule,
     NzButtonModule,
     NzIconModule,
-    SeoFormComponent
+    SeoFormComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <nz-spin [nzSpinning]="loading">
-      <form nz-form [formGroup]="form" nzLayout="vertical" *ngIf="form && languages.length > 0; else noLangs">
+      <form
+        nz-form
+        [formGroup]="form"
+        nzLayout="vertical"
+        *ngIf="form && languages.length > 0; else noLangs"
+      >
         <div nz-row [nzGutter]="[16, 16]">
-          
           <!-- Основные настройки -->
           <div nz-col nzSpan="8">
             <nz-form-item>
@@ -109,20 +113,20 @@ import { AppLanguage } from '@assets/languageApp/models/appLanguage.model';
               <nz-form-control>
                 <div class="icon-management-wrapper">
                   <div class="icon-preview-box">
-                    <img 
-                      [src]="imgService.getAssetUrl(form.get('iconPath')?.value)" 
-                      alt="Preview" 
+                    <img
+                      [src]="imgService.getAssetUrl(form.get('iconPath')?.value)"
+                      alt="Preview"
                       class="preview-img"
                       (error)="imgService.getPlaceholder()"
                     />
                   </div>
                   <div class="icon-controls">
                     <nz-input-group nzSearch [nzAddOnAfter]="suffixButton">
-                      <input 
-                        type="text" 
-                        nz-input 
-                        formControlName="iconPath" 
-                        placeholder="path/to/icon.svg или прямая ссылка" 
+                      <input
+                        type="text"
+                        nz-input
+                        formControlName="iconPath"
+                        placeholder="path/to/icon.svg или прямая ссылка"
                       />
                     </nz-input-group>
                     <ng-template #suffixButton>
@@ -131,7 +135,9 @@ import { AppLanguage } from '@assets/languageApp/models/appLanguage.model';
                         Выбрать/Загрузить
                       </button>
                     </ng-template>
-                    <span class="hint-text">Используйте наш универсальный загрузчик для автоматической обработки.</span>
+                    <span class="hint-text"
+                      >Используйте наш универсальный загрузчик для автоматической обработки.</span
+                    >
                   </div>
                 </div>
               </nz-form-control>
@@ -199,55 +205,66 @@ import { AppLanguage } from '@assets/languageApp/models/appLanguage.model';
       </form>
 
       <ng-template #noLangs>
-        <div class="no-langs-container">Для работы формы необходимо инициализировать языки системы.</div>
+        <div class="no-langs-container">
+          Для работы формы необходимо инициализировать языки системы.
+        </div>
       </ng-template>
     </nz-spin>
   `,
-  styles: [`
-    .tab-content { padding-top: 16px; min-height: 400px; }
-    .no-langs-container { padding: 40px; text-align: center; color: #8c8c8c; }
-    
-    .icon-management-wrapper {
-      display: flex;
-      gap: 20px;
-      align-items: flex-start;
-      padding: 16px;
-      background: #f8fafc;
-      border: 1px solid #e2e8f0;
-      border-radius: 8px;
-    }
-
-    .icon-preview-box {
-      width: 80px;
-      height: 80px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: white;
-      border: 1px dashed #cbd5e1;
-      border-radius: 8px;
-      overflow: hidden;
-      flex-shrink: 0;
-      
-      .preview-img {
-        max-width: 100%;
-        max-height: 100%;
-        object-fit: contain;
+  styles: [
+    `
+      .tab-content {
+        padding-top: 16px;
+        min-height: 400px;
       }
-    }
+      .no-langs-container {
+        padding: 40px;
+        text-align: center;
+        color: #8c8c8c;
+      }
 
-    .icon-controls {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
+      .icon-management-wrapper {
+        display: flex;
+        gap: 20px;
+        align-items: flex-start;
+        padding: 16px;
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+      }
 
-    .hint-text {
-      font-size: 12px;
-      color: #64748b;
-    }
-  `]
+      .icon-preview-box {
+        width: 80px;
+        height: 80px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: white;
+        border: 1px dashed #cbd5e1;
+        border-radius: 8px;
+        overflow: hidden;
+        flex-shrink: 0;
+
+        .preview-img {
+          max-width: 100%;
+          max-height: 100%;
+          object-fit: contain;
+        }
+      }
+
+      .icon-controls {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .hint-text {
+        font-size: 12px;
+        color: #64748b;
+      }
+    `,
+  ],
 })
 export class DeveloperOfAggregatorFormComponent implements OnInit {
   private fb = inject(FormBuilder);
@@ -259,7 +276,7 @@ export class DeveloperOfAggregatorFormComponent implements OnInit {
   private modal = inject(NzModalService);
 
   id = input<number | null>(null);
-  onSave = output<any>();
+  save = output<any>();
 
   form: FormGroup;
   languages: AppLanguage[] = [];
@@ -275,18 +292,18 @@ export class DeveloperOfAggregatorFormComponent implements OnInit {
       iconPath: [''],
       isActive: [true],
       sortOrder: [0],
-      localizations: this.fb.array([])
+      localizations: this.fb.array([]),
     });
 
     toObservable(this.langService.availableLanguages)
       .pipe(
-        filter(langs => !!langs && langs.length > 0),
-        takeUntilDestroyed()
+        filter((langs) => !!langs && langs.length > 0),
+        takeUntilDestroyed(),
       )
-      .subscribe(langs => {
+      .subscribe((langs) => {
         this.languages = langs;
         this.initLocTabs();
-        
+
         if (this.id()) {
           this.loadData(this.id()!);
         }
@@ -304,11 +321,11 @@ export class DeveloperOfAggregatorFormComponent implements OnInit {
       nzContent: AvUniversalUploadModalComponent,
       nzData: {
         folder: 'developers',
-        title: 'Загрузка иконки разработчика'
+        title: 'Загрузка иконки разработчика',
       },
       nzFooter: null,
       nzWidth: 700,
-      nzClassName: 'aurora-modal-glass'
+      nzClassName: 'aurora-modal-glass',
     });
 
     modalRef.afterClose.subscribe((result: any) => {
@@ -352,47 +369,50 @@ export class DeveloperOfAggregatorFormComponent implements OnInit {
   private loadData(id: number): void {
     this.loading = true;
     this.cdr.markForCheck();
-    this.api.getById(id).pipe(take(1)).subscribe({
-      next: (data) => {
-        this.form.patchValue({
-          id: data.id,
-          name: data.name,
-          systemCode: data.systemCode,
-          website: data.website,
-          iconPath: data.iconPath,
-          isActive: data.isActive,
-          sortOrder: data.sortOrder
-        });
+    this.api
+      .getById(id)
+      .pipe(take(1))
+      .subscribe({
+        next: (data) => {
+          this.form.patchValue({
+            id: data.id,
+            name: data.name,
+            systemCode: data.systemCode,
+            website: data.website,
+            iconPath: data.iconPath,
+            isActive: data.isActive,
+            sortOrder: data.sortOrder,
+          });
 
-        data.localizations?.forEach((loc: any) => {
-          const group = this.getLocGroup(loc.languageOfAggregatorId);
-          if (group) {
-            group.patchValue({
-              name: loc.name,
-              description: loc.description
-            });
-            // Маппинг плоских полей из БД в структуру SeoForm
-            group.get('seoData')?.patchValue({
-              metaTitle: loc.metaTitle,
-              metaDescription: loc.metaDescription
-            });
-          }
-        });
+          data.localizations?.forEach((loc: any) => {
+            const group = this.getLocGroup(loc.languageOfAggregatorId);
+            if (group) {
+              group.patchValue({
+                name: loc.name,
+                description: loc.description,
+              });
+              // Маппинг плоских полей из БД в структуру SeoForm
+              group.get('seoData')?.patchValue({
+                metaTitle: loc.metaTitle,
+                metaDescription: loc.metaDescription,
+              });
+            }
+          });
 
-        this.loading = false;
-        this.cdr.markForCheck();
-      },
-      error: () => {
-        this.loading = false;
-        this.cdr.markForCheck();
-      }
-    });
+          this.loading = false;
+          this.cdr.markForCheck();
+        },
+        error: () => {
+          this.loading = false;
+          this.cdr.markForCheck();
+        },
+      });
   }
 
   submit(): void {
     if (this.form.valid) {
       const val = JSON.parse(JSON.stringify(this.form.value));
-      
+
       // Плоское маппирование SEO данных перед отправкой на сервер
       val.localizations.forEach((loc: any) => {
         if (loc.seoData) {
@@ -402,10 +422,10 @@ export class DeveloperOfAggregatorFormComponent implements OnInit {
         }
       });
 
-      this.onSave.emit(val);
+      this.save.emit(val);
     } else {
       this.message.warning('Проверьте обязательные поля (Название и Код)');
-      Object.keys(this.form.controls).forEach(key => {
+      Object.keys(this.form.controls).forEach((key) => {
         const control = this.form.get(key);
         if (control?.invalid) {
           control.markAsDirty();
@@ -416,4 +436,3 @@ export class DeveloperOfAggregatorFormComponent implements OnInit {
     }
   }
 }
-

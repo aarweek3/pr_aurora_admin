@@ -175,10 +175,10 @@ export class ImageCanvasService {
   /**
    * Зум
    */
-  zoomIn(factor: number = 0.1): void {
+  zoomIn(factor = 0.1): void {
     this.zoom.update((z) => Math.min(z + factor, 5));
   }
-  zoomOut(factor: number = 0.1): void {
+  zoomOut(factor = 0.1): void {
     this.zoom.update((z) => Math.max(z - factor, 0.1));
   }
 

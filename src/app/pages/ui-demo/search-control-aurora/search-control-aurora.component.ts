@@ -160,7 +160,7 @@ export class SearchControlAuroraComponent implements OnInit {
     }
 
     // Events
-    attributes.push(`(onSearch)="handleSearch($event)"`);
+    attributes.push(`(searchChange)="handleSearch($event)"`);
 
     const html = `<av-search\n  ${attributes.join('\n  ')}>\n</av-search>`;
 

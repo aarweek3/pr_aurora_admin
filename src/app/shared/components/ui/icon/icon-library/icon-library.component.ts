@@ -42,7 +42,7 @@ export class IconLibraryComponent {
   // Группированные и отфильтрованные категории
   filteredCategories = computed(() => {
     const query = this.searchQuery().toLowerCase();
-    const categories: { [key: string]: IconPreset[] } = {};
+    const categories: Record<string, IconPreset[]> = {};
 
     // Группируем иконки по категориям
     this.presets().forEach((preset) => {

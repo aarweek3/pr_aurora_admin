@@ -1,11 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import {
-  AvSearchComponent,
-  PaginationComponent,
-} from '@shared/components/ui';
+import { AvSearchComponent, PaginationComponent } from '@shared/components/ui';
 import { ModalService } from '@shared/components/ui/modal/services/modal.service';
 import { PaginationChangeEvent } from '@shared/components/ui/pagination/pagination.component';
 
@@ -67,7 +64,7 @@ import { PlatformOfAggregatorStateService } from '../../services/platform-of-agg
               [value]="searchTerm"
               [avLoading]="state.loading()"
               avPlaceholder="Поиск по названию или коду..."
-              (onSearch)="onSearchChange($event)"
+              (searchChange)="onSearchChange($event)"
               [showButton]="false"
             ></av-search>
           </div>
@@ -125,35 +122,75 @@ import { PlatformOfAggregatorStateService } from '../../services/platform-of-agg
       >
         <thead>
           <tr>
-            <th 
-              nzWidth="100px" 
-              [nzSortFn]="true" 
-              [nzSortOrder]="state.sortBy() === 'Id' ? (state.sortDirection() === 0 ? 'ascend' : 'descend') : null"
-              (nzSortOrderChange)="onSortChange('Id', $event)"
-            >ID</th>
-            <th 
-              [nzSortFn]="true" 
-              [nzSortOrder]="state.sortBy() === 'Name' ? (state.sortDirection() === 0 ? 'ascend' : 'descend') : null"
-              (nzSortOrderChange)="onSortChange('Name', $event)"
-            >Платформа</th>
-            <th 
-              [nzSortFn]="true" 
-              [nzSortOrder]="state.sortBy() === 'SystemCode' ? (state.sortDirection() === 0 ? 'ascend' : 'descend') : null"
-              (nzSortOrderChange)="onSortChange('SystemCode', $event)"
-            >Системный код</th>
-            <th>Локализации</th>
-            <th 
-              nzWidth="120px" 
-              [nzSortFn]="true" 
-              [nzSortOrder]="state.sortBy() === 'ProgramsCount' ? (state.sortDirection() === 0 ? 'ascend' : 'descend') : null"
-              (nzSortOrderChange)="onSortChange('ProgramsCount', $event)"
-            >Программы</th>
-            <th 
+            <th
               nzWidth="100px"
-              [nzSortFn]="true" 
-              [nzSortOrder]="state.sortBy() === 'SortOrder' ? (state.sortDirection() === 0 ? 'ascend' : 'descend') : null"
+              [nzSortFn]="true"
+              [nzSortOrder]="
+                state.sortBy() === 'Id'
+                  ? state.sortDirection() === 0
+                    ? 'ascend'
+                    : 'descend'
+                  : null
+              "
+              (nzSortOrderChange)="onSortChange('Id', $event)"
+            >
+              ID
+            </th>
+            <th
+              [nzSortFn]="true"
+              [nzSortOrder]="
+                state.sortBy() === 'Name'
+                  ? state.sortDirection() === 0
+                    ? 'ascend'
+                    : 'descend'
+                  : null
+              "
+              (nzSortOrderChange)="onSortChange('Name', $event)"
+            >
+              Платформа
+            </th>
+            <th
+              [nzSortFn]="true"
+              [nzSortOrder]="
+                state.sortBy() === 'SystemCode'
+                  ? state.sortDirection() === 0
+                    ? 'ascend'
+                    : 'descend'
+                  : null
+              "
+              (nzSortOrderChange)="onSortChange('SystemCode', $event)"
+            >
+              Системный код
+            </th>
+            <th>Локализации</th>
+            <th
+              nzWidth="120px"
+              [nzSortFn]="true"
+              [nzSortOrder]="
+                state.sortBy() === 'ProgramsCount'
+                  ? state.sortDirection() === 0
+                    ? 'ascend'
+                    : 'descend'
+                  : null
+              "
+              (nzSortOrderChange)="onSortChange('ProgramsCount', $event)"
+            >
+              Программы
+            </th>
+            <th
+              nzWidth="100px"
+              [nzSortFn]="true"
+              [nzSortOrder]="
+                state.sortBy() === 'SortOrder'
+                  ? state.sortDirection() === 0
+                    ? 'ascend'
+                    : 'descend'
+                  : null
+              "
               (nzSortOrderChange)="onSortChange('SortOrder', $event)"
-            >Порядок</th>
+            >
+              Порядок
+            </th>
             <th nzWidth="100px">Статус</th>
             <th nzWidth="120px">Действия</th>
           </tr>
@@ -303,14 +340,12 @@ import { PlatformOfAggregatorStateService } from '../../services/platform-of-agg
   styleUrls: ['./platform-of-aggregator-list.component.scss'],
 })
 export class PlatformOfAggregatorListComponent {
+  state = inject(PlatformOfAggregatorStateService);
+  private modalService = inject(ModalService);
+
   searchTerm = '';
 
   @Input() usePageNavigation = false;
-
-  constructor(
-    public state: PlatformOfAggregatorStateService,
-    private modalService: ModalService,
-  ) {}
 
   onSearchChange(term: string): void {
     this.searchTerm = term;
@@ -345,7 +380,6 @@ export class PlatformOfAggregatorListComponent {
   onView(id: number): void {
     this.state.openViewModal(id);
   }
-
 
   async onRestore(id: number): Promise<void> {
     const confirmed = await this.modalService.confirm({

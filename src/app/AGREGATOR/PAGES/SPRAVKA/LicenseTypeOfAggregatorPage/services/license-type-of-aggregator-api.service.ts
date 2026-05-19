@@ -1,5 +1,5 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { finalize, shareReplay } from 'rxjs/operators';
 import { environment } from '../../../../../../environments/environment';
@@ -16,12 +16,14 @@ import {
   providedIn: 'root',
 })
 export class LicenseTypeOfAggregatorApiService {
+  private http = inject(HttpClient);
+
   private readonly baseUrl = `${environment.apiUrl}/${LicenseTypeOfAggregatorEndPoints.Base}`;
   private cache = new Map<string, Observable<LicenseTypeOfAggregatorPagedResponseDto>>();
 
-  constructor(private http: HttpClient) {}
-
-  getPaged(request: LicenseTypeOfAggregatorPageRequestDto): Observable<LicenseTypeOfAggregatorPagedResponseDto> {
+  getPaged(
+    request: LicenseTypeOfAggregatorPageRequestDto,
+  ): Observable<LicenseTypeOfAggregatorPagedResponseDto> {
     const cacheKey = JSON.stringify(
       Object.keys(request)
         .sort()
@@ -39,15 +41,18 @@ export class LicenseTypeOfAggregatorApiService {
       if (request.searchTerm) params = params.set('searchTerm', request.searchTerm);
       if (request.languageId) params = params.set('languageId', request.languageId.toString());
       if (request.sortBy) params = params.set('sortBy', request.sortBy);
-      if (request.sortDirection !== undefined) params = params.set('sortDirection', request.sortDirection.toString());
+      if (request.sortDirection !== undefined)
+        params = params.set('sortDirection', request.sortDirection.toString());
       if (request.showDeleted) params = params.set('showDeleted', 'true');
 
-      const request$ = this.http.get<LicenseTypeOfAggregatorPagedResponseDto>(this.baseUrl, { params }).pipe(
-        shareReplay(1),
-        finalize(() => {
-          setTimeout(() => this.cache.delete(cacheKey), 30000);
-        }),
-      );
+      const request$ = this.http
+        .get<LicenseTypeOfAggregatorPagedResponseDto>(this.baseUrl, { params })
+        .pipe(
+          shareReplay(1),
+          finalize(() => {
+            setTimeout(() => this.cache.delete(cacheKey), 30000);
+          }),
+        );
 
       this.cache.set(cacheKey, request$);
     }
@@ -66,12 +71,15 @@ export class LicenseTypeOfAggregatorApiService {
     return this.http.post<LicenseTypeOfAggregatorDetailDto>(this.baseUrl, dto);
   }
 
-  update(id: number, dto: LicenseTypeOfAggregatorUpdateDto): Observable<LicenseTypeOfAggregatorDetailDto> {
+  update(
+    id: number,
+    dto: LicenseTypeOfAggregatorUpdateDto,
+  ): Observable<LicenseTypeOfAggregatorDetailDto> {
     this.clearCache();
     return this.http.put<LicenseTypeOfAggregatorDetailDto>(`${this.baseUrl}/${id}`, dto);
   }
 
-  delete(id: number, isHard: boolean = false): Observable<void> {
+  delete(id: number, isHard = false): Observable<void> {
     this.clearCache();
     let params = new HttpParams();
     if (isHard) params = params.set('isHard', 'true');

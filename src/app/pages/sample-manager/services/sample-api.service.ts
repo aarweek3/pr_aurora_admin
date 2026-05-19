@@ -1,5 +1,5 @@
 ﻿import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { environment } from '@environments/environment';
 import { Observable } from 'rxjs';
 import {
@@ -12,9 +12,9 @@ import {
 
 @Injectable()
 export class SampleApiService {
-  private readonly baseUrl = `${environment.apiUrl}/api/v1/samples`;
+  private http = inject(HttpClient);
 
-  constructor(private http: HttpClient) {}
+  private readonly baseUrl = `${environment.apiUrl}/api/v1/samples`;
 
   /**
    * Получить все родителей для селектора (в алфавитном порядке)

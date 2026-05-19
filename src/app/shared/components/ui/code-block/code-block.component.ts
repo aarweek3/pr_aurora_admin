@@ -25,9 +25,9 @@ import { Component, input, signal } from '@angular/core';
       <div class="av-code-block__header">
         <h4 class="av-code-block__title">{{ title() }}</h4>
         @if (showCopy()) {
-        <button class="av-code-block__copy-btn" (click)="copyCode()">
-          {{ copied() ? 'Скопировано!' : 'Копировать' }}
-        </button>
+          <button class="av-code-block__copy-btn" (click)="copyCode()">
+            {{ copied() ? 'Скопировано!' : 'Копировать' }}
+          </button>
         }
       </div>
       <div class="av-code-block__window">
@@ -89,11 +89,6 @@ import { Component, input, signal } from '@angular/core';
           border: 1px solid #cbd5e1;
           flex: 1;
           overflow: auto;
-
-          @include dark-theme {
-            background: rgba(255, 255, 255, 0.05);
-            border-color: rgba(255, 255, 255, 0.1);
-          }
         }
 
         &__pre {
@@ -105,15 +100,6 @@ import { Component, input, signal } from '@angular/core';
           font-family: 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
           font-size: 13px;
           line-height: 1.6;
-
-          @include dark-theme {
-            color: #f8fafc;
-          }
-        }
-
-        @include dark-theme {
-          box-shadow: none;
-          border: 1px solid rgba(255, 255, 255, 0.1);
         }
       }
     `,

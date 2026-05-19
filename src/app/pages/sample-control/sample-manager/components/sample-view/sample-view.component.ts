@@ -1,10 +1,4 @@
-﻿import {
-  Component,
-  Input,
-  Output,
-  EventEmitter,
-  OnDestroy,
-} from '@angular/core';
+﻿import { Component, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzDescriptionsModule } from 'ng-zorro-antd/descriptions';
@@ -21,7 +15,7 @@ import { Subject } from 'rxjs';
       nzTitle="Просмотр"
       [nzWidth]="600"
       [nzFooter]="null"
-      (nzOnCancel)="close.emit()"
+      (nzOnCancel)="modalClose.emit()"
     >
       <ng-container *nzModalContent>
         <nz-descriptions nzBordered [nzColumn]="1" *ngIf="sample">
@@ -45,9 +39,9 @@ import { Subject } from 'rxjs';
   `,
 })
 export class SampleViewComponent implements OnDestroy {
-  @Input() visible: boolean = false;
+  @Input() visible = false;
   @Input() sample: SampleDetailDto | null = null;
-  @Output() close = new EventEmitter<void>();
+  @Output() modalClose = new EventEmitter<void>();
 
   private destroy$ = new Subject<void>();
 

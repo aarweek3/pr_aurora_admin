@@ -1,0 +1,105 @@
+<h1>Документация: Управление боковым меню (Sidebar)</h1>
+<p>
+  Боковое меню в приложении <strong>Aurora Admin</strong> строится на основе конфигурационного файла, который определяет
+  структуру групп, пунктов и подменю.
+</p>
+<div
+  style="background-color: #f6f8fa; padding: 16px; border-radius: 6px; border: 1px solid #d1d5da; margin-bottom: 20px"
+>
+  <h2 style="margin-top: 0">Файлы конфигурации !!!</h2>
+  <p>&nbsp;</p>
+  <ul>
+    <li>
+      <strong>Основной конфиг</strong>:
+      <code>src/app/shared/components/layout/left-sidebar/sidebar-default.config.ts</code>
+    </li>
+    <li><strong>Модель данных</strong>: <code>src/app/shared/components/layout/left-sidebar/sidebar.model.ts</code></li>
+  </ul>
+</div>
+<hr />
+<h2>Структура конфигурации</h2>
+<p>
+  Меню состоит из массива групп (<code>menuGroups</code>). Каждая группа содержит массив пунктов (<code>items</code>).
+</p>
+<h3>1. Как добавить новую группу</h3>
+<p>
+  Группы используются для визуального разделения блоков меню (например, &laquo;Администрирование&raquo;,
+  &laquo;Контент&raquo;).
+</p>
+<pre
+  style="
+    background-color: #282c34;
+    color: #abb2bf;
+    padding: 15px;
+    border-radius: 4px;
+    overflow: auto;
+    font-family: monospace;
+  "
+>
+{
+  id: 'my-group',
+  title: 'Заголовок группы', 
+  highlight: false,         
+  items: [
+    // Пункты меню здесь
+  ]
+}
+</pre>
+<h3>2. Как добавить обычный пункт (ссылку)</h3>
+<p>Пункт типа <code>link</code> выполняет переход по маршруту.</p>
+<pre
+  style="
+    background-color: #282c34;
+    color: #abb2bf;
+    padding: 15px;
+    border-radius: 4px;
+    overflow: auto;
+    font-family: monospace;
+  "
+>
+{
+  id: 'unique-id',
+  icon: 'dashboard',      
+  label: 'Главная',       
+  type: 'link',
+  route: '/dashboard',     
+  badge: {                
+    value: 'New',
+    intent: 'success'     
+  }
+}
+</pre>
+<h3>3. Как изменить порядок</h3>
+<p>
+  Порядок пунктов в меню соответствует их порядку в массиве <code>items</code>. Просто переместите объект вверх или вниз
+  по списку.
+</p>
+<hr />
+<div style="background-color: #fff9db; padding: 15px; border-left: 5px solid #fcc419; margin: 20px 0">
+  <strong>Важно:</strong> После внесения изменений в файл конфигурации Angular автоматически пересоберет проект и
+  обновит меню.
+</div>
+
+<h2 style="color: #000000; border-top: 1px solid #eee; padding-top: 15px; margin-top: 30px">
+  📂 Пути к исходному коду
+</h2>
+<div style="border: 1px solid #d9d9d9; padding: 16px; border-radius: 8px; background: #fafafa; margin-bottom: 24px">
+  <div style="margin-bottom: 12px">
+    <strong>Конфигурация меню:</strong><br />
+    <code style="color: #1890ff">src/app/shared/components/layout/left-sidebar/sidebar-default.config.ts</code>
+    <br />
+    <span style="font-size: 12px; color: #8c8c8c">[Копировать] [Открыть в IDE]</span>
+  </div>
+  <div style="margin-bottom: 12px">
+    <strong>Компонент Sidebar:</strong><br />
+    <code style="color: #1890ff">src/app/shared/components/layout/left-sidebar/left-sidebar.component.ts</code>
+    <br />
+    <span style="font-size: 12px; color: #8c8c8c">[Копировать] [Открыть в IDE]</span>
+  </div>
+  <div style="margin-bottom: 12px">
+    <strong>Модель данных:</strong><br />
+    <code style="color: #1890ff">src/app/shared/components/layout/left-sidebar/sidebar.model.ts</code>
+    <br />
+    <span style="font-size: 12px; color: #8c8c8c">[Копировать] [Открыть в IDE]</span>
+  </div>
+</div>

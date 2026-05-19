@@ -106,8 +106,9 @@ export class LoggerConsoleService {
     try {
       const result = await handler.execute(args);
       return result || `Command "${commandName}" executed successfully.`;
-    } catch (err: any) {
-      return `Error executing "${commandName}": ${err.message || err}`;
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : String(err);
+      return `Error executing "${commandName}": ${errorMessage}`;
     }
   }
 
@@ -271,14 +272,23 @@ export class LoggerConsoleService {
 
     // Определение темы (базируется на стандартных классах Aurora или системных предпочтениях)
     const isDark =
-      (typeof document !== 'undefined' && document.body && document.body.classList.contains('dark-theme')) ||
-      (typeof document !== 'undefined' && document.documentElement && document.documentElement.getAttribute('data-theme') === 'dark') ||
-      (typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+      (typeof document !== 'undefined' &&
+        document.body &&
+        document.body.classList.contains('dark-theme')) ||
+      (typeof document !== 'undefined' &&
+        document.documentElement &&
+        document.documentElement.getAttribute('data-theme') === 'dark') ||
+      (typeof window !== 'undefined' &&
+        window.matchMedia &&
+        window.matchMedia('(prefers-color-scheme: dark)').matches);
 
     const screenWidth = typeof window !== 'undefined' && window.screen ? window.screen.width : 1920;
-    const screenHeight = typeof window !== 'undefined' && window.screen ? window.screen.height : 1080;
-    const viewportWidth = typeof window !== 'undefined' && window.innerWidth ? window.innerWidth : 1920;
-    const viewportHeight = typeof window !== 'undefined' && window.innerHeight ? window.innerHeight : 1080;
+    const screenHeight =
+      typeof window !== 'undefined' && window.screen ? window.screen.height : 1080;
+    const viewportWidth =
+      typeof window !== 'undefined' && window.innerWidth ? window.innerWidth : 1920;
+    const viewportHeight =
+      typeof window !== 'undefined' && window.innerHeight ? window.innerHeight : 1080;
 
     return {
       browser,

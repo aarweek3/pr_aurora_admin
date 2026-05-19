@@ -154,5 +154,3 @@ export class AppearanceTabComponent {
     }
   }
 }
-
-

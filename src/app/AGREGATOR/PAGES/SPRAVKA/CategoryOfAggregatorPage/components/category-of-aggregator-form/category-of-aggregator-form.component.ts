@@ -1,11 +1,11 @@
-import { 
-  Component, 
-  OnInit, 
-  inject, 
-  input, 
-  output, 
-  ChangeDetectionStrategy, 
-  ChangeDetectorRef 
+import {
+  Component,
+  OnInit,
+  inject,
+  input,
+  output,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, FormArray } from '@angular/forms';
@@ -29,10 +29,10 @@ import { NzModalService } from 'ng-zorro-antd/modal';
 import { CategoryOfAggregatorApiService } from '../../services/category-of-aggregator-api.service';
 import { CategoryOfAggregatorItem } from '../../models/category-of-aggregator.model';
 import { ImageServiceUniversal } from '@shared/services/image-service-universal.service';
-import { LanguageService } from '@assets/languageApp/services/language.service';
+import { LanguageService } from '@language-app';
 import { CategoryOfAggregatorStateService } from '../../services/category-of-aggregator-state.service';
-import { SeoFormComponent } from '@shared/components/ui/seo-form/seo-form.component';
-import { AppLanguage } from '@assets/languageApp/models/appLanguage.model';
+import { SeoFormComponent } from '@shared-ui';
+import { AppLanguage } from '@language-app/models/appLanguage.model';
 import { AvUniversalUploadModalComponent } from '@shared/components/av-universal-upload-modal/av-universal-upload-modal.component';
 
 @Component({
@@ -52,14 +52,18 @@ import { AvUniversalUploadModalComponent } from '@shared/components/av-universal
     NzButtonModule,
     NzIconModule,
     NzSelectModule,
-    SeoFormComponent
+    SeoFormComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <nz-spin [nzSpinning]="loading">
-      <form nz-form [formGroup]="form" nzLayout="vertical" *ngIf="form && languages.length > 0; else noLangs">
+      <form
+        nz-form
+        [formGroup]="form"
+        nzLayout="vertical"
+        *ngIf="form && languages.length > 0; else noLangs"
+      >
         <div nz-row [nzGutter]="[16, 16]">
-          
           <!-- Основные настройки -->
           <div nz-col nzSpan="8">
             <nz-form-item>
@@ -83,9 +87,17 @@ import { AvUniversalUploadModalComponent } from '@shared/components/av-universal
             <nz-form-item>
               <nz-form-label>Родительская категория</nz-form-label>
               <nz-form-control>
-                <nz-select formControlName="parentId" nzShowSearch nzAllowClear nzPlaceHolder="Выберите родителя">
+                <nz-select
+                  formControlName="parentId"
+                  nzShowSearch
+                  nzAllowClear
+                  nzPlaceHolder="Выберите родителя"
+                >
                   @for (cat of parentCategories; track cat.id) {
-                    <nz-option [nzValue]="cat.id" [nzLabel]="cat.localizedName || cat.canonicalName"></nz-option>
+                    <nz-option
+                      [nzValue]="cat.id"
+                      [nzLabel]="cat.localizedName || cat.canonicalName"
+                    ></nz-option>
                   }
                 </nz-select>
               </nz-form-control>
@@ -126,11 +138,21 @@ import { AvUniversalUploadModalComponent } from '@shared/components/av-universal
               <nz-form-control>
                 <div class="icon-management-wrapper">
                   <div class="icon-preview-box">
-                    <img [src]="imgService.getAssetUrl(form.get('iconPath')?.value)" alt="Preview" class="preview-img" (error)="imgService.getPlaceholder()" />
+                    <img
+                      [src]="imgService.getAssetUrl(form.get('iconPath')?.value)"
+                      alt="Preview"
+                      class="preview-img"
+                      (error)="imgService.getPlaceholder()"
+                    />
                   </div>
                   <div class="icon-controls">
                     <nz-input-group nzSearch [nzAddOnAfter]="suffixButton">
-                      <input type="text" nz-input formControlName="iconPath" placeholder="path/to/icon.svg" />
+                      <input
+                        type="text"
+                        nz-input
+                        formControlName="iconPath"
+                        placeholder="path/to/icon.svg"
+                      />
                     </nz-input-group>
                     <ng-template #suffixButton>
                       <button nz-button nzType="primary" (click)="openIconUploadModal()">
@@ -168,7 +190,11 @@ import { AvUniversalUploadModalComponent } from '@shared/components/av-universal
                             <nz-form-item>
                               <nz-form-label>Описание</nz-form-label>
                               <nz-form-control>
-                                <textarea nz-input formControlName="description" [nzAutosize]="{ minRows: 2, maxRows: 4 }"></textarea>
+                                <textarea
+                                  nz-input
+                                  formControlName="description"
+                                  [nzAutosize]="{ minRows: 2, maxRows: 4 }"
+                                ></textarea>
                               </nz-form-control>
                             </nz-form-item>
                           </div>
@@ -176,7 +202,10 @@ import { AvUniversalUploadModalComponent } from '@shared/components/av-universal
                             <nz-collapse [nzBordered]="false">
                               <nz-collapse-panel [nzHeader]="'SEO Настройки (' + lang.code + ')'">
                                 @if (getSeoGroup(lang.id); as seoGroup) {
-                                  <app-seo-form [form]="seoGroup" [sourceName]="locGroup.get('name')?.value"></app-seo-form>
+                                  <app-seo-form
+                                    [form]="seoGroup"
+                                    [sourceName]="locGroup.get('name')?.value"
+                                  ></app-seo-form>
                                 }
                               </nz-collapse-panel>
                             </nz-collapse>
@@ -193,17 +222,57 @@ import { AvUniversalUploadModalComponent } from '@shared/components/av-universal
       </form>
 
       <ng-template #noLangs>
-        <div class="no-langs-container">Для работы формы необходимо инициализировать языки системы.</div>
+        <div class="no-langs-container">
+          Для работы формы необходимо инициализировать языки системы.
+        </div>
       </ng-template>
     </nz-spin>
   `,
-  styles: [`
-    .tab-content { padding-top: 16px; min-height: 350px; }
-    .no-langs-container { padding: 40px; text-align: center; color: #8c8c8c; }
-    .icon-management-wrapper { display: flex; gap: 20px; align-items: flex-start; padding: 12px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; }
-    .icon-preview-box { width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; background: white; border: 1px dashed #cbd5e1; border-radius: 8px; overflow: hidden; flex-shrink: 0; .preview-img { max-width: 100%; max-height: 100%; object-fit: contain; } }
-    .icon-controls { flex: 1; display: flex; flex-direction: column; gap: 8px; }
-  `]
+  styles: [
+    `
+      .tab-content {
+        padding-top: 16px;
+        min-height: 350px;
+      }
+      .no-langs-container {
+        padding: 40px;
+        text-align: center;
+        color: #8c8c8c;
+      }
+      .icon-management-wrapper {
+        display: flex;
+        gap: 20px;
+        align-items: flex-start;
+        padding: 12px;
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+      }
+      .icon-preview-box {
+        width: 60px;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: white;
+        border: 1px dashed #cbd5e1;
+        border-radius: 8px;
+        overflow: hidden;
+        flex-shrink: 0;
+        .preview-img {
+          max-width: 100%;
+          max-height: 100%;
+          object-fit: contain;
+        }
+      }
+      .icon-controls {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+    `,
+  ],
 })
 export class CategoryOfAggregatorFormComponent implements OnInit {
   private fb = inject(FormBuilder);
@@ -216,7 +285,7 @@ export class CategoryOfAggregatorFormComponent implements OnInit {
   private stateService = inject(CategoryOfAggregatorStateService);
 
   id = input<number | null>(null);
-  onSave = output<any>();
+  save = output<any>();
 
   form: FormGroup;
   languages: AppLanguage[] = [];
@@ -234,12 +303,15 @@ export class CategoryOfAggregatorFormComponent implements OnInit {
       isActive: [true],
       isSystem: [false],
       sortOrder: [0],
-      localizations: this.fb.array([])
+      localizations: this.fb.array([]),
     });
 
     toObservable(this.langService.availableLanguages)
-      .pipe(filter(langs => !!langs && langs.length > 0), takeUntilDestroyed())
-      .subscribe(langs => {
+      .pipe(
+        filter((langs) => !!langs && langs.length > 0),
+        takeUntilDestroyed(),
+      )
+      .subscribe((langs) => {
         this.languages = langs;
         this.initLocTabs();
         this.syncSelectedTab();
@@ -260,16 +332,18 @@ export class CategoryOfAggregatorFormComponent implements OnInit {
 
   private loadParents(): void {
     const langId = this.stateService.selectedLanguageId();
-    this.api.getPaged({ 
-      pageNumber: 1, 
-      pageSize: 1000, 
-      sortBy: 'CanonicalName', 
-      sortDirection: 0, 
-      showDeleted: false,
-      languageId: langId
-    })
-      .pipe(take(1)).subscribe(res => {
-        this.parentCategories = res.items.filter(i => i.id !== this.id());
+    this.api
+      .getPaged({
+        pageNumber: 1,
+        pageSize: 1000,
+        sortBy: 'CanonicalName',
+        sortDirection: 0,
+        showDeleted: false,
+        languageId: langId,
+      })
+      .pipe(take(1))
+      .subscribe((res) => {
+        this.parentCategories = res.items.filter((i) => i.id !== this.id());
         this.cdr.markForCheck();
       });
   }
@@ -277,7 +351,7 @@ export class CategoryOfAggregatorFormComponent implements OnInit {
   private syncSelectedTab(): void {
     const langId = this.stateService.selectedLanguageId();
     if (langId) {
-      const index = this.languages.findIndex(l => l.id === langId);
+      const index = this.languages.findIndex((l) => l.id === langId);
       if (index !== -1) {
         this.selectedTabIndex = index;
       }
@@ -289,7 +363,7 @@ export class CategoryOfAggregatorFormComponent implements OnInit {
       nzContent: AvUniversalUploadModalComponent,
       nzData: { folder: 'categories', title: 'Загрузка иконки категории' },
       nzFooter: null,
-      nzWidth: 700
+      nzWidth: 700,
     });
     modalRef.afterClose.subscribe((result: any) => {
       if (result && result.relativePath) {
@@ -303,17 +377,25 @@ export class CategoryOfAggregatorFormComponent implements OnInit {
     const locs = this.form.get('localizations') as FormArray;
     locs.clear();
     this.languages.forEach((lang) => {
-      locs.push(this.fb.group({
-        languageOfAggregatorId: [lang.id],
-        name: ['', [Validators.maxLength(255)]],
-        description: [''],
-        seoData: SeoFormComponent.createSeoForm(this.fb),
-      }));
+      locs.push(
+        this.fb.group({
+          languageOfAggregatorId: [lang.id],
+          name: ['', [Validators.maxLength(255)]],
+          description: [''],
+          seoData: SeoFormComponent.createSeoForm(this.fb),
+        }),
+      );
     });
   }
 
-  get locsArray(): FormArray { return this.form.get('localizations') as FormArray; }
-  getLocGroup(langId: number): FormGroup | null { return this.locsArray.controls.find((c) => c.value.languageOfAggregatorId === langId) as FormGroup; }
+  get locsArray(): FormArray {
+    return this.form.get('localizations') as FormArray;
+  }
+  getLocGroup(langId: number): FormGroup | null {
+    return this.locsArray.controls.find(
+      (c) => c.value.languageOfAggregatorId === langId,
+    ) as FormGroup;
+  }
   getSeoGroup(langId: number): FormGroup | null {
     const loc = this.getLocGroup(langId);
     return loc ? (loc.get('seoData') as FormGroup) : null;
@@ -322,30 +404,38 @@ export class CategoryOfAggregatorFormComponent implements OnInit {
   private loadData(id: number): void {
     this.loading = true;
     this.cdr.markForCheck();
-    this.api.getById(id).pipe(take(1)).subscribe({
-      next: (data) => {
-        this.form.patchValue({
-          id: data.id,
-          canonicalName: data.canonicalName,
-          slug: data.slug,
-          parentId: data.parentId,
-          iconPath: data.iconPath,
-          isActive: data.isActive,
-          isSystem: data.isSystem,
-          sortOrder: data.sortOrder
-        });
-        data.localizations?.forEach((loc: any) => {
-          const group = this.getLocGroup(loc.languageOfAggregatorId);
-          if (group) {
-            group.patchValue({ name: loc.name, description: loc.description });
-            group.get('seoData')?.patchValue({ metaTitle: loc.metaTitle, metaDescription: loc.metaDescription });
-          }
-        });
-        this.loading = false;
-        this.cdr.markForCheck();
-      },
-      error: () => { this.loading = false; this.cdr.markForCheck(); }
-    });
+    this.api
+      .getById(id)
+      .pipe(take(1))
+      .subscribe({
+        next: (data) => {
+          this.form.patchValue({
+            id: data.id,
+            canonicalName: data.canonicalName,
+            slug: data.slug,
+            parentId: data.parentId,
+            iconPath: data.iconPath,
+            isActive: data.isActive,
+            isSystem: data.isSystem,
+            sortOrder: data.sortOrder,
+          });
+          data.localizations?.forEach((loc: any) => {
+            const group = this.getLocGroup(loc.languageOfAggregatorId);
+            if (group) {
+              group.patchValue({ name: loc.name, description: loc.description });
+              group
+                .get('seoData')
+                ?.patchValue({ metaTitle: loc.metaTitle, metaDescription: loc.metaDescription });
+            }
+          });
+          this.loading = false;
+          this.cdr.markForCheck();
+        },
+        error: () => {
+          this.loading = false;
+          this.cdr.markForCheck();
+        },
+      });
   }
 
   submit(): void {
@@ -358,7 +448,7 @@ export class CategoryOfAggregatorFormComponent implements OnInit {
           delete loc.seoData;
         }
       });
-      this.onSave.emit(val);
+      this.save.emit(val);
     } else {
       this.message.warning('Заполните обязательные поля');
       this.cdr.markForCheck();

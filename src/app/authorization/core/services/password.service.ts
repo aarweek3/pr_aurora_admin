@@ -14,7 +14,7 @@ export interface PasswordResponse {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class PasswordService {
   private readonly http = inject(HttpClient);

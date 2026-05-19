@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit, inject } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
-import { LanguageService } from '@assets/languageApp/services/language.service';
+import { LanguageService } from '@language-app/services/language.service';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzGridModule } from 'ng-zorro-antd/grid';
 import { NzIconModule } from 'ng-zorro-antd/icon';
@@ -42,8 +42,18 @@ import { SampleMainTableComponent } from '../sample-main-table/sample-main-table
         <div nz-col nzSpan="24" class="header-row">
           <div class="title-group" style="display: flex; align-items: center; gap: 8px;">
             <h2 class="m0">Multi-Language Manager 🌐</h2>
-            <button nz-button nzType="text" (click)="showHelp()" nz-tooltip nzTooltipTitle="Открыть справку">
-              <span nz-icon nzType="question-circle" style="font-size: 18px; color: #1890ff;"></span>
+            <button
+              nz-button
+              nzType="text"
+              (click)="showHelp()"
+              nz-tooltip
+              nzTooltipTitle="Открыть справку"
+            >
+              <span
+                nz-icon
+                nzType="question-circle"
+                style="font-size: 18px; color: #1890ff;"
+              ></span>
             </button>
             <span class="total-count">Всего: {{ (state$ | async)?.total }}</span>
           </div>
@@ -234,7 +244,7 @@ export class SampleMainManagerComponent implements OnInit {
         </div>
       `,
       nzFooter: null,
-      nzMaskClosable: true
+      nzMaskClosable: true,
     });
   }
 }

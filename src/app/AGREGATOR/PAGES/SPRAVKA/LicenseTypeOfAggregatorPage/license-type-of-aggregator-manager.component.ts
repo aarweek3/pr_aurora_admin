@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { NzButtonModule } from 'ng-zorro-antd/button';
@@ -7,7 +7,7 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzRadioModule } from 'ng-zorro-antd/radio';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 
-import { ButtonControlJsonBlockComponent } from '@shared/controls/button-control-json-block/button-control-json-block.component';
+import { ButtonControlJsonBlockComponent } from '@controls';
 import { LicenseTypeOfAggregatorListComponent } from './components/license-type-of-aggregator-list/license-type-of-aggregator-list.component';
 
 import { LicenseTypeOfAggregatorModalComponent } from './components/license-type-of-aggregator-modal.component';
@@ -78,9 +78,9 @@ import { ModalService } from '@shared/components/ui/modal/services/modal.service
         *ngIf="showMaintenance"
         [loading]="state.loading()"
         [total]="state.total() || 0"
-        (onClear)="handleClearDatabase()"
-        (onRead)="handleReadFromDb()"
-        (onSeed)="state.seedFromJson()"
+        (clear)="handleClearDatabase()"
+        (read)="handleReadFromDb()"
+        (seed)="state.seedFromJson()"
       ></app-button-control-json-block>
 
       <!-- Основной список -->
@@ -126,13 +126,11 @@ import { ModalService } from '@shared/components/ui/modal/services/modal.service
   styleUrls: ['./license-type-of-aggregator-manager.component.scss'],
 })
 export class LicenseTypeOfAggregatorManagerComponent implements OnInit {
+  state = inject(LicenseTypeOfAggregatorStateService);
+  private modalService = inject(ModalService);
+
   viewMode: 'modal' | 'inline' | 'page' = 'modal';
   showMaintenance = false;
-
-  constructor(
-    public state: LicenseTypeOfAggregatorStateService,
-    private modalService: ModalService
-  ) {}
 
   async handleReadFromDb(): Promise<void> {
     const confirmed = await this.modalService.confirm({
@@ -142,7 +140,7 @@ export class LicenseTypeOfAggregatorManagerComponent implements OnInit {
       cancelText: 'Нет',
       confirmType: 'primary',
       centered: true,
-      icon: 'system/av_info'
+      icon: 'system/av_info',
     });
 
     if (confirmed) {
@@ -155,7 +153,7 @@ export class LicenseTypeOfAggregatorManagerComponent implements OnInit {
       'Вы действительно хотите СТЕРЕТЬ ВСЕ ДАННЫЕ из справочника типов лицензий?',
       '2 + 2 * 2 = ?',
       '6',
-      'Критическое действие'
+      'Критическое действие',
     );
 
     if (confirmed) {

@@ -120,7 +120,9 @@
   cursor: pointer;
   padding: 0 4px;
   font-size: var(--lc-font-size, 13px);
-  transition: opacity 0.2s, transform 0.2s;
+  transition:
+    opacity 0.2s,
+    transform 0.2s;
   color: var(--lc-text-muted);
   margin-left: auto;
 

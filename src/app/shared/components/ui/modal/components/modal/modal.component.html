@@ -1,80 +1,94 @@
-<div
-  *ngIf="isOpen"
-  [class]="wrapperClasses.join(' ')"
-  [@modal]="'enter'"
-  role="dialog"
-  aria-modal="true"
-  [attr.aria-labelledby]="title ? 'modal-title' : null"
->
-  <!-- Backdrop -->
-  <div *ngIf="showBackdrop" class="modal-backdrop" (click)="onBackdropClick($event)" aria-hidden="true"></div>
-
-  <!-- Modal Container -->
+@if (isOpen) {
   <div
-    #modalContainer
-    [class]="containerClasses.join(' ')"
-    [ngStyle]="containerStyles"
-    role="document"
-    cdkDrag
-    [cdkDragDisabled]="!draggable"
-    cdkDragBoundary=".modal-wrapper"
+    [class]="wrapperClasses.join(' ')"
+    [@modal]="'enter'"
+    role="dialog"
+    aria-modal="true"
+    [attr.aria-labelledby]="title ? 'modal-title' : null"
   >
-    <!-- Header -->
+    <!-- Backdrop -->
+    @if (showBackdrop) {
+      <div class="modal-backdrop" (click)="onBackdropClick($event)" aria-hidden="true"></div>
+    }
+
+    <!-- Modal Container -->
     <div
-      class="modal-header"
-      *ngIf="title || showCloseButton"
-      cdkDragHandle
-      [style.cursor]="draggable ? 'move' : 'default'"
+      #modalContainer
+      [class]="containerClasses.join(' ')"
+      [ngStyle]="containerStyles"
+      role="document"
+      cdkDrag
+      [cdkDragDisabled]="!draggable"
+      cdkDragBoundary=".modal-wrapper"
     >
-      <div class="modal-header__content">
-        <h2 *ngIf="title" id="modal-title" class="modal-header__title">
-          {{ title }}
-        </h2>
-        <p *ngIf="subtitle" class="modal-header__subtitle">
-          {{ subtitle }}
-        </p>
-      </div>
-
-      <div class="modal-header__actions">
-        <button
-          *ngIf="showMaximizeButton"
-          type="button"
-          class="modal-header__action"
-          (click)="toggleFullscreen($event)"
-          [attr.aria-label]="isFullscreen ? 'Свернуть' : 'Развернуть'"
+      <!-- Header -->
+      @if (title || showCloseButton) {
+        <div
+          class="modal-header"
+          cdkDragHandle
+          [style.cursor]="draggable ? 'move' : 'default'"
         >
-          <av-icon [type]="isFullscreen ? 'actions/av_compress' : 'actions/av_expand'" [size]="18"></av-icon>
-        </button>
+          <div class="modal-header__content">
+            @if (title) {
+              <h2 id="modal-title" class="modal-header__title">
+                {{ title }}
+              </h2>
+            }
+            @if (subtitle) {
+              <p class="modal-header__subtitle">
+                {{ subtitle }}
+              </p>
+            }
+          </div>
 
-        <button
-          *ngIf="showCloseButton"
-          type="button"
-          class="modal-header__close"
-          (click)="close()"
-          aria-label="Закрыть"
-        >
-          <av-icon type="actions/av_close" [size]="20"></av-icon>
-        </button>
+          <div class="modal-header__actions">
+            @if (showMaximizeButton) {
+              <button
+                type="button"
+                class="modal-header__action"
+                (click)="toggleFullscreen($event)"
+                [attr.aria-label]="isFullscreen ? 'Свернуть' : 'Развернуть'"
+              >
+                <av-icon [type]="isFullscreen ? 'actions/av_compress' : 'actions/av_expand'" [size]="18"></av-icon>
+              </button>
+            }
+
+            @if (showCloseButton) {
+              <button
+                type="button"
+                class="modal-header__close"
+                (click)="close()"
+                aria-label="Закрыть"
+              >
+                <av-icon type="actions/av_close" [size]="20"></av-icon>
+              </button>
+            }
+          </div>
+        </div>
+      }
+
+      <!-- Body -->
+      <div class="modal-body">
+        <ng-content select="[modal-body]"></ng-content>
       </div>
-    </div>
 
-    <!-- Body -->
-    <div class="modal-body">
-      <ng-content select="[modal-body]"></ng-content>
-    </div>
+      <!-- Footer -->
+      <div class="modal-footer" [class.modal-footer--loading]="loading">
+        <!-- Loading Overlay -->
+        @if (loading) {
+          <div class="modal-footer__loading">
+            <div class="spinner"></div>
+            <span>Загрузка...</span>
+          </div>
+        }
 
-    <!-- Footer -->
-    <div class="modal-footer" [class.modal-footer--loading]="loading">
-      <!-- Loading Overlay -->
-      <div *ngIf="loading" class="modal-footer__loading">
-        <div class="spinner"></div>
-        <span>Загрузка...</span>
+        <ng-content select="[modal-footer]"></ng-content>
       </div>
 
-      <ng-content select="[modal-footer]"></ng-content>
+      <!-- Resize Handle -->
+      @if (resizable) {
+        <div class="modal-resize-handle" (mousedown)="onResizeMouseDown($event)"></div>
+      }
     </div>
-
-    <!-- Resize Handle -->
-    <div *ngIf="resizable" class="modal-resize-handle" (mousedown)="onResizeMouseDown($event)"></div>
   </div>
-</div>
+}

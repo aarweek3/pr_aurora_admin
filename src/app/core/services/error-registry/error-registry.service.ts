@@ -1,6 +1,6 @@
 // src/app/core/services/error-registry/error-registry.service.ts
 import { HttpErrorResponse } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { BehaviorSubject, map } from 'rxjs';
 import {
   ErrorFilter,
@@ -15,14 +15,14 @@ import { EventBusService } from '../event-bus/event-bus.service';
   providedIn: 'root',
 })
 export class ErrorRegistryService implements IErrorRegistry {
+  private eventBus = inject(EventBusService);
+
   private readonly errorsMap = new Map<string, RegisteredError>();
   private readonly errorsSubject = new BehaviorSubject<RegisteredError[]>([]);
 
   readonly errors$ = this.errorsSubject.asObservable();
 
   readonly summary$ = this.errors$.pipe(map((errors) => this.calculateSummary(errors)));
-
-  constructor(private eventBus: EventBusService) {}
 
   // ===== REGISTRATION =====
 

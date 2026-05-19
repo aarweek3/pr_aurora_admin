@@ -15,91 +15,93 @@
       </div>
 
       @if (isPlaygroundVisible()) {
-      <!-- Interactive Playground -->
-      <div class="playground-container">
-        <div nz-row [nzGutter]="[24, 24]">
-          <!-- Left: Controls & Docs Tabs -->
-          <div nz-col [nzXs]="24" [nzLg]="15">
-            <nz-card class="control-card-tabs">
-              <nz-tabset>
-                <!-- Tab 1: Settings -->
-                <nz-tab nzTitle="⚙️ Настройки">
-                  <div style="padding-top: 20px">
-                    <av-icon-settings-control
-                      [value]="pgConfig()"
-                      (valueChange)="pgConfig.set($event)"
-                      [presets]="iconPresets"
-                    ></av-icon-settings-control>
-                  </div>
-                </nz-tab>
+        <!-- Interactive Playground -->
+        <div class="playground-container">
+          <div nz-row [nzGutter]="[24, 24]">
+            <!-- Left: Controls & Docs Tabs -->
+            <div nz-col [nzXs]="24" [nzLg]="15">
+              <nz-card class="control-card-tabs">
+                <nz-tabset>
+                  <!-- Tab 1: Settings -->
+                  <nz-tab nzTitle="⚙️ Настройки">
+                    <div style="padding-top: 20px">
+                      <av-icon-settings-control
+                        [value]="pgConfig()"
+                        (valueChange)="pgConfig.set($event)"
+                        [presets]="iconPresets"
+                      ></av-icon-settings-control>
+                    </div>
+                  </nz-tab>
 
-                <!-- Tab 2: Generated Code -->
-                <nz-tab nzTitle="📄 Код">
-                  <div style="padding-top: 20px">
-                    <av-help-copy-container
-                      title="Сгенерированный код (HTML / TS / SCSS)"
-                      [content]="pgGeneratedCode()"
-                      bgColor="#1e293b"
-                      [defaultCollapsed]="false"
-                    ></av-help-copy-container>
-                  </div>
-                </nz-tab>
+                  <!-- Tab 2: Generated Code -->
+                  <nz-tab nzTitle="📄 Код">
+                    <div style="padding-top: 20px">
+                      <av-help-copy-container
+                        title="Сгенерированный код (HTML / TS / SCSS)"
+                        [content]="pgGeneratedCode()"
+                        bgColor="#1e293b"
+                        [defaultCollapsed]="false"
+                      ></av-help-copy-container>
+                    </div>
+                  </nz-tab>
 
-                <!-- Tab 3: SVG Source -->
-                <nz-tab nzTitle="🏗️ SVG Source">
-                  <div style="padding-top: 20px">
-                    <av-help-copy-container
-                      title="Raw Source (SVG)"
-                      [content]="pgRawSource()"
-                      bgColor="#0f172a"
-                      codeLang="xml"
-                      [defaultCollapsed]="false"
-                    ></av-help-copy-container>
-                  </div>
-                </nz-tab>
+                  <!-- Tab 3: SVG Source -->
+                  <nz-tab nzTitle="🏗️ SVG Source">
+                    <div style="padding-top: 20px">
+                      <av-help-copy-container
+                        title="Raw Source (SVG)"
+                        [content]="pgRawSource()"
+                        bgColor="#0f172a"
+                        codeLang="xml"
+                        [defaultCollapsed]="false"
+                      ></av-help-copy-container>
+                    </div>
+                  </nz-tab>
 
-                <!-- Tab 4: API Docs -->
-                <nz-tab nzTitle="🛠️ API">
-                  <div style="padding-top: 20px">
-                    <av-help-copy-container
-                      title="Interface: AvIconProps"
-                      [content]="apiInterfaceCode"
-                      bgColor="#0a0e1a"
-                      [showHelpButton]="true"
-                      [defaultCollapsed]="false"
-                    ></av-help-copy-container>
-                  </div>
-                </nz-tab>
-              </nz-tabset>
-            </nz-card>
-          </div>
+                  <!-- Tab 4: API Docs -->
+                  <nz-tab nzTitle="🛠️ API">
+                    <div style="padding-top: 20px">
+                      <av-help-copy-container
+                        title="Interface: AvIconProps"
+                        [content]="apiInterfaceCode"
+                        bgColor="#0a0e1a"
+                        [showHelpButton]="true"
+                        [defaultCollapsed]="false"
+                      ></av-help-copy-container>
+                    </div>
+                  </nz-tab>
+                </nz-tabset>
+              </nz-card>
+            </div>
 
-          <!-- Right: Result Preview -->
-          <div nz-col [nzXs]="24" [nzLg]="9">
-            <nz-card nzTitle="Результат" class="result-card" style="height: 100%">
-              <div class="icon-preview-container" style="height: 100%; min-height: 300px">
-                <div class="preview-background" style="flex: 1">
-                  <div class="icon-showcase">
-                    <av-icon [config]="pgConfig()"></av-icon>
+            <!-- Right: Result Preview -->
+            <div nz-col [nzXs]="24" [nzLg]="9">
+              <nz-card nzTitle="Результат" class="result-card" style="height: 100%">
+                <div class="icon-preview-container" style="height: 100%; min-height: 300px">
+                  <div class="preview-background" style="flex: 1">
+                    <div class="icon-showcase">
+                      <av-icon [config]="pgConfig()"></av-icon>
+                    </div>
+                  </div>
+                  <div class="preview-info">
+                    <p><strong>Иконка:</strong> {{ pgConfig().type }}</p>
+                    <p><strong>Размер:</strong> {{ pgConfig().size }}px</p>
+                    <p><strong>Цвет:</strong> {{ pgConfig().color }}</p>
+                    @if (pgConfig().rotation !== 0) {
+                      <p><strong>Поворот:</strong> {{ pgConfig().rotation }}°</p>
+                    }
+                    @if (pgConfig().scale !== 1) {
+                      <p><strong>Масштаб:</strong> {{ pgConfig().scale }}</p>
+                    }
+                    @if (pgConfig().opacity !== 1) {
+                      <p><strong>Прозрачность:</strong> {{ (pgConfig().opacity * 100).toFixed(0) }}%</p>
+                    }
                   </div>
                 </div>
-                <div class="preview-info">
-                  <p><strong>Иконка:</strong> {{ pgConfig().type }}</p>
-                  <p><strong>Размер:</strong> {{ pgConfig().size }}px</p>
-                  <p><strong>Цвет:</strong> {{ pgConfig().color }}</p>
-                  @if (pgConfig().rotation !== 0) {
-                  <p><strong>Поворот:</strong> {{ pgConfig().rotation }}°</p>
-                  } @if (pgConfig().scale !== 1) {
-                  <p><strong>Масштаб:</strong> {{ pgConfig().scale }}</p>
-                  } @if (pgConfig().opacity !== 1) {
-                  <p><strong>Прозрачность:</strong> {{ (pgConfig().opacity * 100).toFixed(0) }}%</p>
-                  }
-                </div>
-              </div>
-            </nz-card>
+              </nz-card>
+            </div>
           </div>
         </div>
-      </div>
       }
     </div>
 
@@ -115,63 +117,63 @@
       </div>
 
       @if (isSectionLibraryVisible()) {
-      <div class="library-container">
-        <div class="search-bar" style="margin-bottom: 24px">
-          <nz-input-group [nzPrefix]="searchIcon">
-            <input
-              nz-input
-              [ngModel]="searchQuery()"
-              (ngModelChange)="searchQuery.set($event)"
-              placeholder="Поиск по названию или категории..."
-            />
-          </nz-input-group>
-          <ng-template #searchIcon>
-            <av-icon type="actions/av_search" [size]="16" color="#bfbfbf"></av-icon>
-          </ng-template>
-        </div>
-
-        @for (cat of filteredCategories; track cat.category) {
-        <div class="category-block" style="margin-bottom: 40px">
-          <h3
-            class="category-title"
-            style="margin-bottom: 16px; border-bottom: 1px solid var(--color-border-secondary); padding-bottom: 8px"
-          >
-            {{ cat.category }}
-            <small style="color: var(--color-text-secondary); margin-left: 8px">({{ cat.icons.length }})</small>
-          </h3>
-
-          <div
-            class="icon-grid"
-            style="display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 16px"
-          >
-            @for (icon of cat.icons; track icon.type) {
-            <nz-card
-              class="icon-item-card"
-              [nzHoverable]="true"
-              (click)="copyToClipboard(icon.type, 'Тип иконки скопирован!')"
-              style="text-align: center; cursor: pointer"
-            >
-              <div class="icon-holder" style="margin-bottom: 8px; display: flex; justify-content: center">
-                <av-icon [type]="icon.type" [size]="32" [color]="pgConfig().color"></av-icon>
-              </div>
-              <div
-                class="icon-label"
-                style="
-                  font-size: 11px;
-                  color: var(--color-text-secondary);
-                  overflow: hidden;
-                  text-overflow: ellipsis;
-                  white-space: nowrap;
-                "
-              >
-                {{ icon.name }}
-              </div>
-            </nz-card>
-            }
+        <div class="library-container">
+          <div class="search-bar" style="margin-bottom: 24px">
+            <nz-input-group [nzPrefix]="searchIcon">
+              <input
+                nz-input
+                [ngModel]="searchQuery()"
+                (ngModelChange)="searchQuery.set($event)"
+                placeholder="Поиск по названию или категории..."
+              />
+            </nz-input-group>
+            <ng-template #searchIcon>
+              <av-icon type="actions/av_search" [size]="16" color="#bfbfbf"></av-icon>
+            </ng-template>
           </div>
+
+          @for (cat of filteredCategories; track cat.category) {
+            <div class="category-block" style="margin-bottom: 40px">
+              <h3
+                class="category-title"
+                style="margin-bottom: 16px; border-bottom: 1px solid var(--color-border-secondary); padding-bottom: 8px"
+              >
+                {{ cat.category }}
+                <small style="color: var(--color-text-secondary); margin-left: 8px">({{ cat.icons.length }})</small>
+              </h3>
+
+              <div
+                class="icon-grid"
+                style="display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 16px"
+              >
+                @for (icon of cat.icons; track icon.type) {
+                  <nz-card
+                    class="icon-item-card"
+                    [nzHoverable]="true"
+                    (click)="copyToClipboard(icon.type, 'Тип иконки скопирован!')"
+                    style="text-align: center; cursor: pointer"
+                  >
+                    <div class="icon-holder" style="margin-bottom: 8px; display: flex; justify-content: center">
+                      <av-icon [type]="icon.type" [size]="32" [color]="pgConfig().color"></av-icon>
+                    </div>
+                    <div
+                      class="icon-label"
+                      style="
+                        font-size: 11px;
+                        color: var(--color-text-secondary);
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        white-space: nowrap;
+                      "
+                    >
+                      {{ icon.name }}
+                    </div>
+                  </nz-card>
+                }
+              </div>
+            </div>
+          }
         </div>
-        }
-      </div>
       }
     </div>
 
@@ -218,8 +220,8 @@
 
   <!-- Toast Notification -->
   @if (toastMessage()) {
-  <div class="av-toast">
-    {{ toastMessage() }}
-  </div>
+    <div class="av-toast">
+      {{ toastMessage() }}
+    </div>
   }
 </app-container-ui-help-base>

@@ -4,8 +4,6 @@ import { Component } from '@angular/core';
   selector: 'app-platform',
   imports: [],
   templateUrl: './platform.component.html',
-  styleUrl: './platform.component.scss'
+  styleUrl: './platform.component.scss',
 })
-export class PlatformComponent {
-
-}
+export class PlatformComponent {}

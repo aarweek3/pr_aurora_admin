@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ViewChild, ChangeDetectionStrategy, inject } from '@angular/core';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzModalModule } from 'ng-zorro-antd/modal';
@@ -10,7 +10,13 @@ import { PlatformOfAggregatorFormComponent } from '../platform-of-aggregator-for
   selector: 'app-platform-of-aggregator-modal',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, NzModalModule, NzButtonModule, NzIconModule, PlatformOfAggregatorFormComponent],
+  imports: [
+    CommonModule,
+    NzModalModule,
+    NzButtonModule,
+    NzIconModule,
+    PlatformOfAggregatorFormComponent,
+  ],
   template: `
     <nz-modal
       [nzVisible]="state.modalVisible()"
@@ -39,7 +45,12 @@ import { PlatformOfAggregatorFormComponent } from '../platform-of-aggregator-for
 
       <ng-template #modalFooter>
         <button nz-button nzType="default" (click)="handleCancel()">Отмена</button>
-        <button nz-button nzType="primary" (click)="platformForm.submitForm()" [nzLoading]="state.modalLoading()">
+        <button
+          nz-button
+          nzType="primary"
+          (click)="platformForm.submitForm()"
+          [nzLoading]="state.modalLoading()"
+        >
           Сохранить
         </button>
       </ng-template>
@@ -47,10 +58,14 @@ import { PlatformOfAggregatorFormComponent } from '../platform-of-aggregator-for
   `,
 })
 export class PlatformOfAggregatorModalComponent {
+  state = inject(PlatformOfAggregatorStateService);
+
   @ViewChild('platformForm') platformForm!: PlatformOfAggregatorFormComponent;
 
-  constructor(public state: PlatformOfAggregatorStateService) {}
-
-  handleCancel(): void { this.state.closeModal(); }
-  handleSave(formValue: any): void { this.state.save(formValue); }
+  handleCancel(): void {
+    this.state.closeModal();
+  }
+  handleSave(formValue: any): void {
+    this.state.save(formValue);
+  }
 }

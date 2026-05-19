@@ -14,8 +14,8 @@ import { HealthCheckService } from '../../services/health.service';
 export class HealthIndicatorComponent {
   public healthService = inject(HealthCheckService);
 
-  @Input() status: string = 'Unknown';
-  @Input() pulse: boolean = false;
+  @Input() status = 'Unknown';
+  @Input() pulse = false;
 
   getStatusClass(status: SystemStatus | string): string {
     const base = 'status-circle';

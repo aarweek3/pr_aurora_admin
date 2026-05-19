@@ -17,7 +17,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
       nzTitle="Просмотр"
       [nzWidth]="600"
       [nzFooter]="null"
-      (nzOnCancel)="close.emit()"
+      (nzOnCancel)="modalClose.emit()"
     >
       <ng-template #modalTitle>
         <div class="modal-title-container">
@@ -52,9 +52,9 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
   `,
 })
 export class SampleViewComponent implements OnDestroy {
-  @Input() visible: boolean = false;
+  @Input() visible = false;
   @Input() sample: SampleDetailDto | null = null;
-  @Output() close = new EventEmitter<void>();
+  @Output() modalClose = new EventEmitter<void>();
 
   private destroy$ = new Subject<void>();
 

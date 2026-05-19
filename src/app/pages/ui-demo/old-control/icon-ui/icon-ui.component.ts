@@ -3,10 +3,10 @@ import { HttpClient } from '@angular/common/http';
 import { Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ApiEndpoints } from '@environments/api-endpoints';
-import { IconLaboratoryService } from '@shared/services/icon-laboratory.service';
+import { IconDataService } from '@core/services/icon/icon-data.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { AvIconConfig, IconComponent } from '../../../../shared/components/ui/icon';
-import { AvIconCategory } from './icon-metadata.model';
+import { AvIconCategory } from '@shared/models/icon-metadata.model';
 import { ICON_REGISTRY } from './icon-registry';
 
 @Component({
@@ -33,18 +33,20 @@ import { ICON_REGISTRY } from './icon-registry';
             <div class="action-info">
               <p class="text-secondary">Компонент: IconUiComponent</p>
               @if (dataSource() === 'backend') {
-              <button
-                class="sync-btn"
-                [disabled]="isSyncing()"
-                (click)="syncToLocal()"
-                title="Синхронизировать бэкенд с локальным файлом"
-              >
-                @if (isSyncing()) {
-                <div class="small-spinner"></div>
-                Syncing... } @else {
-                <av-icon type="actions/av_save" [size]="14"></av-icon>
-                Sync to Local }
-              </button>
+                <button
+                  class="sync-btn"
+                  [disabled]="isSyncing()"
+                  (click)="syncToLocal()"
+                  title="Синхронизировать бэкенд с локальным файлом"
+                >
+                  @if (isSyncing()) {
+                    <div class="small-spinner"></div>
+                    Syncing...
+                  } @else {
+                    <av-icon type="actions/av_save" [size]="14"></av-icon>
+                    Sync to Local
+                  }
+                </button>
               }
             </div>
           </div>
@@ -58,9 +60,9 @@ import { ICON_REGISTRY } from './icon-registry';
               class="search-input"
             />
             @if (searchQuery()) {
-            <button class="clear-btn" (click)="searchQuery.set('')">
-              <av-icon type="actions/av_close" [size]="14"></av-icon>
-            </button>
+              <button class="clear-btn" (click)="searchQuery.set('')">
+                <av-icon type="actions/av_close" [size]="14"></av-icon>
+              </button>
             }
           </div>
         </div>
@@ -68,40 +70,44 @@ import { ICON_REGISTRY } from './icon-registry';
         <!-- Main Content -->
         <div class="icon-ui__content">
           @if (isLoading()) {
-          <div class="loading-state">
-            <div class="spinner"></div>
-            <p>Загрузка библиотеки иконок...</p>
-          </div>
-          } @else if (filteredCategories().length === 0) {
-          <div class="empty-state">
-            <av-icon type="system/av_info" [size]="48"></av-icon>
-            <h3>Ничего не найдено</h3>
-            <p>Попробуйте изменить поисковый запрос</p>
-          </div>
-          } @for (cat of filteredCategories(); track cat.category) {
-          <section class="category-section">
-            <h2 class="category-title">
-              {{ cat.category }}
-              <span class="count">{{ cat.icons.length }}</span>
-            </h2>
-
-            <div class="icon-grid">
-              @for (icon of cat.icons; track icon.type) {
-              <div class="icon-card" (click)="copyToClipboard(icon.type)">
-                <div class="icon-preview" [style.color]="activeColor()">
-                  <av-icon [type]="icon.type" [size]="iconSize()"></av-icon>
-                </div>
-                <div class="icon-info">
-                  <span class="icon-name" [title]="icon.name">{{ icon.name }}</span>
-                  <button class="copy-hint" (click)="$event.stopPropagation(); copyCode(icon.type)">
-                    <av-icon type="actions/av_save" [size]="12"></av-icon>
-                    Code
-                  </button>
-                </div>
-              </div>
-              }
+            <div class="loading-state">
+              <div class="spinner"></div>
+              <p>Загрузка библиотеки иконок...</p>
             </div>
-          </section>
+          } @else if (filteredCategories().length === 0) {
+            <div class="empty-state">
+              <av-icon type="system/av_info" [size]="48"></av-icon>
+              <h3>Ничего не найдено</h3>
+              <p>Попробуйте изменить поисковый запрос</p>
+            </div>
+          }
+          @for (cat of filteredCategories(); track cat.category) {
+            <section class="category-section">
+              <h2 class="category-title">
+                {{ cat.category }}
+                <span class="count">{{ cat.icons.length }}</span>
+              </h2>
+
+              <div class="icon-grid">
+                @for (icon of cat.icons; track icon.type) {
+                  <div class="icon-card" (click)="copyToClipboard(icon.type)">
+                    <div class="icon-preview" [style.color]="activeColor()">
+                      <av-icon [type]="icon.type" [size]="iconSize()"></av-icon>
+                    </div>
+                    <div class="icon-info">
+                      <span class="icon-name" [title]="icon.name">{{ icon.name }}</span>
+                      <button
+                        class="copy-hint"
+                        (click)="$event.stopPropagation(); copyCode(icon.type)"
+                      >
+                        <av-icon type="actions/av_save" [size]="12"></av-icon>
+                        Code
+                      </button>
+                    </div>
+                  </div>
+                }
+              </div>
+            </section>
           }
         </div>
       </div>
@@ -392,7 +398,7 @@ import { ICON_REGISTRY } from './icon-registry';
   ],
 })
 export class IconUiComponent {
-  private iconService = inject(IconLaboratoryService);
+  private iconService = inject(IconDataService);
   private http = inject(HttpClient);
   private message = inject(NzMessageService);
 
@@ -410,7 +416,7 @@ export class IconUiComponent {
 
   private loadIcons() {
     this.isLoading.set(true);
-    this.iconService.getRegistry().subscribe({
+    this.iconService.getIcons().subscribe({
       next: (data) => {
         const sorted = [...data].sort((a, b) => {
           if (a.category === 'Другие') return 1;

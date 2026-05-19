@@ -94,12 +94,12 @@ import { NzTabsModule } from 'ng-zorro-antd/tabs';
                 <p>Компонент использует следующие системные сервисы:</p>
                 <ul>
                   <li>
-                    <strong>IconLaboratoryService</strong> — для отправки команды
+                    <strong>IconDataService</strong> — для отправки команды
                     <code>OPEN_FILE</code> на бэкенд.
                   </li>
                   <li>
-                    <strong>ClipboardModule (&#64;angular/cdk)</strong> — для взаимодействия с буфером
-                    обмена.
+                    <strong>ClipboardModule (&#64;angular/cdk)</strong> — для взаимодействия с
+                    буфером обмена.
                   </li>
                   <li>
                     <strong>NzMessageService</strong> — для отображения уведомлений об успехе или

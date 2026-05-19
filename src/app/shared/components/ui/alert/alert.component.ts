@@ -42,21 +42,22 @@ export type AlertType = 'success' | 'info' | 'warning' | 'error';
       <!-- Content -->
       <div class="alert__content">
         @if (title()) {
-        <div class="alert__title">{{ title() }}</div>
-        } @if (description()) {
-        <div class="alert__description">{{ description() }}</div>
+          <div class="alert__title">{{ title() }}</div>
+        }
+        @if (description()) {
+          <div class="alert__description">{{ description() }}</div>
         } @else {
-        <div class="alert__message">
-          <ng-content></ng-content>
-        </div>
+          <div class="alert__message">
+            <ng-content></ng-content>
+          </div>
         }
       </div>
 
       <!-- Close Button -->
       @if (closable()) {
-      <button class="alert__close" (click)="handleClose()" type="button">
-        <span nz-icon nzType="close"></span>
-      </button>
+        <button class="alert__close" (click)="handleClose()" type="button">
+          <span nz-icon nzType="close"></span>
+        </button>
       }
     </div>
   `,
@@ -173,53 +174,6 @@ export type AlertType = 'success' | 'info' | 'warning' | 'error';
           border-radius: 0;
           border-left: none;
           border-right: none;
-        }
-
-        // Dark theme
-        @include dark-theme {
-          &--success {
-            background: rgba($color-success, 0.15);
-            border-color: $color-success;
-
-            .alert__title {
-              color: $color-success-hover;
-            }
-          }
-
-          &--info {
-            background: rgba($color-info, 0.15);
-            border-color: $color-info;
-
-            .alert__title {
-              color: $color-info-hover;
-            }
-          }
-
-          &--warning {
-            background: rgba($color-warning, 0.15);
-            border-color: $color-warning;
-
-            .alert__title {
-              color: $color-warning-hover;
-            }
-          }
-
-          &--error {
-            background: rgba($color-error, 0.15);
-            border-color: $color-error;
-
-            .alert__title {
-              color: $color-error-hover;
-            }
-          }
-
-          .alert__close {
-            color: $dark-text-secondary;
-
-            &:hover {
-              color: $dark-text-primary;
-            }
-          }
         }
       }
     `,

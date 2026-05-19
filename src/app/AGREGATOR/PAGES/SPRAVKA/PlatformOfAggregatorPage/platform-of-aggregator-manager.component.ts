@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { NzButtonModule } from 'ng-zorro-antd/button';
@@ -7,7 +7,7 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzRadioModule } from 'ng-zorro-antd/radio';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 
-import { ButtonControlJsonBlockComponent } from '@shared/controls/button-control-json-block/button-control-json-block.component';
+import { ButtonControlJsonBlockComponent } from '@controls';
 import { PlatformOfAggregatorInlineComponent } from './components/platform-of-aggregator-inline/platform-of-aggregator-inline.component';
 import { PlatformOfAggregatorListComponent } from './components/platform-of-aggregator-list/platform-of-aggregator-list.component';
 import { PlatformOfAggregatorModalComponent } from './components/platform-of-aggregator-modal/platform-of-aggregator-modal.component';
@@ -76,9 +76,9 @@ import { ModalService } from '@shared/components/ui/modal/services/modal.service
         *ngIf="showMaintenance"
         [loading]="state.loading()"
         [total]="state.total() || 0"
-        (onClear)="handleClearDatabase()"
-        (onRead)="handleReadFromDb()"
-        (onSeed)="state.seedFromJson()"
+        (clear)="handleClearDatabase()"
+        (read)="handleReadFromDb()"
+        (seed)="state.seedFromJson()"
       ></app-button-control-json-block>
 
       <!-- Кнопка "Создать" для режима страницы -->
@@ -120,9 +120,7 @@ import { ModalService } from '@shared/components/ui/modal/services/modal.service
           <span class="status-item" *ngIf="state.loading()">
             <i nz-icon nzType="loading"></i> Обновление...
           </span>
-          <span class="status-item version-tag">
-            v3.5.0
-          </span>
+          <span class="status-item version-tag"> v3.5.0 </span>
         </div>
       </div>
     </div>
@@ -130,14 +128,12 @@ import { ModalService } from '@shared/components/ui/modal/services/modal.service
   styleUrls: ['./platform-of-aggregator-manager.component.scss'],
 })
 export class PlatformOfAggregatorManagerComponent implements OnInit {
+  state = inject(PlatformOfAggregatorStateService);
+  private modalService = inject(ModalService);
+
   viewMode: 'modal' | 'inline' | 'page' = 'modal';
   showMaintenance = false;
 
-  constructor(
-    public state: PlatformOfAggregatorStateService,
-    private modalService: ModalService
-  ) {}
-  
   async handleReadFromDb(): Promise<void> {
     const confirmed = await this.modalService.confirm({
       title: 'Подтверждение',
@@ -146,9 +142,9 @@ export class PlatformOfAggregatorManagerComponent implements OnInit {
       cancelText: 'Нет',
       confirmType: 'primary',
       centered: true,
-      icon: 'system/av_info'
+      icon: 'system/av_info',
     });
-    
+
     if (confirmed) {
       this.state.loadItems(true);
     }
@@ -159,7 +155,7 @@ export class PlatformOfAggregatorManagerComponent implements OnInit {
       'Вы действительно хотите СТЕРЕТЬ ВСЕ ДАННЫЕ из таблицы платформ?',
       '2 + 2 * 2 = ?',
       '6',
-      'Критическое действие'
+      'Критическое действие',
     );
 
     if (confirmed) {

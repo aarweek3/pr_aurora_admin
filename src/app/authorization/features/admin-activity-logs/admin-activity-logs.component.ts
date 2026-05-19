@@ -14,13 +14,7 @@ import { ACTIVITY_ACTION_LABELS } from '@auth/models';
 @Component({
   selector: 'app-admin-activity-logs',
   standalone: true,
-  imports: [
-    CommonModule,
-    NzTableModule,
-    NzTagModule,
-    NzButtonModule,
-    NzIconModule
-  ],
+  imports: [CommonModule, NzTableModule, NzTagModule, NzButtonModule, NzIconModule],
   template: `
     <div class="logs-container">
       <div class="header">
@@ -31,11 +25,7 @@ import { ACTIVITY_ACTION_LABELS } from '@auth/models';
         </button>
       </div>
 
-      <nz-table 
-        [nzData]="logs"
-        [nzLoading]="loading"
-        [nzPageSize]="20"
-      >
+      <nz-table [nzData]="logs" [nzLoading]="loading" [nzPageSize]="20">
         <thead>
           <tr>
             <th>Пользователь</th>
@@ -55,7 +45,7 @@ import { ACTIVITY_ACTION_LABELS } from '@auth/models';
                 {{ log.success ? 'Успех' : 'Ошибка' }}
               </nz-tag>
             </td>
-            <td>{{ log.timestamp | date:'short' }}</td>
+            <td>{{ log.timestamp | date: 'short' }}</td>
             <td>{{ log.ipAddress || 'N/A' }}</td>
             <td>{{ log.deviceType }}</td>
           </tr>
@@ -63,24 +53,26 @@ import { ACTIVITY_ACTION_LABELS } from '@auth/models';
       </nz-table>
     </div>
   `,
-  styles: [`
-    .logs-container {
-      padding: 24px;
-      background: #fff;
-      border-radius: 8px;
-    }
+  styles: [
+    `
+      .logs-container {
+        padding: 24px;
+        background: #fff;
+        border-radius: 8px;
+      }
 
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 24px;
-    }
+      .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 24px;
+      }
 
-    .header h2 {
-      margin: 0;
-    }
-  `]
+      .header h2 {
+        margin: 0;
+      }
+    `,
+  ],
 })
 export class AdminActivityLogsComponent implements OnInit, OnDestroy {
   private readonly destroy$ = new Subject<void>();
@@ -101,7 +93,8 @@ export class AdminActivityLogsComponent implements OnInit, OnDestroy {
 
   loadLogs(): void {
     this.loading = true;
-    this.activityLogsService.getRecentActivities(50)
+    this.activityLogsService
+      .getRecentActivities(50)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response) => {
@@ -111,7 +104,7 @@ export class AdminActivityLogsComponent implements OnInit, OnDestroy {
         error: () => {
           this.message.error('Ошибка при загрузке логов');
           this.loading = false;
-        }
+        },
       });
   }
 
@@ -119,4 +112,3 @@ export class AdminActivityLogsComponent implements OnInit, OnDestroy {
     return ACTIVITY_ACTION_LABELS[action as keyof typeof ACTIVITY_ACTION_LABELS] || action;
   }
 }
-

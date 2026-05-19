@@ -21,47 +21,53 @@
               <nz-tab nzTitle="⚙️ Настройки">
                 <div style="padding-top: 20px">
                   @for (control of config().controls; track control.name) {
-                  <av-field-group [label]="control.label" [description]="control.description">
-                    @switch (control.type) { @case ('select') {
-                    <nz-select
-                      [ngModel]="controlValues()[control.name]"
-                      (ngModelChange)="updateControl(control.name, $event)"
-                      style="width: 100%"
-                    >
-                      @for (opt of control.options; track opt.value) {
-                      <nz-option [nzValue]="opt.value" [nzLabel]="opt.label" />
+                    <av-field-group [label]="control.label" [description]="control.description">
+                      @switch (control.type) {
+                        @case ('select') {
+                          <nz-select
+                            [ngModel]="controlValues()[control.name]"
+                            (ngModelChange)="updateControl(control.name, $event)"
+                            style="width: 100%"
+                          >
+                            @for (opt of control.options; track opt.value) {
+                              <nz-option [nzValue]="opt.value" [nzLabel]="opt.label" />
+                            }
+                          </nz-select>
+                        }
+                        @case ('boolean') {
+                          <nz-switch
+                            [ngModel]="controlValues()[control.name]"
+                            (ngModelChange)="updateControl(control.name, $event)"
+                          />
+                        }
+                        @case ('text') {
+                          <input
+                            nz-input
+                            [ngModel]="controlValues()[control.name]"
+                            (ngModelChange)="updateControl(control.name, $event)"
+                            [placeholder]="control.label"
+                          />
+                        }
+                        @case ('number') {
+                          <nz-input-number
+                            [ngModel]="controlValues()[control.name]"
+                            (ngModelChange)="updateControl(control.name, $event)"
+                            [nzMin]="control.min"
+                            [nzMax]="control.max"
+                            [nzStep]="control.step"
+                            style="width: 100%"
+                          />
+                        }
+                        @case ('color') {
+                          <input
+                            type="color"
+                            [ngModel]="controlValues()[control.name]"
+                            (ngModelChange)="updateControl(control.name, $event)"
+                            style="width: 100%; height: 40px; cursor: pointer"
+                          />
+                        }
                       }
-                    </nz-select>
-                    } @case ('boolean') {
-                    <nz-switch
-                      [ngModel]="controlValues()[control.name]"
-                      (ngModelChange)="updateControl(control.name, $event)"
-                    />
-                    } @case ('text') {
-                    <input
-                      nz-input
-                      [ngModel]="controlValues()[control.name]"
-                      (ngModelChange)="updateControl(control.name, $event)"
-                      [placeholder]="control.label"
-                    />
-                    } @case ('number') {
-                    <nz-input-number
-                      [ngModel]="controlValues()[control.name]"
-                      (ngModelChange)="updateControl(control.name, $event)"
-                      [nzMin]="control.min"
-                      [nzMax]="control.max"
-                      [nzStep]="control.step"
-                      style="width: 100%"
-                    />
-                    } @case ('color') {
-                    <input
-                      type="color"
-                      [ngModel]="controlValues()[control.name]"
-                      (ngModelChange)="updateControl(control.name, $event)"
-                      style="width: 100%; height: 40px; cursor: pointer"
-                    />
-                    } }
-                  </av-field-group>
+                    </av-field-group>
                   }
                   <div style="margin-top: 32px; padding-top: 24px; border-top: 1px solid #e8e8e8">
                     <button nz-button nzType="default" nzDanger (click)="resetAll()" style="width: 100%">
@@ -123,66 +129,66 @@
 
     <!-- 📖 Примеры использования -->
     @if (config().examples && config().examples.length > 0) {
-    <div class="examples-section">
-      <h2>📖 Примеры использования</h2>
-      <div nz-row [nzGutter]="[16, 16]">
-        @for (example of config().examples; track example.title) {
-        <div nz-col [nzXs]="24" [nzMd]="12" [nzLg]="8">
-          <nz-card [nzTitle]="example.title" [class.highlight]="example.highlight">
-            @if (example.description) {
-            <p class="example-description">{{ example.description }}</p>
-            }
-            <av-help-copy-container [content]="example.code" bgColor="#1e293b" [defaultCollapsed]="true" />
-          </nz-card>
+      <div class="examples-section">
+        <h2>📖 Примеры использования</h2>
+        <div nz-row [nzGutter]="[16, 16]">
+          @for (example of config().examples; track example.title) {
+            <div nz-col [nzXs]="24" [nzMd]="12" [nzLg]="8">
+              <nz-card [nzTitle]="example.title" [class.highlight]="example.highlight">
+                @if (example.description) {
+                  <p class="example-description">{{ example.description }}</p>
+                }
+                <av-help-copy-container [content]="example.code" bgColor="#1e293b" [defaultCollapsed]="true" />
+              </nz-card>
+            </div>
+          }
         </div>
-        }
       </div>
-    </div>
     }
 
     <!-- 📖 Руководство -->
     @if (config().documentation) {
-    <div class="documentation-section">
-      <h2>📖 Руководство</h2>
+      <div class="documentation-section">
+        <h2>📖 Руководство</h2>
 
-      <nz-collapse [nzBordered]="false">
-        <!-- Как использовать -->
-        <nz-collapse-panel nzHeader="Как использовать в проекте?" [nzActive]="true" nzShowArrow="true">
-          <div [innerHTML]="config().documentation.usage"></div>
-        </nz-collapse-panel>
+        <nz-collapse [nzBordered]="false">
+          <!-- Как использовать -->
+          <nz-collapse-panel nzHeader="Как использовать в проекте?" [nzActive]="true" nzShowArrow="true">
+            <div [innerHTML]="config().documentation.usage"></div>
+          </nz-collapse-panel>
 
-        <!-- Установка -->
-        @if (config().documentation.installation) {
-        <nz-collapse-panel nzHeader="Установка" nzShowArrow="true">
-          <div [innerHTML]="config().documentation.installation"></div>
-        </nz-collapse-panel>
-        }
+          <!-- Установка -->
+          @if (config().documentation.installation) {
+            <nz-collapse-panel nzHeader="Установка" nzShowArrow="true">
+              <div [innerHTML]="config().documentation.installation"></div>
+            </nz-collapse-panel>
+          }
 
-        <!-- Полезные советы -->
-        @if (config().documentation.tips && config().documentation.tips?.length) {
-        <nz-collapse-panel nzHeader="Полезные советы" nzShowArrow="true">
-          <ul class="tips-list">
-            @for (tip of config().documentation.tips; track tip) {
-            <li>{{ tip }}</li>
-            }
-          </ul>
-        </nz-collapse-panel>
-        }
+          <!-- Полезные советы -->
+          @if (config().documentation.tips && config().documentation.tips?.length) {
+            <nz-collapse-panel nzHeader="Полезные советы" nzShowArrow="true">
+              <ul class="tips-list">
+                @for (tip of config().documentation.tips; track tip) {
+                  <li>{{ tip }}</li>
+                }
+              </ul>
+            </nz-collapse-panel>
+          }
 
-        <!-- Дополнительные ссылки -->
-        @if (config().documentation.links && config().documentation.links?.length) {
-        <nz-collapse-panel nzHeader="Дополнительные ссылки" nzShowArrow="true">
-          <ul class="links-list">
-            @for (link of config().documentation.links; track link.url) {
-            <li>
-              <a [href]="link.url" target="_blank" rel="noopener">{{ link.title }}</a>
-            </li>
-            }
-          </ul>
-        </nz-collapse-panel>
-        }
-      </nz-collapse>
-    </div>
+          <!-- Дополнительные ссылки -->
+          @if (config().documentation.links && config().documentation.links?.length) {
+            <nz-collapse-panel nzHeader="Дополнительные ссылки" nzShowArrow="true">
+              <ul class="links-list">
+                @for (link of config().documentation.links; track link.url) {
+                  <li>
+                    <a [href]="link.url" target="_blank" rel="noopener">{{ link.title }}</a>
+                  </li>
+                }
+              </ul>
+            </nz-collapse-panel>
+          }
+        </nz-collapse>
+      </div>
     }
   </div>
 </av-wrapper-ui>

@@ -24,25 +24,27 @@ import { IconComponent } from '../icon/icon.component';
   template: `
     <div class="av-field-group" [class.is-collapsed]="isCollapsed()">
       @if (label() || collapsible()) {
-      <div
-        class="av-field-group__header"
-        (click)="toggleCollapse()"
-        [class.is-clickable]="collapsible()"
-        [class.is-empty]="!label()"
-      >
-        @if (label()) {
-        <span class="av-field-group__label">{{ label() }}</span>
-        } @if (collapsible()) {
-        <button class="av-field-group__toggle" type="button">
-          <av-icon
-            [type]="isCollapsed() ? 'arrows/av_chevron-down' : 'arrows/av_chevron-up'"
-            [size]="14"
-          ></av-icon>
-        </button>
-        }
-      </div>
-      } @if (description()) {
-      <div class="av-field-group__description">{{ description() }}</div>
+        <div
+          class="av-field-group__header"
+          (click)="toggleCollapse()"
+          [class.is-clickable]="collapsible()"
+          [class.is-empty]="!label()"
+        >
+          @if (label()) {
+            <span class="av-field-group__label">{{ label() }}</span>
+          }
+          @if (collapsible()) {
+            <button class="av-field-group__toggle" type="button">
+              <av-icon
+                [type]="isCollapsed() ? 'arrows/av_chevron-down' : 'arrows/av_chevron-up'"
+                [size]="14"
+              ></av-icon>
+            </button>
+          }
+        </div>
+      }
+      @if (description()) {
+        <div class="av-field-group__description">{{ description() }}</div>
       }
       <div class="av-field-group__content" [hidden]="isCollapsed()">
         <ng-content></ng-content>

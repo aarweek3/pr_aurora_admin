@@ -6,7 +6,7 @@ import { ApiEndpoints } from '@environments/api-endpoints';
 import { UserProfileDto, UpdateUserDto, ChangePasswordDto } from '@auth/models';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class UserProfileService {
   private readonly http = inject(HttpClient);
@@ -15,7 +15,10 @@ export class UserProfileService {
     return this.http.get<any>(ApiEndpoints.AUTH.PROFILE);
   }
 
-  updateProfile(userId: string, data: UpdateUserDto): Observable<{ success: boolean; message: string }> {
+  updateProfile(
+    userId: string,
+    data: UpdateUserDto,
+  ): Observable<{ success: boolean; message: string }> {
     return this.http.put<any>(ApiEndpoints.USERS.BY_ID(userId), data);
   }
 

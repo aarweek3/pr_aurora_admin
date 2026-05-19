@@ -72,7 +72,7 @@
     <div class="stats-grid">
       <nz-card>
         <nz-statistic
-          [nzValue]="(currentUser()?.lastLogin | date : 'shortTime') || '-'"
+          [nzValue]="(currentUser()?.lastLogin | date: 'shortTime') || '-'"
           [nzTitle]="'Время входа'"
           [nzPrefix]="prefixLogin"
         >
@@ -201,7 +201,7 @@
                 </div>
               </nz-list-item-meta-avatar>
             </nz-list-item-meta>
-            <div>{{ item.timestamp | date : 'HH:mm:ss' }}</div>
+            <div>{{ item.timestamp | date: 'HH:mm:ss' }}</div>
           </nz-list-item>
         </ng-template>
       </nz-list>

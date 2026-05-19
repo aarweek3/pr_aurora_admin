@@ -45,35 +45,35 @@ import { ProfileSecurityTabComponent } from '../profile-security-tab/profile-sec
 
       <div class="profile-content">
         @if (loading()) {
-        <nz-skeleton [nzActive]="true" [nzParagraph]="{ rows: 10 }"></nz-skeleton>
+          <nz-skeleton [nzActive]="true" [nzParagraph]="{ rows: 10 }"></nz-skeleton>
         } @else if (error()) {
-        <nz-alert
-          nzType="error"
-          [nzMessage]="'Ошибка загрузки профиля'"
-          [nzDescription]="error() || ''"
-          nzShowIcon
-        ></nz-alert>
-        <button nz-button nzType="primary" (click)="loadProfile()" style="margin-top: 16px;">
-          Попробовать снова
-        </button>
+          <nz-alert
+            nzType="error"
+            [nzMessage]="'Ошибка загрузки профиля'"
+            [nzDescription]="error() || ''"
+            nzShowIcon
+          ></nz-alert>
+          <button nz-button nzType="primary" (click)="loadProfile()" style="margin-top: 16px;">
+            Попробовать снова
+          </button>
         } @else {
-        <nz-tabset [nzTabPosition]="'left'" class="profile-tabs">
-          <nz-tab [nzTitle]="generalTitle">
-            <ng-template #generalTitle>
-              <i nz-icon nzType="user"></i>
-              Общая информация
-            </ng-template>
-            <app-profile-general-tab></app-profile-general-tab>
-          </nz-tab>
+          <nz-tabset [nzTabPosition]="'left'" class="profile-tabs">
+            <nz-tab [nzTitle]="generalTitle">
+              <ng-template #generalTitle>
+                <i nz-icon nzType="user"></i>
+                Общая информация
+              </ng-template>
+              <app-profile-general-tab></app-profile-general-tab>
+            </nz-tab>
 
-          <nz-tab [nzTitle]="securityTitle">
-            <ng-template #securityTitle>
-              <i nz-icon nzType="safety"></i>
-              Безопасность
-            </ng-template>
-            <app-profile-security-tab></app-profile-security-tab>
-          </nz-tab>
-        </nz-tabset>
+            <nz-tab [nzTitle]="securityTitle">
+              <ng-template #securityTitle>
+                <i nz-icon nzType="safety"></i>
+                Безопасность
+              </ng-template>
+              <app-profile-security-tab></app-profile-security-tab>
+            </nz-tab>
+          </nz-tabset>
         }
       </div>
     </div>
@@ -147,5 +147,3 @@ export class ProfilePageComponent implements OnInit {
     });
   }
 }
-
-

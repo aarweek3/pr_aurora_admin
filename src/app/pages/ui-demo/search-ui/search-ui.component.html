@@ -56,7 +56,7 @@
         "
       >
         <p style="margin: 0; font-size: 0.875rem; color: var(--text-secondary, #666)">
-          💡 <strong>Совет:</strong> Используйте [(value)] для двусторонней связи и (onSearch) для обработки
+          💡 <strong>Совет:</strong> Используйте [(value)] для двусторонней связи и (searchChange) для обработки
           результатов.
         </p>
       </div>
@@ -122,7 +122,7 @@
             [avButtonText]="playgroundButtonText()"
             [avSize]="playgroundSize()"
             [avDebounceTime]="playgroundDebounce()"
-            (onSearch)="handleSearch($event)"
+            (searchChange)="handleSearch($event)"
           ></av-search>
 
           <div class="search-status">
@@ -131,7 +131,7 @@
               <span>{{ searchQuery() || 'пусто' }}</span>
             </div>
             <div class="search-status__item">
-              <label>Последнее событие (onSearch):</label>
+              <label>Последнее событие (searchChange):</label>
               <span>{{ lastSearchEvent() || 'ожидание...' }}</span>
             </div>
           </div>

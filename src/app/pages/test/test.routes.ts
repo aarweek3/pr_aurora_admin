@@ -6,9 +6,9 @@ export const TEST_ROUTES: Routes = [
   {
     path: 'ui-help-base',
     loadComponent: () =>
-      import(
-        '../../shared/containers/ui-help/container-ui-help-base/container-ui-help-base.component'
-      ).then((m) => m.ContainerUiHelpBaseComponent),
+      import('../../shared/containers/ui-help/container-ui-help-base/container-ui-help-base.component').then(
+        (m) => m.ContainerUiHelpBaseComponent,
+      ),
   },
   {
     path: 'sample-control-test',
@@ -40,15 +40,13 @@ export const TEST_ROUTES: Routes = [
   {
     path: 'rating',
     loadComponent: () =>
-      import('../../../assets/tests/test-rating/test-rating.component').then(
-        (m) => m.TestRatingComponent,
-      ),
+      import('../debug-tools/test-rating/test-rating.component').then((m) => m.TestRatingComponent),
   },
   {
     path: 'help-universal',
     loadComponent: () =>
       import('../../shared/components/test-components/test-help-modal/test-help-modal.component').then(
-        (m) => m.TestHelpModalComponent
+        (m) => m.TestHelpModalComponent,
       ),
-  }
+  },
 ];

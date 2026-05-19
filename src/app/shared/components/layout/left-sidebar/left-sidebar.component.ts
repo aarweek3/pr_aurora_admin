@@ -5,7 +5,7 @@ import { NzBadgeModule } from 'ng-zorro-antd/badge';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 import { filter } from 'rxjs/operators';
-import { EventBusService } from '../../../../core/services/event-bus/event-bus.service';
+import { EventBusService } from '@core/services/event-bus/event-bus.service';
 import { LoggerConsoleService } from '../../../logger-console/services/logger-console.service';
 import { DEFAULT_SIDEBAR_CONFIG } from './sidebar-default.config';
 import { MenuGroup, MenuItem, SidebarConfig, SidebarState, SubMenuItem } from './sidebar.model';

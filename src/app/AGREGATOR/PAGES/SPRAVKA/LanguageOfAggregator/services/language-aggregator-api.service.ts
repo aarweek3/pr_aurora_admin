@@ -16,9 +16,18 @@ export class LanguageAggregatorApiService {
   /**
    * Получить все языки агрегатора
    */
-  getAll(includeDisabled = true): Observable<LanguageAggregator[]> {
-    const params = new HttpParams().set('includeDisabled', includeDisabled.toString());
+  getAll(includeDisabled = true, includeDeleted = false): Observable<LanguageAggregator[]> {
+    let params = new HttpParams()
+      .set('includeDisabled', includeDisabled.toString())
+      .set('includeDeleted', includeDeleted.toString());
     return this.http.get<LanguageAggregator[]>(ApiEndpoints.AGGREGATOR_LANGUAGES.BASE, { params });
+  }
+
+  /**
+   * Восстановить язык
+   */
+  restore(id: number): Observable<void> {
+    return this.http.post<void>(ApiEndpoints.AGGREGATOR_LANGUAGES.RESTORE(id), {});
   }
 
   /**
@@ -54,6 +63,13 @@ export class LanguageAggregatorApiService {
    */
   delete(id: number): Observable<void> {
     return this.http.delete<void>(ApiEndpoints.AGGREGATOR_LANGUAGES.BY_ID(id));
+  }
+
+  /**
+   * Полное удаление языка
+   */
+  hardDelete(id: number): Observable<void> {
+    return this.http.delete<void>(ApiEndpoints.AGGREGATOR_LANGUAGES.HARD_DELETE(id));
   }
 
   /**

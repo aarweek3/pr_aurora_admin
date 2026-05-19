@@ -69,7 +69,9 @@
   cursor: pointer;
   font-weight: 600;
   font-size: 13px;
-  transition: transform 0.1s, opacity 0.2s;
+  transition:
+    transform 0.1s,
+    opacity 0.2s;
 
   &:hover {
     opacity: 0.9;

@@ -27,5 +27,3 @@ export class AuthPlaygroundService {
     console.log('Exporting history...');
   }
 }
-
-

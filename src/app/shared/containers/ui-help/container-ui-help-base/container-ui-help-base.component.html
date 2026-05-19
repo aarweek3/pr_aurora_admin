@@ -36,25 +36,25 @@
 
     <div class="controls-overview">
       @for (group of controlGroups; track group.title) {
-      <div class="control-group-section">
-        <div class="group-header">
-          <h3>{{ group.title }}</h3>
-          <p>{{ group.description }}</p>
-        </div>
-
-        <div class="controls-grid">
-          @for (item of group.items; track item.name) {
-          <div class="control-card">
-            <div class="control-info">
-              <span class="control-badge" [class]="item.type.toLowerCase()">{{ item.type }}</span>
-              <h4 class="control-name">{{ item.name }}</h4>
-              <code class="control-selector">{{ item.selector }}</code>
-              <p class="control-desc">{{ item.description }}</p>
-            </div>
+        <div class="control-group-section">
+          <div class="group-header">
+            <h3>{{ group.title }}</h3>
+            <p>{{ group.description }}</p>
           </div>
-          }
+
+          <div class="controls-grid">
+            @for (item of group.items; track item.name) {
+              <div class="control-card">
+                <div class="control-info">
+                  <span class="control-badge" [class]="item.type.toLowerCase()">{{ item.type }}</span>
+                  <h4 class="control-name">{{ item.name }}</h4>
+                  <code class="control-selector">{{ item.selector }}</code>
+                  <p class="control-desc">{{ item.description }}</p>
+                </div>
+              </div>
+            }
+          </div>
         </div>
-      </div>
       }
     </div>
 

@@ -1,4 +1,4 @@
-import { ErrorResponse } from "../../../../../shared/infrastructure/interceptor/models/error-response.model";
+import { ErrorResponse } from '@core/models/error-response.model';
 
 export interface CategoryTagOfAggregatorLocalization {
   languageOfAggregatorId: number;
@@ -63,5 +63,5 @@ export const initialCategoryTagOfAggregatorState: CategoryTagOfAggregatorState =
   languageId: null,
   showDeleted: false,
   selectedId: null,
-  error: null
+  error: null,
 };

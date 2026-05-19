@@ -22,7 +22,7 @@ export class Test29TokenValidation extends BaseTest {
     return this.http.get(url, { withCredentials: true }).pipe(
       map((response: any) => {
         const data = response.data;
-        let resultText = `
+        const resultText = `
 User ID: ${data.userId || 'Отсутствует'}
 Email: ${data.email || 'Отсутствует'}
 Роли: ${data.roles?.join(', ') || 'Отсутствуют'}

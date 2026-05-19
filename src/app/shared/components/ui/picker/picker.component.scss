@@ -45,11 +45,6 @@
     border: none;
   }
 
-  @include dark-theme {
-    background: rgba(255, 255, 255, 0.05);
-    border-color: rgba(255, 255, 255, 0.1);
-  }
-
   &__section {
     display: flex;
     flex-direction: column;
@@ -62,10 +57,6 @@
     color: #64748b;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-
-    @include dark-theme {
-      color: rgba(255, 255, 255, 0.5);
-    }
   }
 
   &__grid {
@@ -98,10 +89,6 @@
       border-color: $color-primary;
       box-shadow: 0 0 0 2px rgba($color-primary, 0.2);
     }
-
-    @include dark-theme {
-      border-color: rgba(255, 255, 255, 0.1);
-    }
   }
 
   &__check {
@@ -127,11 +114,6 @@
     &:hover {
       background: rgba($color-primary, 0.1);
       color: $color-primary;
-    }
-
-    @include dark-theme {
-      background: rgba(255, 255, 255, 0.05);
-      color: rgba(255, 255, 255, 0.7);
     }
   }
 
@@ -161,23 +143,22 @@
       background: #fff;
       box-shadow: 0 0 0 2px rgba($color-primary, 0.1);
     }
-
-    @include dark-theme {
-      background: rgba(0, 0, 0, 0.2);
-      border-color: rgba(255, 255, 255, 0.1);
-      color: #f8fafc;
-    }
   }
 
   &__transparent-pattern {
     width: 24px;
     height: 24px;
-    background-image: linear-gradient(45deg, #ddd 25%, transparent 25%),
+    background-image:
+      linear-gradient(45deg, #ddd 25%, transparent 25%),
       linear-gradient(-45deg, #ddd 25%, transparent 25%),
       linear-gradient(45deg, transparent 75%, #ddd 75%),
       linear-gradient(-45deg, transparent 75%, #ddd 75%);
     background-size: 8px 8px;
-    background-position: 0 0, 0 4px, 4px -4px, -4px 0px;
+    background-position:
+      0 0,
+      0 4px,
+      4px -4px,
+      -4px 0px;
     border-radius: 4px;
   }
 
@@ -243,10 +224,6 @@
     padding-right: 16px;
     border-right: 1px solid #e5e7eb;
     flex-shrink: 0; // Не сжимается
-
-    @include dark-theme {
-      border-right-color: rgba(255, 255, 255, 0.1);
-    }
   }
 
   // Секция 2: Color Picker + Input
@@ -258,10 +235,6 @@
     border-right: 1px solid #e5e7eb;
     flex: 1; // Занимает доступное место
     min-width: 0; // Позволяет сжиматься
-
-    @include dark-theme {
-      border-right-color: rgba(255, 255, 255, 0.1);
-    }
   }
 
   // Секция 3: Кнопка Сброс (текстовая)
@@ -290,18 +263,6 @@
     &:active {
       color: $color-primary-active;
     }
-
-    @include dark-theme {
-      color: #3c9ae8;
-
-      &:hover {
-        color: #69b1ff;
-      }
-
-      &:active {
-        color: #177ddc;
-      }
-    }
   }
 }
 
@@ -312,8 +273,4 @@
   padding: 4px !important;
   background: transparent !important;
   border-color: #cbd5e1 !important;
-
-  @include dark-theme {
-    border-color: rgba(255, 255, 255, 0.2) !important;
-  }
 }

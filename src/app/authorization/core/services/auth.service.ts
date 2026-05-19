@@ -14,7 +14,7 @@ import {
   UserProfileDto,
   UserSessionDto,
 } from '@auth/models';
-import { LanguageService } from '@assets/languageApp/services/language.service';
+import { LanguageService } from '@language-app/services/language.service';
 import { TokenService } from './token.service';
 
 @Injectable({
@@ -174,7 +174,7 @@ export class AuthService {
   /**
    * Получение активных сессий пользователя
    */
-  getUserSessions(includeHistory: boolean = false): Observable<ApiResponse<UserSessionDto[]>> {
+  getUserSessions(includeHistory = false): Observable<ApiResponse<UserSessionDto[]>> {
     return this.http
       .get<ApiResponse<UserSessionDto[]>>(ApiEndpoints.AUTH.GET_USER_SESSIONS(includeHistory), {
         withCredentials: true,

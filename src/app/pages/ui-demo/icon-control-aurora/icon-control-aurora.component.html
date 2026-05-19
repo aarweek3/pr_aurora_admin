@@ -7,7 +7,7 @@
         <div class="demo-form">
           <!-- Сообщения пользователю -->
           @if (message()) {
-          <div class="message-toast">{{ message() }}</div>
+            <div class="message-toast">{{ message() }}</div>
           }
 
           <!-- Готовый контрол иконок -->
@@ -168,11 +168,13 @@
           <li><strong>Размер:</strong> {{ iconConfig().size }}px</li>
           <li><strong>Цвет:</strong> {{ iconConfig().color }}</li>
           @if (iconConfig().rotation !== 0) {
-          <li><strong>Поворот:</strong> {{ iconConfig().rotation }}°</li>
-          } @if (iconConfig().scale !== 1) {
-          <li><strong>Масштаб:</strong> {{ iconConfig().scale }}x</li>
-          } @if (iconConfig().opacity !== 1) {
-          <li><strong>Прозрачность:</strong> {{ iconConfig().opacity }}</li>
+            <li><strong>Поворот:</strong> {{ iconConfig().rotation }}°</li>
+          }
+          @if (iconConfig().scale !== 1) {
+            <li><strong>Масштаб:</strong> {{ iconConfig().scale }}x</li>
+          }
+          @if (iconConfig().opacity !== 1) {
+            <li><strong>Прозрачность:</strong> {{ iconConfig().opacity }}</li>
           }
         </ul>
       </div>
@@ -212,35 +214,40 @@
           <span class="config-value">{{ iconConfig().color }}</span>
         </div>
         @if (iconConfig().rotation !== 0) {
-        <div class="config-item">
-          <span class="config-label">Поворот:</span>
-          <span class="config-value">{{ iconConfig().rotation }}°</span>
-        </div>
-        } @if (iconConfig().scale !== 1) {
-        <div class="config-item">
-          <span class="config-label">Масштаб:</span>
-          <span class="config-value">{{ iconConfig().scale }}x</span>
-        </div>
-        } @if (iconConfig().opacity !== 1) {
-        <div class="config-item">
-          <span class="config-label">Прозрачность:</span>
-          <span class="config-value">{{ iconConfig().opacity }}</span>
-        </div>
-        } @if (iconConfig().flipX) {
-        <div class="config-item">
-          <span class="config-label">Отражение X:</span>
-          <span class="config-value">Да</span>
-        </div>
-        } @if (iconConfig().flipY) {
-        <div class="config-item">
-          <span class="config-label">Отражение Y:</span>
-          <span class="config-value">Да</span>
-        </div>
-        } @if (iconConfig().borderShow) {
-        <div class="config-item">
-          <span class="config-label">Рамка:</span>
-          <span class="config-value">{{ iconConfig().borderColor }} ({{ iconConfig().borderWidth }}px)</span>
-        </div>
+          <div class="config-item">
+            <span class="config-label">Поворот:</span>
+            <span class="config-value">{{ iconConfig().rotation }}°</span>
+          </div>
+        }
+        @if (iconConfig().scale !== 1) {
+          <div class="config-item">
+            <span class="config-label">Масштаб:</span>
+            <span class="config-value">{{ iconConfig().scale }}x</span>
+          </div>
+        }
+        @if (iconConfig().opacity !== 1) {
+          <div class="config-item">
+            <span class="config-label">Прозрачность:</span>
+            <span class="config-value">{{ iconConfig().opacity }}</span>
+          </div>
+        }
+        @if (iconConfig().flipX) {
+          <div class="config-item">
+            <span class="config-label">Отражение X:</span>
+            <span class="config-value">Да</span>
+          </div>
+        }
+        @if (iconConfig().flipY) {
+          <div class="config-item">
+            <span class="config-label">Отражение Y:</span>
+            <span class="config-value">Да</span>
+          </div>
+        }
+        @if (iconConfig().borderShow) {
+          <div class="config-item">
+            <span class="config-label">Рамка:</span>
+            <span class="config-value">{{ iconConfig().borderColor }} ({{ iconConfig().borderWidth }}px)</span>
+          </div>
         }
       </div>
 

@@ -36,20 +36,22 @@ import { NzTimelineModule } from 'ng-zorro-antd/timeline';
                 Middleware является единственной точкой выхода всех ошибок. Его работа делится на
                 два сценария:
               </p>
-              
+
               <div class="logic-grid">
                 <div class="logic-item">
                   <h4>⚡ Сценарий 1: Перехват Exception</h4>
                   <p>
-                    Если в любом месте кода (контроллер, сервис, БД) выбрасывается <code>throw new Exception()</code>, 
-                    middleware ловит его в блоке <code>catch</code> и вызывает <code>HandleExceptionAsync</code>.
+                    Если в любом месте кода (контроллер, сервис, БД) выбрасывается
+                    <code>throw new Exception()</code>, middleware ловит его в блоке
+                    <code>catch</code> и вызывает <code>HandleExceptionAsync</code>.
                   </p>
                 </div>
                 <div class="logic-item">
                   <h4>🚪 Сценарий 2: Перехват статус-кода</h4>
                   <p>
-                    Если код выполнился без исключений, но Identity или авторизация вернули <code>401</code> или <code>403</code>, 
-                    middleware перехватывает этот статус и оборачивает его в JSON, чтобы фронтенд всегда получал объект.
+                    Если код выполнился без исключений, но Identity или авторизация вернули
+                    <code>401</code> или <code>403</code>, middleware перехватывает этот статус и
+                    оборачивает его в JSON, чтобы фронтенд всегда получал объект.
                   </p>
                 </div>
               </div>
@@ -57,10 +59,13 @@ import { NzTimelineModule } from 'ng-zorro-antd/timeline';
               <h4 style="margin-top: 24px;">Алгоритм работы HandleExceptionAsync:</h4>
               <nz-timeline>
                 <nz-timeline-item nzColor="blue">
-                  <b>Идентификация:</b> Генерация или получение <code>CorrelationId</code> (TraceIdentifier) для связи логов сервера и клиента.
+                  <b>Идентификация:</b> Генерация или получение
+                  <code>CorrelationId</code> (TraceIdentifier) для связи логов сервера и клиента.
                 </nz-timeline-item>
                 <nz-timeline-item nzColor="orange">
-                  <b>Логирование:</b> Если ошибка — это <code>ArgumentException</code> или <code>ConflictException</code>, она логируется как <b>Warning</b> (вина клиента). Остальные — как <b>Error</b> (вина сервера).
+                  <b>Логирование:</b> Если ошибка — это <code>ArgumentException</code> или
+                  <code>ConflictException</code>, она логируется как <b>Warning</b> (вина клиента).
+                  Остальные — как <b>Error</b> (вина сервера).
                 </nz-timeline-item>
                 <nz-timeline-item nzColor="purple">
                   <b>Маппинг статуса:</b> Проверка типа исключения через <code>switch</code>:
@@ -72,7 +77,8 @@ import { NzTimelineModule } from 'ng-zorro-antd/timeline';
                   </ul>
                 </nz-timeline-item>
                 <nz-timeline-item nzColor="green">
-                  <b>Сериализация:</b> Запись в <code>Response</code> объекта <code>ErrorResponseModel</code> с текущей датой (UTC) и деталями.
+                  <b>Сериализация:</b> Запись в <code>Response</code> объекта
+                  <code>ErrorResponseModel</code> с текущей датой (UTC) и деталями.
                 </nz-timeline-item>
               </nz-timeline>
             </nz-card>
@@ -145,18 +151,19 @@ import { NzTimelineModule } from 'ng-zorro-antd/timeline';
   6. [Component .subscribe] ─────► Извлекает сообщение
   7. [getFriendlyMessage] ───────► Финальный текст
   8. [NzMessage (UI)] ───────────► Показ уведомления
-                </pre>
+                </pre
+                >
               </div>
             </nz-card>
-            
+
             <nz-card nzTitle="Специфика Network Error (Status 0)">
-               <p>Если сервер недоступен, цепочка сокращается:</p>
-               <ol>
-                 <li><b>Браузер:</b> net::ERR_CONNECTION_REFUSED.</li>
-                 <li><b>Angular:</b> HttpErrorResponse (status 0).</li>
-                 <li><b>HttpErrorInterceptor:</b> Метод <code>createNetworkError()</code>.</li>
-                 <li><b>UI:</b> Сообщение "Нет связи с сервером".</li>
-               </ol>
+              <p>Если сервер недоступен, цепочка сокращается:</p>
+              <ol>
+                <li><b>Браузер:</b> net::ERR_CONNECTION_REFUSED.</li>
+                <li><b>Angular:</b> HttpErrorResponse (status 0).</li>
+                <li><b>HttpErrorInterceptor:</b> Метод <code>createNetworkError()</code>.</li>
+                <li><b>UI:</b> Сообщение "Нет связи с сервером".</li>
+              </ol>
             </nz-card>
           </div>
         </nz-tab>

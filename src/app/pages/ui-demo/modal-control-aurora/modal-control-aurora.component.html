@@ -31,7 +31,7 @@
             <label class="control-label">Размер (Size):</label>
             <nz-radio-group [ngModel]="config().size" (ngModelChange)="updateConfig('size', $event)">
               @for (size of sizes; track size.value) {
-              <label nz-radio [nzValue]="size.value">{{ size.label }}</label>
+                <label nz-radio [nzValue]="size.value">{{ size.label }}</label>
               }
             </nz-radio-group>
           </div>
@@ -40,7 +40,7 @@
             <label class="control-label">Позиция (Position):</label>
             <nz-radio-group [ngModel]="config().position" (ngModelChange)="updateConfig('position', $event)">
               @for (pos of positions; track pos.value) {
-              <label nz-radio [nzValue]="pos.value">{{ pos.label }}</label>
+                <label nz-radio [nzValue]="pos.value">{{ pos.label }}</label>
               }
             </nz-radio-group>
           </div>

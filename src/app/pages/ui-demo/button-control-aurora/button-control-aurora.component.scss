@@ -149,28 +149,3 @@
 
 // ===== ТЕМНАЯ ТЕМА - ТОЛЬКО СТРУКТУРНЫЕ СТИЛИ =====
 // Исправляет "белые пятна" в темной теме для контейнеров
-:host-context(.dark-theme) {
-  .live-preview {
-    background: #262626;
-    border-color: #434343;
-  }
-
-  .button-preview {
-    background: #1f1f1f;
-    border-color: #434343;
-  }
-
-  .button-info {
-    background: #1f1f1f;
-    color: rgba(255, 255, 255, 0.85);
-  }
-
-  .config-summary .config-grid .config-item {
-    background: rgba(255, 255, 255, 0.05);
-    color: rgba(255, 255, 255, 0.85);
-  }
-
-  .button-controls {
-    box-shadow: 0 0 10px rgba(255, 100, 100, 0.3);
-  }
-}

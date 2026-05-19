@@ -409,27 +409,3 @@
 }
 
 // Dark theme support
-@include dark-theme {
-  .av-btn {
-    &--default,
-    &--dashed {
-      background-color: $dark-bg-container;
-      border-color: $dark-border-color;
-      color: $dark-text-primary;
-
-      &:hover:not(:disabled) {
-        border-color: $color-primary;
-        color: $color-primary;
-      }
-    }
-
-    &--text {
-      color: $dark-text-primary;
-
-      &:hover:not(:disabled) {
-        background-color: transparent; // No background on hover in dark mode
-        color: $color-primary;
-      }
-    }
-  }
-}

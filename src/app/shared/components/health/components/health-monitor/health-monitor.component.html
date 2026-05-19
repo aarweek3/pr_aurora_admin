@@ -9,7 +9,7 @@
     </div>
 
     <div class="actions">
-      <span class="last-check" *ngIf="status().lastCheck">Обновлено: {{ status().lastCheck | date : 'HH:mm:ss' }}</span>
+      <span class="last-check" *ngIf="status().lastCheck">Обновлено: {{ status().lastCheck | date: 'HH:mm:ss' }}</span>
       <button class="refresh-btn" (click)="refresh()" [disabled]="isLoading()">
         <span *ngIf="!isLoading()">🔄 Обновить</span>
         <span *ngIf="isLoading()">⌛ Загрузка...</span>
@@ -65,7 +65,7 @@
         <h3>Активные уведомления</h3>
         <div class="alert-item" *ngFor="let alert of alerts()" [class]="alert.severity">
           <span>{{ alert.message }}</span>
-          <small>{{ alert.timestamp | date : 'HH:mm' }}</small>
+          <small>{{ alert.timestamp | date: 'HH:mm' }}</small>
         </div>
       </section>
     </div>

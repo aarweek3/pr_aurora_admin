@@ -1,0 +1,202 @@
+<style>
+  /* БАЗОВЫЙ СТИЛЬ AURORA DOCUMENTATION */
+  .av-doc-container {
+    padding: 20px;
+    background: #f0f2f5;
+    min-height: 100%;
+    font-family: 'Segoe UI', Roboto, sans-serif;
+    color: #262626;
+  }
+
+  /* Код (Блочный) */
+  .av-code-block {
+    background: #000000 !important;
+    border: 1px solid #305d96 !important;
+    border-radius: 8px !important;
+    padding: 16px !important;
+    margin: 12px 0 !important;
+    overflow: auto;
+  }
+  .av-code-block pre {
+    margin: 0 !important;
+    background: transparent !important;
+    border: none !important;
+  }
+  .av-code-block code {
+    background: transparent !important;
+    color: #00ff00 !important;
+    font-family: 'Consolas', 'Monaco', monospace !important;
+    font-size: 13px !important;
+  }
+
+  /* Код (Инлайновый) */
+  code.av-inline-code {
+    background: #1a1a1a !important;
+    color: #69c0ff !important;
+    padding: 2px 6px !important;
+    border-radius: 4px !important;
+    font-family: monospace !important;
+    font-weight: 600 !important;
+  }
+
+  /* Темные секции (Dark Card) */
+  .av-dark-section {
+    background: #001529 !important;
+    color: #ffffff !important;
+    padding: 32px !important;
+    border-radius: 12px !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2) !important;
+    margin-bottom: 24px;
+  }
+  .av-dark-section h1,
+  .av-dark-section h2,
+  .av-dark-section h3,
+  .av-dark-section h4,
+  .av-dark-section h5 {
+    color: #ffffff !important;
+  }
+  .av-dark-section p,
+  .av-dark-section li {
+    color: rgba(255, 255, 255, 0.85) !important;
+    line-height: 1.8;
+  }
+  .av-dark-section code {
+    background: #1a1a1a !important;
+    color: #ffd666 !important;
+  }
+
+  /* Алерт-блоки */
+  .av-alert-info {
+    background: #e6f7ff;
+    border: 1px solid #91d5ff;
+    padding: 16px;
+    border-radius: 8px;
+    color: #0050b3;
+    margin-top: 16px;
+  }
+  .av-alert-success {
+    background: #f6ffed;
+    border: 1px solid #b7eb8f;
+    padding: 16px;
+    border-radius: 8px;
+    color: #389e0d;
+  }
+</style>
+
+<div class="av-doc-container">
+  <!-- HEADER -->
+  <div
+    style="
+      background: #fff;
+      padding: 24px;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      margin-bottom: 24px;
+    "
+  >
+    <div style="display: flex; align-items: center; gap: 20px">
+      <div
+        style="
+          background: #1890ff;
+          width: 60px;
+          height: 60px;
+          border-radius: 12px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        "
+      >
+        <span nz-icon nzType="safety-certificate" style="font-size: 32px; color: #fff"></span>
+      </div>
+      <div>
+        <h1 style="margin: 0; font-size: 24px; font-weight: 600">Authorization & Security: Full Guide</h1>
+        <p style="margin: 4px 0 0 0; color: #8c8c8c">Полная документация по системе безопасности Aurora v3.5.</p>
+      </div>
+    </div>
+  </div>
+
+  <nz-tabset nzType="card" [nzAnimated]="true">
+    <!-- GRAND TOUR -->
+    <nz-tab [nzTitle]="'GRAND TOUR: ГРАНД-ТУР'">
+      <div style="background: #fff; padding: 40px; border-radius: 0 0 8px 8px">
+        <h2 style="color: #1890ff; margin-bottom: 32px">Жизненный цикл безопасности</h2>
+
+        <!-- Шаг 1 -->
+        <div class="av-dark-section">
+          <h4>Шаг 1: Инициация входа (Login Flow)</h4>
+          <p>
+            Запрос на <code class="av-inline-code">/api/Auth/login</code>. Проверка в базе
+            <code class="av-inline-code">AuroraIdentityDb</code>.
+          </p>
+        </div>
+
+        <!-- Шаг 2 -->
+        <div class="av-dark-section">
+          <h4>Шаг 2: Генерация и "Посадка" токенов</h4>
+          <p>
+            Бэкенд генерирует <code class="av-inline-code">Access Token (JWT)</code> и
+            <code class="av-inline-code">Refresh Token (Opaque)</code>. Оба упаковываются в
+            <strong>HttpOnly Cookies</strong>.
+          </p>
+          <div class="av-code-block">
+            <pre><code>// Token Storage Nuances
+accessToken: HttpOnly Cookie (Stateless)
+refreshToken: HttpOnly Cookie + Database Table (Session Management)</code></pre>
+          </div>
+        </div>
+
+        <!-- Шаг 4 -->
+        <div class="av-dark-section">
+          <h4>Шаг 4: Silent Refresh (Магия 401)</h4>
+          <p>Автоматическое продление сессии при получении 401 ошибки без прерывания работы пользователя.</p>
+        </div>
+      </div>
+    </nz-tab>
+
+    <!-- FRONT-END DETAILS -->
+    <nz-tab [nzTitle]="'FRONT-END DETAILS'">
+      <div style="background: #fff; padding: 40px; border-radius: 0 0 8px 8px">
+        <h2 style="color: #722ed1; margin-bottom: 32px">Реализация на Angular 18</h2>
+
+        <div class="av-dark-section">
+          <h4>State Management (Signals)</h4>
+          <div class="av-code-block">
+            <pre><code>public currentUser = signal&lt;User | null&gt;(null);
+public isAdmin = computed(() => this.currentUser()?.roles.includes('Admin'));</code></pre>
+          </div>
+        </div>
+
+        <div class="av-dark-section">
+          <h4>401 Interceptor Algorithm</h4>
+          <ol>
+            <li>Intercept <code class="av-inline-code">HttpErrorResponse</code>.</li>
+            <li>Queue requests via <code class="av-inline-code">BehaviorSubject</code>.</li>
+            <li>Execute <code class="av-inline-code">refreshToken()</code>.</li>
+          </ol>
+        </div>
+      </div>
+    </nz-tab>
+
+    <!-- STRATEGY: ПЕРЕЕЗД -->
+    <nz-tab [nzTitle]="'STRATEGY: ПЕРЕЕЗД'">
+      <div style="background: #fff; padding: 40px; border-radius: 0 0 8px 8px">
+        <h2 style="color: #fa8c16; margin-bottom: 32px">План миграции в @shared/auth</h2>
+        <div class="av-alert-info">
+          <strong>Цель:</strong> Полная изоляция логики авторизации для повторного использования.
+        </div>
+        <div style="margin-top: 24px">
+          <p>
+            1. Создание каталогов <code class="av-inline-code">/services</code>,
+            <code class="av-inline-code">/interceptors</code>, <code class="av-inline-code">/ui</code>.
+          </p>
+          <p>2. Перенос сервисов и моделей.</p>
+          <p>3. Реализация провайдера <code class="av-inline-code">provideAuroraAuth()</code>.</p>
+        </div>
+      </div>
+    </nz-tab>
+  </nz-tabset>
+
+  <div style="text-align: right; margin-top: 24px; color: #bfbfbf; font-size: 11px">
+    Aurora Visual Standard v1.0 | Full Master Guide | 2026-04-27
+  </div>
+</div>

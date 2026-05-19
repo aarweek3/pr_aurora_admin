@@ -1,6 +1,13 @@
 // src/app/shared/components/ui/form-field/form-field.component.ts
 import { CommonModule } from '@angular/common';
-import { Component, input } from '@angular/core';
+import {
+  AfterContentInit,
+  Component,
+  ElementRef,
+  inject,
+  input,
+  Renderer2,
+} from '@angular/core';
 import { AbstractControl } from '@angular/forms';
 
 /**
@@ -37,12 +44,12 @@ import { AbstractControl } from '@angular/forms';
     >
       <!-- Label -->
       @if (label()) {
-      <label class="form-field__label">
-        {{ label() }}
-        @if (required()) {
-        <span class="form-field__required">*</span>
-        }
-      </label>
+        <label class="form-field__label" [attr.for]="id()">
+          {{ label() }}
+          @if (required()) {
+            <span class="form-field__required">*</span>
+          }
+        </label>
       }
 
       <!-- Input Wrapper -->
@@ -52,39 +59,39 @@ import { AbstractControl } from '@angular/forms';
 
       <!-- Help Text -->
       @if (helpText() && !hasError()) {
-      <div class="form-field__help">{{ helpText() }}</div>
+        <div class="form-field__help">{{ helpText() }}</div>
       }
 
       <!-- Error Messages -->
       @if (hasError() && control()) {
-      <div class="form-field__error">
-        @if (control()?.hasError('required')) {
-        <span>Поле обязательно для заполнения</span>
-        } @else if (control()?.hasError('email')) {
-        <span>Введите корректный email</span>
-        } @else if (control()?.hasError('phoneIncomplete')) {
-        <span>{{ control()?.errors?.['phoneIncomplete']?.message }}</span>
-        } @else if (control()?.hasError('phoneTooLong')) {
-        <span>{{ control()?.errors?.['phoneTooLong']?.message }}</span>
-        } @else if (control()?.hasError('minlength')) {
-        <span>Минимальная длина: {{ control()?.errors?.['minlength']?.requiredLength }}</span>
-        } @else if (control()?.hasError('maxlength')) {
-        <span>Максимальная длина: {{ control()?.errors?.['maxlength']?.requiredLength }}</span>
-        } @else if (control()?.hasError('pattern')) {
-        <span>Неверный формат</span>
-        } @else if (errorMessage()) {
-        <span>{{ errorMessage() }}</span>
-        } @else {
-        <span>Ошибка валидации</span>
-        }
-      </div>
+        <div class="form-field__error">
+          @if (control()?.hasError('required')) {
+            <span>Поле обязательно для заполнения</span>
+          } @else if (control()?.hasError('email')) {
+            <span>Введите корректный email</span>
+          } @else if (control()?.hasError('phoneIncomplete')) {
+            <span>{{ control()?.errors?.['phoneIncomplete']?.message }}</span>
+          } @else if (control()?.hasError('phoneTooLong')) {
+            <span>{{ control()?.errors?.['phoneTooLong']?.message }}</span>
+          } @else if (control()?.hasError('minlength')) {
+            <span>Минимальная длина: {{ control()?.errors?.['minlength']?.requiredLength }}</span>
+          } @else if (control()?.hasError('maxlength')) {
+            <span>Максимальная длина: {{ control()?.errors?.['maxlength']?.requiredLength }}</span>
+          } @else if (control()?.hasError('pattern')) {
+            <span>Неверный формат</span>
+          } @else if (errorMessage()) {
+            <span>{{ errorMessage() }}</span>
+          } @else {
+            <span>Ошибка валидации</span>
+          }
+        </div>
       }
     </div>
   `,
   styles: [
     `
-      @use '../../../../../styles/abstracts/variables' as *;
-      @use '../../../../../styles/abstracts/mixins' as *;
+      @use 'styles/abstracts/variables' as *;
+      @use 'styles/abstracts/mixins' as *;
 
       .form-field {
         display: flex;
@@ -126,7 +133,7 @@ import { AbstractControl } from '@angular/forms';
               &:focus {
                 outline: none;
                 border-color: $color-primary;
-                box-shadow: 0 0 0 2px rgba($color-primary, 0.1);
+                box-shadow: 0 0 0 2px rgba($color-primary-pure, 0.1);
               }
 
               &::placeholder {
@@ -172,7 +179,7 @@ import { AbstractControl } from '@angular/forms';
 
                 &:focus {
                   border-color: $color-error;
-                  box-shadow: 0 0 0 2px rgba($color-error, 0.1);
+                  box-shadow: 0 0 0 2px rgba($color-error-pure, 0.1);
                 }
               }
             }
@@ -187,37 +194,19 @@ import { AbstractControl } from '@angular/forms';
         }
 
         // Dark theme
-        @include dark-theme {
-          &__label {
-            color: $dark-text-primary;
-          }
-
-          &__help {
-            color: $dark-text-secondary;
-          }
-
-          &__input {
-            :ng-deep {
-              input,
-              textarea,
-              select {
-                background: $dark-bg-light;
-                color: $dark-text-primary;
-                border-color: $dark-border-base;
-
-                &:disabled {
-                  background: $dark-bg-gray;
-                  color: $dark-text-tertiary;
-                }
-              }
-            }
-          }
-        }
       }
     `,
   ],
 })
-export class FormFieldComponent {
+export class FormFieldComponent implements AfterContentInit {
+  private static nextId = 0;
+  private readonly defaultId = `av-ff-${FormFieldComponent.nextId++}`;
+
+  /** ID для связи label и input */
+  id = input<string>(this.defaultId);
+
+  private renderer = inject(Renderer2);
+  private el = inject(ElementRef);
   /** Label текст */
   label = input<string>('');
 
@@ -240,5 +229,16 @@ export class FormFieldComponent {
   hasError(): boolean {
     const ctrl = this.control();
     return !!(ctrl && ctrl.invalid && (ctrl.dirty || ctrl.touched));
+  }
+
+  ngAfterContentInit(): void {
+    // Автоматически связываем label с первым элементом управления, если у него нет ID
+    const control = this.el.nativeElement.querySelector(
+      'input, textarea, select, [formControl], [formControlName], av-phone-input, av-input, av-search, .av-control'
+    );
+
+    if (control && !control.getAttribute('id')) {
+      this.renderer.setAttribute(control, 'id', this.id());
+    }
   }
 }

@@ -74,17 +74,11 @@
     background: var(--bg-secondary-light, #f5f5f5);
     border-color: transparent;
 
-    @include dark-theme {
-      background: var(--dark-bg-light, #2a2a2a);
-    }
 
     &:hover:not(:disabled):not(.av-pagination__button--active) {
       background: var(--bg-secondary, #e8e8e8);
       border-color: transparent;
 
-      @include dark-theme {
-        background: var(--dark-bg-base, #303030);
-      }
     }
 
     &--active {
@@ -92,18 +86,12 @@
       color: #fff;
       border-color: transparent;
 
-      @include dark-theme {
-        background: var(--color-primary, #1890ff);
-      }
     }
 
     &:disabled {
       background: var(--bg-disabled, #f5f5f5);
       border-color: transparent;
 
-      @include dark-theme {
-        background: var(--dark-bg-disabled, #1f1f1f);
-      }
     }
   }
 }
@@ -147,9 +135,6 @@
       border-color: transparent;
       box-shadow: 0 2px 8px rgba(24, 144, 255, 0.3);
 
-      @include dark-theme {
-        box-shadow: 0 2px 8px rgba(24, 144, 255, 0.5);
-      }
     }
   }
 }
@@ -245,9 +230,6 @@
     &:hover:not(:disabled):not(.av-pagination__button--active) {
       background: var(--bg-secondary, #e8e8e8);
 
-      @include dark-theme {
-        background: var(--dark-bg-base, #303030);
-      }
     }
 
     &--active {

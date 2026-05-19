@@ -85,16 +85,23 @@ import { NzTagModule } from 'ng-zorro-antd/tag';
 
             <nz-card nzTitle="⚙️ Системные требования БД" style="margin-top: 16px;">
               <p>
-                Для корректной работы логики «Умного мастера» в справочнике разработчиков 
+                Для корректной работы логики «Умного мастера» в справочнике разработчиков
                 <strong>обязательно</strong> должна присутствовать запись с <code>ID = 1</code>.
               </p>
-              <div class="logic-card" style="background: #fffbe6; border: 1px solid #ffe58f; padding: 12px; border-radius: 8px;">
+              <div
+                class="logic-card"
+                style="background: #fffbe6; border: 1px solid #ffe58f; padding: 12px; border-radius: 8px;"
+              >
                 <ul style="margin-bottom: 0; padding-left: 20px;">
                   <li><strong>ID: 1</strong> — Зарезервированный системный идентификатор.</li>
-                  <li><strong>Назначение:</strong> Используется как значение по умолчанию («Не указан»), 
-                      когда оператор оставляет поле разработчика пустым в мастере программ.</li>
-                  <li><strong>Рекомендация:</strong> При начальном заполнении БД (Seed Data) создайте под этим ID 
-                      запись с системным именем <em>"Unknown / Не указан"</em>.</li>
+                  <li>
+                    <strong>Назначение:</strong> Используется как значение по умолчанию («Не
+                    указан»), когда оператор оставляет поле разработчика пустым в мастере программ.
+                  </li>
+                  <li>
+                    <strong>Рекомендация:</strong> При начальном заполнении БД (Seed Data) создайте
+                    под этим ID запись с системным именем <em>"Unknown / Не указан"</em>.
+                  </li>
                 </ul>
               </div>
             </nz-card>
@@ -185,7 +192,7 @@ import { NzTagModule } from 'ng-zorro-antd/tag';
                     <strong>Шаблон:</strong>
                     <code
                       >&lt;av-search [(value)]="searchTerm"
-                      (onSearch)="onSearchChange($event)"&gt;</code
+                      (searchChange)="onSearchChange($event)"&gt;</code
                     >
                   </li>
                   <li>
@@ -675,15 +682,19 @@ import { NzTagModule } from 'ng-zorro-antd/tag';
           <div class="help-section">
             <nz-card nzTitle="Архитектурный стандарт: Системные требования v1.0">
               <p>
-                Система требований реализована через связку справочника версий ОС и архитектур процессоров. 
-                Это позволяет избежать текстового хардкода и обеспечить фильтрацию ПО по совместимости.
+                Система требований реализована через связку справочника версий ОС и архитектур
+                процессоров. Это позволяет избежать текстового хардкода и обеспечить фильтрацию ПО
+                по совместимости.
               </p>
 
               <div class="logic-grid">
                 <div class="logic-card">
                   <h5>Ключевые сущности:</h5>
                   <ul>
-                    <li><code>PlatformOsVersionOfAggregator</code> — Справочник (Win 10, macOS Sonoma).</li>
+                    <li>
+                      <code>PlatformOsVersionOfAggregator</code> — Справочник (Win 10, macOS
+                      Sonoma).
+                    </li>
                     <li><code>RequirementArchitecture</code> — Enum (x64, Arm64, Universal).</li>
                     <li><code>SystemRequirementOfAggregator</code> — Связующая таблица.</li>
                   </ul>
@@ -708,7 +719,10 @@ import { NzTagModule } from 'ng-zorro-antd/tag';
                   <av-help-copy-container [content]="sysReqCoreCode"></av-help-copy-container>
                 </nz-tab>
                 <nz-tab nzTitle="Seed Data (JSON)">
-                  <p>Стандарт заполнения справочников через <code>DAL/SeedData/Aggregator/platform_os_versions.json</code></p>
+                  <p>
+                    Стандарт заполнения справочников через
+                    <code>DAL/SeedData/Aggregator/platform_os_versions.json</code>
+                  </p>
                   <av-help-copy-container [content]="sysReqJsonCode"></av-help-copy-container>
                 </nz-tab>
               </nz-tabset>
@@ -1174,15 +1188,32 @@ import { NzTagModule } from 'ng-zorro-antd/tag';
                     </li>
                     <li>
                       <strong>Механика English Fallbacks:</strong>
-                      <div class="logic-card" style="margin: 8px 0; background: #f0fdf4; border: 1px solid #bbf7d0; padding: 12px; font-size: 13px; color: #166534;">
-                        <p style="margin-bottom: 8px;"><strong>Как это работает при сохранении:</strong></p>
+                      <div
+                        class="logic-card"
+                        style="margin: 8px 0; background: #f0fdf4; border: 1px solid #bbf7d0; padding: 12px; font-size: 13px; color: #166534;"
+                      >
+                        <p style="margin-bottom: 8px;">
+                          <strong>Как это работает при сохранении:</strong>
+                        </p>
                         <ul style="padding-left: 18px;">
                           <li>Сервис сканирует все локализации перед отправкой на бэкенд.</li>
-                          <li>Если «Название» пустое — подставляется значение из <strong>en-US</strong>.</li>
-                          <li>Если английская вкладка тоже пуста — используется технический <strong>Slug</strong>.</li>
-                          <li>Автоматически копируются Описание и SEO-настройки (Title, Meta) из английской версии.</li>
+                          <li>
+                            Если «Название» пустое — подставляется значение из
+                            <strong>en-US</strong>.
+                          </li>
+                          <li>
+                            Если английская вкладка тоже пуста — используется технический
+                            <strong>Slug</strong>.
+                          </li>
+                          <li>
+                            Автоматически копируются Описание и SEO-настройки (Title, Meta) из
+                            английской версии.
+                          </li>
                         </ul>
-                        <p style="margin-top: 8px; font-size: 12px; font-style: italic;">Это избавляет от необходимости вручную заполнять 10+ вкладок при создании контента.</p>
+                        <p style="margin-top: 8px; font-size: 12px; font-style: italic;">
+                          Это избавляет от необходимости вручную заполнять 10+ вкладок при создании
+                          контента.
+                        </p>
                       </div>
                     </li>
                     <li>
@@ -1191,7 +1222,9 @@ import { NzTagModule } from 'ng-zorro-antd/tag';
                         class="logic-card"
                         style="margin: 8px 0; background: #fff7ed; border: 1px solid #ffedd5; font-size: 11px; color: #9a3412; padding: 8px;"
                       >
-                        <strong>Оркестрация Сохранения:</strong> 1. Валидация. 2. Вызов <code>applyEnglishFallbacks()</code>. 3. <code>api.save</code> в <code>executeWithLoading</code>. 4. Refresh данных.
+                        <strong>Оркестрация Сохранения:</strong> 1. Валидация. 2. Вызов
+                        <code>applyEnglishFallbacks()</code>. 3. <code>api.save</code> в
+                        <code>executeWithLoading</code>. 4. Refresh данных.
                       </div>
                     </li>
                   </ul>
@@ -1755,7 +1788,7 @@ dest.LanguageName -> src.LanguageOfAggregator.Title</code></pre>
                       <ul>
                         <li>
                           Путь импорта:
-                          <code>&#64;assets/languageApp/services/language.service</code>.
+                          <code>&#64;language-app/services/language.service</code>.
                         </li>
                         <li>
                           Доступ к списку языков осуществляется через сигнал
@@ -1854,25 +1887,48 @@ dest.LanguageName -> src.LanguageOfAggregator.Title</code></pre>
         <nz-tab nzTitle="📋 Спецификация Aurora v3.5">
           <div class="help-section">
             <nz-card nzTitle="Глобальный чек-лист соответствия (Reference Checklist)">
-              <p>Любая новая сущность в системе Агрегатора должна соответствовать следующим критериям:</p>
-              
+              <p>
+                Любая новая сущность в системе Агрегатора должна соответствовать следующим
+                критериям:
+              </p>
+
               <div class="logic-grid">
                 <div class="logic-card">
                   <h5>Frontend (Angular 17+):</h5>
                   <ul>
-                    <li><nz-tag nzColor="success">Signals</nz-tag> Полный переход на Signal-based State.</li>
+                    <li>
+                      <nz-tag nzColor="success">Signals</nz-tag> Полный переход на Signal-based
+                      State.
+                    </li>
                     <li><nz-tag nzColor="success">Standalone</nz-tag> Компоненты без модулей.</li>
-                    <li><nz-tag nzColor="success">AvShowcase</nz-tag> Использование базовых компонентов для CRUD.</li>
-                    <li><nz-tag nzColor="success">Localizations</nz-tag> Вкладки для всех активных языков.</li>
+                    <li>
+                      <nz-tag nzColor="success">AvShowcase</nz-tag> Использование базовых
+                      компонентов для CRUD.
+                    </li>
+                    <li>
+                      <nz-tag nzColor="success">Localizations</nz-tag> Вкладки для всех активных
+                      языков.
+                    </li>
                   </ul>
                 </div>
                 <div class="logic-card">
                   <h5>Backend (.NET Core):</h5>
                   <ul>
-                    <li><nz-tag nzColor="processing">FullAuditable</nz-tag> Наследование от базовых сущностей аудита.</li>
-                    <li><nz-tag nzColor="processing">UnitOfWork</nz-tag> Регистрация в репозиториях.</li>
-                    <li><nz-tag nzColor="processing">AutoMapper</nz-tag> Наличие DTO и профилей маппинга.</li>
-                    <li><nz-tag nzColor="processing">Migrations</nz-tag> Наличие чистых миграций без конфликтов.</li>
+                    <li>
+                      <nz-tag nzColor="processing">FullAuditable</nz-tag> Наследование от базовых
+                      сущностей аудита.
+                    </li>
+                    <li>
+                      <nz-tag nzColor="processing">UnitOfWork</nz-tag> Регистрация в репозиториях.
+                    </li>
+                    <li>
+                      <nz-tag nzColor="processing">AutoMapper</nz-tag> Наличие DTO и профилей
+                      маппинга.
+                    </li>
+                    <li>
+                      <nz-tag nzColor="processing">Migrations</nz-tag> Наличие чистых миграций без
+                      конфликтов.
+                    </li>
                   </ul>
                 </div>
               </div>
@@ -1885,7 +1941,8 @@ DAL/Models/Aggregator/DeveloperOfAggregator.cs
 // Frontend Page:
 src/app/AGREGATOR/PAGES/DeveloperOfAggregatorPage/
 // Documentation:
-src/app/pages/help/developer-help/developer-help.component.ts</pre>
+src/app/pages/help/developer-help/developer-help.component.ts</pre
+                >
               </div>
             </nz-card>
           </div>
@@ -2282,7 +2339,7 @@ onToggleTrash(show: boolean): void {
   headerAssemblyHtmlCode = `<div class="table-header">
   <div class="left-actions">
     <div class="search-box">
-      <av-search [(value)]="searchTerm" (onSearch)="onSearchChange($event)"></av-search>
+      <av-search [(value)]="searchTerm" (searchChange)="onSearchChange($event)"></av-search>
     </div>
 
     <!-- Фильтр языков -->

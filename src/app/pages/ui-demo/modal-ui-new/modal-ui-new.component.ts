@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, signal } from '@angular/core';
+import { Component, computed, signal, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzGridModule } from 'ng-zorro-antd/grid';
@@ -31,6 +31,8 @@ import { ModalComponent, ModalService } from '../../../shared/components/ui/moda
   styleUrl: './modal-ui-new.component.scss',
 })
 export class ModalUiNewComponent {
+  private modalService = inject(ModalService);
+
   // Playground State
   pgTitle = signal('New Modal');
   pgSubtitle = signal('Interactive modeling demo');
@@ -159,8 +161,6 @@ export class MyComponent {
 • closeAll() - принудительное закрытие всех окон.
 
 Важно: Сервис автоматически управляет z-index и стеком открытых окон (поддерживает до 5 уровней вложенности).`;
-
-  constructor(private modalService: ModalService) {}
 
   pgGeneratedCode = computed(() => {
     let code = `<av-modal

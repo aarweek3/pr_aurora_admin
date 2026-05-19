@@ -409,7 +409,7 @@ export class TestImageEditorVsComponent {
   private readonly sanitizer = inject(DomSanitizer);
 
   lastResult: AvImageEditorOutput | null = null;
-  lastResultJson: string = '';
+  lastResultJson = '';
   safeHtml: SafeHtml | null = null;
 
   openEditor(imageUrl: string): void {

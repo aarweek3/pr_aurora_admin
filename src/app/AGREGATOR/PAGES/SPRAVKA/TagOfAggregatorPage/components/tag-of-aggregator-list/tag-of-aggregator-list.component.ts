@@ -39,7 +39,7 @@ import { PaginationComponent, PaginationChangeEvent } from '@shared/components/u
     NzCardModule,
     NzSpaceModule,
     AvSearchComponent,
-    PaginationComponent
+    PaginationComponent,
   ],
   template: `
     <nz-card [nzBordered]="false" class="page-card">
@@ -64,7 +64,7 @@ import { PaginationComponent, PaginationChangeEvent } from '@shared/components/u
               class="search-input"
             ></av-search>
           </div>
-          
+
           <nz-select
             [ngModel]="state.categoryTagId()"
             (ngModelChange)="state.setCategoryFilter($event)"
@@ -72,9 +72,11 @@ import { PaginationComponent, PaginationChangeEvent } from '@shared/components/u
             nzAllowClear
             style="width: 180px;"
           >
-            <nz-option *ngFor="let cat of state.categories()" 
-                       [nzValue]="cat.id" 
-                       [nzLabel]="cat.localizedName || cat.slug"></nz-option>
+            <nz-option
+              *ngFor="let cat of state.categories()"
+              [nzValue]="cat.id"
+              [nzLabel]="cat.localizedName || cat.slug"
+            ></nz-option>
           </nz-select>
 
           <nz-select
@@ -91,8 +93,8 @@ import { PaginationComponent, PaginationChangeEvent } from '@shared/components/u
 
           <div class="trash-toggle" [class.active]="state.showDeleted()">
             <span class="label">КОРЗИНА</span>
-            <nz-switch 
-              [ngModel]="state.showDeleted()" 
+            <nz-switch
+              [ngModel]="state.showDeleted()"
               (ngModelChange)="state.setShowDeleted($event)"
               nzSize="small"
             ></nz-switch>
@@ -133,27 +135,60 @@ import { PaginationComponent, PaginationChangeEvent } from '@shared/components/u
       >
         <thead>
           <tr>
-            <th nzWidth="80px"
-                [nzSortFn]="true" 
-                [nzSortOrder]="state.sortBy() === 'Id' ? (state.sortDirection() === 0 ? 'ascend' : 'descend') : null"
-                (nzSortOrderChange)="onSortChange('Id', $event)"
-            >ID</th>
-            <th [nzSortFn]="true" 
-                [nzSortOrder]="state.sortBy() === 'Name' ? (state.sortDirection() === 0 ? 'ascend' : 'descend') : null"
-                (nzSortOrderChange)="onSortChange('Name', $event)">
+            <th
+              nzWidth="80px"
+              [nzSortFn]="true"
+              [nzSortOrder]="
+                state.sortBy() === 'Id'
+                  ? state.sortDirection() === 0
+                    ? 'ascend'
+                    : 'descend'
+                  : null
+              "
+              (nzSortOrderChange)="onSortChange('Id', $event)"
+            >
+              ID
+            </th>
+            <th
+              [nzSortFn]="true"
+              [nzSortOrder]="
+                state.sortBy() === 'Name'
+                  ? state.sortDirection() === 0
+                    ? 'ascend'
+                    : 'descend'
+                  : null
+              "
+              (nzSortOrderChange)="onSortChange('Name', $event)"
+            >
               Тег
             </th>
-            <th [nzSortFn]="true" 
-                [nzSortOrder]="state.sortBy() === 'Slug' ? (state.sortDirection() === 0 ? 'ascend' : 'descend') : null"
-                (nzSortOrderChange)="onSortChange('Slug', $event)">
+            <th
+              [nzSortFn]="true"
+              [nzSortOrder]="
+                state.sortBy() === 'Slug'
+                  ? state.sortDirection() === 0
+                    ? 'ascend'
+                    : 'descend'
+                  : null
+              "
+              (nzSortOrderChange)="onSortChange('Slug', $event)"
+            >
               Системный код
             </th>
             <th>Категория</th>
             <th nzWidth="100px">Превью</th>
-            <th nzWidth="100px" 
-                [nzSortFn]="true" 
-                [nzSortOrder]="state.sortBy() === 'SortOrder' ? (state.sortDirection() === 0 ? 'ascend' : 'descend') : null"
-                (nzSortOrderChange)="onSortChange('SortOrder', $event)">
+            <th
+              nzWidth="100px"
+              [nzSortFn]="true"
+              [nzSortOrder]="
+                state.sortBy() === 'SortOrder'
+                  ? state.sortDirection() === 0
+                    ? 'ascend'
+                    : 'descend'
+                  : null
+              "
+              (nzSortOrderChange)="onSortChange('SortOrder', $event)"
+            >
               Порядок
             </th>
             <th nzWidth="120px">Статус</th>
@@ -165,52 +200,88 @@ import { PaginationComponent, PaginationChangeEvent } from '@shared/components/u
             @for (skeleton of [1, 2, 3, 4, 5]; track skeleton) {
               <tr>
                 <td colspan="8">
-                  <nz-skeleton [nzActive]="true" [nzTitle]="false" [nzParagraph]="{ rows: 1 }"></nz-skeleton>
+                  <nz-skeleton
+                    [nzActive]="true"
+                    [nzTitle]="false"
+                    [nzParagraph]="{ rows: 1 }"
+                  ></nz-skeleton>
                 </td>
               </tr>
             }
           }
 
           <tr *ngFor="let data of basicTable.data" [class.deleted-row]="state.showDeleted()">
-            <td><span class="text-secondary">{{ data.id }}</span></td>
+            <td>
+              <span class="text-secondary">{{ data.id }}</span>
+            </td>
             <td>
               <div class="entity-cell">
                 <div class="entity-info">
                   <div class="name-row">
                     <nz-tag [nzColor]="data.displayColor || 'blue'" class="name-tag">
                       <ng-container *ngIf="data.displayIcon">
-                        <div *ngIf="isCustomIcon(data.displayIcon); else standardIcon"
-                             class="tag-icon" 
-                             [style.-webkit-mask-image]="'url(' + imgService.getAssetUrl(data.displayIcon) + ')'"
-                             [style.mask-image]="'url(' + imgService.getAssetUrl(data.displayIcon) + ')'"></div>
+                        <div
+                          *ngIf="isCustomIcon(data.displayIcon); else standardIcon"
+                          class="tag-icon"
+                          [style.-webkit-mask-image]="
+                            'url(' + imgService.getAssetUrl(data.displayIcon) + ')'
+                          "
+                          [style.mask-image]="
+                            'url(' + imgService.getAssetUrl(data.displayIcon) + ')'
+                          "
+                        ></div>
                         <ng-template #standardIcon>
-                          <i nz-icon [nzType]="getStandardIcon(data.displayIcon)" class="tag-icon-standard"></i>
+                          <i
+                            nz-icon
+                            [nzType]="getStandardIcon(data.displayIcon)"
+                            class="tag-icon-standard"
+                          ></i>
                         </ng-template>
                       </ng-container>
                       <span class="tag-text">{{ data.localizedName || data.slug }}</span>
                     </nz-tag>
-                    <span *ngIf="data.requiresTranslation" class="red-dot" nz-tooltip nzTooltipTitle="Требуется перевод"></span>
+                    <span
+                      *ngIf="data.requiresTranslation"
+                      class="red-dot"
+                      nz-tooltip
+                      nzTooltipTitle="Требуется перевод"
+                    ></span>
                   </div>
                 </div>
               </div>
             </td>
-            <td><nz-tag nzColor="blue" class="slug-tag">{{ data.slug }}</nz-tag></td>
-            <td><span class="text-secondary">{{ data.categoryName }}</span></td>
+            <td>
+              <nz-tag nzColor="blue" class="slug-tag">{{ data.slug }}</nz-tag>
+            </td>
+            <td>
+              <span class="text-secondary">{{ data.categoryName }}</span>
+            </td>
             <td>
               <div class="style-preview" [style.border-color]="data.displayColor">
-                 <ng-container *ngIf="data.displayIcon">
-                   <div *ngIf="isCustomIcon(data.displayIcon); else standardIconPreview"
-                        class="preview-icon" 
-                        [style.background-color]="data.displayColor" 
-                        [style.-webkit-mask-image]="'url(' + imgService.getAssetUrl(data.displayIcon) + ')'"
-                        [style.mask-image]="'url(' + imgService.getAssetUrl(data.displayIcon) + ')'"></div>
-                   <ng-template #standardIconPreview>
-                     <i nz-icon [nzType]="getStandardIcon(data.displayIcon)" [style.color]="data.displayColor" style="font-size: 16px;"></i>
-                   </ng-template>
-                 </ng-container>
+                <ng-container *ngIf="data.displayIcon">
+                  <div
+                    *ngIf="isCustomIcon(data.displayIcon); else standardIconPreview"
+                    class="preview-icon"
+                    [style.background-color]="data.displayColor"
+                    [style.-webkit-mask-image]="
+                      'url(' + imgService.getAssetUrl(data.displayIcon) + ')'
+                    "
+                    [style.mask-image]="'url(' + imgService.getAssetUrl(data.displayIcon) + ')'"
+                  ></div>
+                  <ng-template #standardIconPreview>
+                    <i
+                      nz-icon
+                      [nzType]="getStandardIcon(data.displayIcon)"
+                      [style.color]="data.displayColor"
+                      style="font-size: 16px;"
+                    ></i>
+                  </ng-template>
+                </ng-container>
               </div>
             </td>
-            <td><span class="order-badge">{{ data.sortOrder }}</span></td>
+            <td>
+              <span class="order-badge">{{ data.sortOrder }}</span>
+            </td>
             <td>
               <nz-tag [nzColor]="data.isActive ? 'success' : 'default'">
                 {{ data.isActive ? 'Активен' : 'Пауза' }}
@@ -218,25 +289,61 @@ import { PaginationComponent, PaginationChangeEvent } from '@shared/components/u
             </td>
             <td>
               <div class="actions">
-                <button nz-button nzType="text" nz-tooltip nzTooltipTitle="Просмотр" (click)="state.openView(data.id)">
+                <button
+                  nz-button
+                  nzType="text"
+                  nz-tooltip
+                  nzTooltipTitle="Просмотр"
+                  (click)="state.openView(data.id)"
+                >
                   <i nz-icon nzType="eye" class="view-icon"></i>
                 </button>
-                
+
                 @if (state.showDeleted()) {
-                  <button nz-button nzType="text" nz-tooltip nzTooltipTitle="Восстановить" (click)="onRestore(data.id)">
+                  <button
+                    nz-button
+                    nzType="text"
+                    nz-tooltip
+                    nzTooltipTitle="Восстановить"
+                    (click)="onRestore(data.id)"
+                  >
                     <i nz-icon nzType="undo" class="restore-icon"></i>
                   </button>
-                  <button nz-button nzType="text" nz-tooltip nzTooltipTitle="Удалить окончательно" (click)="onHardDelete(data.id)">
+                  <button
+                    nz-button
+                    nzType="text"
+                    nz-tooltip
+                    nzTooltipTitle="Удалить окончательно"
+                    (click)="onHardDelete(data.id)"
+                  >
                     <i nz-icon nzType="fire" class="hard-delete-icon"></i>
                   </button>
                 } @else {
-                  <button nz-button nzType="text" nz-tooltip nzTooltipTitle="Правка" (click)="state.openEditModal(data.id)">
+                  <button
+                    nz-button
+                    nzType="text"
+                    nz-tooltip
+                    nzTooltipTitle="Правка"
+                    (click)="state.openEditModal(data.id)"
+                  >
                     <i nz-icon nzType="edit" class="edit-icon"></i>
                   </button>
-                  <button nz-button nzType="text" nz-tooltip nzTooltipTitle="В корзину" (click)="onDelete(data.id)">
+                  <button
+                    nz-button
+                    nzType="text"
+                    nz-tooltip
+                    nzTooltipTitle="В корзину"
+                    (click)="onDelete(data.id)"
+                  >
                     <i nz-icon nzType="rest" class="delete-icon"></i>
                   </button>
-                  <button nz-button nzType="text" nz-tooltip nzTooltipTitle="Hard Delete" (click)="onHardDelete(data.id)">
+                  <button
+                    nz-button
+                    nzType="text"
+                    nz-tooltip
+                    nzTooltipTitle="Hard Delete"
+                    (click)="onHardDelete(data.id)"
+                  >
                     <i nz-icon nzType="fire" class="hard-delete-icon"></i>
                   </button>
                 }
@@ -258,65 +365,185 @@ import { PaginationComponent, PaginationChangeEvent } from '@shared/components/u
       </div>
     </nz-card>
   `,
-  styles: [`
-    .page-card { border-radius: 8px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); }
-    .trash-alert { margin-bottom: 16px; }
-    
-    .table-header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 16px; }
-    .left-actions { display: flex; align-items: center; gap: 16px; flex: 1; }
-    .search-box { width: 300px; }
+  styles: [
+    `
+      .page-card {
+        border-radius: 8px;
+        box-shadow:
+          0 4px 6px -1px rgba(0, 0, 0, 0.1),
+          0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      }
+      .trash-alert {
+        margin-bottom: 16px;
+      }
 
-    .trash-toggle { 
-      display: flex; align-items: center; gap: 8px; background: #f1f5f9; padding: 4px 12px; border-radius: 20px; 
-      transition: all 0.3s; border: 1px solid transparent;
-    }
-    .trash-toggle.active { background: #fee2e2; border-color: #fca5a5; }
-    .trash-toggle .label { font-size: 10px; font-weight: 800; color: #64748b; letter-spacing: 0.5px; }
-    .trash-toggle.active .label { color: #b91c1c; }
+      .table-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-bottom: 16px;
+      }
+      .left-actions {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        flex: 1;
+      }
+      .search-box {
+        width: 300px;
+      }
 
-    .aurora-table { margin-top: 8px; }
-    
-    .entity-cell { display: flex; align-items: center; gap: 12px; }
-    .name-row { display: flex; align-items: center; gap: 6px; }
-    .name-tag { 
-      display: flex; align-items: center; gap: 8px; padding: 4px 12px; border-radius: 6px; 
-      font-weight: 600; height: auto; border: none;
-    }
-    .tag-icon { 
-      width: 14px; height: 14px; background-color: #fff;
-      mask-size: contain; -webkit-mask-size: contain;
-      mask-repeat: no-repeat; -webkit-mask-repeat: no-repeat;
-      mask-position: center; -webkit-mask-position: center;
-    }
-    .tag-text { color: #fff; font-size: 13px; }
-    .tag-icon-standard { color: #fff; font-size: 14px; }
-    
-    .red-dot { width: 6px; height: 6px; background: #ef4444; border-radius: 50%; display: inline-block; }
-    .slug-tag { font-family: 'JetBrains Mono', monospace; font-size: 11px; border-radius: 4px; }
-    .order-badge { background: #f1f5f9; padding: 2px 8px; border-radius: 4px; font-weight: 700; color: #475569; }
+      .trash-toggle {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: #f1f5f9;
+        padding: 4px 12px;
+        border-radius: 20px;
+        transition: all 0.3s;
+        border: 1px solid transparent;
+      }
+      .trash-toggle.active {
+        background: #fee2e2;
+        border-color: #fca5a5;
+      }
+      .trash-toggle .label {
+        font-size: 10px;
+        font-weight: 800;
+        color: #64748b;
+        letter-spacing: 0.5px;
+      }
+      .trash-toggle.active .label {
+        color: #b91c1c;
+      }
 
-    .style-preview { width: 28px; height: 28px; border: 2px solid; border-radius: 6px; display: flex; align-items: center; justify-content: center; background: #fff; }
-    .preview-icon { 
-      width: 16px; height: 16px;
-      mask-size: contain; -webkit-mask-size: contain;
-      mask-repeat: no-repeat; -webkit-mask-repeat: no-repeat;
-      mask-position: center; -webkit-mask-position: center;
-    }
+      .aurora-table {
+        margin-top: 8px;
+      }
 
-    .actions { display: flex; gap: 4px; }
-    .actions i { font-size: 17px; color: #64748b; transition: all 0.2s; }
-    .view-icon:hover { color: #3b82f6; }
-    .edit-icon:hover { color: #2563eb; }
-    .delete-icon:hover { color: #ef4444; }
-    .hard-delete-icon:hover { color: #f97316; }
-    .restore-icon:hover { color: #10b981; }
+      .entity-cell {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .name-row {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .name-tag {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 4px 12px;
+        border-radius: 6px;
+        font-weight: 600;
+        height: auto;
+        border: none;
+      }
+      .tag-icon {
+        width: 14px;
+        height: 14px;
+        background-color: #fff;
+        mask-size: contain;
+        -webkit-mask-size: contain;
+        mask-repeat: no-repeat;
+        -webkit-mask-repeat: no-repeat;
+        mask-position: center;
+        -webkit-mask-position: center;
+      }
+      .tag-text {
+        color: #fff;
+        font-size: 13px;
+      }
+      .tag-icon-standard {
+        color: #fff;
+        font-size: 14px;
+      }
 
-    .pagination-footer { margin-top: 24px; display: flex; justify-content: center; }
-    
-    .deleted-row { background-color: #fff1f0; }
+      .red-dot {
+        width: 6px;
+        height: 6px;
+        background: #ef4444;
+        border-radius: 50%;
+        display: inline-block;
+      }
+      .slug-tag {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 11px;
+        border-radius: 4px;
+      }
+      .order-badge {
+        background: #f1f5f9;
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-weight: 700;
+        color: #475569;
+      }
 
-    ::ng-deep .ant-table-thead > tr > th { background: #f8fafc !important; color: #475569 !important; font-weight: 700 !important; }
-  `]
+      .style-preview {
+        width: 28px;
+        height: 28px;
+        border: 2px solid;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #fff;
+      }
+      .preview-icon {
+        width: 16px;
+        height: 16px;
+        mask-size: contain;
+        -webkit-mask-size: contain;
+        mask-repeat: no-repeat;
+        -webkit-mask-repeat: no-repeat;
+        mask-position: center;
+        -webkit-mask-position: center;
+      }
+
+      .actions {
+        display: flex;
+        gap: 4px;
+      }
+      .actions i {
+        font-size: 17px;
+        color: #64748b;
+        transition: all 0.2s;
+      }
+      .view-icon:hover {
+        color: #3b82f6;
+      }
+      .edit-icon:hover {
+        color: #2563eb;
+      }
+      .delete-icon:hover {
+        color: #ef4444;
+      }
+      .hard-delete-icon:hover {
+        color: #f97316;
+      }
+      .restore-icon:hover {
+        color: #10b981;
+      }
+
+      .pagination-footer {
+        margin-top: 24px;
+        display: flex;
+        justify-content: center;
+      }
+
+      .deleted-row {
+        background-color: #fff1f0;
+      }
+
+      ::ng-deep .ant-table-thead > tr > th {
+        background: #f8fafc !important;
+        color: #475569 !important;
+        font-weight: 700 !important;
+      }
+    `,
+  ],
 })
 export class TagOfAggregatorListComponent {
   public state = inject(TagOfAggregatorStateService);
@@ -359,7 +586,7 @@ export class TagOfAggregatorListComponent {
       'ВНИМАНИЕ: Это действие безвозвратно удалит тег из базы данных.',
       '2 + 2 = ?',
       '4',
-      'Удалить навсегда'
+      'Удалить навсегда',
     );
     if (confirmed) this.state.hardDelete(id);
   }

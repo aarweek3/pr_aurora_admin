@@ -5,7 +5,7 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { LoggerConsoleService } from '../../../shared/logger-console/services/logger-console.service';
-import { IconLaboratoryService } from '../../../shared/services/icon-laboratory.service';
+import { IconDataService } from '@core/services/icon/icon-data.service';
 
 @Component({
   selector: 'av-icon-sync',
@@ -128,8 +128,12 @@ import { IconLaboratoryService } from '../../../shared/services/icon-laboratory.
       }
 
       @keyframes float {
-        from { transform: translate(0, 0) scale(1); }
-        to { transform: translate(50px, 50px) scale(1.1); }
+        from {
+          transform: translate(0, 0) scale(1);
+        }
+        to {
+          transform: translate(50px, 50px) scale(1.1);
+        }
       }
 
       .sync-glass {
@@ -241,7 +245,9 @@ import { IconLaboratoryService } from '../../../shared/services/icon-laboratory.
         color: #1e293b;
       }
 
-      .stat-card .value.success { color: #10b981; }
+      .stat-card .value.success {
+        color: #10b981;
+      }
 
       .log-container {
         flex: 1;
@@ -331,12 +337,15 @@ import { IconLaboratoryService } from '../../../shared/services/icon-laboratory.
         gap: 16px;
       }
 
-      .empty-logs p { margin: 0; font-size: 14px; }
+      .empty-logs p {
+        margin: 0;
+        font-size: 14px;
+      }
     `,
   ],
 })
 export class IconSyncComponent {
-  private iconLabService = inject(IconLaboratoryService);
+  private iconLabService = inject(IconDataService);
   private message = inject(NzMessageService);
   private logger = inject(LoggerConsoleService).getLogger('IconSync');
 

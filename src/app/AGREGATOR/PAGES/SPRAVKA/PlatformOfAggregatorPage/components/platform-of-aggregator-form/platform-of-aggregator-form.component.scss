@@ -6,24 +6,24 @@
   .ant-tabs-nav {
     margin-bottom: 24px;
     border-bottom: 2px solid #f1f5f9;
-    
+
     &::before {
       border: none;
     }
   }
-  
+
   .ant-tabs-tab {
     padding: 12px 0;
     font-weight: 600;
     color: #64748b;
-    
+
     &-active {
       .ant-tabs-tab-btn {
         color: #2563eb !important;
       }
     }
   }
-  
+
   .ant-tabs-ink-bar {
     background: #2563eb;
     height: 3px;
@@ -35,19 +35,19 @@
     border: 1px solid #e2e8f0;
     border-radius: 12px;
     margin-top: 16px;
-    
+
     .ant-collapse-header {
       font-weight: 700;
       color: #334155;
       font-size: 13px;
     }
-    
+
     .ant-collapse-content {
       background: #ffffff;
       border-top: 1px solid #e2e8f0;
     }
   }
-  
+
   .ant-form-item-label > label {
     font-weight: 600;
     color: #475569;

@@ -12,7 +12,6 @@ export interface RegisterDto {
   password: string;
 }
 
-
 export interface UserProfileDto {
   fullName: string;
   email: string;
@@ -95,7 +94,7 @@ export interface UserStatisticsDto {
   inactiveUsers: number;
   externalAccounts: number;
   usersWithTwoFactor: number;
-  usersByDepartment: { [key: string]: number };
+  usersByDepartment: Record<string, number>;
 }
 
 export interface CreateUserDto {

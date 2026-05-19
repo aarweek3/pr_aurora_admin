@@ -1,22 +1,24 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { 
-  DeveloperOfAggregatorPageRequest, 
+import {
+  DeveloperOfAggregatorPageRequest,
   DeveloperOfAggregatorPagedResponse,
-  DeveloperOfAggregatorDetail
+  DeveloperOfAggregatorDetail,
 } from '../models/developer-of-aggregator.model';
 import { environment } from '../../../../../../environments/environment';
 import { DEVELOPER_OF_AGGREGATOR_BASE_URL } from '../end-points';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class DeveloperOfAggregatorApiService {
   private http = inject(HttpClient);
   private apiUrl = `${environment.apiUrl}/${DEVELOPER_OF_AGGREGATOR_BASE_URL}`;
 
-  getPaged(request: DeveloperOfAggregatorPageRequest): Observable<DeveloperOfAggregatorPagedResponse> {
+  getPaged(
+    request: DeveloperOfAggregatorPageRequest,
+  ): Observable<DeveloperOfAggregatorPagedResponse> {
     let params = new HttpParams()
       .set('pageNumber', request.pageNumber.toString())
       .set('pageSize', request.pageSize.toString())
@@ -43,7 +45,7 @@ export class DeveloperOfAggregatorApiService {
     return this.http.put<DeveloperOfAggregatorDetail>(`${this.apiUrl}/${id}`, dto);
   }
 
-  delete(id: number, isHard: boolean = false): Observable<void> {
+  delete(id: number, isHard = false): Observable<void> {
     let params = new HttpParams();
     if (isHard) params = params.set('isHard', 'true');
     return this.http.delete<void>(`${this.apiUrl}/${id}`, { params });

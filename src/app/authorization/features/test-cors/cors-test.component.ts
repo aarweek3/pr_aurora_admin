@@ -1,5 +1,5 @@
 // src/app/cors-test/cors-test.component.ts
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 
@@ -37,7 +37,7 @@ interface TestResult {
         >
           <h3>{{ result.success ? '✅' : '❌' }} {{ result.title }}</h3>
           <pre>{{ result.content }}</pre>
-          <small>{{ result.timestamp | date : 'HH:mm:ss' }}</small>
+          <small>{{ result.timestamp | date: 'HH:mm:ss' }}</small>
         </div>
       </div>
     </div>
@@ -108,12 +108,12 @@ interface TestResult {
   ],
 })
 export class CorsTestComponent {
+  private http = inject(HttpClient);
+
   private readonly API_URL = 'https://localhost:7233';
 
   currentOrigin = window.location.origin;
   results: TestResult[] = [];
-
-  constructor(private http: HttpClient) {}
 
   private addResult(title: string, success: boolean, content: string) {
     this.results.unshift({

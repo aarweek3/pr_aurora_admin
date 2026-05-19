@@ -158,7 +158,7 @@ beforeClose = async () => {
 
 ```typescript
 @Output() isOpenChange = new EventEmitter<boolean>();     // Two-way binding
-@Output() closed = new EventEmitter<any>();               // Событие закрытия с результатом
+@Output() modalClosed = new EventEmitter<any>();               // Событие закрытия с результатом
 @Output() opened = new EventEmitter<void>();              // Событие открытия
 @Output() backdropClick = new EventEmitter<void>();       // Клик на backdrop
 ```

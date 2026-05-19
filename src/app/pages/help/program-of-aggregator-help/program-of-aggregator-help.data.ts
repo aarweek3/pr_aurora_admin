@@ -47,60 +47,159 @@ export const PLATFORM_FIELDS = [
 export const MARKET_FIELDS = [
   { name: 'AggregatorSourceId', type: 'int', desc: 'ID источника (Google Play, Steam...).' },
   { name: 'RatingValue', type: 'double', desc: 'Рейтинг в этом магазине.' },
-  { name: 'DownloadCountDisplay', type: 'string', desc: 'Отображаемое кол-во загрузок (напр. "1M+").' },
+  {
+    name: 'DownloadCountDisplay',
+    type: 'string',
+    desc: 'Отображаемое кол-во загрузок (напр. "1M+").',
+  },
   { name: 'Price', type: 'string', desc: 'Актуальная цена в магазине.' },
 ];
 
 export const MASTER_FIELDS = [
   // PROGRAM
-  { model: 'Program', name: 'CanonicalName', type: 'string', desc: 'Системное имя программы (эталон).' },
-  { model: 'Program', name: 'MainPlatformId', type: 'int', desc: 'ID основной платформы (контейнера).' },
+  {
+    model: 'Program',
+    name: 'CanonicalName',
+    type: 'string',
+    desc: 'Системное имя программы (эталон).',
+  },
+  {
+    model: 'Program',
+    name: 'MainPlatformId',
+    type: 'int',
+    desc: 'ID основной платформы (контейнера).',
+  },
   { model: 'Program', name: 'Slug', type: 'string', desc: 'URL-префикс (ЧПУ).' },
-  { model: 'Program', name: 'IconPath', type: 'string', desc: 'Путь к иконке программы (логотип).' },
+  {
+    model: 'Program',
+    name: 'IconPath',
+    type: 'string',
+    desc: 'Путь к иконке программы (логотип).',
+  },
   { model: 'Program', name: 'Website', type: 'string', desc: 'Официальный сайт продукта.' },
-  { model: 'Program', name: 'Status', type: 'Enum', desc: 'Статус публикации (Draft, Published...)' },
-  { model: 'Program', name: 'NeedsReview', type: 'bool', desc: 'Требует ручной проверки модератором.' },
-  { model: 'Program', name: 'IsSystem', type: 'bool', desc: 'Защита от удаления системных записей.' },
-  { model: 'Program', name: 'TotalDownloads', type: 'long', desc: 'Агрегированное кол-во загрузок со всех платформ.' },
-  
+  {
+    model: 'Program',
+    name: 'Status',
+    type: 'Enum',
+    desc: 'Статус публикации (Draft, Published...)',
+  },
+  {
+    model: 'Program',
+    name: 'NeedsReview',
+    type: 'bool',
+    desc: 'Требует ручной проверки модератором.',
+  },
+  {
+    model: 'Program',
+    name: 'IsSystem',
+    type: 'bool',
+    desc: 'Защита от удаления системных записей.',
+  },
+  {
+    model: 'Program',
+    name: 'TotalDownloads',
+    type: 'long',
+    desc: 'Агрегированное кол-во загрузок со всех платформ.',
+  },
+
   // REDIRECTS
-  { model: 'SlugRedirect', name: 'OldSlug', type: 'string', desc: 'Предыдущий URL-адрес (для SEO редиректа).' },
+  {
+    model: 'SlugRedirect',
+    name: 'OldSlug',
+    type: 'string',
+    desc: 'Предыдущий URL-адрес (для SEO редиректа).',
+  },
   { model: 'SlugRedirect', name: 'NewSlug', type: 'string', desc: 'Новый (текущий) URL-адрес.' },
 
   // LOCALIZATION
-  { model: 'Localization', name: 'LocalizedName', type: 'string', desc: 'Название на конкретном языке.' },
-  { model: 'Localization', name: 'ShortDescription', type: 'string', desc: 'Краткое описание для карточек.' },
-  { model: 'Localization', name: 'FullDescription', type: 'string', desc: 'Полный текст обзора (HTML).' },
-  { model: 'Localization', name: 'Pros/Cons', type: 'string', desc: 'Списки преимуществ и недостатков.' },
-  { model: 'Localization', name: 'LicenseTypeId', type: 'int', desc: 'Тип лицензии (Бесплатно, Демо и т.д.).' },
-  
+  {
+    model: 'Localization',
+    name: 'LocalizedName',
+    type: 'string',
+    desc: 'Название на конкретном языке.',
+  },
+  {
+    model: 'Localization',
+    name: 'ShortDescription',
+    type: 'string',
+    desc: 'Краткое описание для карточек.',
+  },
+  {
+    model: 'Localization',
+    name: 'FullDescription',
+    type: 'string',
+    desc: 'Полный текст обзора (HTML).',
+  },
+  {
+    model: 'Localization',
+    name: 'Pros/Cons',
+    type: 'string',
+    desc: 'Списки преимуществ и недостатков.',
+  },
+  {
+    model: 'Localization',
+    name: 'LicenseTypeId',
+    type: 'int',
+    desc: 'Тип лицензии (Бесплатно, Демо и т.д.).',
+  },
+
   // VERSIONS
   { model: 'Version', name: 'VersionNumber', type: 'string', desc: 'Номер версии (напр. 1.0.1).' },
   { model: 'Version', name: 'IsLatest', type: 'bool', desc: 'Флаг актуальной версии.' },
   { model: 'Version', name: 'ReleasedAt', type: 'DateTime', desc: 'Дата выхода релиза.' },
-  
+
   // CATEGORIES
   { model: 'Category', name: 'Slug', type: 'string', desc: 'Уникальный URL-код категории.' },
-  { model: 'Category', name: 'HierarchyPath', type: 'string', desc: 'Материализованный путь (1/2/...) для дерева.' },
+  {
+    model: 'Category',
+    name: 'HierarchyPath',
+    type: 'string',
+    desc: 'Материализованный путь (1/2/...) для дерева.',
+  },
   { model: 'Category', name: 'Level', type: 'int', desc: 'Уровень вложенности категории.' },
 
   // TAGS SYSTEM
-  { model: 'CategoryTag', name: 'Slug', type: 'string', desc: 'Тех. код группы тегов (напр. "OS", "LICENSE").' },
-  { model: 'CategoryTag', name: 'Color', type: 'string', desc: 'HEX-цвет группы (наследуется тегами).' },
+  {
+    model: 'CategoryTag',
+    name: 'Slug',
+    type: 'string',
+    desc: 'Тех. код группы тегов (напр. "OS", "LICENSE").',
+  },
+  {
+    model: 'CategoryTag',
+    name: 'Color',
+    type: 'string',
+    desc: 'HEX-цвет группы (наследуется тегами).',
+  },
   { model: 'Tag', name: 'Slug', type: 'string', desc: 'Уникальный код тега.' },
   { model: 'Tag', name: 'Color', type: 'string', desc: 'Индивидуальный цвет или "inherit".' },
-  { model: 'Tag', name: 'IsFeature', type: 'bool', desc: 'Флаг важной характеристики (вывод в топ).' },
-  { model: 'ProgramTag', name: 'IsMain', type: 'bool', desc: 'Является ли тег основным для этой программы.' },
-  
+  {
+    model: 'Tag',
+    name: 'IsFeature',
+    type: 'bool',
+    desc: 'Флаг важной характеристики (вывод в топ).',
+  },
+  {
+    model: 'ProgramTag',
+    name: 'IsMain',
+    type: 'bool',
+    desc: 'Является ли тег основным для этой программы.',
+  },
+
   // SNAPSHOTS
   { model: 'Snapshot', name: 'Price', type: 'string', desc: 'Цена на момент снимка.' },
   { model: 'Snapshot', name: 'RatingValue', type: 'double', desc: 'Рейтинг на момент снимка.' },
   { model: 'Snapshot', name: 'SnapshotDate', type: 'DateTime', desc: 'Дата фиксации состояния.' },
-  
+
   // MEDIA
   { model: 'Screenshot', name: 'FilePath', type: 'string', desc: 'Путь к файлу скриншота.' },
   { model: 'Screenshot', name: 'Priority', type: 'int', desc: 'Порядок вывода в галерее.' },
-  { model: 'Video', name: 'VideoUrl', type: 'string', desc: 'Ссылка на видео-превью (YouTube/Direct).' }
+  {
+    model: 'Video',
+    name: 'VideoUrl',
+    type: 'string',
+    desc: 'Ссылка на видео-превью (YouTube/Direct).',
+  },
 ];
 
 export const MERMAID_CODE = `classDiagram

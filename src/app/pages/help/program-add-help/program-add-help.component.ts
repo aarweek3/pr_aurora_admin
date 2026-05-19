@@ -83,16 +83,23 @@ import { NzTimelineModule } from 'ng-zorro-antd/timeline';
             </nz-card>
 
             <!-- Формирование URL (Hierarchical Strategy) -->
-            <nz-card nzTitle="🔗 Формирование URL (Hierarchical Strategy)" class="premium-card" style="margin-top: 24px; border-left: 4px solid #1890ff;">
+            <nz-card
+              nzTitle="🔗 Формирование URL (Hierarchical Strategy)"
+              class="premium-card"
+              style="margin-top: 24px; border-left: 4px solid #1890ff;"
+            >
               <ng-container>
                 <div class="url-info">
                   <p>
                     В системе Aurora v3.5 принят <b>Вариант 1: Иерархический (через Платформу)</b>.
                     Это самый «чистый» и премиальный вариант, где платформа становится частью пути.
                   </p>
-                  
+
                   <ng-container>
-                    <div class="example-box" style="background: #f8fafc; padding: 16px; border-radius: 12px; border: 1px solid #e2e8f0;">
+                    <div
+                      class="example-box"
+                      style="background: #f8fafc; padding: 16px; border-radius: 12px; border: 1px solid #e2e8f0;"
+                    >
                       <div class="example-item" style="margin-bottom: 8px;">
                         <b style="color: #64748b; width: 80px; display: inline-block;">Windows:</b>
                         <code style="color: #0f172a;">site.com/windows/browsers/chrome</code>
@@ -108,13 +115,33 @@ import { NzTimelineModule } from 'ng-zorro-antd/timeline';
                     </div>
                   </ng-container>
 
-                  <div class="rule-box" style="margin-top: 20px; padding: 16px; background: #e6f7ff; border-radius: 12px;">
+                  <div
+                    class="rule-box"
+                    style="margin-top: 20px; padding: 16px; background: #e6f7ff; border-radius: 12px;"
+                  >
                     <h4 style="margin-top: 0; color: #0050b3;">🛠 Правила и требования:</h4>
                     <ul style="margin-bottom: 0;">
-                      <li>Slug программы уникален <b>только</b> в связке с Основной платформой (<code>Slug + MainPlatformId</code>).</li>
-                      <li>Полный путь формируется по иерархии: <code>/{{ '{' }}platform{{ '}' }}/{{ '{' }}category{{ '}' }}/{{ '{' }}subcategory{{ '}' }}/{{ '{' }}program-slug{{ '}' }}</code>.</li>
-                      <li>Данный подход позволяет создавать отдельные страницы для одной и той же программы под разные ОС с уникальным контентом и SEO.</li>
-                      <li>При изменении иерархии (смене категории или платформы) система должна обеспечивать автоматический 301-редирект.</li>
+                      <li>
+                        Slug программы уникален <b>только</b> в связке с Основной платформой (<code
+                          >Slug + MainPlatformId</code
+                        >).
+                      </li>
+                      <li>
+                        Полный путь формируется по иерархии:
+                        <code
+                          >/{{ '{' }}platform{{ '}' }}/{{ '{' }}category{{ '}' }}/{{
+                            '{'
+                          }}subcategory{{ '}' }}/{{ '{' }}program-slug{{ '}' }}</code
+                        >.
+                      </li>
+                      <li>
+                        Данный подход позволяет создавать отдельные страницы для одной и той же
+                        программы под разные ОС с уникальным контентом и SEO.
+                      </li>
+                      <li>
+                        При изменении иерархии (смене категории или платформы) система должна
+                        обеспечивать автоматический 301-редирект.
+                      </li>
                     </ul>
                   </div>
                 </div>

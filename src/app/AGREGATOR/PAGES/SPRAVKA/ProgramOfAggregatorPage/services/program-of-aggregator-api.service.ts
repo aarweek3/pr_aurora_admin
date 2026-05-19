@@ -1,42 +1,45 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Injectable, inject } from '@angular/core';
 import { environment } from '@environments/environment';
-import { 
-  ProgramOfAggregatorItem, 
-  ProgramOfAggregatorDetail, 
-  ProgramOfAggregatorCreate, 
+import { Observable } from 'rxjs';
+import {
+  ProgramOfAggregatorCreate,
+  ProgramOfAggregatorDetail,
+  ProgramOfAggregatorPageRequest,
+  ProgramOfAggregatorPagedResponse,
   ProgramOfAggregatorUpdate,
-  VersionOfAggregatorItem,
-  VersionOfAggregatorDetail,
   VersionOfAggregatorCreate,
-  VersionOfAggregatorUpdate
+  VersionOfAggregatorDetail,
+  VersionOfAggregatorItem,
+  VersionOfAggregatorUpdate,
 } from '../models/program-of-aggregator.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ProgramOfAggregatorApiService {
+  private http = inject(HttpClient);
+
   private readonly baseUrl = `${environment.apiUrl}/api/v1/aggregator/programs`;
 
-  constructor(private http: HttpClient) {}
-
-  getPaged(request: any): Observable<any> {
+  getPaged(request: ProgramOfAggregatorPageRequest): Observable<ProgramOfAggregatorPagedResponse> {
     let params = new HttpParams()
-      .set('pageNumber', request.pageNumber?.toString() || '1')
-      .set('pageSize', request.pageSize?.toString() || '10');
+      .set('pageNumber', request.pageNumber.toString())
+      .set('pageSize', request.pageSize.toString());
 
     if (request.searchTerm) params = params.set('searchTerm', request.searchTerm);
-    if (request.languageId) params = params.set('languageId', request.languageId?.toString());
-    if (request.categoryId) params = params.set('categoryId', request.categoryId?.toString());
-    if (request.platformId) params = params.set('platformId', request.platformId?.toString());
-    if (request.developerId) params = params.set('developerId', request.developerId?.toString());
-    if (request.status !== undefined && request.status !== null) params = params.set('status', request.status.toString());
+    if (request.languageId) params = params.set('languageId', request.languageId.toString());
+    if (request.categoryId) params = params.set('categoryId', request.categoryId.toString());
+    if (request.platformId) params = params.set('platformId', request.platformId.toString());
+    if (request.developerId) params = params.set('developerId', request.developerId.toString());
+    if (request.status !== undefined && request.status !== null)
+      params = params.set('status', request.status.toString());
     if (request.showDeleted) params = params.set('showDeleted', 'true');
     if (request.sortBy) params = params.set('sortBy', request.sortBy);
-    if (request.sortDirection !== undefined && request.sortDirection !== null) params = params.set('sortDirection', request.sortDirection.toString());
+    if (request.sortDirection !== undefined && request.sortDirection !== null)
+      params = params.set('sortDirection', request.sortDirection.toString());
 
-    return this.http.get<any>(this.baseUrl, { params });
+    return this.http.get<ProgramOfAggregatorPagedResponse>(this.baseUrl, { params });
   }
 
   getById(id: number): Observable<ProgramOfAggregatorDetail> {
@@ -51,7 +54,7 @@ export class ProgramOfAggregatorApiService {
     return this.http.put<void>(`${this.baseUrl}/${id}`, dto);
   }
 
-  delete(id: number, hardDelete: boolean = false): Observable<void> {
+  delete(id: number, hardDelete = false): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/${id}?hardDelete=${hardDelete}`);
   }
 
@@ -84,11 +87,11 @@ export class ProgramOfAggregatorApiService {
     return this.http.get<VersionOfAggregatorDetail>(`${this.baseUrl}/versions/${id}`);
   }
 
-  createVersion(dto: any): Observable<number> {
+  createVersion(dto: VersionOfAggregatorCreate): Observable<number> {
     return this.http.post<number>(`${this.baseUrl}/versions`, dto);
   }
 
-  updateVersion(id: number, dto: any): Observable<void> {
+  updateVersion(id: number, dto: VersionOfAggregatorUpdate): Observable<void> {
     return this.http.put<void>(`${this.baseUrl}/versions/${id}`, dto);
   }
 

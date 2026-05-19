@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, inject } from '@angular/core';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzModalModule } from 'ng-zorro-antd/modal';
@@ -45,14 +45,14 @@ import { SampleMainSeoFormComponent } from '../sample-main-seo-form/sample-main-
   `,
 })
 export class SampleMainSeoModalComponent implements OnInit {
+  private state = inject(SampleMainSeoStateService);
+
   @ViewChild('seoForm') seoForm!: SampleMainSeoFormComponent;
 
   isVisible = false;
   mode: 'add' | 'edit' | 'view' = 'add';
   isLoading = false;
   editingItem: any = null;
-
-  constructor(private state: SampleMainSeoStateService) {}
 
   ngOnInit(): void {
     this.state.modalVisible$.subscribe((v) => (this.isVisible = v));

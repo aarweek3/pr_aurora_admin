@@ -1,5 +1,5 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../../../environments/environment';
 import { OS_VERSION_BASE_URL, SYSTEM_REQUIREMENT_BASE_URL } from '../end-points';
@@ -16,14 +16,16 @@ import {
   providedIn: 'root',
 })
 export class SystemRequirementApiService {
+  private http = inject(HttpClient);
+
   private readonly osUrl = `${environment.apiUrl}/${OS_VERSION_BASE_URL}`;
   private readonly reqUrl = `${environment.apiUrl}/${SYSTEM_REQUIREMENT_BASE_URL}`;
 
-  constructor(private http: HttpClient) {}
-
   // --- Справочник ОС ---
 
-  getOsVersions(request: PlatformOsVersionPageRequestDto): Observable<PlatformOsVersionPagedResponseDto> {
+  getOsVersions(
+    request: PlatformOsVersionPageRequestDto,
+  ): Observable<PlatformOsVersionPagedResponseDto> {
     let params = new HttpParams()
       .set('pageNumber', request.pageNumber.toString())
       .set('pageSize', request.pageSize.toString());
@@ -31,7 +33,8 @@ export class SystemRequirementApiService {
     if (request.platformId) params = params.set('platformId', request.platformId.toString());
     if (request.searchTerm) params = params.set('searchTerm', request.searchTerm);
     if (request.languageId) params = params.set('languageId', request.languageId.toString());
-    if (request.showDeleted !== undefined) params = params.set('showDeleted', request.showDeleted.toString());
+    if (request.showDeleted !== undefined)
+      params = params.set('showDeleted', request.showDeleted.toString());
 
     return this.http.get<PlatformOsVersionPagedResponseDto>(this.osUrl, { params });
   }
@@ -48,7 +51,7 @@ export class SystemRequirementApiService {
     return this.http.put<PlatformOsVersionDto>(`${this.osUrl}/${id}`, dto);
   }
 
-  deleteOsVersion(id: number, isHard: boolean = false): Observable<void> {
+  deleteOsVersion(id: number, isHard = false): Observable<void> {
     let params = new HttpParams();
     if (isHard) params = params.set('isHard', 'true');
     return this.http.delete<void>(`${this.osUrl}/${id}`, { params });
@@ -80,7 +83,7 @@ export class SystemRequirementApiService {
     return this.http.put<SystemRequirementDto>(`${this.reqUrl}/${id}`, dto);
   }
 
-  delete(id: number, isHard: boolean = false): Observable<void> {
+  delete(id: number, isHard = false): Observable<void> {
     let params = new HttpParams();
     if (isHard) params = params.set('isHard', 'true');
     return this.http.delete<void>(`${this.reqUrl}/${id}`, { params });

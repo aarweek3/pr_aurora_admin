@@ -81,7 +81,7 @@
 
 *   **AvSearchComponent** (Shared):
     *   Предоставляет UI ввода с иконкой очистки и индикатором загрузки.
-    *   Связывается через `[(value)]` и событие `(onSearch)`.
+    *   Связывается через `[(value)]` и событие `(search)`.
 *   **DeveloperOfAggregatorListComponent** (Local):
     *   Слушает событие `onSearch` и транслирует его в `state.setSearch(term)`.
     *   Отображает таблицу `nz-table` с данными из `state.items()`.

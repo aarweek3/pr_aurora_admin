@@ -24,10 +24,6 @@
     border: 1px solid #e2e8f0;
     min-height: 100px;
 
-    @include dark-theme {
-      background: rgba(255, 255, 255, 0.02);
-      border-color: rgba(255, 255, 255, 0.1);
-    }
   }
 
   .picker-container-bordered {
@@ -45,9 +41,6 @@
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 
-    @include dark-theme {
-      background: rgba(255, 255, 255, 0.05);
-    }
 
     .demo-items {
       display: flex;
@@ -71,9 +64,6 @@
       font-size: 0.875rem;
       font-style: italic;
 
-      @include dark-theme {
-        color: rgba(255, 255, 255, 0.6);
-      }
     }
   }
 }
@@ -87,10 +77,6 @@
   .control-card {
     border-radius: 8px;
 
-    @include dark-theme {
-      background: rgba(255, 255, 255, 0.02);
-      border-color: rgba(255, 255, 255, 0.08);
-    }
   }
 
   .action-buttons {
@@ -110,9 +96,6 @@
       padding-bottom: 8px;
       border-bottom: 1px solid #f0f0f0;
 
-      @include dark-theme {
-        border-bottom-color: rgba(255, 255, 255, 0.05);
-      }
 
       &:last-child {
         border-bottom: none;
@@ -209,51 +192,3 @@
 }
 
 // Dark theme overrides
-:host-context(.dark-theme) {
-  // Темная тема для документации
-  .documentation-content {
-    h3 {
-      color: color.adjust($color-primary, $lightness: 15%) !important;
-    }
-    p {
-      color: rgba(255, 255, 255, 0.65) !important;
-    }
-  }
-
-  // Темная тема для компонентов
-  .component-info-card {
-    &--current {
-      background: rgba(24, 144, 255, 0.1);
-      border-color: rgba(24, 144, 255, 0.3);
-
-      h4 {
-        color: color.adjust(#1890ff, $lightness: 20%);
-      }
-
-      code {
-        background: rgba(24, 144, 255, 0.2);
-        color: rgba(255, 255, 255, 0.85);
-      }
-    }
-
-    &--control {
-      background: rgba(82, 196, 26, 0.1);
-      border-color: rgba(82, 196, 26, 0.3);
-
-      h4 {
-        color: color.adjust(#52c41a, $lightness: 20%);
-      }
-
-      code {
-        background: rgba(82, 196, 26, 0.2);
-        color: rgba(255, 255, 255, 0.85);
-      }
-    }
-
-    .component-details {
-      .description {
-        color: rgba(255, 255, 255, 0.65);
-      }
-    }
-  }
-}

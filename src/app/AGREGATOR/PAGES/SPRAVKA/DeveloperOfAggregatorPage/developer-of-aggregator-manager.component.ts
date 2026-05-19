@@ -11,7 +11,7 @@ import { NzRadioModule } from 'ng-zorro-antd/radio';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 
 import { ModalService } from '@shared/components/ui/modal/services/modal.service';
-import { ButtonControlJsonBlockComponent } from '@shared/controls/button-control-json-block/button-control-json-block.component';
+import { ButtonControlJsonBlockComponent } from '@controls';
 import { DeveloperOfAggregatorListComponent } from './components/developer-of-aggregator-list/developer-of-aggregator-list.component';
 import { DeveloperOfAggregatorModalComponent } from './components/developer-of-aggregator-modal/developer-of-aggregator-modal.component';
 import { DeveloperOfAggregatorViewModalComponent } from './components/developer-of-aggregator-view-modal/developer-of-aggregator-view-modal.component';
@@ -98,9 +98,9 @@ import { DeveloperOfAggregatorStateService } from './services/developer-of-aggre
         *ngIf="showMaintenance"
         [loading]="state.loading()"
         [total]="state.total() || 0"
-        (onClear)="handleClearDatabase()"
-        (onRead)="handleReadFromDb()"
-        (onSeed)="handleSeedFromJson()"
+        (clear)="handleClearDatabase()"
+        (read)="handleReadFromDb()"
+        (seed)="handleSeedFromJson()"
       ></app-button-control-json-block>
 
       <!-- Основной список -->
@@ -114,7 +114,7 @@ import { DeveloperOfAggregatorStateService } from './services/developer-of-aggre
       <app-developer-of-aggregator-modal
         *ngIf="isModalVisible && viewMode() === 'modal'"
         [isVisible]="isModalVisible"
-        (onClose)="closeModal()"
+        (modalClose)="closeModal()"
       ></app-developer-of-aggregator-modal>
 
       <!-- Модальное окно просмотра -->

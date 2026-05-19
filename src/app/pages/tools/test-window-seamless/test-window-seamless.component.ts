@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { WindowSeamlessExampleComponent } from '@assets/examples/window-seamless-example/window-seamless-example.component';
+import { WindowSeamlessExampleComponent } from '../../debug-tools/examples/window-seamless-example/window-seamless-example.component';
 import { AvImagePickerComponent } from '@shared/components/av-image-uploader/av-image-picker.component';
 import { ModalComponent } from '@shared/components/ui/modal';
 import { VSModalService } from '@shared/components/ui/vs-modal';

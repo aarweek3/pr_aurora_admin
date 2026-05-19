@@ -324,5 +324,3 @@ export class RegisterComponent implements OnDestroy {
       });
   }
 }
-
-

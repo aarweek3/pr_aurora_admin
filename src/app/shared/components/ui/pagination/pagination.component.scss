@@ -344,57 +344,6 @@
 
   // === DARK THEME ===
 
-  @include dark-theme {
-    .pagination__btn {
-      background: $dark-bg-light;
-      border-color: $dark-border-base;
-      color: $dark-text-primary;
-
-      &:hover:not(:disabled) {
-        background: $dark-bg-gray;
-      }
-
-      &:disabled {
-        background: $dark-bg-gray;
-        color: $dark-text-tertiary;
-      }
-
-      &--active {
-        background: rgba($color-primary, 0.2);
-      }
-
-      &--text {
-        background: transparent;
-        border: none;
-
-        &:hover:not(:disabled) {
-          background: rgba($color-primary, 0.2);
-        }
-      }
-    }
-
-    .pagination__select,
-    .pagination__input {
-      background: $dark-bg-light;
-      border-color: $dark-border-base;
-      color: $dark-text-primary;
-
-      &:disabled {
-        background: $dark-bg-gray;
-      }
-    }
-
-    .pagination__total,
-    .pagination__info,
-    .pagination__compact-info,
-    .pagination__quick-jumper {
-      color: $dark-text-secondary;
-    }
-
-    .pagination__ellipsis {
-      color: $dark-text-tertiary;
-    }
-  }
 }
 
 // === COLOR VARIANTS ===
@@ -431,11 +380,6 @@
     }
   }
 
-  @include dark-theme {
-    .pagination__btn--active {
-      background: rgba($color-success, 0.2);
-    }
-  }
 }
 
 .pagination--color-warning {
@@ -470,11 +414,6 @@
     }
   }
 
-  @include dark-theme {
-    .pagination__btn--active {
-      background: rgba($color-warning, 0.2);
-    }
-  }
 }
 
 .pagination--color-danger {
@@ -509,11 +448,6 @@
     }
   }
 
-  @include dark-theme {
-    .pagination__btn--active {
-      background: rgba($color-error, 0.2);
-    }
-  }
 }
 
 // === RESPONSIVE ===

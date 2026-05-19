@@ -304,8 +304,8 @@ import { NzModalRef } from 'ng-zorro-antd/modal';
         height: 880px;
         position: relative;
         z-index: 100;
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial,
-          sans-serif;
+        font-family:
+          -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
         color: #d9d9d9;
         background: #262626;
         overflow: hidden;
@@ -345,12 +345,17 @@ import { NzModalRef } from 'ng-zorro-antd/modal';
         left: 0;
         right: 0;
         bottom: 0;
-        background-image: linear-gradient(45deg, #222 25%, transparent 25%),
+        background-image:
+          linear-gradient(45deg, #222 25%, transparent 25%),
           linear-gradient(-45deg, #222 25%, transparent 25%),
           linear-gradient(45deg, transparent 75%, #222 75%),
           linear-gradient(-45deg, transparent 75%, #222 75%);
         background-size: 20px 20px;
-        background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+        background-position:
+          0 0,
+          0 10px,
+          10px -10px,
+          -10px 0px;
       }
 
       .preview-image-mock {

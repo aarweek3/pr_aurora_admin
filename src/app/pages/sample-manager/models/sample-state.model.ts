@@ -1,4 +1,4 @@
-﻿import { ErrorResponse } from '@shared/infrastructure/interceptor/models/error-response.model';
+import { ErrorResponse } from '@core/models/error-response.model';
 import { SampleDetailDto } from './sample.dto';
 
 export interface SampleState {

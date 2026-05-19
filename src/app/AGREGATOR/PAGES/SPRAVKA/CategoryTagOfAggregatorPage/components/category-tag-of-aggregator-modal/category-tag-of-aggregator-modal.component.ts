@@ -8,12 +8,7 @@ import { CategoryTagOfAggregatorStateService } from '../../services/category-tag
 @Component({
   selector: 'app-category-tag-of-aggregator-modal',
   standalone: true,
-  imports: [
-    CommonModule,
-    NzModalModule,
-    NzButtonModule,
-    CategoryTagOfAggregatorFormComponent
-  ],
+  imports: [CommonModule, NzModalModule, NzButtonModule, CategoryTagOfAggregatorFormComponent],
   template: `
     <nz-modal
       [(nzVisible)]="isVisible"
@@ -27,39 +22,39 @@ import { CategoryTagOfAggregatorStateService } from '../../services/category-tag
         <app-category-tag-of-aggregator-form
           #categoryForm
           [id]="state.selectedId()"
-          (onSave)="handleSave($event)"
+          (save)="handleSave($event)"
         ></app-category-tag-of-aggregator-form>
       </ng-container>
 
       <ng-template #modalFooter>
         <button nz-button nzType="default" (click)="handleCancel()">Отмена</button>
-        <button 
-          nz-button 
-          nzType="primary" 
-          [nzLoading]="state.modalLoading()" 
+        <button
+          nz-button
+          nzType="primary"
+          [nzLoading]="state.modalLoading()"
           (click)="categoryForm.submit()"
         >
           Сохранить
         </button>
       </ng-template>
     </nz-modal>
-  `
+  `,
 })
 export class CategoryTagOfAggregatorModalComponent {
   state = inject(CategoryTagOfAggregatorStateService);
 
   @Input() isVisible = false;
-  @Output() onClose = new EventEmitter<void>();
+  @Output() modalClose = new EventEmitter<void>();
 
   @ViewChild('categoryForm') categoryForm!: CategoryTagOfAggregatorFormComponent;
 
   handleCancel(): void {
-    this.onClose.emit();
+    this.modalClose.emit();
   }
 
   handleSave(dto: any): void {
     this.state.save(dto).subscribe(() => {
-      this.onClose.emit();
+      this.modalClose.emit();
     });
   }
 }

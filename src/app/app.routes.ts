@@ -46,12 +46,15 @@ export const routes: Routes = [
       },
       {
         path: 'admin',
-        loadChildren: () => import('./authorization/routes/admin.routes').then((m) => m.ADMIN_ROUTES),
+        loadChildren: () =>
+          import('./authorization/routes/admin.routes').then((m) => m.ADMIN_ROUTES),
       },
       {
         path: 'auth-control',
         loadChildren: () =>
-          import('./authorization/features/auth-control/auth-control.routes').then((m) => m.AUTH_CONTROL_ROUTES),
+          import('./authorization/features/auth-control/auth-control.routes').then(
+            (m) => m.AUTH_CONTROL_ROUTES,
+          ),
       },
       // TODO: Add feature modules (Phase 7)
       // { path: 'users', loadChildren: () => import('./pages/users/users.routes') },
@@ -59,7 +62,9 @@ export const routes: Routes = [
       {
         path: 'settings',
         loadChildren: () =>
-          import('./authorization/features/pages/settings-user/settings-user.routes').then((m) => m.SETTINGS_ROUTES),
+          import('./authorization/features/pages/settings-user/settings-user.routes').then(
+            (m) => m.SETTINGS_ROUTES,
+          ),
       },
       {
         path: 'profile',
@@ -83,18 +88,6 @@ export const routes: Routes = [
           ),
       },
       {
-        path: 'developer',
-        loadChildren: () =>
-          import('./business/components/developer/routes/developer.routes').then(
-            (m) => m.DEVELOPER_ROUTES,
-          ),
-      },
-      {
-        path: 'platforms',
-        loadChildren: () =>
-          import('./pages/platform-manager/platform.routes').then((m) => m.PLATFORM_MANAGER_ROUTES),
-      },
-      {
         path: 'sample-manager-simple-language-seo',
         redirectTo: 'sample-seo',
         pathMatch: 'full',
@@ -106,65 +99,72 @@ export const routes: Routes = [
       {
         path: 'agregator/references/language',
         loadChildren: () =>
-          import(
-            './AGREGATOR/PAGES/SPRAVKA/LanguageOfAggregator/language-of-aggregator.routes'
-          ).then((m) => m.LANGUAGE_OF_AGGREGATOR_ROUTES),
+          import('./AGREGATOR/PAGES/SPRAVKA/LanguageOfAggregator/language-of-aggregator.routes').then(
+            (m) => m.LANGUAGE_OF_AGGREGATOR_ROUTES,
+          ),
       },
       {
         path: 'agregator/references/os',
         loadChildren: () =>
-          import(
-            './AGREGATOR/PAGES/SPRAVKA/PlatformOfAggregatorPage/platform-of-aggregator.routes'
-          ).then((m) => m.PLATFORM_OF_AGGREGATOR_ROUTES),
+          import('./AGREGATOR/PAGES/SPRAVKA/PlatformOfAggregatorPage/platform-of-aggregator.routes').then(
+            (m) => m.PLATFORM_OF_AGGREGATOR_ROUTES,
+          ),
       },
       {
         path: 'agregator/references/os-versions',
         loadChildren: () =>
-          import(
-            './AGREGATOR/PAGES/SPRAVKA/SystemRequirementPage/system-requirement.routes'
-          ).then((m) => m.SYSTEM_REQUIREMENT_ROUTES),
+          import('./AGREGATOR/PAGES/SPRAVKA/SystemRequirementPage/system-requirement.routes').then(
+            (m) => m.SYSTEM_REQUIREMENT_ROUTES,
+          ),
       },
       {
         path: 'agregator/references/license-types',
         loadChildren: () =>
-          import(
-            './AGREGATOR/PAGES/SPRAVKA/LicenseTypeOfAggregatorPage/license-type-of-aggregator.routes'
-          ).then((m) => m.LICENSE_TYPE_OF_AGGREGATOR_ROUTES),
+          import('./AGREGATOR/PAGES/SPRAVKA/LicenseTypeOfAggregatorPage/license-type-of-aggregator.routes').then(
+            (m) => m.LICENSE_TYPE_OF_AGGREGATOR_ROUTES,
+          ),
       },
       {
         path: 'agregator/references/developer',
         loadChildren: () =>
-          import(
-            './AGREGATOR/PAGES/SPRAVKA/DeveloperOfAggregatorPage/developer-of-aggregator.routes'
-          ).then((m) => m.DEVELOPER_OF_AGGREGATOR_ROUTES),
+          import('./AGREGATOR/PAGES/SPRAVKA/DeveloperOfAggregatorPage/developer-of-aggregator.routes').then(
+            (m) => m.DEVELOPER_OF_AGGREGATOR_ROUTES,
+          ),
       },
       {
         path: 'agregator/references/categories',
         loadChildren: () =>
-          import(
-            './AGREGATOR/PAGES/SPRAVKA/CategoryOfAggregatorPage/category-of-aggregator.routes'
-          ).then((m) => m.CATEGORY_OF_AGGREGATOR_ROUTES),
+          import('./AGREGATOR/PAGES/SPRAVKA/CategoryOfAggregatorPage/category-of-aggregator.routes').then(
+            (m) => m.CATEGORY_OF_AGGREGATOR_ROUTES,
+          ),
+      },
+      {
+        path: 'agregator/references/categories-v2',
+        loadChildren: () =>
+          import('./AGREGATOR/PAGES/SPRAVKA/CategorySimplifiedPage/category-simplified.routes').then(
+            (m) => m.CATEGORY_SIMPLIFIED_ROUTES,
+          ),
       },
       {
         path: 'agregator/references/tag-categories',
         loadChildren: () =>
-          import(
-            './AGREGATOR/PAGES/SPRAVKA/CategoryTagOfAggregatorPage/category-tag-of-aggregator.routes'
-          ).then((m) => m.CATEGORY_TAG_OF_AGGREGATOR_ROUTES),
+          import('./AGREGATOR/PAGES/SPRAVKA/CategoryTagOfAggregatorPage/category-tag-of-aggregator.routes').then(
+            (m) => m.CATEGORY_TAG_OF_AGGREGATOR_ROUTES,
+          ),
       },
       {
         path: 'agregator/references/tags',
         loadChildren: () =>
-          import(
-            './AGREGATOR/PAGES/SPRAVKA/TagOfAggregatorPage/tag-of-aggregator.routes'
-          ).then((m) => m.TAG_OF_AGGREGATOR_ROUTES),
+          import('./AGREGATOR/PAGES/SPRAVKA/TagOfAggregatorPage/tag-of-aggregator.routes').then(
+            (m) => m.TAG_OF_AGGREGATOR_ROUTES,
+          ),
       },
       {
         path: 'agregator/pages/program',
         loadChildren: () =>
-          import(
-            './AGREGATOR/PAGES/SPRAVKA/ProgramOfAggregatorPage/program-of-aggregator.routes'
-          ).then((m) => m.PROGRAM_OF_AGGREGATOR_ROUTES),
+          import('./AGREGATOR/PAGES/SPRAVKA/ProgramOfAggregatorPage/program-of-aggregator.routes').then(
+            (m) => m.PROGRAM_OF_AGGREGATOR_ROUTES,
+          ),
       },
 
       // { path: 'reports', loadChildren: () => import('./pages/reports/reports.routes') },

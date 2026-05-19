@@ -14,9 +14,6 @@
     padding-bottom: 2rem;
     border-bottom: 2px solid var(--border-color, #e8e8e8);
 
-    @include dark-theme {
-      border-bottom-color: var(--dark-border-color, #303030);
-    }
 
     .header-content {
       flex: 1;
@@ -27,9 +24,6 @@
         font-weight: 700;
         color: var(--text-primary, #1a1a1a);
 
-        @include dark-theme {
-          color: var(--dark-text-primary, #fff);
-        }
       }
 
       p {
@@ -37,9 +31,6 @@
         font-size: 1rem;
         color: var(--text-secondary, #666);
 
-        @include dark-theme {
-          color: var(--dark-text-secondary, #a0a0a0);
-        }
       }
     }
   }
@@ -52,10 +43,6 @@
   border-radius: 12px;
   border: 1px solid var(--border-color, #e8e8e8);
 
-  @include dark-theme {
-    background: var(--dark-bg-container, #1a1a1a);
-    border-color: var(--dark-border-color, #303030);
-  }
 
   &__header {
     margin-bottom: 1.5rem;
@@ -64,27 +51,18 @@
       font-size: 1.5rem;
       font-weight: 600;
       color: var(--text-primary, #1a1a1a);
-      @include dark-theme {
-        color: var(--dark-text-primary, #fff);
-      }
     }
   }
 
   &__description {
     margin-bottom: 1.5rem;
     color: var(--text-secondary, #666);
-    @include dark-theme {
-      color: var(--dark-text-secondary, #a0a0a0);
-    }
   }
 
   &__preview {
     padding: 2rem;
     background: var(--bg-secondary-light, #fafafa);
     border-radius: 8px;
-    @include dark-theme {
-      background: rgba(255, 255, 255, 0.03);
-    }
 
     h4 {
       margin-bottom: 1rem;
@@ -99,9 +77,6 @@
     .demo-section__header {
       border-bottom: 2px solid var(--border-color, #e8e8e8);
       padding-bottom: 1rem;
-      @include dark-theme {
-        border-bottom-color: var(--dark-border-color, #303030);
-      }
     }
   }
 }
@@ -117,10 +92,6 @@
     background: var(--bg-secondary-light, #fafafa);
     border-radius: 12px;
     border: 1px solid var(--border-color, #e8e8e8);
-    @include dark-theme {
-      background: rgba(255, 255, 255, 0.02);
-      border-color: var(--dark-border-color, #303030);
-    }
 
     h3 {
       margin: 0 0 1.5rem 0;
@@ -164,11 +135,6 @@
   border: 1px solid var(--border-color, #d9d9d9);
   border-radius: 8px;
   width: 100%;
-  @include dark-theme {
-    background: var(--dark-bg-light, #2a2a2a);
-    border-color: var(--dark-border-base, #404040);
-    color: var(--dark-text-primary, #fff);
-  }
 }
 
 .control-checkbox {
@@ -209,16 +175,6 @@
       color: #fff;
     }
 
-    @include dark-theme {
-      background: var(--dark-bg-light, #2a2a2a);
-      border-color: var(--dark-border-base, #404040);
-      color: #ccc;
-
-      &.active {
-        background: var(--color-primary, #1890ff);
-        color: #fff;
-      }
-    }
   }
 }
 
@@ -231,10 +187,6 @@
   justify-content: center;
   align-items: center;
   min-height: 300px;
-  @include dark-theme {
-    background: rgba(255, 255, 255, 0.03);
-    border-color: var(--dark-border-color, #303030);
-  }
 }
 
 @media (max-width: 992px) {

@@ -20,13 +20,7 @@ import { debounceTime, takeUntil, distinctUntilChanged } from 'rxjs/operators';
 @Component({
   selector: 'app-sample-search',
   standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    NzGridModule,
-    NzInputModule,
-    NzIconModule,
-  ],
+  imports: [CommonModule, FormsModule, NzGridModule, NzInputModule, NzIconModule],
   template: `
     <div nz-row [nzGutter]="16" class="search-container">
       <div nz-col nzSpan="24">
@@ -72,7 +66,7 @@ import { debounceTime, takeUntil, distinctUntilChanged } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SampleSearchComponent implements OnInit, OnChanges, OnDestroy {
-  @Input() searchTerm: string = '';
+  @Input() searchTerm = '';
   @Output() searchChange = new EventEmitter<string>();
 
   // Изменяем тип, чтобы явно разрешить null и undefined

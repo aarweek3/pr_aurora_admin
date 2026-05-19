@@ -1,6 +1,6 @@
 // src/app/auth/services/token.service.ts
 import { HttpClient } from '@angular/common/http';
-import { Injectable, Injector, inject } from '@angular/core';
+import { Injectable, Injector, inject, OnDestroy } from '@angular/core';
 import { ApiEndpoints } from '@environments/api-endpoints';
 import { ILoggerConsole } from '@shared/logger-console/models/logger-console.model';
 import { LoggerConsoleService } from '@shared/logger-console/services/logger-console.service';
@@ -18,14 +18,14 @@ export interface TokenStatus {
   expiresAt: Date | null;
   timeUntilExpiry: number;
   lastChecked: Date;
-  claims?: { [key: string]: string };
+  claims?: Record<string, string>;
   isExternalAccount?: boolean;
   externalProvider?: string | null;
 }
 
 export interface ServerTokenInfo {
   success: boolean;
-  claims?: Array<{ type?: string; Type?: string; value?: string; Value?: string }>;
+  claims?: { type?: string; Type?: string; value?: string; Value?: string }[];
   roles: string[];
   userId: string;
   email: string;
@@ -45,7 +45,7 @@ export interface CookieInfo {
 @Injectable({
   providedIn: 'root',
 })
-export class TokenService {
+export class TokenService implements OnDestroy {
   private http = inject(HttpClient);
   private injector = inject(Injector);
   private _logger?: ILoggerConsole;
@@ -331,7 +331,7 @@ export class TokenService {
     const uniqueRoles = [...new Set(response.roles || [])];
 
     // Преобразуем массив клеймов в удобный объект (map)
-    const claimsMap: { [key: string]: string } = {};
+    const claimsMap: Record<string, string> = {};
     if (response.claims) {
       response.claims.forEach((c) => {
         const type = c.type || c.Type;
